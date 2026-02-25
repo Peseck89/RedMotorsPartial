@@ -1,0 +1,11 @@
+# Salesforce local auth / cache (NO subir)
+.sf/
+.sfdx/
+
+# Node / builds
+node_modules/
+dist/
+coverage/
+
+# OS / editor
+.DS_Store
