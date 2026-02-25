@@ -1,0 +1,23 @@
+.scroller-wrapper {
+    height: 600px;
+    position: relative;
+}
+
+.scroller-content {
+    width: 100%;
+    height: auto; /* Ajusta según el tamaño del contenido */
+}
+
+.scrollbar-container {
+    width: 100%;
+    height: 20px; /* Ajusta el alto del scroll si es necesario */
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f0f0f0; /* Color de fondo para la barra de scroll si es necesario */
+}
+
+lightning-datatable {
+    overflow: hidden !important; /* Evitar que la tabla tenga su propio scroll */
+}

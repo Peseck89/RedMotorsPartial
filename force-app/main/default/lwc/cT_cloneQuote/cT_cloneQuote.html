@@ -1,0 +1,29 @@
+<template>  
+  <lightning-quick-action-panel title="Quick Action Title">
+    <template if:false={disabled}>
+      <p style="text-align: center;">
+        <strong style="color: rgb(2, 2, 2); font-size: 20px;">
+          ¿Duplicar este registro?
+        </strong>
+      </p>
+    </template>
+    <br>
+  
+    <template if:true={disabled}>
+      <p style="text-align: center;">
+        <strong style="color: rgb(2, 2, 2); font-size: 20px;">
+          Registro creado exitosamente 
+        </strong>
+      </p>
+      <div style="text-align: center;">
+        <lightning-button variant="neutral" label="Ir" onclick={viewRecord} value={isCloned}></lightning-button>
+      </div>
+    </template>
+
+    <br>
+    <div style="text-align: center;">
+      <lightning-button disabled={disabled} variant="neutral" onclick={handleClone} label="Confirmar"></lightning-button>
+    </div>
+    
+  </lightning-quick-action-panel>
+</template>

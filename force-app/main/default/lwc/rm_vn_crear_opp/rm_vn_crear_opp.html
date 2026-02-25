@@ -1,0 +1,22 @@
+<template>
+  <div style="font-size:12px">TEST-CLAUDIA-CREAR-OPP</div>
+  <template if:true={showSelectInventory}>
+    <c-rm_vn_inventario brand={brand} year={year} oninventoryselecion={handleInventorySelectionEvent}>
+      <span slot="actions">
+
+        <lightning-button variant="success" label="Crear Oportunidad de Modelo de Interes"
+          onclick={handleCreateOppModeloInteresHandle} class="slds-m-left_x-small"></lightning-button>
+
+        <lightning-button variant="brand" label="Continuar" title="Continuar" disabled={disableNextButton}
+          onclick={handleGoNextStepHandle} class="slds-m-left_x-small"></lightning-button>
+
+      </span>
+    </c-rm_vn_inventario>
+
+  </template>
+  <template if:true={showConfirmation}>
+    <c-rm_vn_crear_opp_confirmar ongobackstep={handleGoBackEvent} onnextstep={handleGoNextStepHandle}
+      account-id={recordId} brand={brand} year={year} records={selectedProdXBodItems}
+      show-account-input={showAccountInput} onclose={handlCloseEvent} onresetvalues={handlResetvaluesEvent}></c-rm_vn_crear_opp_confirmar>
+  </template>
+</template>

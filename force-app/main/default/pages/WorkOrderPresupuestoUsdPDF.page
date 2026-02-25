@@ -1,0 +1,1038 @@
+<apex:page title="Presupuesto" standardController="Workorder" extensions="ct_presupuestoWorkDesc" renderAs="pdf"
+    showHeader="false" sidebar="false">
+
+    <head>
+        <style type="text/css" media="print">
+            @page {
+                @bottom-left {
+                    content: element(footer);
+                }
+            }
+
+            div.footer {
+                display: block;
+                padding: 5px;
+                position: running(footer);
+            }
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+        </style>
+    </head>
+    <apex:pageBlock rendered="{!if(Workorder.MarcaFormula__c =='Moto BMW',true,false)}">
+      <table style="background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333">
+      <tr>
+        <td>
+          <img style="margin-right:20px;" src="{!$Resource.logoMotoBMW}" width="200px" />
+        </td>
+        <td style="width:750px;">
+          <span style="padding-left:23px;font-width:bold;font-size:17px;">
+            <b>Red Motors CR S.A.
+
+            </b>
+            <br/>
+            <b style="font-size:10px;padding-left:25px;">
+              Cédula Jur. No 3-101-50 2521
+              <br/>
+            </b>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>Tel.:
+              </b> (506) 2105-8300
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Correo: bmwmotorradcr@redmotorscr.com
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              www.bmw-motorrad.cr
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>
+              </b> Costa Rica, San José, La Uruca, 400 metros al oeste de la plaza de  
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              deportes, diagonal a la nueva rotonda, Circunvalación Norte
+            </span>
+          </span>
+        </td>
+      </tr>
+       </table>
+      </apex:pageBlock>
+    
+      <apex:pageBlock rendered="{!if(Workorder.MarcaFormula__c =='Moto Kawa',true,false)}">
+        <table style="background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333">
+      <tr>
+        <td>
+          <img style="margin-right:20px;" src="{!$Resource.logoKawasakiRojo}" width="200px" />
+        </td>
+        <td style="width:750px;">
+          <span style="padding-left:23px;font-width:bold;font-size:17px;">
+            <b>Otobai Motors S.A.
+            </b>
+            <br/>
+            <b style="font-size:10px;padding-left:25px;">
+              Cédula Jur. No 3-101-720752
+              <br/>
+            </b>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>Tel.:
+              </b> (506) 2105-8300
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Correo: kawasakicr@redmotorscr.com
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              costarica.kawasaki-la.com
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Costa Rica, San José, La Uruca, 400 metros al oeste de la plaza de
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              deportes, diagonal a la nueva rotonda, Circunvalación Norte
+            </span>
+          </span>
+        </td>
+      </tr>
+    </table>
+      </apex:pageBlock>
+    
+      <apex:pageBlock rendered="{!if(Workorder.MarcaFormula__c =='Vehículo Polaris',true,false)}">
+        <table style="background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333">
+      <tr>
+        <td>
+          <img style="margin-right:20px;" src="{!$Resource.logoPolaris}" width="200px" />
+        </td>
+        <td style="width:750px;">
+          <span style="padding-left:23px;font-width:bold;font-size:17px;">
+            <b>Otobai Motors S.A.
+            </b>
+            <br/>
+            <b style="font-size:10px;padding-left:25px;">
+              Cédula Jur. No 3-101-720752
+              <br/>
+            </b>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>Tel.:
+              </b> (506) 2105-8300
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Correo: polariscr@redmotorscr.com
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Costa Rica, San José, La Uruca, 400 metros al oeste de la plaza de
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              deportes, diagonal a la nueva rotonda, Circunvalación Norte
+            </span>
+          </span>
+        </td>
+      </tr>
+    </table>
+      </apex:pageBlock>
+    
+      <apex:pageBlock rendered="{!if(Workorder.MarcaFormula__c !='Vehículo Polaris' && Workorder.MarcaFormula__c !='Moto Kawa' && Workorder.MarcaFormula__c !='Moto BMW',true,false)}">
+        <table style="background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333">
+          <tr>
+            <td>
+              <img style="margin-right:20px;" src="{!$Resource.bmwminiLogo}" width="200px" />
+            </td>
+            <td style="width:750px;">
+              <span style="padding-left:23px;font-width:bold;font-size:17px;">
+                <b>Red Motors CR S.A.
+                </b>
+                <br/>
+                <b style="font-size:10px;padding-left:25px;">
+                  Cédula Jur. No 3-101-502-521
+                  <br/>
+                </b>
+                <span style="font-size:10px;padding-left:25px;">
+                  <b>Tel.:
+                  </b> (506) 2547-5000
+                  <br/>
+                </span>
+                <span style="font-size:10px;padding-left:25px;">
+                  Taller@redmotorscr.com www.bmw.co.cr
+                  <br/>
+                </span>
+                <span style="font-size:10px;padding-left:25px;">
+                  <b>Apdo:
+                  </b> 7461150
+                  <br/>
+                </span>
+                <span style="font-size:10px;padding-left:25px;">
+                  La Uruca, costado sur de la estación de servicio, San José, Costa Rica
+                </span>
+              </span>
+            </td>
+          </tr>
+        </table>
+      </apex:pageBlock>
+    <br/>
+    <br/>
+    <table style="font-size: 12px; font-family:sans-serif; width:100%;padding: 10px 20px;color:#333333;margin-top:-20px;">
+        <tr>
+            <td>
+                <span style="line-height: 0.428571;color: #333333;text-align: left;font-weight: bold;font-size: 16px;font-family:Arial, Helvetica, sans-serif;margin-top:-5px">Información del cliente:</span>
+            </td>
+            <td>
+                <span style="line-height: 0.428571;color: #333333;text-align: left;font-weight: bold;font-size: 16px;font-family:Arial, Helvetica, sans-serif;margin-top:-5px">Información del vehículo: </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Cuenta de facturación:&nbsp;</span>
+                <apex:outputField value="{!worder.Cuenta_de_Facturacion__r.Name}" />
+		        
+            </td>
+            <td>
+                <span style="font-weight:bold">Modelo:&nbsp;</span>
+                <apex:outputField value="{!worder.Asset.modelo__c}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Cédula:&nbsp;</span>
+                <apex:outputField value="{!worder.Contact.Cedula__c}"
+    		       rendered="{!worder.ContactId != null && worder.Contact.Cedula__c != null && worder.Contact.Cedula__c != ''}" />
+		        <apex:outputField value="{!worder.Account.Cedula__c}"
+    		       rendered="{!worder.ContactId == null || worder.Contact.Cedula__c == null || worder.Contact.Cedula__c == ''}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Año Modelo:&nbsp;</span>
+                <apex:outputField value="{!worder.Asset.Anio__c}" /> </td>
+            
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Tel. Propietario:&nbsp;</span>
+                <apex:outputField value="{!worder.Contact.Phone}"
+    		       rendered="{!worder.ContactId != null && worder.Contact.Phone != null && worder.Contact.Phone != ''}" />
+		        <apex:outputField value="{!worder.Account.Phone}"
+    		       rendered="{!worder.ContactId == null || worder.Contact.Phone == null || worder.Contact.Phone == ''}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Tipo:&nbsp; </span>
+                <apex:outputField value="{!worder.Asset.Account.Type}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Tel. Movil:&nbsp;</span>
+                <apex:outputField value="{!worder.Asset.Account.PersonMobilePhone}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Kms:</span> &nbsp;
+                <apex:outputText value="{0,number, ###,###}">
+                    <apex:param value="{!kilometros}" />
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Propietario:&nbsp; </span>{!worder.Asset.Account.Name}&nbsp;&nbsp;
+                <apex:repeat value="{!cambioPropietario}" var="cp">    
+                   <apex:outputText value="Pendiente de actualización" 
+                     rendered="{!cp.Estado__c = 'Pendiente'}"
+                     style="font-weight:bold"/>
+                   </apex:repeat>
+            </td>
+            <td>
+                <span style="font-weight:bold">Horas uso:&nbsp;</span>
+                <apex:outputField value="{!worder.Duration}" />
+            </td>
+            
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Asesor:&nbsp;</span>
+                <apex:outputField value="{!worder.OwnerId}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Matrícula:&nbsp;</span>
+                <apex:outputField value="{!worder.Asset.numeroDePlaca__c}" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <span style="font-weight:bold">Orden-Trabajo:&nbsp;</span> {!worder.WorkOrderNumber}</td>
+            <td>
+                <span style="font-weight:bold">VIN:&nbsp;</span>
+                <apex:outputField value="{!worder.Asset.NumeroDeChasis__c}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Fecha Apertura:&nbsp; </span>
+                <apex:outputField value="{!worder.CreatedDate}" />
+            </td>
+            
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <span style="font-weight:bold">Descripción:</span> &nbsp;
+                <apex:outputField value="{!worder.Description}" />
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td> </td>
+
+        </tr>
+    </table>
+    <hr style="display: block;height: 1px;border: 0;border-top: 1px solid #ccc;margin: 1em 0;padding: 0;" />
+    <div class="slds-card" id="generalData" style="width: 100%;margin: 10px auto;border: none;text-align:center;">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__body">
+                <span style="line-height: 0.428571;color: #333333;text-align: center;font-weight: bold;font-size: 20px;font-family:Arial, Helvetica, sans-serif;">
+                    Presupuesto:
+
+                    <br/>
+                </span>
+                <span style="display: inline-block;font-family:sans-serif; color:#333333;font-size:13px;text-align:center;margin-top:8px">
+                    Orden de trabajo:
+                    <b>
+                        <apex:outputField value="{!worder.WorkOrderNumber}" />
+                    </b>&nbsp;&nbsp;
+                </span>
+                <span style="display: inline-block;font-family:sans-serif; color:#333333;font-size:13px;text-align:center;margin-top:8px">
+                    Caso:
+                    <b>
+                        <apex:outputField value="{!WorkOrder.CaseId}" />
+                    </b>
+                </span>
+                <span style="display: inline-block;font-family:sans-serif; color:#333333;font-size:13px;text-align:center;margin-top:8px">
+                    Presupuesto:
+                    <b>
+                        <apex:outputField value="{!quotePresu.QuoteNumber}" />
+                    </b>
+                </span>
+                <span style="display: inline-block;font-family:sans-serif; color:#333333;font-size:13px;text-align:center;margin-top:8px">
+                    Tipo de Gasto:
+                    <b>
+                        <apex:outputField value="{!worder.tipoDeGasto__c}" />
+                    </b>
+                </span>
+            </div>
+        </header>
+    </div>
+    <hr style="display: block;height: 1px;border: 0;border-top: 1px solid #ccc;margin: 1em 0;padding: 0;" />
+    
+    <apex:repeat value="{!bloques}" var="b">
+        <table cellpadding="0" cellspacing="0" style="margin-top: 5px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold;width:100%;">
+        <tr>
+            <td style="width: 4px; height: 12px; 
+                background-color: {!IF(b.prioridad == 'Necesario', 'red', IF(b.prioridad == 'Recomendado', 'green',IF(b.prioridad == 'Sugerido','yellow', 'gray')))};
+                padding: 0;
+                margin: 0;
+                vertical-align: middle;">
+            </td>
+            <td style="background-color:#f4f4f4; padding: 7px 8px; color:#333333; font-family: Arial, Helvetica, sans-serif;">
+            {!b.numero}.{!b.tareaName}&nbsp;<span style="text-transform: capitalize;color: #707070;font-size:9px">({!b.prioridad})</span>
+            </td>
+            <!--<td style="width: 12px; height: 12px; 
+                background-color: {!IF(b.prioridad == 'Necesario', 'red', IF(b.prioridad == 'Recomendado', 'green',IF(b.prioridad == 'Sugerido','yellow', 'gray')))};
+                padding: 0;
+                margin: 0;
+                
+                vertical-align: middle;">
+            </td>
+            <td style="padding-left: 6px; color: #333333;">
+                {!b.prioridad}
+            </td>-->
+        </tr>
+    </table>
+        <div style="border-left: 4px solid #f4f4f4; border-bottom: 4px solid #f4f4f4; padding: 4px; margin-bottom: 20px; box-shadow: 2px 2px 6px rgba(244,244,244,0.15);">
+    <h3 style="background-color:#f4f4f4;color: #333333;font-weight: bold;font-size: 13px;font-family:Arial, Helvetica, sans-serif;padding:7px 5px 7px 8px;">
+        Materiales:
+    </h3>
+    <!--Esteban Segura Benavides -->
+    <table style="color:#eaeaea; font-family: Arial, Helvetica, sans-serif; width:100%;border-collapse: collapse;table-layout:fixed;">
+        <colgroup>
+             <col style="width:7%"/>   <!-- Código -->
+             <col style="width:32%"/>  <!-- Descripción -->
+             <col style="width:15%"/>  <!-- Unidades -->
+             <col style="width:15%"/>  <!-- Precio -->
+             <col style="width:15%"/>  <!-- % Dto -->
+             <col style="width:15%"/>  <!-- Monto -->
+            </colgroup>
+        <tr style="background-color: #E1E1E1; border: none;font-size: 10px;text-align:center;color: #696969;font-weight: bold;">
+            <!-- <th style="padding:7px 5px;">
+                Código: 
+            </th> -->
+            <th style="padding:7px 5px;">
+                Codigo:
+            </th>
+            <th style="padding:7px 5px;">
+                Descripción:
+            </th>
+            <th style="padding:7px 5px;">
+                Unidades:
+            </th>
+            <th style="padding:7px 5px;">
+                Precio:
+            </th>
+            <th style="padding:7px 5px;">
+                % Dto.
+            </th>
+            <th style="padding:7px 5px;">
+                Monto:
+            </th>
+        </tr>
+
+        <apex:repeat value="{!b.items}" var="item">
+            <tr style="color: #707070;font-size: 10px;background:#FAFAFA;{!IF(item.Trabajo__c ='Materiales','display: table-row;', 'display:none')}">
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff; {!IF(worder.BMW_CodigoDeProducto__c = true,'visibility:visible;','visibility:hidden;')}">
+                    {!item.BMW_CodigoDeProducto__c}
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;" width="{!IF(worder.BMW_CodigoDeProducto__c = true,'35%', '40%')}">
+                 <!-- Mostrar Alias si NO está vacío -->
+                  <apex:outputPanel rendered="{!NOT(ISBLANK(item.Alias_Articulo__c))}">
+                    <span>{!item.Alias_Articulo__c}</span>    
+                  </apex:outputPanel>
+                 <!-- Mostrar Product Name si Alias está vacío -->
+                  <apex:outputPanel rendered="{!ISBLANK(item.Alias_Articulo__c)}">
+                    <span>{!item.Product2.Name}</span>
+                  </apex:outputPanel>
+
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="10%">                    
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.Quantity}" />
+                    </apex:outputText>                    
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="20%">
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.UnitPrice}" />
+                    </apex:outputText>
+                    &nbsp;&nbsp;{!item.CurrencyIsoCode}
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="10%">                    
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.discount}" />
+                    </apex:outputText>                           
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="20%">
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.MontoCliente__c}" />
+                    </apex:outputText>
+                    &nbsp;&nbsp;{!item.CurrencyIsoCode}
+                </td>
+            </tr>
+        </apex:repeat>
+    </table>
+    <br/>
+        
+      <h3 style="background-color:#f4f4f4;color: #333333;font-weight: bold;font-size: 13px;font-family:Arial, Helvetica, sans-serif;padding:7px 5px 7px 8px;">
+        Mano de obra:
+    </h3>
+    <table style="color:#333333; font-family: Arial, Helvetica, sans-serif; width:100%;border-collapse: collapse;table-layout:fixed;">
+        <colgroup>
+             <col style="width:7%"/>   <!-- Código -->
+             <col style="width:32%"/>  <!-- Descripción -->
+             <col style="width:15%"/>  <!-- Unidades -->
+             <col style="width:15%"/>  <!-- Precio -->
+             <col style="width:15%"/>  <!-- % Dto -->
+             <col style="width:15%"/>  <!-- Monto -->
+            </colgroup>
+        <tr style="background-color: #E1E1E1; border: none;font-size: 10px;text-align:center;color: #696969;font-weight: bold;">
+            <th style="padding:7px 5px; ">
+                Código: 
+            </th>
+            <th style="padding:7px 5px;">
+                Descripción:
+            </th>
+            <th style="padding:7px 5px;">
+                Horas:
+            </th>
+            <th style="padding:7px 5px;">
+                Precio:
+            </th>
+            <th style="padding:7px 5px;">
+                % Dto:
+            </th>
+            <th style="padding:7px 5px;">
+                Monto:
+            </th>
+        </tr>
+        <apex:repeat value="{!b.items}" var="item">
+            <tr style="color: #707070;font-size: 10px;background:#FAFAFA; {!IF(item.Trabajo__c ='Mano de Obra','display: table-row;', 'display:none')}">
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff; {!IF(worder.BMW_CodigoDeProducto__c = true,'visibility:visible;','visibility:hidden;')}">
+                    {!item.BMW_CodigoDeProducto__c}
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;" width="{!IF(worder.BMW_CodigoDeProducto__c = true,'35%', '40%')}">
+                 <!-- Mostrar Alias si NO está vacío -->
+                  <apex:outputPanel rendered="{!NOT(ISBLANK(item.Alias_Articulo__c))}">
+                    <span>{!item.Alias_Articulo__c}</span>    
+                  </apex:outputPanel>
+                 <!-- Mostrar Product Name si Alias está vacío -->
+                  <apex:outputPanel rendered="{!ISBLANK(item.Alias_Articulo__c)}">
+                    <span>{!item.Product2.Name}</span>
+                  </apex:outputPanel>
+
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="10%">                    
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.Quantity}" />
+                    </apex:outputText>                    
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="20%">
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.UnitPrice}" />
+                    </apex:outputText>
+                    &nbsp;&nbsp;{!item.currencyIsoCode}
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="10%">                    
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.discount}" />
+                    </apex:outputText>                           
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="20%">
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.totalPrice}" />
+                    </apex:outputText>
+                    &nbsp;&nbsp;{!item.currencyIsoCode}
+                </td>
+            </tr>
+        </apex:repeat>
+    </table>  
+        <br/>
+    <apex:outputPanel rendered="{!b.totalSubcontratoTarea > 0}">        
+    <h3 style="background-color:#f4f4f4;color: #333333;font-weight: bold;font-size: 13px;font-family:Arial, Helvetica, sans-serif;padding:7px 5px 7px 8px;">
+        Subcontrato:
+    </h3>
+    <table style="color:#333333; font-family: Arial, Helvetica, sans-serif; width:100%;border-collapse: collapse;table-layout:fixed;">
+        <colgroup>
+             <col style="width:7%"/>   <!-- Código -->
+             <col style="width:32%"/>  <!-- Descripción -->
+             <col style="width:15%"/>  <!-- Unidades -->
+             <col style="width:15%"/>  <!-- Precio -->
+             <col style="width:15%"/>  <!-- % Dto -->
+             <col style="width:15%"/>  <!-- Monto -->
+            </colgroup>
+        <tr style="background-color: #E1E1E1; border: none;font-size: 10px;text-align:center;color: #696969;font-weight: bold;">
+            <th style="padding:7px 5px; ">
+                Código: 
+            </th>
+            <th style="padding:7px 5px;">
+                Descripción:
+            </th>
+            <th style="padding:7px 5px;">
+                Horas:
+            </th>
+            <th style="padding:7px 5px;">
+                Precio:
+            </th>
+            <th style="padding:7px 5px;">
+                % Dto:
+            </th>
+            <th style="padding:7px 5px;">
+                Monto:
+            </th>
+        </tr>
+        <apex:repeat value="{!b.items}" var="item">
+            <tr style="color: #707070;font-size: 10px;background:#FAFAFA;{!IF(item.Trabajo__c ='Subcontrato','display: table-row;', 'display:none')}">
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff; {!IF(worder.BMW_CodigoDeProducto__c = true,'visibility:visible;','visibility:hidden;')}">
+                    {!item.BMW_CodigoDeProducto__c}
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;" width="{!IF(worder.BMW_CodigoDeProducto__c = true,'35%', '40%')}">
+                 <!-- Mostrar Alias si NO está vacío -->
+                  <apex:outputPanel rendered="{!NOT(ISBLANK(item.Alias_Articulo__c))}">
+                    <span>{!item.Alias_Articulo__c}</span>    
+                  </apex:outputPanel>
+                 <!-- Mostrar Product Name si Alias está vacío -->
+                  <apex:outputPanel rendered="{!ISBLANK(item.Alias_Articulo__c)}">
+                    <span>{!item.Product2.Name}</span>
+                  </apex:outputPanel>
+
+                </td>
+
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="10%">                    
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.Quantity}" />
+                    </apex:outputText>                    
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="20%">
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.UnitPrice}" />
+                    </apex:outputText>
+                    &nbsp;&nbsp;{!item.currencyIsoCode}
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="10%">                    
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.discount}" />
+                    </apex:outputText>                           
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;font-size: 8px;" width="20%">
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.totalPrice}" />
+                    </apex:outputText>
+                    &nbsp;&nbsp;{!item.currencyIsoCode}
+                </td>
+            </tr>
+        </apex:repeat>
+    </table> 
+    </apex:outputPanel>    
+       <br/>
+        <h3 style="background-color:#f4f4f4;color: #333333;font-weight: bold;font-size: 13px;font-family:Arial, Helvetica, sans-serif;padding:7px 5px 7px 8px;">
+        Total de {!b.tareaName}
+    </h3>
+        <table style="color:#333333; font-family: Arial, Helvetica, sans-serif; width:100%;border-collapse: collapse;">
+        <tr style="background-color: #E1E1E1; border: none;font-size: 10px;text-align:center;color: #696969;font-weight: bold;">
+            <th style="padding:7px 5px;">
+                M. Obra:
+            </th>
+            <th style="padding:7px 5px;">
+                Materiales:
+            </th>
+            <th style="padding:7px 5px;">
+                Subcontr:
+            </th>
+            <th style="padding:7px 5px;">
+                Pintura:
+            </th>
+            <th style="padding:7px 5px;">
+                Varios:
+            </th>
+            <th style="padding:7px 5px;">
+                Tasas:
+            </th>
+            <th style="padding:7px 5px;">
+                B.I.:
+            </th>
+            <th style="padding:7px 5px;">
+                IV:
+            </th>
+            <th style="padding:7px 5px;">
+                Total:
+            </th>
+        </tr>
+        <tr style="color: #333333;font-size: 8px;background:#FAFAFA;">
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!b.totalManoDeObraTarea}" />&nbsp;&nbsp;</apex:outputText> {!WorkOrder.CurrencyIsoCode}
+                <!--<apex:outputField value="{!worder.montoManoDeObra__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!b.totalMaterialesTarea}" />&nbsp;&nbsp;</apex:outputText>
+                <!--<apex:outputField value="{!worder.montoMateriales__c}"/>--> {!WorkOrder.CurrencyIsoCode}
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                <apex:outputText value="{0, number, ###,###,##0.00}">
+                <apex:param value="{!b.totalSubcontratoTarea}" />&nbsp;&nbsp;</apex:outputText> {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!worder.?}" />&nbsp;&nbsp;</apex:outputText> -->
+                <!--<apex:outputField value="{!worder.montoSubcontrato__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                0.00 {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!worder.montoPintura__c}" />&nbsp;&nbsp;</apex:outputText> -->
+                <!--<apex:outputField value="{!worder.montoPintura__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                0.00 {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!worder.montoVarios__c}" />&nbsp;&nbsp;</apex:outputText> -->
+                <!-- <apex:outputField value="{!worder.montoVarios__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                0.00 {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!worder.Tasas__c}" />&nbsp;&nbsp;</apex:outputText> -->
+                <!--<apex:outputField value="{!worder.Tasas__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                0.00 {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputField value="{!worder.B_I__c}" /> -->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!b.Iva}" />&nbsp;&nbsp;</apex:outputText> {!WorkOrder.CurrencyIsoCode}
+                    <!--<apex:outputField value="{!worder.IVA__c}"/></apex:outputText>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;background-color:#f4f4f4;">
+                <apex:outputText style="font-weight: bold;font-size: 8px;color: #707070" value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!b.totalTarea}" />&nbsp;&nbsp;</apex:outputText> {!WorkOrder.CurrencyIsoCode}
+            </td>
+        </tr>
+   
+       </table>
+        <br/>
+            </div>
+     </apex:repeat>
+    <!--<h3 style="line-height: 0.428571;color: #333333;font-weight: bold;font-size: 15px;font-family:Arial, Helvetica, sans-serif;{!IF(worder.Presupuesto_est_ndar_sin_PE__c = false,'display:text', 'display:none')}">
+        Materiales Bajo Pedido Especial:
+    </h3>-->
+
+    <!--Esteban Segura Benavides -->
+   <!-- <table style="color:#333333; font-family: Arial, Helvetica, sans-serif; width:100%;border-collapse: collapse;{!IF(worder.Presupuesto_est_ndar_sin_PE__c = false,'display:table', 'display:none')}">
+        <tr style="background-color: #E1E1E1; border: none;font-size: 10px;text-align:center;color: #8a8a8a;font-weight: bold;">-->
+            <!-- <th style="padding:7px 5px;">
+                Código: 
+            </th> -->
+           <!-- <th style="padding:7px 5px; {!IF(worder.BMW_CodigoDeProducto__c = true,'display:table-cell', 'display:none')}">
+                Codigo:
+            </th>
+            <th style="padding:7px 5px;">
+                Descripción:
+            </th>
+            <th style="padding:7px 5px;">
+                Unidades:
+            </th>
+            <th style="padding:7px 5px;">
+                Precio:
+            </th>
+            <th style="padding:7px 5px;">
+                % Dto.
+            </th>
+            <th style="padding:7px 5px;">
+                Monto:
+            </th>
+        </tr>
+
+        <apex:repeat value="{!itemsWO_MT}" var="item">
+            <tr style="color: #333333;font-size: 10px;background:#FAFAFA; {!IF(item.estadoSolicitudCompra != 'Recibido en bodega' && item.estadoSolicitudCompra != null && item.estadoReserva != 'Reservado', 'display: table-row;', 'display:none')} ">
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff; {!IF(worder.BMW_CodigoDeProducto__c = true,'display:table-cell;width:5%', 'display:none')}">
+                    {!item.codigoDeProductoCustom}
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;"  width="{!IF(worder.BMW_CodigoDeProducto__c = true,'35%', '40%')}">
+                    {!item.description}
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;" width="10%">                    
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.quantityConsumed}" />
+                    </apex:outputText>                    
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;" width="20%">
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.UnitPrice}" />
+                    </apex:outputText>
+                    &nbsp;&nbsp;{!item.currencyCode}
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;" width="10%">                    
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.discount}" />
+                    </apex:outputText>                           
+                </td>
+                <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;" width="20%">
+                    <apex:outputText value="{0, number, ###,###,##0.00}">
+                        <apex:param value="{!item.totalPrice}" />
+                    </apex:outputText>
+                    &nbsp;&nbsp;{!item.currencyCode}
+                </td>
+            </tr>
+        </apex:repeat>
+    </table>-->
+
+    <!--****************************************************************************-->
+    <br/>
+    
+    <!--****************************************************************************-->
+    <br/>
+    <br/>
+    <h3 style="background-color:#f4f4f4;color: #333333;font-weight: bold;font-size: 13px;font-family:Arial, Helvetica, sans-serif;padding:7px 5px 7px 8px;">
+    Total presupuesto
+    </h3>
+    <table style="color:#333333; font-family: Arial, Helvetica, sans-serif; width:100%;border-collapse: collapse;">
+        <tr style="background-color: #E1E1E1; border: none;font-size: 10px;text-align:center;color: #696969;font-weight: bold;">
+            <th style="padding:7px 5px;">
+                M. Obra:
+            </th>
+            <th style="padding:7px 5px;">
+                Materiales:
+            </th>
+            <th style="padding:7px 5px;">
+                Subcontr:
+            </th>
+            <th style="padding:7px 5px;">
+                Pintura:
+            </th>
+            <th style="padding:7px 5px;">
+                Varios:
+            </th>
+            <th style="padding:7px 5px;">
+                Tasas:
+            </th>
+            <th style="padding:7px 5px;">
+                B.I.:
+            </th>
+            <th style="padding:7px 5px;">
+                IV:
+            </th>
+            <th style="padding:7px 5px;">
+                Total:
+            </th>
+        </tr>
+        <tr style="color: #333333;font-size: 8px;background:#FAFAFA;">
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!manodeObra}" />&nbsp;&nbsp;</apex:outputText> {!WorkOrder.CurrencyIsoCode}
+                <!--<apex:outputField value="{!worder.montoManoDeObra__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!materiales}" />&nbsp;&nbsp;</apex:outputText>
+                <!--<apex:outputField value="{!worder.montoMateriales__c}"/>--> {!WorkOrder.CurrencyIsoCode}
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                <apex:outputText value="{0, number, ###,###,##0.00}">
+                <apex:param value="{!subcontrato}" />&nbsp;&nbsp;</apex:outputText> {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!worder.?}" />&nbsp;&nbsp;</apex:outputText> -->
+                <!--<apex:outputField value="{!worder.montoSubcontrato__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                0.00 {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!worder.montoPintura__c}" />&nbsp;&nbsp;</apex:outputText> -->
+                <!--<apex:outputField value="{!worder.montoPintura__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                0.00 {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!worder.montoVarios__c}" />&nbsp;&nbsp;</apex:outputText> -->
+                <!-- <apex:outputField value="{!worder.montoVarios__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                0.00 {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!worder.Tasas__c}" />&nbsp;&nbsp;</apex:outputText> -->
+                <!--<apex:outputField value="{!worder.Tasas__c}"/>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                0.00 {!WorkOrder.CurrencyIsoCode}
+                <!-- <apex:outputField value="{!worder.B_I__c}" /> -->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                <apex:outputText value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!IV}" />&nbsp;&nbsp;</apex:outputText> {!WorkOrder.CurrencyIsoCode}
+                    <!--<apex:outputField value="{!worder.IVA__c}"/></apex:outputText>-->
+            </td>
+            <td style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;border-top:1px solid #ffffff;">
+                <apex:outputText style="font-weight: bold;font-size: 12px;color: #707070" value="{0, number, ###,###,##0.00}">
+                    <apex:param value="{!total}" />&nbsp;&nbsp;</apex:outputText> {!WorkOrder.CurrencyIsoCode}
+            </td>
+        </tr>
+        <tr aria-selected="false" class="slds-hint-parent">
+            <td role="gridcell" style="text-align:right;" colspan="9">
+                <br/>
+                <!--<span style="line-height: 0.428571;color: #333333;font-weight: bold;font-size: 14px;font-family:Arial, Helvetica, sans-serif;">Total presupuesto:</span>-->
+                <b>
+                    <span style="color: #333333;font-weight: bold;font-size: 14px;font-family:Arial, Helvetica, sans-serif;">
+                        <apex:outputText value="{!TotalTexto}" /> </span>
+                    <span style="color: #333333;font-weight: bold;font-size: 14px;font-family:Arial, Helvetica, sans-serif;">
+                        <span style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;">{!Centavos}</span>/100 {!worder.CurrencyISOCode}
+                        <br/>
+                        <br/> </span>
+                </b>
+            </td>
+        </tr>
+        <table style="color:#333333; font-family: Arial, Helvetica, sans-serif; width:100%;border-collapse: collapse;">
+            <tr style="background-color: #E1E1E1; border: none;font-size: 10px;text-align:center;color: #8a8a8a;font-weight: bold;">
+                <td style="padding:7px 5px 7px 8px;">
+                    <b style="font-weight:bold">Observaciones</b>
+                </td>
+
+            </tr>
+            <tr style="color: #333333;font-size: 10px;background:#FAFAFA;">
+                <td colspan="3" style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;">
+                    <apex:outputField value="{!worder.Observaciones__c}" />
+                </td>
+            </tr>
+        </table>
+        <tr>
+            <td>
+                <br/>
+            </td>
+        </tr>
+        <table width="100%" style="border-collapse: collapse;font-size: 12px; font-family:sans-serif;border:1px solid #000;">       
+         <tr>
+            <td style="width: 4px; height: 12px; 
+                background-color:#FF0000;
+                padding: 0;
+                margin: 0;
+                vertical-align: middle;">
+            </td>
+            <td style="width: 4px; height: 12px; 
+                background-color:#ffffff;
+                padding: 0;
+                margin: 0;
+                vertical-align: middle;">
+            </td> 
+            <td role="gridcell" style="font-size: 10px;" colspan="9">
+            <span style="color: #696969;font-size: 10px;font-family:sans-serif;font-weight: bold;">Necesario:</span> <span style="color: #707070;font-size: 10px;font-family:sans-serif">Se refiere a una reparación o servicio que debe realizarse para garantizar el funcionamiento seguro del vehículo o sistema.
+            Ignorarla puede causar daños mayores o poner en riesgo la seguridad.</span>
+            </td>
+            
+        </tr>
+            <tr>
+            <td>
+                <br/>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 4px; height: 12px; 
+                background-color:#FFFF00;
+                padding: 0;
+                margin: 0;
+                vertical-align: middle;">
+            </td>
+            <td style="width: 4px; height: 12px; 
+                background-color:#ffffff;
+                padding: 0;
+                margin: 0;
+                vertical-align: middle;">
+            </td>
+            <td role="gridcell" style="font-size: 10px;" colspan="9">
+            <span style="color: #696969;font-size: 10px;font-family:sans-serif;font-weight: bold;">Sugerido:</span><span style="color: #707070;font-size: 10px;font-family:sans-serif">Es una acción que se debería realizar pronto para prevenir fallos futuros o mejorar el rendimiento, 
+            aunque el vehículo aún pueda seguir funcionando. No es urgente, pero sí importante.</span>
+            </td>
+            
+        </tr>
+            <tr>
+            <td>
+                <br/>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 4px; height: 12px; 
+                background-color:#008000;
+                padding: 0;
+                margin: 0;
+                vertical-align: middle;">
+            </td>
+            <td style="width: 4px; height: 12px; 
+                background-color:#ffffff;
+                padding: 0;
+                margin: 0;
+                vertical-align: middle;">
+            </td>
+            <td role="gridcell" style="font-size: 10px;" colspan="9">
+            <span style="color: #696969;font-size: 10px;font-family:sans-serif;font-weight: bold;">Recomendado:</span><span style="color: #707070;font-size: 10px;font-family:sans-serif">Es una acción opcional, basada en buenas prácticas o mantenimientos preventivos. 
+            Su objetivo es prolongar la vida útil del vehículo, mejorar la experiencia del cliente o mantener el vehículo en condiciones óptimas.</span>
+            </td>
+            
+        </tr>
+        </table>  
+    <br/>
+        <table width="100%" style="border-collapse: collapse;font-size: 12px; font-family:sans-serif;border:1px solid #000;">
+            <tr style="background-color: #E1E1E1; border: none;font-size: 10px;text-align:center;color: #8a8a8a;font-weight: bold;">
+                <td colspan="6" style="padding:7px 5px 7px 8px;">
+                    <b style="font-weight:bold; color: #696969">Realice su pago aquí:</b>
+                </td>
+
+            </tr>
+            <tr aria-selected="false" class="slds-hint-parent" style="font-size: 10px;text-align:center;">
+                <td role="gridcell" style="font-size: 10px;text-align:center;" colspan="2">
+                    <br/>
+                    <img style="text-align:center;" src="{!$Resource.bavarianMotorsColones}" width="100px" />
+                    <br/>
+                    <br/>
+                    <span style="font-weight:bold">Colones </span>
+                </td>
+                <td role="gridcell" style="font-size: 10px;text-align:center;" colspan="2">
+                    <br/>
+                    <img style="text-align:center;" src="{!$Resource.bavarianMotorsDolares}" width="100px" />
+                    <br/>
+                    <br/>
+                    <span style="font-weight:bold">Dólares </span>
+                </td>
+            </tr>
+            <br/>
+        </table>
+
+        <table width="100%" style="border-collapse: collapse;font-size: 12px; font-family:sans-serif;border:1px solid #000;">
+            <tr aria-selected="false" class="slds-hint-parent">
+                <td role="gridcell" style="font-size: 10px;" colspan="9"> 
+                    <br/> 1 – Proforma o cotización valida por 30 días una vez de emitida la misma, 
+                    después de ese periodo Bavarian Motors S. A se reserva el derecho de realizar cambios en los precios sin previo aviso. 
+                    <br/> 2 – Este documento NO REPRESENTA, una reserva de las partes, ni la confirmación 
+                    de la disponibilidad inmediata de las partes en stock. 
+                    <br/> 3 – Los precios pueden ser modificados cuando los mismos se requieran por medio de un pedido especial
+                    por falta de existencia.
+                    <br/> 4 – Los datos del documento están basados en información suministrada por el cliente, sea este número de VIN o Placa
+                    del Vehículo, para lo referente a los repuestos que serán importados a solicitud del mismo. 
+                    No nos hacemos responsables en casos donde la pieza no corresponda.
+                    <br/> 5 – Para proceder con la importación de un pedido especial, el cliente debe anticipar el 50% del valor del mismo, 
+                    este monto no será reembolsable o aplicable a otros artículos y/o servicios en caso de que el cliente decida no aceptar 
+                    el pedido especial. 
+                    <br/> 6 – Bavarian Motors S.A. se compromete en importar los repuestos que cumplen con las características requeridas por el cliente,
+                    y almacenarlo por un periodo de 3 meses, después de ese plazo Bavarian Motos S.A. podrá disponer del repuesto de la manera 
+                    que considere conveniente. 
+                    <br/> 7 – Autorizo hacer el pedido especial, bajo las condiciones mencionadas. 
+                    <br/> “AUTORIZADO MEDIANTE RESOLUCIÓN NO.11-97 DEL 12-08-97 DE LA D.G.T.D".
+                    <br/>
+                    <br/>
+                    <br/>
+                </td>
+                </tr>
+                <tr aria-selected="false" class="slds-hint-parent">
+                <td role="gridcell" style="font-size: 10px;" colspan="9">
+                    <span style="font-weight:bold">Política de garantía:</span><br/>
+                    <br/> 1 – Los accesorios y repuestos están cubiertos por una garantía de dos (2) años, contados a partir de la 
+                    fecha de entrega del producto al cliente. Excepto, piezas de desgaste, lubricantes o productos químicos.
+                    <br/> 2 – La garantía cubre la reparación o el cambio de la pieza o accesorio (caso no se pueda reparar) 
+                    por defectos de fabricación.
+                    <br/> 3 – Los productos deben de usarse o instalarse según las instrucciones o manual de reparaciones, un uso 
+                    inadecuado o instalación incorrecta invalida la garantía.
+                    <br/> 4 – Para otorgar la garantía, los defectos deben ser constatados o analizados a través de diagnóstico y análisis técnico de nuestro departamento de garantía.
+                     5 – La reclamación de garantía de accesorios y repuestos se debe realizar exclusivamente en la sucursal 
+                    donde ha adquiero el producto.
+                    <br/> 6 – El diagnóstico y análisis técnico se debe realizar con herramienta especializada cuando todavía el 
+                    accesorio/repuesto está instalado en el vehículo/motocicleta. Si el cliente, o quien autorice, desinstalar el 
+                    accesorio/repuesto previamente no será posible determinar con certeza la causa del defecto y por lo tanto se 
+                    considerará inviable otorgar la garantía.
+                    <br/> 7 – Se debe de tomar en cuenta seguir las recomendaciones del fabricante en relación a la instalación, 
+                    uso y conservación del accesorio/repuesto, además del mantenimiento del vehículo/motocicleta relacionado con el 
+                    accesorio/repuesto.
+                    <br/> 8 – El accesorio/repuesto instalado debe corresponder al modelo de vehículo/motocicleta para el cual fue diseñado.
+                    <br/> 9 – El periodo de garantía esté vigente.
+                    <br/>
+                    <br/>
+                    <br/>
+                </td>
+            </tr>
+            <tr aria-selected="false" class="slds-hint-parent">
+                <td role="gridcell" style="font-size: 10px;text-align:center;" colspan="2">
+                    <apex:outputField value="{!worder.Contact.Name}" />
+                    <br/> ______________________________________
+                    <br/>
+                    <br/>
+                    <span style="font-weight:bold">Nombre de quien recibe </span>
+                </td>
+                <td role="gridcell" style="font-size: 10px;text-align:center;" colspan="2">
+                    _________________________________
+                    <br/>
+                    <br/>
+                    <span style="font-weight:bold">Firma </span>
+                </td>
+            </tr>
+            <br/>
+        </table>
+    </table>
+    <footer style="color: #333333;font-family: Arial, Helvetica, sans-serif;display:block;text-align:center;padding:20px;font-size:7px;">
+        <p>- - - - - - - - - - - - - - - -&nbsp;&nbsp;&nbsp; Última página &nbsp;&nbsp;&nbsp;- - - - - - - - - - - - - - - -</p>
+    </footer>
+
+    <div class="footer">
+        <div class="pagenumber"></div>
+    </div>
+</apex:page>

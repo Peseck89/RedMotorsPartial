@@ -1,0 +1,29 @@
+<aura:component controller="OppActivityUploader" 
+                implements="force:appHostable" access="global">
+    <aura:attribute name="Err" type="String" />
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container" style="z-index:99999;position: fixed !important;">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <div class="slds-card slds-p-around_large">
+        &nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>
+        <div class="slds-align_absolute-center">
+            <lightning:button aura:id="leadBtn" variant="brand" Class="slds-button slds-button_neutral" label="Upload Leads Data" onclick="{!c.goLeaddata}"/> 
+        </div>
+        &nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>
+        <div class="slds-align_absolute-center">
+            <lightning:button aura:id="oppBtn" variant="brand" Class="slds-button slds-button_neutral" label="Upload Opportunities Data" onclick="{!c.goOppdata}"/> 
+        </div>
+        <br/>&nbsp;<br/>&nbsp;<br/>&nbsp;
+        <div class ="slds-align_absolute-center">
+            <lightning:button aura:id="oppBtn" variant="brand" Class="slds-button slds-button_neutral" label="Upload Opportunities Data After September-2019" onclick="{!c.setoppdata}"/> 
+        </div>
+        <br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;
+    </div>
+</aura:component>

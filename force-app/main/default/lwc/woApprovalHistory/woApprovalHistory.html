@@ -1,0 +1,39 @@
+<template>
+  <lightning-card title="Approval History">
+    <template if:true={loading}>
+      <lightning-spinner alternative-text="Cargando"></lightning-spinner>
+    </template>
+
+    <div class="slds-p-around_small">
+      <lightning-datatable
+        key-field="Id"
+        data={instances}
+        columns={columnsInstances}
+        max-row-selection="1"
+        onrowselection={handleSelectInstance}>
+      </lightning-datatable>
+    </div>
+
+    <template if:true={selectedPiId}>
+      <div class="slds-m-top_medium slds-p-around_small">
+        <lightning-datatable
+          key-field="Id"
+          data={filteredSteps}
+          columns={columnsSteps}>
+        </lightning-datatable>
+      </div>
+    </template>
+
+    <div class="slds-m-top_medium slds-p-around_small">
+      <lightning-card title="Pending Approvals">
+        <div class="slds-p-around_small">
+          <lightning-datatable
+            key-field="Id"
+            data={workitems}
+            columns={columnsWorkitems}>
+          </lightning-datatable>
+        </div>
+      </lightning-card>
+    </div>
+  </lightning-card>
+</template>

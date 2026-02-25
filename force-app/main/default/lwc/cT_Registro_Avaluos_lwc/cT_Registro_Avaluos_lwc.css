@@ -1,0 +1,81 @@
+.cust-body {
+  background: rgb(225,229,252);
+  background: -moz-linear-gradient(180deg, rgba(225,229,252,1) 20%, rgba(247,247,247,1) 70%);
+  background: -webkit-linear-gradient(180deg, rgba(225,229,252,1) 20%, rgba(247,247,247,1) 70%);
+  background: linear-gradient(180deg, rgba(225,229,252,1) 20%, rgba(247,247,247,1) 70%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e1e5fc",endColorstr="#f7f7f7",GradientType=1); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-header {
+  width: 35%;
+  padding: 40px 0px 0px 0px;
+}
+
+.form-body {
+  display: flex  ;
+  flex-direction: column;
+  width: 35%;
+  padding: 40px 0px;
+}
+
+.vehicle-info-body {
+  background: #FFF;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.cust-label {
+  font-size: 15px;
+}
+
+.slds-card {
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.slds-form-element__static {
+  font-weight: 500;
+  padding-top: 0.25rem;
+}
+
+.slds-card__header-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #032d60;
+}
+
+.slds-button_brand {
+  background-color: #0070d2;
+  border-color: #0070d2;
+}
+
+.slds-button_brand:hover {
+  background-color: #005fb2;
+  border-color: #005fb2;
+}
+
+.slds-button_stretch {
+  width: 100%;
+}
+
+.form-cust {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.slds-has-error .slds-input, 
+.slds-has-error .slds-select {
+    border-color: #ea001e;
+    box-shadow: 0 0 0 1px #ea001e;
+}
+
+.slds-form-element__help {
+    color: #ea001e;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}

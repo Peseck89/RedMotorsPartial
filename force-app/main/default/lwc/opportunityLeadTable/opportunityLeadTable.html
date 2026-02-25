@@ -1,0 +1,11 @@
+<template>
+    <lightning-card title="Opportunities and Leads Created Today">
+        <div class="slds-m-around_medium">
+            <lightning-button-icon icon-name="utility:chevronleft" onclick={handlePreviousPage} class="slds-m-right_x-small" alternative-text="Previous" disabled={isFirstPage}></lightning-button-icon>
+            <lightning-button-icon icon-name="utility:chevronright" onclick={handleNextPage} alternative-text="Next" disabled={isLastPage}></lightning-button-icon>
+            <p class="slds-text-align_center">Page {page} of {totalPages}</p>
+            <lightning-datatable key-field="Id" data={records} columns={columns}></lightning-datatable>
+            <lightning-button label="Export to Excel" onclick={exportToExcel} class="slds-m-top_medium"></lightning-button>
+        </div>
+    </lightning-card>
+</template>

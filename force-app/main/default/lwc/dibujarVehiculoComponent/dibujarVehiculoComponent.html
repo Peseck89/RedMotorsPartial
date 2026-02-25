@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title="">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <div class="vehicle-drawing-container" style="height:300px">
+            <canvas class="vehicle-drawing-pad" lwc:dom="manual"></canvas>
+        </div>
+        <div class="button-group slds-m-top_medium slds-align_absolute-center">
+            <lightning-button label="Deshacer" onclick={handleUndo} disabled={isClearButtonDisabled}></lightning-button>
+            <lightning-button label="Borrar Dibujo" onclick={handleClearDrawing} disabled={isClearButtonDisabled}></lightning-button>
+            <lightning-button label="Guardar Imagen" variant="brand" onclick={handleSaveDrawing} disabled={isSaveButtonDisabled}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

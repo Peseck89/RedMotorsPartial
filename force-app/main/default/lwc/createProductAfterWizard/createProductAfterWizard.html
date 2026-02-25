@@ -1,0 +1,94 @@
+<template>
+    <lightning-record-edit-form
+        record-type-id={recordTypeId}
+        object-api-name="Product2"
+    >
+        <div class="slds-grid slds-wrap slds-p-around_small">
+            <!-- First Column -->
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input-field data-id="Marca__c" field-name="Marca__c" value={brand} disabled></lightning-input-field>
+                <lightning-input-field data-id="Categor_a_veh_culo__c" field-name="Categor_a_veh_culo__c" value={category} disabled></lightning-input-field>
+                <lightning-input-field data-id="Grupo__c" field-name="Grupo__c" value={group} disabled></lightning-input-field>
+                <lightning-input-field data-id="Familia__c" field-name="Familia__c" value={family} disabled></lightning-input-field>
+                <lightning-input-field data-id="Modelo_De_Inter_s__c" field-name="Modelo_De_Inter_s__c" value="Se creará el valor con el nombre del producto" disabled></lightning-input-field>
+                <lightning-input-field data-id="Name" field-name="Name" onchange={handleFieldChange} disabled={recordId}></lightning-input-field>
+                <lightning-input-field data-id="Codigo_Info__c" field-name="Codigo_Info__c" onchange={handleFieldChange} disabled={recordId}></lightning-input-field>
+                <lightning-input-field data-id="Codigo_de_Producto__c" field-name="Codigo_de_Producto__c" onchange={handleFieldChange} disabled={recordId}></lightning-input-field>
+            </div>
+
+            <!-- Second Column -->
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input-field  data-id="Description"  field-name="Description" onchange={handleFieldChange} disabled={recordId}></lightning-input-field>
+                <lightning-input-field  data-id="walking_product__c"  field-name="walking_product__c" onchange={handleFieldChange} disabled={recordId}></lightning-input-field>
+                <lightning-input-field  data-id="Orden_Walking__c"  field-name="Orden_Walking__c" onchange={handleFieldChange} disabled={recordId}></lightning-input-field>
+                <lightning-input-field  data-id="Se_Muestra_en_Sitio__c" field-name="Se_Muestra_en_Sitio__c" onchange={handleFieldChange} disabled={recordId} ></lightning-input-field>
+                <lightning-input-field  data-id="Nombre_Digital__c" field-name="Nombre_Digital__c" onchange={handleFieldChange} disabled={recordId} ></lightning-input-field>
+                <lightning-input-field  data-id="Orden_Sitio_Web__c" field-name="Orden_Sitio_Web__c" onchange={handleFieldChange} disabled={recordId} ></lightning-input-field>
+                <lightning-input-field  data-id="IsActive" field-name="IsActive" disabled={recordId} onchange={handleFieldChange} ></lightning-input-field>
+                <lightning-input-field  field-name="BossPercentage__c" ></lightning-input-field>
+                <lightning-input-field  field-name="Porcentaje_vendedor__c" ></lightning-input-field>
+                <lightning-input-field  field-name="Porcentaje_jefe__c" ></lightning-input-field>
+                <template if:true={recordId}>
+                    <div class="message-container">
+                        <div class="success-text">El producto se ha creado correctamente.</div>
+                        <div class="warning-text">Por favor, añade la ficha técnica para completar el proceso de creación del producto!</div>
+                    </div>
+                </template>
+                <lightning-file-upload
+                class="slds-align_absolute-center"
+                label="Adjuntar Ficha técnica"
+                name="fileUploader"
+                accept={acceptedFormats}
+                record-id={recordId}
+                onuploadfinished={handleUploadFinished}
+                multiple
+                disabled ={isCreatingProduct}
+                >
+            </lightning-file-upload>
+            </div>
+        </div>
+
+        <!-- Additional Fields 
+        <div class="slds-grid slds-wrap slds-p-around_small">
+            <div class="slds-col slds-size_1-of-2">
+               sss <lightning-input-field field-name="ShowWalking__c"></lightning-input-field>
+             ss   <lightning-input-field field-name="WalkingOrder__c" ></lightning-input-field>
+              s  <lightning-input-field field-name="Category__c" ></lightning-input-field>
+                <lightning-input-field field-name="IsActive" ></lightning-input-field>
+            </div>
+        </div>-->
+    </lightning-record-edit-form>
+    <lightning-record-edit-form
+        object-api-name="PricebookEntry"
+    >
+        <div class="slds-grid slds-wrap slds-p-around_small">
+            <!-- First Column -->
+            <div class="slds-col slds-size_1-of-2">
+                <template lwc:if={createPricebook}>
+                    <div class="message-container" style="margin-bottom: 20px">
+                        <div class="success-text">Se creará la lista de precio automáticamente: {pb2Name}</div>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <lightning-input-field data-id="Pricebook2Id" value={priceBookId} field-name="Pricebook2Id" onchange={handleEntryFieldChange} disabled={recordId}></lightning-input-field>
+                </template>
+                <lightning-input-field data-id="UnitPrice" field-name="UnitPrice" onchange={handleEntryFieldChange} disabled={recordId}></lightning-input-field>
+                <lightning-input-field data-id="Costo_Fijo__c" field-name="Costo_Fijo__c" onchange={handleEntryFieldChange} disabled={recordId}></lightning-input-field>
+                
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input-field data-id="Gerente__c" field-name="Gerente__c" onchange={handleEntryFieldChange} disabled={recordId}></lightning-input-field>
+                <lightning-input-field data-id="Jefe__c" field-name="Jefe__c" onchange={handleEntryFieldChange} disabled={recordId}></lightning-input-field>
+                <lightning-input-field data-id="Vendedor__c" field-name="Vendedor__c" onchange={handleEntryFieldChange} disabled={recordId}></lightning-input-field>
+            </div>
+        </div>
+    </lightning-record-edit-form>
+            <!-- Submit Button -->
+            <div class="slds-p-around_small">
+                <lightning-button class="slds-align_absolute-center" variant="brand" label={buttonText} onclick={handleCreateProduct} disabled={disableButton}></lightning-button>
+            </div>
+     <!-- Spinner and backdrop -->
+     <template lwc:if={isLoading}>
+        <lightning-spinner size="large" alternative-text="Loading..."></lightning-spinner>
+    </template>
+</template>

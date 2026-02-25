@@ -1,0 +1,129 @@
+[data-isclosed='true'] {
+  box-shadow:inset 0px 0px 8px 1px #141413;
+}
+
+[data-status='true'] {
+  font-weight: 900;
+}
+.greenClass {
+    box-shadow:inset 5px 0px 0px 0px #10ad13;
+}
+.redClass {
+    box-shadow:inset 5px 0px 0px 0px #fb0000;
+}
+.warningClass {
+  box-shadow:inset 5px 0px 0px 0px #f5d357;
+}
+table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+  
+  table tr {
+    
+    border: 1px solid #ddd;
+    padding: .35em;
+  }
+  
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+  
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  tr:nth-child(even) {background-color: #f3f2f2;}
+  tr[data-isclosed='false']:hover  {
+    background-color:#0070d2b2;
+    color: white;
+  }
+  tr[data-isclosed='true']:hover  {
+    background-color: #c1c1c1;
+    box-shadow: inset 1px 1px 8px 0px #ffffff;
+    color: black;
+  }
+  @media screen and (max-width: 1143px) {
+    
+    table thead {
+      font-size: 8.85px;
+      text-transform: capitalize;
+    }
+
+    table {
+      font-size: 8.85px;
+    }
+    
+    
+   
+  }
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+  
+    table caption {
+      font-size: 1.3em;
+    }
+    
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    
+    table tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: .625em;
+    }
+    
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+    }
+    
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    table td:last-child {
+      border-bottom: 0;
+    }
+   
+  }
+  .modal__custom{
+    max-width: 71% !important;
+    text-align: -webkit-center;
+    padding: 12% 0;
+    margin: auto;
+}
+.d-none{
+  display: none;
+}

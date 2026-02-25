@@ -1,0 +1,27 @@
+<aura:component
+  implements="force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+  access="global" controller="CommunityCalendarController">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> 
+  <aura:attribute name="marca" type="String" default="motorrad"/> 
+  <body class="THIS">
+    <header class="main-header">
+      <!-- <img src="{!$Resource.bmwMotorradLogo}" class="header-logo" onclick="{!c.navigateToLogin}"/>
+      <img src="{!$Resource.kawaLogo}" class="header-logo" onclick="{!c.navigateToLogin}"/>
+      <img src="{!$Resource.indianLogo}" class="header-logo" onclick="{!c.navigateToLogin}"/>
+      <img src="{!$Resource.polarisLogo}" class="header-logo" onclick="{!c.navigateToLogin}"/> -->
+
+      <aura:if isTrue="{!v.marca == 'motorrad'}">
+        <img src="{!$Resource.bmwMotorradLogo}" class="header-logo"/>
+      </aura:if>
+      <aura:if isTrue="{!v.marca == 'kawasaki'}">
+        <img src="{!$Resource.kawaLogo}" class="header-logo"/> 
+      </aura:if>
+      <aura:if isTrue="{!v.marca == 'indian'}">
+        <img src="{!$Resource.indianLogo}" class="header-logo"/>
+      </aura:if>
+      <aura:if isTrue="{!v.marca == 'polaris'}">
+        <img src="{!$Resource.polarisLogo}" class="header-logo"/>
+      </aura:if>
+    </header>
+  </body>
+</aura:component>

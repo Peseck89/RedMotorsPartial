@@ -1,0 +1,46 @@
+<template>
+    <section role="dialog" tabindex="-1" aria-modal="true" aria-label="Meaningful description of the modal content" class="slds-modal slds-fade-in-open slds-align_absolute-center">
+      <div class="slds-modal__container" style="width:100%;">
+        <div class="slds-modal__content slds-p-around_medium slds-align_absolute-center" id="modal-content-id-1" style="border-top-right-radius: 0.25rem; border-top-left-radius: 0.25rem;">
+          <lightning-record-edit-form object-api-name={objectApiName} record-id={recordId} onsuccess={handleSubmit} data-id="Save">
+            <lightning-messages></lightning-messages>
+            <div class="slds-text-align_center">
+              <h1 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Información Necesaria Para Continuar</h1>
+              <lightning-output-field field-name="Name"></lightning-output-field>
+            </div>
+            <div class="slds-grid ">
+              <div class="slds-col slds-text-align_center">
+                <h4 if:true={softlandRequested} style="font-weight: bold;color: #0070d2;">Salesforce</h4>
+                
+                <lightning-input-field data-type="softlandField" data-name="Softland_Tipo_Documento__c" field-name="Tipo_de_Documento__c" onchange={handleInputChangeTipo} required></lightning-input-field>
+                <lightning-input-field data-type="softlandField" data-name="Softland_Numero_Identificacion__c" field-name="Cedula__c" onchange={handleInputChange} required></lightning-input-field>
+                <div class="slds-text-color_error">{errorText}</div>
+                <lightning-input-field data-type="softlandField" data-name="Softland_Email__c"  if:true={isPhysical} field-name="PersonEmail" required></lightning-input-field>
+                <lightning-input-field data-type="softlandField" data-name="Softland_Email__c"  if:false={isPhysical} field-name="CorreoElectronicoEmpresarial__c" required></lightning-input-field>
+                <lightning-input-field data-type="softlandField" data-name="Softland_Phone__c"    field-name="Phone" required></lightning-input-field>
+                <lightning-input-field data-type="softlandField" data-name="Softland_FE_Email__c" field-name="Invoice_Email__c" required></lightning-input-field>
+                <lightning-input-field data-type="softlandField" data-name="Softland_Phone2__c"    field-name="Invoice_Phone__c" required></lightning-input-field>
+              </div>
+              <div if:true={accountWrapper} class="slds-col slds-text-align_center">
+                <h4 style="font-weight: bold;color: #d25f00;">Softland</h4>
+                <lightning-input-field   field-name="Tipo_de_Documento__c"  value={softlandTipoId} disabled readonly></lightning-input-field>
+                <lightning-input-field   field-name="Numero_Cedula_Representante_Legal__c"  value={softlandNumeroId} required readonly></lightning-input-field>
+                
+
+                <lightning-input-field   field-name="Softland_Email__c"  value={accountWrapper.email} required readonly></lightning-input-field>
+                <lightning-input-field  field-name="Softland_Phone__c" value={accountWrapper.telefono1} required readonly></lightning-input-field>
+                <lightning-input-field  field-name="Softland_FE_Email__c" value={accountWrapper.email_doc_electronico} required readonly></lightning-input-field>
+                <lightning-input-field  field-name="Softland_Phone__c" value={accountWrapper.telefono2} required readonly></lightning-input-field>
+              </div>
+            </div>
+            <div class="slds-text-align_center">
+              <lightning-button data-id="Cancel" variant="destructive" class="slds-var-p-around_x-small" label="Cancel" onclick={handleSubmit}></lightning-button>
+              <lightning-button data-id="Save" class="slds-m-top_small" variant="brand" type="submit" name="update" label="Guardar"></lightning-button>
+            </div>
+          </lightning-record-edit-form>
+        </div>
+      </div>
+    </section>
+       
+    <div class="slds-backdrop slds-backdrop_open" role="presentation" style="height: 500px;top: 21.7%;opacity: 0.8;"></div>
+  </template>

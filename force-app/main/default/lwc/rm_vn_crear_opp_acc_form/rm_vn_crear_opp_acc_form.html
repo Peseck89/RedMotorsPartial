@@ -1,0 +1,106 @@
+<!--
+  @description       : 
+  @author            : marcohernandezhp@gmail.com
+  @group             : Redmotors
+  @last modified on  : 06-22-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+        <lightning-record-edit-form object-api-name='Account' record-id={accountId} layout-type="Full"
+            onsubmit={handleSubmitEvent} onsuccess={handleSuccessEvent} onload={handleLoadEvent}
+            onerror={handleErrorEvent} record-type-id={selectedRrecordTypeId} >
+            <lightning-modal-header label="Nueva Cuenta"></lightning-modal-header>
+            <lightning-modal-body>
+                <lightning-messages></lightning-messages>
+
+                <div class="slds-form" role="list">
+                    <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_stacked">
+                                <div class="slds-form-element__control">
+                                    <lightning-combobox
+                                        name="rts"
+                                        label="Seleccione el tipo de registro"
+                                        value={selectedRrecordTypeId}
+                                        placeholder=""
+                                        options={recordTypeOptions}
+                                        onchange={handleRecordTypeSelection} required="true" ></lightning-combobox>
+                                </div>
+                            </div>
+
+                            <div class="slds-form-element slds-form-element_stacked">
+                                <div class="slds-form-element__control">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+
+                    <div class="slds-form__row">
+                        <template if:true={isLoading}>
+                            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                        </template>
+
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_stacked">
+                                <div class="slds-form-element__control">
+                                    <lightning-input-field field-name="Name" required="true"></lightning-input-field>
+                                </div>
+                            </div>
+
+                            <div class="slds-form-element slds-form-element_stacked">
+                                <div class="slds-form-element__control">
+                                   
+                                    <lightning-input-field field-name="Cedula__c"
+                                    required="true"></lightning-input-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+      
+                    <div class="slds-form__row"  if:false={isBURTSelected}>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_stacked">
+                                <div class="slds-form-element__control"> 
+                                    <lightning-input-field field-name="PersonEmail"
+                                        required="true"></lightning-input-field>
+                                </div>
+                            </div>
+
+                            <div class="slds-form-element slds-form-element_stacked">
+                                <div class="slds-form-element__control">
+                                    <lightning-input-field field-name="Phone" required="true"></lightning-input-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-form__row" if:true={isBURTSelected}>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_stacked">
+                                <div class="slds-form-element__control">
+                                    <lightning-input-field field-name="Invoice_Email__c"></lightning-input-field>
+                                </div>
+                            </div>
+
+                            <div class="slds-form-element slds-form-element_stacked">
+                                <div class="slds-form-element__control">
+                                    <lightning-input-field field-name="Invoice_Phone__c"></lightning-input-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+           
+            </lightning-modal-body>
+            <lightning-modal-footer>
+                <lightning-button label="Cancelar" onclick={handleCancelClick}
+                    disabled={disableClose}></lightning-button>
+                <lightning-button label="Aceptar" type="submit" variant="brand" class="slds-m-left_small"
+                    disabled={disableClose}></lightning-button>
+            </lightning-modal-footer>
+
+        </lightning-record-edit-form>
+
+</template>

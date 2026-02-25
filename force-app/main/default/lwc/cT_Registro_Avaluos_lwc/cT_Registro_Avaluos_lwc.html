@@ -1,0 +1,474 @@
+<template>
+  <!-- Search View -->
+  <div if:true={isSearchView} class="cust-body slds-card">
+    <div class="custom-header slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__body">
+          <h2 class="slds-card__header-title" style="font-size: 30px;">
+            <span>Consulta de Vehículo</span>
+          </h2>
+          <p class="slds-text-body_small">Ingrese el número de placa para consultar los datos del vehículo</p>
+        </div>
+      </header>
+    </div>
+    <div class="form-body">
+      <label class="slds-form-element__label" for="licensePlate">Número de Placa</label>
+      <div class="slds-grid slds-gutters" style="align-items: flex-end">
+        <div class="slds-col slds-size_3-of-4 form-cust">
+          <lightning-combobox name="tipoVehiculo" value={vehiValue} placeholder="Tipo de vehículo" options={options}
+            onchange={handleVhiChange} style="margin-bottom: -2px; width: 35%;"></lightning-combobox>
+          <input type="text" id="licensePlate" class="slds-input" placeholder="Ej. ABC123"
+            onchange={handleLicensePlateChange} />
+        </div>
+        <div class="butons-container">
+          <button class="slds-button slds-button_brand slds-button_stretch" onclick={handleSearch} disabled={isLoading}>
+            {searchButtonLabel}
+            <lightning-icon if:false={isLoading} icon-name="standard:search" size="x-small"
+              class="slds-m-left_x-small"></lightning-icon>
+          </button>
+        </div>
+      </div>
+      <!-- <div if:true={error} class="slds-text-color_error slds-p-top_x-small">{error}</div> -->
+    </div>
+  </div>
+
+  <!-- Vehicle Details View -->
+  <div if:true={isDetailsView} class="cust-body slds-card">
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__body">
+          <h2 class="slds-card__header-title" style="font-size: 30px;">
+            <span>Datos del Vehículo</span>
+          </h2>
+          <p class="slds-text-body_small">Información detallada del vehículo consultado</p>
+        </div>
+      </header>
+    </div>
+    <div class="vehicle-info-body slds-card__body slds-card__body_inner">
+      <div class="slds-grid slds-wrap slds-gutters">
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Placa</label>
+            <div class="slds-form-element__static">{vehicleData.placa}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Número VIN</label>
+            <div class="slds-form-element__static">{vehicleData.numeroVin}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Marca</label>
+            <div class="slds-form-element__static">{vehicleData.marca}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Modelo</label>
+            <div class="slds-form-element__static">{vehicleData.modelo}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Año</label>
+            <div class="slds-form-element__static">{vehicleData.anio}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Tracción</label>
+            <div class="slds-form-element__static">{vehicleData.traccion}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Carrocería</label>
+            <div class="slds-form-element__static">{vehicleData.carroceria}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Número de Chasis</label>
+            <div class="slds-form-element__static">{vehicleData.numeroChasis}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Categoría</label>
+            <div class="slds-form-element__static">{vehicleData.categoria}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Estilo</label>
+            <div class="slds-form-element__static">{vehicleData.estilo}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Capacidad Personas</label>
+            <div class="slds-form-element__static">{vehicleData.capacidadPersonas}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Color</label>
+            <div class="slds-form-element__static">{vehicleData.color}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Combustible</label>
+            <div class="slds-form-element__static">{vehicleData.combustible}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Cantidad Embargos</label>
+            <div class="slds-form-element__static">{vehicleData.cantidadEmbargos}</div>
+          </div>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Propietario</label>
+            <div class="slds-form-element__static">{vehicleData.propietario}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+        <template if:true={promedio}>
+        <div class="slds-form-element">
+          <label class="slds-form-element__label cust-label" for="systemSugestedValue">Valor Sugerido Sistema</label>
+          <div class="slds-form-element__control">
+            <span class="slds-text-heading_medium">USD {formatSuggestedBossValue}</span>
+          </div>
+        </div>
+        </template> 
+        <template if:false={promedio}>
+          <p>No hay datos históricos</p>
+        </template>
+      </div> -->
+    </div>
+
+    <div class="slds-card__footer" style="width: 100%;">
+      <div class="slds-grid slds-grid_align-end">
+        <button class="slds-button slds-button_brand" onclick={handleBack}>
+          <lightning-icon icon-name="utility:chevronleft" size="x-small" class="slds-m-left_x-small"></lightning-icon>
+          Regresar
+        </button>
+        <button class="slds-button slds-button_brand" onclick={handleRegisterAppraisal}>
+          Registrar Avalúo
+          <lightning-icon icon-name="utility:chevronright" size="x-small" class="slds-m-left_x-small"></lightning-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appraisal View -->
+  <div if:true={isAppraisalView} class="cust-body slds-card">
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__body">
+          <h2 class="slds-card__header-title" style="font-size: 30px;">
+            <span>Registro de Avalúo</span>
+          </h2>
+          <p class="slds-text-body_small">Complete la información para registrar el avalúo</p>
+        </div>
+      </header>
+    </div>
+    <div class=" vehicle-info-body slds-card__body slds-card__body_inner">
+      <div class="slds-grid slds-wrap slds-gutters">
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Placa</label>
+            <div class="slds-form-element__static">{vehicleData.placa}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Número VIN</label>
+            <div class="slds-form-element__static">{vehicleData.numeroVin}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Tracción</label>
+            <div class="slds-form-element__static">{vehicleData.traccion}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Carrocería</label>
+            <div class="slds-form-element__static">{vehicleData.carroceria}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Número de Chasis</label>
+            <div class="slds-form-element__static">{vehicleData.numeroChasis}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Categoría</label>
+            <div class="slds-form-element__static">{vehicleData.categoria}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Estilo</label>
+            <div class="slds-form-element__static">{vehicleData.carroceria}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Capacidad Personas</label>
+            <div class="slds-form-element__static">{vehicleData.capacidadPersonas}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Año</label>
+            <div class="slds-form-element__static">{vehicleData.anio}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Color</label>
+            <div class="slds-form-element__static">{vehicleData.color}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Combustible</label>
+            <div class="slds-form-element__static">{vehicleData.combustible}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Cantidad Embargos</label>
+            <div class="slds-form-element__static">{vehicleData.cantidadEmbargos}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Marca</label>
+            <div class="slds-form-element__static">{vehicleData.marca}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Modelo</label>
+            <div class="slds-form-element__static">{vehicleData.modelo}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Propietario</label>
+            <div class="slds-form-element__static">{vehicleData.propietario}</div>
+          </div>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Tipo de moneda</label>
+            <lightning-combobox name="tipoMoneda" value={moneda} placeholder="Tipo de moneda" options={monedaOptions}
+              onchange={handleMonedaChange} style="margin-bottom: -2px; width: 35%;"></lightning-combobox>
+          </div>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label" for="observations">Observaciones</label>
+            <div class="slds-form-element__control">
+              <textarea id="observations" class="slds-textarea"
+                placeholder="Ingrese sus observaciones sobre el vehículo"
+                onchange={handleObservationsChange}></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label" for="suggestedValue">Valor Sugerido Valuador</label>
+            <div class="slds-form-element__control">
+              <input type="text" id="suggestedValue" class="slds-input" placeholder="Ej. $10,000.00"
+                onchange={handleSuggestedValueChange} />
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <template if:true={showPromedio}>
+            <div class="slds-form-element">
+              <label class="slds-form-element__label cust-label" for="systemSugestedValue">Valor Sugerido
+                Sistema</label>
+              <div class="slds-form-element__control">
+                <span class="slds-text-heading_medium">
+                  <lightning-formatted-number value={valorSugeridoSistema}
+                  format-style="currency" currency-code="USD" minimum-fraction-digits="0" maximum-fraction-digits="2">
+                  </lightning-formatted-number>
+                </span>
+              </div>
+            </div>
+          </template>
+          <template if:false={showPromedio}>
+            <p>No hay información</p>
+          </template>
+        </div>
+      </div>
+    </div>
+    <div class="slds-card__footer" style="width: 100%;">
+      <div class="slds-grid slds-grid_align-end">
+        <button class="slds-button slds-button_brand" onclick={handleBack}>
+          <lightning-icon icon-name="utility:chevronleft" size="x-small" class="slds-m-left_x-small"></lightning-icon>
+          Regresar
+        </button>
+        <button class="slds-button slds-button_brand" onclick={handleInfoModalOpen}>
+          Guardar
+          <lightning-icon icon-name="utility:save" size="x-small" class="slds-m-left_x-small"></lightning-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- <template if:true={showMissingFieldsModal}>
+    <section class="slds-modal slds-fade-in-open slds-modal_medium" role="dialog">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 class="slds-modal__title slds-hyphenate">Campos Obligatorios Faltantes</h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium">
+          <p>Por favor complete los siguientes campos obligatorios:</p>
+          <div class="slds-form slds-form_stacked">
+            <template for:each={missingFields} for:item="field">
+              <div key={field.name} class="slds-form-element slds-m-top_medium">
+                <label class="slds-form-element__label" for={field.name}>
+                  {field.label}
+                </label>
+                <div class="slds-form-element__control">
+                  <template if:true={field.isText}>
+                    <input type="text" id={field.name} class="slds-input" data-field={field.name}
+                      onchange={handleMissingFieldChange} maxlength={field.maxlength} required />
+                  </template>
+
+                  <template if:true={field.isNumber}>
+                    <input type="number" id={field.name} class="slds-input" data-field={field.name}
+                      onchange={handleMissingFieldChange} min={field.min} max={field.max} required />
+                  </template>
+
+                  <template if:true={field.isPicklist}>
+                    <select id={field.name} class="slds-select" data-field={field.name}
+                      onchange={handleMissingFieldChange} required>
+                      <option value="">Seleccione una opción</option>
+                      <template for:each={field.options} for:item="option">
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      </template>
+                    </select>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+        <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" onclick={handleCancelMissingFields}>
+                Cancelar
+            </button>
+            <button class="slds-button slds-button_brand" onclick={handleSaveMissingFields}>
+                Continuar
+            </button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template> -->
+
+  <template if:true={showMissingFieldsModal}>
+    <section class="slds-modal slds-fade-in-open slds-modal_medium" role="dialog">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 class="slds-modal__title slds-hyphenate">Campos Obligatorios Faltantes</h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium">
+          <p>Por favor complete los siguientes campos obligatorios:</p>
+          <div class="slds-form slds-form_stacked">
+            <template for:each={missingFields} for:item="field">
+              <div key={field.name} class="slds-form-element slds-m-top_medium">
+                <label class="slds-form-element__label" for={field.name}>
+                  {field.label}
+                </label>
+                <div class="slds-form-element__control">
+                  <template if:true={field.isText}>
+                    <input type="text" id={field.name} class="slds-input" data-field={field.name}
+                      onchange={handleMissingFieldChange} maxlength={field.maxlength} required
+                       />
+                  </template>
+  
+                  <template if:true={field.isNumber}>
+                    <input type="number" id={field.name} class="slds-input" data-field={field.name}
+                      onchange={handleMissingFieldChange} min={field.min} max={field.max} required
+                       />
+                  </template>
+  
+                  <template if:true={field.isPicklist}>
+                    <select id={field.name} class="slds-select" data-field={field.name}
+                      onchange={handleMissingFieldChange} required>
+                      <option value="">Seleccione una opción</option>
+                      <template for:each={field.options} for:item="option">
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      </template>
+                    </select>
+                  </template>
+                  
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+        <footer class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" onclick={handleCancelMissingFields}>
+            Cancelar
+          </button>
+          <button class="slds-button slds-button_brand" onclick={handleSaveMissingFields}>
+            Continuar
+          </button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+  <template if:true={infoModal}>
+    <section class="slds-modal slds-fade-in-open slds-modal_medium" role="dialog">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 class="slds-modal__title slds-hyphenate">Información importante</h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium">
+          <p>En la siguiente pantalla podrá agregar los archivos adjuntos del avalúo</p>
+          <div class="slds-form slds-form_stacked">
+            <img src={saveFilesAv} style="width: 100%;"/>
+          </div>
+        </div>
+        <footer class="slds-modal__footer">
+          <button class="slds-button slds-button_brand" onclick={handleInfoModalClose}>
+            Cancelar
+          </button>
+          <button class="slds-button slds-button_brand" onclick={handleSaveAppraisal}>
+            Continuar
+          </button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+</template>

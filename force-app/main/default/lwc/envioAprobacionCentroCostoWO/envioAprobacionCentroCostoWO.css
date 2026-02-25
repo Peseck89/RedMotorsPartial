@@ -1,0 +1,54 @@
+.tc-table {
+    display: grid;
+    grid-auto-rows: minmax(44px, auto);
+    border: 1px solid #d8dde6;
+    border-radius: 6px;
+}
+
+.tc-row {
+    display: grid;
+    /* 👉 le damos más espacio a la última columna */
+    grid-template-columns: 90px 1.2fr 1.2fr 200px 230px;
+    border-top: 1px solid #d8dde6;
+    background:#ecf0f5;
+}
+
+.tc-row:first-child { border-top: none; }
+
+.tc-head {
+    background: #255d7a;
+    color: #fff;
+    font-weight: 600;
+}
+
+.tc-cell {
+    display:flex;
+    align-items:center;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+}
+
+.tc-cell--check {
+    justify-content:center;
+    width: 90px;
+}
+
+/* 👉 dejar que el texto haga wrap dentro de la celda */
+.tc-cell--status {
+    /* quita el nowrap */
+    white-space: normal;
+}
+
+.tc-cell--amount {
+    justify-content:flex-end;
+}
+
+.pending-approval-msg {
+    padding: 16px 20px;          
+    border-radius: 8px;
+    background: #fef4f4;          
+    border: 1px solid #f3a5a5;
+    color: #c23934;              
+    font-size: 0.95rem;
+    font-weight: 500; 
+}

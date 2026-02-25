@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>57.0</apiVersion>
+    <decisions>
+        <name>Cambio_Moneda_promesa_de_pago</name>
+        <label>Cambio  Moneda promesa de pago</label>
+        <locationX>182</locationX>
+        <locationY>335</locationY>
+        <defaultConnectorLabel>no Cambio</defaultConnectorLabel>
+        <rules>
+            <name>Cambio_Moneda_promesa</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Moneda_promesa_pago__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>actualiza_Campo_moneda</targetReference>
+            </connector>
+            <label>Cambio</label>
+        </rules>
+    </decisions>
+    <interviewLabel>GestiónAlticaATualizaOprtunidadFinancieraCompoMoneda {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>GestiónAlticaATualizaOprtunidadFinancieraCompoMoneda</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <description>actualiza Campo moneda. en portunidad financiera</description>
+        <name>actualiza_Campo_moneda</name>
+        <label>actualiza Campo moneda</label>
+        <locationX>50</locationX>
+        <locationY>455</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Oportunidad_de_Financiamiento__r.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Moneda__c</field>
+            <value>
+                <elementReference>$Record.Moneda_promesa_pago__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Oportunidad_de_Financiamiento__c</object>
+    </recordUpdates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Cambio_Moneda_promesa_de_pago</targetReference>
+        </connector>
+        <object>Gesti_n_ltica__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

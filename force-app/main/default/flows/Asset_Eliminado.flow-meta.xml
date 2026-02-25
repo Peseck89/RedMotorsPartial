@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>57.0</apiVersion>
+    <choices>
+        <name>Compro_otro_auto_moto</name>
+        <choiceText>Compro otro auto/moto</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Compro otro auto/moto	</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Cr_dito_denegado</name>
+        <choiceText>Crédito denegado</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Crédito denegado	</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>No_muestra_inter_s</name>
+        <choiceText>No muestra interés</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No muestra interés	</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>No_se_localiz</name>
+        <choiceText>No se localizó</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No se localizó	</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Oportunidad_duplicada</name>
+        <choiceText>Oportunidad duplicada</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Oportunidad duplicada	</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Tiempo_de_entrega</name>
+        <choiceText>Tiempo de entrega</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Tiempo de entrega	</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Valor_de_recibo</name>
+        <choiceText>Valor de recibo</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Valor de recibo	</stringValue>
+        </value>
+    </choices>
+    <decisions>
+        <name>Revisa_si_hay_asset</name>
+        <label>Revisa si hay asset</label>
+        <locationX>182</locationX>
+        <locationY>278</locationY>
+        <defaultConnector>
+            <targetReference>No_se_elimina_asset</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Si_hay_asset</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Obtiene_el_asset</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Raz_de_vena_per</targetReference>
+            </connector>
+            <label>Si hay asset</label>
+        </rules>
+    </decisions>
+    <interviewLabel>Asset Eliminado {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Asset Eliminado</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordDeletes>
+        <name>Borra_el_Asset</name>
+        <label>Borra el Asset</label>
+        <locationX>50</locationX>
+        <locationY>518</locationY>
+        <connector>
+            <targetReference>Actualiza_opp_a_cerrada_perdida</targetReference>
+        </connector>
+        <inputReference>Obtiene_el_asset</inputReference>
+    </recordDeletes>
+    <recordLookups>
+        <name>Obtiene_el_asset</name>
+        <label>Obtiene el asset</label>
+        <locationX>182</locationX>
+        <locationY>158</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Revisa_si_hay_asset</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Oportunidad__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Asset</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Actualiza_opp_a_cerrada_perdida</name>
+        <label>Actualiza opp a cerrada perdida</label>
+        <locationX>50</locationX>
+        <locationY>638</locationY>
+        <connector>
+            <targetReference>Asset_Eliminado</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>CloseDate</field>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RazonVentaPerdida__c</field>
+            <value>
+                <elementReference>Raz_n_de_venta_perdidpiclist</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StageName</field>
+            <value>
+                <stringValue>Cerrada Perdida</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>fechaentrega__c</field>
+        </inputAssignments>
+        <inputAssignments>
+            <field>fechafactura__c</field>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
+    <screens>
+        <name>Asset_Eliminado</name>
+        <label>Asset Eliminado</label>
+        <locationX>50</locationX>
+        <locationY>758</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>Asset_eliminado1</name>
+            <fieldText>&lt;p&gt;Se eliminó el Asset relacionado a la oportunidad de forma correcta y se actualizó la oportunidad a &quot;Cerrada perdida&quot;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>No_se_elimina_asset</name>
+        <label>No se elimina asset</label>
+        <locationX>314</locationX>
+        <locationY>398</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>No_hay_Asset</name>
+            <fieldText>&lt;p&gt;No se encontró ningún Asset relacionado a esta oportunidad&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Raz_de_vena_per</name>
+        <label>Razó de vena per</label>
+        <locationX>50</locationX>
+        <locationY>398</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Borra_el_Asset</targetReference>
+        </connector>
+        <fields>
+            <name>Raz_n_de_venta_perdidpiclist</name>
+            <choiceReferences>Valor_de_recibo</choiceReferences>
+            <choiceReferences>Compro_otro_auto_moto</choiceReferences>
+            <choiceReferences>Cr_dito_denegado</choiceReferences>
+            <choiceReferences>Tiempo_de_entrega</choiceReferences>
+            <choiceReferences>No_muestra_inter_s</choiceReferences>
+            <choiceReferences>No_se_localiz</choiceReferences>
+            <choiceReferences>Oportunidad_duplicada</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Razón de venta perdida</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Obtiene_el_asset</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,46 @@
+<aura:component
+  implements="force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+  access="global" controller="CommunityCalendarController">
+  <aura:attribute name="navigateToComponent2" type="Aura.Component[]" />
+  <aura:handler name="init" value="this" action="{!c.doInit}" />  
+  <aura:attribute name="sucursalSelected" type="String"  />
+  <aura:attribute name="marca" type="String" default="motorrad"/> 
+  <html>
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+      <title> Walking Motorrad </title>
+      <meta name="description" content="" />
+    </head>
+    <body class="THIS">
+      <div class="container">
+        <section class="info-header">
+          <h1>Gracias</h1>
+          <h2>Uno de nuestros asesores le estará <br/>
+              antendido en breve.
+          </h2>
+        </section>
+        <section class="main-section">
+          <div class="m-s-left">
+            <lightning:button label="Regresar a inicio" onclick="{!c.navigateToComponent}" />
+          </div>
+          <div class="car-container">
+            <aura:if isTrue="{!v.marca == 'motorrad'}">
+              <img src="{!$Resource.MotorradHome}" class="car-image"/>
+            </aura:if>
+            <aura:if isTrue="{!v.marca == 'kawasaki'}">
+              <img src="{!$Resource.KawasakiHome}" class="car-image"/> 
+            </aura:if>
+            <aura:if isTrue="{!v.marca == 'indian'}">
+              <img src="{!$Resource.IndianHome}" class="car-image"/>
+            </aura:if>
+            <aura:if isTrue="{!v.marca == 'polaris'}">
+              <img src="{!$Resource.PolarisHome}" class="car-image"/>
+            </aura:if>
+          </div>
+        </section>
+      </div>
+    </body>
+  </html>
+</aura:component>

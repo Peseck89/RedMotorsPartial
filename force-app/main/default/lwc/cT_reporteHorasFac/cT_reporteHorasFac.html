@@ -1,0 +1,206 @@
+<template>
+    <div>
+        <template if:true={isLoading}>
+            <div>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <header>
+            <div class="slds-page-header slds-page-header_record-home">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-opportunity">
+                                    <lightning-icon icon-name="standard:contract" alternative-text="Horas Facturadas"
+                                        title="Horas Facturadas"></lightning-icon>
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1>
+                                            <span>Horas Facturadas</span>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-page-header__col-actions">
+                        <div class="slds-page-header__controls">
+                            <div class="slds-page-header__control">
+                                <ul class="slds-button-group-list">
+                                    <template if:true={recordsFound}>
+                                        <li>
+                                            <!-- <lightning-input type="checkbox" label="Mostrar Detalle" name="inputResumen" onchange={handleResumenChange}></lightning-input> -->
+
+                                            <lightning-button-icon-stateful icon-name="utility:mark_all_as_read"
+                                                class="slds-m-left_xx-small" selected={showResume}
+                                                onclick={handleShowResumeClick} alternative-text="Mostrar Detalle">
+                                            </lightning-button-icon-stateful>
+
+                                        </li>
+                                    </template>
+                                    <!-- <template if:true={recordsFound}>
+                                        <li>
+                                            <lightning-button label="Exportar excel" title="Exportar a excel"
+                                                onclick={handleExportClick}
+                                                class="slds-m-left_x-small"></lightning-button>
+                                        </li>
+                                    </template> -->
+                                    <li>
+                                        <lightning-button-icon-stateful icon-name="utility:filterList"
+                                            class="slds-m-left_xx-small" selected={showFilters}
+                                            onclick={handleShowFiltersClick} alternative-text="Filtrar">
+                                        </lightning-button-icon-stateful>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="slds-card slds-card slds-m-top_small">
+            <template if:true={showFilters}>
+                <lightning-layout class="slds-grid_align-center">
+                    <lightning-layout-item flexibility="auto" padding="around-small">
+                        <lightning-dual-listbox name="territories" label="Seleccionar territorios"
+                            source-label="Disponibles" selected-label="Seleccionados" options={territories}
+                            value={selectedTerritories} onchange={handleTerritoryChange}></lightning-dual-listbox>
+                    </lightning-layout-item>
+                    <lightning-layout-item flexibility="auto" padding="around-small">
+                        <c-lookup selection={mechanicInicialSelection} errors={errors} label="Seleccione el mecánico"
+                            onsearch={handleMechanicSearch} onselectionchange={handleMechanicSelectionChange}
+                            placeholder="Buscar ...">
+                        </c-lookup>
+
+                        <lightning-input type="search" value={caseNumber} placeholder="000000" label="Número de caso"
+                            minlength="8" onchange={handleCaseNumberChange}> </lightning-input>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item flexibility="auto" padding="around-small">
+
+                        <lightning-input type="date" name="dDesde" label="Desde" value={inputStartDate}
+                            onchange={handleStarDateChange}></lightning-input>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="around-small">
+                        <lightning-input class="inpHoy" type="date" name="dHasta" label="Hasta" value={inputEndDate}
+                            onchange={handleEndDateChange}></lightning-input>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="around-small" class="slds-m-top_xx-small">
+                        <button class="slds-button slds-button_brand slds-m-top_medium"
+                            onclick={handleApplyFiltersClick} disabled={isApplybuttonEnabled}>Aplicar</button>
+                        <button class="slds-button slds-button_neutral slds-m-top_medium"
+                            onclick={handleResetClick}>Limpiar filtros</button>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </template>
+
+            <template if:false={showFilters}>
+                <template if:true={recordsFound}>
+                    <table class="slds-table slds-no-row-hover slds-table_bordered slds-table_col-bordered"
+                        aria-labelledby="element-with-table-label other-element-with-table-label" data-name="resumen">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="slds-text-align_center" scope="col">
+                                    <div class="slds-truncate" title="Tecnico">Técnico</div>
+                                </th>
+                                <th class="slds-text-align_center" style="width: 250px;">
+                                    <div class="slds-truncate" title="Taller">Taller</div>
+                                </th>
+                                <th class="slds-text-align_center" style="width: 120px;" if:true={showResume}>
+                                    <div class="slds-truncate" title="Número de caso"># Caso</div>
+                                </th>
+                                <th class="slds-text-align_center" style="width: 150px;">
+                                    <div class="slds-truncate" title="H. Asignadas">H. Asignadas</div>
+                                </th>
+                                <th class="slds-text-align_center" style="width: 150px;">
+                                    <div class="slds-truncate" title="H.tardadas">H. Tardadas</div>
+                                </th>
+                                <th class="slds-text-align_center" style="width: 150px;">
+                                    <div class="slds-truncate" title="H. Facturadas">H. Facturadas</div>
+                                </th>
+                                <th class="slds-text-align_center" style="width: 150px;">
+                                    <div class="slds-truncate" title="H. Facturadas">H. Reprocesadas</div>
+                                </th>
+                                <th class="slds-text-align_center" style="width: 200px;">
+                                    <div class="slds-truncate" title="Tiempos Improductivos">Tiempos Improductivos</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={records} for:item="record">
+                                <tr key={record.mechanicId}>
+                                    <td class="slds-text-align_right">
+                                        <strong>{record.mechanicName}</strong>
+                                    </td>
+                                    <td class="slds-text-align_center">
+                                        <strong>{record.territoryName}</strong>
+                                    </td>
+                                    <td class="slds-text-align_center" if:true={showResume}>
+                                        <strong>{record.caseNumber}</strong>
+                                    </td>
+                                    <td class="slds-text-align_right">
+                                        {record.horasEstimadas}
+                                    </td>
+                                    <td class="slds-text-align_right">
+                                        {record.horasTrabajadas}
+                                    </td>
+                                    <td class="slds-text-align_right">
+                                        {record.horasFacturadas}
+                                    </td>
+                                    <td class="slds-text-align_right">
+                                        {record.horasReprocesadas}
+                                    </td>
+                                    <td class="slds-text-align_right">
+                                        {record.tiemposImproductivos}
+                                    </td>
+                                </tr>
+
+                                <tr key={record.mechanicId}>
+                                    <td class="slds-text-align_right"><strong>Productividad</strong></td>
+                                    <td class="slds-text-align_right">
+                                        <lightning-formatted-number value={record.productividad} maximum-fraction-digits="2"></lightning-formatted-number>
+                                    </td>
+                                    <td>&#32;</td>
+                                    <td>&#32;</td>
+                                    <td>&#32;</td>
+                                    <td>&#32;</td>
+                                    <td>&#32;</td>
+                                    <td if:true={showResume}>&#32;</td>
+                                </tr>
+                                <tr key={record.mechanicId}>
+                                    <td class="slds-text-align_right"><strong>Eficiencia</strong></td>
+                                    <td class="slds-text-align_right">
+                                        <lightning-formatted-number value={record.eficiencia} maximum-fraction-digits="2"></lightning-formatted-number>
+                                    </td>
+                                    <td>&#32;</td>
+                                    <td>&#32;</td>
+                                    <td>&#32;</td>
+                                    <td>&#32;</td>
+                                    <td>&#32;</td>                                    
+                                    <td if:true={showResume}>&#32;</td>
+                                </tr>
+                                <tr key={record.mechanicId}>                                    
+                                    <td colspan="8" style="height:20px ;"  if:true={showResume}>&#32;</td>                                    
+                                    <td colspan="7" style="height:20px ;"  if:false={showResume}>&#32;</td>                                    
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template if:false={recordsFound}>
+                    <div class="slds-text-heading_medium slds-text-align_center slds-p-around_medium">
+                        No se encontraron registros.
+                    </div>
+                </template>
+            </template>
+        </div>
+    </div>
+</template>

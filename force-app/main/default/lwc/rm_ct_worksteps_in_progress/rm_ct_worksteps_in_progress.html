@@ -1,0 +1,271 @@
+<!--
+  @description       : Pantalla de consulta que muestra las tareas en proceso
+  @author            : marcohernandezhp@gmail.com
+  @group             : Redmotors
+  @last modified on  : 08-05-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <div>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <header>
+            <div class="slds-page-header slds-page-header_record-home">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-opportunity">
+                                    <lightning-icon icon-name="standard:contract"
+                                        alternative-text="Tareas en Proceso"
+                                        title="Tareas en Proceso"></lightning-icon>
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1>
+                                            <span>Tareas en Proceso</span>
+                                            <span class="slds-page-header__title slds-truncate"
+                                                title="Tareas en Proceso">Tareas en Proceso</span>
+                                        </h1>
+                                    </div>
+                                </div>                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-page-header__col-actions">
+                        <div class="slds-page-header__controls">
+                            <div class="slds-page-header__control">
+                                <ul class="slds-button-group-list">
+                                    <li>
+                                        <lightning-button-icon-stateful icon-name="utility:filterList"
+                                            class="slds-m-left_xx-small" selected={showFilters}
+                                            onclick={handleShowFiltersClick} alternative-text="Filtrar">
+                                        </lightning-button-icon-stateful>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <article class="slds-card slds-m-top_small">
+
+            <template if:true={showFilters}>
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size="3" padding="around-small" >
+                        <div class="custom-box ">
+                            <lightning-dual-listbox name="territories" label="Territorios"
+                                source-label="Disponibles" selected-label="Seleccionados" options={territories}
+                                value={selectedTerritories} onchange={handleTerritoryChange}>
+                            </lightning-dual-listbox>                            
+                        </div>
+                    </lightning-layout-item> 
+                    <lightning-layout-item size="3" padding="around-small" >
+                        <div class="custom-box ">
+                            <lightning-dual-listbox name="workStepStatuses" label="Seleccionar estatus"
+                            source-label="Disponibles" selected-label="Seleccionados" options={workStepStatus}
+                            value={selectedWorkStepStatus} onchange={handleWorkStepStatusChange}></lightning-dual-listbox>                           
+                        </div>
+                    </lightning-layout-item>                                  
+                    <lightning-layout-item size="2" padding="around-small">
+                        <div class="custom-box ">
+                            <lightning-input type="search" value={caseNumber}
+                            placeholder="000000" label="Número de caso" minlength="8"
+                            onchange={handleCaseNumberChange}> </lightning-input>
+                            
+                            <lightning-input type="search" value={workOrderNumber}
+                            placeholder="000000" label="Número de orden" minlength="8"
+                            onchange={handleWorkOrderNumberChange}> </lightning-input>                             
+                            
+                            <lightning-input type="search" value={placa}
+                            placeholder="xscdds34345ffddff" label="Placa"
+                            onchange={handlePlacaChange}> </lightning-input> 
+                            
+                            <lightning-input type="search" value={vin}
+                            placeholder="abc001" label="VIN" onchange={handleVINChange}>
+                            </lightning-input>                                 
+
+                            <c-lookup selection={agentInitialSelection} errors={agentErrors} label="Asesor"
+                            onsearch={handleAgentSearch} onselectionchange={handleAgentSelectionChange}>                                  
+                            </c-lookup>
+
+                            <c-lookup selection={mechanicInitialSelection} errors={mechanicErrors} label="Mecánico"
+                            onsearch={handleMechanicSearch} onselectionchange={handleMechanicSelectionChange}>                                  
+                            </c-lookup>                            
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" padding="around-small">
+                        <div class="custom-box">                            
+                            <lightning-input type="date" value={startDate} label="Desde" placeholder="01/01/1980"
+                            onchange={handleStartDateChange}></lightning-input>
+
+                            <lightning-input type="date" value={endDate} label="Hasta" placeholder="01/01/1980"
+                            onchange={handleEndDateChange}></lightning-input>  
+
+                            <div class="slds-m-top_medium">
+                                <lightning-input type="checkbox" checked={showParentTasks} label={showMessageInfo} title="Indica si la pantalla muestra solo tareas padres tareas hijas" onchange={handleShowParentTasksChange}></lightning-input>                                 
+                            </div>
+
+                            <div class="slds-p-top_xx-small slds-text-align_right">
+                                <button class="slds-button slds-button_brand slds-m-top_medium"
+                                    onclick={handleApplyFiltersClick}>Aplicar</button>
+                                <button class="slds-button slds-button_neutral slds-m-top_medium"
+                                    onclick={handleResetClick}>Limpiar filtros</button>
+                            </div>
+                        </div>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </template>
+            
+            <template if:false={showFilters}>
+                <div class="slds-card__body">
+                    <table
+                        class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout"
+                        role="grid" aria-label="Tareas agrupadas por caso">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Mecanico">Mecanico</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="No. Caso">No. Caso</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="No. Orden">No. Orden</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Estado">Estado</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_right" title="Fecha creación caso">Fecha creación de caso</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Tarea">Tarea</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Asesor reponsable del caso">Asesor</div>
+                                </th>                                
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_right" title="Minutos iniciales">Minutos iniciales</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_right" title="Minutos trabajados">Minutos trabajados</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Vinrie">Vin</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Placa">Placa</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Marca">Marca</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Modelo">Modelo</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={records} for:item="record">
+                                <tr class={record.statusBackground} key={record.id}>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">
+                                            <a href={record.mecanicoURL} target="_blank" class={record.classLink}>{record.mechanicFullName}</a>                                                                      
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">
+                                            <a href={record.caseURL} target="_blank"  class={record.classLink}>{record.caseNumber}</a>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">
+                                            <a href={record.workOrderURL} target="_blank"  class={record.classLink}>{record.workOrderNumber}</a>
+                                        </div>
+                                    </td>
+                                    
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">                                            
+                                            <span class="slds-badge" style="background-color:#f2f8e7;">{record.status}</span>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate slds-text-align_right"
+                                            title="Fecha de creación del caso">
+                                            <lightning-formatted-date-time value={record.createdDate} year="numeric"
+                                                month="2-digit" day="2-digit" time-zone="America/Costa_Rica">
+                                            </lightning-formatted-date-time>
+                                        </div>
+                                    </td>
+                                    
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">
+                                            <a href={record.workStepURL} target="_blank"  class={record.classLink}>{record.name}</a>
+                                        </div>
+                                    </td> 
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">
+                                            <a href={record.agentURL} target="_blank"  class={record.classLink}>{record.agentFullName}</a>
+                                        </div>
+                                    </td>                                     
+                                    <td role="gridcell">
+                                        <div class="slds-truncate slds-text-align_right"
+                                            title={record.totalInitialTimeText}>
+                                            {record.startingMinutes} mins.
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate slds-text-align_right" title={record.totalWorkedTime}>
+                                            <template if:true={record.isRunning}>
+                                                <span class="slds-m-right_xxx-small">{record.totalMinutesWorked}.{record.secondsWorked} mins.</span>                                             
+                                            </template>
+                                            <template if:false={record.isRunning}>
+                                                {record.totalMinutesWorked} mins.
+                                            </template>
+                                        </div>
+                                    </td>                           
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">
+                                            {record.vin}
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">
+                                            {record.placa}
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">
+                                            {record.marca}
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate">
+                                            {record.modelo}
+                                        </div>
+                                    </td> 
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+                    <div>
+                        <div class="slds-button-group" role="group">
+                            <button class="slds-button slds-button_neutral" disabled={isEnablePrevButton}
+                                onclick={handleBackClick}>Atras</button>
+                            <button class="slds-button slds-button_neutral" disabled={isEnableNextButton}
+                                onclick={handleNextClick}>Siguiente</button>
+                        </div>
+                        <span class="slds-m-left_medium">{totalRecords} casos encontrados, Pagina {pageNumber} de
+                            {totalPages}</span>
+                    </div>
+                </footer>
+            </template>
+        </article>
+    </div>
+</template>

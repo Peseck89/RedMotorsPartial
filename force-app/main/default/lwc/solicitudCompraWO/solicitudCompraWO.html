@@ -1,0 +1,108 @@
+<template>
+    <lightning-card variant="Narrow" title="Solicitud de Compra" icon-name="standard:account">
+        <div class="slds-grid slds-gutters slds-m-top_large slds-p-vertical_xx-small">
+            <div class="slds-col slds-size_2-of-12">
+                <div class="slds-text-heading_small slds-m-left_large">Pedido:</div>
+            </div>
+            <div class="slds-col slds-size_5-of-12 slds-text-align_center">
+                <div class="slds-text-heading_small slds-m-left_large">{pedido}</div>
+            </div>
+          </div>
+          <div class="slds-grid slds-p-vertical_xx-small">
+            <div class="slds-col slds-size_2-of-12">
+                <div class="slds-text-heading_small slds-m-left_large">Cliente:</div>
+            </div>
+            <div class="slds-col slds-size_5-of-12 slds-text-align_center">
+                <div class="slds-text-heading_small slds-m-left_large">{cliente}</div>
+            </div>
+          </div>
+          <div class="slds-grid slds-p-vertical_xx-small">
+            <div class="slds-col slds-size_2-of-12">
+                <div class="slds-m-top_medium slds-text-heading_small slds-m-left_large">Departamento:</div>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-m-left_x-large slds-p-left_x-large">
+                <div class="slds-text-heading_small"><lightning-combobox
+                    value={value}
+                    placeholder="Seleccione Departamento"
+                    options={departamentos}
+                    onchange={handleDepartment}
+                    class="slds-text-align_center"
+                ></lightning-combobox></div>
+            </div>
+          </div>
+          <div class="slds-grid slds-p-vertical_xx-small">
+            <div class="slds-col slds-size_2-of-12">
+                <div class="slds-text-heading_small slds-m-left_large">Prioridad:</div>
+            </div>
+            <div class="slds-col slds-p-left_x-large slds-text-align_center">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-input data-element="priority" type="checkbox" label="Maritimo" name="Maritimo" onchange={handleCheckboxChange}></lightning-input>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-input  data-element="priority" type="checkbox" label="Aereo" name="Aereo" onchange={handleCheckboxChange}></lightning-input>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-input data-element="priority" type="checkbox" label="VDR" name="VDR" onchange={handleCheckboxChange}></lightning-input>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="slds-grid slds-p-vertical_xx-small">
+            <div class="slds-col slds-size_2-of-12">
+                <div class="slds-m-top_medium slds-text-heading_small slds-m-left_large">Anticipo:</div>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-m-left_x-large slds-p-left_x-large">
+                <div><lightning-input type="text" onchange={handleAnticipoChange}></lightning-input></div>
+            </div>
+          </div>
+          <div class="slds-grid slds-p-vertical_xx-small">
+            <div class="slds-col slds-size_2-of-12">
+                <div class="slds-text-heading_small slds-m-left_large slds-m-top_medium">Adjuntos:</div>
+            </div>
+            <div class="slds-col slds-p-left_x-large slds-text-align_center">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-m-right_medium col slds-size_9-of-12">
+                        <lightning-file-upload name="logoUploader"
+                        multiple
+                        accept={acceptedFormats} record-id={recordId}
+                        onuploadfinished={handleUploadFinished}>
+                        </lightning-file-upload>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="slds-p-left_x-large slds-text-align_center slds-m-top_medium slds-text-heading_small"> Seleccione los productos para la solicitud de compra</div>
+          <div class="despachoLWCdataTable slds-table_col-bordered slds-table_bordered" style="height: 100%;">
+                <lightning-datatable
+                data-id = "solicitudTable"
+                data={rows} 
+                columns={cols} 
+                selected-rows={selectedRowsID}
+                onrowselection={handleSelectRows}
+                key-field="ID"
+                >
+                </lightning-datatable>
+          </div>
+          <div class="slds-grid slds-gutters">
+            <div class="slds-col"></div>
+              <div class="slds-col slds-m-left_x-large">
+                <lightning-button-group class="slds-text-align_center slds-p-top_medium">
+                    <lightning-button
+                    disabled={showSendSCButton}
+                    label="Enviar Solicitud"
+                    variant="brand-outline" 
+                    onclick ={handleSendSC}
+                    icon-name ="utility:send"
+                    ></lightning-button>
+                    <lightning-button label="Cancelar" 
+                    variant="destructive"
+                    onclick={handleCancel}
+                    ></lightning-button>
+                </lightning-button-group>
+              </div>
+              <div class="slds-col"></div>
+          </div>
+        <div slot="footer"> La cantidad de los productos en la tabla excede el inventario disponible actual. Se debe realizar una "Solicitud de Compra" para obtener más de estos productos.</div>
+    </lightning-card>
+</template>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <decisions>
+        <name>decide_si_hay_subtrabajos</name>
+        <label>decide si hay subtrabajos</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_hay</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>obtiene_subtrabajos</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>elimina_subtrabajos</targetReference>
+            </connector>
+            <label>si hay</label>
+        </rules>
+    </decisions>
+    <interviewLabel>Elimina Subtrabajos del trabajo a realizar {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Elimina Subtrabajos del trabajo a realizar</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordDeletes>
+        <name>elimina_subtrabajos</name>
+        <label>elimina subtrabajos</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputReference>obtiene_subtrabajos</inputReference>
+    </recordDeletes>
+    <recordLookups>
+        <name>obtiene_subtrabajos</name>
+        <label>obtiene subtrabajos</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>decide_si_hay_subtrabajos</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Tipo_de_trabajo_del_caso__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Subtipo_de_trabajo_del_caso__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>obtiene_subtrabajos</targetReference>
+        </connector>
+        <object>tiposDeTrabajoCaso__c</object>
+        <recordTriggerType>Delete</recordTriggerType>
+        <triggerType>RecordBeforeDelete</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

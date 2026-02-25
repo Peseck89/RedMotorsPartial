@@ -1,0 +1,299 @@
+<template>
+  <template if:true={firstScreen}>
+  <lightning-card title="Trabajos a Realizar" icon-name="standard:work_type">
+    <template if:true={isLoading}>
+      <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template> 
+    <div class="slds-m-around_medium">
+      <div class="slds-m-bottom_medium header-but-content">
+        <lightning-button label="Cancelar" title="Cancelar" onclick={handleCancelar} class="slds-m-left_x-small"></lightning-button>&nbsp;&nbsp;
+        <lightning-button label="+" variant="brand" onclick={handleAddWork} disabled={disabeldTrabajosButton}>
+        </lightning-button>
+      </div>
+      <table class="custom-table">
+        <thead>
+          <tr class="custom-table-tr">
+            <th>Prioridad</th>
+            <th>Trabajo a Realizar</th>
+            <th>Tipo de Cargo</th>
+            <th>Aprobador</th>
+            <th>Alias</th>
+            <template if:true={showWorkOrderCombo}>
+              <th>Orden</th>
+            </template>
+            <th>Guardar</th>
+            <th style="width: 100px; max-width: 100px;">Horas</th>
+            <th style="width: 100px; max-width: 100px;">UTS</th>
+            <th>Subtrabajos</th>
+            <th>Borrar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template for:each={trabajos} for:item="trabajo">
+            <tr key={trabajo.id} class="slds-hint-parent custom-td">
+              <td class="custom-td">
+                <lightning-combobox style="margin-top: -15px;" value={trabajo.prioridad} options={prioridadOptions}
+                  data-id={trabajo.id} onchange={handlePrioridadChange}>
+                </lightning-combobox>
+              </td>
+              <td class="custom-td">
+                <template if:true={trabajo.nombreTrabajo}>
+                  <c-lookup 
+                  selection={trabajo.selectedTrabajo} 
+                  onsearch={handleLookupsearch}
+                  onselectionchange={handleTipoTrabajoLookupSelectionChange} 
+                  id="TipoDeTrabajo"
+                  data-id={trabajo.id} 
+                  required>
+                </c-lookup>
+                </template>
+                <template if:false={trabajo.nombreTrabajo}>
+                  <c-lookup 
+                  onsearch={handleLookupsearch}
+                  onselectionchange={handleTipoTrabajoLookupSelectionChange} 
+                  id="TipoDeTrabajo2"
+                  data-id={trabajo.id} 
+                  required>
+                </c-lookup>
+                </template>
+              </td>
+              <td class="custom-td">
+                <lightning-combobox style="margin-top: -15px;" value={trabajo.tipoCargo} options={tipoCargoOptions}
+                  data-id={trabajo.id} onchange={handleTipoCargoChange}>
+                </lightning-combobox>
+              </td>
+              <td class="custom-td">
+                <lightning-combobox style="margin-top: -15px;" value={trabajo.aprobador} options={aprobadorOptions}
+                  data-id={trabajo.id} onchange={handleAprobadorChange}>
+                </lightning-combobox> 
+              </td>
+              <td class="custom-td">
+                <lightning-input style="margin-top: -15px;" 
+                                class="test" 
+                                type="text" 
+                                value={trabajo.alias}
+                                data-id={trabajo.id} 
+                                onchange={handleAliasChange}>
+                </lightning-input>
+            </td>
+              <template if:true={showWorkOrderCombo}>
+                <td>
+                <lightning-combobox style="margin-top: -15px;"
+                    value={trabajo.workOrderId} options={workOrdersOptions} disabled={trabajo.disabledWorkOrder}  data-id={trabajo.id}
+                    onchange={handleOrdenSelection}>
+                </lightning-combobox>
+               </td>
+            </template>
+              <td>
+                <lightning-button label="+" variant="brand" onclick={handleSaveOne} data-id={trabajo.id} class="slds-m-left_small"></lightning-button>
+              </td>
+              <td style="width: 100px; max-width: 100px;">
+                <lightning-input style="margin-top: -15px;" class="test"  disabled={trabajo.disabledUts}  type="decimal" value={trabajo.uts}
+                  data-id={trabajo.id} onchange={handleUTSChange}>
+                </lightning-input>
+              </td>
+               <td style="width: 100px; max-width: 100px;">
+                <lightning-input 
+                  style="margin-top: -15px;" 
+                  class="test" 
+                  disabled={trabajo.disabledUts} 
+                  type="number" 
+                  min="0"
+                  step="1"
+                  value={trabajo.utsReal}
+                  data-id={trabajo.id} 
+                  onchange={handleUTSRealChange}>
+              </lightning-input>
+              </td>
+              <td>
+                <lightning-button label={trabajo.subtrabajos.length} variant="neutral" icon-name="utility:right"
+                  onclick={handleOpenSubtrabajos} data-id={trabajo.id}  disabled={trabajo.isButtonDisabled}>
+                </lightning-button>
+              </td>
+              <td>
+                <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Eliminar"
+                  data-id={trabajo.id} onclick={handleDeleteTrabajo}>
+                </lightning-button-icon>
+              </td>
+            </tr>
+            <template if:true={trabajo.mostrarAseguradora}>
+              <tr key={trabajo.idAseguradora} class="slds-hint-parent custom-td">
+                <td colspan="3"></td>
+                <td colspan="2">
+                  <template if:true={trabajo.aseguradora}>
+                    <c-lookup
+                      selection={trabajo.selectedAseguradora} 
+                      onsearch={handleLookupsearch}
+                      id="Aseguradora"
+                      onselectionchange={handleLookupAseguradoraChange} 
+                      label="Aseguradora"
+                      data-id={trabajo.id}>
+                    </c-lookup>
+                  </template>
+                  <template if:false={trabajo.aseguradora}>
+                    <c-lookup
+                      onsearch={handleLookupsearch}
+                      id="Aseguradora2"
+                      onselectionchange={handleLookupAseguradoraChange} 
+                      label="Aseguradora"
+                      data-id={trabajo.id}>
+                    </c-lookup>
+                  </template>
+                </td>
+                <td colspan="4"></td>
+              </tr>
+            </template>
+            <template if:true={trabajo.mostrarCentroDeCostos}>
+              <tr key={trabajo.idCentroDeCostos} class="slds-hint-parent custom-td">
+                <td colspan="3"></td>
+                <td colspan="2">
+                  <template if:true={trabajo.centroDeCostos}>
+                    <c-lookup
+                      selection={trabajo.selectedCentroDeCostos} 
+                      onsearch={handleLookupsearch}
+                      id="CentroCosto"
+                      onselectionchange={handleLookupCentroDeCostosChange} 
+                      label="Centro de costos"
+                      data-id={trabajo.id}>
+                    </c-lookup>
+                  </template>
+                  <template if:false={trabajo.centroDeCostos}>
+                    <c-lookup
+                      onsearch={handleLookupsearch}
+                      id="CentroCosto2"
+                      onselectionchange={handleLookupCentroDeCostosChange} 
+                      label="Centro de costos"
+                      data-id={trabajo.id}>
+                    </c-lookup>
+                  </template>
+                </td>
+                <td colspan="4"></td>
+              </tr>
+            </template>
+          </template>
+        </tbody>
+      </table>
+    </div>
+    <div class="slds-grid slds-grid_align-end slds-m-top_large">
+      <lightning-button variant="neutral" label="Nuevo tipo de trabajo" onclick={handleCrear} class="slds-var-m-right_small"></lightning-button>
+    </div>
+  </lightning-card>
+  </template>
+  <template if:true={creacionTipoDeTrabajo}>
+    <lightning-card>
+        <br />
+        <br />
+        <br />
+        <lightning-record-form object-api-name="tiposDeTrabajo__c" fields={myFields} layout-type="Full" columns="2"
+            oncancel={handleCancelTrabajo} onsuccess={handleSuccessTrabajo}>
+        </lightning-record-form>
+    </lightning-card>
+</template>
+<template if:true={showModal}>
+    <section role="dialog" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container" style="width: 800px; max-width: 800px;">
+            <!-- Estado de creación de tipo de trabajo -->
+            <template if:true={creacionTipoDeTrabajoSub}>
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">Nuevo Tipo de Trabajo</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-record-form 
+                        object-api-name="tiposDeTrabajo__c" 
+                        fields={myFields} 
+                        layout-type="Full" 
+                        columns="2"
+                        oncancel={handleCancelTrabajoSub} 
+                        onsuccess={handleSuccessTrabajoSub}>
+                    </lightning-record-form>
+                </div>
+            </template>
+            
+            <!-- Estado normal de subtrabajos -->
+            <template if:false={creacionTipoDeTrabajoSub}>
+                <header class="cust-header slds-modal__header">
+                    <div class="slds-grid slds-wrap slds-m-top_x-small">
+                        <div class="slds-size_1-of-1" style="text-align: left;">
+                            <h2 class="slds-text-heading_medium"><b>Punto de trabajo: {trabajoSeleccionado.nombreTrabajo}</b></h2>
+                        </div>
+                        <div class="slds-size_1-of-1" style="text-align: left;"><b>Horas:</b> {trabajoSeleccionado.uts}</div>
+                        <div class="slds-size_1-of-1" style="text-align: left;"><b>Cargo:</b> {trabajoSeleccionado.tipoCargo}</div>
+                    </div>
+                    
+                    <div class="slds-m-top_small">
+                        <lightning-button label="Cancelar" title="Cancelar" onclick={handleCancelarSubTrabajo} class="slds-m-left_x-small"></lightning-button>
+                        &nbsp;&nbsp;
+                        <lightning-button label="+" variant="brand" onclick={agregarFilaSubtrabajo} disabled={disabledSubtrabajosButton}></lightning-button>
+                        &nbsp;&nbsp;
+                        <lightning-button label="Guardar" variant="brand" onclick={guardarSubtrabajos}></lightning-button>
+                    </div>
+                </header>
+                
+                <div class="slds-modal__content slds-p-around_medium" style="height: 300px">
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+              <tr class="slds-text-title_caps">
+                <th>Sub punto de trabajo</th>
+                <th>Alias</th>
+                <th>Horas</th>
+                <th>Borrar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={subtrabajosTemporal} for:item="subtrabajo">
+                <tr key={subtrabajo.id}>
+                  <td>
+                    <template if:true={subtrabajo.tipoTrabajo}>
+                      <c-lookup 
+                        selection={subtrabajo.selectedTipoTrabajo} 
+                        onsearch={handleLookupsearch}
+                        onselectionchange={handleSubtipoTipoDeTrabajoLookupSelectionChange} 
+                        id="TipoDeTrabajo3"
+                        placeholder="Tipo de trabajo" 
+                        data-id={subtrabajo.id} 
+                        required>
+                      </c-lookup>
+                    </template>
+                    <template if:false={subtrabajo.tipoTrabajo}>
+                      <c-lookup 
+                        onsearch={handleLookupsearch}
+                        onselectionchange={handleSubtipoTipoDeTrabajoLookupSelectionChange} 
+                        id="TipoDeTrabajo4"
+                        placeholder="Tipo de trabajo" 
+                        data-id={subtrabajo.id} 
+                        required>
+                      </c-lookup>
+                    </template>
+                  </td>
+                   <td>
+                    <lightning-input style="margin-top: -15px;" type="text" value={subtrabajo.alias}
+                      data-id={subtrabajo.id} onchange={handleSubtrabajoAliasChange}>
+                    </lightning-input>
+                  </td>
+                  <td>
+                    <lightning-input style="margin-top: -15px;" type="decimal" value={subtrabajo.uts}
+                      data-id={subtrabajo.id} onchange={handleSubtrabajoUtsChange} disabled={subtrabajo.disabledUts}>
+                    </lightning-input>
+                  </td>
+                  <td>
+                    <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Eliminar"
+                      data-id={subtrabajo.id} onclick={handleDeleteSubtrabajo}>
+                    </lightning-button-icon>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+                
+                <footer class="slds-modal__footer">
+                    <div class="slds-grid slds-grid_align-end">
+                        <lightning-button variant="neutral" label="Nuevo tipo de trabajo" onclick={handleCrearSub}></lightning-button>
+                    </div>
+                </footer>
+            </template>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+</template>

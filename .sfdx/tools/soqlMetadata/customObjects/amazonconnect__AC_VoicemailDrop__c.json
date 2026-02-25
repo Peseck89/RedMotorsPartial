@@ -1,0 +1,1496 @@
+{
+  "fields": [
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Record ID",
+      "name": "Id",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "id"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Owner ID",
+      "name": "OwnerId",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [
+        "Group",
+        "User"
+      ],
+      "relationshipName": "Owner",
+      "sortable": true,
+      "type": "reference"
+    },
+    {
+      "aggregatable": false,
+      "custom": false,
+      "defaultValue": false,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Deleted",
+      "name": "IsDeleted",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "boolean"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "AC Voicemail Drop Name",
+      "name": "Name",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "string"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": "USD",
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Currency ISO Code",
+      "name": "CurrencyIsoCode",
+      "nillable": true,
+      "picklistValues": [
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Costa Rica Colon",
+          "validFor": null,
+          "value": "CRC"
+        },
+        {
+          "active": true,
+          "defaultValue": true,
+          "label": "U.S. Dollar",
+          "validFor": null,
+          "value": "USD"
+        }
+      ],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "picklist"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Created Date",
+      "name": "CreatedDate",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Created By ID",
+      "name": "CreatedById",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [
+        "User"
+      ],
+      "relationshipName": "CreatedBy",
+      "sortable": true,
+      "type": "reference"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Last Modified Date",
+      "name": "LastModifiedDate",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Last Modified By ID",
+      "name": "LastModifiedById",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [
+        "User"
+      ],
+      "relationshipName": "LastModifiedBy",
+      "sortable": true,
+      "type": "reference"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "System Modstamp",
+      "name": "SystemModstamp",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Last Viewed Date",
+      "name": "LastViewedDate",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Last Referenced Date",
+      "name": "LastReferencedDate",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": false,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Active",
+      "name": "amazonconnect__Active__c",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "boolean"
+    },
+    {
+      "aggregatable": true,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "ContactId",
+      "name": "amazonconnect__ContactId__c",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "string"
+    },
+    {
+      "aggregatable": true,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Language",
+      "name": "amazonconnect__Language__c",
+      "nillable": false,
+      "picklistValues": [
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Arabic",
+          "validFor": null,
+          "value": "Arabic"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Chinese (Mandarin)",
+          "validFor": null,
+          "value": "Chinese (Mandarin)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Danish",
+          "validFor": null,
+          "value": "Danish"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Dutch",
+          "validFor": null,
+          "value": "Dutch"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "English (Australian)",
+          "validFor": null,
+          "value": "English (Australian)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "English (British)",
+          "validFor": null,
+          "value": "English (British)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "English (Indian)",
+          "validFor": null,
+          "value": "English (Indian)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "English (US)",
+          "validFor": null,
+          "value": "English (US)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "English (Welsh)",
+          "validFor": null,
+          "value": "English (Welsh)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "French",
+          "validFor": null,
+          "value": "French"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "French (Canadian)",
+          "validFor": null,
+          "value": "French (Canadian)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "German",
+          "validFor": null,
+          "value": "German"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Icelandic",
+          "validFor": null,
+          "value": "Icelandic"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Italian",
+          "validFor": null,
+          "value": "Italian"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Japanese",
+          "validFor": null,
+          "value": "Japanese"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Korean",
+          "validFor": null,
+          "value": "Korean"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Norwegian",
+          "validFor": null,
+          "value": "Norwegian"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Polish",
+          "validFor": null,
+          "value": "Polish"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Portuguese",
+          "validFor": null,
+          "value": "Portuguese"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Portuguese (Brazilian)",
+          "validFor": null,
+          "value": "Portuguese (Brazilian)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Romanian",
+          "validFor": null,
+          "value": "Romanian"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Russian",
+          "validFor": null,
+          "value": "Russian"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Spanish (Castialian)",
+          "validFor": null,
+          "value": "Spanish (Castialian)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Spanish (Mexican)",
+          "validFor": null,
+          "value": "Spanish (Mexican)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Spanish (US)",
+          "validFor": null,
+          "value": "Spanish (US)"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Swedish",
+          "validFor": null,
+          "value": "Swedish"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Turkish",
+          "validFor": null,
+          "value": "Turkish"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Welsh",
+          "validFor": null,
+          "value": "Welsh"
+        }
+      ],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "picklist"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": "plaintextarea",
+      "filterable": false,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Message",
+      "name": "amazonconnect__Message__c",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": false,
+      "type": "textarea"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": false,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Selected",
+      "name": "amazonconnect__Selected__c",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "boolean"
+    },
+    {
+      "aggregatable": true,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Voice",
+      "name": "amazonconnect__Voice__c",
+      "nillable": false,
+      "picklistValues": [
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ivy",
+          "validFor": "AQAA",
+          "value": "Ivy"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Joanna",
+          "validFor": "AQAA",
+          "value": "Joanna"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Joey",
+          "validFor": "AQAA",
+          "value": "Joey"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Justin",
+          "validFor": "AQAA",
+          "value": "Justin"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Kendra",
+          "validFor": "AQAA",
+          "value": "Kendra"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Kimberly",
+          "validFor": "AQAA",
+          "value": "Kimberly"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Matthew",
+          "validFor": "AQAA",
+          "value": "Matthew"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Salli",
+          "validFor": "AQAA",
+          "value": "Salli"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Zeina",
+          "validFor": "gAAA",
+          "value": "Zeina"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Zhiyu",
+          "validFor": "QAAA",
+          "value": "Zhiyu"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Mads",
+          "validFor": "IAAA",
+          "value": "Mads"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Naja",
+          "validFor": "IAAA",
+          "value": "Naja"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Lotte",
+          "validFor": "EAAA",
+          "value": "Lotte"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ruben",
+          "validFor": "EAAA",
+          "value": "Ruben"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Russell",
+          "validFor": "CAAA",
+          "value": "Russell"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Nicole",
+          "validFor": "CAAA",
+          "value": "Nicole"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Amy",
+          "validFor": "BAAA",
+          "value": "Amy"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Brian",
+          "validFor": "BAAA",
+          "value": "Brian"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Emma",
+          "validFor": "BAAA",
+          "value": "Emma"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Raveena",
+          "validFor": "AgAA",
+          "value": "Raveena"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Aditi",
+          "validFor": "AgAA",
+          "value": "Aditi"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Geraint",
+          "validFor": "AIAA",
+          "value": "Geraint"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Céline",
+          "validFor": "AEAA",
+          "value": "Céline"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Mathieu",
+          "validFor": "AEAA",
+          "value": "Mathieu"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Léa",
+          "validFor": "AEAA",
+          "value": "Léa"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Chantal",
+          "validFor": "ACAA",
+          "value": "Chantal"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Marlene",
+          "validFor": "ABAA",
+          "value": "Marlene"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Vicki",
+          "validFor": "ABAA",
+          "value": "Vicki"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Hans",
+          "validFor": "ABAA",
+          "value": "Hans"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Karl",
+          "validFor": "AAgA",
+          "value": "Karl"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Dóra",
+          "validFor": "AAgA",
+          "value": "Dóra"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Giorgio",
+          "validFor": "AAQA",
+          "value": "Giorgio"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Bianca",
+          "validFor": "AAQA",
+          "value": "Bianca"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Carla",
+          "validFor": "",
+          "value": "Carla"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Mizuki",
+          "validFor": "AAIA",
+          "value": "Mizuki"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Takumi",
+          "validFor": "AAIA",
+          "value": "Takumi"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Seoyeon",
+          "validFor": "AAEA",
+          "value": "Seoyeon"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Liv",
+          "validFor": "AACA",
+          "value": "Liv"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ewa",
+          "validFor": "AABA",
+          "value": "Ewa"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Maja",
+          "validFor": "AABA",
+          "value": "Maja"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Jacek",
+          "validFor": "AABA",
+          "value": "Jacek"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Jan",
+          "validFor": "AABA",
+          "value": "Jan"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Inês",
+          "validFor": "AAAg",
+          "value": "Inês"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Cristiano",
+          "validFor": "AAAg",
+          "value": "Cristiano"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Vitória",
+          "validFor": "AAAQ",
+          "value": "Vitória"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Camila",
+          "validFor": "AAAQ",
+          "value": "Camila"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ricardo",
+          "validFor": "AAAQ",
+          "value": "Ricardo"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Carmen",
+          "validFor": "AAAI",
+          "value": "Carmen"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Maxim",
+          "validFor": "AAAE",
+          "value": "Maxim"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Tatyana",
+          "validFor": "AAAE",
+          "value": "Tatyana"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Lucia",
+          "validFor": "AAAC",
+          "value": "Lucia"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Enrique",
+          "validFor": "AAAC",
+          "value": "Enrique"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Conchita",
+          "validFor": "AAAC",
+          "value": "Conchita"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Mia",
+          "validFor": "AAAB",
+          "value": "Mia"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Miguel",
+          "validFor": "AAAAgAAA",
+          "value": "Miguel"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Penélope",
+          "validFor": "AAAAgAAA",
+          "value": "Penélope"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Lupe",
+          "validFor": "AAAAgAAA",
+          "value": "Lupe"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Astrid",
+          "validFor": "AAAAQAAA",
+          "value": "Astrid"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Filiz",
+          "validFor": "AAAAIAAA",
+          "value": "Filiz"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Gwyneth",
+          "validFor": "AAAAEAAA",
+          "value": "Gwyneth"
+        }
+      ],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "picklist"
+    }
+  ],
+  "label": "AC Voicemail Drop",
+  "childRelationships": [
+    {
+      "cascadeDelete": true,
+      "childSObject": "AIInsightValue",
+      "deprecatedAndHidden": false,
+      "field": "SobjectLookupValueId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "AIRecordInsight",
+      "deprecatedAndHidden": false,
+      "field": "TargetId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "AgentWork",
+      "deprecatedAndHidden": false,
+      "field": "WorkItemId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "AttachedContentDocument",
+      "deprecatedAndHidden": false,
+      "field": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "AttachedContentDocuments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "AttachedContentNote",
+      "deprecatedAndHidden": false,
+      "field": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "AttachedContentNotes",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "Attachment",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Attachments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "CollaborationGroupRecord",
+      "deprecatedAndHidden": false,
+      "field": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordAssociatedGroups",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "CombinedAttachment",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "CombinedAttachments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ContactRequest",
+      "deprecatedAndHidden": false,
+      "field": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ContactRequests",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "ContentDistribution",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "ContentDocumentLink",
+      "deprecatedAndHidden": false,
+      "field": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ContentDocumentLinks",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ContentDocumentLinkChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ContentVersion",
+      "deprecatedAndHidden": false,
+      "field": "FirstPublishLocationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ContentVersionChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "FirstPublishLocationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "DuplicateRecordItem",
+      "deprecatedAndHidden": false,
+      "field": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "DuplicateRecordItems",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EmailMessageChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelatedToId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EngagementTopic",
+      "deprecatedAndHidden": false,
+      "field": "TopicId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "EngagementInitiatedTopic",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EngagementTopicChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "TopicId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "EntitySubscription",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "FeedSubscriptionsForEntity",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EventChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "EventRelation",
+      "deprecatedAndHidden": false,
+      "field": "RelationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "EventRelations",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EventRelationChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "FeedComment",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "FeedItem",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "FlowExecutionErrorEvent",
+      "deprecatedAndHidden": false,
+      "field": "ContextRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "FlowOrchestrationWorkItem",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "FlowOrchestrationWorkItems",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "FlowRecordRelation",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "NetworkActivityAudit",
+      "deprecatedAndHidden": false,
+      "field": "ParentEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ParentEntities",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "NetworkFeedResponseMetric",
+      "deprecatedAndHidden": false,
+      "field": "ParentRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "NetworkUserHistoryRecent",
+      "deprecatedAndHidden": false,
+      "field": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "NetworkUserHistoryRecentToRecord",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "Note",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Notes",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "NoteAndAttachment",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "NotesAndAttachments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "PendingServiceRouting",
+      "deprecatedAndHidden": false,
+      "field": "WorkItemId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "PendingServiceRoutingInteractionInfo",
+      "deprecatedAndHidden": false,
+      "field": "PrimaryRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "PendingServiceRoutingInteractionInfo",
+      "deprecatedAndHidden": false,
+      "field": "TargetObjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "ProcessException",
+      "deprecatedAndHidden": false,
+      "field": "AttachedToId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ProcessExceptions",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ProcessExceptionEvent",
+      "deprecatedAndHidden": false,
+      "field": "AttachedToId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "ProcessInstance",
+      "deprecatedAndHidden": false,
+      "field": "TargetObjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ProcessInstances",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ProcessInstanceHistory",
+      "deprecatedAndHidden": false,
+      "field": "TargetObjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ProcessSteps",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "RecordAction",
+      "deprecatedAndHidden": false,
+      "field": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordActions",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "RecordActionHistory",
+      "deprecatedAndHidden": false,
+      "field": "ParentRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordActionHistories",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "RecordAlert",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordAlertParent",
+      "restrictedDelete": true
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "RecordAlert",
+      "deprecatedAndHidden": false,
+      "field": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordAlertWhat",
+      "restrictedDelete": true
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "SurveySubject",
+      "deprecatedAndHidden": false,
+      "field": "SubjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "SurveySubjectEntities",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "TaskChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "TaskRelation",
+      "deprecatedAndHidden": false,
+      "field": "RelationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "TaskRelations",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "TaskRelationChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "TopicAssignment",
+      "deprecatedAndHidden": false,
+      "field": "EntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "TopicAssignments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "UserDefinedLabelAssignment",
+      "deprecatedAndHidden": false,
+      "field": "ItemId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "UserDefinedLabelAssignments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "VideoCall",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "VideoRelatedRecords",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "VideoCallChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "VoiceCall",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RelatedRecords",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "VoiceCallChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "amazonconnect__AC_VoicemailDrop__Share",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Shares",
+      "restrictedDelete": false
+    }
+  ],
+  "custom": true,
+  "name": "amazonconnect__AC_VoicemailDrop__c",
+  "queryable": true
+}

@@ -1,0 +1,139 @@
+<template>
+    <div style="height:103%;">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <div class="slds-page-header slds-page-header_record-home">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-standard-opportunity">
+                                <lightning-icon icon-name="standard:contract" alternative-text="Pasos de la orden"
+                                    title="Pasos de la orden"></lightning-icon>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span>Pasos de trabajo</span>
+                                        <span class="slds-page-header__title slds-truncate"
+                                            title="Vista Vehículo Kanvan">Vista Vehículo Kanvan</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <ul class="slds-button-group-list">
+                                <li>
+                                    <lightning-button-icon-stateful icon-name="utility:filterList"
+                                        class="slds-m-left_xx-small" selected={showFilters}
+                                        onclick={handleButtonFilterClick} alternative-text="Filtrar">
+                                    </lightning-button-icon-stateful>
+                                </li>
+                                <li>
+                                    <lightning-button-icon icon-name="utility:freeze_column"
+                                        class="slds-m-left_xx-small" onclick={handleButtonOpenModalDialogClick}
+                                        alternative-text="Seleccionar columnas para visualizar">
+                                    </lightning-button-icon>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-m-top_xx-small"
+            style="background-color:rgb(250 250 249 / 0%);position:relative;height:calc(103% - 40px);overflow:hidden;display:flex;flex-direction:row-reverse ">
+            <div class={openPanel}>
+                <div class="slds-panel__header">
+                    <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Filter">Filtrar
+                    </h2>
+                </div>
+                <div class="slds-panel__body">
+                    <div class="slds-filters">
+                        <ol class="slds-list_vertical slds-list_vertical-space">
+                            <li class="slds-item slds-hint-parent">
+                                <lightning-combobox name="taller" label="Taller" 
+                                    options={territories.data} onchange={handleTerritoryIdChange}></lightning-combobox>
+                            </li>
+                            <!-- <li class="slds-item slds-hint-parent">
+                                <lightning-input type="date" label="Fecha inicio" value={startDate} onchange={handleStartDateChange}>
+                                </lightning-input>
+                            </li>
+                            <li class="slds-item slds-hint-parent">
+                                <lightning-input class="inpHoy" type="date" label="Fecha fin" value={endDate} onchange={handleEndDateChange}>                                    
+                                </lightning-input>
+                            </li> -->
+                            <!-- <li class="slds-item slds-hint-parent">
+                                <lightning-input type="search" label="Orden de trabajo" placeholder="" value={workOrderNumber}
+                                onchange={handleWorkOrderChange}></lightning-input>
+                            </li> -->
+                            <li class="slds-item slds-hint-parent">
+                                <lightning-input type="search" label="Caso" placeholder="" value={caseNumber}
+                                onchange={handleCaseNumberChange}></lightning-input>
+                            </li>                            
+                            <li class="slds-item slds-hint-parent">
+                                <lightning-input type="search" label="Placa" onchange={handlePlacaChange} value={placa}>
+                                </lightning-input>
+                            </li>
+                            <li class="slds-item slds-hint-parent">
+                                <lightning-input type="search" label="Vin" onchange={handleVinChange} value={vin}>
+                                </lightning-input>
+                            </li>                                                    
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-only-content slds-col  ui"
+                style="background-color: rgb(250 250 249 / 0%); padding-left: 0px;padding-right: 0px;">
+                <div class="lists slds-m-top_xx-small">
+                    <template for:each={workOrderStageNames} for:item="stageName">
+                        <div class="list scroll" key={stageName}  data-stage={stageName}>
+                            <c-rm_ct_vista_kanban_vehiculo_item stage={stageName} territory-id={territoryId} start-date={startDate} end-date={endDate} work-order-number={workOrderNumber} case-number={caseNumber} vin={vin} placa={placa}></c-rm_ct_vista_kanban_vehiculo_item>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <template if:true={showModal}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+                class="slds-modal slds-fade-in-open slds-modal_small">
+                <div class="slds-modal__container">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        aria-hidden="true" onclick={handleButtonCloseModalDialogClick}>
+                        <lightning-icon icon-name="utility:close" alternative-text="Connected" size="small"
+                            title="small size" class="slds-button__icon slds-button__icon_large"
+                            onclick={handleButtonCloseModalDialogClick}>
+                        </lightning-icon>
+                        <span class="slds-assistive-text">Cancelar y cerrar</span>
+                    </button>
+                    <div class="slds-modal__header">
+                        <h2 class="slds-modal__title slds-hyphenate">Seleccionar los campos que se visualizarán</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning-dual-listbox name="workOrderStages" source-label="Disponibles"
+                            selected-label="Seleccionadas" options={workOrderStageNamesForSelect}  onchange={handleStageSelectedChange} value={workOrderStageNames}>
+                        </lightning-dual-listbox>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" aria-label="Cancelar y cerrar"
+                            onclick={handleButtonCloseModalDialogClick}>Cancelar</button>
+                        <button class="slds-button slds-button_brand" aria-label="Guardar"
+                            onclick={handleButtonSaveModalDialogClick}>Guardar</button>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
+    </div>
+</template>

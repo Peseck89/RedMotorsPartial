@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Copy_1_of_enviarFechaColocada</name>
+        <label>Copy 1 of enviarFechaColocada</label>
+        <locationX>710</locationX>
+        <locationY>792</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>{!emailCliente},{!emailClienteOpp},consultas@alticacr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>consultas@alticacr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Recordatorio promesa de pago:  {!$Record.Cuenta__c} – {!$Record.Fecha_promesa_pago__c} | {!$Record.Name}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>emailTemplateRecordatorio</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>enviarFechaColocada</name>
+        <label>enviarFechaColocada</label>
+        <locationX>50</locationX>
+        <locationY>792</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>emailTemplate</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>{!emailCliente},{!emailClienteOpp},consultas@alticacr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>consultas@alticacr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Registro promesa de pago:  {!$Record.Cuenta__c} – {!$Record.Fecha_promesa_pago__c} | {!$Record.Name}</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <assignments>
+        <name>Copy_1_of_productoAsignado</name>
+        <label>Copy 1 of productoAsignado</label>
+        <locationX>578</locationX>
+        <locationY>600</locationY>
+        <assignmentItems>
+            <assignToReference>productoGestion</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>obtener_el_producto.TipoProducto__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Copy_1_of_enviarFechaColocada</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>productoAsignado</name>
+        <label>productoAsignado</label>
+        <locationX>50</locationX>
+        <locationY>492</locationY>
+        <assignmentItems>
+            <assignToReference>productoGestion</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>obtener_el_producto.TipoProducto__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>fechaCambiado</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Copy_1_of_producto_no_es_null</name>
+        <label>Copy 1 of producto no es null</label>
+        <locationX>710</locationX>
+        <locationY>492</locationY>
+        <defaultConnector>
+            <targetReference>Copy_1_of_enviarFechaColocada</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_no_es_nulo</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>obtener_el_producto.TipoProducto__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_productoAsignado</targetReference>
+            </connector>
+            <label>Copy 1 of no es nulo</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>fechaCambiado</name>
+        <label>fechaCambiado</label>
+        <locationX>182</locationX>
+        <locationY>684</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>seCambio</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Fecha_promesa_pago__c</leftValueReference>
+                <operator>WasSet</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>enviarFechaColocada</targetReference>
+            </connector>
+            <label>seCambio</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>producto_no_es_null</name>
+        <label>producto no es null</label>
+        <locationX>182</locationX>
+        <locationY>384</locationY>
+        <defaultConnector>
+            <targetReference>fechaCambiado</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>no_es_nulo</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>obtener_el_producto.TipoProducto__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>productoAsignado</targetReference>
+            </connector>
+            <label>no es nulo</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>revisar_si_esta_en_proceso</name>
+        <label>revisar si esta en proceso</label>
+        <locationX>864</locationX>
+        <locationY>276</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>esta_en_proceso</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Estatus_de_la_gesti_n__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>En proceso</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_obtener_el_producto</targetReference>
+            </connector>
+            <label>esta en proceso</label>
+        </rules>
+    </decisions>
+    <description>was set fecha</description>
+    <interviewLabel>gestion promesa de pago {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>gestion promesa de pago</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Copy_1_of_obtener_el_producto</name>
+        <label>Copy 1 of obtener el producto</label>
+        <locationX>710</locationX>
+        <locationY>384</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Copy_1_of_producto_no_es_null</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Oportunidad_de_Financiamiento__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Oportunidad_de_Financiamiento__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>obtener_el_producto</name>
+        <label>obtener el producto</label>
+        <locationX>182</locationX>
+        <locationY>276</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>producto_no_es_null</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Oportunidad_de_Financiamiento__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Oportunidad_de_Financiamiento__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>397</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>obtener_el_producto</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Categor_a_de_gesti_n__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Cobro</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Subcategor_a_de_gesti_n__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Promesa de pago</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Fecha_promesa_pago__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Gesti_n_ltica__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <scheduledPaths>
+            <name>llegaLaFecha</name>
+            <connector>
+                <targetReference>revisar_si_esta_en_proceso</targetReference>
+            </connector>
+            <label>llegaLaFecha</label>
+            <offsetNumber>8</offsetNumber>
+            <offsetUnit>Hours</offsetUnit>
+            <recordField>Fecha_promesa_pago__c</recordField>
+            <timeSource>RecordField</timeSource>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>emailTemplate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:Tahoma;border-collapse: collapse;width:100%;font-family:Tahoma;border: 1px solid;border-color: white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+
+ &lt;tr&gt;
+
+  &lt;td align=&quot;center&quot;&gt;
+
+   &lt;table style=&quot;width:600px;background-color:white;border: 1px solid;border-color:#E5E6E6;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+
+    &lt;tr&gt;
+
+     &lt;td style=&quot;padding:1px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+
+    &lt;/tr&gt;
+
+    &lt;tr&gt;
+
+     &lt;td&gt;
+
+      &lt;table style=&quot;width:100%;&quot;&gt;
+
+       &lt;tr&gt;
+
+         &lt;td style=&quot;&quot;&gt;
+
+           &lt;p style=&quot;font-weight: bold;font-size:24px;background:#F4F4F4; width:500px;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333;font-size:25px;font-weight:bold&quot;&gt;Registro promesa de pago.&lt;/p&gt;
+
+
+
+         &lt;/td&gt;
+
+       &lt;/tr&gt;
+
+      &lt;/table&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+     &lt;tr&gt;
+
+      &lt;td style = &quot;&quot;&gt;
+
+       &lt;table style=&quot;width:100%;background-color:#white;height:10px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+
+    &lt;tr&gt;
+
+     &lt;td style = &quot;padding:20px;&quot;&gt;
+
+      &lt;p style=&quot;width:580px&quot;&gt;Estimado(a): {!$Record.Cuenta__c}:&lt;/p&gt;
+
+      &lt;p style=&quot;width:580px&quot;&gt; Áltica Servicios le notifica el registro de la siguiente promesa de pago, relacionada al pago de la cuota de su {!productoGestion}, operación número {!obtener_el_producto.Numero_Operacion_Altica__c}: &lt;/p&gt;
+
+      &lt;p style=&quot;width:580px&quot;&gt;Fecha de compromiso: {!$Record.Fecha_promesa_pago__c}&lt;/p&gt;
+      &lt;p style=&quot;width:580px&quot;&gt;Monto: {!$Record.Monto_promesa_pago__c}&lt;/p&gt;
+      &lt;p style=&quot;width:580px&quot;&gt;Moneda: {!$Record.CurrencyIsoCode}&lt;/p&gt;
+
+      &lt;p style=&quot;width:580px&quot;&gt;Comentarios del cliente:&lt;/p&gt;
+      &lt;p style=&quot;width:580px&quot;&gt;En caso de necesitar mayor información, no dude en comunicarse con uno de nuestros agentes de cobro por medio de nuestros canales de contacto:&lt;/p&gt;
+      
+       &lt;ul&gt;
+         &lt;li&gt;Central telefónica: 0800-015 0756&lt;/li&gt;
+         &lt;li&gt;WhatsApp: 6445-0823&lt;/li&gt;
+         &lt;li&gt;Facebook: &lt;a href=&quot;https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.facebook.com%2Falticacr&amp;data=05%7C01%7C%7C990cdd417c5243d357c108db61822064%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638210983739984858%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=GGTmLpej5Zzs3%2Br%2BqCZVDD4NRjIsm3eX%2BmXKbZLVV3s%3D&amp;reserved=0&quot;&gt;Áltica | Facebook&lt;/a&gt;&lt;/li&gt;
+         &lt;li&gt;Correo electrónico: &lt;a href=&quot;mailto:consultas@alticacr.com&quot;&gt;consultas@alticacr.com&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+       
+       
+
+      &lt;br /&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+    &lt;tr &gt;
+
+     &lt;td style=&quot;padding-top: 20px;&quot;&gt;
+
+      &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot; &gt;
+
+       &lt;tr&gt;
+
+
+       &lt;/tr&gt;
+
+      &lt;/table&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+
+
+    &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+
+
+
+
+    &lt;tr&gt;
+
+     &lt;td style=&quot;&quot;&gt;
+
+
+       
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+    &lt;tr&gt;
+
+      &lt;td&gt;
+
+        &lt;br&gt;
+
+
+         &lt;/td&gt;
+
+       &lt;/tr&gt;
+
+
+
+
+
+      &lt;tr&gt;
+
+         
+
+      &lt;td style = &quot;padding:20px;&quot;&gt;
+
+
+     &lt;/td&gt;
+
+      &lt;/tr&gt;
+
+   &lt;/table&gt;
+
+  &lt;/td&gt;
+
+ &lt;/tr&gt;
+
+&lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>emailTemplateRecordatorio</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:Tahoma;border-collapse: collapse;width:100%;font-family:Tahoma;border: 1px solid;border-color: white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+
+ &lt;tr&gt;
+
+  &lt;td align=&quot;center&quot;&gt;
+
+   &lt;table style=&quot;width:600px;background-color:white;border: 1px solid;border-color:#E5E6E6;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+
+    &lt;tr&gt;
+
+     &lt;td style=&quot;padding:1px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+
+    &lt;/tr&gt;
+
+    &lt;tr&gt;
+
+     &lt;td&gt;
+
+      &lt;table style=&quot;width:100%;&quot;&gt;
+
+       &lt;tr&gt;
+
+         &lt;td style=&quot;&quot;&gt;
+
+           &lt;p style=&quot;font-weight: bold;font-size:24px;background:#F4F4F4; width:500px;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333;font-size:25px;font-weight:bold&quot;&gt;Recordatorio promesa de pago.&lt;/p&gt;
+
+
+
+         &lt;/td&gt;
+
+       &lt;/tr&gt;
+
+      &lt;/table&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+     &lt;tr&gt;
+
+      &lt;td style = &quot;&quot;&gt;
+
+       &lt;table style=&quot;width:100%;background-color:#white;height:10px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+
+    &lt;tr&gt;
+
+     &lt;td style = &quot;padding:20px;&quot;&gt;
+
+      &lt;p style=&quot;width:580px&quot;&gt;Estimado(a): {!$Record.Cuenta__c}:&lt;/p&gt;
+
+      &lt;p style=&quot;width:580px&quot;&gt; Áltica Servicios le recuerda la promesa de pago pactada para el día de hoy {!$Record.Fecha_promesa_pago__c}, por la suma de {!$Record.Monto_promesa_pago__c} {!$Record.Moneda_promesa_pago__c} relacionada a la cuota de su {!productoGestion}, operación número {!$Record.Numero_operacion_Altica__c}. &lt;/p&gt;
+
+      &lt;p style=&quot;width:580px&quot;&gt;El día de hoy estaremos debitando de forma automática la cuenta bancaria registrada en nuestros sistemas. O bien, mediante nuestro canales de WhatsApp o Facebook (Opción: Cobros -&gt; Canales de pago -&gt; Cuentas bancarias) podrá obtener el detalle de cuentas bancarias a donde podrá transferir el monto correspondiente; además, en dichos canales podrá solicitarle a uno de nuestros agentes de cobro, el envío (al correo electrónico registrado) de un link desde el cual le será posible realizar en línea el pago del monto acordado, mediante la plataforma electrónica del Banco Nacional de Costa Rica, utilizando la tarjeta de débito o crédito de su conveniencia.&lt;/p&gt;
+
+      &lt;p style=&quot;width:580px&quot;&gt;En caso de necesitar mayor información, no dude en comunicarse con uno de nuestros agentes de cobro por medio de nuestros canales de contacto:&lt;/p&gt;
+     
+       &lt;ul&gt;
+         &lt;li&gt;Central telefónica: 0800-015 0756&lt;/li&gt;
+         &lt;li&gt;WhatsApp: 6445-0823&lt;/li&gt;
+         &lt;li&gt;Facebook: &lt;a href=&quot;https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.facebook.com%2Falticacr&amp;data=05%7C01%7C%7C990cdd417c5243d357c108db61822064%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638210983739984858%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=GGTmLpej5Zzs3%2Br%2BqCZVDD4NRjIsm3eX%2BmXKbZLVV3s%3D&amp;reserved=0&quot;&gt;Áltica | Facebook&lt;/a&gt;&lt;/li&gt;
+         &lt;li&gt;Correo electrónico: &lt;a href=&quot;mailto:consultas@alticacr.com&quot;&gt;consultas@alticacr.com&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+       
+       
+
+      &lt;br /&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+    &lt;tr &gt;
+
+     &lt;td style=&quot;padding-top: 20px;&quot;&gt;
+
+      &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot; &gt;
+
+       &lt;tr&gt;
+
+
+       &lt;/tr&gt;
+
+      &lt;/table&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+
+
+    &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+
+
+
+
+    &lt;tr&gt;
+
+     &lt;td style=&quot;&quot;&gt;
+
+
+       
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+    &lt;tr&gt;
+
+      &lt;td&gt;
+
+        &lt;br&gt;
+
+
+         &lt;/td&gt;
+
+       &lt;/tr&gt;
+
+
+
+
+
+      &lt;tr&gt;
+
+         
+
+      &lt;td style = &quot;padding:20px;&quot;&gt;
+
+
+     &lt;/td&gt;
+
+      &lt;/tr&gt;
+
+   &lt;/table&gt;
+
+  &lt;/td&gt;
+
+ &lt;/tr&gt;
+
+&lt;/table&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>emailCliente</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <elementReference>$Record.Account0__r.Correo_electronico_Altica__c</elementReference>
+        </value>
+    </variables>
+    <variables>
+        <name>emailClienteOpp</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <elementReference>$Record.Oportunidad_de_Financiamiento__r.Email__c</elementReference>
+        </value>
+    </variables>
+    <variables>
+        <name>productoGestion</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,38 @@
+<template>
+    <lightning-card>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <!-- create layout 2 columns -->
+        <lightning-layout>
+            <lightning-layout-item flexibility="auto" size="2" class="slds-p-left_medium slds-m-bottom_small">
+                <!-- <lightning-input type="search" label="Ingrese el número de caso" onblur={handleBlur} class="slds-m-around_medium" value={caseNumber}></lightning-input> -->
+                <c-lookup selection={caseInitialSelection} errors={caseErrors} placeholder="Ingrese el número de caso"
+                    onsearch={handleCaseSearch} onselectionchange={handleCaseSelectionChange}>                                  
+                </c-lookup>
+            </lightning-layout-item>
+            <lightning-layout-item flexibility="auto" size="2" class="slds-p-left_medium slds-m-bottom_small">
+                <div class="slds-text-heading_small">
+                    {tallerName}
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        
+        <lightning-layout>
+            <lightning-layout-item flexibility="auto" size="12" padding="horizontal-medium">
+                <lightning-tree-grid
+                data={data}
+                columns={columns}
+                key-field="id"
+                is-loading={isLoading}
+                hide-checkbox-column
+                expanded-rows={defaultExpandedRows}
+                onrowaction={handleRowAction}
+                >
+                </lightning-tree-grid>
+            </lightning-layout-item>
+        </lightning-layout>
+        <div class="slds-m-bottom_large"></div>
+    </lightning-card>
+</template>

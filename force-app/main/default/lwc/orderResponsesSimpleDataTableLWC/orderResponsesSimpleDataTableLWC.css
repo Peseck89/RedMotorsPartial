@@ -1,0 +1,38 @@
+h1{
+    font-size: 17px;
+    color: #ff9a31;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.updated-order{
+  font-size: 24px;
+  color: #44bd29;
+}
+
+.no-updated-order{
+  font-size: 24px;
+  color: #e00606;
+}
+
+h2{
+    font-size: 14px;
+    color: #2b2b2b;
+    font-weight: bold;
+}
+
+.btn-sync{
+  color: white;
+  font-size: 15px;
+  margin-left: 3px;
+  
+}
+
+.msg-container{
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+.date{
+  margin-left: 25px;
+}

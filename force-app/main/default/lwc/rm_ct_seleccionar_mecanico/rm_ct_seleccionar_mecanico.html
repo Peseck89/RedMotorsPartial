@@ -1,0 +1,19 @@
+<template>
+    <lightning-modal-header label="Seleccionar mecánico"></lightning-modal-header>
+    <lightning-modal-body> 
+       <!--create a layout with one column-->
+        <lightning-layout>
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <div style="height: 300px;">
+                    <p>Seleccione el mecánico al que desea asignar la(s) tarea(s)</p>
+                    <c-lookup selection={mechanicInitialSelection} errors={mechanicErrors} label="Mecánico"
+                    onsearch={handleMechanicSearch} onselectionchange={handleMechanicSelectionChange}>                                  
+                    </c-lookup>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Aceptar" onclick={handleAccept}></lightning-button>
+    </lightning-modal-footer>
+</template>

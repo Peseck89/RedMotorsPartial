@@ -1,0 +1,17 @@
+<template>
+    <div class="wrapper">
+        <div class="subtitle">{currentTrack}</div>
+        <div class="controls">
+            <button class="control-btn secondary" onclick={handlePrev} title="Previous">
+                <lightning-icon icon-name="utility:chevronleft" size="small"></lightning-icon>
+            </button>
+            <button class="control-btn primary" onclick={handlePlayPause} title={playPauseTitle}>
+                <lightning-icon icon-name={playPauseIcon} size="medium"></lightning-icon>
+            </button>
+            <button class="control-btn secondary" onclick={handleNext} title="Next">
+                <lightning-icon icon-name="utility:chevronright" size="small"></lightning-icon>
+            </button>
+        </div>
+        <div class="status">{playerStatus}</div>
+    </div>
+</template>

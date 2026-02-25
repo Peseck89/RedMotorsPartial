@@ -1,0 +1,21 @@
+<template>
+    <lightning-modal-header label="Agregar comentario del estado del vehículo"></lightning-modal-header>
+    <lightning-modal-body>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <lightning-card>
+            <div class="slds-m-around_medium">
+                <lightning-input label="Comentario" value={comentario} onchange={handleComentarioChange} required></lightning-input>
+            </div>
+            <div class="slds-m-around_medium">
+                <lightning-input label="Reportado" onchange={handleReportadoChange} type="checkbox" checked={reportado}></lightning-input>
+            </div>
+        </lightning-card>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div class="slds-m-around_medium">
+            <lightning-button label="Guardar" onclick={handleGuardarComentario} variant="brand" disabled={isSaveButtonDisabled}></lightning-button>
+        </div>
+    </lightning-modal-footer>
+</template>

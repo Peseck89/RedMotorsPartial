@@ -1,0 +1,186 @@
+<template>
+  <div class="cust-body slds-card">
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__body">
+          <br />
+          <h2 class="slds-card__header-title" style="font-size: 30px;">
+            <span>Detalles del Avalúo</span>
+          </h2>
+        </div>
+      </header>
+    </div>
+    <div class=" vehicle-info-body slds-card__body slds-card__body_inner" style="margin-inline: 15px;">
+      <div class="slds-grid slds-wrap slds-gutters" style="padding-inline: 10px;">
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Placa</label>
+            <div class="slds-form-element__static">{vehicleData.placa}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Número VIN</label>
+            <div class="slds-form-element__static">{vehicleData.numeroVin}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Tracción</label>
+            <div class="slds-form-element__static">{vehicleData.traccion}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Carrocería</label>
+            <div class="slds-form-element__static">{vehicleData.carroceria}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Número de Chasis</label>
+            <div class="slds-form-element__static">{vehicleData.numeroChasis}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Categoría</label>
+            <div class="slds-form-element__static">{vehicleData.categoria}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Estilo</label>
+            <div class="slds-form-element__static">{vehicleData.estilo}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Capacidad Personas</label>
+            <div class="slds-form-element__static">{vehicleData.capacidadPersonas}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Año</label>
+            <div class="slds-form-element__static">{vehicleData.anio}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Color</label>
+            <div class="slds-form-element__static">{vehicleData.color}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Combustible</label>
+            <div class="slds-form-element__static">{vehicleData.combustible}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Cantidad Embargos</label>
+            <div class="slds-form-element__static">{vehicleData.cantidadEmbargos}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Marca</label>
+            <div class="slds-form-element__static">{vehicleData.marca}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Modelo</label>
+            <div class="slds-form-element__static">{vehicleData.modelo}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label">Propietario</label>
+            <div class="slds-form-element__static">{vehicleData.propietario}</div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label" for="observations">Observaciones</label>
+            <div class="slds-form-element__control">
+              <textarea id="observations" class="slds-textarea" style="font-size: 16px;" disabled={canEdit} 
+                placeholder="Ingrese sus observaciones sobre el vehículo" onchange={handleObservationsChange}>{observations}
+              </textarea>
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label" for="suggestedValue">Valor Sugerido Valuador</label>
+            <div class="slds-form-element__control">
+              <div class="slds-form-element__static">{tipoMoneda} {formatSuggestedValue}</div>
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <div class="slds-form-element">
+            <label class="slds-form-element__label cust-label" for="bossSuggestedValue">Valor Sugerido Jefe de
+              Usados</label>
+            <div class="slds-form-element__control">
+              <input type="text" id="bossSuggestedValue" class="slds-input" placeholder="Ej. $10,000.00"
+                value={formatSuggestedBossValue} onchange={handleBossSuggestedValueChange} disabled={canEdit} />
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <template if:true={promedios}>
+            <div class="slds-form-element">
+              <label class="slds-form-element__label cust-label" for="systemSugestedValue">Valor Sugerido Sistema</label>
+              <div class="slds-form-element__control">
+                <span class="slds-text-heading_medium">{tipoMoneda} {formatPromedioSistema}</span>
+              </div>
+            </div>
+          </template>
+          <template if:false={promedios}>
+            <div class="slds-form-element">
+              <label class="slds-form-element__label cust-label" for="systemSugestedValue">Valor Sugerido Sistema</label>
+              <div class="slds-form-element__control">
+                <span class="slds-text-heading_medium">No hay información</span>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+          <template if:true={promedios}>
+            <dl class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-2">
+                    <dt class="slds-text-title"> Promedio Sistema:</dt>
+                    <dd class="slds-text-heading_medium">{promedios.Promedio_Valuador__c}</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <dt class="slds-text-title">Jefe Usados:</dt>
+                    <dd class="slds-text-heading_medium">{promedios.Promedio_Jefe_Us__c}</dd>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <dt class="slds-text-title">Muestras:</dt>
+                    <dd class="slds-text-body_regular">{promedios.Cantidad_Registros__c}</dd>
+                </div>
+            </dl>
+          </template>
+          <template if:false={promedios}>
+              <p>No hay datos históricos</p>
+          </template>
+        </div> -->
+
+      </div>
+    </div>
+    <div if:true={hasValidProfile} class="slds-card__footer" style="width: 100%;">
+      <div class="slds-grid slds-grid_align-end">
+        <button class="slds-button slds-button_brand" onclick={handleSaveAppraisal}>
+          Guardar
+          <lightning-icon icon-name="utility:save" size="x-small" class="slds-m-left_x-small"></lightning-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</template>

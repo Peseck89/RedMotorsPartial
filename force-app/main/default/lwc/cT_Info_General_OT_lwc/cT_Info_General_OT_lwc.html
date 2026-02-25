@@ -1,0 +1,44 @@
+<template>
+  <div class="grid-container">
+    <!-- <div class="slds-p-around_medium lgc-bg main-container"> -->
+      <div class="info-data-container item1">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:service_contract" alternative-text="Email" title="Email"></lightning-icon>
+          <p class="primary-text">
+            Datos de la orden de Trabajo
+          </p>
+        </div>        
+        <div class="bottom-container client-data">
+          <span><strong>Asesor: </strong>{asesorOt}</span>
+          <span><strong>Servicio: </strong>{servicio}</span>
+          <span><strong>Fecha de ingreso: </strong>{fechaRecibido}</span>
+          <span><strong>Cita: </strong>{cita}</span>
+          <span><strong>Origen de la cita: </strong>{origenCita}</span>
+          <span><strong>Días en proceso: </strong>{diasProceso}</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px" class="info-data-container item1">
+        <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:user_role" alternative-text="Email" title="Email"></lightning-icon>
+            <p class="primary-text">
+                Detalle Asesor
+            </p>
+        </div>
+        <div class="bottom-container client-data">
+            <div if:false={showEditZone} class="edit-zone">
+                <span style="border: none;"><strong></strong>{comentarios}</span>
+                <lightning-button-icon onclick={handleEditZone} icon-name="utility:edit" alternative-text="Editar" title="Edit"></lightning-button-icon>
+            </div>
+            <div if:true={showEditZone} class="edit-zone">
+                <textarea style="min-width: 100%;" onchange={handleTextareaChange}>{comentarios}</textarea>
+            </div>
+            <div if:true={showEditZone} style="display: flex; justify-content:flex-end; width:100%">
+                <lightning-button variant="destructive" onclick={handleEditZone} label="Cancelar" title="Cancelar" class="slds-m-left_x-small"></lightning-button>
+                <lightning-button variant="brand" onclick={handleSave} label="Guardar" title="Guardar" class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </div>
+    </div>
+    
+  </div>
+</template>

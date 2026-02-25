@@ -1,0 +1,63 @@
+<template>
+  <div class="grid-container">
+    <!-- <div class="slds-p-around_medium lgc-bg main-container"> -->
+      <div style="margin-bottom:20px" class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:people" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <p class="primary-text">
+            Propietario
+          </p>
+        </div>
+        <div class="bottom-container client-data">
+          <span><strong>Nombre: </strong><a href={urlAccount}>{nombrePropietario}</a></span>
+          <span><strong>Correo: </strong>{correoPropietario}</span>
+          <span><strong>Teléfono: </strong>{telefonoPropietario}</span>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:20px" class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:employee_contact" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <p class="primary-text">
+            Contacto
+          </p>
+        </div>
+        <div class="bottom-container client-data">
+          <span><strong>Nombre: </strong><a href={urlContact}>{nombreContacto}</a></span>
+          <span><strong>Correo: </strong>{correoContacto}</span>
+          <span><strong>Teléfono: </strong>{telefonoContacto}</span>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:20px" class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:contract" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <p class="primary-text">
+            Datos de Facturación
+          </p>
+        </div>
+        <div class="bottom-container client-data">
+          <span><strong>Nombre: </strong>{nombreFacturacion}</span>
+          <span><strong>Correo: </strong>{correoFacturacion}</span>
+          <span><strong>Teléfono: </strong>{telefonoFacturacion}</span>
+        </div>
+      </div>
+      
+      <!-- <div class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:contact" alternative-text="Email" title="Email"></lightning-icon>
+          <p class="primary-text">
+            Contacto
+          </p>
+        </div>        
+        <div class="bottom-container client-data">
+          <span><strong>Ejem: </strong>{}</span>
+        </div>
+      </div> -->
+
+    <!-- </div> -->
+  </div>
+</template>

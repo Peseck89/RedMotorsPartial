@@ -1,0 +1,115 @@
+<!-- vehiculosEnTallerTabla.html -->
+<template>
+    <lightning-card title="Vehículos activos en taller">
+        <!-- Filtros -->
+        <div class="filters">
+            <div class="filter">
+                <lightning-input
+                    type="date"
+                    label="Desde"
+                    value={fechaInicio}
+                    onchange={handleFechaInicioChange}>
+                </lightning-input>
+            </div>
+            <div class="filter">
+                <lightning-input
+                    type="date"
+                    label="Hasta"
+                    value={fechaFin}
+                    onchange={handleFechaFinChange}>
+                </lightning-input>
+            </div>
+            <div class="filter">
+                <lightning-combobox
+                    label="Sucursal"
+                    value={sucursal}
+                    options={sucursalOptions}
+                    onchange={handleSucursalChange}>
+                </lightning-combobox>
+            </div>
+            <div class="filter">
+                <lightning-combobox
+                    label="Tipo servicio"
+                    value={tipoServicio}
+                    options={tipoServicioOptions}
+                    onchange={handleTipoServicioChange}>
+                </lightning-combobox>
+            </div>
+            <div class="filter">
+                <lightning-combobox
+                    label="Asesor"
+                    value={asesorId}
+                    options={asesorOptions}
+                    onchange={handleAsesorChange}>
+                </lightning-combobox>
+            </div>
+            <div class="filter filter-button">
+                <lightning-button
+                    variant="brand"
+                    label="Buscar"
+                    onclick={handleBuscar}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-wrapper">
+            <template if:true={isLoading}>
+                <div class="loading">
+                    <lightning-spinner alternative-text="Cargando" size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:true={hasData}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered custom-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">VIN</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Tipo de servicio</th>
+                            <th scope="col">Fecha ingreso</th>
+                            <th scope="col">Días en taller</th>
+                            <th scope="col">Días sin contacto</th>
+                            <th scope="col">Último contacto</th>
+                            <th scope="col">Asesor</th>
+                            <!-- <th scope="col">Estado actual</th>
+                            <th scope="col">Alerta</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={rows} for:item="row">
+                            <tr key={row.caseId}>
+                                <td>{row.vinOrPlaca}</td>
+                                <td>{row.cliente}</td>
+                                <td>{row.tipoServicio}</td>
+                                <td>{row.fechaIngresoFmt}</td>
+                                <td>{row.diasEnTallerFmt}</td>
+                                <td>{row.diasSinContacto}</td>
+                                <td>{row.ultimoContactoFmt}</td>
+                                <td>{row.asesorNombre}</td>
+                                <!-- <td>{row.semaforo}</td>
+                                <td class={row.alertaClass}>
+                                    {row.semaforo}
+                                </td> -->
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+
+            <template if:false={hasData}>
+                <template if:false={isLoading}>
+                    <div class="no-data">
+                        No se encontraron vehículos con alertas para los filtros seleccionados.
+                    </div>
+                </template>
+            </template>
+
+            <template if:true={error}>
+                <div class="error">
+                    Error al cargar datos: {error.body.message}
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

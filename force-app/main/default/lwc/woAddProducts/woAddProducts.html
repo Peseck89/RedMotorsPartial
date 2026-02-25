@@ -1,0 +1,254 @@
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-card variant="Narrow" icon-name="standard:work_order" title="Cargar Productos a la Orden">
+            <b style="color: #000000;;margin-left: 12px;"> Monto de la W.O:
+                 <b style="color: #193a96;;margin-left: 12px;"><lightning-formatted-number currency-code={currencyCode} format-style="currency" value={montoTotal}></lightning-formatted-number>
+                </b></b><br/>
+            <b if:true={showMoveLines} style="color: #087508;;margin-left: 12px;"> Orden de líneas</b><br/>
+            <b class="d-none" data-label="orderQuantity" style="color: rgb(254 147 57);margin-left: 12px;font-size: 16px;"> Productos sin existencia: {specialOrderQuantity} 
+                <lightning-button-icon 
+                style="margin-bottom: 3px;"
+                variant="container"
+                onclick={handleshowSpecialPreview}
+                icon-name="action:preview"></lightning-button-icon></b>
+           
+       
+            <div   class="slds-float--right" style="padding: 10px;" >
+                <lightning-button-group>
+                    <template if:true={showDelete}>
+                    <lightning-button label="Delete"
+                    variant="destructive" 
+                    onclick={handleDeleteLine}
+                    icon-name="utility:delete"
+                    ></lightning-button>
+                </template>
+                    <lightning-button  label="Agregar Línea" 
+                    variant="brand-outline"
+                    onclick={handleSearch}
+                    icon-name="utility:add"
+
+                    ></lightning-button>
+                    <lightning-button if:false={showBetaStuff} label="Obtener Lineas" 
+                    variant="brand-outline"
+                    disabled={alreadyGetLines}
+                    onclick={handleGetWolis}
+                    icon-name="utility:sync"
+
+                    ></lightning-button>
+                    <lightning-button label="Búsqueda Detallada"
+                    variant="brand-outline" 
+                    onclick={handleShowSearch}
+                    ></lightning-button>
+                    <!--<lightning-button label="Validar Existencias" 
+                    variant="brand-outline"
+                    onclick={validateProducts}
+                    icon-name="utility:sync"
+
+                    ></lightning-button><
+                    <lightning-button label="Guardar Offline" 
+                    variant="brand-outline"
+                    onclick={handleSave}
+                    disabled={showReserveButton}
+                    icon-name="utility:save"
+
+                    ></lightning-button>-->
+                    <lightning-button if:false={showBetaStuff} label="Guardar" 
+                    variant="brand"
+                    onclick={handleSave}
+                    icon-name="utility:product_transfer_state"
+                    ></lightning-button>
+                </lightning-button-group>
+                </div>
+                <div if:true={showMoveLines}   class="slds-float--left" style="padding: 10px;" >
+                    <lightning-button-group>
+                        <lightning-button 
+                        variant="brand-outline"
+                        onclick={handleMoveTop}
+                        icon-name="utility:arrow_top"
+        
+                        ></lightning-button>
+                        <lightning-button 
+                        variant="brand-outline"
+                        onclick={handleMoveUp}
+                        icon-name="utility:arrowup"
+        
+                        ></lightning-button>
+                        <lightning-button 
+                        variant="brand-outline"
+                        onclick={handleMoveDown}
+                        icon-name="utility:arrowdown"
+                        ></lightning-button>
+                        <lightning-button 
+                        variant="brand-outline"
+                        onclick={handleMoveBottom}
+                        icon-name="utility:arrow_bottom"
+                        ></lightning-button>
+                    </lightning-button-group>
+                    </div>
+            
+    </lightning-card>
+    <template if:true={isLoaded}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" style="background-color: #f0ffff00;" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+                <!-- Modal/Popup Box LWC header here -->
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+                    <lightning-spinner style="background-color: #f0ffff00;"   size="large" alternative-text="Loading...">
+                    </lightning-spinner>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                
+            </div>
+            
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" style="opacity: 0.8;top: 5.7%;height: 800px;border-radius: 4px;"></div>
+    </template>
+    <div >
+       <!-- <div if:true={isLoaded} class="slds-is-relative">
+            <lightning-spinner  variant="brand" size="large" alternative-text="Loading...">
+            </lightning-spinner>
+        </div>-->
+        <div  >
+            <table class="slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Select</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Bodega</th>
+                    <!--<th  if:true={showRealAvailability} scope="col">Localización</th>-->
+                    <!-- <th  if:true={showRealAvailability} scope="col" style="width: 131px;">Localización</th> -->
+                    <th scope="col">Precio Unitario</th>
+                    <th scope="col">Precio Venta</th>
+                    <!-- <th scope="col">Disponible</th> -->
+                    <th scope="col">Disponible real</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col" style="width: 150px;">Alias</th>
+                    <!-- <th scope="col">Aprobado</th> -->
+                    <th scope="col">Cantidad</th>
+                    <!--<th scope="col">Descuento</th>-->
+                    <th scope="col">Tipo de Trabajo</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                <template for:each={modifiedList} for:item="item" for:index="indexVar">
+                  <tr key={item.ID} data-id={item.ID} data-isclosed={item.isClosed}>
+                    <td data-label="select">
+                        <lightning-input if:true={item.CanDeleteWolis__c} type="checkbox"  name="chackInput" label="checkbox" variant="label-hidden" checked={item.isChecked}  data-id={item.ID} onchange={handlecheck} disabled={item.isClosed}></lightning-input>
+                    </td>
+                    <td if:false={item.isSearch} data-label="Product">{item.ProductCode}</td>
+                    <td if:true={item.isSearch} data-label="Product"><lightning-input data-id={item.ID} label="Enter some text" name="code" type="text" placeholder="Código de Producto" value={item.ProductCode} onblur={handleSearchText} variant="label-hidden" style="color:rgb(75, 75, 75);" ></lightning-input></td>
+                    <td data-label="Name"> {item.Name}</td>
+                    <!--<td data-label="Bodega">{item.Bodega}</td>
+                    <td if:true={showRealAvailability} data-status={item.validated} data-label="DisponibleReal">{item.location}</td>-->
+                    <td data-label="Bodega"  style="font-weight: 900;">
+                        <lightning-combobox  style="color:rgb(0, 0, 0);text-align: left;font-weight: 900;"
+                            name="location"
+                            variant="label-hidden"
+                            label="Bodega"
+                            data-id={item.ID}
+                            data-status={item.validated}
+                            value={item.Bodega}
+                            options={item.locations}
+                            onchange={handleBodegaSelect}
+                            disabled={item.isClosed}
+                             ></lightning-combobox>
+                    </td>
+                    <td data-label="Precio">{item.currencyCode} <lightning-formatted-number value={item.precio}></lightning-formatted-number> </td>
+                    <td data-label="PrecioModificar"><lightning-input type="number" step=".0001" data-id={item.ID} name="PrecioUnitario" variant="label-hidden" label="Enter a number" onchange={handleSalePrice}  value={item.unitPrice}  style="color:rgb(75, 75, 75);" disabled={item.canEditSalesPrice}></lightning-input></td>
+                    <!-- if:true={showRealAvailability} <td data-label="Disponible">{item.cantidadDisponible}softlandQuantity</td> -->
+                    <td data-status={item.validated} data-label="DisponibleReal">{item.cantidadDisponible}</td>
+                    <td data-label="Tipo">{item.productType}</td>
+                    <td data-label="Alias"><lightning-input data-id={item.ID} label="Enter some text" name="alias" type="text" placeholder="Alias" value={item.alias} onblur={handleAlias} variant="label-hidden" style="color:rgb(75, 75, 75);" disabled={item.isClosed}></lightning-input></td>
+                    <!-- <td data-label="Activo"> <lightning-input type="toggle"  data-id={item.ID} variant="label-hidden" label="Basic option" name="aprobado" onchange={handleApproval} checked disabled={item.isClosed}></lightning-input></td> -->
+                    <td if:true = {item.isMO} data-label="Cantidad"><lightning-input type="number" data-id={item.ID} name="cantidad" variant="label-hidden" label="Enter a number" min="0.01" step=".0001" onchange={handleQuantity}   message-when-range-overflow="No hay la cantidad disponible" message-when-range-underflow="La cantidad no puede ser menor a 0" value={item.cantidad}  style="color:rgb(75, 75, 75);" disabled={item.disableQuantity}> MOOO</lightning-input></td>
+                    <td if:false = {item.isMO}  data-label="Cantidad"><lightning-input type="number" data-id={item.ID} name="cantidad" variant="label-hidden" label="Enter a number" min="0.01" step=".0001" onchange={handleQuantity}   message-when-range-overflow="No hay la cantidad disponible" message-when-range-underflow="La cantidad no puede ser menor a 0" value={item.cantidad}  style="color:rgb(75, 75, 75);" disabled={item.disableQuantity}></lightning-input></td>
+                    <td if:false = {item.isSearch} data-label="TiposTrabajo"  style="font-weight: 900;">
+                        <lightning-combobox  style="color:rgb(0, 0, 0);text-align: left;font-weight: 900;"
+                            name="tiposTrabajo"
+                            variant="label-hidden"
+                            label="Tipos de Trabajo"
+                            data-id={item.ID}
+                            data-status={item.validated}
+                            value={item.TipoTrabajoCaso}
+                            options={tiposTrabajoOptions}
+                            onchange={handleTrabajoSelect}
+                            disabled={item.isClosed}
+                            required
+                             ></lightning-combobox>
+                    </td>
+                    <!--<td data-label="Cantidad"><lightning-input type="number" data-id={item.ID} name="cantidad" variant="label-hidden" label="Enter a number" max={item.softlandQuantity} min="0.01" step=".0001" onchange={handleQuantity}   message-when-range-overflow="No hay la cantidad disponible" message-when-range-underflow="La cantidad no puede ser menor a 0" value={item.cantidad}  style="color:rgb(75, 75, 75);" ></lightning-input></td>-->
+                    <!--<td data-label="Descuento"><lightning-input data-id={item.ID} type="number" name="discount" label="Number field with percentage formatter" onchange={handleDiscount} variant="label-hidden"  min="0" value={item.discount} formatter="percent-fixed" step="1"  message-when-range-underflow="El porcentaje No puede ser negativo"  style="color:rgb(75, 75, 75);" disabled={item.isBlockedCantidadDescuento}></lightning-input></td>-->
+                   
+                    <!--<td data-label="Monto"><lightning-record-edit-form object-api-name="WorkOrderLineItem">
+                        <lightning-messages></lightning-messages>
+                        <lightning-input-field data-id={item.ID}  variant="label-hidden" field-name="tiposDeTrabajo__c" onchange={handleTipodeTrabajo} style="width: 200px;color:rgb(75, 75, 75);" > </lightning-input-field>
+                        <lightning-button 
+                            type="submit"
+                            name="submit"
+                            label="Update"
+                        >
+                        </lightning-button>
+                    </lightning-record-edit-form></td>-->
+                  </tr>
+                </template>
+                </tbody>
+              </table>
+        </div>
+        
+        <!--
+        <div data-id="split" >
+                
+            <c-edit-products-percent
+            workorder-items={modifiedList}
+                >
+            </c-edit-products-percent>
+        
+        </div>-->
+    </div>
+    <template if:true={showModal}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="modal__custom" style="width: 80%;" >
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <h1 if:true={showReserveWarning} id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate" style="padding-left: 20px;padding-right: 20px;"><b>ADVERTENCIA:</b></h1>
+                    <h1 if:true={showPreview} id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate" style="padding-left: 20px;padding-right: 20px;">Los siguientes artículos no poseen existencias en la localización seleccionada, <b>para facturar el pedido valide las existencias entre bodegas o realice la solicitud de un pedido especial.</b></h1>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" style="text-align: center;">
+                    <p><b if:true={showReserveWarning} style="font-size: 15px;">Los siguientes artículos no poseen existencias en la localización seleccionada,para facturar el pedido valide las existencias entre bodegas o realice la solicitud de un pedido especial.
+                    </b></p>
+                    <div class="slds-table_col-bordered slds-table_bordered" style="max-height: 450px">
+                        <lightning-datatable 
+                            show-row-number-column
+                            row-number-offset={rowOffset}
+                            hide-checkbox-column
+                            data={specialOrders} 
+                            columns={cols} key-field="ID">
+                        </lightning-datatable>
+                    </div>
+ 
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer" style="text-align: center;">
+                    <button if:false={showPreview} class="slds-button slds-button_destructive" onclick={closeReservar} title="Cancel">Cancelar</button>
+                    <button if:true={showReserveWarning} class="slds-button slds-button_brand" onclick={handleSaveOnline} title="OK">¡Reservar!</button>
+                    <button if:true={showPreview} class="slds-button  slds-button_brand" onclick={closeReservar} title="Cancel">OK</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" style="opacity: 0.8;top: 5.7%;height: 800px;border-radius: 4px;"></div>
+    </template>
+
+    <c-wo-search-detail-product
+    show-search-modal={showSearchModal}
+    record-id = {recordId}
+    oncancel={handleCancelSearch}
+    onaddlines={handleAddLines}
+    ></c-wo-search-detail-product>
+   
+</template>

@@ -1,0 +1,16 @@
+<!-- saPlayerHub.html -->
+<template>
+    <lightning-card title="Reproductor de Citas de Servicio" class="slds-p-around_medium">
+        <div class="slds-p-horizontal_small">
+            <lightning-combobox label="Selecciona la cita" value={selectedSaId} options={saOptions}
+                placeholder="Elige una Service Appointment" onchange={handleChange}>
+            </lightning-combobox>
+
+            <template if:true={selectedSaId}>
+                <div class="slds-m-top_large">
+                    <c-work-order-player record-id={selectedSaId}></c-work-order-player>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

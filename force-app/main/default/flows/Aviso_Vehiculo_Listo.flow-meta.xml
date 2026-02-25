@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Email_Action</name>
+        <label>Send Email Action</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Owner:User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Vehiculo listo {!$Record.N_de_placa__c} - {!$Record.VIN__c}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoVehiculo</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>60.0</apiVersion>
+    <description>antonio email removed</description>
+    <interviewLabel>Aviso Vehiculo Listo {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Aviso Vehiculo Listo</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Send_Email_Action</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>StatusDetail__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Vehículo Listo</stringValue>
+            </value>
+        </filters>
+        <object>Case</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>correoVehiculo</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html charset=UTF-8&quot; /&gt;
+
+    &lt;link href=&quot;https://db.onlinewebfonts.com/c/8503adf008ebf781c6342c58254552e4?family=BMWTypeNext+Pro&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;title&gt;Vehiculo listo&lt;/title&gt;
+
+&lt;/head&gt;
+
+&lt;body style=&quot;width:100%;font-family: BMWTypeNext Pro, arial; font-size: 18px;&quot;&gt;
+&lt;table role=&quot;presentation&quot; style=&quot;max-width:600px;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff; margin: 0 auto&quot;&gt;&lt;tr&gt;
+        &lt;td align=&quot;center&quot; style=&quot;padding:0;&quot;&gt;
+            &lt;table role=&quot;presentation&quot; style=&quot;width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;&quot;&gt;
+                &lt;tr&gt;
+                    
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding:36px 20px 10px 20px;&quot;&gt;
+                        &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                            &lt;tr&gt;
+                                &lt;td style=&quot;color:#707070;&quot;&gt;
+                                    &lt;h1 style=&quot;font-size:24px;margin:0 0 20px 0;&quot;&gt;Estimado {!$Record.Owner:User.FirstName} {!$Record.Owner:User.LastName},&lt;/h1&gt;
+                                    &lt;p style=&quot;font-weight: light; color: #707070&quot;&gt;
+                                       Se le notifica que el vehiculo VIN:{!$Record.VIN__c} Placa: {!$Record.N_de_placa__c} se encuentra &quot;listo&quot;.
+                                    &lt;/p&gt;
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                            &lt;tr&gt;
+                                &lt;td style=&quot;padding:0;&quot;&gt;
+                                    &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                                        &lt;p style=&quot;font-weight: light; color: #707070; margin: 7px 0&quot;&gt;
+                                          De click aqui para ir al caso: https://redmotors.lightning.force.com/lightning/r/Case/{!$Record.Id}/view.
+                                        &lt;/p&gt;
+                                    &lt;/table&gt;
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                            &lt;tr&gt;
+                              &lt;td style=&quot;padding:0;&quot;&gt;
+                                  &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                                    
+                                  &lt;/table&gt;
+                              &lt;/td&gt;
+                          &lt;/tr&gt;
+                          &lt;tr&gt;
+                            &lt;td&gt;
+                              
+                            &lt;/td&gt;
+                          &lt;/tr&gt;
+                        &lt;/table&gt;
+                    &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding:30px 20px;&quot;&gt;
+                        &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;&quot;&gt;
+                            &lt;tr&gt;
+                                
+                            &lt;/tr&gt;
+                        &lt;/table&gt;
+                    &lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/table&gt;
+        &lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</text>
+    </textTemplates>
+</Flow>

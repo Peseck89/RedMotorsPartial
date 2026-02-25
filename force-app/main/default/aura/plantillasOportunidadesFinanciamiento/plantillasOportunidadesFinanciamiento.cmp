@@ -1,0 +1,25 @@
+<aura:component controller="plantillasOportFinanciamientoController" implements="flexipage:availableForAllPageTypes" access="global" >
+	
+    <aura:attribute name="mydata" type="Object"/>
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="sortedBy" type="String" default="createdDate"/>
+     <aura:attribute name="sortedDirection" type="String" default="asc" />
+     <aura:attribute name="plantillasToPDF" type="Object" />
+    <aura:attribute name="plantillas" type="List" />
+    <aura:attribute name="plantillasList" type="List" access="private" default="" />
+    
+    <aura:handler name="init" value="{!this }" action="{! c.init }"/>
+    
+     
+     <div style="width: 90%;">
+    <lightning:datatable aura:id="plantillasList" data="{!v.mydata }"
+        columns="{!v.mycolumns }"
+        keyField="Id"
+        sortedBy="{!v.sortedBy}"
+        sortedDirection="{!v.sortedDirection}"
+        hideCheckboxColumn="false"/>
+    </div>
+    
+<lightning:button variant="brand" label="Generar PDFs" title="Generacion PDF" onclick="{! c.pdfGenerator }" />
+    
+</aura:component>

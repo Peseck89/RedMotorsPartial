@@ -1,0 +1,217 @@
+<template>
+  <!-- ===================== PASO 1: Selección de Work Order ===================== -->
+  <template if:true={isStep1}>
+    <!-- Siempre visible: NO depende de showComponent para evitar pantalla en blanco -->
+    <lightning-combobox
+      name="workOrderPicklist"
+      label="Selecciona la orden de trabajo"
+      placeholder="Selecciona una order de trabajo"
+      options={workOrderOptions}
+      value={selectedWorkOrder}
+      onchange={handleWorkOrderChange}>
+    </lightning-combobox>
+
+    <div class="slds-m-top_small">
+      <lightning-button variant="brand" label="Continuar" onclick={goToTasks}></lightning-button>
+    </div>
+  </template>
+
+  <!-- ===================== PASO 2: NUEVA pantalla intermedia por Tareas ===================== -->
+  <template if:true={isStep2}>
+    <div class="step2-area">
+      <lightning-card>
+        <h1 slot="title">
+          <lightning-icon icon-name="standard:task2" size="small"></lightning-icon>
+          Selecciona las Tareas a enviar
+        </h1>
+
+        <div class="slds-grid slds-wrap slds-p-horizontal_small slds-p-vertical_x-small">
+          <div class="slds-col slds-size_1-of-2">
+            <b>OT:</b> {selectedWorkOrderNumber} &nbsp;&nbsp; <b>Moneda:</b> {currencyWO}
+          </div>
+          <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+            <lightning-button label="Atrás" onclick={backToStep1}></lightning-button>
+            <lightning-button class="slds-m-left_small" variant="brand" label="Continuar" onclick={goToReview}></lightning-button>
+          </div>
+        </div>
+
+        <table class="slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+          <thead>
+            <tr>
+              <th style="width:3%;">
+                <lightning-input type="checkbox" checked={selectAllTasks} onchange={handleToggleAllTasks}></lightning-input>
+              </th>
+              <th>Tarea</th>
+              <th style="width:15%;"># Líneas</th>
+              <th style="width:20%;">Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template for:each={taskGroups} for:item="tg">
+              <tr key={tg.key}>
+                <td>
+                  <lightning-input type="checkbox" data-key={tg.key} checked={tg.checked} onchange={handleTaskToggle}></lightning-input>
+                </td>
+                <td>{tg.name}</td>
+                <td>{tg.lineCount}</td>
+                <td>
+                  <template if:true={tg.currencyCode}>{tg.currencyCode}&nbsp;</template>
+                  <lightning-formatted-number value={tg.totalAmount} maximum-fraction-digits="2"></lightning-formatted-number>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+
+        <template if:true={noTasksFound}>
+          <div class="slds-m-top_small slds-text-color_error slds-p-horizontal_small">
+            No hay tareas para este presupuesto.
+          </div>
+        </template>
+      </lightning-card>
+    </div>
+  </template>
+
+  <!-- ===================== PASO 3: Revisión/Envío (base original + ajustes) ===================== -->
+  <template if:true={isStep3}>
+    <template if:true={selectedWorkOrder}>  
+      <lightning-card>
+        <h1 slot="title">
+          <lightning-icon icon-name="standard:quotes" size="small"></lightning-icon>
+          Enviar Presupuesto a Orden de Trabajo
+        </h1>
+
+        <!-- Acciones -->
+        <div slot="actions">
+          <lightning-button label="Cambiar Moneda" variant="brand" onclick={handleChangeCurrency}></lightning-button>
+          <lightning-button label="Atrás" variant="neutral" class="slds-m-left_x-small" onclick={handleBackClick}></lightning-button>
+          <lightning-button label="Enviar" variant="brand" class="slds-m-left_x-small" icon-name="utility:save" onclick={handleSave}></lightning-button>
+        </div>
+
+        <!-- Info bajo el header -->
+        <div class="slds-p-horizontal_small slds-p-vertical_x-small">
+          Número de Orden de Trabajo: {selectedWorkOrderNumber}. Moneda de Orden de Trabajo: {currencyWO}
+        </div>
+      </lightning-card>
+
+      <!-- NOTA: Se elimina el checkbox maestro de "Enviar a Caso" -->
+
+      <div>
+        <div if:true={isLoaded} class="slds-is-relative">
+          <lightning-spinner variant="brand" size="large" alternative-text="Cargando..."></lightning-spinner>
+        </div>
+        
+        <div if:false={isLoaded}>
+          <table class="slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+            <thead>
+              <tr>
+                <!-- IMPORTANTE: Se QUITA la columna de “Enviar a Caso” -->
+                <th scope="col" style="width: 5%;">Código</th>
+                <th scope="col" style="width: 15%;">Producto</th>
+                <th scope="col" style="width: 13%;">Precio</th>
+                <th scope="col" style="width: 11%;">Alias</th>
+                <th scope="col" style="width: 9%;">Disponible</th>
+                <th scope="col" style="width: 6%;">Cantidad</th>
+                <th scope="col" style="width: 13%;">Precio Venta</th>
+                <th scope="col" style="width: 11%;">Bodega</th>
+                <th scope="col" style="width: 7%;">Enviado a Orden</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={quoteLineItemsList} for:item="item" for:index="indexVar">
+                <tr key={item.wrapperId}>
+                  <td data-label="Código" style="word-wrap: break-word; white-space: normal; max-width: 5%; overflow-wrap: break-word;">
+                    {item.productCode}
+                  </td>
+                  <td data-label="Producto">{item.name}</td>
+                  <td data-label="Precio">
+                    <div style="display: flex;">
+                      <p style="margin-right: 10px;">{item.currencyCodeProd}</p>
+                      <lightning-input 
+                        disabled 
+                        type="number" 
+                        variant="label-hidden" 
+                        min="0.0000" 
+                        step="any" 
+                        value={item.price}
+                        style="width:80%;color:rgb(75, 75, 75);display: flex;">
+                      </lightning-input>
+                    </div>
+                  </td>
+                  <td data-label="Alias">
+                    <lightning-input type="text" data-id={item.wrapperId} label="Enter some text"
+                      name="alias" placeholder="" value={item.alias} onblur={handleAlias}
+                      variant="label-hidden" style="color:rgb(75, 75, 75);"></lightning-input>
+                  </td>
+                  <td data-label="Disponible">{item.cantidadDisponible}</td>
+                  <td data-label="Cantidad">
+                    <lightning-input type="number" data-id={item.wrapperId} name="cantidad"
+                      variant="label-hidden" label="Enter a number" 
+                      min="0.01" step=".01" onchange={handleQuantity}
+                      message-when-range-overflow="No hay la cantidad disponible"
+                      message-when-range-underflow="La cantidad no puede ser menor a 0"                                    
+                      value={item.cantidad} style="color:rgb(75, 75, 75);"></lightning-input>
+                  </td>
+                  <td data-label="Precio Venta">
+                    <div style="display: flex;">
+                      <template if:true={item.currencyCode}>
+                        <p style="margin-right:10px;">{item.currencyCode}</p>
+                      </template>
+                      <template if:false={item.currencyCode}>
+                        <p style="margin-right:10px;">{item.currencyCodeProd}</p>
+                      </template>
+                      <lightning-input 
+                        type="number" 
+                        data-id={item.wrapperId} 
+                        name="precioVenta"
+                        variant="label-hidden" 
+                        label="Ingrese un precio" 
+                        value={item.precioVenta}
+                        min="0.00" 
+                        step="any" 
+                        onchange={handlePrecioVenta}
+                        message-when-range-underflow="El precio no puede ser menor a 0"
+                        style="width:80%;color:rgb(75, 75, 75);display: flex;">
+                      </lightning-input>
+                    </div>
+                  </td>
+                  <td data-label="Bodega">{item.bodega}</td>
+
+                  <template if:true={item.enOrden}>
+                    <td data-label="enOrden"><input type="checkbox" name="" checked disabled></td>
+                  </template>
+                  <template if:false={item.enOrden}>
+                    <td data-label="enOrden"><input type="checkbox" name="" unchecked disabled></td>
+                  </template>
+
+                  <!-- Se elimina celda/checkbox de “Enviar a Caso” por línea -->
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>  
+      <br />
+    </template>
+  </template>
+
+  <!-- ====== Alertas originales (se mantienen) ====== -->
+  <template if:false={hasWorkOrder}>
+    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+      <span class="slds-assistive-text">Atención!</span>
+      <h2>La oportunidad no tiene orden de trabajo.</h2>
+    </div>
+  </template> 
+  <template if:true={oppStage}>
+    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+      <span class="slds-assistive-text">Atención!</span>
+      <h2>No se puede enviar el presupuesto a orden de trabajo si la oportunidad esta en la etapa de Oportunidad Calificada.</h2>
+    </div>
+  </template>     
+  <template if:true={nullItem}>
+    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+      <span class="slds-assistive-text">Atención!</span>
+      <h2>La bodega no cuenta con 1 o más productos.</h2>
+    </div>
+  </template>     
+</template>

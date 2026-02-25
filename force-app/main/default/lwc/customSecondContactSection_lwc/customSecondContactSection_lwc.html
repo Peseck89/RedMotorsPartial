@@ -1,0 +1,38 @@
+<template>
+  <div class="main-content">
+    <div class="card-container">
+      <div class="information-container">
+        <lightning-accordion allow-multiple-sections-open onsectiontoggle={handleSectionToggle}
+          active-section-name={activeSections}>
+
+          <lightning-accordion-section name="A" label="Datos Adicionales del Propietario">
+            <div class="options-container">
+              <div class="opt-container">
+                <label><strong>Correo de Facturación: </strong>{correoFacturacion}</label>
+                <p></p>
+              </div>
+              <div class="opt-container">
+                <label><strong>Dirección Residecial: </strong>{direccionResidencial}</label>
+                <p></p>
+              </div>
+              <div class="opt-container">
+                <label><strong>Estado Civil: </strong>{estadoCivil}</label>
+                <p></p>
+              </div>
+              <div class="opt-container">
+                <label><strong>Fecha de Nacimiento: </strong>{fechaNacimiento}</label>
+                <p></p>
+              </div>
+              <div class="opt-container">
+                <label><strong>Fecha de Registro: </strong>{fechaRegistro}</label>
+                <p></p>
+              </div>
+            </div>
+          </lightning-accordion-section>
+
+        </lightning-accordion>
+
+      </div>
+    </div>
+  </div>
+</template>

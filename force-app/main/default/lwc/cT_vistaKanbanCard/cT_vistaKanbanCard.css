@@ -1,0 +1,42 @@
+.slds-item {
+    /* border: 1px solid #d8dde6; */
+    /* border-radius: 0.25rem;
+    background-clip: padding-box; */
+    /* padding: 0.45rem;
+    margin: 0.25rem; */
+}
+
+
+.card-shadow {
+    box-shadow: 0 1px 8px #dfdcdc;
+    margin-bottom: 10px;
+}
+
+.custom-css{
+    --lwc-fontFamily:Roboto-Regular;
+    --lwc-formLabelFontSize:1rem;
+    --lwc-colorTextLabel:#000000;
+    color:#b4b9c7;
+    font-family: sans-serif;
+}
+
+.card_left_color_red{
+    border:0px;
+}
+
+.card_left_color_green{
+    border:0px;
+    border-left: 6px #24a03f;
+    border-left-style: solid;
+}
+
+.card_left_color_blue{
+    border:0px;
+    border-left: 6px #1d61c7;
+    border-left-style: solid;
+}        
+
+.card-header-custom {
+    color: #bdbdbf;
+    font-size: 10px;
+}

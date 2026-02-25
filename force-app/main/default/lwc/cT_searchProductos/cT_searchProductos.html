@@ -1,0 +1,110 @@
+<template>
+    
+    <template if:true={isSaving}>
+        <div class="exampleHolder">
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </div>
+    </template>
+
+    <template if:true={secondScreen}>
+        <h3 slot="title">
+            <lightning-icon icon-name="standard:product" size="small"></lightning-icon> Buscar Mano de Obra
+        </h3>
+        
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="8" padding="slds-p-bottom_medium" style="height: 80px;">
+                <div class=" slds-p-around_medium ">
+                    <p class="slds-p-horizontal_small">
+                        <lightning-input type="search" class="slds-m-bottom_small" label="Buscar producto"
+                            onchange={searchProductAction} value={productName}></lightning-input>
+                    </p>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        <p class="slds-p-horizontal_small">
+            <b style="color: #0070d2;">Productos seleccionados: {quantityselected}</b>
+        </p>
+        <div data-id="addTable" style="display: flex;">
+            <div style="min-height: 10px; max-height: 500px; flex: 1;">
+                <div class="slds-table_col-bordered slds-table_bordered" style="height: 100%;">
+                    <lightning-datatable data={productList_test} suppress-bottom-bar onrowselection={selectProducts}
+                        columns={cols} key-field="ID" selected-rows={selectedrows}></lightning-datatable>
+                </div>
+            </div>
+        </div>
+        <div class="slds-var-m-top_large slds-text-align_right">
+            <button class="slds-button slds-button_brand" slot="actions" onclick={handleNavigate}>Siguiente</button>
+        </div>
+    </template>
+
+    <template if:true={thirdScreen}>
+        <div class="slds-float--right" style="padding: 10px;">
+            <lightning-button-group>
+                    <lightning-button label="Eliminar" variant="destructive" onclick={handleDeleteLineEditMO} disabled={showDelete}
+                        icon-name="utility:delete"></lightning-button>
+                    <lightning-button label="Duplicar" variant="create" onclick={handleCloneLineEditMO} disabled={showDelete}
+                        icon-name="utility:add"></lightning-button>
+                   <lightning-button label="Atrás" variant="brand-outline" onclick={backToSelectMO}>
+                </lightning-button>
+                <lightning-button label="Guardar" variant="brand" onclick={handleSave} icon-name="utility:save" disabled={isSaving}>
+                </lightning-button>
+            </lightning-button-group>
+        </div>
+        <table class="slds-table_cell-buffer slds-table_bordered slds-table_col-bordered" id="ManoObraTable">
+            <thead>
+                <tr>
+                    <th scope="col">Seleccionar</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Precio Unitario</th>
+                    <th scope="col">Alias</th>
+                    <th scope="col">Cantidad de Horas</th>
+                    <th scope="col">Descuento</th>
+                    <th scope="col">UT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={productList_test} for:item="item" for:index="indexVar">
+                    <tr key={item.ID} class="JD">
+                        <td data-label="select">
+                            <lightning-input type="checkbox" name="chackInput" label="checkbox" variant="label-hidden"
+                                data-id={item.ID} onchange={handlecheck}></lightning-input>
+                        </td>
+                        <td data-label="Product">{item.ProductCode}</td>
+                        <td data-label="Name"> {item.Name}</td>
+                        <!--{item.currencyCode item.precio}-->
+                        <td data-label="Precio">
+                            <lightning-formatted-number value={item.precio} currency-code={item.currencyCode}
+                                format-style="currency" minimum-fraction-digits="2" maximum-fraction-digits="2">
+                            </lightning-formatted-number>
+                        </td>
+                        <td data-label="Alias">
+                            <lightning-input value={nombretrabajo} data-id={item.ID} label="Enter some text" name="alias"
+                                type="text" placeholder="Alias" maxlength="100" onblur={handleAlias} variant="label-hidden"
+                                style="color:rgb(75, 75, 75);"></lightning-input>
+                        </td>
+                        <td data-label="Cantidad">
+                            <lightning-input value={item.cantidad} type="number" data-id={item.ID} name="cantidad"
+                                variant="label-hidden" label="Enter a number" onblur={handleQuantity} min="0.0001"
+                                step=".0001" message-when-range-underflow="La cantidad no puede ser menor a 0."
+                                style="color:rgb(75, 75, 75);"></lightning-input>
+                        </td>
+                        <td data-label="Descuento">
+                            <lightning-input data-id={item.ID} type="number" name="discount"
+                                label="Number field with percentage formatter" onblur={handleDiscount}
+                                variant="label-hidden" min="0" step=".0001" value="0" formatter="percent-fixed"
+                                message-when-range-underflow="El porcentaje no puede ser negativo"
+                                style="color:rgb(75, 75, 75);"></lightning-input>
+                        </td>
+                        <td data-label="UT">
+                            <lightning-input value={item.UT} data-id={item.ID} type="number" name="UT" label="Number"
+                                onblur={handleUT} variant="label-hidden" min="0.0001" formatter="number-fixed" step=".0001"
+                                message-when-range-underflow="La cantidad no puede ser menor a 0."
+                                style="color:rgb(75, 75, 75);"></lightning-input>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </template>
+</template>

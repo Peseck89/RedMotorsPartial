@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Reserva vehiculo</description>
+        <name>Reserva_vehiculo</name>
+        <label>Reserva vehiculo</label>
+        <locationX>792</locationX>
+        <locationY>1367</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>for_correos</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Reserva de vehiculo</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>Se reservo el vehiculo {!$Record.Name} de la oportunidad {!for_correos.Name}.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>{!correo},{!for_correos.Owner.Email}</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>56.0</apiVersion>
+    <assignments>
+        <name>Asigna_Opportunity_Id</name>
+        <label>Asigna Opportunity Id</label>
+        <locationX>264</locationX>
+        <locationY>575</locationY>
+        <assignmentItems>
+            <assignToReference>OpportunityIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Recorre_Productos_Oportunidad.OpportunityId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Recorre_Productos_Oportunidad</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Correo BMW: PEV_ABMW@redmotorscr.com</description>
+        <name>Correo_BMW</name>
+        <label>Correo BMW</label>
+        <locationX>264</locationX>
+        <locationY>1151</locationY>
+        <assignmentItems>
+            <assignToReference>correo</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>PEV_ABMW@redmotorscr.com</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Reserva_vehiculo</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Correo Kawasaki Motos: PEV_MKAWA@redmotorscr.com</description>
+        <name>Correo_Kawasaki_Motos</name>
+        <label>Correo Kawasaki Motos</label>
+        <locationX>1056</locationX>
+        <locationY>1151</locationY>
+        <assignmentItems>
+            <assignToReference>correo</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>PEV_MKAWA@redmotorscr.com</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Reserva_vehiculo</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Correo MINI: PEV_AMINI@redmotorscr.com</description>
+        <name>Correo_MINI</name>
+        <label>Correo MINI</label>
+        <locationX>528</locationX>
+        <locationY>1151</locationY>
+        <assignmentItems>
+            <assignToReference>correo</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>PEV_AMINI@redmotorscr.com</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Reserva_vehiculo</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Correo Motorrad - BMW Motos: PEV_MBMW@redmotorscr.com</description>
+        <name>Correo_Motorrad_BMW_Motos</name>
+        <label>Correo Motorrad - BMW Motos</label>
+        <locationX>792</locationX>
+        <locationY>1151</locationY>
+        <assignmentItems>
+            <assignToReference>correo</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>PEV_MBMW@redmotorscr.com</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Reserva_vehiculo</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Correo Polaris Motos: PEV_MPOLARIS@redmotorscr.com</description>
+        <name>Correo_Polaris_Motos</name>
+        <label>Correo Polaris Motos</label>
+        <locationX>1320</locationX>
+        <locationY>1151</locationY>
+        <assignmentItems>
+            <assignToReference>correo</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>PEV_MPOLARIS@redmotorscr.com</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Reserva_vehiculo</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>Correo debe lanzarse dependiendo del tipo de oportunidad, recrdtype. 
+
+BMW Autos: PEV_ABMW@redmotorscr.com
+MINI Autos: PEV_AMINI@redmotorscr.com
+Motorrad - BMW Motos: PEV_MBMW@redmotorscr.com
+Kawasaki Motos: PEV_MKAWA@redmotorscr.com
+Polaris Motos: PEV_MPOLARIS@redmotorscr.com</description>
+        <name>Correo_tipo_oportunidad</name>
+        <label>Correo tipo oportunidad</label>
+        <locationX>792</locationX>
+        <locationY>1031</locationY>
+        <defaultConnector>
+            <targetReference>Correo_Polaris_Motos</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Polaris Motos</defaultConnectorLabel>
+        <rules>
+            <name>BMW_Autos</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>for_correos.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BMW</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Correo_BMW</targetReference>
+            </connector>
+            <label>BMW Autos</label>
+        </rules>
+        <rules>
+            <name>MINI_Autos</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>for_correos.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>MINI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Correo_MINI</targetReference>
+            </connector>
+            <label>MINI Autos</label>
+        </rules>
+        <rules>
+            <name>Motorrad_BMW_Motos</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>for_correos.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Motorrad</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Correo_Motorrad_BMW_Motos</targetReference>
+            </connector>
+            <label>Motorrad - BMW Motos</label>
+        </rules>
+        <rules>
+            <name>Kawasaki_Motos</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>for_correos.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Kawasaki</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Correo_Kawasaki_Motos</targetReference>
+            </connector>
+            <label>Kawasaki Motos</label>
+        </rules>
+    </decisions>
+    <description>Alerta de reserva de producto de Oportunidad</description>
+    <interviewLabel>Alerta de reserva de producto de Oportunidad {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Alerta de reserva de producto de Oportunidad</label>
+    <loops>
+        <name>for_correos</name>
+        <label>for correos</label>
+        <locationX>176</locationX>
+        <locationY>911</locationY>
+        <collectionReference>Obtener_Oportunidad</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Correo_tipo_oportunidad</targetReference>
+        </nextValueConnector>
+    </loops>
+    <loops>
+        <name>Recorre_Productos_Oportunidad</name>
+        <label>Recorre Productos Oportunidad</label>
+        <locationX>176</locationX>
+        <locationY>455</locationY>
+        <collectionReference>Obtener_Producto_de_oportunidad</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Asigna_Opportunity_Id</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Obtener_Oportunidad</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Obtener Oportunidad</description>
+        <name>Obtener_Oportunidad</name>
+        <label>Obtener Oportunidad</label>
+        <locationX>176</locationX>
+        <locationY>791</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>for_correos</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>OpportunityIds</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Opportunity</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_Producto_de_oportunidad</name>
+        <label>Obtener Producto de oportunidad</label>
+        <locationX>176</locationX>
+        <locationY>335</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Recorre_Productos_Oportunidad</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Product2Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>OpportunityLineItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Obtener_Producto_de_oportunidad</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Producto_Reservado__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Producto_Reservado__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>Product2</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <description>Correo remitente</description>
+        <name>correo</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>oportunidadesAfectadas</description>
+        <name>oportunidadesAfectadas</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Opportunity</objectType>
+    </variables>
+    <variables>
+        <name>OpportunityIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Productos de la Oportunidad</description>
+        <name>productosOportunidad</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>OpportunityLineItem</objectType>
+    </variables>
+</Flow>

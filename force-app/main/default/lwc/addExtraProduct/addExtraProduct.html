@@ -1,0 +1,98 @@
+<!--
+  @description       : Component to add and extra product into the quote record
+  @author            : marcohernandezhp@gmail.com
+  @group             : 
+  @last modified on  : 03-31-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <div>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>        
+        <c-product-searcher onproductselection={handleProductSelectionEvent} onproducttypeselected={handleProductTypeEvent} title="Seleccionar articulos extras" product-type="extra" brand={brand} model={model} record-id={recordId} vehicle-options={vehicleOptions}>
+            <template if:true={isProductTypeExtraSelected}>
+                <span slot="actions">
+                    <lightning-button variant="success" label="Agregar como regalia" title="Al agregar como regalia el costo del producto es $ 0.00" disabled={isDisableAcceptButton}
+                    onclick={handleRegaliaClick} class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button variant="brand" label="Agregar como extra" title="Agregar" disabled={isDisableAcceptButton}
+                        onclick={handleExtraClick} class="slds-m-left_x-small"></lightning-button>
+                </span>
+            </template>
+
+            <template if:true={showNextButton}>
+                <span slot="actions">
+                    <lightning-button variant="brand" label="Siguiente" title="Siguiente" disabled={isDisableAcceptButton}
+                        onclick={handleNextClick} class="slds-m-left_x-small"></lightning-button>
+                </span>
+            </template>            
+        </c-product-searcher>
+        
+        <c-r-m_-modal header={header} onclosedialog={handleCloseEvent}
+            >
+            <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal ">                               
+                        <lightning-input type="text"  label="Código" value={productCode}  read-only="true"> </lightning-input>                                
+                    </div>
+                </div>
+            </div>  
+
+            <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal ">                               
+                        <lightning-input type="text"  label="Nombre" value={productName} read-only="true"> </lightning-input>                                
+                    </div>
+                </div>
+            </div>          
+
+            <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal ">                               
+                        <lightning-input type="text"  label="Alias" value={productAlias} onchange={handleAliasChange}> </lightning-input>                                
+                    </div>
+                </div>
+            </div>  
+
+            <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal ">                               
+                        <lightning-input type="number"  label="Cantidad" value={productQuantity} onchange={handleQuantityChange}> </lightning-input>                                
+                    </div>
+                </div>
+            </div>             
+
+            <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal ">                               
+                        <lightning-input type="number"  label="Precio Unitario" value={productUnitPrice} onchange={handleUnitPriceChange}> </lightning-input>                                
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-form__row">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal ">                               
+                        <lightning-input type="number"  label="Total" value={totalManoObra}  read-only="true"> </lightning-input>                                
+                    </div>
+                </div>
+            </div>            
+
+            <div slot="footer">
+                <lightning-button
+                    label="Agregar como regalia"
+                    variant="success"
+                    onclick={handleRegaliaClick}
+                ></lightning-button>
+
+                <lightning-button
+                    label="Agregar como articulo extra"
+                    variant="brand"
+                    class="slds-m-left_small"
+                    onclick={handleExtraClick}
+                ></lightning-button>
+            </div>
+        </c-r-m_-modal>
+
+    </div>
+</template>

@@ -1,0 +1,20 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable,force:lightningQuickAction,lightning:availableForFlowScreens" access="global" controller="savePDFfile">
+    
+    <aura:attribute name="messagePDF" type="String"/>
+    <aura:attribute name="instanceURL" type="String"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <!--aura handler with waiting and donewaiting events-->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>    
+    
+    <!--loading spinner start-->
+    <div class="exampleHolder">
+        <lightning:spinner aura:id="mySpinner" class="slds-hide"/>
+    </div>
+    <!-- Loading spinner end-->  
+
+    <aura:if isTrue="{! v.messagePDF == 'Success'}">
+        <span>Se abrio el pdf en una ventana nueva.</span>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,12 @@
+<template>
+    <lightning-combobox name="recordType"
+                        label="Marca"
+                        value={selectedRecordTypeId}
+                        placeholder={brandLabel}
+                        options={recordTypeOptions}
+                        variant={customVariant}
+                        onchange={handleRecordTypeChange}
+                        disabled={isDisabled}>
+                        >
+    </lightning-combobox>
+</template>

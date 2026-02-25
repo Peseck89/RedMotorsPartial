@@ -1,0 +1,47 @@
+<template>   
+    <div>
+        <template if:true={isTerritory}>
+            {territory}
+        </template>
+        <template if:true={isCaseNumber}>
+            {caseNumber}
+        </template>        
+        <template if:true={isHoursAssigned}>            
+            <lightning-formatted-number value={hoursAssigned} maximum-fraction-digits="2"></lightning-formatted-number>                                
+        </template>        
+        
+        <template if:true={isHoursWorked}>             
+            <lightning-formatted-number value={hoursWorked} maximum-fraction-digits="2"></lightning-formatted-number>                   
+        </template>        
+        
+        <template if:true={isHoursBilled}>            
+            <lightning-formatted-number value={hoursBilled} maximum-fraction-digits="2"></lightning-formatted-number>                                
+        </template>  
+        
+        <template if:true={isTotalHoursAssigned}>     
+            <lightning-formatted-number value={totalHoursAssigned} maximum-fraction-digits="2"></lightning-formatted-number>                                                   
+        </template> 
+        
+        <template if:true={isTotalHoursWorked}>            
+            <lightning-formatted-number value={totalHoursWorked} maximum-fraction-digits="2"></lightning-formatted-number>                                            
+        </template> 
+        
+        <template if:true={isTotalHoursBilled}>            
+            <lightning-formatted-number value={totalHoursBilled} maximum-fraction-digits="2"></lightning-formatted-number>                                            
+        </template>    
+        <template if:true={isProductividad}>            
+            <template if:true={existeConfig}>  
+                <lightning-formatted-number value={productividad} maximum-fraction-digits="2"></lightning-formatted-number>        
+            </template>
+            <template if:false={existeConfig}>  
+                Sin registro de config disponibilidad
+            </template>                                                
+        </template>  
+        <template if:true={isEficiencia}>            
+            <lightning-formatted-number value={eficiencia} maximum-fraction-digits="2"></lightning-formatted-number>                                            
+        </template>
+        <template if:true={isTotalHI}>
+            <lightning-formatted-number value={totalHorasImproductivas} maximum-fraction-digits="2"></lightning-formatted-number>                                            
+        </template>                            
+    </div>
+</template>

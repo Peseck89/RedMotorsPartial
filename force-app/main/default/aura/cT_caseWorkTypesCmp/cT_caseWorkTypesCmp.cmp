@@ -1,0 +1,45 @@
+<aura:component
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable,force:lightningQuickAction"
+    access="global"
+    controller="CaseWorkTypeController"
+    >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="existWorkOrder" type="Boolean" default="true" />
+    <aura:attribute name="currentWorkOrder" type="WorkOrder" />
+    <aura:attribute name="showAlert" type="Boolean" default="true" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:html tag="style">
+        .slds-modal__container {
+        min-width: 90vw;
+        }
+    </aura:html>
+    
+    <br/>
+    <aura:if isTrue="{! v.currentWorkOrder.Account.ClienteAltica__c &amp;&amp; v.showAlert &amp;&amp; v.currentWorkOrder.Account.Monto_a_financiar_Altica__c > 0 }">
+        <div style="background-color: rgb(205, 237, 247); border-left-style: solid; border-color: blue;">
+            <div style="overflow: auto;" >
+                <span style="float: right;"><lightning:buttonIcon iconName="utility:close" size="small"   variant="bare" alternativeText="Close" title="Close" onclick="{! c.onCloseAlert}"/> </span>
+            </div>
+            <lightning:card class="alertCard" variant="narrow" footer="" title="Aviso">
+                <p class="slds-var-p-horizontal_small">
+                    La orden de trabajo cuenta con un Financiamiento Altica disponible de {!v.currentWorkOrder.Account.Monto_a_financiar_Altica__c + ' ' + v.currentWorkOrder.Account.Moneda_financiamiento_Altica__c}
+                </p>
+            </lightning:card>
+            <br/>
+        </div>
+    </aura:if>
+    <br/>
+    <aura:if isTrue="{!v.existWorkOrder}">
+        <c:cT_caseWorkTypeForm recId="{!v.recordId}" />
+    <aura:set attribute="else">
+        <p style=" background: #930c0c; color: white; padding-top: 1%; padding-bottom: 1%; border-radius: 8px; text-align: center; font-size: 16px; margin-top: 5%; box-shadow: 8px 8px 10px #888888; ">
+            No existe una Orden de Trabajo asociada a este caso.
+        </p>
+    </aura:set>
+    </aura:if>
+    <!--
+    <div class="slds-grid slds-grid_align-end slds-m-top_medium">                
+        <lightning:button variant="brand-outline" label="Cancelar" title="Cancelar" onclick="{! c.onCancel}" class="slds-var-m-right_small" />
+    </div>
+    -->
+</aura:component>

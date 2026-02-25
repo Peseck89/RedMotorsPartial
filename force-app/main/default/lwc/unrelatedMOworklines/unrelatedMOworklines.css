@@ -1,0 +1,8 @@
+h1{
+    background:  var(--lwc-colorBackgroundAlt);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: #c91b15;
+    font-size: 19px;
+    font-weight: 700;
+}

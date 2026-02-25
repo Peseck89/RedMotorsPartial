@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title="Registro de Anomalías" icon-name="standard:photo">
+        <template if:true={dibujos}>
+            <template for:each={dibujos} for:item="dibujo">
+                <div key={dibujo.id} style="margin-bottom: 20px; padding: 0 1rem;">
+                    <template if:true={dibujo.imageUrl}>
+                        <img src={dibujo.imageUrl} alt="Anomalía" style="max-width: 100%; border: 1px solid #ccc; border-radius: 8px;" />
+                    </template>
+                    <p style="margin-top: 4px;">Fecha de creación: {dibujo.createdDate}</p>
+                    <p style="margin-top: 4px;">Creado por: {dibujo.creadoPor}</p>
+
+                </div>
+            </template>
+        </template>
+        <template if:false={dibujos}>
+            <div class="slds-p-around_medium">No se encontraron anomalías.</div>
+        </template>
+    </lightning-card>
+</template>

@@ -1,0 +1,130 @@
+<!-- <template>
+    <div class="grid-container">
+        <div class="info-data-container">
+            <div class="top-container">
+                <lightning-icon class="icon-ctct" icon-name="standard:travel_mode" alternative-text="Email" title="Email"></lightning-icon>
+                <p class="primary-text">
+                    Puntos de trabajo
+                </p>
+            </div>   
+
+            <div class="one-grid-container">
+                <br>
+                <template for:each={objetoHistorial} for:item="trabajo">
+                    <lightning-accordion allow-multiple-sections-open
+                         onsectiontoggle={handleSectionToggle}
+                         active-section-name={activeSections}
+                         key={trabajo.Id}>
+                        <lightning-accordion-section 
+                            name="A" label={trabajo.Name} 
+                            style="margin-bottom: 10px; background: #f7f7f7; border-radius: 0.5rem;"
+                        >
+                        <div class="card__c">
+                            <div class="card-section__c card-header__c">
+                                <span class="info-item__c font-semibold__c code__c">Trabajo: {trabajo.Tipo_de_trabajo_del_caso__r.Name}</span>
+                                <span class="info-item__c font-semibold__c uts__c">UTS: {trabajo.cantidadHorasMultiplicadas}</span>
+                                <span class="info-item__c font-semibold__c hours__c">Horas: {trabajo.Cantidad_de_horas__c}</span>
+                                <span class="info-item__c font-semibold__c position-type__c">Tipo de cargo: {trabajo.Tipo_de_trabajo_del_caso__r.Tipo_de_cargo__c}</span>
+                            </div>
+                            <div class="card-section__c card-content__c">
+                                <span class="info-item__c font-medium__c item-code__c"><strong>Código artículo: </strong> {trabajo.Articulo_Mano_de_Obra__r.BMW_CodigoDeProducto__c}</span>
+                                <span class="info-item__c font-medium__c name__c"><strong>Nombre:</strong> {trabajo.Articulo_Mano_de_Obra__r.NombreProducto__c}</span>
+                                <span class="info-item__c font-medium__c quantity__c"><strong>Cantidad:</strong> {trabajo.Articulo_Mano_de_Obra__r.Cantidad__c}</span>
+                                <span class="info-item__c font-medium__c price__c"><strong>Precio:</strong> {trabajo.Articulo_Mano_de_Obra__r.TotalPrice}</span>
+                            </div>
+                            <div class="card-section__c card-footer__c">
+                                <span class="font-bold__c total-price__c">Precio total: {trabajo.totalPriceSum}</span>
+                            </div>
+                        </div>
+                        </lightning-accordion-section>
+                    </lightning-accordion>
+                </template>
+            </div>
+        
+        </div>
+    </div>
+</template> -->
+<template>
+    <div class="grid-container">
+    <!-- Spinner para indicar que los datos se están cargando -->
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Cargando" size="large"></lightning-spinner>
+    </template>
+    
+        <!-- Mostrar el contenido una vez que se han cargado los datos -->
+        <template if:true={groupedItems.length}>
+            <!-- <ul class="slds-list_vertical slds-has-dividers_around-space">
+                    <template for:each={groupedItems} for:item="group">
+                        <li key={group.title} class="slds-m-around_small">
+                            <div class="slds-box slds-theme_default slds-p-around_medium">
+                                <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                                    <h3>{group.title}</h3>
+                                    
+                                </div>
+                                
+                                <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                                    <p><strong>Cliente</strong></p>
+                                    <p><strong>Cantidad</strong></p>
+                                    <p><strong>Costo + IVA</strong></p>
+                                    <p><strong>Código artículo:</strong></p>
+                                    <p><strong>Horas</strong></p>
+                                    <p><strong>UTS</strong></p>
+                                </div>
+                                
+                                <ul class="slds-list_dotted">
+                                    <template for:each={group.items} for:item="item">
+                                        <li key={item.name} class="slds-item">
+                                            <div class="slds-grid slds-grid_align-spread">
+                                                <p>{item.name}</p>
+                                                <p>{item.quantity}</p>
+                                                <p>{item.currencyIso} {item.totalPrice}</p>
+                                                <p>{item.bmwCodigoProducto}</p>
+                                                <p>{item.horas}</p>
+                                                <p>{item.uts}</p>
+                                            </div>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </li>
+                    </template>
+                </ul> -->
+            <template for:each={groupedItems} for:item="group" for:index="index">
+                <div key={group.title} class="accordion__c">
+                    <button class="accordion-header" data-index={index} onclick={toggleAccordion}>
+                        Trabajo: {group.title}
+                    </button>
+                    <!-- <div class={accordionContentClass}> -->
+                    <div class={group.contentClass}>
+                        <div class="content-header">
+                            <div>Nombre</div>
+                            <div class="text-center">Código artículo</div>
+                            <div class="text-center">Cantidad</div>
+                            
+                            <div class="text-center">Tipo de cargo</div> 
+                            <div>Precio</div>
+                        </div>
+                        <template for:each={group.items} for:item="item">
+                            <div key={item.name} class="content-row">
+                                <div>{item.name}</div>
+                                <div class="text-center">{item.bmwCodigoProducto}</div>
+                                <div class="text-center">{item.quantity}</div>
+                                <!-- <div class="text-center">{item.uts}</div> -->
+                                <div class="text-center">{item.tipoDeCargo}</div>
+                                <div>{item.currencyIso} {item.totalPrice}</div>
+                            </div>
+                        </template>
+                        <div class="content-footer">
+                            <div>Precio total: {group.currencyIso} {group.groupTotal}</div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </template>
+        
+        <!-- Mensaje en caso de que no haya items -->
+        <template if:false={groupedItems.length}>
+            <p>No hay items para mostrar</p>
+        </template>
+    </div>
+</template>

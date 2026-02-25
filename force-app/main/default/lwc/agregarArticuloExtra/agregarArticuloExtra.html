@@ -1,0 +1,17 @@
+<!--
+  @description       : 
+  @author            : marcohernandezhp@gmail.com
+  @group             : 
+  @last modified on  : 11-21-2022
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <div>
+        <c-product-searcher onproductselection={handleProductSelectionEvent} title="Seleccionar articulos extras" is-package>
+            <span slot="actions">
+                <lightning-button variant="brand" label="Agregar" title="Agregar" disabled={isDisableAcceptButton}
+                    onclick={handleAcceptClick} class="slds-m-left_x-small"></lightning-button>
+            </span>
+        </c-product-searcher>
+    </div>
+</template>

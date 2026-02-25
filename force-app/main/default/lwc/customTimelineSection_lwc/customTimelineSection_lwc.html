@@ -1,0 +1,39 @@
+<template>
+  <div class="timeline-section">
+    <div class="timeline-body">
+      <div class="bordered">
+        <h2 class="second-title">Timeline del Vehículo</h2>
+      </div>
+      <!-- <div class="timeline-container">
+        <lightning-progress-indicator current-step="1" type="path" variant="shade" style="overflow-x: scroll !important;">
+          <template for:each={objetoHistorial} for:item="contact">
+            <lightning-progress-step class="time-line-steps" style="min-width: 300px;" key={contact.value} label={contact.label} value={contact.value}></lightning-progress-step>
+          </template>
+        </lightning-progress-indicator>
+      </div> -->
+
+      <div class="slds-grid slds-path__track">
+        <div class="slds-grid slds-path__scroller-container">
+          <div class="slds-path__scroller">
+            <div class="slds-path__scroller_inner">
+              <ul class="slds-path__nav scroll-list" role="listbox" aria-orientation="horizontal" aria-labelledby="slds-path__stage-name">
+                <template for:each={objetoHistorial} for:item="contact">
+                  <li style="min-width: 300px;" key={contact.value} class="slds-path__item slds-is-current slds-is-active" role="presentation">
+                    <a aria-selected="true" class="slds-path__link" href="#" id={contact.value} role="option" tabindex="-1">
+                      <span class="slds-path__stage">
+                        <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                          <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                        </svg>
+                      </span>
+                      <span class="slds-path__title">{contact.label}</span>
+                    </a>
+                  </li>
+                </template>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

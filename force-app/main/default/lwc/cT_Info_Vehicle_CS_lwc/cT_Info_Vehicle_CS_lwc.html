@@ -1,0 +1,250 @@
+<template>
+  <div class="grid-container">
+    <!-- <div class="slds-p-around_medium lgc-bg main-container"> -->
+    <div class="info-data-container item1">
+      <div class="top-container">
+        <lightning-icon class="icon-ctct" icon-name="standard:travel_mode" alternative-text="Email"
+          title="Email"></lightning-icon>
+        <p class="primary-text">
+          Información del vehículo
+        </p>
+      </div>
+      <div class="three-grid-container">
+        <!-- <div class="circle"></div> -->
+        <div class="img-container">
+          <!-- <img if:true={noContieneImagen} src="https://images.vexels.com/media/users/3/154251/isolated/preview/fef0c563c39f2746c35604e969ffe3ef-bmw-car-front-view-silhouette.png?width=1130" alt="Default Car Image"> -->
+          <img if:true={noContieneImagen} src={imagenDefault} alt="Default Car Image" style="max-width: 200px;">
+          <!-- <img if:true={noContieneImagen} src="https://connect.bmwhk.com/sites/default/files/model/thumb/2019/x5.png" alt="Default Car Image"> -->
+          <img if:false={noContieneImagen} src={imagenCoche} alt="Default Car Image">
+        </div>
+        <div class="grid-items">
+          <span><strong>Tipo: </strong>{tipo}</span>
+          <span><strong>Placa: </strong><a href={urlAsset}>{placa}</a></span>
+          <span><strong>VIN: </strong><a href={urlAsset}>{vin}</a></span>
+          <span><strong>Marca: </strong>{marca}</span>
+          <span><strong>Modelo: </strong>{modelo}</span>
+
+        </div>
+        <div class="grid-items">
+          <span><strong>Año: </strong>{anio}</span>
+          <span><strong>Plan de venta: </strong>{planVenta}</span>
+          <span><strong>Última visita al taller: </strong>{ultVisitaTaller}</span>
+          <div if:false={mostrarHoras} class="edit-zone-info">
+            <span if:false={showEditZoneKM}><strong>Kilometraje: </strong>{formatKilometraje}</span>
+            <lightning-input if:true={showEditZoneKM} type="text" label="Ingrese el kilometraje"
+              onchange={setKilometraje} value={kilometraje}></lightning-input>
+            <div if:true={showEditZoneKM} style="display: flex; justify-content:flex-end;">
+              <lightning-button variant="destructive" onclick={handleEditZoneKM} label="Cancelar" title="Cancelar"
+                class="slds-m-left_x-small"></lightning-button>
+              <lightning-button variant="brand" label="Guardar" onclick={handleKilometrajeChange} title="Guardar"
+                class="slds-m-left_x-small"></lightning-button>
+            </div>
+            <lightning-button-icon if:false={showEditZoneKM} onclick={handleEditZoneKM} icon-name="utility:edit"
+              alternative-text="Editar" title="Editar"></lightning-button-icon>
+          </div>
+          <div if:true={mostrarHoras} class="edit-zone-info">
+            <span if:false={showEditZoneKM}><strong>Horas de uso: </strong>{kilometraje}</span>
+            <lightning-input if:true={showEditZoneKM} type="text" label="Ingrese las horas de uso"
+              onchange={setKilometraje} value={kilometraje}></lightning-input>
+            <div if:true={showEditZoneKM} style="display: flex; justify-content:flex-end;">
+              <lightning-button variant="destructive" onclick={handleEditZoneKM} label="Cancelar" title="Cancelar"
+                class="slds-m-left_x-small"></lightning-button>
+              <lightning-button variant="brand" label="Guardar" onclick={handleKilometrajeChange} title="Guardar"
+                class="slds-m-left_x-small"></lightning-button>
+            </div>
+            <lightning-button-icon if:false={showEditZoneKM} onclick={handleEditZoneKM} icon-name="utility:edit"
+              alternative-text="Editar" title="Editar"></lightning-button-icon>
+          </div>
+          <span><strong>Combustible: </strong>{combustible}</span>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="info-data-container">
+      <div class="top-container">
+        <lightning-icon class="icon-ctct" icon-name="standard:user_role" alternative-text="Email"
+          title="Email"></lightning-icon>
+        <p class="primary-text">
+          Comentarios del plan de venta - OPP: <a href={oppUrl}>{consecutivoOpp}</a>
+        </p>
+      </div>
+      <div class="bottom-container client-data">
+        <span><strong>Comentarios plan cliente: </strong>{comentario}</span>
+        <span><strong>Comentarios plan negocio: </strong>{comentarioNegocio}</span>
+      </div>
+    </div>
+
+    <div class="slds-card">
+      <div class="top-container">
+        <lightning-icon class="icon-ctct" icon-name="standard:service_appointment" alternative-text="Email"
+          title="Email"></lightning-icon>
+        <p class="primary-text">
+          Historial de fechas
+        </p>
+      </div>
+      <div class="bottom-container client-data">
+        <template if:true={historialFechas}>
+          <div class="table-container" style="width: 100%;">
+            <table style="width: 100%;">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Fecha</th>
+                  <th>Tipo de fecha</th>
+                  <th>Usuario que modifica</th>
+                  <th>Fecha ingreso dato</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template for:each={historialFechas} for:item="fecha">
+                  <tr key={fecha.Id}>
+                    <td>
+                      <a href={fecha.recordUrl} target="_blank">{fecha.Name}</a>
+                    </td>
+                    <td>
+                      {fecha.Fecha__c}
+                    </td>
+                    <td>
+                      {fecha.TipoDeFecha__c}
+                    </td>
+                    <td>
+                      {fecha.usuarioName}
+                    </td>
+                    <td>
+                      {fecha.FechaIngresoDato__c}
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </template>
+        <template if:true={error}>
+          <p>Error loading data: {error.message}</p>
+        </template>
+      </div>
+    </div>
+
+    <div>
+      <div if:true={seguroRMActivo} class="info-data-container" style="margin-bottom: 15px;">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:service_contract" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <p class="primary-text">
+            Cliente con seguro RM Activo
+          </p>
+        </div>
+        <div class="bottom-container client-data">
+        </div>
+      </div>
+
+      <div class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:work_contract" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <p class="primary-text">
+            Planes de Mantenimiento
+          </p>
+        </div>
+        <div class="bottom-container client-data">
+          <p if:false={hasWarrantyPlan}>NO HAY UN PLAN DE MANTENIMIENTO ASOCIADO A ESTE VEHÍCULO</p>
+          <!-- <span>{mantPlan}</span> -->
+          <div class="bottom-container client-data" style="padding: 0;" if:true={hasWarrantyPlan}>
+            <div class="table-container" style="width: 100%;">
+              <table style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th>Nombre garantía</th>
+                    <th>Detalles</th>
+                    <th>Fecha finalización</th>
+                    <th>Vigencia</th>
+                    <th>Cambio de owner</th>
+                    <th>Tipo de garantía</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template for:each={warranties} for:item="warranty">
+                    <tr key={warranty.Id}>
+                      <td>
+                        {warranty.WarrantyName__c}
+                      </td>
+                      <td style="white-space: normal;">
+                        {warranty.Details_Warranty__c}
+                      </td>
+                      <td>
+                          {warranty.EndDate}
+                      </td>
+                      <td>
+                        {warranty.Vigencia__c}
+                      </td>
+                      <td>
+                        {warranty.Cambio_de_owner__c}
+                      </td>
+                      <td>
+                        {warranty.WarrantyType}
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom:20px" class="info-data-container">
+      <div class="top-container">
+        <lightning-icon class="icon-ctct" icon-name="standard:shift_preference" alternative-text="Email"
+          title="Email"></lightning-icon>
+        <p class="primary-text">
+          Fecha de venta del vehículo
+        </p>
+      </div>
+      <div class="bottom-container client-data">
+        <span><strong></strong>{fechaVentaNuevo}</span>
+      </div>
+    </div>
+    <div style="margin-bottom:20px" class="info-data-container">
+      <div class="top-container">
+        <lightning-icon class="icon-ctct" icon-name="standard:user_role" alternative-text="Email"
+          title="Email"></lightning-icon>
+        <p class="primary-text">
+          Comentarios del vehículo
+        </p>
+      </div>
+      <div class="bottom-container client-data">
+        <div if:false={showEditZone} class="edit-zone">
+          <span style="border: none;"><strong></strong>{comentarios}</span>
+          <lightning-button-icon onclick={handleEditZone} icon-name="utility:edit" alternative-text="Editar"
+          title="Add user"></lightning-button-icon>
+        </div>
+        <div if:true={showEditZone} class="edit-zone">
+          <textarea onchange={handleEditZoneChange} style="min-width: 100%;">{comentarios}</textarea>
+        </div>
+        <div if:true={showEditZone} style="display: flex; justify-content:flex-end; width:100%">
+          <lightning-button variant="destructive" onclick={handleEditZone} label="Cancelar" title="Cancelar"
+          class="slds-m-left_x-small"></lightning-button>
+          <lightning-button variant="brand" label="Guardar" title="Guardar" onclick={guardarComentarios}
+          class="slds-m-left_x-small"></lightning-button>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- <div class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:contact" alternative-text="Email" title="Email"></lightning-icon>
+          <p class="primary-text">
+            Contacto
+          </p>
+        </div>        
+        <div class="bottom-container client-data">
+          <span><strong>Ejem: </strong>{}</span>
+        </div>
+      </div> -->
+
+    <!-- </div> -->
+  </div>
+</template>

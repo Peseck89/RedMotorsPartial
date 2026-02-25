@@ -1,0 +1,62 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem 0.5rem 1rem;
+}
+
+.subtitle {
+    font-size: 0.7rem;
+    color: var(--lwc-colorTextWeak, #9faab5);
+    margin-bottom: 0.75rem;
+    text-align: center;
+    word-break: break-all;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+}
+
+/* Botones redondos tipo reproductor */
+.control-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+}
+
+.control-btn.primary {
+    background: var(--lwc-brandPrimary, #0176d3);
+}
+
+.control-btn.secondary {
+    background: var(--lwc-colorBackground, #f3f3f3);
+}
+
+.control-btn lightning-icon {
+    --sds-c-icon-color-foreground-default: #ffffff;
+}
+
+.control-btn.secondary lightning-icon {
+    --sds-c-icon-color-foreground-default: #1b1b1b;
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.status {
+    font-size: 0.75rem;
+    color: var(--lwc-colorTextDefault, #333);
+    text-align: center;
+}

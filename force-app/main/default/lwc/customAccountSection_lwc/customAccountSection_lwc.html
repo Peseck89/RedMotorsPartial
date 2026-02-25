@@ -1,0 +1,108 @@
+<template>
+  <div class="main-content">
+
+    <div class="card-container">
+
+      <div class="img-container">
+        <div class="img-cont-edit">
+          <img class="usr-img" onclick={cargarImagen} src={imageUser} alt="User Default Image"/>
+          <lightning-icon 
+            onclick={cargarImagen} 
+            icon-name="action:edit" 
+            alternative-text="Editar" 
+            title="Editar"
+            class="icon-usr"
+            size="x-small">
+          </lightning-icon>
+        </div>
+        <div class="name-container">
+          <h1>Propietario</h1>
+          <p if:true={isPersonAccount} class="name-information"><strong>{nombre} {apellido}</strong></p>
+          <p if:false={isPersonAccount} class="name-information"><strong>{nombreCompleto}</strong></p>
+        </div>
+      </div>
+
+      <template if:false={noTieneImagen}>
+        <div class="upload-container">
+          <lightning-input type="file" label="Select Image" onchange={handleFileChange}></lightning-input>
+          <lightning-button 
+            variant="brand" 
+            label="Cargar imagen" 
+            onclick={handleUpload} 
+            icon-name="utility:upload" 
+            class="slds-m-top_small">
+          </lightning-button>
+          <template if:true={imageUrl}>
+              <div class="slds-m-top_medium">
+                  <img src={imageUrl} alt="Asset Image" class="slds-image" />
+              </div>
+          </template>
+        </div>
+      </template>      
+
+      <div class="information-container">
+        <div class="data-container">
+          <p class="info-label"><strong>Tipo de Identificación: </strong></p>
+          <p>{nombreIdentificacion}</p>
+          <!-- <p>{tipoIdentificacion}</p> -->
+        </div>
+        <div class="data-container">
+          <p class="info-label"><strong>Cédula: </strong></p>
+          <p>{cedula}</p>
+        </div>
+        <div class="data-container ">
+          <lightning-icon class="icon-ctct" icon-name="utility:call" alternative-text="Email" title="Email" size="small"></lightning-icon>
+          <!-- <p class="info-label"><strong>Teléfono: </strong></p> -->
+          <p>{telefono}</p>
+        </div>
+        <div class="data-container ">
+          <lightning-icon class="icon-ctct" icon-name="utility:email" alternative-text="Email" title="Email" size="small"></lightning-icon>
+          <!-- <p class="info-label"><strong>Email: </strong></p> -->
+          <p if:true={isPersonAccount}>{email}</p>
+          <p if:false={isPersonAccount}>{empEmail}</p>
+        </div>
+        <div class="data-container">
+          <p class="info-label"><strong>Código Softland: </strong></p>
+          <p>{codSoft}</p>
+        </div>
+        <div class="data-container">
+          <p style="text-align: start; font-size: 13px"  class="info-label"><strong>Fecha Última Actividad: </strong></p>
+          <p>{fechaUltimaVisita}</p>
+        </div>
+        <div class="data-container">
+          <p class="info-label"><strong>Customer Lifetime Value: </strong></p>
+          <p>{customerLifetimeValue}</p>
+        </div>
+        <!-- <div class="data-container" style="padding-left: 0px;">
+          <lightning-accordion style="width: 100%;"
+          allow-multiple-sections-open onsectiontoggle={handleSectionToggle}
+          active-section-name={activeSections}>
+            <lightning-accordion-section name="A" label="Otro vehiculo:">
+              <lightning-datatable
+                  key-field="id"
+                  data={data}
+                  columns={columns}>
+              </lightning-datatable>
+            </lightning-accordion-section>
+
+          </lightning-accordion>
+        </div> -->
+        <div class="data-container">
+          <p class="info-label"><strong>BMW Service User: </strong></p>
+          <lightning-icon if:true={showBmwUser} icon-name="utility:success" alternative-text="Posee" variant="success"
+            title="success variant xx-small" size="x-small"></lightning-icon>
+            <lightning-icon style="rotate: 45deg;" if:false={showBmwUser} icon-name="utility:new" alternative-text="No posee" variant="error"
+            title="error variant xx-small" size="x-small"></lightning-icon>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  
+  <template if:true={showSpinner}>
+    <div class="backgroundInverse">
+        <lightning-spinner style="background-color: transparent !important;" alternative-text="Loading" variant="inverse"></lightning-spinner>
+    </div>
+  </template>
+</template>

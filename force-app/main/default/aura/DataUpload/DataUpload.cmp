@@ -1,0 +1,14 @@
+<aura:component controller="DataUploadController" implements="force:appHostable" access="global">
+
+    <div class="slds-card slds-p-around_large">
+        &nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>        
+        <div class="slds-align_absolute-center">
+            <lightning:button aura:id="leadBtn" variant="brand" Class="slds-button slds-button_neutral" label="Upload Lead Data" onclick="{!c.uploadLead}"/> 
+        </div>        
+        <br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;
+        <div class="slds-align_absolute-center">
+            <lightning:button aura:id="oppBtn" variant="brand" Class="slds-button slds-button_neutral" label="Upload Opportunity Data" onclick="{!c.uploadOpportunity}"/> 
+        </div>        
+        <br/>&nbsp;<br/>&nbsp;<br/>&nbsp;<br/>&nbsp;
+    </div>
+</aura:component>

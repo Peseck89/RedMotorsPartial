@@ -1,0 +1,132 @@
+<!--
+  @description       : Last step before adding the new item to the quote
+  @author            : marcohernandezhp@gmail.com
+  @group             : Redmotor
+  @last modified on  : 02-15-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <article class="slds-card">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>        
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-contact" title="Agregar inventario seleccionado">
+                        <lightning-icon icon-name="standard:products" alternative-text="Agregar inventario seleccionado" title="Agregar inventario seleccionado"></lightning-icon>
+                        <span class="slds-assistive-text">Agregar inventario seleccionado</span>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="#" class="slds-card__header-link slds-truncate" title="Agregar inventario seleccionado">
+                            <span>Agregar inventario seleccionado</span>
+                        </a>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body">
+            <div class="slds-form slds-m-around_small slds-p-around_small" role="list">
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Marca" value={productBrand} disabled> </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Familia" value={productFamily} disabled> </lightning-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Año" value={productYear} disabled> </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Modelo" value={productModel} disabled>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Vin" value={productVin} disabled>
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Código" value={productCode} disabled>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Nombre" value={productName} disabled>
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Color" value={productInternalColor} disabled>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Color Externo" value={productExternalColor} disabled>
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Bodega" value={bodegaName} disabled>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>                
+
+                <template if:true={hasQuotes}>      
+                    <p>Por defecto el nuevo vehiculo seleccionado se agregara a un nuevo presupuesto, si desea agregarlo a un presupuesto existente favor de indicar el la casilla de abajo.</p>          
+                    <div class="slds-form__row">                        
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">   
+                                <lightning-input type="checkbox"  label="Agregar a presupuesto existente" onchange={handleFlagAddToExistingQuoteChange}> </lightning-input>                                
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <template if:true={showQuoteInput}>
+                                    <lightning-combobox name="quoteId" label="Presupuesto" placeholder="Seleccione presupuesto" value={inputQuoteId} options={quoteOptions} onchange={handleQuoteInputChange}></lightning-combobox>
+                                </template>
+                            </div>
+                        </div>                              
+                    </div>  
+                </template>               
+            </div>
+        </div>
+        <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+            <div></div> 
+            <div>      
+                <lightning-button variant="brand-outline" label="Regresar" title="Regresar" onclick={handleGoBackClick} class="slds-m-left_small"></lightning-button>          
+                <lightning-button variant="brand" label="Agregar vehiculo" title="Agregar vehiculo" disabled={isDisableAcceptButton}
+                    onclick={handleAddItemClick} class="slds-m-left_x-small"></lightning-button>                                                   
+            </div>               
+        </footer>       
+    </article> 
+</template>

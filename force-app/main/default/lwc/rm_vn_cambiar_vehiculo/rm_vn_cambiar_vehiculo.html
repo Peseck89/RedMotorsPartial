@@ -1,0 +1,33 @@
+<!--
+  @description       : 
+  @author            : marcohernandezhp@gmail.com
+  @group             : Redmotors
+  @last modified on  : 06-25-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+  <lightning-quick-action-panel header="Cambio de vehiculo">
+    <template if:true={showSelectVehicleScreen}>
+      <c-rm_vn_cambiar_vehiculo_opp_items opp-id={recordId}
+        onnextstep={handleNextInventarioScreen}></c-rm_vn_cambiar_vehiculo_opp_items>
+    </template>
+    <template if:true={showInventarioScreen}>
+      <c-rm_vn_inventario opp-id={recordId} brand={brand} year={year} model={model}
+        brand-input-disabled="true" year-input-disabled="true" model-input-disabled="true" max-row-selection="1"
+        oninventoryselecion={hendleInventorySelectionEvent}>
+        <span slot="actions">
+          <lightning-button variant="brand-outline" label="Regresar" title="Regresar" onclick={handleBackOppLineItemsScreen}
+            class="slds-m-left_small"></lightning-button>
+
+          <lightning-button variant="brand" label="Siguiente" title="Siguiente" disabled={isDisableAcceptInventarioButton}
+            onclick={handleNextConfirmationScreen} class="slds-m-left_x-small"></lightning-button>
+        </span>
+      </c-rm_vn_inventario>
+    </template>
+    <template if:true={showConfirmationScreen}>
+      <c-rm_vn_cambiar_vehiculo_confirmacion opp-id={recordId} selected-vehicle={selectedVehicle}
+        selected-inventory={selectedInventory} ongobackstep={handleBackInventarioScreen}
+        onnextstep={hendleSaveEvent}></c-rm_vn_cambiar_vehiculo_confirmacion>
+    </template>
+  </lightning-quick-action-panel>
+</template>

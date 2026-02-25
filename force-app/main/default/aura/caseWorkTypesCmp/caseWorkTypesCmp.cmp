@@ -1,0 +1,22 @@
+<aura:component
+    implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable,force:lightningQuickActionWithoutHeader"
+    access="global"
+    controller="CaseWorkTypeController"
+    >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="existWorkOrder" type="Boolean" default="true" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:html tag="style">
+        .slds-modal__container {
+        min-width: 90vw;
+        }
+    </aura:html>
+    <aura:if isTrue="{!v.existWorkOrder}">
+        <c:caseWorkTypeFormNew recId="{!v.recordId}" />
+    <aura:set attribute="else">
+        <p style=" background: #930c0c; color: white; padding-top: 1%; padding-bottom: 1%; border-radius: 8px; text-align: center; font-size: 16px; margin-top: 5%; box-shadow: 8px 8px 10px #888888; ">
+            No existe una Orden de Trabajo asociada a este caso.
+        </p>
+    </aura:set>
+    </aura:if>
+</aura:component>

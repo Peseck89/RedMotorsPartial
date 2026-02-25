@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <assignments>
+        <name>Asigna_etapa_de_flujo_a_wo</name>
+        <label>Asigna etapa de flujo a wo</label>
+        <locationX>138</locationX>
+        <locationY>647</locationY>
+        <assignmentItems>
+            <assignToReference>recorre_WO.Etapa_de_flujo_de_trabajo__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>En proceso</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>recorre_WO.isLocked__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>actualiza_registro_actual</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>TieneWOs</name>
+        <label>Tiene WOs</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>TieneWO</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>obtener_WO</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>recorre_WO</targetReference>
+            </connector>
+            <label>Tiene WO</label>
+        </rules>
+    </decisions>
+    <interviewLabel>Actu {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Actualiza WO al cambiar Caso a En proceso</label>
+    <loops>
+        <name>recorre_WO</name>
+        <label>recorre WO</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <collectionReference>obtener_WO</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Asigna_etapa_de_flujo_a_wo</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>obtener_WO</name>
+        <label>obtener WO</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>TieneWOs</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>CaseId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Etapa_de_flujo_de_trabajo__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Orden Facturada</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>WorkOrder</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>actualiza_registro_actual</name>
+        <label>actualiza registro actual</label>
+        <locationX>138</locationX>
+        <locationY>755</locationY>
+        <connector>
+            <targetReference>recorre_WO</targetReference>
+        </connector>
+        <inputReference>recorre_WO</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>obtener_WO</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>En proceso</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>Case</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

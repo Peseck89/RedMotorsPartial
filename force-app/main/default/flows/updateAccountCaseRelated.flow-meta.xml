@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <assignments>
+        <description>aqui pondremos los nuevos campos relacionados</description>
+        <name>ponemos_los_nuevos_valores</name>
+        <label>ponemos los nuevos valores</label>
+        <locationX>50</locationX>
+        <locationY>647</locationY>
+        <assignmentItems>
+            <assignToReference>obtener_Cuenta.Name</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Nombre_Encargado_Cuenta__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>obtener_Cuenta.Phone</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Telefono_Encargado_Cuenta__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>obtener_Cuenta.Email</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Correo_Encargado_Cuenta__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Actualizar_la_cuenta</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Campos_no_deben_ser_vacios</name>
+        <label>Campos no deben ser vacios</label>
+        <locationX>182</locationX>
+        <locationY>539</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>SOlo_actualizar_los_que_no_son_vacios</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Nombre_Encargado_Cuenta__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Telefono_Encargado_Cuenta__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Correo_Encargado_Cuenta__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ponemos_los_nuevos_valores</targetReference>
+            </connector>
+            <label>SOlo actualizar los que no son vacios</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Si_tiene_una_cuenta_relacionada</name>
+        <label>Si tiene una cuenta relacionada</label>
+        <locationX>380</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Si_tiene_cuenta</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>obtener_Cuenta</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Campos_no_deben_ser_vacios</targetReference>
+            </connector>
+            <label>Si tiene cuenta</label>
+        </rules>
+    </decisions>
+    <description>Flow to update the fields Name Telephone and Email</description>
+    <interviewLabel>updateAccountCaseRelated {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>updateAccountCaseRelated</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>obtener_Cuenta</name>
+        <label>obtener Cuenta</label>
+        <locationX>380</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Si_tiene_una_cuenta_relacionada</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ContactId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Actualizar_la_cuenta</name>
+        <label>Actualizar la cuenta</label>
+        <locationX>50</locationX>
+        <locationY>755</locationY>
+        <inputReference>obtener_Cuenta</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>254</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>obtener_Cuenta</targetReference>
+        </connector>
+        <object>Case</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+</Flow>

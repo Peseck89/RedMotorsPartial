@@ -1,0 +1,96 @@
+<template>
+  <div if:true={data}>
+    <h1 if:false={caseId} class="slds-align_absolute-center">LA ORDEN ACTUAL NO TIENE CASO ASOCIADO</h1>
+    <lightning-card if:true={minwindow}  variant="Narrow"  title="Mano de Obra NO relacionadas al caso:" icon-name="standard:case">
+        <lightning-button-icon if:true={caseId}  icon-name="utility:new_window" variant="border-filled" alternative-text="Show More" slot="actions" onclick={tooglewindow}></lightning-button-icon>
+        <!--  <lightning-record-edit-form object-api-name="WorkOrderLineItem">
+          <lightning-messages></lightning-messages>
+        <lightning-input-field variant="label-hidden" field-name="tiposDeTrabajo__c" onchange={handleTipodeTrabajo} style="width: 200px;color:rgb(75, 75, 75);width: 229px;" > </lightning-input-field>
+          <lightning-button 
+              type="submit"
+              name="submit"
+              label="Update"
+          >
+          </lightning-button>
+      </lightning-record-edit-form>-->
+
+
+        <div  data-id="unrelated-mo-table" style="display: flex;">
+            <div style="min-height: 10px; max-height: 500px; flex: 1;">
+                <div class="slds-table_col-bordered slds-table_bordered" style="height: 100%;">
+                    <lightning-datatable 
+                        hide-checkbox-column
+                        data={unrelatedmos} 
+                        columns={cols} key-field="wolId"
+                        >
+                    </lightning-datatable>
+                </div>
+            </div>
+        </div>
+        <p slot="footer"></p>
+    </lightning-card>
+    <template if:false={minwindow}>
+      <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_large">
+          <div class="slds-modal__container">
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+              <lightning-card if:false={minwindow}  variant="Narrow"  title="Mano de Obra NO relacionadas al caso:" icon-name="standard:case">
+
+                <lightning-combobox
+                name="caseWorkTypeOptions"
+                label="Trabajo existente en el caso"
+                value={selectedCaseWorkTypeId}
+                placeholder="Trabajo existente en el caso"
+                options={workTypesOptions}
+                onchange={handleCaseWorkTypeChange} ></lightning-combobox>
+                
+                <br/>
+                <p class="">Lineas de la Orden de Trabajo que no están presentes en el caso.</p>
+                <lightning-record-edit-form object-api-name="WorkOrderLineItem" class="slds-m-top_medium slds-m-bottom_medium">
+                  <lightning-messages></lightning-messages>
+                  <lightning-input-field variant="label-hidden" field-name="tiposDeTrabajo__c" onchange={handleTipodeTrabajo} style="width: 200px;color:rgb(75, 75, 75);width: 229px;" > </lightning-input-field>
+              </lightning-record-edit-form>
+              
+                <div  data-id="unrelated-mo-table" style="display: flex;" class="slds-m-top_medium">
+                    <div style="min-height: 10px; max-height: 500px; flex: 1;">
+                        <div class="slds-table_col-bordered slds-table_bordered" style="height: 100%;">
+                            <lightning-datatable 
+                                data={unrelatedmos} 
+                                columns={cols} key-field="wolId"
+                                selected-rows={selectedRows}
+                                onsave={handleSave}
+                                onrowselection={handleRowSelection}
+                                >
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+                <p slot="footer"></p>
+            </lightning-card>
+            </div>
+            <div class="slds-modal__footer">
+              <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={tooglewindow}>Close</button>
+              <button class="slds-button slds-button_brand" onclick={handleSave} disabled={isSaveButtonDisabled}>Save</button>
+            </div>
+          </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+  </div>
+  <div if:true={isLoaded}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section role="dialog" tabindex="-1" style="background-color: #f0ffff00;" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-spinner" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+            <!-- Modal/Popup Box LWC header here -->
+            <!-- Modal/Popup Box LWC body starts here -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-spinner" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+                <lightning-spinner style="background-color: #f0ffff00;"   size="large" alternative-text="Loading...">
+                </lightning-spinner>
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+            
+        </div>
+        
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</div>
+</template>

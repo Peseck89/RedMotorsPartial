@@ -1,0 +1,1213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Envia correo de cancelacion de vehiculo BMW</description>
+        <name>sendCancelacionBMW</name>
+        <label>sendCancelacionBMW</label>
+        <locationX>1106</locationX>
+        <locationY>947</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>desactivarRecordatorios</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>emailBMWAutosTemp</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>correoCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>reservacitas@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>subjectCancelacion</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>Envia correo de cancelacion de vehiculo BMW moto.</description>
+        <name>sendCancelacionBMWMotos</name>
+        <label>sendCancelacionBMWMotos</label>
+        <locationX>50</locationX>
+        <locationY>947</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>desactivarRecordatorios</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>emailBMWMotosTemp</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>correoCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>reservacitas@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>subjectCancelacion</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>Envia correo de cancelacion de vehiculo KAWASAKI.</description>
+        <name>sendCancelacionKAWASAKI</name>
+        <label>sendCancelacionKAWASAKI</label>
+        <locationX>842</locationX>
+        <locationY>947</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>desactivarRecordatorios</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>emailKAWASAKIMotosTemp</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>correoCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>reservacitas@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>subjectCancelacion</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>Envia correo de cancelacion de vehiculo MINI</description>
+        <name>sendCancelacionMINI</name>
+        <label>sendCancelacionMINI</label>
+        <locationX>314</locationX>
+        <locationY>947</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>desactivarRecordatorios</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>emailMINITemp</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>correoCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>reservacitas@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>subjectCancelacion</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>Envia correo de cancelacion de vehiculo POLARIS.</description>
+        <name>sendCancelacionPOLARIS</name>
+        <label>sendCancelacionPOLARIS</label>
+        <locationX>578</locationX>
+        <locationY>947</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>desactivarRecordatorios</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>emailPOLARISMotosTemp</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>correoCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>reservacitas@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>subjectCancelacion</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <assignments>
+        <name>Asigna_correo_cliente_custom</name>
+        <label>Asigna correo cliente custom</label>
+        <locationX>50</locationX>
+        <locationY>647</locationY>
+        <assignmentItems>
+            <assignToReference>correoCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Contact__r.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>BMW_MINI_o_MOTOS</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Asigna_correo_contacto</name>
+        <label>Asigna correo contacto</label>
+        <locationX>314</locationX>
+        <locationY>647</locationY>
+        <assignmentItems>
+            <assignToReference>correoCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>getContact.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>BMW_MINI_o_MOTOS</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Asigna_correo_empresarial</name>
+        <label>Asigna correo empresarial</label>
+        <locationX>1106</locationX>
+        <locationY>647</locationY>
+        <assignmentItems>
+            <assignToReference>correoCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Activo__r.Account.CorreoElectronicoEmpresarial__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>BMW_MINI_o_MOTOS</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Asigna_correo_nulo</name>
+        <label>Asigna correo nulo</label>
+        <locationX>1370</locationX>
+        <locationY>647</locationY>
+        <assignmentItems>
+            <assignToReference>correoCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue></stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>BMW_MINI_o_MOTOS</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Asigna_correo_trafico</name>
+        <label>Asigna correo trafico</label>
+        <locationX>578</locationX>
+        <locationY>647</locationY>
+        <assignmentItems>
+            <assignToReference>correoCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>getLead.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>BMW_MINI_o_MOTOS</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assigna_correo_personal</name>
+        <label>Assigna correo personal</label>
+        <locationX>842</locationX>
+        <locationY>647</locationY>
+        <assignmentItems>
+            <assignToReference>correoCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Activo__r.Account.PersonEmail</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>BMW_MINI_o_MOTOS</targetReference>
+        </connector>
+    </assignments>
+    <constants>
+        <description>Subject email de cancelacion. &quot;Bavarian Motors&quot;.</description>
+        <name>subjectCancelacion</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Reserva Citas</stringValue>
+        </value>
+    </constants>
+    <decisions>
+        <name>BMW_MINI_o_MOTOS</name>
+        <label>BMW MINI o MOTOS</label>
+        <locationX>710</locationX>
+        <locationY>839</locationY>
+        <defaultConnector>
+            <targetReference>desactivarRecordatorios</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>BMW Autos</defaultConnectorLabel>
+        <rules>
+            <name>BMW_Motos</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Marca_Nvo__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BMW Motos</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>correoCliente</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>sendCancelacionBMWMotos</targetReference>
+            </connector>
+            <label>BMW Motos</label>
+        </rules>
+        <rules>
+            <name>MINI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Marca_Nvo__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>MINI</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>correoCliente</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>sendCancelacionMINI</targetReference>
+            </connector>
+            <label>MINI</label>
+        </rules>
+        <rules>
+            <name>Polaris_Motos</name>
+            <conditionLogic>(1 OR 2) AND 3</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Marca_Nvo__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Polaris Moto</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Marca_Nvo__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Polaris Mula</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>correoCliente</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>sendCancelacionPOLARIS</targetReference>
+            </connector>
+            <label>Polaris Motos</label>
+        </rules>
+        <rules>
+            <name>Kawasaki</name>
+            <conditionLogic>(1 OR 2 OR 3) AND 4</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Marca_Nvo__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Kawasaki Motos</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Marca_Nvo__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Kawasaki Mula</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Marca_Nvo__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Kawasaki Cuadraciclo</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>correoCliente</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>sendCancelacionKAWASAKI</targetReference>
+            </connector>
+            <label>Kawasaki</label>
+        </rules>
+        <rules>
+            <name>BMW_Autos</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Marca_Nvo__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BMW Automovil</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>correoCliente</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>sendCancelacionBMW</targetReference>
+            </connector>
+            <label>BMW Autos</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Email_personal_o_empresarial</name>
+        <label>Email personal o empresarial</label>
+        <locationX>710</locationX>
+        <locationY>539</locationY>
+        <defaultConnector>
+            <targetReference>Asigna_correo_nulo</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No tiene email</defaultConnectorLabel>
+        <rules>
+            <name>Email_contacto_custom</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Contact__r.Email</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asigna_correo_cliente_custom</targetReference>
+            </connector>
+            <label>Email contacto custom</label>
+        </rules>
+        <rules>
+            <name>Email_contacto</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>getContact.Email</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asigna_correo_contacto</targetReference>
+            </connector>
+            <label>Email contacto</label>
+        </rules>
+        <rules>
+            <name>Email_trafico</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>getLead.Email</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asigna_correo_trafico</targetReference>
+            </connector>
+            <label>Email trafico</label>
+        </rules>
+        <rules>
+            <name>Email_personal_cuenta</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Account.PersonEmail</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assigna_correo_personal</targetReference>
+            </connector>
+            <label>Email personal cuenta</label>
+        </rules>
+        <rules>
+            <name>Email_empresarial_cuenta</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Account.CorreoElectronicoEmpresarial__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asigna_correo_empresarial</targetReference>
+            </connector>
+            <label>Email empresarial cuenta</label>
+        </rules>
+    </decisions>
+    <description>Envia alertas de email cuando se cancela o reprograma una cita de BMW, MINI o MOTOS</description>
+    <interviewLabel>Cancelacion y reprogramacion de citas {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Cancelacion y reprogramacion de citas</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>getContact</name>
+        <label>getContact</label>
+        <locationX>710</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>getLead</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.WhoId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>getLead</name>
+        <label>getLead</label>
+        <locationX>710</locationX>
+        <locationY>431</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Email_personal_o_empresarial</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.WhoId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Lead</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>desactivarRecordatorios</name>
+        <label>desactivarRecordatorios</label>
+        <locationX>710</locationX>
+        <locationY>1139</locationY>
+        <inputAssignments>
+            <field>BMW_NuevaCita__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>584</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>getContact</targetReference>
+        </connector>
+        <filterLogic>1 AND (2 OR 3) And 4</filterLogic>
+        <filters>
+            <field>Estado__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Estado__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Reprogramada</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Estado__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Cancelada</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>OrigenEvento__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Campaña previo de entrega</stringValue>
+            </value>
+        </filters>
+        <object>Event</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <description>Template de correo de cancelacion de un vehiculo BMW.</description>
+        <name>emailBMWAutosTemp</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+    &lt;tr&gt;
+        &lt;td align=&quot;center&quot;&gt;
+        &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+                    &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+                    &lt;tr&gt;
+                        &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+                            Reciba un cordial saludo.
+                        &lt;/td&gt;
+                        &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors--portalcom.sandbox.file.force.com/servlet/servlet.ImageServer?id=0158N000000QGEx&amp;oid=00D8N00000050ml&amp;lastMod=1677197078000&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style = &quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                    &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                        &lt;tr&gt;
+                            &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                                &lt;span&gt;Hemos recibido la cancelación de su cita. &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                                &lt;span&gt;En caso de que desee reagendar, puede hacerlo en el siguiente &lt;a href=&quot;https://redmotorscr.com/bmw/citas/&quot;&gt;link.&lt;/a&gt;&lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                    &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;span style=&quot;padding-left: 20px;&quot;&gt; Quedamos a su disposición. &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;                      
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+                    &lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0154U000008MEBh&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; width=&quot;200px&quot; /&gt;
+                            &lt;/td&gt;
+                            &lt;td style=&quot;width:750px;&quot;&gt;
+                                &lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+                                    &lt;b&gt;BAVARIAN MOTORS CR S.A. &lt;/b&gt;&lt;br/&gt;
+                                    &lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt; Cédula Jur. No 3-101-502-521 &lt;/b&gt;&lt;br/&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                        &lt;b&gt;Tel.:&lt;/b&gt; (506) 2290-9235 &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt; www.bmw.co.cr &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                        &lt;b&gt;Apdo:&lt;/b&gt; 10101 San José, Costa Rica. &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt; De la embajada americana 200 sur, 200 este &lt;/span&gt;
+                                &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>emailBMWMotosTemp</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+    &lt;tr&gt;
+        &lt;td align=&quot;center&quot;&gt;
+        &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+                    &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+                    &lt;tr&gt;
+                        &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+                            Reciba un cordial saludo.
+                        &lt;/td&gt;
+                        &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Png&amp;versionId=0684U00000LfZ01&amp;operationContext=DELIVERY&amp;contentId=05T4U000016soXz&amp;page=0&amp;d=/a/4U000001C3Wi/KnS1fp6u6sAUtPUMH.DSimHHcbaTYmFds7wV0hEWqts&amp;oid=00D0P000000Dvkz&amp;dpt=null&amp;viewId=&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style = &quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                    &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                        &lt;tr&gt;
+                            &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                                &lt;span&gt;Hemos recibido la cancelación de su cita. &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                                &lt;span&gt;En caso de que desee reagendar, puede hacerlo en el siguiente &lt;a href=&quot;https://redmotorscr.com/bmw/citas/&quot;&gt;link.&lt;/a&gt;&lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                    &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;span style=&quot;padding-left: 20px;&quot;&gt; Quedamos a su disposición. &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;                      
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+                    &lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Png&amp;versionId=0684U00000LfZD7&amp;operationContext=DELIVERY&amp;contentId=05T4U000016sory&amp;page=0&amp;d=/a/4U000001C3Wd/QphZwHFeu.9YZ19e8QUTBTEn_NthtLqi2Z20rXsHDok&amp;oid=00D0P000000Dvkz&amp;dpt=null&amp;viewId=&quot; width=&quot;200px&quot; /&gt;
+                            &lt;/td&gt;
+                            &lt;td style=&quot;width:750px;&quot;&gt;
+                                &lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+                                    &lt;b&gt;BAVARIAN MOTORS CR S.A. &lt;/b&gt;&lt;br/&gt;
+                                    &lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt; Cédula Jur. No 3-101-502-521 &lt;/b&gt;&lt;br/&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                        &lt;b&gt;Tel.:&lt;/b&gt; (506) 2290-9235 &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt; www.bmw.co.cr &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                        &lt;b&gt;Apdo:&lt;/b&gt; 10101 San José, Costa Rica. &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt; De la embajada americana 200 sur, 200 este &lt;/span&gt;
+                                &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>emailKAWASAKIMotosTemp</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+    &lt;tr&gt;
+        &lt;td align=&quot;center&quot;&gt;
+        &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+                    &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+                    &lt;tr&gt;
+                        &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+                            Reciba un cordial saludo.
+                        &lt;/td&gt;
+                        &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Png&amp;versionId=0684U00000LfZib&amp;operationContext=DELIVERY&amp;contentId=05T4U000016sqXT&amp;page=0&amp;d=/a/4U000001C3Wo/_eWct596pv.NfQgvKKAbwQBXj2sg.VRUYqPkDnmKBfQ&amp;oid=00D0P000000Dvkz&amp;dpt=null&amp;viewId=&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style = &quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                    &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                        &lt;tr&gt;
+                            &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                                &lt;span&gt;Hemos recibido la cancelación de su cita. &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                                &lt;span&gt;En caso de que desee reagendar, puede hacerlo llamando al 2105-8300.&lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                    &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;span style=&quot;padding-left: 20px;&quot;&gt; Quedamos a su disposición. &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;                      
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+                    &lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Png&amp;versionId=0684U00000LfZr0&amp;operationContext=DELIVERY&amp;contentId=05T4U000016spKc&amp;page=0&amp;d=/a/4U000001C3X2/S2fssKxL.uukzHyG2GQl0oTWORBFAjCc3YCjjP7NhwY&amp;oid=00D0P000000Dvkz&amp;dpt=null&amp;viewId=&quot; width=&quot;200px&quot; /&gt;
+                            &lt;/td&gt;
+                            &lt;td style=&quot;width:750px;&quot;&gt;
+                                &lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+                                    &lt;b&gt;OTOBAI MOTORS S.A. &lt;/b&gt;&lt;br/&gt;
+                                    &lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt; Cédula Jur. No 3-101-720-752 &lt;/b&gt;&lt;br/&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                        &lt;b&gt;Tel.:&lt;/b&gt; (506) 2290-9235 &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt; www.bmw.co.cr &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                        &lt;b&gt;Apdo:&lt;/b&gt; 10101 San José, Costa Rica. &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt; De la embajada americana 200 sur, 200 este &lt;/span&gt;
+                                &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>emailMINITemp</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+            &lt;table style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+                  Reciba un cordial saludo.
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors--portalcom.sandbox.file.force.com/servlet/servlet.ImageServer?id=0158N000000QGF2&amp;oid=00D8N00000050ml&amp;lastMod=1677197110000&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                  &lt;span&gt;Hemos recibido la cancelacion de su cita.&lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                  &lt;span&gt;En caso de que desee reagendar, puede hacerlo en el siguiente &lt;a href=&quot;https://redmotorscr.com/mini/citas/ &quot;&gt;link.&lt;/a&gt;&lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;&gt;
+              &lt;tr&gt;
+                &lt;td&gt;
+                  &lt;span style=&quot;padding-left: 20px;&quot;&gt; Quedamos a su disposición. &lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+  
+    &lt;tr&gt;
+      &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;
+        &amp;nbsp;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+        &lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+          &lt;tr&gt;
+            &lt;td&gt;
+              &lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0154U000008MEBh&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; width=&quot;200px&quot; /&gt;
+            &lt;/td&gt;
+            &lt;td style=&quot;width:750px;&quot;&gt;
+              &lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+                &lt;b&gt;BAVARIAN MOTORS CR S.A.&lt;/b&gt;&lt;br/&gt;
+                &lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                  Cédula Jur. No 3-101-502-521&lt;/b&gt;&lt;br/&gt;
+                &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                  &lt;b&gt;Tel.:&lt;/b&gt; (506) 2290-9235 &lt;br/&gt;
+                &lt;/span&gt;
+                &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                  www.bmw.co.cr&lt;br/&gt;
+                &lt;/span&gt;
+                &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                  &lt;b&gt;Apdo:&lt;/b&gt; 10101 San José, Costa Rica. &lt;br/&gt;
+                &lt;/span&gt;
+                &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                  De la embajada americana 200 sur, 200 este
+                &lt;/span&gt;
+              &lt;/span&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/table&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+        &amp;nbsp;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>emailPOLARISMotosTemp</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+    &lt;tr&gt;
+        &lt;td align=&quot;center&quot;&gt;
+        &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+                    &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+                    &lt;tr&gt;
+                        &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+                            Reciba un cordial saludo.
+                        &lt;/td&gt;
+                        &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Png&amp;versionId=0684U00000LfZiv&amp;operationContext=DELIVERY&amp;contentId=05T4U000016sqbn&amp;page=0&amp;d=/a/4U000001C3Wx/.TGPFdH8EQHv3Ul9XKk_QudB5mqLeyZ0zVB8YdITIjY&amp;oid=00D0P000000Dvkz&amp;dpt=null&amp;viewId=&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style = &quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                    &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                        &lt;tr&gt;
+                            &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                                &lt;span&gt;Hemos recibido la cancelación de su cita. &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                        &lt;/tr&gt;
+                        &lt;tr&gt;
+                            &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                                &lt;span&gt;En caso de que desee reagendar, puede hacerlo llamando al 2105-8300.&lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                    &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;span style=&quot;padding-left: 20px;&quot;&gt; Quedamos a su disposición. &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;                      
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;border-bottom: 1px solid #2F7BB4&quot;&gt;
+                    &lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+                        &lt;tr&gt;
+                            &lt;td&gt;
+                                &lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Png&amp;versionId=0684U00000LfYtm&amp;operationContext=DELIVERY&amp;contentId=05T4U000016sqZD&amp;page=0&amp;d=/a/4U000001C3Wn/ADe.xepwaexPMJAnLxLLqeePUsGZjCn_XT4VDsgunRE&amp;oid=00D0P000000Dvkz&amp;dpt=null&amp;viewId=&quot; width=&quot;200px&quot; /&gt;
+                            &lt;/td&gt;
+                            &lt;td style=&quot;width:750px;&quot;&gt;
+                                &lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+                                    &lt;b&gt;OTOBAI MOTORS S.A. &lt;/b&gt;&lt;br/&gt;
+                                    &lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt; Cédula Jur. No 3-101-720-752 &lt;/b&gt;&lt;br/&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                        &lt;b&gt;Tel.:&lt;/b&gt; (506) 2290-9235 &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt; www.bmw.co.cr &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                        &lt;b&gt;Apdo:&lt;/b&gt; 10101 San José, Costa Rica. &lt;br/&gt;
+                                    &lt;/span&gt;
+                                    &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt; De la embajada americana 200 sur, 200 este &lt;/span&gt;
+                                &lt;/span&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+                &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>correoCliente</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

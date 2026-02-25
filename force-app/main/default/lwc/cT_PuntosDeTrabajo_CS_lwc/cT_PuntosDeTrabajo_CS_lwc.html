@@ -1,0 +1,118 @@
+<template>
+    <div class="grid-container">
+        <!-- <div class="slds-p-around_medium lgc-bg main-container"> -->
+        <div class="info-data-container">
+            <div class="top-container">
+                <lightning-icon class="icon-ctct" icon-name="standard:travel_mode" alternative-text="Email"
+                    title="Email"></lightning-icon>
+                <p class="primary-text">
+                    Puntos de trabajo
+                </p>
+            </div>
+            <!-- <button onclick={openLightningComponent}>Open Case Work Types</button> -->
+            <div class="one-grid-container">
+                <br>
+                <table>
+                    <tr>
+                        <th>Trabajo</th>
+                        <th>Nombre</th>
+                        <th>UTS</th>
+                        <th>Horas</th>
+                        <th>Mecánico
+                            Asignado</th>
+                    </tr>
+                    <template for:each={objetoHistorial} for:item="trabajo">
+
+                        <tr key={trabajo.Id}>
+                            <!-- //<td><a href={trabajo.trabajoUrl} onclick={openRecord} target="_blank">{trabajo.Tipo_de_trabajo_del_caso__r.Name}</a></td> -->
+                            <td><a href="#" data-record-id={trabajo.Id}
+                                    onclick={openRecord}>
+                                    {trabajo.Name}
+                                </a></td>
+                            <td>{trabajo.Nombre_TTC__c}</td>
+                            <td>{trabajo.cantidadHorasMultiplicadas}</td>
+                            <td>{trabajo.Total_de_horas__c}</td>
+                            <td>{mecAsig}</td>
+                        </tr>
+                    </template>
+                </table>
+                <br>
+
+            </div>
+
+        </div>
+
+        <div class="info-data-container">
+            <div class="top-container">
+                <lightning-icon class="icon-ctct" icon-name="standard:work_plan_template" alternative-text="Email"
+                    title="Email"></lightning-icon>
+                <p class="primary-text">
+                    Ordenes de trabajo
+                </p>
+            </div>
+            <div class="one-grid-container">
+                <br>
+                <table>
+                    <tr>
+                        <th>Ordenes de trabajo</th>
+                        <th>Propietario</th>
+                        <th>Tipo de Cargo</th>
+                    </tr>
+                    <template for:each={objetoWo} for:item="wo">
+                        <tr key={wo.Id}>
+                            <td><a href="#" data-record-id={wo.Id} onclick={openRecord}>
+                                    {wo.WorkOrderNumber}
+                                </a></td>
+                            <td>{wo.OwnerOT__c}</td>
+                            <td>{wo.Tipo_de_Cargo__c}</td>
+                        </tr>
+                    </template>
+                </table>
+                <br>
+            </div>
+
+        </div>
+
+        <div class="info-data-container">
+            <div class="top-container">
+                <lightning-icon class="icon-ctct" icon-name="standard:list_fee" alternative-text="Email"
+                    title="Email"></lightning-icon>
+                <p class="primary-text">
+                    Presupuestos
+                </p>
+            </div>
+            <div class="one-grid-container">
+                <br>
+                <template if:true={quotes}>
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <thead>
+                            <tr>
+                                <th>Presupuesto</th>
+                                <th>Propietario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={quotes} for:item="q">
+                                <tr key={q.Id}>
+                                    <td>
+                                        <a href="#" data-record-id={q.Id} onclick={openQuoteRecord}>
+                                            {q.Name}
+                                        </a>
+                                    </td>
+                                    <td>{q.Account.Name}</td>
+                                    <td>{q.CurrencyIsoCode} {q.formattedGrandTotal}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <br>
+                </template>
+                
+                <template if:false={quotes}>
+                    <p>No hay presupuestos disponibles.</p>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

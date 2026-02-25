@@ -1,0 +1,210 @@
+<template>
+    <lightning-card title="Mantenimiento" icon-name="custom:custom63">
+        <div class="slds-p-around_medium">
+            <!-- Marca render logic -->
+            <template lwc:if={showMarcaForm}>
+                    <lightning-combobox
+                        class="slds-p-around_small"
+                        name="marca"
+                        label="Marca"
+                        value=""
+                        options={marcas}
+                        onchange={handleMarcaSelected}
+                        required
+                    ></lightning-combobox>
+                <lightning-input
+                    lwc:if={showInputMarca}
+                    class="slds-p-around_small"
+                    type="text"
+                    label="Nombre de la Nueva Marca"
+                    onchange={handleBrandChange}
+                    data-field="brand"
+                ></lightning-input>
+            </template>
+
+            <!-- Categoria TIPO render logic -->
+            <template lwc:if={showCategoriaForm}>
+                <template lwc:if={step2}>
+                    <lightning-record-edit-form
+                        id="marca"
+                        record-type-id={recordTypeId}
+                        object-api-name="Product2"
+                    >
+                        <lightning-input-field
+                            class="slds-p-around_small"
+                            variant="label-stacked"
+                            field-name="Marca__c"
+                            onchange={handleMarcaSelected}
+                            value={wBrand}
+                            disabled
+                        ></lightning-input-field>
+                    </lightning-record-edit-form>
+                </template>
+                <lightning-combobox
+                    class="slds-p-around_small"
+                    name="categoria"
+                    label="Tipo"
+                    value=""
+                    options={categorias}
+                    onchange={handleCategoriaSelected}
+                ></lightning-combobox>
+                <lightning-input
+                    lwc:if={showInputCategoria}
+                    class="slds-p-around_small"
+                    type="text"
+                    label="Nombre de la Nueva Categoría"
+                    value={category}
+                    onchange={handleCategoryChange}
+                    data-field="category"
+                ></lightning-input>
+            </template>
+
+            <!-- Grupo Render logic -->
+
+            <template lwc:if={showGrupoForm}>
+                <template lwc:if={step3}>
+                    <lightning-record-edit-form
+                        id="categoria"
+                        record-type-id={recordTypeId}
+                        object-api-name="Product2"
+                    >
+                        <lightning-input-field
+                            class="slds-p-around_small"
+                            variant="label-stacked"
+                            field-name="Marca__c"
+                            onchange={handleMarcaSelected}
+                            value={wBrand}
+                            disabled
+                        ></lightning-input-field>
+                        <lightning-input-field
+                            class="slds-p-around_small"
+                            variant="label-stacked"
+                            field-name="Categor_a_veh_culo__c"
+                            onchange={handleCategoriaSelected}
+                            value={wCategory}
+                            disabled
+                        ></lightning-input-field>
+                    </lightning-record-edit-form>
+                </template>
+                <lightning-combobox
+                    class="slds-p-around_small"
+                    name="familia"
+                    label="Grupo de Categoria"
+                    value=""
+                    options={grupos}
+                    onchange={handleGrupoSelected}
+                ></lightning-combobox>
+                <lightning-input
+                lwc:if={showInputGrupo}
+                class="slds-p-around_small"
+                type="text"
+                label="Nombre del Nuevo Grupo Categoría"
+                value={group}
+                onchange={handleGroupChange}
+                data-field="category"
+                ></lightning-input>
+            </template>
+
+            <template lwc:if={showFamiliaForm}>
+                <template lwc:if={step4}>
+                    <lightning-record-edit-form
+                        id="grupo"
+                        record-type-id={recordTypeId}
+                        object-api-name="Product2"
+                    >
+                        <lightning-input-field
+                            class="slds-p-around_small"
+                            variant="label-stacked"
+                            field-name="Marca__c"
+                            onchange={handleMarcaSelected}
+                            value={wBrand}
+                            disabled
+                        ></lightning-input-field>
+                        <lightning-input-field
+                            class="slds-p-around_small"
+                            variant="label-stacked"
+                            field-name="Categor_a_veh_culo__c"
+                            onchange={handleCategoriaSelected}
+                            value={wCategory}
+                            disabled
+                        ></lightning-input-field>
+                        <lightning-input-field
+                            class="slds-p-around_small"
+                            variant="label-stacked"
+                            field-name="Grupo__c"
+                            onchange={handleGrupoSelected}
+                            value={wGroup}
+                            disabled
+                        ></lightning-input-field>
+                    </lightning-record-edit-form>
+                </template>
+                <lightning-combobox
+                    class="slds-p-around_small"
+                    name="familia"
+                    label="Familia"
+                    value=""
+                    options={familias}
+                    onchange={handleFamilySelected}
+                ></lightning-combobox>
+                <lightning-input
+                lwc:if={showInputFamilia}
+                class="slds-p-around_small"
+                type="text"
+                label="Nombre de la Nueva Familia"
+                value={family}
+                onchange={handleFamilyChange}
+                data-field="category"
+                ></lightning-input>
+            </template>
+
+            <!-- Create Product Wizard -->
+            <template lwc:if={showProductForm}>
+                <template lwc:if={step5}>
+                    <lightning-card title="Crear Producto">
+                        <!-- Call the child component and pass parameters -->
+                        <c-create-product-after-wizard
+                            record-type-id={recordTypeId}
+                            record-type-descripton={recordTypeDescripton}
+                            label={label}
+                            record-type-api-name={recordTypeApiName}
+                            brand={wBrand}
+                            category={wCategory}
+                            group={wGroup}
+                            family={wFamily}
+                        >
+                        </c-create-product-after-wizard>
+                    </lightning-card>
+                </template>
+            </template>
+
+            <lightning-button
+                lwc:if={showCreate}
+                label="CREAR"
+                variant="brand"
+                onclick={handleCreate}
+            ></lightning-button>
+        </div>
+
+        <!-- Spinner and backdrop -->
+        <template lwc:if={isLoading}>
+            <lightning-spinner size="large" alternative-text="Loading..."></lightning-spinner>
+        </template>
+
+        <div class="slds-clearfix">
+            <lightning-button
+                lwc:if={isWizard}
+                label="Siguiente"
+                onclick={handleNext}
+                class="slds-float_right slds-p-around_small"
+                variant="brand"
+            ></lightning-button>
+            <lightning-button
+                lwc:if={isWizard}
+                label="Cancelar"
+                onclick={handleReload}
+                class="slds-p-around_small"
+                variant="destructive"
+            ></lightning-button>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="FlowDatatableWoli">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="workOrderLineItemIds" type="String" label="Work Order Line Item IDs" description="Lista de IDs seleccionados de Work Order Line Items, separados por comas"/>
+            <property name="tipoCambio" type="String" label="Tipo de Cambio" description="Valor del tipo de cambio para conversión de moneda"/>
+            <property name="moneda" type="String" label="Moneda" description="Código de la moneda (ej. USD, CRC)"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,120 @@
+.backgroundInverse {
+    position: relative;
+    background-color: #16325c;
+    height: 80px;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  width: 500px;
+}
+
+.slds-modal__container {
+  width: max-content;
+  max-width: 70%;
+  min-width: 60%;
+}
+
+.slds-table {
+    margin-top: 1rem;
+    width: 100%;
+    font-size: 0.875rem;
+}
+
+.slds-table th {
+    background-color: #f3f2f2;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+}
+
+.slds-table td, .slds-table th {
+    padding: 0.5rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.slds-table tr:hover {
+    background-color: #fafaf9;
+}
+
+.slds-modal__content {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.slds-modal__footer {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid #dddbda;
+}
+
+.slds-spinner-container {
+    position: relative;
+    height: 100px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+}
+th {
+  background-color: #009879;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+tr:hover {
+  background-color: #f1f1f1;
+}
+.active {
+  color: #009879;
+  font-weight: bold;
+}
+.inactive {
+  color: #ff6b6b;
+}
+@media screen and (max-width: 600px) {
+  table {
+    font-size: 14px;
+  }
+  th, td {
+    padding: 8px 10px;
+  }
+  th {
+    display: none;
+  }
+  td {
+    display: block;
+    position: relative;
+    padding-left: 50%;
+  }
+  td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+}

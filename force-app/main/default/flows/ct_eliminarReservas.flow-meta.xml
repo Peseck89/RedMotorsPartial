@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <decisions>
+        <name>Copy_1_of_if_es_reserva</name>
+        <label>Copy 1 of if es reserva</label>
+        <locationX>908</locationX>
+        <locationY>384</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_si_es_reserva</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.es_Reserva__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>getEvent</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_EliminarRegistro</targetReference>
+            </connector>
+            <label>Copy 1 of si es reserva</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>if_es_reserva</name>
+        <label>if es reserva</label>
+        <locationX>182</locationX>
+        <locationY>276</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_es_reserva</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.es_Reserva__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>EliminarRegistro</targetReference>
+            </connector>
+            <label>si es reserva</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>si_tiene</name>
+        <label>si tiene</label>
+        <locationX>710</locationX>
+        <locationY>708</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>eliminar_shadow_si</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>buscar_shadow</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>eliminar_el_shadow</targetReference>
+            </connector>
+            <label>eliminar shadow si</label>
+        </rules>
+    </decisions>
+    <description>eliminar shadow agregado</description>
+    <interviewLabel>ct_eliminarReservas {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>ct_eliminarReservas</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordDeletes>
+        <name>Copy_1_of_EliminarRegistro</name>
+        <label>Copy 1 of EliminarRegistro</label>
+        <locationX>710</locationX>
+        <locationY>492</locationY>
+        <connector>
+            <targetReference>buscar_shadow</targetReference>
+        </connector>
+        <inputReference>$Record</inputReference>
+    </recordDeletes>
+    <recordDeletes>
+        <name>eliminar_el_shadow</name>
+        <label>eliminar el shadow</label>
+        <locationX>578</locationX>
+        <locationY>816</locationY>
+        <inputReference>buscar_shadow</inputReference>
+    </recordDeletes>
+    <recordDeletes>
+        <name>EliminarRegistro</name>
+        <label>EliminarRegistro</label>
+        <locationX>50</locationX>
+        <locationY>384</locationY>
+        <inputReference>$Record</inputReference>
+    </recordDeletes>
+    <recordLookups>
+        <name>buscar_shadow</name>
+        <label>buscar shadow</label>
+        <locationX>710</locationX>
+        <locationY>600</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>si_tiene</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>OriginalEventId__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Event_Shadow__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>getEvent</name>
+        <label>getEvent</label>
+        <locationX>908</locationX>
+        <locationY>276</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Copy_1_of_if_es_reserva</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Event</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>419</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>if_es_reserva</targetReference>
+        </connector>
+        <object>Event</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <scheduledPaths>
+            <name>es_reserva</name>
+            <connector>
+                <targetReference>getEvent</targetReference>
+            </connector>
+            <label>es reserva</label>
+            <offsetNumber>10</offsetNumber>
+            <offsetUnit>Minutes</offsetUnit>
+            <recordField>CreatedDate</recordField>
+            <timeSource>RecordField</timeSource>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+</Flow>

@@ -1,0 +1,46 @@
+<template>
+    <article class="slds-card">
+ 
+        
+        <div class="slds-card__header slds-grid">
+            <h2 class="slds-card__header-title">
+                Anticipos asociados
+            </h2>
+        </div>
+
+        <div class="slds-card__body">
+            <lightning-layout vertical-align="center" class="x-large"  horizontal-align="space">
+                <lightning-layout-item flexibility="auto" padding="around-small" size="5">
+                    
+                    <p style="text-align: center;"> Esta oportunidad ya tiene anticipos asociados: </p>
+                    <br/>
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <thead>
+                            <tr>
+                                <th> Código </th>
+                                <th> Monto </th>
+                                <!-- Add more headers for your record fields -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={records} for:item="record">
+                                <tr key={record.Id}>
+                                    <td>{record.Identificador__c}</td>
+                                    <td>${record.Monto__c}</td>
+                                    <!-- Add more <td> elements for other record fields -->
+                                </tr>
+                            </template>
+                        </tbody>
+                    
+                    </table>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+        <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+            <div></div> 
+            <div>                      
+                <lightning-button variant="brand" label="Continuar" title="Continuar" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>                                                   
+            </div>               
+        </footer>       
+    </article> 
+</template>

@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Copy_1_of_Reenviar_formalizacion</name>
+        <label>Copy 1 of Reenviar formalizacion</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>sandra.lopez@portalnetcr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>composeEmailContent</name>
+            <value>
+                <stringValue>True</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AsuntoDeCorreo</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>CuerpoDeCorreo</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Reenviar_formalizacion</name>
+        <label>Reenviar formalizacion</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>sandra.lopez@portalnetcr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>composeEmailContent</name>
+            <value>
+                <stringValue>True</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AsuntoDeCorreo</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>CuerpoDeCorreo</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>64.0</apiVersion>
+    <assignments>
+        <name>Guarda_Id_c_dulas</name>
+        <label>Guarda Id cédulas</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Guardacedulas</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Obtener_c_dula.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Es_auto</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Es_auto</name>
+        <label>Es auto</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Copy_1_of_Reenviar_formalizacion</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Es_auto1</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>Obtener_oportunidad.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BMW</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Obtener_oportunidad.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>MINI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Reenviar_formalizacion</targetReference>
+            </connector>
+            <label>Es auto</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>ya_se_ha_enviado_la_formalizaci_n</name>
+        <label>ya se ha enviado la formalización</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Si</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Obtener_oportunidad.Envio_formalizacion_legal__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Obtener_cuenta</targetReference>
+            </connector>
+            <label>Si</label>
+        </rules>
+    </decisions>
+    <formulas>
+        <name>CorreosAEnviar</name>
+        <dataType>String</dataType>
+        <expression>{!Obtener_oportunidad.Owner.Email}+&apos;,sandra.e.lopezlopez@gmail.com,sandra.lopez@portalnetcr.com&apos;</expression>
+    </formulas>
+    <formulas>
+        <name>CorreosAutos</name>
+        <dataType>String</dataType>
+        <expression>{!Obtener_oportunidad.Owner.Email}+&apos;,formalizacionautos@redmotorscr.com,nsolano@redmotorscr.com&apos;</expression>
+    </formulas>
+    <formulas>
+        <name>CorreosMotos</name>
+        <dataType>String</dataType>
+        <expression>{!Obtener_oportunidad.Owner.Email}+&apos;,formalizacionmotos@redmotorscr.com&apos;</expression>
+    </formulas>
+    <formulas>
+        <name>CuentaFacturacionName</name>
+        <dataType>String</dataType>
+        <expression>IF({!Obtener_oportunidad.Cuenta_de_Facturaci_n__r.IsPersonAccount},{!Obtener_oportunidad.Cuenta_de_Facturaci_n__r.FirstName}+&apos; &apos;+{!Obtener_oportunidad.Cuenta_de_Facturaci_n__r.LastName},{!Obtener_oportunidad.Cuenta_de_Facturaci_n__r.Name})</expression>
+    </formulas>
+    <formulas>
+        <name>FormulaCedula</name>
+        <dataType>String</dataType>
+        <expression>MID(
+    {!Guardacedulas},
+    FIND(&quot;[&quot;, {!Guardacedulas}) + 1,
+    FIND(&quot;]&quot;, {!Guardacedulas}) - FIND(&quot;[&quot;, {!Guardacedulas}) - 1
+)</expression>
+    </formulas>
+    <formulas>
+        <name>LinkImprimirFormalizacion</name>
+        <dataType>String</dataType>
+        <expression>{!$Label.BaseUrl} &amp; &quot;apex/formalizacionLegalNuevosVfp?id=&quot; &amp; {!Obtener_oportunidad.Id}</expression>
+    </formulas>
+    <formulas>
+        <name>TipoCliente</name>
+        <dataType>String</dataType>
+        <expression>IF({!Obtener_cuenta.IsPersonAccount},&apos;Físico&apos;,&apos;Jurídico&apos;)</expression>
+    </formulas>
+    <formulas>
+        <name>TipoDocumentoClienteTexto</name>
+        <dataType>String</dataType>
+        <expression>CASE(
+   {!Obtener_cuenta.Tipo_de_Documento__c},
+    &quot;01&quot;, &quot;Cédula Física&quot;,
+    &quot;02&quot;, &quot;Cédula Jurídica&quot;,
+    &quot;03&quot;, &quot;Dimex&quot;,
+    &quot;04&quot;, &quot;NITE&quot;,
+    &quot;Cédula Fisica&quot;, &quot;Cédula Física&quot;,
+    &quot;Cédula Juridica&quot;, &quot;Cédula Jurídica&quot;,
+    &quot;Dimex&quot;, &quot;Dimex&quot;,
+    &quot;NITE&quot;, &quot;NITE&quot;,
+    &quot;Sin valores&quot;  
+)</expression>
+    </formulas>
+    <formulas>
+        <name>TipoDocumentoTexto</name>
+        <dataType>String</dataType>
+        <expression>CASE(
+   {!Obtener_cuenta.Tipo_de_Documento__c} ,
+    &quot;01&quot;, &quot;Cédula Física&quot;,
+    &quot;02&quot;, &quot;Cédula Jurídica&quot;,
+    &quot;03&quot;, &quot;Dimex&quot;,
+    &quot;04&quot;, &quot;NITE&quot;,
+    &quot;Cédula Fisica&quot;, &quot;Cédula Física&quot;,
+    &quot;Cédula Juridica&quot;, &quot;Cédula Jurídica&quot;,
+    &quot;Dimex&quot;, &quot;Dimex&quot;,
+    &quot;NITE&quot;, &quot;NITE&quot;,
+    &quot;Sin valores&quot;  
+)</expression>
+    </formulas>
+    <formulas>
+        <name>ValorVehiculoSinGastos</name>
+        <dataType>Currency</dataType>
+        <expression>{!Obtener_producto_de_la_oportunidad.UnitPrice}-{!Obtener_oportunidad.Gastos_Legales__c}</expression>
+        <scale>2</scale>
+    </formulas>
+    <interviewLabel>Reenviar formalizacion {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Reenviar formalizacion</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Obtener_anticipo</name>
+        <label>Obtener anticipo</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Obtener_c_dula</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Oportunidad__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Obtener_oportunidad.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Anticipo__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_archivo_de_c_dula</name>
+        <label>Obtener archivo de cédula</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Guarda_Id_c_dulas</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>LinkedEntityId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Obtener_c_dula.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ContentDocumentLink</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_c_dula</name>
+        <label>Obtener cédula</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Obtener_archivo_de_c_dula</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Cuenta__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Obtener_oportunidad.Account.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>C_dula__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_cuenta</name>
+        <label>Obtener cuenta</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Obtener_recibo_de_usados</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Obtener_oportunidad.AccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_oportunidad</name>
+        <label>Obtener oportunidad</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>ya_se_ha_enviado_la_formalizaci_n</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.OportunidadReserva__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Opportunity</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_producto_de_la_oportunidad</name>
+        <label>Obtener producto de la oportunidad</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Obtener_anticipo</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>OpportunityId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Obtener_oportunidad.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>OpportunityLineItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Obtener_recibo_de_usados</name>
+        <label>Obtener recibo de usados</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Obtener_producto_de_la_oportunidad</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Oportunidad__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Obtener_oportunidad.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Serecibevehiculo__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ReciboUsado__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Actualiza_vin</name>
+        <label>Actualiza vin</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Obtener_oportunidad</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>vin__c</field>
+            <value>
+                <elementReference>$Record.Codigo_de_Producto__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Actualiza_vin</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Codigo_de_Producto__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>Product2</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+    <textTemplates>
+        <name>CuerpoDeCorreo</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html&gt;
+&lt;head&gt;
+&lt;/head&gt;
+&lt;body style=&quot;max-width: 800px; margin: 0 auto; font-family:Arial, Helvetica, sans-serif&quot;&gt;
+  &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;100%&quot; style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;p style=&quot;padding: 16px 5px;text-align:center;background:#e1e1e1&quot;&gt;Solicitud de formalización Bavarian&lt;/p&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+
+  &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;100%&quot; style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td align=&quot;center&quot; class=&quot;esd-block-image&quot; style=&quot;font-size: 0px; width:60px; border: none&quot;&gt;&lt;a
+            target=&quot;_blank&quot;&gt;&lt;img
+              src=&quot;https://ehxeqpz.stripocdn.email/content/guids/CABINET_124b60e36f1e390e3d13857a8c3faf88fb87e6c267d8b90d0d1a8e3981ffadb2/images/redmlogocolor_ocS.png&quot;
+              alt style=&quot;display: block;&quot; width=&quot;60&quot;&gt;&lt;/a&gt;&lt;/td&gt;
+        &lt;td align=&quot;left&quot; class=&quot;esd-block-text&quot; style=&quot;border: none; text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;
+          &lt;span style=&quot;line-height: 100%; font-size: 15px;&quot;&gt;El asesor {!Obtener_oportunidad.Owner_Name__c}, ha enviado
+            la siguiente formalización legal correspondiente a la oportunidad- N° de Formalización:
+            {!Obtener_oportunidad.ConsecutivoOportunidad__c}&lt;/span&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+  &lt;p style=&quot;color: green; background:#e1e1e1; padding: 5px&quot;&gt;La presente Solicitud de formalización legal ha sido actualizada en los siguientes campos:
+    Código de producto&lt;/p&gt;
+  &lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;p style=&quot;background:#e1e1e1; padding: 5px&quot;&gt;Inscripción del vehículo&lt;/p&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Cliente&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.Name}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Tipo de documento&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!TipoDocumentoClienteTexto}&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;tr&gt;
+         &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Cuenta de facturación&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!CuentaFacturacionName}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;N° de documento&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.Cedula__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Valor del vehículo sin gastos&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!ValorVehiculoSinGastos}{!Obtener_oportunidad.CurrencyIsoCode}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Precio&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_producto_de_la_oportunidad.UnitPrice} {!Obtener_oportunidad.CurrencyIsoCode}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Adelanto&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.Enganche_monto__c}{!Obtener_oportunidad.CurrencyIsoCode}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Gastos &lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.Gastos_Legales__c}{!Obtener_oportunidad.CurrencyIsoCode}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;br&gt;
+  &lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;p style=&quot;font-family: Arial, Helvetica, sans-serif; font-weight:bold;background:#e1e1e1;padding:5px;width:99%&quot;&gt;Detalle de la solicitud&lt;/p&gt;
+    &lt;tr style=&quot;background-color: #faf8f7; padding: 5px&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Cliente&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.Name}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Teléfono&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.Phone}&lt;/td&gt;
+    &lt;/tr&gt;
+ &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Tipo de Cliente&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!TipoCliente}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Tipo de documento&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!TipoDocumentoTexto}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Teléfono de facturación&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.Invoice_Phone__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Documento&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.Cedula__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Correo&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.CorreoElectronicoEmpresarial__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Dirección&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.Direccion_Residencial__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Profesión&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.Profesiones__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Estado civil&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.EstadoCivilTipos__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Número de matrimonios&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.numberMarriages__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Número de divorcios&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_cuenta.numberDivorces__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;br&gt;
+  &lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;p style=&quot;background: #e1e1e1; padding: 5px&quot;&gt;Detalles del vehiculo&lt;/p&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Marca&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!$Record.marcaVehiculo__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Modelo&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!$Record.modelo__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Año&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!$Record.Anno__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;N° Chasis&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!$Record.vin__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;N° Motor&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!$Record.Numero_Motor__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Placa diferenciada 1&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.PlacaDiferenciada1__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Tapicería &lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!$Record.tapiceria__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Placa diferenciada 2 &lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.PlacaDiferenciada2__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Color&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!$Record.Color_Externo__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Placa diferenciada 3 &lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.PlacaDiferenciada3__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Carrocería&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!$Record.Carroceria__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Paga Marchamo próximo año&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.pago_marchamo__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;¿Quién paga el marchamo?&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.Quien_paga_marchamo_New__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;br&gt;
+  
+  &lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;p style=&quot;background: #e1e1e1; padding: 5px&quot;&gt;Recibir vehículo&lt;/p&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Valor&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_recibo_de_usados.ValorReciboCliente__c}{!Obtener_oportunidad.CurrencyIsoCode}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Recibo con marchamo&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_recibo_de_usados.Recibo_Marchamo__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Placa&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_recibo_de_usados.Placa__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Observaciones&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_recibo_de_usados.Observaciones_Generales__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Nombre registral&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_recibo_de_usados.Name} &lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;p style=&quot;background: #e1e1e1; padding: 5px&quot;&gt;Confirmación de entrega del vehículo&lt;/p&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Fecha de entrega&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.fechaentrega__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Lugar de entrega&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.LugarDeEntrega__c}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Hora de entrega&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.HoraDeEntrega__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;p style=&quot;background: #e1e1e1; padding: 5px&quot;&gt;Financiamiento - Tipo: {!Obtener_oportunidad.Tipo_de_financiamiento__c}&lt;/p&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Entidad&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.Entidad__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Monto&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.MontoFinanciar__c} {!Obtener_oportunidad.CurrencyIsoCode}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style=&quot;background-color: #faf8f7;&quot;&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;Observaciones&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;{!Obtener_oportunidad.ComentariosFinancieros__c}&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;/td&gt;
+      &lt;!-- &lt;td&gt;Plazo en meses&lt;/td&gt; --&gt;
+      &lt;!-- &lt;td&gt;{!Obtener_oportunidad.ComentariosFinancieros__c}&lt;/td&gt; --&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;tr &gt;
+      &lt;p style=&quot;background: #e1e1e1; padding: 5px&quot;&gt;Archivos adjuntos&lt;/p&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;a
+          href=&quot;https://redmotors.lightning.force.com/lightning/r/Opportunity/{!Obtener_oportunidad.Id}/related/CombinedAttachments/view&quot;&gt;https://redmotors.lightning.force.com/lightning/r/Opportunity/{!Obtener_oportunidad.Id}/related/CombinedAttachments/view&lt;/a&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;tr&gt;
+      &lt;p style=&quot;background:#e1e1e1; padding: 5px&quot;&gt;Para acceder a la oportunidad, por favor ingresar al siguiente link&lt;/p&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;a
+          href=&quot;https://redmotors.lightning.force.com/{!Obtener_oportunidad.Id}&quot;&gt;https://redmotors.lightning.force.com/{!Obtener_oportunidad.Id}&lt;/a&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+&lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;tr&gt;
+      &lt;p style=&quot;background:#e1e1e1; padding: 5px&quot;&gt;Para acceder a imprimir la formalización legal, por favor ingresar al siguiente link&lt;/p&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;a
+          href=&quot;{!LinkImprimirFormalizacion}&quot;&gt;{!LinkImprimirFormalizacion}&lt;/a&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;table style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;tr &gt;
+      &lt;p style=&quot;background: #e1e1e1; padding: 5px&quot;&gt;Cédula adjunta&lt;/p&gt;
+      &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px&quot;&gt;&lt;a
+          href=&quot;https://redmotors.lightning.force.com/lightning/r/C_dula__c/{!FormulaCedula}/related/CombinedAttachments/view&quot;&gt;https://redmotors.lightning.force.com/lightning/r/C_dula__c/{!FormulaCedula}/related/CombinedAttachments/view&lt;/a&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;br&gt;
+  &lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;100%&quot; style=&quot;font-family:Arial, Helvetica, sans-serif; border-collapse:collapse; width:100%&quot;&gt;
+    &lt;tbody&gt;
+      &lt;tr style=&quot;border-top: 1px solid #b3b3b3; border-bottom: 1px solid #b3b3b3&quot;&gt;
+        &lt;td style=&quot;text-align: left; padding: 8px; min-width:75px; max-width: 75px; height: 35px; font-size:13px; border:none&quot; align=&quot;left&quot;&gt;
+          &lt;span&gt;&lt;strong&gt;{!Obtener_oportunidad.Owner_Name__c}&lt;/strong&gt;&lt;/span&gt;&lt;br&gt;
+          &lt;span&gt;&lt;b&gt;&lt;a target=&quot;_blank&quot; style=&quot;color: #ed3f44;&quot;&gt;&lt;/a&gt;&lt;/b&gt;&lt;/span&gt;&lt;br&gt;
+          &lt;span&gt;&lt;/span&gt;&lt;br&gt;
+          &lt;span&gt;&lt;/span&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>AsuntoDeCorreo</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Reenvio Formalización Bavarian</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>Guardacedulas</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

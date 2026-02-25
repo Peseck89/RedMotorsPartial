@@ -1,0 +1,19 @@
+<template>
+    <header class="slds-text-heading_small custom-css"
+    style="color: #636363;">
+    {stage} ({totalRecords})</header>
+    <ul style="padding-left: 10px; padding-right: 10px;"  ondragover={handleDragOver} ondrop={handleDrop}>
+        <template if:true={recordsFound}>
+            <template for:each={records} for:item="record">       
+                <c-rm_ct_vista_kanban_vehiculo_card stage={stage} record={record} key={record.Id}>
+                </c-rm_ct_vista_kanban_vehiculo_card>
+            </template>
+
+            <template if:true={hasMoreRecords}>
+                <div class="slds-text-align_center">
+                    <lightning-button variant="base" label="Ver Mas" title="Looks like a link" onclick={handleMoreClick} class="slds-m-left_x-small"></lightning-button>
+                </div>
+            </template>
+        </template>
+    </ul>
+</template>

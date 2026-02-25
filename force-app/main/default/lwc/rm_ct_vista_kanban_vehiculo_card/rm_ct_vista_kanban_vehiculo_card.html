@@ -1,0 +1,17 @@
+<template>
+    <li class="slds-card card-shadow card_left_color_red slds-m-bottom_medium" draggable="true" ondragstart={handleDragStart}>
+        <div style="padding: 10px;">                                                       
+            <div class="slds-m-top_x-small" style="display: flex;align-items: center;justify-content: space-between;">
+                <div>                         
+                    <div class="slds-text-title" style="font-family: sans-serif;"><strong>Caso: </strong> <a href={caseURL} target="_blank"> {record.CaseNumber}</a></div>
+                    <div class="slds-text-title" style="font-family: sans-serif;"><strong>Placa:</strong> <span class="slds-text-title_caps"> <a href={vehicleURL}  target="_blank"> {vehicleName}</a></span></div>
+                    <div class="slds-text-title" style="font-family: sans-serif;"><strong>Mecánico: </strong> <a href={mechanicURL}  target="_blank"> { mechanicName}</a></div>
+                </div>
+            </div>
+        </div> 
+        <div style="padding: 5px 10px 5px 10px;background-color: #f9f9f9;color:#494848;font-size: 10px;text-align: right;font-family: sans-serif;">
+            {record.Fecha_Creacion_FM__c}
+            &nbsp;
+        </div>            
+    </li>
+</template>

@@ -1,0 +1,188 @@
+<aura:component
+  implements="force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+  access="global" controller="walkingCommunityController">
+  <aura:handler name="init" value="this" action="{!c.doInit}" />
+  <aura:attribute name="isModalInsc" type="boolean" default="false" />
+  <aura:attribute name="isModalDatos" type="boolean" default="true" />
+  <aura:attribute name="isModalExiste" type="boolean" default="false" />
+  <aura:attribute name="isModalNuevo" type="boolean" default="false" />
+  
+
+  <aura:attribute name="familias" type="List"  />
+  <aura:attribute name="infoCedula" type="List"  />
+  <aura:attribute name="imagenes" type="Object[]" />
+  <aura:attribute name="isLoading" type="Boolean" default="true"/>
+  <!-- Data Cliente --> 
+  <aura:attribute name="cedulaCliente" type="String"  />
+  <aura:attribute name="nombreCliente" type="String"  />
+  <aura:attribute name="apellidoCliente" type="String"  />
+  <aura:attribute name="telefonoCliente" type="String"  />
+  <aura:attribute name="emailCliente" type="String"  />
+  <aura:attribute name="sucursalSelected" type="String"  />
+  <!-- Data vehiculo --> 
+  <aura:attribute name="modeloSeleccionado" type="String"  />
+  <aura:attribute name="familiaSeleccionado" type="String"  />
+  <aura:attribute name="tiempoEstimado" type="String"  />
+  <aura:attribute name="otroMedio" type="String"  />
+  <aura:attribute name="familiaFinal" type="String"  />
+  
+  <html lang="en">
+  <body class="THIS">
+
+
+
+    <aura:if isTrue="{!v.isLoading}">
+        <!-- Add your spinner markup or use Salesforce's spinner component here -->
+        <!-- For example, you can use SLDS (Salesforce Lightning Design System) spinner -->
+        <div class="spinner-container" style="background-color: rgba(0, 0, 0, 0.9);top: 0;left: 0;position:fixed;width: 100%;height: 100%; align-items: center;justify-content: center;z-index: 9999;">
+            <div class="slds-spinner slds-spinner_medium">
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.isModalDatos}">
+
+      
+      <div class="main-container">
+        <lightning:button class="back-first-button" label="⨞ Volver" onclick="{!c.returnHome}" />
+        <section class="top-info-section">
+          <div class="info-header">
+            <h1>Modelos MINI</h1>
+            <h2>Seleccione el modelo de su preferencia.</h2>
+          </div>
+          <nav class="categories-nav mobile">
+            <ul class="vehicles-list">
+              <aura:iteration items="{!v.familias}" var="item">
+                <li><a  onclick="{! c.changeFamilia }" id="{!item.Grupo__c}">{!item.Grupo__c}</a></li>
+              </aura:iteration>
+                  
+            </ul>
+          </nav>
+        </section>
+        <!-- Seccion dinamica -->
+        <section class="container-showroom">
+            <aside>
+              <nav class="categories-nav desktop">
+                <ul class="vehicles-list">
+                  <aura:iteration items="{!v.familias}" var="item">
+                    <li><a  onclick="{! c.changeFamilia }" id="{!item.Grupo__c}">{!item.Grupo__c}</a></li>
+                  </aura:iteration>
+                      
+                </ul>
+              </nav>
+            </aside>
+          <div id="displayCoches">
+            <div class="car-container">
+              <h2 class="car-title">Mini</h2>
+              <img src="{!$Resource.ThanksMiniCar}" class="car-image" />
+              <!-- <button class="car-container-button" onclick="{! c.openShowInsc }">Me interesa este modelo</button> -->
+            </div>
+          </div>        
+          
+        </section>
+        <!-- Termina seccion dinamica -->
+      </div>
+
+      <!-- Popup cedula -->
+
+      <div class="slds-m-around_xx-large">
+        <aura:if isTrue="{!v.isModalInsc}">
+          <!-- Modal/Popup Box starts here-->
+          <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container modal-container">
+              <lightning:buttonIcon
+                class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse close-button"
+                onclick="{! c.closeShowInsc }" iconName="utility:close" variant="brand" alternativeText="Cerrar"
+                title="Cerrar" />
+              <!-- Modal/Popup Box Header Starts here-->
+              <div class="slds-modal__header ced-main-popup">
+                <h1>Ingrese su número de cédula</h1>
+                <div class="id-input-container">
+                  <lightning:input type="tel" name="input-ced" value="{!v.cedulaCliente}" variant="label-hidden" placeholder="Cédula" />
+                  <lightning:buttonIcon iconName="utility:send" alternativeText="Enviar" title="Enviar" onclick="{!c.navigateToComponent}"/>
+                </div>
+                <!-- <p>¿Primera vez en nuestra plataforma?</p> -->
+                <!-- <lightning:button class="insc-button" label="Inscribirse" onclick="{!c.navigateToComponentInsc}" /> -->
+              </div>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+      </div>
+    
+      <aura:set attribute="else">
+
+        <aura:if isTrue="{!v.isModalExiste}">
+          <div class="container">
+            <section class="info-header">
+              <h1>MIS DATOS</h1>
+              <h2>Le damos la bienvenida a nuestra agencia. <br/>
+                  Por favor actualice la información solicitada.
+              </h2>
+            </section>
+            <section class="main-section">
+              <lightning:input name="input-name" label="Nombre" value="{!v.nombreCliente}" required="true"/>
+              <lightning:input name="input-lastname" label="Apellido" value="{!v.apellidoCliente}" required="true"/>
+              <lightning:input type="tel" name="input-ced" label="Cédula" value="{!v.cedulaCliente}" required="true"/>
+              <lightning:input type="tel" name="input-phone" label="Teléfono" value="{!v.telefonoCliente}" required="true"/>
+              <lightning:input type="email" name="input-email" label="E-mail" value="{!v.emailCliente}" required="true"/>
+
+              <lightning:select name="select-buy" aura:id="select" label="Fecha estimada de compra" required="true"  onchange="{! c.onChange }">
+                <option value="" selected="true" disabled="true">Elige una opción...</option>
+                <option value="1 a 3 meses">De 0 a 3 meses</option>
+                <option value="4 a 6 meses">De 3 a 6 meses</option>
+                <option value="Después de 6 meses.">Mayor a 6 meses</option>
+            </lightning:select>
+            <div style="margin-bottom: 10px;"></div>
+            <lightning:select name="select-buy" aura:id="select" label="¿Ha sido atendido previamente a su visita por un asesor online de nuestra empresa?" required="true"  onchange="{! c.onChangeOtro }">
+                <option value="" selected="true" disabled="true">Elige una opción...</option>
+                <option value="si">Si</option>
+                <option value="no">No</option>
+            </lightning:select>
+          </section>
+          <lightning:button class="send-button" label="Enviar" onclick="{!c.navigateToComponent2}" />
+          <lightning:button class="back-button" label="⨞ Volver" onclick="{!c.closeModalexiste}" />
+          </div>
+        </aura:if>
+
+        <aura:if isTrue="{!v.isModalNuevo}">
+          <div class="container">
+            <section class="info-header">
+              <h1>INSCRIPCIÓN</h1>
+              <h2>Le damos la bienvenida a nuestra agencia. <br/>
+                  Por favor actualice la información solicitada.
+              </h2>
+            </section>
+            <section class="main-section">
+              <lightning:input name="input-name" label="Nombre" value="{!v.nombreCliente}" required="true"/>
+              <lightning:input name="input-lastname" label="Apellido" value="{!v.apellidoCliente}" required="true"/>
+              <lightning:input type="tel" name="input-ced" label="Cédula" value="{!v.cedulaCliente}" required="true"/>
+              <lightning:input type="tel" name="input-phone" label="Teléfono" value="{!v.telefonoCliente}" required="true"/>
+              <lightning:input type="email" name="input-email" label="E-mail" value="{!v.emailCliente}" required="true"/>
+              <lightning:select name="select-buy" aura:id="select" label="Fecha estimada de compra" required="true"  onchange="{!c.onChange}">
+                <option value="" selected="true" disabled="true">Elige una opción...</option>
+                <option value="1 a 3 meses">De 0 a 3 meses</option>
+                <option value="4 a 6 meses">De 3 a 6 meses</option>
+                <option value="Después de 6 meses.">Mayor a 6 meses</option>
+                
+            </lightning:select>
+            <div style="margin-bottom: 10px;"></div>
+            <lightning:select name="select-buy" aura:id="select" label="¿Ha sido atendido previamente a su visita por un asesor online de nuestra empresa?" required="true"  onchange="{!c.onChangeOtro}">
+              <option value="" selected="true" disabled="true">Elige una opción...</option>
+              <option value="si">Si</option>
+              <option value="no">No</option>
+            </lightning:select>
+          </section>
+          <lightning:button class="send-button" label="Enviar" onclick="{!c.navigateToComponent2}" />
+          <lightning:button class="back-button" label="⨞ Volver" onclick="{!c.closeModalNuevo}" />
+          </div>
+        </aura:if>
+
+      </aura:set>
+    </aura:if>
+  </body>
+  </html>
+</aura:component>

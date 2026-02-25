@@ -1,0 +1,15 @@
+<template>
+    <lightning-modal-header label={title}></lightning-modal-header>
+    <lightning-modal-body> 
+       <!--create a layout with one column-->
+        <lightning-layout>
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <p>{message}</p>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Aceptar" onclick={handleAccept} varian="brand"></lightning-button>
+        <lightning-button label="Cancelar" onclick={handleCancel} class="slds-m-left_small"></lightning-button>
+    </lightning-modal-footer>
+</template>

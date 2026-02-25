@@ -1,0 +1,27 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable,force:lightningQuickAction" access="global" controller="savePDFfile">
+    
+    <aura:attribute name="messagePDF" type="String"/>
+    <aura:attribute name="instanceURL" type="String"/>
+    <aura:attribute name="startFlow" type="Boolean" default="true"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <!--aura handler with waiting and donewaiting events-->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>    
+    
+    <!--loading spinner start-->
+    <div class="exampleHolder">
+        <lightning:spinner aura:id="mySpinner" class="slds-hide"/>
+    </div>
+    <!-- Loading spinner end-->  
+
+    <!-- Invoque screen flow -->
+    <aura:renderIf isTrue="{! v.startFlow}">
+        <lightning:flow aura:id="testFlowID" onstatuschange="{!c.statusChange}" />
+    </aura:renderIf>
+
+    <!-- Render vfPage -->
+    <aura:renderIf isTrue="{! v.messagePDF == 'Success'}">
+        <iframe src="{! v.instanceURL + '/apex/ct_facturaProforma?Id=' + v.recordId }" width="100%" height="1000px;" frameBorder="0"/>
+    </aura:renderIf>
+</aura:component>

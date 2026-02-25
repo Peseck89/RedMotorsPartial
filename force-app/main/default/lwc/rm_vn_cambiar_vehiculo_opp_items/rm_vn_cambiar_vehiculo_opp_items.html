@@ -1,0 +1,41 @@
+<!--
+  @description       : 
+  @author            : marcohernandezhp@gmail.com
+  @group             : Redmotors
+  @last modified on  : 06-24-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <article class="slds-card">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <span class="slds-p-around_medium">Seleccione el vehiculo que desea reemplazar.</span>
+
+        <div class="slds-card__body">
+            <div style="height:300px;">
+                <lightning-datatable selected-rows={selectedOppLineItemIds} max-row-selection="1"
+                    onrowselection={handleOppLineItemsSelection} key-field="Id" data={oppLineItems} columns={columns}>
+                </lightning-datatable>
+            </div>
+        </div>
+
+        <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+            <div>
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button_neutral" disabled={isEnablePrevButton}
+                        onclick={handleBackClick}>Pag. Anterior</button>
+                    <button class="slds-button slds-button_neutral" disabled={isEnableNextButton}
+                        onclick={handleNextClick}>Sig. Pagina</button>
+                </div>
+                <span class="slds-m-left_medium">{totalRecords} registros encontrados, Pagina {pageNumber} de
+                    {totalPages}</span>
+            </div>
+            <div>
+                <lightning-button variant="brand" label="Continuar" title="Continuar" disabled={disableNextButton}
+                    onclick={handleNextStepClick} class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </footer>
+    </article>
+</template>

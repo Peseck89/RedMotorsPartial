@@ -1,0 +1,166 @@
+<template>
+    <lightning-tabset class="despacho-container">
+        <lightning-tab label="Pendientes de Despacho">
+            <lightning-card>   
+                <lightning-button-group if:true ={showPendienteButtons} slot="actions" >
+                    <lightning-button label="Delete"
+                    if:true ={showDelete}
+                    variant ="destructive" 
+                    onclick ={handleDeleteWolis}
+                    icon-name ="utility:delete"
+                    ></lightning-button>
+                    <lightning-button label="Validar Existencias" 
+                    variant="brand-outline"
+                    onclick={handleConsultarDisponibilidad}
+                    icon-name="utility:sync"
+                    ></lightning-button>
+                    <lightning-button label="Solicitud Despacho" 
+                    variant="brand-outline"
+                    onclick={handleRequestDespacho}
+                    disabled={needValidation}
+                    icon-name="utility:send"
+                    ></lightning-button>
+                    <lightning-button label="Solicitud Apartado" 
+                    variant="brand-outline"
+                    onclick={handleRequestApartar}
+                    disabled={needValidation}
+                    icon-name="utility:send"
+                    ></lightning-button>
+                    <lightning-button label="Solicitud de Compra" 
+                    if:true={showSCbutton}
+                    variant="brand-outline"
+                    onclick={handleSolicitudCompra}
+                    ></lightning-button>
+                </lightning-button-group>
+
+                <div style="display: flex;">
+                    <div style="min-height: 10px; max-height: 500px; flex: 1;">
+                        <div class="despachoLWCdataTable slds-table_col-bordered slds-table_bordered" style="height: 100%;">
+                            <lightning-datatable 
+                                if:true={showPendientesTable}
+                                data={pendientes} 
+                                onrowselection={handleRowPendientesSelection}
+                                columns={cols} key-field="ID"
+                                onsave={handleSave}
+                                draft-values={pendientesDraftValues}
+                            >
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+           </lightning-card> 
+        </lightning-tab>
+        <lightning-tab label="Reservadas" title="2nd tab extended title">
+        <div if:true={showPDF}>
+            <iframe  src={iframeSrc} width="100%" height="500px" frameborder="0" allowfullscreen="true"></iframe>
+            <lightning-button label="Cerrar PDF" 
+                    variant="brand"
+                    onclick={handlePrintDespacho}
+                    ></lightning-button>
+        </div>
+        <lightning-card if:false={showPDF}> 
+            <lightning-button-group if:true ={showReservaButtons}  slot="actions" >
+                <lightning-button label="Reimprimir Despacho" 
+                variant="brand-outline"
+                onclick={handlePrintDespacho}
+                icon-name="utility:sync"
+                ></lightning-button>
+                <lightning-button label="Solicitar Devolución"
+                if:true ={showDevolution}
+                variant ="destructive" 
+                onclick ={handleRequestDevolution}
+                icon-name ="utility:delete"
+                ></lightning-button>
+            </lightning-button-group>
+                <div data-id="addTable" style="display: flex;">
+                    <div style="min-height: 10px; max-height: 500px; flex: 1;">
+                        <div class="despachoLWCdataTable slds-table_col-bordered slds-table_bordered" style="height: 100%;">
+                            <lightning-datatable
+                                if:true={showReservadasTable}
+                                data={reservadas} 
+                                onrowselection={handleRowReservadasSelection}
+                                onsave={handleSaveReservadas}
+                                columns={reservadaCols} key-field="ID"
+                                draft-values={reservadasDraftValues}
+                                data-id="reservada"
+                            >
+                            </lightning-datatable>
+                        </div>
+                    </div>
+                </div>
+        </lightning-card> 
+        </lightning-tab>
+        <lightning-tab label="Solicitud de Compra" title="3rd tab extended title">
+            <lightning-card > 
+                <!--<lightning-button-group if:true ={showReservaButtons}  slot="actions" >
+                    <lightning-button label="Reimprimir Despacho" 
+                    variant="brand-outline"
+                    onclick={handlePrintDespacho}
+                    icon-name="utility:sync"
+                    ></lightning-button>
+                    <lightning-button label="Solicitar Devolución"
+                    if:true ={showDevolution}
+                    variant ="destructive" 
+                    onclick ={handleRequestDevolution}
+                    icon-name ="utility:delete"
+                    ></lightning-button>
+                </lightning-button-group>-->
+                    <div data-id="addTable" style="display: flex;">
+                        <div style="min-height: 10px; max-height: 500px; flex: 1;">
+                            <div class="despachoLWCdataTable slds-table_col-bordered slds-table_bordered" style="height: 100%;">
+                                <lightning-datatable
+                                    if:true={solicitudCompras}
+                                    data={solicitudCompras} 
+                                    columns={compraCols} key-field="ID"
+                                    data-id="solicitudcompra"
+                                    hide-checkbox-column
+                                >
+                                </lightning-datatable>
+                            </div>
+                        </div>
+                    </div>
+            </lightning-card> 
+            </lightning-tab>
+    </lightning-tabset>
+
+    <div if:true ={isLoaded}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" style="background-color: #f0ffff00;" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+                <!-- Modal/Popup Box LWC header here -->
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+                    <lightning-spinner style="background-color: #f0ffff00;"   size="large" alternative-text="Loading...">
+                    </lightning-spinner>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                
+            </div>
+            
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" style="opacity: 0.8;border-radius: 4px;"></div>
+    </div>
+
+    <div if:true ={showSolicitudCompra}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" style="background-color: #f0ffff00;" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container slds-align_absolute-center" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+                <!-- Modal/Popup Box LWC header here -->
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);width: 600px;">
+                    <c-solicitud-compra-w-o
+                        record-id = {recordId}
+                        oncancel={handleCancelSolicitud}
+                        rows= {suggestSolicitudCompra}
+                        >
+                    </c-solicitud-compra-w-o>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                
+            </div>
+            
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" style="opacity: 0.8;border-radius: 4px;"></div>
+    </div>
+         
+ </template>

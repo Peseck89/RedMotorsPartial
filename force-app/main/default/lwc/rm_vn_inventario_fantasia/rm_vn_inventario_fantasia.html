@@ -1,0 +1,32 @@
+<template>
+    <lightning-layout pull-to-boundary="small" multiple-rows="true" class="slds-p-around_medium">
+        <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12" medium-device-size="6"
+            large-device-size="6">
+
+            <c-rm_vn_get_record_opp_record_types
+            onrecordtypeselected={handleRecordTypeSelectedEvent} custom-variant = "label-inline"></c-rm_vn_get_record_opp_record_types>
+
+            <c-lookup selection={familyInitialSelection} label="Familia" variant="label-inline"
+                onsearch={handleFamilySearch} required="true" onselectionchange={handleFamilySelectionChange}
+                placeholder="Buscar ...">
+            </c-lookup>
+
+            <lightning-input type="text" name="year" label="Año" value={year} variant="label-inline" required="true" max-length="4" min-length="4" pattern="[0-9]{4}"
+                onblur={handleYearChange}></lightning-input>
+
+        </lightning-layout-item>
+        <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12" medium-device-size="6"
+            large-device-size="6">
+        </lightning-layout-item>
+    </lightning-layout>
+
+    <div style="height: 300px;">
+        <lightning-datatable data={records} columns={columns} key-field="id" onrowselection={handleRowSelection}
+            max-row-selection="1">
+        </lightning-datatable>
+
+        <template if:true={isLoading}>
+            <lightning-spinner></lightning-spinner>
+        </template>
+    </div>
+</template>

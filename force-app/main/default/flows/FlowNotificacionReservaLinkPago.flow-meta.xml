@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Enviar_Correo</name>
+        <label>Enviar Correo</label>
+        <locationX>176</locationX>
+        <locationY>647</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>AsignarEnviarNotificacionFalse</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddressesArray</name>
+            <value>
+                <elementReference>OppsEmails</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>Subject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>Body</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <elementReference>GetOpp.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>63.0</apiVersion>
+    <assignments>
+        <name>Asignar</name>
+        <label>Asignar</label>
+        <locationX>176</locationX>
+        <locationY>431</locationY>
+        <assignmentItems>
+            <assignToReference>OppsEmails</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>GetOpp.Owner.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OppsEmails</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>GetOpp.JefeSucursal__r.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OppsEmails</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>GetOpp.GerenteSucursal__r.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OppsEmails</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>admin@portalnetcr.com</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OppsEmails</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue> grupo.cajas@redmotorscr.com</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OppsEmails</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>notificacionesTD@redmotorscr.com</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetOpportunityRecord</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>AsignarEnviarNotificacionFalse</name>
+        <label>AsignarEnviarNotificacionFalse</label>
+        <locationX>176</locationX>
+        <locationY>755</locationY>
+        <assignmentItems>
+            <assignToReference>GetOpp.Notificar_reserva_veh_culo__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_Records_1</targetReference>
+        </connector>
+    </assignments>
+    <interviewLabel>FlowNotificacionReservaLinkPago {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>FlowNotificacionReservaLinkPago</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>GetOpp</name>
+        <label>GetOpp</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Asignar</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Opportunity</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>GetOpportunityRecord</name>
+        <label>GetOpportunityRecord</label>
+        <locationX>176</locationX>
+        <locationY>539</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Enviar_Correo</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>OpportunityId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>OpportunityLineItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Records_1</name>
+        <label>Update Records 1</label>
+        <locationX>176</locationX>
+        <locationY>863</locationY>
+        <inputReference>GetOpp</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>GetOpp</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Notificar_reserva_veh_culo__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Notificar_reserva_veh_culo__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>Opportunity</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>Body</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;span style=&quot;color: rgb(50, 51, 56); font-family: Figtree, Roboto, &apos;Noto Sans Hebrew&apos;, &apos;Noto Kufi Arabic&apos;, &apos;Noto Sans JP&apos;, sans-serif; font-size: 16px; background-color: rgb(255, 255, 255);&quot;&gt;
+    Estimado,&lt;/span&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;span style=&quot;color: rgb(50, 51, 56); font-family: Figtree, Roboto, &apos;Noto Sans Hebrew&apos;, &apos;Noto Kufi Arabic&apos;, &apos;Noto Sans JP&apos;, sans-serif; font-size: 16px; background-color: rgb(255, 255, 255);&quot;&gt;
+    Se ha realizado una nueva reserva por medio de enlace de pago para la oportunidad 
+    &lt;strong&gt;{!GetOpp.ConsecutivoOportunidad__c}&lt;/strong&gt; a nombre de &lt;strong&gt;{!GetOpp.Name}&lt;/strong&gt;.
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style=&quot;color: rgb(50, 51, 56); font-family: Figtree, Roboto, &apos;Noto Sans Hebrew&apos;, &apos;Noto Kufi Arabic&apos;, &apos;Noto Sans JP&apos;, sans-serif; font-size: 16px; background-color: rgb(255, 255, 255);&quot;&gt;
+    Con el número de autorización &lt;strong&gt;{!GetOpp.Autorizacion__c}&lt;/strong&gt;, por favor proceder a validar con tesorería.
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style=&quot;color: rgb(50, 51, 56); font-family: Figtree, Roboto, &apos;Noto Sans Hebrew&apos;, &apos;Noto Kufi Arabic&apos;, &apos;Noto Sans JP&apos;, sans-serif; font-size: 16px; background-color: rgb(255, 255, 255);&quot;&gt;
+    Correo del cliente: &lt;strong&gt;{!GetOpp.Account.Correo_electr_nico_Formula_Reportes__c}&lt;/strong&gt;
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style=&quot;color: rgb(50, 51, 56); font-family: Figtree, Roboto, &apos;Noto Sans Hebrew&apos;, &apos;Noto Kufi Arabic&apos;, &apos;Noto Sans JP&apos;, sans-serif; font-size: 16px; background-color: rgb(255, 255, 255);&quot;&gt;
+    Identificación del cliente: &lt;strong&gt;{!GetOpp.Account.Cedula__c}&lt;/strong&gt;
+&lt;/span&gt;&lt;/p&gt;
+
+    &lt;p&gt;
+        &lt;span style=&quot;color: rgb(50, 51, 56); font-family: Figtree, Roboto, &apos;Noto Sans Hebrew&apos;, &apos;Noto Kufi Arabic&apos;, &apos;Noto Sans JP&apos;, sans-serif; font-size: 16px; background-color: rgb(255, 255, 255);&quot;&gt;
+            Código de Softland: &lt;strong&gt;{!GetOpp.Account.codigoSoftland__c}&lt;/strong&gt;
+        &lt;/span&gt;
+    &lt;/p&gt;
+
+&lt;p&gt;&lt;span style=&quot;color: rgb(50, 51, 56); font-family: Figtree, Roboto, &apos;Noto Sans Hebrew&apos;, &apos;Noto Kufi Arabic&apos;, &apos;Noto Sans JP&apos;, sans-serif; font-size: 16px; background-color: rgb(255, 255, 255);&quot;&gt;
+    Link: &lt;a href=&quot;https://redmotors.lightning.force.com/lightning/r/Opportunity/{!GetOpp.Id}/view&quot; 
+    style=&quot;color: rgb(0, 112, 210); text-decoration: none;&quot;&gt;Click Aquí&lt;/a&gt;
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;span style=&quot;color: rgb(50, 51, 56); font-family: Figtree, Roboto, &apos;Noto Sans Hebrew&apos;, &apos;Noto Kufi Arabic&apos;, &apos;Noto Sans JP&apos;, sans-serif; font-size: 16px; background-color: rgb(255, 255, 255);&quot;&gt;
+    Saludos cordiales.
+&lt;/span&gt;&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>Subject</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Nueva reserva por link de pago {!GetOpp.ConsecutivoOportunidad__c}</text>
+    </textTemplates>
+    <variables>
+        <name>OppsEmails</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

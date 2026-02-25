@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Reset</name>
+        <label>Send Reset</label>
+        <locationX>50</locationX>
+        <locationY>674</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>getCaseInfo.SuppliedEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>bmwservice@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Bienvenido a nuestro Portal Services.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>BMWEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <decisions>
+        <name>IfRecordHasData</name>
+        <label>IfRecordHasData</label>
+        <locationX>182</locationX>
+        <locationY>458</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>tiene_todo</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>getCaseInfo</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>getCaseInfo.SuppliedEmail</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>getCaseInfo.suppliedLastName__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>getCaseInfo.SuppliedName</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>createCustomerUser</targetReference>
+            </connector>
+            <label>tiene todo</label>
+        </rules>
+    </decisions>
+    <description>cambiar a service</description>
+    <formulas>
+        <name>getAlias</name>
+        <dataType>String</dataType>
+        <expression>LEFT({!getCaseInfo.suppliedLastName__c}+TEXT({!$Flow.CurrentDate}), 8)</expression>
+    </formulas>
+    <interviewLabel>automateCommUser {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>automateCommUser</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordCreates>
+        <name>CreateContact</name>
+        <label>CreateContact</label>
+        <locationX>182</locationX>
+        <locationY>350</locationY>
+        <assignRecordIdToReference>ContactId</assignRecordIdToReference>
+        <connector>
+            <targetReference>IfRecordHasData</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>AccountId</field>
+            <value>
+                <stringValue>0014U00002NUcbeQAD</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Community_User__c</field>
+            <value>
+                <stringValue>Yes</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>FirstName</field>
+            <value>
+                <stringValue>comunidad</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LastName</field>
+            <value>
+                <elementReference>getCaseInfo.suppliedLastName__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Contact</object>
+    </recordCreates>
+    <recordCreates>
+        <name>createCustomerUser</name>
+        <label>createCustomerUser</label>
+        <locationX>50</locationX>
+        <locationY>566</locationY>
+        <connector>
+            <targetReference>Send_Reset</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Alias</field>
+            <value>
+                <elementReference>getAlias</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ContactId</field>
+            <value>
+                <elementReference>ContactId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Email</field>
+            <value>
+                <elementReference>getCaseInfo.SuppliedEmail</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>EmailEncodingKey</field>
+            <value>
+                <stringValue>UTF-8</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>FirstName</field>
+            <value>
+                <elementReference>getCaseInfo.SuppliedName</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>IsActive</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LanguageLocaleKey</field>
+            <value>
+                <stringValue>en_US</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LastName</field>
+            <value>
+                <elementReference>getCaseInfo.suppliedLastName__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LocaleSidKey</field>
+            <value>
+                <stringValue>en_US</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ProfileId</field>
+            <value>
+                <stringValue>00e4U000001FEiZQAW</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>TimeZoneSidKey</field>
+            <value>
+                <stringValue>America/Costa_Rica</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Username</field>
+            <value>
+                <elementReference>getCaseInfo.SuppliedEmail</elementReference>
+            </value>
+        </inputAssignments>
+        <object>User</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>getCaseInfo</name>
+        <label>getCaseInfo</label>
+        <locationX>182</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>CreateContact</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Case</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <screens>
+        <name>MostrarAprobarUsuario</name>
+        <label>MostrarAprobarUsuario</label>
+        <locationX>182</locationX>
+        <locationY>134</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>getCaseInfo</targetReference>
+        </connector>
+        <fields>
+            <name>MostrarMensajeAviso</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 16px;&quot;&gt;Aqui podra aprobar un usuario comunidad.&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>MostrarAprobarUsuario</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>BMWEmail</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:Tahoma;border-collapse: collapse;width:100%;font-family:Tahoma;border: 1px solid;border-color: white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;border: 1px solid;border-color:#E5E6E6;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+            &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                 &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 25px;&quot;&gt;
+                     &lt;p style=&quot;font-weight: bold;font-size:24px;&quot;&gt;Sr. (a)  {!getCaseInfo.SuppliedName} {!getCaseInfo.suppliedLastName__c}&lt;/p&gt;
+                     &lt;p Style=&quot;font-size:20px;&quot;&gt; Reciba un cordial saludo.&lt;/p&gt;
+                 &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+          &lt;tr&gt;
+            &lt;td style = &quot;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+     
+
+
+        &lt;tr&gt;
+          &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border: 2px solid; border-color: #E5E6E6;&quot; &gt;
+
+
+
+       &lt;tr&gt;
+
+        &lt;td style=&quot;text-align:left;&quot;&gt;
+
+          &lt;span style=&quot;font-size:20px;font-weight: bold;&quot;&gt;Aquí puedes gestionar tu acceso a la comunidad&lt;/span&gt;
+
+          &lt;br&gt;
+        &lt;/td&gt;
+
+        &lt;td style=&quot;width:50%;padding-right: 10px;padding-left: 30px;&quot;&gt;
+
+         &lt;a href=&quot;https://redmotors.my.site.com/ForgotPassword?Email={!getCaseInfo.SuppliedEmail}&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors--portalcom.sandbox.file.force.com/servlet/servlet.ImageServer?id=0158N000000QkWN&amp;oid=00D8N00000050ml&amp;lastMod=1679087667000&quot; style=&quot;max-width: 676.207px; height:40px;&quot; title=&quot;logo&quot; /&gt;&lt;/a&gt;
+
+           
+
+        &lt;/td&gt;
+
+       &lt;/tr&gt;
+
+      &lt;/table&gt;
+
+        &lt;/tr&gt;
+
+
+        &lt;tr&gt;
+          &lt;td style=&quot;&quot;&gt;
+            &lt;table &gt;
+              &lt;tr&gt;
+                
+              &lt;/tr&gt;
+              
+            &lt;/table&gt;
+            
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td style=&quot;padding-left:40px&quot;&gt;
+                &lt;br&gt;
+                  &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH0000004RMh&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; style=&quot;max-width: 676.207px; height:100px;&quot; title=&quot;logo&quot; /&gt;
+                  &lt;/td&gt;
+              &lt;/tr&gt;
+
+
+            &lt;tr&gt;
+                
+            &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border-top: 2px solid; border-color: #E5E6E6;&quot;  &gt;
+
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH0000004Qgg&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; style=&quot;max-width: 676.207px; height:30px;&quot; title=&quot;logo&quot; /&gt;
+                    
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    Visítenos en:
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 10px;padding-left: 30px;&quot;&gt;
+                    &lt;a href=&quot;https://www.waze.com/es-419/live-map/directions/bmw-uruca-uruca,-san-jose?utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.w.180813923.1808204771.2247866&quot;&gt;Uruca&lt;/a&gt;
+                    
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 10px;padding-left: 30px;&quot;&gt;
+                    &lt;a href=&quot;https://www.waze.com/es-419/live-map/directions/cr/san-jose/san-rafael/bmw-bavarian-motors?navigate=yes&amp;utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.ChIJ2XnMrXn8oI8RceU0yvZt5cs&quot;&gt;Escazú&lt;/a&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 10px;padding-left: 30px;&quot;&gt;
+                    &lt;a href=&quot;https://www.waze.com/es-419/live-map/directions/bmw-pinares-pinares,-sanchez,-curridabat?utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.w.180879459.1808663519.730125&quot;&gt;Pinares&lt;/a&gt;
+
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+            &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>ContactId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

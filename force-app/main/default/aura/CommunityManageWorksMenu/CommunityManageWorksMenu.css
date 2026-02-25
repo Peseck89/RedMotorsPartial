@@ -1,0 +1,260 @@
+.THIS .banner-image-mw {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.THIS .bannercontainer {
+  margin-top: 40px;
+}
+
+.THIS .component-title {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.THIS .cards-container {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  align-items: center;
+  justify-items: center;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+  margin: 0 auto;
+  column-gap: 1em;
+}
+
+.THIS .card {
+  width: 200px;
+  background: #eeeeee;
+  padding: 20px;
+  border-radius: 0;
+}
+
+.THIS .card h2{
+  font-size: 15px;
+  text-align: center;
+}
+
+.THIS .card-child {
+  margin: 10px 0;
+}
+
+.THIS .card-button {
+  background: #0062ab;
+  border: none;
+  border-radius: 20px;
+  color: #FFF;
+  padding: 5px 0;
+  width: 60%;
+}
+
+.THIS .card-button:hover {
+  background: #004f8b;
+  transform: translateY(-1px);
+}
+
+@media only screen and (max-width: 1440px) {
+  .THIS .cards-container {
+    grid-template-columns: 25% 25% 25% 25%;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  /* .THIS #layout-navbar {
+    display: none;
+  } */
+}
+
+@media only screen and (max-width: 768px) {
+  .THIS .banner-image-mw {
+    display: none;
+  }
+
+}
+
+.THIS .card-grid-c {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+ .THIS .card-grid-c { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 768px) {
+ .THIS .card-grid-c { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .THIS .card-grid-c { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (min-width: 1280px) {
+  .THIS .card-grid-c { grid-template-columns: repeat(5, 1fr); }
+}
+
+.THIS .card-c {
+  background-color: #f9f9f9;
+  border: 1px solid #e4e4e7;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.THIS .card-header-c {
+  padding: 1.25rem 1rem 0.75rem;
+}
+
+.THIS .card-title-c {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.THIS .card-description-c {
+  font-size: 0.875rem;
+  color: #718096;
+  margin: 0;
+}
+
+.THIS .card-content-c {
+  padding: 0.75rem 1rem;
+  flex-grow: 1;
+}
+
+.THIS .badge-c {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background-color: #000;
+  color: #FFF;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+}
+
+.THIS .card-footer-c {
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.THIS .btn-c {
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.THIS .btn-outline-c {
+  background-color: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.THIS .btn-outline-c:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.THIS .btn-primary-c {
+  background-color: #0062ab;
+  border: 1px solid #0062ab;
+  color: #FFF;
+}
+
+.THIS .btn-primary-c:hover {
+  background-color: #004f8b;
+}
+
+.THIS .consulta-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #FFF;
+  color: #1c69d4;
+  border: 1px solid #1c69d4;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 999;
+}
+
+.THIS .consulta-btn:hover {
+  background-color: #FFF;
+  transform: scale(1.05);
+}
+
+.THIS .consulta-btn:focus {
+  outline: none;
+}
+
+.THIS .consulta-btn img {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  margin-right: 5px;
+}
+
+.THIS .consulta-btn-text {
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .THIS .consulta-btn {
+      padding: 8px 16px;
+      font-size: 14px;
+  }
+
+  .THIS .consulta-btn img {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .THIS .consulta-btn {
+      padding: 8px;
+      border-radius: 50%;
+  }
+
+  .THIS .consulta-btn-text {
+      display: none;
+  }
+
+  .THIS .consulta-btn img {
+      margin-right: 0;
+  }
+}
+
+@media (max-width: 820px) {
+  .THIS .container-p-y {
+      margin-top: 0px !important;
+  }
+
+  .THIS .cancelMargin {
+    margin-bottom: 0px !important;
+    font-size: 15px;
+  }
+
+  .THIS .component-title {
+    display: none;
+  }
+
+  .THIS .card-grid-c {
+    margin-top: 100px;
+  }
+}

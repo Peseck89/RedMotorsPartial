@@ -1,0 +1,1351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Bmw</name>
+        <label>Send Bmw</label>
+        <locationX>710</locationX>
+        <locationY>3047</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>CorreoBMW</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Cotización BMW</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_MINI</name>
+        <label>Send MINI</label>
+        <locationX>974</locationX>
+        <locationY>3047</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Send_Moto</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>CorreoMini</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Cotización MINI</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Moto</name>
+        <label>Send Moto</label>
+        <locationX>974</locationX>
+        <locationY>3155</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>CorreoMoto</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Cotización Motoroad</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <assignments>
+        <name>almacenar_los_campos</name>
+        <label>almacenar los campos</label>
+        <locationX>138</locationX>
+        <locationY>1895</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.DocumentId2__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>get_document2.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>recorriendoObjeto2</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>almacenar_los_campos2</name>
+        <label>almacenar los campos2</label>
+        <locationX>1898</locationX>
+        <locationY>1787</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.DocumentId2__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Copy_1_of_get_document.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>recorriendoObjeto</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>codigoProdVacio</name>
+        <label>codigoProdVacio</label>
+        <locationX>1854</locationX>
+        <locationY>1139</locationY>
+        <assignmentItems>
+            <assignToReference>codigoProd</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Modelo_De_Inter_s1__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>modelosCotizacion</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>$Record.Modelo_De_Inter_s2__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>modelosCotizacion</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>$Record.Modelo_De_Inter_s3__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>modelosCotizacion</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>$Record.Modelo_De_Inter_s4__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>siTIeneLista</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>codigoProdVerifica</name>
+        <label>codigoProdVerifica</label>
+        <locationX>94</locationX>
+        <locationY>1247</locationY>
+        <assignmentItems>
+            <assignToReference>modelosCotizacion</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>$Record.Modelo_De_Inter_s2__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>modelosCotizacion</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>$Record.Modelo_De_Inter_s3__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>modelosCotizacion</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>$Record.Modelo_De_Inter_s4__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>siTIeneLista2</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copy_1_of_almacenar_los_campos</name>
+        <label>Copy 1 of almacenar los campos</label>
+        <locationX>402</locationX>
+        <locationY>1895</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.DocumentId3__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>get_document2.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>recorriendoObjeto2</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copy_1_of_almacenar_los_campos2</name>
+        <label>Copy 1 of almacenar los campos2</label>
+        <locationX>2162</locationX>
+        <locationY>1787</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.DocumentId3__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Copy_1_of_get_document.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>recorriendoObjeto</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copy_2_of_almacenar_los_campos</name>
+        <label>Copy 2 of almacenar los campos</label>
+        <locationX>666</locationX>
+        <locationY>1895</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.DocumentId4__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>get_document2.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>recorriendoObjeto2</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copy_2_of_almacenar_los_campos2</name>
+        <label>Copy 2 of almacenar los campos2</label>
+        <locationX>2426</locationX>
+        <locationY>1787</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.DocumentId4__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Copy_1_of_get_document.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>recorriendoObjeto</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>save_product_Name</name>
+        <label>save product Name</label>
+        <locationX>94</locationX>
+        <locationY>1139</locationY>
+        <assignmentItems>
+            <assignToReference>codigoProd</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>get_product.Name</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>codigoProdVerifica</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>setTheMainDocument</name>
+        <label>setTheMainDocument</label>
+        <locationX>842</locationX>
+        <locationY>2639</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.DocumentId__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>get_document.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>test</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>buscar_marca</name>
+        <label>buscar marca</label>
+        <locationX>974</locationX>
+        <locationY>2939</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>BMW</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Marca__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BMW</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>control</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Bmw</targetReference>
+            </connector>
+            <label>BMW</label>
+        </rules>
+        <rules>
+            <name>MINI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Marca__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>MINI</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>control</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_MINI</targetReference>
+            </connector>
+            <label>MINI</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>buscarNumeroDoc</name>
+        <label>buscarNumeroDoc</label>
+        <locationX>2294</locationX>
+        <locationY>1679</locationY>
+        <defaultConnector>
+            <targetReference>recorriendoObjeto</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>es_doc_2</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Modelo_De_Inter_s2__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>recorriendoObjeto</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>almacenar_los_campos2</targetReference>
+            </connector>
+            <label>es doc 2</label>
+        </rules>
+        <rules>
+            <name>es_doc_3</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Modelo_De_Inter_s3__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>recorriendoObjeto</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_almacenar_los_campos2</targetReference>
+            </connector>
+            <label>es doc 3</label>
+        </rules>
+        <rules>
+            <name>es_doc_4</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Modelo_De_Inter_s4__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>recorriendoObjeto</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_almacenar_los_campos2</targetReference>
+            </connector>
+            <label>es doc 4</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>check_if_not_nul</name>
+        <label>check if not nul</label>
+        <locationX>974</locationX>
+        <locationY>2531</locationY>
+        <defaultConnector>
+            <targetReference>buscar_marca</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>document_exists</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_document</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>setTheMainDocument</targetReference>
+            </connector>
+            <label>document exists</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>check_if_not_null</name>
+        <label>check if not null</label>
+        <locationX>820</locationX>
+        <locationY>1679</locationY>
+        <defaultConnector>
+            <targetReference>recorriendoObjeto2</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_Copy_1_of_document_exists</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_document2</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_buscarNumeroDoc</targetReference>
+            </connector>
+            <label>Copy 1 of Copy 1 of document exists</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>check_if_not_null_cotizador</name>
+        <label>check if not null cotizador</label>
+        <locationX>820</locationX>
+        <locationY>539</locationY>
+        <defaultConnector>
+            <targetReference>get_product</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>document_exists_cotizador</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_document_cotizador</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>set_document_cotizador</targetReference>
+            </connector>
+            <label>document exists cotizador</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Copy_1_of_buscarNumeroDoc</name>
+        <label>Copy 1 of buscarNumeroDoc</label>
+        <locationX>534</locationX>
+        <locationY>1787</locationY>
+        <defaultConnector>
+            <targetReference>recorriendoObjeto2</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_es_doc_2</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Modelo_De_Inter_s2__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>recorriendoObjeto2</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>almacenar_los_campos</targetReference>
+            </connector>
+            <label>Copy 1 of es doc 2</label>
+        </rules>
+        <rules>
+            <name>Copy_1_of_es_doc_3</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Modelo_De_Inter_s3__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>recorriendoObjeto2</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_almacenar_los_campos</targetReference>
+            </connector>
+            <label>Copy 1 of es doc 3</label>
+        </rules>
+        <rules>
+            <name>Copy_1_of_es_doc_4</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Modelo_De_Inter_s4__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>recorriendoObjeto2</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_almacenar_los_campos</targetReference>
+            </connector>
+            <label>Copy 1 of es doc 4</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Copy_1_of_check_if_not_nul</name>
+        <label>Copy 1 of check if not nul</label>
+        <locationX>2580</locationX>
+        <locationY>1571</locationY>
+        <defaultConnector>
+            <targetReference>recorriendoObjeto</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_document_exists</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Copy_1_of_get_document</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>buscarNumeroDoc</targetReference>
+            </connector>
+            <label>Copy 1 of document exists</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>is_cotizador_web</name>
+        <label>is cotizador web</label>
+        <locationX>974</locationX>
+        <locationY>323</locationY>
+        <defaultConnector>
+            <targetReference>get_product</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>cotizador_web</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Modelo_cotizacion__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.LeadSource</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Cotizador Web</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>get_document_cotizador</targetReference>
+            </connector>
+            <label>cotizador web</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>product_not_null</name>
+        <label>product not null</label>
+        <locationX>974</locationX>
+        <locationY>1031</locationY>
+        <defaultConnector>
+            <targetReference>codigoProdVacio</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>it_has_value</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_product</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>save_product_Name</targetReference>
+            </connector>
+            <label>it has value</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>siTIeneLista</name>
+        <label>siTIeneLista</label>
+        <locationX>1854</locationX>
+        <locationY>1247</locationY>
+        <defaultConnector>
+            <targetReference>get_document</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_tiene</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>modelosCotizacion</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>recorriendoObjeto</targetReference>
+            </connector>
+            <label>si tiene</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>siTIeneLista2</name>
+        <label>siTIeneLista2</label>
+        <locationX>94</locationX>
+        <locationY>1355</locationY>
+        <defaultConnector>
+            <targetReference>get_document</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_si_tiene</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>modelosCotizacion</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>recorriendoObjeto2</targetReference>
+            </connector>
+            <label>Copy 1 of si tiene</label>
+        </rules>
+    </decisions>
+    <interviewLabel>Send Cotizacion {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Send Cotizacion</label>
+    <loops>
+        <name>recorriendoObjeto</name>
+        <label>recorriendoObjeto</label>
+        <locationX>1810</locationX>
+        <locationY>1355</locationY>
+        <collectionReference>modelosCotizacion</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Copy_1_of_get_document</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>get_document</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <name>recorriendoObjeto2</name>
+        <label>recorriendoObjeto2</label>
+        <locationX>50</locationX>
+        <locationY>1463</locationY>
+        <collectionReference>modelosCotizacion</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>get_document2</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>get_document</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Copy_1_of_get_document</name>
+        <label>Copy 1 of get document</label>
+        <locationX>2580</locationX>
+        <locationY>1463</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Copy_1_of_check_if_not_nul</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <elementReference>recorriendoObjeto</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Type</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>pdf</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Document</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>get_document</name>
+        <label>get document</label>
+        <locationX>974</locationX>
+        <locationY>2423</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>check_if_not_nul</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <elementReference>codigoProd</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Type</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>pdf</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Document</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>get_document2</name>
+        <label>get document2</label>
+        <locationX>820</locationX>
+        <locationY>1571</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>check_if_not_null</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <elementReference>recorriendoObjeto2</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Type</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>pdf</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Document</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>get_document_cotizador</name>
+        <label>get document cotizador</label>
+        <locationX>820</locationX>
+        <locationY>431</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>check_if_not_null_cotizador</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <elementReference>$Record.Modelo_cotizacion__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Type</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>pdf</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Document</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>get_product</name>
+        <label>get product</label>
+        <locationX>974</locationX>
+        <locationY>923</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>product_not_null</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Modelo_De_Inter_s__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Modelo_De_Inter_s1__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Product2</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>set_document_cotizador</name>
+        <label>set document cotizador</label>
+        <locationX>688</locationX>
+        <locationY>647</locationY>
+        <connector>
+            <targetReference>get_product</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>DocumentId__c</field>
+            <value>
+                <elementReference>get_document_cotizador.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>test</name>
+        <label>test</label>
+        <locationX>842</locationX>
+        <locationY>2747</locationY>
+        <connector>
+            <targetReference>buscar_marca</targetReference>
+        </connector>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>848</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>is_cotizador_web</targetReference>
+        </connector>
+        <object>Lead</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>CorreoBMW</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:Tahoma;border-collapse: collapse;width:100%;font-family:Tahoma;border: 1px solid;border-color: white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;border: 1px solid;border-color:#E5E6E6;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+            &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                 &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 25px;&quot;&gt;
+                     &lt;p style=&quot;font-weight: bold;font-size:24px;&quot;&gt;Sr. (a) {!$Record.FirstName} {!$Record.LastName}&lt;/p&gt;
+                     &lt;p Style=&quot;font-size:20px;&quot;&gt; Reciba un cordial saludo.&lt;/p&gt;
+                 &lt;/td&gt;
+
+                &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id={!get_document.Id}&amp;oid=00D0P000000Dvkz&quot; width=&quot;300px&quot; height=&quot;200px&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+          &lt;tr&gt;
+            &lt;td style = &quot;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;font-size:20px;&quot;&gt;
+                    &lt;span&gt;Muchas gracias por la oportunidad que nos está brindando al considerar nuestros productos.&lt;/span&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+                 &lt;tr&gt;
+                &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;font-size:20px;&quot;&gt;
+                    &lt;span&gt;Adjunto podrá encontrar las especificaciones del siguiente modelo y a continuación le detallamos su cotización.&lt;/span&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+
+          &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;
+          &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border: 2px solid; border-color: #E5E6E6;&quot;  &gt;
+
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    &lt;span style=&quot;font-size:20px;font-weight: bold;&quot;&gt;Modelo&lt;/span&gt;
+                    &lt;br&gt;
+                    &lt;br&gt;
+                    &lt;span style=&quot;font-size:24px;font-weight: bold;&quot;&gt;Precio ${!$Record.Precio1__c}&lt;/span&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;width:50%;padding-right: 10px;padding-left: 30px;&quot;&gt;
+                  &lt;a href=&quot;https://redmotorscr.com/bmw/cotizador/&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH000001O1Id&amp;oid=00D0P000000Dvkz&quot; width=&quot;300px&quot; height=&quot;50px&quot; title=&quot;logo&quot; /&gt;&lt;/a&gt;
+                    
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr &gt;
+          &lt;td style=&quot;padding-top: 20px;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+              &lt;tr&gt;
+                &lt;td&gt;
+                  &lt;span style=&quot;padding-left: 20px; font-family: Tahoma; font-size: 20px;&quot;&gt; Quedo a su disposición: &lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;
+          &lt;td style=&quot;&quot;&gt;
+            &lt;table &gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: Tahoma; font-size: 16px; line-height: 27px;&quot;&gt;
+
+                  &lt;span style=&quot;font-size: 18px;&quot;&gt; Asesor: {!$Record.Owner_Name__c} &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 18px;&quot;&gt; Iniciar WhatsApp: &lt;a href=&quot;https://api.whatsapp.com/send?phone={!$Record.Owner:User.MobilePhone}&quot;&gt;{!$Record.Owner:User.MobilePhone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 18px;&quot;&gt; Enviar email: &lt;a href=&quot;mailto:{!$Record.Owner:User.Email}&quot;&gt;{!$Record.Owner:User.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+              
+            &lt;/table&gt;
+            
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;br&gt;
+                  &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH000001Nxev&amp;oid=00D0P000000Dvkz&quot; width=&quot;100px&quot; height=&quot;100px&quot; title=&quot;logo&quot; /&gt;
+                  &lt;/td&gt;
+              &lt;/tr&gt;
+
+
+            &lt;tr&gt;
+                
+            &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border-top: 2px solid; border-color: #E5E6E6;&quot;  &gt;
+
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH0000004Qgg&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; width=&quot;50px&quot; height=&quot;50px&quot; title=&quot;logo&quot; /&gt;
+                    
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    Visítenos en:
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 10px;padding-left: 30px;&quot;&gt;
+                    &lt;a href=&quot;https://www.waze.com/es-419/live-map/directions/bmw-uruca-uruca,-san-jose?utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.w.180813923.1808204771.2247866&quot;&gt;Uruca.&lt;/a&gt;
+                    
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 10px;padding-left: 30px;&quot;&gt;
+                    &lt;a href=&quot;https://www.waze.com/es-419/live-map/directions/cr/san-jose/san-rafael/bmw-bavarian-motors?navigate=yes&amp;utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.ChIJ2XnMrXn8oI8RceU0yvZt5cs&quot;&gt;Escazú.&lt;/a&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 10px;padding-left: 30px;&quot;&gt;
+                    &lt;a href=&quot;https://www.waze.com/es-419/live-map/directions/bmw-pinares-pinares,-sanchez,-curridabat?utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.w.180879459.1808663519.730125&quot;&gt;Pinares.&lt;/a&gt;
+
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+            &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>CorreoMini</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:&apos;Georgia&apos;;border-collapse: collapse;width:100%;border: 1px solid;border-color: white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;border: 1px solid;border-color: #E5E6E6;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+            &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                 &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 25px;&quot;&gt;
+                     &lt;p style=&quot;font-weight: bold;font-size:22px&quot;&gt;¡Hola {!$Record.Name} !&lt;/p&gt;                                       
+                     &lt;p style=&quot;font-size:20px&quot;&gt; Esperamos que esté muy bien. &lt;/p&gt;
+                 &lt;/td&gt;
+
+                &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id={!get_document.Id}&amp;oid=00D0P000000Dvkz&quot; width=&quot;300px&quot; height=&quot;200px&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+          &lt;tr&gt;
+            &lt;td style = &quot;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span style=&quot;font-size:20px&quot;&gt;Gracias por su interés en MINI. Desde ya lo invitamos a realizar un test
+drive para que pueda disfrutar de la experiencia de manejar el carro de
+sus sueños, estamos seguros que no querrá bajarse de su MINI.&lt;/span&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+                 &lt;tr&gt;
+                &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span style=&quot;font-size:20px&quot;&gt;Adjunto podrá encontrar las especificaciones del siguiente modelo y a
+continuación le detallamos su cotización.&lt;/span&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+
+          &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;
+          &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border: 2px solid; border-color: #E5E6E6;&quot;  &gt;
+
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    &lt;span style=&quot;font-size:20px;font-weight: bold;&quot;&gt;{!$Record.Modelo_De_Inter_s1__c}&lt;/span&gt;
+                    &lt;br&gt;
+                    &lt;br&gt;
+                    &lt;span style=&quot;font-size:24px;font-weight: bold;&quot;&gt;Precio ${!$Record.Precio1__c}&lt;/span&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;width:50%;padding-right: 10px;padding-left: 30px;&quot;&gt;
+                  &lt;a href=&quot;https://redmotorscr.com/mini/cotizador/&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH000001O2RW&amp;oid=00D0P000000Dvkz&quot; width=&quot;300px&quot; height=&quot;50px&quot; title=&quot;logo&quot; /&gt;&lt;/a&gt;
+                    
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr &gt;
+          &lt;td style=&quot;padding-top: 20px;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+              &lt;tr&gt;
+                &lt;td&gt;
+                  &lt;span style=&quot;;padding-left: 20px; font-family: Georgia; font-size: 20px;&quot;&gt; Quedo a su disposición: &lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;
+          &lt;td style=&quot;&quot;&gt;
+            &lt;table &gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: Georgia
+; font-size: 20px; line-height: 27px;&quot;&gt;
+
+                  &lt;span style=&quot;font-size: 18px;&quot;&gt; Asesor: {!$Record.Owner_Name__c} &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 18px;&quot;&gt; Iniciar WhatsApp: &lt;a href=&quot;https://api.whatsapp.com/send?phone={!$Record.Owner:User.MobilePhone}&quot;&gt;{!$Record.Owner:User.MobilePhone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 18px;&quot;&gt; Enviar email: &lt;a href=&quot;mailto:{!$Record.Owner:User.Email}&quot;&gt;{!$Record.Owner:User.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+              
+            &lt;/table&gt;
+            
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td style=&quot;padding-left:20px;&quot;&gt;
+                &lt;br&gt;
+                  &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH000001Nzla&amp;oid=00D0P000000Dvkz&quot; width=&quot;100px&quot; height=&quot;100px&quot; title=&quot;logo&quot; /&gt;
+                  &lt;/td&gt;
+              &lt;/tr&gt;
+
+
+            &lt;tr&gt;
+                
+            &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border-top: 2px solid; border-color: #E5E6E6;&quot;  &gt;
+
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH0000004Qgg&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; width=&quot;50px&quot; height=&quot;50px&quot;title=&quot;logo&quot; /&gt;
+                    
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    Visítenos en:
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 200px;padding-left: 30px;&quot;&gt;
+                    &lt;a href=&quot;https://www.waze.com/es-419/live-map/directions/bmw-uruca-uruca,-san-jose?utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.w.180813923.1808204771.2247866&quot;&gt;MINI URUCA&lt;/a&gt;
+                    
+                &lt;/td&gt;
+                
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+            &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>CorreoMoto</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%;font-family:arial;border: 1px solid;border-color: white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+            &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                 &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+                     Sr. (a) {!$Record.FirstName} {!$Record.LastName}
+                     &lt;br&gt;
+                     &lt;br&gt;
+                     Reciba un cordial saludo.
+                 &lt;/td&gt;
+
+                &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id={!get_document.Id}&amp;oid=00D0P000000Dvkz&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+          &lt;tr&gt;
+            &lt;td style = &quot;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span&gt;Muchas gracias por la oportunidad que nos está brindando al considerar nuestros productos.&lt;/span&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+                 &lt;tr&gt;
+                &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span&gt;Adjunto podrá encontrar las especificaciones del siguiente modelo y a continuación le detallamos su cotización.&lt;/span&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+
+          &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;
+          &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border: 2px solid; border-color: #E5E6E6;&quot;  &gt;
+
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    &lt;span style=&quot;font-size:18px&quot;&gt;Modelo&lt;/span&gt;
+                    &lt;br&gt;
+                    &lt;br&gt;
+                    &lt;span style=&quot;font-size:20px&quot;&gt;Precio ${!$Record.Precio1__c}&lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr &gt;
+          &lt;td style=&quot;padding-top: 20px;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+              &lt;tr&gt;
+                &lt;td&gt;
+                  &lt;span style=&quot;color:#4F4F4F;padding-left: 20px; font-family: arial; font-size: 20px;&quot;&gt; Quedo a su disposición: &lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;
+          &lt;td style=&quot;&quot;&gt;
+            &lt;table &gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: arial; font-size: 16px; line-height: 27px;&quot;&gt;
+
+                  &lt;span style=&quot;font-size: 18px;&quot;&gt; Asesor: {!$Record.Owner_Name__c} &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 18px;&quot;&gt; Iniciar WhatsApp: &lt;a href=&quot;https://api.whatsapp.com/send?phone={!$Record.Owner:User.MobilePhone}&quot;&gt;{!$Record.Owner:User.MobilePhone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 18px;&quot;&gt; Enviar email: &lt;a href=&quot;mailto:{!$Record.Owner:User.Email}&quot;&gt;{!$Record.Owner:User.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+              
+            &lt;/table&gt;
+            
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;br&gt;
+                  &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0156s000000dEbb&amp;oid=00D0P000000Dvkz&quot; style=&quot;max-width: 676.207px; height:100px;&quot; title=&quot;logo&quot; /&gt;
+                  &lt;/td&gt;
+              &lt;/tr&gt;
+
+
+            &lt;tr&gt;
+                
+            &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border-top: 2px solid; border-color: #E5E6E6;&quot;  &gt;
+
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0156s000000dEdL&amp;oid=00D0P000000Dvkz&quot; style=&quot;max-width: 676.207px; height:30px;&quot; title=&quot;logo&quot; /&gt;
+                    
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    Visítenos en:
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 200px;padding-left: 30px;&quot;&gt;
+                    &lt;a href=&quot;https://www.waze.com/es-419/live-map/directions/bmw-uruca-uruca,-san-jose?utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.w.180813923.1808204771.2247866&quot;&gt;Pavas&lt;/a&gt;
+                    
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+            &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>codigoProd</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>control</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>modelosCotizacion</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Envia_a_aprobaci_n_centro_de_costos</name>
+        <label>Envia a aprobación centro de costos</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>submit</actionName>
+        <actionType>submit</actionType>
+        <connector>
+            <targetReference>actualiza_solicitante</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>objectId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>comment</name>
+            <value>
+                <stringValue>Auto Submitted through Flow</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>processDefinitionNameOrId</name>
+            <value>
+                <stringValue>AprobacionCentroDeCostos</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>enviar_correo_de_solicitud_de_aprobacion</name>
+        <label>enviar correo de solicitud de aprobacion</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>recipientAddresses</name>
+            <value/>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>composeEmailContent</name>
+            <value>
+                <stringValue>True</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Solicitud de aprobación centro de costo</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>&lt;p&gt;{!bodyEmail}&lt;/p&gt;</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>useLineBreaks</name>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>64.0</apiVersion>
+    <assignments>
+        <name>asigna_correos</name>
+        <label>asigna correos</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>correos</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Aprobador_Centro_de_Costos__r.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>enviar_correo_de_solicitud_de_aprobacion</targetReference>
+        </connector>
+    </assignments>
+    <interviewLabel>envia aprobación centro de costos flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>envia aprobación centro de costos flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>actualiza_solicitante</name>
+        <label>actualiza solicitante</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>asigna_correos</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Solicitante_Centro_de_Costo__c</field>
+            <value>
+                <elementReference>$Record.LastModifiedById</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Envia_a_aprobaci_n_centro_de_costos</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Aprobador_Centro_de_Costos__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Aprobador_Centro_de_Costos__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>WorkOrder</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>bodyEmail</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;!-- CONTENEDOR 600px CENTRADO --&gt;
+&lt;table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; align=&quot;center&quot; width=&quot;600&quot; style=&quot;width:600px;max-width:100%;background-color:#f1f1f1;&quot;&gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot; style=&quot;padding:5px;&quot;&gt;
+      &lt;!-- HEADER CON LOGO --&gt;
+      &lt;table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background-color:#f1f1f1;&quot;&gt;
+        &lt;tr&gt;
+          &lt;td align=&quot;center&quot; style=&quot;padding:0;&quot;&gt;
+            &lt;img src=&quot;https://ehxeqpz.stripocdn.email/content/guids/CABINET_acb286200a147884b697334b6b8ba60e6526faf6b747b3e2060647d7f175b4c5/images/redmlogocolor_uPR.png&quot; 
+                 
+          &lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/table&gt;
+
+      &lt;!-- CUERPO BLANCO --&gt;
+      &lt;table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background-color:#ffffff;&quot;&gt;
+        &lt;!-- TÍTULO --&gt;
+        &lt;tr&gt;
+          &lt;td align=&quot;center&quot; style=&quot;padding:10px 20px 5px 20px;&quot;&gt;
+            &lt;p style=&quot;margin:0;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:24px;color:#333333;&quot;&gt;&lt;b&gt;Solicitud de aprobación&lt;/b&gt;&lt;/p&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;!-- TEXTO --&gt;
+        &lt;tr&gt;
+          &lt;td align=&quot;left&quot; style=&quot;padding:10px 30px;&quot;&gt;
+            &lt;p style=&quot;margin:0 0 12px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#333333;&quot;&gt;
+              Estimado(a) {!$Record.Aprobador_Centro_de_Costos__r.FirstName} {!$Record.Aprobador_Centro_de_Costos__r.LastName},&lt;br&gt;&lt;br&gt;
+              Se solicita su aprobación para la facturación del siguiente cargo interno del taller​&lt;br&gt;
+             Orden de trabajo {!$Record.WorkOrderNumber}&lt;br&gt;
+             VIN: {!$Record.Asset.NumeroDeChasis__c}&lt;br&gt;
+             Propietario: {!$Record.Asset.Account.FirstName} {!$Record.Asset.Account.LastName}&lt;br&gt;
+             Monto: {!$Record.CurrencyIsoCode}  {!$Record.Monto_Aprobaci_n_centro_de_costos__c} &lt;br&gt;
+            Comentarios del Asesor: {!$Record.Comentarios_aprobaci_n_centro_de_costos__c}&lt;br&gt;&lt;br&gt;
+              Esta aprobación es necesaria para continuar con los procedimientos establecidos y
+              garantizar la correcta imputación del gasto. &lt;br&gt;
+              Puede revisar los detalles de la orden de trabajo directamente en Salesforce en el siguiente
+              enlace:
+            &lt;/p&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;!-- BOTÓN --&gt;
+        &lt;tr&gt;
+          &lt;td align=&quot;center&quot; style=&quot;padding:10px;&quot;&gt;
+            &lt;table role=&quot;presentation&quot; border=&quot;0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+              &lt;tr&gt;
+                &lt;td bgcolor=&quot;#ee272c&quot; align=&quot;center&quot; style=&quot;padding:10px 20px;border-radius:24px;&quot;&gt;
+                  &lt;a href=&quot;https://redmotors--partial.sandbox.lightning.force.com/lightning/r/WorkOrder/{!$Record.Id}/view&quot;&gt;
+                    &lt;font face=&quot;Arial, Helvetica, sans-serif&quot; size=&quot;3&quot; color=&quot;white&quot;&gt;Abrir Orden de Trabajo&lt;/font&gt;
+                  &lt;/a&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;!-- LINK DE RESPALDO --&gt;
+        &lt;tr&gt;
+          &lt;td align=&quot;center&quot; style=&quot;padding:0 30px 15px 30px;&quot;&gt;
+            &lt;p style=&quot;margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#7a7a7a;&quot;&gt;
+              Si el botón no funciona, copie y pegue este enlace en su navegador:&lt;br&gt;
+              &lt;a href=&quot;https://redmotors--partial.sandbox.lightning.force.com/lightning/r/WorkOrder/{!$Record.Id}/view&quot;&gt;
+                https://redmotors--partial.sandbox.lightning.force.com/lightning/r/WorkOrder/{!$Record.Id}/view
+              &lt;/a&gt;
+            &lt;/p&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;!-- CIERRE --&gt;
+        &lt;tr&gt;
+          &lt;td align=&quot;left&quot; style=&quot;padding:0 30px 15px 30px;&quot;&gt;
+            &lt;p style=&quot;margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#333333;&quot;&gt;
+              Agradezco de antemano su pronta atención y quedo atento(a) acualquier comentario
+              adicional que requiera para la aprobación.&lt;br&gt;
+              Saludos cordiales,
+            &lt;/p&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;!-- IMAGEN INFERIOR --&gt;
+        &lt;tr&gt;
+          &lt;td align=&quot;center&quot; style=&quot;padding:0;&quot;&gt;
+            &lt;img src=&quot;https://ehxeqpz.stripocdn.email/content/guids/CABINET_acb286200a147884b697334b6b8ba60e6526faf6b747b3e2060647d7f175b4c5/images/p90343281crophighres.jpg&quot; width=&quot;560&quot;&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>correos</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

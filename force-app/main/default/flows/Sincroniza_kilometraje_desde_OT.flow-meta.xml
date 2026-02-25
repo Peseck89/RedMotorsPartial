@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <assignments>
+        <name>Asigna_el_asset</name>
+        <label>Asigna el asset</label>
+        <locationX>50</locationX>
+        <locationY>1163</locationY>
+        <assignmentItems>
+            <assignToReference>Obtiene_caso.AssetId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.AssetId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Actualiza_caso2</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Asigna_kilometraje</name>
+        <label>Asigna kilometraje</label>
+        <locationX>50</locationX>
+        <locationY>755</locationY>
+        <assignmentItems>
+            <assignToReference>Obtiene_caso.Kilometraje__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Kilometraje</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Actualiza_caso</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Decide_si_el_kilometraje_es_distinto</name>
+        <label>Decide si el kilometraje es distinto</label>
+        <locationX>182</locationX>
+        <locationY>647</locationY>
+        <defaultConnector>
+            <targetReference>Decide_si_tiene_asset_y_es_distinto</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Si_es_distinto</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Obtiene_caso.Kilometraje__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>Kilometraje</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asigna_kilometraje</targetReference>
+            </connector>
+            <label>Si es distinto</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decide_si_kilometraje_es_mayor_a_0</name>
+        <label>Decide si kilometraje es mayor a 0</label>
+        <locationX>501</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Si_mayor_a_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Kilometraje</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Decide_si_tiene_caso</targetReference>
+            </connector>
+            <label>Si mayor a 0</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decide_si_tiene_asset_y_es_distinto</name>
+        <label>Decide si tiene asset y es distinto</label>
+        <locationX>182</locationX>
+        <locationY>1055</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Si_es_distinto_el_asset</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.AssetId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.AssetId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>Obtiene_caso.AssetId</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asigna_el_asset</targetReference>
+            </connector>
+            <label>Si es distinto el asset</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decide_si_tiene_caso</name>
+        <label>Decide si tiene caso</label>
+        <locationX>336</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_tiene_caso</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.CaseId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Obtiene_caso</targetReference>
+            </connector>
+            <label>si tiene caso</label>
+        </rules>
+    </decisions>
+    <formulas>
+        <name>Kilometraje</name>
+        <dataType>Number</dataType>
+        <expression>IF(ISNULL({!$Record.Kilometros__c}),0,{!$Record.Kilometros__c})</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>Sincroniza kilometraje desde OT {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Sincroniza kilometraje y placa desde OT</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Obtiene_caso</name>
+        <label>Obtiene caso</label>
+        <locationX>182</locationX>
+        <locationY>539</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Decide_si_el_kilometraje_es_distinto</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.CaseId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Case</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Actualiza_caso</name>
+        <label>Actualiza caso</label>
+        <locationX>50</locationX>
+        <locationY>863</locationY>
+        <connector>
+            <targetReference>Decide_si_tiene_asset_y_es_distinto</targetReference>
+        </connector>
+        <inputReference>Obtiene_caso</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Actualiza_caso2</name>
+        <label>Actualiza caso</label>
+        <locationX>50</locationX>
+        <locationY>1271</locationY>
+        <inputReference>Obtiene_caso</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>375</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Decide_si_kilometraje_es_mayor_a_0</targetReference>
+        </connector>
+        <object>WorkOrder</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

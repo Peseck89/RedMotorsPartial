@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Envia_correo</name>
+        <label>Envia correo</label>
+        <locationX>50</locationX>
+        <locationY>2387</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>genera_tabla_html_cliente</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>ListEmails</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>SubjectEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>BodyEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Envia_correo_cliente</name>
+        <label>Envía correo cliente</label>
+        <locationX>50</locationX>
+        <locationY>2603</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>CorreoCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>SubjectEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>BodyEmailCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>genera_tabla_html</name>
+        <label>genera tabla html</label>
+        <locationX>50</locationX>
+        <locationY>2279</locationY>
+        <actionName>TiposCargosWrapper</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Envia_correo</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>items</name>
+            <value>
+                <elementReference>lineDataCollection</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>tablaHtml</assignToReference>
+            <name>html</name>
+        </outputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>genera_tabla_html_cliente</name>
+        <label>genera tabla html cliente</label>
+        <locationX>50</locationX>
+        <locationY>2495</locationY>
+        <actionName>TiposCargosClienteWrapper</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Envia_correo_cliente</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>items</name>
+            <value>
+                <elementReference>lineDataCollectionCliente</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>tablaHtmlCliente</assignToReference>
+            <name>html</name>
+        </outputParameters>
+    </actionCalls>
+    <apiVersion>62.0</apiVersion>
+    <assignments>
+        <name>asigna_tipos_cargo_wrapper</name>
+        <label>asigna tipos cargo wrapper</label>
+        <locationX>666</locationX>
+        <locationY>1811</locationY>
+        <assignmentItems>
+            <assignToReference>tipocargowrapper.nombre</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_wolis_del_trabajo_a_realizar.Producto_OR_Alias__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrapper.cantidad</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_wolis_del_trabajo_a_realizar.Quantity</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrapper.monto</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_tipos_de_cargo_de_la_woli.totalMercaderia2__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrapper.precioConDescuento</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_tipos_de_cargo_de_la_woli.totalFacturar2__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrapper.codigoArticulo</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_wolis_del_trabajo_a_realizar.BMW_CodigoDeProducto__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrapper.tipoTrabajo</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_trabajo_a_realizar.Tipotrabajo__r.Name</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>lineDataCollection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>tipocargowrapper</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>asigna_tipos_cargo_wrapper_cliente</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>asigna_tipos_cargo_wrapper_cliente</name>
+        <label>asigna tipos cargo wrapper cliente</label>
+        <locationX>666</locationX>
+        <locationY>1919</locationY>
+        <assignmentItems>
+            <assignToReference>tipocargowrappercliente.nombre</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_wolis_del_trabajo_a_realizar.Producto_OR_Alias__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrappercliente.cantidad</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_wolis_del_trabajo_a_realizar.Quantity</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrappercliente.monto</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_tipos_de_cargo_de_la_woli.totalMercaderia2__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrappercliente.precioConDescuento</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_tipos_de_cargo_de_la_woli.totalFacturar2__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrappercliente.codigoArticulo</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_wolis_del_trabajo_a_realizar.BMW_CodigoDeProducto__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>tipocargowrappercliente.tipoTrabajo</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>recorre_trabajo_a_realizar.Tipotrabajo__r.Name</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>lineDataCollectionCliente</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>tipocargowrappercliente</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>recorre_tipos_de_cargo_de_la_woli</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Asigna_Wolis_Ids</name>
+        <label>Asigna Wolis Ids</label>
+        <locationX>270</locationX>
+        <locationY>863</locationY>
+        <assignmentItems>
+            <assignToReference>wolisIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Recorre_wolis.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Recorre_wolis</targetReference>
+        </connector>
+    </assignments>
+    <collectionProcessors>
+        <name>tipos_de_cargo_de_la_woli</name>
+        <elementSubtype>FilterCollectionProcessor</elementSubtype>
+        <label>tipos de cargo de la woli</label>
+        <locationX>578</locationX>
+        <locationY>1595</locationY>
+        <assignNextValueToReference>currentItem_tipos_de_cargo_de_la_woli</assignNextValueToReference>
+        <collectionProcessorType>FilterCollectionProcessor</collectionProcessorType>
+        <collectionReference>get_tipo_de_cargo</collectionReference>
+        <conditionLogic>and</conditionLogic>
+        <conditions>
+            <leftValueReference>currentItem_tipos_de_cargo_de_la_woli.Work_Order_Line_Item__c</leftValueReference>
+            <operator>EqualTo</operator>
+            <rightValue>
+                <elementReference>recorre_wolis_del_trabajo_a_realizar.Id</elementReference>
+            </rightValue>
+        </conditions>
+        <connector>
+            <targetReference>recorre_tipos_de_cargo_de_la_woli</targetReference>
+        </connector>
+    </collectionProcessors>
+    <collectionProcessors>
+        <name>wolis_del_trabajo_a_realizar</name>
+        <elementSubtype>FilterCollectionProcessor</elementSubtype>
+        <label>wolis del trabajo a realizar</label>
+        <locationX>402</locationX>
+        <locationY>1379</locationY>
+        <assignNextValueToReference>currentItem_wolis_del_trabajo_a_realizar</assignNextValueToReference>
+        <collectionProcessorType>FilterCollectionProcessor</collectionProcessorType>
+        <collectionReference>Get_Wolis</collectionReference>
+        <conditionLogic>and</conditionLogic>
+        <conditions>
+            <leftValueReference>currentItem_wolis_del_trabajo_a_realizar.TipoTrabajoCaso__c</leftValueReference>
+            <operator>EqualTo</operator>
+            <rightValue>
+                <elementReference>recorre_trabajo_a_realizar.Id</elementReference>
+            </rightValue>
+        </conditions>
+        <connector>
+            <targetReference>recorre_wolis_del_trabajo_a_realizar</targetReference>
+        </connector>
+    </collectionProcessors>
+    <decisions>
+        <name>decide_si_hay_tipos_de_cargo</name>
+        <label>decide si hay tipos de cargo</label>
+        <locationX>182</locationX>
+        <locationY>1163</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_hay_tipos_de_cargo</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_tipo_de_cargo</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>recorre_trabajo_a_realizar</targetReference>
+            </connector>
+            <label>si hay tipos de cargo</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>decide_si_hay_trabajo_a_realizar</name>
+        <label>decide si hay trabajo a realizar</label>
+        <locationX>611</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_hay_trabajo_a_realizar</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_trabajo_a_realizar</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Wolis</targetReference>
+            </connector>
+            <label>si hay trabajo a realizar</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>decide_si_hay_wolis</name>
+        <label>decide si hay wolis</label>
+        <locationX>380</locationX>
+        <locationY>647</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_hay_wolis</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Wolis</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Recorre_wolis</targetReference>
+            </connector>
+            <label>si hay wolis</label>
+        </rules>
+    </decisions>
+    <formulas>
+        <name>CorreoCliente</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.Correo__c}</expression>
+    </formulas>
+    <formulas>
+        <name>ListEmails</name>
+        <dataType>String</dataType>
+        <expression>IF(CONTAINS({!$Record.ServiceTerritory.Name}, &apos;Uruca&apos;),
+&apos;presupuestosurucabms@redmotorscr.com,luis.sandoval.rocha@gmail.com,admin@portalnetcr.com,notificacionestd@redmotorscr.com&apos;, 
+IF(CONTAINS({!$Record.ServiceTerritory.Name}, &apos;Escazú&apos;),
+&apos;‎presupuestosescazubms@redmotorscr.com,luis.sandoval.rocha@gmail.com,admin@portalnetcr.com,notificacionestd@redmotorscr.com&apos;,
+IF(CONTAINS({!$Record.ServiceTerritory.Name}, &apos;Pinares&apos;),
+&apos;presupuestospinaresbms@redmotorscr.com,luis.sandoval.rocha@gmail.com,admin@portalnetcr.com,notificacionestd@redmotorscr.com&apos;,
+IF(CONTAINS({!$Record.ServiceTerritory.Name}, &apos;Motorrad&apos;),
+&apos;prespuestosmotorradbms@redmotorscr.com,luis.sandoval.rocha@gmail.com,admin@portalnetcr.com,notificacionestd@redmotorscr.com&apos;, 
+IF(CONTAINS({!$Record.ServiceTerritory.Name}, &apos;Otobai&apos;),
+&apos;prespuestosotobaibms@redmotorscr.com,luis.sandoval.rocha@gmail.com,admin@portalnetcr.com,notificacionestd@redmotorscr.com&apos;,&apos;luis.sandoval.rocha@gmail.com,admin@portalnetcr.com,notificacionestd@redmotorscr.com&apos;)))))</expression>
+    </formulas>
+    <formulas>
+        <name>NombreCliente</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.NombreCliente__c}</expression>
+    </formulas>
+    <formulas>
+        <name>OwnerName</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.OwnerOT__c}</expression>
+    </formulas>
+    <interviewLabel>Envia correo cuando {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Envia correo cuando cliente aprueba presupuesto en service</label>
+    <loops>
+        <name>recorre_tipos_de_cargo_de_la_woli</name>
+        <label>recorre tipos de cargo de la woli</label>
+        <locationX>578</locationX>
+        <locationY>1703</locationY>
+        <collectionReference>tipos_de_cargo_de_la_woli</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>asigna_tipos_cargo_wrapper</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>recorre_wolis_del_trabajo_a_realizar</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <name>recorre_trabajo_a_realizar</name>
+        <label>recorre trabajo a realizar</label>
+        <locationX>50</locationX>
+        <locationY>1271</locationY>
+        <collectionReference>get_trabajo_a_realizar</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>wolis_del_trabajo_a_realizar</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>genera_tabla_html</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <name>Recorre_wolis</name>
+        <label>Recorre wolis</label>
+        <locationX>182</locationX>
+        <locationY>755</locationY>
+        <collectionReference>Get_Wolis</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Asigna_Wolis_Ids</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>get_tipo_de_cargo</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <name>recorre_wolis_del_trabajo_a_realizar</name>
+        <label>recorre wolis del trabajo a realizar</label>
+        <locationX>402</locationX>
+        <locationY>1487</locationY>
+        <collectionReference>wolis_del_trabajo_a_realizar</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>tipos_de_cargo_de_la_woli</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>recorre_trabajo_a_realizar</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>get_tipo_de_cargo</name>
+        <label>get tipo de cargo</label>
+        <locationX>182</locationX>
+        <locationY>1055</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>decide_si_hay_tipos_de_cargo</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Work_Order_Line_Item__c</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>wolisIds</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>tipoCargo__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>1</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>tipoCargo__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>get_trabajo_a_realizar</name>
+        <label>get trabajo a realizar</label>
+        <locationX>611</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>decide_si_hay_trabajo_a_realizar</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>RM_WorkOrder__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Enviar_a_service__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Estado_aprobaci_n_service__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Aprobado</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>tiposDeTrabajoCaso__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Wolis</name>
+        <label>Get Wolis</label>
+        <locationX>380</locationX>
+        <locationY>539</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>decide_si_hay_wolis</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>WorkOrderId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>WorkOrderLineItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>485</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>get_trabajo_a_realizar</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Cliente_aprueba_presupuesto_en_service__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Cliente_aprueba_presupuesto_en_service__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>WorkOrder</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>BodyEmail</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html charset=UTF-8&quot; /&gt;
+    &lt;link href=&quot;https://db.onlinewebfonts.com/c/8503adf008ebf781c6342c58254552e4?family=BMWTypeNext+Pro&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;title&gt;Aprobación de presupuesto&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;width:100%;font-family: BMWTypeNext Pro, arial; font-size: 18px;&quot;&gt;
+    &lt;table role=&quot;presentation&quot; style=&quot;max-width:600px;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff; margin: 0 auto&quot;&gt;
+        &lt;tr&gt;
+            &lt;td align=&quot;center&quot; style=&quot;padding:0;&quot;&gt;
+                &lt;table role=&quot;presentation&quot; style=&quot;width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;&quot;&gt;
+                    &lt;tr&gt;
+                        &lt;td align=&quot;center&quot;&gt;
+                            &lt;img src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH000002H2It&amp;oid=00D0P000000Dvkz&quot; alt=&quot;&quot; width=&quot;100%&quot; style=&quot;height:auto;display:block;&quot; /&gt;
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;td style=&quot;padding:36px 20px 10px 20px;&quot;&gt;
+                            &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                                &lt;tr&gt;
+                                    &lt;td style=&quot;color:#707070;&quot;&gt;
+                                        &lt;h1 style=&quot;font-size:24px;margin:0 0 20px 0;&quot;&gt;Estimado {!OwnerName},&lt;/h1&gt;
+                                        &lt;p style=&quot;font-weight: light; color: #707070; margin: 7px 0; margin-bottom:25px&quot;&gt;
+                                          A continuación, encontrará un deslgose de los puntos aprobados en la orden de trabajo {!$Record.WorkOrderNumber}: 
+                                        &lt;/p&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                                &lt;tr&gt;
+                                    &lt;td style=&quot;padding:0;&quot;&gt;
+                                        {!tablaHtml}
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                                &lt;tr&gt;
+                                  &lt;td style=&quot;padding:0;&quot;&gt;
+                                      &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                                          &lt;p style=&quot;font-weight: light; color: #707070; margin-bottom:45px&quot;&gt;
+                                          &lt;/p&gt;
+                                      &lt;/table&gt;
+                                  &lt;/td&gt;
+                              &lt;/tr&gt;
+                                &lt;tr&gt;
+                                    &lt;td&gt;
+                                        &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;margin-top:20px&quot;&gt;
+&lt;a style=&quot;background:#1a57a8;color:#fff;text-decoration:none; padding:8px 15px;&quot; href=&quot;https://redmotors--portalcom.sandbox.lightning.force.com/{!$Record.Id}&quot;&gt;Ver orden de trabajo&lt;/a&gt;
+                                        &lt;/table&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                            &lt;/table&gt;
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;td style=&quot;padding:10px 20px 30px 20px;&quot;&gt;
+                            &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;&quot;&gt;
+                                &lt;tr&gt;
+                                    &lt;td style=&quot;padding:0;width:50%;line-height:4px;color:#707070&quot; align=&quot;left&quot;&gt;
+                                        &lt;p&gt;&lt;b&gt;
+                                                RedMotors CR
+                                            &lt;/b&gt;&lt;/p&gt;
+                                        &lt;p&gt;Agencia BMW, diagonal a la&lt;/p&gt;
+                                        &lt;p&gt;gasolinera Delta en La Uruca, San José&lt;/p&gt;
+                                        &lt;p&gt;BMW La Uruca: 2547 5000&lt;/p&gt;
+                                        &lt;p&gt;&lt;a href=&quot;https://www.bmw.co.cr&quot; style=&quot;color: #707070;&quot;&gt;www.bmw.co.cr&lt;/a&gt;&lt;/p&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                            &lt;/table&gt;
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                &lt;/table&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>BodyEmailCliente</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html charset=UTF-8&quot; /&gt;
+    &lt;link href=&quot;https://db.onlinewebfonts.com/c/8503adf008ebf781c6342c58254552e4?family=BMWTypeNext+Pro&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;title&gt;Aprobación de presupuesto&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;width:100%;font-family: BMWTypeNext Pro, arial; font-size: 18px;&quot;&gt;
+    &lt;table role=&quot;presentation&quot; style=&quot;max-width:600px;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff; margin: 0 auto&quot;&gt;
+        &lt;tr&gt;
+            &lt;td align=&quot;center&quot; style=&quot;padding:0;&quot;&gt;
+                &lt;table role=&quot;presentation&quot; style=&quot;width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;&quot;&gt;
+                    &lt;tr&gt;
+                        &lt;td align=&quot;center&quot;&gt;
+                            &lt;img src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH000002H2It&amp;oid=00D0P000000Dvkz&quot; alt=&quot;&quot; width=&quot;100%&quot; style=&quot;height:auto;display:block;&quot; /&gt;
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;td style=&quot;padding:36px 20px 10px 20px;&quot;&gt;
+                            &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                                &lt;tr&gt;
+                                    &lt;td style=&quot;color:#707070;&quot;&gt;
+                                        &lt;h1 style=&quot;font-size:24px;margin:0 0 20px 0;&quot;&gt;Estimado {!$Record.NombreCliente__c},&lt;/h1&gt;
+                                        &lt;p style=&quot;font-weight: light; color: #707070; margin: 7px 0; margin-bottom:25px&quot;&gt;
+                                          Le notificamos que hemos recibido la aprobación del presupuesto para la orden de trabajo 
+                                           {!$Record.WorkOrderNumber} correspondiente al vehículo {!$Record.Asset.numeroDePlaca__c} &lt;br&gt;
+                                          Detallamos para su preferencia los puntos que fueron aprobados:
+                                        &lt;/p&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                                &lt;tr&gt;
+                                    &lt;td style=&quot;padding:0;&quot;&gt;
+                                        {!tablaHtmlCliente}
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                                &lt;tr&gt;
+                                  &lt;td style=&quot;padding:0;&quot;&gt;
+                                      &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                                          &lt;p style=&quot;font-weight: light; color: #707070; margin-bottom:45px&quot;&gt;
+                                          &lt;/p&gt;
+                                      &lt;/table&gt;
+                                  &lt;/td&gt;
+                              &lt;/tr&gt;
+                                &lt;tr&gt;
+                                    &lt;td&gt;
+                                        &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;margin-top:20px&quot;&gt;
+                                 &lt;p style=&quot;font-weight: light; color: #707070; margin: 7px 0; margin-bottom:25px&quot;&gt;
+                                          Le notificamos que hemos recibido la aprobación del presupuesto para la orden de trabajo 
+                                           Para cualquier consulta adicional por favor contacte a {!$Record.Asesor_de_la_orden__r.FirstName} {!$Record.Asesor_de_la_orden__r.LastName} {!$Record.Asesor_de_la_orden__r.Celular__c} le asistirá
+                                        &lt;/p&gt;
+                                        &lt;/table&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                            &lt;/table&gt;
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                        &lt;td style=&quot;padding:10px 20px 30px 20px;&quot;&gt;
+                            &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;&quot;&gt;
+                                &lt;tr&gt;
+                                    &lt;td style=&quot;padding:0;width:50%;line-height:4px;color:#707070&quot; align=&quot;left&quot;&gt;
+                                        &lt;p&gt;&lt;b&gt;
+                                                RedMotors CR
+                                            &lt;/b&gt;&lt;/p&gt;
+                                        &lt;p&gt;Agencia BMW, diagonal a la&lt;/p&gt;
+                                        &lt;p&gt;gasolinera Delta en La Uruca, San José&lt;/p&gt;
+                                        &lt;p&gt;BMW La Uruca: 2547 5000&lt;/p&gt;
+                                        &lt;p&gt;&lt;a href=&quot;https://www.bmw.co.cr&quot; style=&quot;color: #707070;&quot;&gt;www.bmw.co.cr&lt;/a&gt;&lt;/p&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                            &lt;/table&gt;
+                        &lt;/td&gt;
+                    &lt;/tr&gt;
+                &lt;/table&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>SubjectEmail</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Aprobación de presupuesto, {!$Record.WorkOrderNumber}</text>
+    </textTemplates>
+    <variables>
+        <name>currentItem_tipos_de_cargo_de_la_woli</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>tipoCargo__c</objectType>
+    </variables>
+    <variables>
+        <name>currentItem_wolis_del_trabajo_a_realizar</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>WorkOrderLineItem</objectType>
+    </variables>
+    <variables>
+        <name>lineDataCollection</name>
+        <apexClass>TiposCargosWrapper</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>lineDataCollectionCliente</name>
+        <apexClass>TiposCargosClienteWrapper</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>tablaHtml</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>tablaHtmlCliente</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>tipocargowrapper</name>
+        <apexClass>TiposCargosWrapper</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>tipocargowrappercliente</name>
+        <apexClass>TiposCargosClienteWrapper</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>wolisIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

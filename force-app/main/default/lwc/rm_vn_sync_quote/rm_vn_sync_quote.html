@@ -1,0 +1,15 @@
+<template>
+    <lightning-card>
+        <template if:true={showLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium" class="spinnerClass"></lightning-spinner>
+        </template>
+        <div class="slds-m-around_medium">
+            <div class="slds-media__body slds-text-align_center">      
+                <template if:true={flagRelatedAnticipos}>
+                    <p class="slds-m-bottom_medium">La oportunidad relacionada al presupuesto tiene relacionado registro de plan de mantenimiento, por lo que al sincronizar se requiere volver a crearlos.</p>
+                </template>              
+                <lightning-button label="Sincronizar" onclick={handleClick}></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,129 @@
+.cust-body {
+  background: rgb(225,229,252);
+  background: -moz-linear-gradient(180deg, rgba(225,229,252,1) 20%, rgba(247,247,247,1) 70%);
+  background: -webkit-linear-gradient(180deg, rgba(225,229,252,1) 20%, rgba(247,247,247,1) 70%);
+  background: linear-gradient(180deg, rgba(225,229,252,1) 20%, rgba(247,247,247,1) 70%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e1e5fc",endColorstr="#f7f7f7",GradientType=1); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-header {
+  width: 35%;
+  padding: 40px 0px 0px 0px;
+}
+
+.form-body {
+  display: flex  ;
+  flex-direction: column;
+  width: 35%;
+  padding: 40px 0px;
+}
+
+.vehicle-info-body {
+  background: #FFF;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.cust-label {
+  font-size: 15px;
+}
+
+.slds-card {
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.slds-form-element__static {
+  font-weight: 500;
+  padding-top: 0.25rem;
+}
+
+.slds-card__header-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #032d60;
+}
+
+.slds-button_brand {
+  background-color: #0070d2;
+  border-color: #0070d2;
+}
+
+.slds-button_brand:hover {
+  background-color: #005fb2;
+  border-color: #005fb2;
+}
+
+.slds-button_stretch {
+  width: 100%;
+}
+
+.form-cust {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+}
+th {
+  background-color: #009879;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+tr:hover {
+  background-color: #f1f1f1;
+}
+.active {
+  color: #009879;
+  font-weight: bold;
+}
+.inactive {
+  color: #ff6b6b;
+}
+@media screen and (max-width: 600px) {
+  table {
+    font-size: 14px;
+  }
+  th, td {
+    padding: 8px 10px;
+  }
+  th {
+    display: none;
+  }
+  td {
+    display: block;
+    position: relative;
+    padding-left: 50%;
+  }
+  td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+}

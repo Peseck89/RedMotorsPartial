@@ -1,0 +1,43 @@
+<template>
+    <lightning-modal-header label={title}></lightning-modal-header>
+    <lightning-modal-body>
+        <lightning-layout>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+            <lightning-layout-item flexibility="auto" padding="around-small">
+
+                <c-lookup selection={mechanicInitialSelection} label="Mecánico" variant="label-inline"
+                    onsearch={handleMechanicLookUpSearch} required="true" onselectionchange={handleMechanicLookupChange}
+                    placeholder="Buscar Mécanico ...">
+                </c-lookup>
+
+                <lightning-combobox
+                    variant="label-inline"
+                    name="territoryId"
+                    label="Taller"
+                    value={territoryId}
+                    placeholder="Seleccionar Taller"
+                    options={territoryOptions}
+                    required="true"
+                    onchange={handleTerritoryChange}>
+                </lightning-combobox>
+
+                <lightning-combobox
+                    name="tipo"
+                    label="Tipo de Tiempo Improductivo"
+                    value={tipoSeleccionado}
+                    placeholder="Seleccione una opción"
+                    options={tipoOptions}
+                    variant="label-inline"
+                    required="true"
+                    onchange={handleTipoChange}>
+                </lightning-combobox>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Registrar" onclick={handleSave} class="slds-m-right_x-small"
+            variant="brand" disabled={isSaveDisabled}></lightning-button>
+    </lightning-modal-footer>
+</template>

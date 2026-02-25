@@ -1,0 +1,64 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-quick-action-panel header="Seleccionar Inventario">
+        <article class="slds-card">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+
+            <template if:false={showPedidoEspecialForm}>
+
+                <template if:true={isStepOne}>
+                    <c-c-t_-opportunity_-line_-items opp-id={recordId}
+                        onprodinteresselection={handleProdInteresSelectionEvent}></c-c-t_-opportunity_-line_-items>
+                </template>
+
+                <template if:true={isStepTwo}>
+                    <c-rm_vn_inventario brand={brand} 
+                        data-id="inventoryComponent"
+                        selected-year={year} 
+                        model={model} 
+                        hide-extra-buttons={hideExtraButtons}
+                        oninventoryselecion={handleInventorySelectionEvent}>
+                        <span slot="actions">
+                            <lightning-button variant="brand-outline" label="Pedido especial" title="Pedido especial"
+                                onclick={handleCreateSpecialOrderClick} class="slds-m-left_x-small"></lightning-button>
+
+                            <lightning-button variant="brand-outline" label="Regresar" title="Regresar"
+                                onclick={handleGoBackToStepOneClick} class="slds-m-left_small"></lightning-button>
+
+                            <lightning-button variant="brand" label="Siguiente" title="Siguiente"
+                                disabled={isDisableAcceptButton} onclick={handleNextPreviewClick}
+                                class="slds-m-left_x-small"></lightning-button>
+                        </span>
+                    </c-rm_vn_inventario>
+                </template>
+
+                <template if:true={isStepThree}>
+                    <c-c-t_-add_-inventario_-preview class="rm-vn-preview"
+                        ongobacktosteptwo={handleGoBackToStepTwoEvent} onaddnewitem={handleAddNewItemEvent}
+                        prod-x-bod-item={prodXBodItem} opp-id={recordId} brand={brand} family={family} year={year}
+                        model={model}></c-c-t_-add_-inventario_-preview>
+                </template>
+
+            </template>
+
+            <template if:true={showPedidoEspecialForm}>
+                <c-create-pedido-especial oppid={recordId} oncancelpedidoespecial={handleCancelPedidoEspecialEvent}
+                    onclosewindow={handleCloseWindowEvent}></c-create-pedido-especial>
+            </template>
+
+        </article>
+    </lightning-quick-action-panel>
+
+    <!-- Added account validation for Email and Phone-->
+    <c-account-validation
+            if:true={accountValidationFlag}
+            record-id={recordId}
+            is-physical={isPhysical}
+            account-validation={validationObject}
+            onupdateaccount={handleUpdateAccount}
+            >
+    </c-account-validation>
+
+</template>

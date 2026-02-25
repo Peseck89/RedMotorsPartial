@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <decisions>
+        <name>es_un_asesor</name>
+        <label>es un asesor</label>
+        <locationX>182</locationX>
+        <locationY>731</locationY>
+        <defaultConnector>
+            <targetReference>change_asesor_evento</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>es_un_calendario</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Asesor__r.FirstName</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Calendario</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>buscar_el_asesor_correspondiente</targetReference>
+            </connector>
+            <label>es un calendario</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>fue_creado_por_contact</name>
+        <label>fue creado por contact</label>
+        <locationX>380</locationX>
+        <locationY>323</locationY>
+        <defaultConnector>
+            <targetReference>owner_dieferente_a_asesor</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_es_contact</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.CreatedBy.FirstName</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Center</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.CreatedBy.LastName</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Center</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Poner_el_contac_center</targetReference>
+            </connector>
+            <label>si es contact</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>owner_dieferente_a_asesor</name>
+        <label>owner dieferente a asesor</label>
+        <locationX>380</locationX>
+        <locationY>623</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Owner_diferente_al_asesor</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.OwnerId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Asesor__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>es_un_asesor</targetReference>
+            </connector>
+            <label>Owner diferente al asesor</label>
+        </rules>
+    </decisions>
+    <description>v7 + prueba error + Contact Center</description>
+    <interviewLabel>asignar unico owner {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>asignar unico owner</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>buscar_el_asesor_correspondiente</name>
+        <label>buscar el asesor correspondiente</label>
+        <locationX>50</locationX>
+        <locationY>839</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>actualizar_el_asesor</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Calendario__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Calendar__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>AsesorxCalendario__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>actualizar_el_asesor</name>
+        <label>actualizar el asesor</label>
+        <locationX>50</locationX>
+        <locationY>947</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>buscar_el_asesor_correspondiente.Asesor__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Event_Shadow__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>change_asesor_evento</name>
+        <label>change asesor evento</label>
+        <locationX>314</locationX>
+        <locationY>839</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$Record.Asesor__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Event_Shadow__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Poner_el_contac_center</name>
+        <label>Poner el contac center</label>
+        <locationX>248</locationX>
+        <locationY>431</locationY>
+        <connector>
+            <targetReference>owner_dieferente_a_asesor</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>OrigenEvento__c</field>
+            <value>
+                <stringValue>Contact Center</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>254</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>fue_creado_por_contact</targetReference>
+        </connector>
+        <object>Event_Shadow__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

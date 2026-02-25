@@ -1,0 +1,30 @@
+<template>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Mecánico">Mecánico</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Caso">Caso</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+            <template for:each={records} for:item="record">
+                <tr class="slds-hint-parent"  key={record.Id}>
+                    <th data-label="Mecánico" scope="row">
+                      <div class="slds-truncate" title="">
+                        <a href={record.mecanicoURL} target="_blank">{record.RM_Mecanico__r.Name}</a>
+                      </div>
+                    </th>
+                    <th data-label="Caso" scope="row">
+                      <div class="slds-truncate" title="">
+                        <a href={record.caseURL} target="_blank">{record.Caso__r.CaseNumber}</a>
+                      </div>
+                    </th>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+</template>

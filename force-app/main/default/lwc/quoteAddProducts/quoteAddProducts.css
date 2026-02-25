@@ -1,0 +1,288 @@
+[data-isclosed='true'] {
+    box-shadow:inset 0px 0px 8px 1px #141413;
+  }
+  
+  [data-status='true'] {
+    font-weight: 900;
+  }
+  .greenClass {
+      box-shadow:inset 5px 0px 0px 0px #10ad13;
+  }
+  .redClass {
+      box-shadow:inset 5px 0px 0px 0px #fb0000;
+  }
+  .warningClass {
+    box-shadow:inset 5px 0px 0px 0px #f5d357;
+  }
+  table {
+      border: 1px solid #ccc;
+      border-collapse: collapse;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      table-layout: fixed;
+    }
+    
+    table caption {
+      font-size: 1.5em;
+      margin: .5em 0 .75em;
+    }
+    
+    table tr {
+      
+      border: 1px solid #ddd;
+      padding: .35em;
+    }
+    
+    table th,
+    table td {
+      padding: .625em;
+      text-align: center;
+    }
+    
+    table th {
+      font-size: .85em;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    tr:nth-child(even) {background-color: #f3f2f2;}
+    tr[data-isclosed='false']:hover  {
+      background-color:#0070d2b2;
+      color: white;
+    }
+    tr[data-isclosed='true']:hover  {
+      background-color: #c1c1c1;
+      box-shadow: inset 1px 1px 8px 0px #ffffff;
+      color: black;
+    }
+    @media screen and (max-width: 1143px) {
+      
+      table thead {
+        font-size: 8.85px;
+        text-transform: capitalize;
+      }
+  
+      table {
+        font-size: 8.85px;
+      }
+      
+      
+     
+    }
+    @media screen and (max-width: 600px) {
+      table {
+        border: 0;
+      }
+    
+      table caption {
+        font-size: 1.3em;
+      }
+      
+      table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+      }
+      
+      table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+      }
+      
+      table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+      }
+      
+      table td::before {
+        /*
+        * aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      
+      table td:last-child {
+        border-bottom: 0;
+      }
+     
+    }
+    .modal__custom{
+      max-width: 71% !important;
+      text-align: -webkit-center;
+      padding: 12% 0;
+      margin: auto;
+  }
+  .d-none{
+    display: none;
+  }
+  .custom-picklist {
+    font-family: 'Salesforce Sans', sans-serif;
+    font-size: 0.875rem;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    background-color: white;
+    height: 34px; /* igual que los botones */
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.texto-rojo {
+    color: red;
+}
+
+.texto-amarillo {
+    color: #f5d357;
+}
+
+.texto-verde {
+    color: green;
+}
+.tarea-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 1rem;
+}
+
+.tarea-container label {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.lookup-input-container {
+    position: relative;
+    width: 250px; /* Ajusta según tu diseño */
+}
+.lookup-input-container input {
+    height: 32px; /* igual a lightning-button */
+    padding: 0 0.75rem; /* sin padding vertical */
+    border: 1.5px solid #002f6c;
+    border-radius: 0.25rem;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+/* Evita que el contenido se estire verticalmente */
+.compact-modal .slds-modal__content {
+  flex: 0 0 auto;     /* <- clave para quitar el "aire" */
+  min-height: auto;
+  height: auto;
+  padding: 5.75rem;   /* más compacto */
+}
+
+/* (Opcional) reduce aún más el ancho y el margen vertical del modal */
+.compact-modal {
+  max-width: 24rem;          /* ajusta 22–26rem a gusto */
+  margin: 1.5rem auto;       /* menos separación con los bordes de la pantalla */
+}
+
+/* Barra de acciones por tarea: botones responsivos con espacio entre filas */
+.task-actions {
+  display: flex;
+  flex-wrap: wrap;              /* permite salto de línea */
+  justify-content: flex-end;    /* alinea a la derecha */
+  align-items: center;
+  gap: 8px 12px;                /* row-gap 8px, column-gap 12px (tipo <br> entre filas) */
+}
+
+/* Evita doble espaciado si algún botón trae margen de SLDS */
+.task-actions .slds-m-left_x-small {
+  margin-left: 0 !important;
+}
+
+/* Fallback para navegadores sin soporte de gap en flex (por si acaso) */
+@supports not (gap: 8px) {
+  .task-actions > * { margin: 4px 6px; }
+  .task-actions { margin-top: 6px; }
+}
+
+/* Fila flexible para alinear verticalmente controles inline */
+.toolbar-row {
+  display: inline-flex;
+  align-items: center;     /* ← clave para centrar vertical */
+  gap: 0.5rem;
+}
+
+/* La barra por tarea ya tiene .task-actions; volvemos flex y centramos */
+.task-actions {
+  display: flex;
+  align-items: center;     /* ← centra vertical */
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Normaliza altura del <select> nativo para que empareje con combobox */
+.toolbar-row select,
+.task-actions select {
+  height: 32px;           /* ~2rem */
+  line-height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Quita márgenes “raros” del combobox cuando va inline */
+.inline-pick {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Opcional: si tu prioridadClass no define altura, la igualamos */
+.custom-picklist {
+  height: 32px;
+  line-height: 32px;
+}
+/* Evita desbordes en cualquier celda de texto/largo */
+.cell-wrap {
+  white-space: normal;        /* permite salto de línea */
+  word-break: break-word;     /* corta dentro de palabras si hace falta */
+  overflow-wrap: anywhere;    /* fuerza corte en tokens largos (CRC262...) */
+}
+
+/* Aplicarlo por columnas sin tocar el HTML (opcional) */
+table td[data-label="Precio"],
+table td[data-label="PrecioModificar"],
+table td[data-label="DisponibleReal"],
+table td[data-label="Product"],
+table td[data-label="Name"],
+table td[data-label="Alias"] {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Componentes base dentro de celdas: que respeten el ancho de la celda */
+td lightning-input,
+td lightning-combobox,
+td c-lookup,
+td lightning-formatted-number {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0; /* clave para que flex/table no “empuje” la celda */
+}
+/* 1ª columna ultra angosta */
+table th:first-child,
+table td:first-child {
+  width: 28px;          /* prueba 20–28 px según se vea el checkbox */
+  max-width: 28px;
+  min-width: 24px;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: center;
+}
+
+/* Quita márgenes del checkbox para que quepa */
+table td:first-child lightning-input {
+  margin: 0;
+}

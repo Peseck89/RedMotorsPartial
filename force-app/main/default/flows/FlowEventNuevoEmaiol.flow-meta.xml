@@ -1,0 +1,1641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Copy_1_of_Copy_1_of_enviar_email_actualizacion</name>
+        <label>Copy 1 of Copy 1 of enviar email actualizacion</label>
+        <locationX>1766</locationX>
+        <locationY>1200</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>DynamicEditTemplateMINI</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>emailCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>reservacitas@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Nueva Cita</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Copy_1_of_enviar_email_actualizacion</name>
+        <label>Copy 1 of enviar email actualizacion</label>
+        <locationX>710</locationX>
+        <locationY>1308</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>DynamicEditTemplateMINI</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>emailCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>reservacitas@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Nueva Cita</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Copy_2_of_enviar_email_actualizacion</name>
+        <label>Copy 2 of enviar email actualizacion</label>
+        <locationX>1502</locationX>
+        <locationY>1200</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>recordatorioEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>emailCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>reservacitas@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Recordatorio</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>enviar_email_actualizacion</name>
+        <label>enviar email actualizacion</label>
+        <locationX>446</locationX>
+        <locationY>1308</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>DynamicEditTemplate</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>emailCliente</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>reservacitas@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Nueva Cita</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <assignments>
+        <name>asignar_Personal</name>
+        <label>asignar Personal</label>
+        <locationX>710</locationX>
+        <locationY>1008</locationY>
+        <assignmentItems>
+            <assignToReference>emailCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Activo__r.Account.PersonEmail</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>revisarMarca</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copy_1_of_asignar_Personal</name>
+        <label>Copy 1 of asignar Personal</label>
+        <locationX>1766</locationX>
+        <locationY>900</locationY>
+        <assignmentItems>
+            <assignToReference>emailCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Activo__r.Account.PersonEmail</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Copy_1_of_Copy_1_of_revisarMarca</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copy_1_of_obtener_el_usuario</name>
+        <label>Copy 1 of obtener el usuario</label>
+        <locationX>1898</locationX>
+        <locationY>492</locationY>
+        <assignmentItems>
+            <assignToReference>ownerFirstName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>get_the_name.FirstName</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>tiene_calendario</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Copy_1_of_sacar_correo_emp</name>
+        <label>Copy 1 of sacar correo emp</label>
+        <locationX>1502</locationX>
+        <locationY>900</locationY>
+        <assignmentItems>
+            <assignToReference>emailCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Activo__r.Account.CorreoElectronicoEmpresarial__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Copy_1_of_Copy_1_of_revisarMarca</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>obtener_el_usuario</name>
+        <label>obtener el usuario</label>
+        <locationX>677</locationX>
+        <locationY>492</locationY>
+        <assignmentItems>
+            <assignToReference>ownerFirstName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>get_the_name.FirstName</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>es_Calendario</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>sacar_correo_emp</name>
+        <label>sacar correo emp</label>
+        <locationX>446</locationX>
+        <locationY>1008</locationY>
+        <assignmentItems>
+            <assignToReference>emailCliente</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Activo__r.Account.CorreoElectronicoEmpresarial__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>revisarMarca</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Copy_1_of_Copy_1_of_revisarMarca</name>
+        <label>Copy 1 of Copy 1 of revisarMarca</label>
+        <locationX>1766</locationX>
+        <locationY>1092</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_Copy_1_of_BMW</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.marca__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BMW</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_enviar_email_actualizacion</targetReference>
+            </connector>
+            <label>Copy 1 of Copy 1 of BMW</label>
+        </rules>
+        <rules>
+            <name>MINI_2</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.marca__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>MINI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_Copy_1_of_enviar_email_actualizacion</targetReference>
+            </connector>
+            <label>MINI_2</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Copy_1_of_record_is_not_null</name>
+        <label>Copy 1 of record is not null</label>
+        <locationX>2030</locationX>
+        <locationY>384</locationY>
+        <defaultConnector>
+            <targetReference>tiene_calendario</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_si_tiene</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_the_name</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_obtener_el_usuario</targetReference>
+            </connector>
+            <label>Copy 1 of si tiene</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Copy_1_of_revisarMarca</name>
+        <label>Copy 1 of revisarMarca</label>
+        <locationX>50</locationX>
+        <locationY>900</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_BMW</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.marca__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BMW</stringValue>
+                </rightValue>
+            </conditions>
+            <label>Copy 1 of BMW</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Copy_1_of_tienen_o_no_correo</name>
+        <label>Copy 1 of tienen o no correo</label>
+        <locationX>1766</locationX>
+        <locationY>792</locationY>
+        <defaultConnector>
+            <targetReference>Copy_1_of_Copy_1_of_revisarMarca</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_1_of_es_empresarial</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Account.CorreoElectronicoEmpresarial__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_sacar_correo_emp</targetReference>
+            </connector>
+            <label>Copy 1 of es empresarial</label>
+        </rules>
+        <rules>
+            <name>Copy_1_of_es_personal</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Account.PersonEmail</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_asignar_Personal</targetReference>
+            </connector>
+            <label>Copy 1 of es personal</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>es_Calendario</name>
+        <label>es Calendario</label>
+        <locationX>809</locationX>
+        <locationY>684</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>es_calendario1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>ownerFirstName</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Calendario</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>revisar_editado</targetReference>
+            </connector>
+            <label>es calendario</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>record_is_not_null</name>
+        <label>record is not null</label>
+        <locationX>809</locationX>
+        <locationY>384</locationY>
+        <defaultConnector>
+            <targetReference>es_Calendario</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_tiene</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_the_name</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>obtener_el_usuario</targetReference>
+            </connector>
+            <label>si tiene</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>revisar_editado</name>
+        <label>revisar editado</label>
+        <locationX>380</locationX>
+        <locationY>792</locationY>
+        <defaultConnector>
+            <targetReference>tienen_o_no_correo</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>es_editado</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Location</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.StartDateTime</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_revisarMarca</targetReference>
+            </connector>
+            <label>es editado</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>revisarMarca</name>
+        <label>revisarMarca</label>
+        <locationX>710</locationX>
+        <locationY>1200</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>BMW</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.marca__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BMW</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>emailCliente</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>enviar_email_actualizacion</targetReference>
+            </connector>
+            <label>BMW</label>
+        </rules>
+        <rules>
+            <name>MINI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.marca__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>MINI</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>emailCliente</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_enviar_email_actualizacion</targetReference>
+            </connector>
+            <label>MINI</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>tiene_calendario</name>
+        <label>tiene calendario</label>
+        <locationX>2030</locationX>
+        <locationY>684</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_tiene_calendario</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>ownerFirstName</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Calendario</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_tienen_o_no_correo</targetReference>
+            </connector>
+            <label>si tiene calendario</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>tienen_o_no_correo</name>
+        <label>tienen o no correo</label>
+        <locationX>710</locationX>
+        <locationY>900</locationY>
+        <defaultConnector>
+            <targetReference>revisarMarca</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>es_empresarial</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Account.CorreoElectronicoEmpresarial__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>sacar_correo_emp</targetReference>
+            </connector>
+            <label>es empresarial</label>
+        </rules>
+        <rules>
+            <name>es_personal</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Activo__r.Account.PersonEmail</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>asignar_Personal</targetReference>
+            </connector>
+            <label>es personal</label>
+        </rules>
+    </decisions>
+    <interviewLabel>FlowEventNuevoEmaiol {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>FlowEventNuevoEmaiol</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Copy_1_of_get_the_name</name>
+        <label>Copy 1 of get the name</label>
+        <locationX>2030</locationX>
+        <locationY>276</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Copy_1_of_record_is_not_null</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.OwnerId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>User</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>get_the_name</name>
+        <label>get the name</label>
+        <locationX>809</locationX>
+        <locationY>276</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>record_is_not_null</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.OwnerId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>User</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>1293</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>get_the_name</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>StartDateTime</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>BMW_SinCorreo__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Event</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <scheduledPaths>
+            <name>Recordatorio_Cita</name>
+            <connector>
+                <targetReference>Copy_1_of_get_the_name</targetReference>
+            </connector>
+            <label>Recordatorio Cita</label>
+            <offsetNumber>-24</offsetNumber>
+            <offsetUnit>Hours</offsetUnit>
+            <recordField>StartDateTime</recordField>
+            <timeSource>RecordField</timeSource>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+    <textTemplates>
+        <name>DynamicEditTemplate</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+            &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                 &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+
+                     Reciba un cordial saludo.
+                 &lt;/td&gt;
+
+                &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors--portalcom.sandbox.file.force.com/servlet/servlet.ImageServer?id=0158N000000QGEx&amp;oid=00D8N00000050ml&amp;lastMod=1677197078000&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+          &lt;tr&gt;
+            &lt;td style = &quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span&gt;Gracias {!$Record.Contact__r.Name} por reservar su cita con nosotros.&lt;/span&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+                 &lt;tr&gt;
+                &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span&gt;Bavarian Motors le confirma que se ha reservado {!$Record.Activo__r.numeroDePlaca__c} - {!$Record.Contact__r.Name}  en {!$Record.Owner:User.FirstName} {!$Record.Owner:User.LastName} el  {!$Record.StartDateTime};  Le esperamos !.&lt;/span&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+
+          &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr &gt;
+          &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+              &lt;tr&gt;
+                &lt;td&gt;
+                  &lt;span style=&quot;color:#4F4F4F;padding-left: 20px; font-family: arial;&quot;&gt; Quedo a su disposición: &lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;
+          &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+            &lt;table &gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: arial; font-size: 16px; line-height: 27px;&quot;&gt;
+
+                  &lt;span style=&quot;&quot;&gt; Asesor: {!$Record.Asesor__r.FirstName}  {!$Record.Asesor__r.LastName}  &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;&quot;&gt; {!$Record.Asesor__r.UserRole.Name}  &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;&quot;&gt; Correo: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;&quot;&gt; Telefono: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Phone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+             
+                &lt;/td&gt;
+              &lt;/tr&gt;
+
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+
+
+									
+											&lt;/tr&gt;
+											&lt;tr&gt;
+												&lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+											&lt;/tr&gt;
+											&lt;tr&gt;
+												&lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+													&lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+														&lt;tr&gt;
+															&lt;td&gt;
+																&lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0154U000008MEBh&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; width=&quot;200px&quot; /&gt;
+															&lt;/td&gt;
+															&lt;td style=&quot;width:750px;&quot;&gt;
+																&lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+																	&lt;b&gt;BAVARIAN MOTORS CR S.A.
+                        &lt;/b&gt;
+																	&lt;br/&gt;
+																	&lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                          Cédula Jur. No 3-101-502-521
+                          
+																		&lt;br/&gt;
+																	&lt;/b&gt;
+																	&lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+																		&lt;b&gt;Tel.:
+                          &lt;/b&gt; (506) 2290-9235
+                          
+																		&lt;br/&gt;
+																	&lt;/span&gt;
+																	&lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                          www.bmw.co.cr
+                          
+																		&lt;br/&gt;
+																	&lt;/span&gt;
+																	&lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+																		&lt;b&gt;Apdo:
+                          &lt;/b&gt; 10101 San José, Costa Rica.
+                          
+																		&lt;br/&gt;
+																	&lt;/span&gt;
+																	&lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                          De la embajada americana 200 sur, 200 este
+                        &lt;/span&gt;
+																&lt;/span&gt;
+															&lt;/td&gt;
+														&lt;/tr&gt;
+													&lt;/table&gt;
+												&lt;/td&gt;
+											&lt;/tr&gt;
+											&lt;tr&gt;
+												&lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+											&lt;/tr&gt;
+										&lt;/table&gt;
+									&lt;/td&gt;
+								&lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>DynamicEditTemplateMINI</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+            &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                 &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+
+                     Reciba un cordial saludo.
+                 &lt;/td&gt;
+
+                &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors--portalcom.sandbox.file.force.com/servlet/servlet.ImageServer?id=0158N000000QGF2&amp;oid=00D8N00000050ml&amp;lastMod=1677197110000&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+          &lt;tr&gt;
+            &lt;td style = &quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span&gt;Gracias {!$Record.Contact__r.Name} por reservar su cita con nosotros.&lt;/span&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+                 &lt;tr&gt;
+                &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span&gt;Bavarian Motors le confirma que se ha reservado {!$Record.Activo__r.numeroDePlaca__c}  - {!$Record.Contact__r.Name}  en {!$Record.Owner:User.FirstName} {!$Record.Owner:User.LastName} el  {!$Record.StartDateTime}; Le esperamos !.&lt;/span&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+
+          &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr &gt;
+          &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+              &lt;tr&gt;
+                 &lt;td&gt;
+                    &lt;span style=&quot;color:#4F4F4F;padding-left: 20px; font-family: arial;&quot;&gt; Quedo a su disposición: &lt;/span&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+  
+          &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+  
+  
+  
+          &lt;tr&gt;
+            &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+              &lt;table &gt;
+                &lt;tr&gt;
+                  &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: arial; font-size: 16px; line-height: 27px;&quot;&gt;
+  
+                    &lt;span style=&quot;&quot;&gt; Asesor: {!$Record.Asesor__r.FirstName}  {!$Record.Asesor__r.LastName}  &lt;/span&gt;&lt;br&gt;
+                      &lt;span style=&quot;&quot;&gt; {!$Record.Asesor__r.UserRole.Name}  &lt;/span&gt;&lt;br&gt;
+                      &lt;span style=&quot;&quot;&gt; Correo: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                      &lt;span style=&quot;&quot;&gt; Telefono: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Phone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+               
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+  
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+  
+  
+  
+                                      
+                                              &lt;/tr&gt;
+                                              &lt;tr&gt;
+                                                  &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+                                              &lt;/tr&gt;
+                                              &lt;tr&gt;
+                                                  &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                                                      &lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+                                                          &lt;tr&gt;
+                                                              &lt;td&gt;
+                                                                  &lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0154U000008MEBh&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; width=&quot;200px&quot; /&gt;
+                                                              &lt;/td&gt;
+                                                              &lt;td style=&quot;width:750px;&quot;&gt;
+                                                                  &lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+                                                                      &lt;b&gt;BAVARIAN MOTORS CR S.A.
+                          &lt;/b&gt;
+                                                                      &lt;br/&gt;
+                                                                      &lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                            Cédula Jur. No 3-101-502-521
+                            
+                                                                          &lt;br/&gt;
+                                                                      &lt;/b&gt;
+                                                                      &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                                                          &lt;b&gt;Tel.:
+                            &lt;/b&gt; (506) 2290-9235
+                            
+                                                                          &lt;br/&gt;
+                                                                      &lt;/span&gt;
+                                                                      &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                            www.bmw.co.cr
+                            
+                                                                          &lt;br/&gt;
+                                                                      &lt;/span&gt;
+                                                                      &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                                                          &lt;b&gt;Apdo:
+                            &lt;/b&gt; 10101 San José, Costa Rica.
+                            
+                                                                          &lt;br/&gt;
+                                                                      &lt;/span&gt;
+                                                                      &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                            De la embajada americana 200 sur, 200 este
+                          &lt;/span&gt;
+                                                                  &lt;/span&gt;
+                                                              &lt;/td&gt;
+                                                          &lt;/tr&gt;
+                                                      &lt;/table&gt;
+                                                  &lt;/td&gt;
+                                              &lt;/tr&gt;
+                                              &lt;tr&gt;
+                                                  &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+                                              &lt;/tr&gt;
+                                          &lt;/table&gt;
+                                      &lt;/td&gt;
+                                  &lt;/tr&gt;
+        &lt;/table&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>DynamicEditTemplateMINIUruca</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+            &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                 &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+
+                     Reciba un cordial saludo.
+                 &lt;/td&gt;
+
+                &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors--portalcom.sandbox.file.force.com/servlet/servlet.ImageServer?id=0158N000000QGF2&amp;oid=00D8N00000050ml&amp;lastMod=1677197110000&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+          &lt;tr&gt;
+            &lt;td style = &quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span&gt;Gracias {!$Record.Contact__r.Name} por reservar su cita con nosotros.&lt;/span&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+                 &lt;tr&gt;
+                &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                    &lt;span&gt;Bavarian Motors le confirma que se ha reservado {!$Record.Activo__r.numeroDePlaca__c}  - {!$Record.Contact__r.Name}  en {!$Record.Owner:User.FirstName} {!$Record.Owner:User.LastName} el  {!$Record.StartDateTime}; Le esperamos !.&lt;/span&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+
+          &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr &gt;
+          &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+              &lt;tr&gt;
+                 &lt;td&gt;
+                    &lt;span style=&quot;color:#4F4F4F;padding-left: 20px; font-family: arial;&quot;&gt; Quedo a su disposición: &lt;br&gt;
+“Estimado cliente queremos informarte que estamos en proceso de remodelación con el objetivo de mejorar tu su experiencia con nosotros. Durante este tiempo, queremos agradecerte por la paciencia y comprensión, ya que nuestras áreas de espera estarán limitadas y puede haber ruido en ocasiones, por lo cual te recomendamos que si tienes una cita agendada en los próximos días puedas traer tu auto, entregar a tu asesor de servicio y regresar por el a la hora indicada.
+Te aseguramos que valdrá la pena y pronto podrás disfrutar de la nueva experiencia premium de BMW y MINI.
+En caso de que necesites trasladarte del taller de Uruca a tu domicilio o un área dentro del GAM puedes solicitar a tu asesor servicio un Uber de cortesía**
+ &lt;/span&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+  
+          &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+  
+  
+  
+          &lt;tr&gt;
+            &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+              &lt;table &gt;
+                &lt;tr&gt;
+                  &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: arial; font-size: 16px; line-height: 27px;&quot;&gt;
+  
+                    &lt;span style=&quot;&quot;&gt; Asesor: {!$Record.Asesor__r.FirstName}  {!$Record.Asesor__r.LastName}  &lt;/span&gt;&lt;br&gt;
+                      &lt;span style=&quot;&quot;&gt; {!$Record.Asesor__r.UserRole.Name}  &lt;/span&gt;&lt;br&gt;
+                      &lt;span style=&quot;&quot;&gt; Correo: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                      &lt;span style=&quot;&quot;&gt; Telefono: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Phone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+               
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+  
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+  
+  
+  
+                                      
+                                              &lt;/tr&gt;
+                                              &lt;tr&gt;
+                                                  &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+                                              &lt;/tr&gt;
+                                              &lt;tr&gt;
+                                                  &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                                                      &lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+                                                          &lt;tr&gt;
+                                                              &lt;td&gt;
+                                                                  &lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0154U000008MEBh&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; width=&quot;200px&quot; /&gt;
+                                                              &lt;/td&gt;
+                                                              &lt;td style=&quot;width:750px;&quot;&gt;
+                                                                  &lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+                                                                      &lt;b&gt;BAVARIAN MOTORS CR S.A.
+                          &lt;/b&gt;
+                                                                      &lt;br/&gt;
+                                                                      &lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                            Cédula Jur. No 3-101-502-521
+                            
+                                                                          &lt;br/&gt;
+                                                                      &lt;/b&gt;
+                                                                      &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                                                          &lt;b&gt;Tel.:
+                            &lt;/b&gt; (506) 2290-9235
+                            
+                                                                          &lt;br/&gt;
+                                                                      &lt;/span&gt;
+                                                                      &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                            www.bmw.co.cr
+                            
+                                                                          &lt;br/&gt;
+                                                                      &lt;/span&gt;
+                                                                      &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                                                          &lt;b&gt;Apdo:
+                            &lt;/b&gt; 10101 San José, Costa Rica.
+                            
+                                                                          &lt;br/&gt;
+                                                                      &lt;/span&gt;
+                                                                      &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                            De la embajada americana 200 sur, 200 este
+                          &lt;/span&gt;
+                                                                  &lt;/span&gt;
+                                                              &lt;/td&gt;
+                                                          &lt;/tr&gt;
+                                                      &lt;/table&gt;
+                                                  &lt;/td&gt;
+                                              &lt;/tr&gt;
+                                              &lt;tr&gt;
+                                                  &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+                                              &lt;/tr&gt;
+                                          &lt;/table&gt;
+                                      &lt;/td&gt;
+                                  &lt;/tr&gt;
+        &lt;/table&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>DynamicEditTemplateUruca</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table class=&quot;ql-table-blob&quot; style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td align=&quot;center&quot;&gt;&lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; style=&quot;width:600px;background-color:white;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;table style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+
+                     Reciba un cordial saludo.
+                 &lt;/td&gt;
+
+                &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img title=&quot;logo&quot; style=&quot;max-width: 676.207px; height:150px;&quot; src=&quot;https://redmotors--portalcom.sandbox.file.force.com/servlet/servlet.ImageServer?id=0158N000000QGEx&amp;amp;oid=00D8N00000050ml&amp;amp;lastMod=1677197078000&quot; alt=&quot;logo&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;&lt;/tr&gt;
+
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+          &lt;tr&gt;&lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; style=&quot;width:100%;background-color:#white;height:30px;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style=&quot;padding-left: 20px;&quot;&gt;&lt;span&gt;Gracias {!$Record.Contact__r.Name} por reservar su cita con nosotros.&lt;/span&gt;&lt;/td&gt;
+
+                &lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;padding-left: 20px;&quot;&gt;&lt;span&gt;Bavarian Motors le confirma que se ha reservado {!$Record.Activo__r.numeroDePlaca__c} - {!$Record.Contact__r.Name}  en {!$Record.Owner:User.FirstName} {!$Record.Owner:User.LastName} el  {!$Record.StartDateTime};  Le esperamos !.&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;&lt;/tr&gt;
+
+          &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;&lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;span style=&quot;color:#4F4F4F;padding-left: 20px; font-family: arial;&quot;&gt; Quedo a su disposición: &lt;br&gt;
+“Estimado cliente queremos informarte que estamos en proceso de remodelación con el objetivo de mejorar tu su experiencia con nosotros. Durante este tiempo, queremos agradecerte por la paciencia y comprensión, ya que nuestras áreas de espera estarán limitadas y puede haber ruido en ocasiones, por lo cual te recomendamos que si tienes una cita agendada en los próximos días puedas traer tu auto, entregar a tu asesor de servicio y regresar por el a la hora indicada.
+Te aseguramos que valdrá la pena y pronto podrás disfrutar de la nueva experiencia premium de BMW y MINI.
+En caso de que necesites trasladarte del taller de Uruca a tu domicilio o un área dentro del GAM puedes solicitar a tu asesor servicio un Uber de cortesía**
+&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;&lt;/tr&gt;
+        
+
+
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;&lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: arial; font-size: 16px; line-height: 27px;&quot;&gt;
+
+                  &lt;span style=&quot;&quot;&gt; Asesor: {!$Record.Asesor__r.FirstName}  {!$Record.Asesor__r.LastName}  &lt;/span&gt;&lt;br&gt;&lt;span style=&quot;&quot;&gt; {!$Record.Asesor__r.UserRole.Name}  &lt;/span&gt;&lt;br&gt;&lt;span style=&quot;&quot;&gt; Correo: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;&lt;span style=&quot;&quot;&gt; Telefono: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Phone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+             
+                &lt;/td&gt;&lt;/tr&gt;
+
+            &lt;/tbody&gt;&lt;/table&gt;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+									
+											
+											&lt;tr&gt;
+												&lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+											&lt;/tr&gt;
+											&lt;tr&gt;
+												&lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+													&lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+														&lt;tbody&gt;&lt;tr&gt;
+															&lt;td&gt;
+																&lt;img width=&quot;200px&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0154U000008MEBh&amp;amp;oid=00D0P000000Dvkz&amp;amp;lastMod=1665782772000&quot; style=&quot;margin-right:20px;&quot;&gt;
+															&lt;/td&gt;
+															&lt;td style=&quot;width:750px;&quot;&gt;
+																&lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+																	&lt;b&gt;BAVARIAN MOTORS CR S.A.
+                        &lt;/b&gt;
+																	&lt;br&gt;
+																	&lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                          Cédula Jur. No 3-101-502-521
+                          
+																		&lt;br&gt;
+																	&lt;/b&gt;
+																	&lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+																		&lt;b&gt;Tel.:
+                          &lt;/b&gt; (506) 2290-9235
+                          
+																		&lt;br&gt;
+																	&lt;/span&gt;
+																	&lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                          www.bmw.co.cr
+                          
+																		&lt;br&gt;
+																	&lt;/span&gt;
+																	&lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+																		&lt;b&gt;Apdo:
+                          &lt;/b&gt; 10101 San José, Costa Rica.
+                          
+																		&lt;br&gt;
+																	&lt;/span&gt;
+																	&lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                          De la embajada americana 200 sur, 200 este
+                        &lt;/span&gt;
+																&lt;/span&gt;
+															&lt;/td&gt;
+														&lt;/tr&gt;
+													&lt;/tbody&gt;&lt;/table&gt;
+												&lt;/td&gt;
+											&lt;/tr&gt;
+											&lt;tr&gt;
+												&lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+											&lt;/tr&gt;
+										&lt;/tbody&gt;&lt;/table&gt;
+									&lt;/td&gt;
+								&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>DynamicNewBMW</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;BMW&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>DynamicNewMini</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;MINI&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>recordatorioEmail</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+    &lt;tr&gt;
+      &lt;td align=&quot;center&quot;&gt;
+        &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+          &lt;tr&gt;
+            &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;
+              &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+                &lt;tr&gt;
+                   &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+                          Recordatorio.
+                   &lt;/td&gt;
+  
+                  &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors--portalcom.sandbox.file.force.com/servlet/servlet.ImageServer?id=0158N000000QGEx&amp;oid=00D8N00000050ml&amp;lastMod=1677197078000&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+  
+          &lt;tr&gt;
+            &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+          &lt;/tr&gt;
+  
+          &lt;tr&gt;
+              &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+          &lt;/tr&gt;
+  
+            &lt;tr&gt;
+              &lt;td style = &quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                  &lt;tr&gt;
+                      &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                      &lt;span&gt;Bavarian Motors le recuerda:&lt;/span&gt;
+                      &lt;/td&gt;
+  
+                  &lt;/tr&gt;
+                   &lt;tr&gt;
+                  &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                      &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+                      &lt;span&gt;Su cita {!$Record.Activo__r.numeroDePlaca__c}  - {!$Record.Contact__r.Name}  en {!$Record.Owner:User.FirstName} {!$Record.Owner:User.LastName} el  {!$Record.StartDateTime}; Será un placer atenderle!.&lt;/span&gt;
+                    &lt;/td&gt;
+                  &lt;/tr&gt;
+                &lt;/table&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+  
+            &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+  
+  
+  
+          &lt;tr &gt;
+            &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td&gt;
+                        &lt;span style=&quot;color:#4F4F4F;padding-left: 20px; font-family: arial;&quot;&gt; Quedo a su disposición: &lt;/span&gt;
+                      &lt;/td&gt;
+                    &lt;/tr&gt;
+                  &lt;/table&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+      
+              &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+      
+      
+      
+              &lt;tr&gt;
+                &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                  &lt;table &gt;
+                    &lt;tr&gt;
+                      &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: arial; font-size: 16px; line-height: 27px;&quot;&gt;
+      
+                        &lt;span style=&quot;&quot;&gt; Asesor: {!$Record.Asesor__r.FirstName}  {!$Record.Asesor__r.LastName}  &lt;/span&gt;&lt;br&gt;
+                          &lt;span style=&quot;&quot;&gt; {!$Record.Asesor__r.UserRole.Name}  &lt;/span&gt;&lt;br&gt;
+                          &lt;span style=&quot;&quot;&gt; Correo: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                          &lt;span style=&quot;&quot;&gt; Telefono: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Phone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                   
+                      &lt;/td&gt;
+                    &lt;/tr&gt;
+      
+                  &lt;/table&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+      
+      
+      
+                                          
+                                                  &lt;/tr&gt;
+                                                  &lt;tr&gt;
+                                                      &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+                                                  &lt;/tr&gt;
+                                                  &lt;tr&gt;
+                                                      &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                                                          &lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+                                                              &lt;tr&gt;
+                                                                  &lt;td&gt;
+                                                                      &lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0154U000008MEBh&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; width=&quot;200px&quot; /&gt;
+                                                                  &lt;/td&gt;
+                                                                  &lt;td style=&quot;width:750px;&quot;&gt;
+                                                                      &lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+                                                                          &lt;b&gt;BAVARIAN MOTORS CR S.A.
+                              &lt;/b&gt;
+                                                                          &lt;br/&gt;
+                                                                          &lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                Cédula Jur. No 3-101-502-521
+                                
+                                                                              &lt;br/&gt;
+                                                                          &lt;/b&gt;
+                                                                          &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                                                              &lt;b&gt;Tel.:
+                                &lt;/b&gt; (506) 2290-9235
+                                
+                                                                              &lt;br/&gt;
+                                                                          &lt;/span&gt;
+                                                                          &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                www.bmw.co.cr
+                                
+                                                                              &lt;br/&gt;
+                                                                          &lt;/span&gt;
+                                                                          &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                                                              &lt;b&gt;Apdo:
+                                &lt;/b&gt; 10101 San José, Costa Rica.
+                                
+                                                                              &lt;br/&gt;
+                                                                          &lt;/span&gt;
+                                                                          &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                De la embajada americana 200 sur, 200 este
+                              &lt;/span&gt;
+                                                                      &lt;/span&gt;
+                                                                  &lt;/td&gt;
+                                                              &lt;/tr&gt;
+                                                          &lt;/table&gt;
+                                                      &lt;/td&gt;
+                                                  &lt;/tr&gt;
+                                                  &lt;tr&gt;
+                                                      &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+                                                  &lt;/tr&gt;
+                                              &lt;/table&gt;
+                                          &lt;/td&gt;
+                                      &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>recordatorioMini</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:arial;border-collapse: collapse;width:100%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+
+    &lt;tr&gt;
+   
+     &lt;td align=&quot;center&quot;&gt;
+   
+      &lt;table style=&quot;width:600px;background-color:white;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+   
+       &lt;tr&gt;
+   
+        &lt;td style=&quot;padding:10px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+   
+       &lt;/tr&gt;
+   
+       &lt;tr&gt;
+   
+        &lt;td&gt;
+   
+         &lt;table style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+   
+          &lt;tr&gt;
+   
+            &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 45px;&quot;&gt;
+   
+               Recordatorio.
+   
+            &lt;/td&gt;
+   
+   
+   
+           &lt;td style=&quot;text-align:center;background-color:#E5E6E6;&quot;&gt;&lt;img alt=&quot;logo&quot; src=&quot;https://redmotors--portalcom.sandbox.file.force.com/servlet/servlet.ImageServer?id=0158N000000QGF2&amp;oid=00D8N00000050ml&amp;lastMod=1677197110000&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;&lt;/td&gt;
+   
+          &lt;/tr&gt;
+   
+         &lt;/table&gt;
+   
+        &lt;/td&gt;
+   
+       &lt;/tr&gt;
+   
+   
+   
+       &lt;tr&gt;
+   
+        &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+   
+       &lt;/tr&gt;
+   
+   
+   
+       &lt;tr&gt;
+   
+         &lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+   
+       &lt;/tr&gt;
+   
+   
+   
+        &lt;tr&gt;
+   
+         &lt;td style = &quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+   
+          &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+   
+           &lt;tr&gt;
+   
+             &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+   
+             &lt;span&gt;Bavarian Motors le recuerda:&lt;/span&gt;
+   
+             &lt;/td&gt;
+   
+   
+   
+           &lt;/tr&gt;
+   
+            &lt;tr&gt;
+   
+           &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+   
+           &lt;/tr&gt;
+   
+           &lt;tr&gt;
+   
+             &lt;td style=&quot;padding-left: 20px;&quot;&gt;
+   
+             &lt;span&gt;Su cita {!$Record.Activo__r.numeroDePlaca__c} - {!$Record.Contact__r.Name} en {!$Record.Owner:User.FirstName} {!$Record.Owner:User.LastName} el {!$Record.StartDateTime}; Será un placer atenderle!.&lt;/span&gt;
+   
+            &lt;/td&gt;
+   
+           &lt;/tr&gt;
+   
+          &lt;/table&gt;
+   
+         &lt;/td&gt;
+   
+        &lt;/tr&gt;
+   
+   
+   
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+   
+   
+   
+   
+   
+   
+   
+       &lt;tr &gt;
+   
+        &lt;td style=&quot;padding-top: 20px;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+   
+         &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot; &gt;
+   
+          &lt;tr&gt;
+   
+            &lt;td&gt;
+                &lt;span style=&quot;color:#4F4F4F;padding-left: 20px; font-family: arial;&quot;&gt; Quedo a su disposición: &lt;/span&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+      &lt;tr&gt;&lt;td style=&quot;padding:5px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+      &lt;tr&gt;
+        &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+          &lt;table &gt;
+            &lt;tr&gt;
+              &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: arial; font-size: 16px; line-height: 27px;&quot;&gt;
+
+                &lt;span style=&quot;&quot;&gt; Asesor: {!$Record.Asesor__r.FirstName}  {!$Record.Asesor__r.LastName}  &lt;/span&gt;&lt;br&gt;
+                  &lt;span style=&quot;&quot;&gt; {!$Record.Asesor__r.UserRole.Name}  &lt;/span&gt;&lt;br&gt;
+                  &lt;span style=&quot;&quot;&gt; Correo: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                  &lt;span style=&quot;&quot;&gt; Telefono: &lt;a href=&quot;mailto:emailusuario&quot;&gt;{!$Record.Asesor__r.Phone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+           
+              &lt;/td&gt;
+            &lt;/tr&gt;
+
+          &lt;/table&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+
+
+                                  
+                                          &lt;/tr&gt;
+                                          &lt;tr&gt;
+                                              &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+                                          &lt;/tr&gt;
+                                          &lt;tr&gt;
+                                              &lt;td style=&quot;border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4;&quot;&gt;
+                                                  &lt;table style=&quot;background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333&quot;&gt;
+                                                      &lt;tr&gt;
+                                                          &lt;td&gt;
+                                                              &lt;img style=&quot;margin-right:20px;&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0154U000008MEBh&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; width=&quot;200px&quot; /&gt;
+                                                          &lt;/td&gt;
+                                                          &lt;td style=&quot;width:750px;&quot;&gt;
+                                                              &lt;span style=&quot;padding-left:23px;font-width:bold;font-size:17px;&quot;&gt;
+                                                                  &lt;b&gt;BAVARIAN MOTORS CR S.A.
+                      &lt;/b&gt;
+                                                                  &lt;br/&gt;
+                                                                  &lt;b style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                        Cédula Jur. No 3-101-502-521
+                        
+                                                                      &lt;br/&gt;
+                                                                  &lt;/b&gt;
+                                                                  &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                                                      &lt;b&gt;Tel.:
+                        &lt;/b&gt; (506) 2290-9235
+                        
+                                                                      &lt;br/&gt;
+                                                                  &lt;/span&gt;
+                                                                  &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                        www.bmw.co.cr
+                        
+                                                                      &lt;br/&gt;
+                                                                  &lt;/span&gt;
+                                                                  &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                                                                      &lt;b&gt;Apdo:
+                        &lt;/b&gt; 10101 San José, Costa Rica.
+                        
+                                                                      &lt;br/&gt;
+                                                                  &lt;/span&gt;
+                                                                  &lt;span style=&quot;font-size:10px;padding-left:25px;&quot;&gt;
+                        De la embajada americana 200 sur, 200 este
+                      &lt;/span&gt;
+                                                              &lt;/span&gt;
+                                                          &lt;/td&gt;
+                                                      &lt;/tr&gt;
+                                                  &lt;/table&gt;
+                                              &lt;/td&gt;
+                                          &lt;/tr&gt;
+                                          &lt;tr&gt;
+                                              &lt;td style=&quot;padding:25px; border-left: 1px solid #2F7BB4;border-right: 1px solid #2F7BB4; border-bottom: 1px solid #2F7BB4&quot;&gt;&amp;nbsp;&lt;/td&gt;
+                                          &lt;/tr&gt;
+                                      &lt;/table&gt;
+                                  &lt;/td&gt;
+                              &lt;/tr&gt;
+    &lt;/table&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>emailCliente</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>ownerFirstName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

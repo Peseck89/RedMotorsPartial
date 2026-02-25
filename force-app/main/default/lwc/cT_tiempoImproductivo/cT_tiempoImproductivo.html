@@ -1,0 +1,59 @@
+<template>
+    <lightning-card  >
+        <div class="c-container">
+            <lightning-layout>
+                <lightning-layout-item padding="around-small">
+
+                    <lightning-record-form
+                    object-api-name={objectApiName}
+                    fields={fields}
+                    onsuccess={handleSuccess}
+                    >
+                    </lightning-record-form>
+
+                    <template if:true={areDetailsVisible}>
+                        <lightning-button variant="brand-outline" label="Volver" title="Volver" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+                    </template>
+
+
+                    <!-- <div class="header-column">
+                        <lightning-layout-item padding="around-small">
+                            <lightning-input required type="datetime" name="Inicio de trabajo" label="Enter a date/time value" ></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small">
+                            <lightning-input required type="datetime" name="Fin de Trabajo" label="Enter a date/time value" ></lightning-input>
+                        </lightning-layout-item>
+                        <br>
+                        <lightning-layout-item padding="around-small">
+                            <label class="slds-form-element__label" for="sTrabajos">Tipo de trabajo</label>
+                            <select required class="slds-select" name="sTrabajos" id="sTrabajos" onchange={handleTrabajos} >
+                                <option value="%" selected>--None--</option>
+                                <template for:each={trabajos.data} for:item="trabajo">
+                                    <option key={trabajo.id} value={trabajo.Name} >{trabajo.Name}</option>
+                                </template>                        
+                            </select>                                    
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small">
+                            <label class="slds-form-element__label" for="sMecanico">Mecánico</label>
+                            <select required class="slds-select" name="sMecanico" id="sMecanico" onchange={handleMecanico} >
+                                <option value="%" selected>--None--</option>
+                                <template for:each={contactos.data} for:item="taller">
+                                    <option key={taller.id} value={taller.Name} >{taller.Name}</option>
+                                </template>                        
+                            </select>                                    
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small">
+                            <lightning-input  type="text" name="ordenTrabajo" label="Orden de Trabajo" ></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small">
+                            <lightning-textarea required name="Observaciones" label="Observaciones" ></lightning-textarea>
+                        </lightning-layout-item>
+                        
+                        <div style="text-align: end;">
+                        </div>
+                    </div> -->
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+    </lightning-card>
+</template>

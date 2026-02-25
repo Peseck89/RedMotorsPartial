@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Copy_1_of_Copy_1_of_Send_Email</name>
+        <label>Send Email</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Send_Notif</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>recipientAddresses</name>
+            <value/>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>CurrentUser</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>composeEmailContent</name>
+            <value>
+                <stringValue>True</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>asunto</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>notificacionrecordatorio</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>useLineBreaks</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Copy_1_of_Send_Email</name>
+        <label>Copy 1 of Send Email</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Copy_1_of_Send_Notif_WhatsApp</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>recipientAddresses</name>
+            <value/>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>CurrentUser</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>composeEmailContent</name>
+            <value>
+                <stringValue>True</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>asunto</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>notificacionrecordatorio</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>useLineBreaks</name>
+        </inputParameters>
+        <inputParameters>
+            <name>recipientId</name>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Copy_1_of_Send_Notif_WhatsApp</name>
+        <label>Copy 1 of Send Notif WhatsApp</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>PN_NotificacionLineasRechazadasInv</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>idQuote</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Notif</name>
+        <label>Send Notif WhatsApp</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>PN_NotificacionLineasRechazadasInv</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>idQuote</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>65.0</apiVersion>
+    <assignments>
+        <name>Add_Row_Linea</name>
+        <label>Add Row Linea</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>lsRowsLineas</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>CurrentRow</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Lineas</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Current_Row_Linea</name>
+        <label>Current Row Linea</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>CurrentRow</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>&lt;tr&gt;&lt;td&gt;{!Loop_Lineas.Name}&lt;/td&gt;&lt;/tr&gt;</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Add_Row_Linea</targetReference>
+        </connector>
+    </assignments>
+    <description>Nuevo template correo en ruta default fixed head template correo</description>
+    <formulas>
+        <name>asunto</name>
+        <dataType>String</dataType>
+        <expression>&apos;Seguimiento a oferta de trabajos postergados –&apos; &amp; {!$Record.Opportunity.Account.Name} &amp; &apos;/ Placa &apos;  &amp; {!$Record.Placa__c}</expression>
+    </formulas>
+    <formulas>
+        <name>bodyEmail</name>
+        <dataType>String</dataType>
+        <expression>&apos;&lt;b&gt;Hola $Record.Owner:User.FirstName, &lt;/b&gt;&apos; &amp;  &apos;&lt;br&gt;&apos; &amp;
+&apos;&lt;b&gt;Espero que estés teniendo un excelente día. &lt;/b&gt;&apos; &amp;  &apos;&lt;br&gt;&apos; &amp;
+&apos;&lt;b&gt;Te escribo para recordarte dar seguimiento al cliente $Record.Opportunity.Account.Name, con placa $Record.Placa__c, a quien se le ofrecieron trabajos postergados durante su última visita. &lt;/b&gt;&apos; &amp;  &apos;&lt;br&gt;&apos; &amp;
+&apos;&lt;b&gt;Para facilitarte el acceso, te comparto el enlace directo con los detalles de los trabajos postergados: &lt;/b&gt;&apos; &amp;  &apos;&lt;br&gt;&apos; &amp;
+&apos;&lt;b&gt;URLLineas&lt;/b&gt;&apos; &amp;  &apos;&lt;br&gt;&apos; &amp;
+
+&apos;&lt;b&gt;Sería ideal contactarlo pronto para ofrecerle una cita o resolver cualquier duda que tenga al respecto. &lt;/b&gt;&apos; &amp;  &apos;&lt;br&gt;&apos; &amp;
+&apos;&lt;b&gt;¡Gracias por tu gestión!&lt;/b&gt;&apos; &amp;  &apos;&lt;br&gt;&apos; &amp;
+&apos;&lt;b&gt;Saludos,&lt;/b&gt;&apos;</expression>
+    </formulas>
+    <formulas>
+        <name>URLLineas</name>
+        <dataType>String</dataType>
+        <expression>LEFT({!$Api.Partner_Server_URL_260}, FIND(&apos;/services&apos;, {!$Api.Partner_Server_URL_260})) &amp; 
+&apos;lightning/r/Quote/&apos; &amp;
+{!$Record.Id} &amp;
+ &apos;/related/Archivo_lineas_rechazadas__r/view?ws=%2Flightning%2Fr%2FQuote%2F&apos; &amp; {!$Record.Id} &amp; &apos;%2Fview&apos;</expression>
+    </formulas>
+    <interviewLabel>Notificacion Lineas Rechazadas {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Notificacion Lineas Rechazadas</label>
+    <loops>
+        <name>Loop_Lineas</name>
+        <label>Loop Lineas</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Lineas_Rechazads</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Current_Row_Linea</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Copy_1_of_Copy_1_of_Send_Email</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Lineas_Rechazads</name>
+        <label>Get Lineas Rechazads</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Lineas</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Quote__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Recordatorio__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Archivo_lineas_rechazadas__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Copy_1_of_Send_Email</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Facturado</stringValue>
+            </value>
+        </filters>
+        <object>Quote</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <scheduledPaths>
+            <name>X25_dias_despues</name>
+            <connector>
+                <targetReference>Get_Lineas_Rechazads</targetReference>
+            </connector>
+            <label>25 dias despues</label>
+            <offsetNumber>25</offsetNumber>
+            <offsetUnit>Days</offsetUnit>
+            <timeSource>RecordTriggerEvent</timeSource>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>notificacionrecordatorio</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html charset=UTF-8&quot; /&gt;
+    &lt;title&gt;Correo notificación lineas rechazadas&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body class=&quot;body&quot; style=&quot;width:100%;height:100%;padding:0;Margin:0&quot;&gt;
+
+    &lt;div dir=&quot;ltr&quot; class=&quot;es-wrapper-color&quot; lang=&quot;es&quot; style=&quot;background-color:#F6F6F6&quot;&gt;
+
+        &lt;table class=&quot;es-wrapper&quot; width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;background-color:#F6F6F6&quot;&gt;
+
+            &lt;tr&gt;
+
+                &lt;td valign=&quot;top&quot; style=&quot;padding:0;Margin:0&quot;&gt;
+
+                    &lt;table class=&quot;es-header&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; align=&quot;center&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important;background-color:transparent;background-repeat:repeat;background-position:center top&quot;&gt;
+
+                        &lt;tr&gt;
+
+                            &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
+
+                                &lt;table class=&quot;es-header-body&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot; role=&quot;none&quot;&gt;
+
+                                    &lt;tr&gt;
+
+                                        &lt;td align=&quot;left&quot; style=&quot;padding:0;Margin:0;padding-top:20px;padding-right:20px;padding-left:20px&quot;&gt;
+
+                                            &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; width=&quot;100%&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px&quot;&gt;
+
+                                                &lt;tr&gt;
+
+                                                    &lt;td valign=&quot;top&quot; align=&quot;center&quot; style=&quot;padding:0;Margin:0;width:560px&quot;&gt;
+
+                                                        &lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; role=&quot;presentation&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px&quot;&gt;
+
+                                                            &lt;tr&gt;
+
+                                                                &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0;font-size:0px&quot;&gt;&lt;img src=&quot;https://ehxeqpz.stripocdn.email/content/guids/CABINET_acb286200a147884b697334b6b8ba60e6526faf6b747b3e2060647d7f175b4c5/images/redmlogocolor_uPR.png&quot; alt style=&quot;display:block;font-size:14px;border:0;outline:none;text-decoration:none&quot; width=&quot;115&quot;&gt;&lt;/td&gt;
+
+                                                            &lt;/tr&gt;
+
+                                                        &lt;/table&gt;
+
+                                                    &lt;/td&gt;
+
+                                                &lt;/tr&gt;
+
+                                            &lt;/table&gt;
+
+                                        &lt;/td&gt;
+
+                                    &lt;/tr&gt;
+
+                                &lt;/table&gt;
+
+                            &lt;/td&gt;
+
+                        &lt;/tr&gt;
+
+                    &lt;/table&gt;
+
+                    &lt;table class=&quot;es-content&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; align=&quot;center&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important&quot;&gt;
+
+                        &lt;tr&gt;
+
+                            &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
+
+                                &lt;table class=&quot;es-content-body&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot; role=&quot;none&quot;&gt;
+
+                                    &lt;tr&gt;
+
+                                        &lt;td align=&quot;left&quot; style=&quot;padding:20px;Margin:0&quot;&gt;
+
+                                            &lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px&quot;&gt;
+
+                                                &lt;tr&gt;
+
+                                                    &lt;td valign=&quot;top&quot; align=&quot;center&quot; style=&quot;padding:0;Margin:0;width:560px&quot;&gt;
+
+                                                        &lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#ffffff&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#ffffff&quot; role=&quot;presentation&quot;&gt;
+
+                                                            &lt;tr&gt;
+
+                                                                &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0;padding-top:30px;padding-bottom:30px&quot;&gt;
+
+                                                                    &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:45px;letter-spacing:0;color:#333333;font-size:30px&quot;&gt;
+
+                                                                        &lt;strong&gt;&lt;span style=&quot;color:#ee272c&quot;&gt;HOLA&lt;/span&gt;&lt;/strong&gt;
+
+                                                                    &lt;/p&gt;
+
+                                                                    &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:45px;letter-spacing:0;color:#696969;font-size:30px&quot;&gt;
+
+                                                                        {!$Record.Owner:User.FirstName}&lt;/p&gt;
+
+                                                                &lt;/td&gt;
+
+                                                            &lt;/tr&gt;
+
+                                                            &lt;tr&gt;
+
+                                                                &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0;padding-bottom:30px;padding-left:40px;padding-right:40px&quot;&gt;
+
+                                                                    &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:26px;letter-spacing:0;color:#333333;font-size:17px&quot;&gt;
+
+                                                                        Te escribo para recordarte dar seguimiento al cliente {!$Record.Opportunity.Account.Name}, con placa {!$Record.Placa__c}, a quien se le ofrecieron trabajos postergados durante su última visita.
+                                                                        Para facilitarte el acceso, te comparto el enlace directo con los detalles de los trabajos postergados:
+                                                                        &lt;br&gt;&lt;br&gt;
+                                                                        {!URLLineas}
+                                                                        &lt;br&gt;&lt;br&gt; Sería ideal contactarlo pronto para ofrecerle una cita o resolver cualquier duda que tenga al respecto.
+                                                                        &lt;br&gt;&lt;br&gt;
+                                                                        ¡Gracias por tu gestión!
+                                                                        &lt;br&gt;&lt;br&gt;
+                                                                    &lt;/p&gt;
+                                                                &lt;/td&gt;
+                                                            &lt;/tr&gt;
+                                                            &lt;tr&gt;
+                                                                &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0;font-size:0px&quot;&gt;&lt;img class=&quot;adapt-img&quot; src=&quot;https://ehxeqpz.stripocdn.email/content/guids/CABINET_acb286200a147884b697334b6b8ba60e6526faf6b747b3e2060647d7f175b4c5/images/di21_000023829.jpg&quot; alt style=&quot;display:block;font-size:14px;border:0;outline:none;text-decoration:none&quot; width=&quot;560&quot;&gt;&lt;/td&gt;
+                                                            &lt;/tr&gt;
+                                                        &lt;/table&gt;
+                                                    &lt;/td&gt;
+                                                &lt;/tr&gt;
+                                            &lt;/table&gt;
+                                        &lt;/td&gt;
+                                    &lt;/tr&gt;
+                                &lt;/table&gt;
+                            &lt;/td&gt;
+                        &lt;/tr&gt;
+                    &lt;/table&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>CurrentRow</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>lsRowsLineas</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

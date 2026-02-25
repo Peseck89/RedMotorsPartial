@@ -1,0 +1,1827 @@
+<aura:component
+    implements="lightning:isUrlAddressable,force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+    access="global" controller="CommunityCalendarController">
+    <aura:attribute name="controllerFirstRun" type="boolean" default="false" />
+    <aura:handler name="init" value="this" action="{!c.doInit}" />
+    <aura:attribute name="isComboboxRendered" type="Boolean" default="false" />
+    <aura:attribute name="hasRun" type="Boolean" default="false" />
+
+    <aura:attribute name="isDoneRendering" type="Boolean" default="false" />
+    <!-- LISTAS PARA CONTROLAR LAS RESERVAS -->
+    <aura:attribute name="horasReservas" type="List" />
+    <aura:attribute name="servicioUrl" type="String" />
+    <aura:attribute name="selectedValue" type="String" default="" />
+    <aura:attribute name="marcaUrl" type="String" default="" />
+    <aura:attribute name="tipoCita" type="Boolean" default="false" />
+    <aura:attribute name="espacioNoOcupado" type="Boolean" default="false" />
+    <aura:attribute name="formuLLeno" type="Boolean" default="false" />
+    <aura:attribute name="inputCount" type="List" />
+    <aura:attribute name="asesoresXcomunidad" type="List" />
+    <aura:attribute name="mecanicosXespacio" type="Integer" />
+    <aura:attribute name="isModalOpenSoporte" type="Boolean" default="false" />
+    <aura:attribute name="isModalCitaMovil" type="boolean" default="false" />
+    <!-- FORMULARIO PREGUNTAS -->
+    <aura:attribute name="url" type="String" />
+    <aura:attribute name="correUnaVez" type="Boolean" default="false" />
+    <aura:attribute name="Servicio" type="String" />
+    <aura:attribute name="pregunta1" type="String" />
+    <aura:attribute name="pregunta2" type="String" />
+    <aura:attribute name="pregunta3" type="String" />
+    <aura:attribute name="pregunta4" type="String" />
+    <aura:attribute name="pregunta5" type="String" />
+    <aura:attribute name="pregunta6" type="String" />
+    <aura:attribute name="pregunta7" type="String" />
+    <aura:attribute name="pregunta8" type="String" />
+    <aura:attribute name="pregunta9" type="String" />
+    <aura:attribute name="pregunta10" type="String" />
+    <aura:attribute name="pregunta11" type="String" />
+    <aura:attribute name="pregunta12" type="String" />
+    <aura:attribute name="pregunta13" type="String" />
+    <aura:attribute name="pregunta14" type="String" />
+    <aura:attribute name="pregunta15" type="String" />
+    <aura:attribute name="pregunta16" type="String" />
+    <aura:attribute name="pregunta17" type="String" />
+    <aura:attribute name="pregunta18" type="String" />
+    <aura:attribute name="pregunta19" type="String" />
+    <aura:attribute name="pregunta20" type="String" />
+    <aura:attribute name="citaMovil" type="Boolean" default="false" />
+    <aura:attribute name="mecanicosSucursal" type="Decimal" />
+    <aura:attribute name="minutosSucursal" type="Decimal" />
+    <aura:attribute name="startDateHour" type="String" />
+
+    <!-- Fecha en español -->
+    <aura:attribute name="startDateHourEsp" type="String" />
+    <aura:attribute name="descripcionCase" type="String" />
+    <aura:attribute name="isModalNewCase" type="Boolean" default="false" />
+
+    <aura:attribute name="setIntervalId" type="Integer" />
+    <aura:attribute name="tiempoTimer" type="Integer" />
+
+    <!-- Contact Information -->
+    <aura:attribute name="userInfo" type="user" />
+    <aura:attribute name="userName" type="String" />
+    <aura:attribute name="userPhone" type="String" />
+    <aura:attribute name="userEmail" type="String" />
+
+    <!-- Next User Citations - Information -->
+
+    <aura:attribute name="listaCoches" type="List" />
+    <aura:attribute name="asesorXcalendario" type="List" />
+    <aura:attribute name="userEvents" type="List" />
+    <aura:attribute name="userEvent" type="Event" />
+    <aura:attribute name="eventLocation" type="String" />
+    <aura:attribute name="eventCarId" type="String" />
+    <aura:attribute name="eventStartDate" type="String" />
+    <aura:attribute name="eventId" type="String" />
+    <aura:attribute name="contactId" type="String" />
+
+    <aura:attribute name="calendarList" type="List" />
+    <aura:attribute name="selectedPlaca" type="String" />
+    <aura:attribute name="eventosActuales" type="List" />
+    <aura:attribute name="selectedSucursal" type="String" />
+
+    <aura:attribute name="userAssets" type="List" />
+    <aura:attribute name="hasNoAssets" type="boolean" default="true" />
+    <aura:attribute name="additionalComments" type="string" default="" />
+    <aura:attribute name="additionalSubService" type="string" default="" />
+    <aura:attribute name="estimatedKM" type="string" default="" />
+    <aura:attribute name="isModalOpenExistingCitation" type="boolean" default="false" />
+    <aura:attribute name="isModalOpenConfirmation" type="boolean" default="false" />
+    <aura:attribute name="isModalChangeMarca" type="boolean" default="false" />
+    <aura:attribute name="isModalOtro" type="boolean" default="false" />
+
+    <!--NUEVAS VARIABLES PARA MODALES-->
+    <aura:attribute name="isModalMinutes" type="boolean" default="false" />
+    <aura:attribute name="isModalOffMinutes" type="boolean" default="false" />
+
+    <aura:attribute name="isModalLibreDeCitas" type="boolean" default="false" />
+
+    <aura:attribute name="isModalOpenFinalConfirmation" type="boolean" default="false" />
+    <aura:attribute name="marcaSelected" type="String" default="BMW" />
+    <aura:attribute name="marcasPagina" type="List"
+        default="[{'label': 'BMW', 'value': 'BMW'}, {'label': 'MINI', 'value': 'MINI'}, {'label': 'Motorrad', 'value': 'Motorrad'}]" />
+
+    <!-- Información Próximo Evento Agendado Vehículo Seleccionado -->
+    <aura:attribute name="vehiculeIdEvent" type="Event" />
+
+    <aura:attribute name="response" type="String" />
+
+    <!-- User Selections -->
+    <aura:attribute name="serviceSelected" type="String" />
+    <aura:attribute name="vehicleSelected" type="String" />
+    <aura:attribute name="ownVehicleSelected" default="" type="String" />
+    <aura:attribute name="vehicleId" type="String" />
+    <aura:attribute name="myResult" type="String" />
+    <aura:attribute name="subServiceWasSelected" type="boolean" default="false" />
+
+    <aura:attribute name="services" type="Object"
+        default='[ {"Mecánica Rápida":[{ "label":"Escazú","id":"0054U000009hipBQAQ" }, { "label":"Pavas","id":"0054U000009hiw2QAA" }, { "label":"Pinares","id":"0054U000009hiwHQAQ" }, { "label":"Uruca","id":"0054U000009hiwMQAQ" } ], "Mecánica general":[ { "label":"Pavas","id":"0054U000009hiwCQAQ" }, { "label":"Uruca","id":"0054U000009hiwRQAQ" } ], "Otobai":[ { "label":"Pavas","id":"0054U00000Bes4GQAR" } ], "Enderezado y Pintura":[ { "label":"Uruca","id":"0054U000009hiwWQAQ"}]}]' />
+    <aura:attribute name="serviceCenterSelected" type="String" />
+    <aura:attribute name="serviceCenterSelectedName" type="String" />
+    <aura:attribute name="selectedDate" type="Date" />
+    <aura:attribute name="selectedHour" type="Date" />
+    <aura:attribute name="serviceCenters" type="List" />
+    <aura:attribute name="optionsService" type="List" default="[]" />
+    <aura:attribute name="optionsVehicule" type="List"
+        default="[{'label': 'Vehículo Propio', 'value': 'Vehículo Propio'}]" />
+    <aura:attribute name="tabs" type="Object[]" />
+    <aura:attribute name="selTabId" type="String" />
+
+    <aura:attribute name="optionsErrors" type="List" default="[{'label': 'Otro', 'value': 'Otro'}]" />
+
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="isLoadingNo" type="Boolean" default="true" />
+
+    <aura:method name="logParam" description="Sample method with parameter">
+        <aura:attribute name="message" type="String" default="default message" />
+    </aura:method>
+
+    <aura:handler name="render" value="{!this}" action="{!c.onRender}" />
+
+    <html lang="en" class="light-style layout-menu-fixed">
+    <!--Community Calendar Components -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes" />
+    <title>Citas-BMW</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    </link>
+
+    <!-- CSS -->
+    <ltng:require styles="{!$Resource.CustomerCommunitiesAdditionalStyles}" /> <!-- Nuestros CSSs -->
+    <ltng:require styles="{!$Resource.CommunityCalendarStyle}" /> <!-- Nuestros CSSs -->
+    <ltng:require styles="{!$Resource.CommunityCalendarStyleComplement}" /> <!-- Nuestros CSSs -->
+
+
+    <ltng:require styles="{!$Resource.CustomerCommunity_corecss}" /> <!-- Template CSSs -->
+    <ltng:require styles="{!$Resource.CustomerCommunity_themeDefault}" /> <!-- Template CSSs -->
+    <ltng:require styles="{!$Resource.CustomerCommunityFiles + 'CustomerCommunity/assets/vendor/fonts/boxicons.css'}" />
+    <!-- Template CSSs -->
+
+    <ltng:require scripts="{!join(',', $Resource.CommunityCalendarFiles + '/jquery.min.js',
+                       $Resource.CommunityCalendarFiles + '/materialize.min.js', 
+                       $Resource.CommunityCalendarFiles + '/popper.min.js',
+                       $Resource.CommunityCalendarFiles + '/bootstrap.min.js' )}"
+        afterScriptsLoaded="{!c.myFunction}" />
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+        <title> </title>
+        <meta name="description" content="" />
+        <!-- Fonts -->
+    </head>
+
+    <body>
+        <!-- Layout wrapper -->
+
+        <aura:if isTrue="{!v.isLoading}">
+            <!-- Add your spinner markup or use Salesforce's spinner component here -->
+            <!-- For example, you can use SLDS (Salesforce Lightning Design System) spinner -->
+            <div class="spinner-container"
+                style="background-color: rgba(0, 0, 0, 0.9);top: 0;left: 0;position:fixed;width: 100%;height: 100%; align-items: center;justify-content: center;z-index: 9999;">
+                <div class="slds-spinner slds-spinner_medium">
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!v.isLoadingNo}">
+            <div class="layout-wrapper layout-content-navbar">
+                <div class="layout-container">
+                    <!-- Menu -->
+                    <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+                        <div class="app-brand demo">
+                            <a class="app-brand-link" href="{!'/s/?servicio=' + v.marcaSelected}">
+                                <a class="app-brand-link" href="{!'/s/?servicio=' + v.marcaSelected}">
+                                    <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+                                        <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo"
+                                            style="max-width: 175px;" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+                                        <img src="{!$Resource.communityMINI}" alt="MINI Logo"
+                                            style="max-width: 175px;" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+                                        <img src="{!$Resource.BMWServiceLogo}" alt="Motorrad Logo"
+                                            style="max-width: 175px;" />
+                                    </aura:if>
+                                </a>
+                            </a>
+                            <a class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none"> <i
+                                    class="bx bx-chevron-left bx-sm align-middle"> </i> </a>
+                        </div>
+                        <div class="menu-inner-shadow"></div>
+                        <ul class="menu-inner py-1">
+                            <li class="menu-header small text-uppercase">
+                                <span class="menu-header-text">Citas de Servicio</span>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link menu-toggle "
+                                    href="{!'/s/communitymenu?servicio=' + v.marcaSelected}">
+                                    <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                                    <div class="under active" data-i18n="Authentications">Nueva Cita</div>
+                                </a>
+                                <ul class="menu-sub"></ul>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link menu-toggle"
+                                    href="{!'/s/communitycancelappointments?id=' + v.contactId + '&amp;marca=' +  v.marcaSelected}">
+                                    <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                                    <div class="under" data-i18n="Authentications">Modificar Cita</div>
+                                </a>
+                                <ul class="menu-sub"></ul>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link menu-toggle"
+                                    href="{!'/s/communityappointmentshistory?id=' + v.contactId + '&amp;marca=' +  v.marcaSelected}">
+                                    <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                                    <div class="under" data-i18n="Authentications">Historial de Citas</div>
+                                </a>
+                                <ul class="menu-sub"></ul>
+                            </li>
+
+                            <!-- Components -->
+
+                            <li class="menu-header small text-uppercase">
+                                <span class="menu-header-text">Presupuestos</span>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" href="{!'/s/communitymanageworksmenu?id=' + v.contactId}">
+                                    <i class="menu-icon tf-icons bx bx-collection"> </i>
+                                    <div class="under " data-i18n="Basic">Aprobar presupuesto</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" href="{!'/s/communityinspectionhistory?id=' + v.contactId}">
+                                    <i class="menu-icon tf-icons bx bx-collection"> </i>
+                                    <div class="under" data-i18n="Basic">Historial de inspecciones</div>
+                                </a>
+                            </li>
+                            <li class="menu-header small text-uppercase">
+                                <span class="menu-header-text">Perfil </span>
+                            </li>
+                            <!-- Cards -->
+                            <li class="menu-item">
+                                <a class="menu-link" href="{!'/s/communityprofile?id=' + v.contactId}">
+                                    <i class="menu-icon tf-icons bx bx-collection"> </i>
+                                    <div class="under " data-i18n="Basic">Perfil</div>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" href="{!'/s/communitycarsmanagement?id=' + v.contactId}">
+                                    <i class="menu-icon tf-icons bx bx-collection"> </i>
+                                    <div class="under" data-i18n="Basic">Información de mi auto</div>
+                                </a>
+                            </li>
+                            <li class="menu-header small text-uppercase">
+                                <a class="menu-link" href="/secur/logout.jsp">
+                                    <div style="font-size: 13px; color:#697A8D" class="under" data-i18n="Basic">LogOut
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="menu-header small text-uppercase" style="margin-top: 0;">
+                                <a class="menu-link" onclick="{! c.openSoporte }">
+                                    <div style="font-size: 13px; color:#697A8D" class="under"
+                                        data-i18n="Authentications">Asistencia en
+                                        Linea</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
+                    <!-- / Menu -->
+                    <!-- Layout container -->
+                    <div class="layout-page">
+
+                        <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+                            <img src="{!$Resource.BMWCar}" alt="BMWLogo" class="banner-image" />
+                        </aura:if>
+                        <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+                            <img src="{!$Resource.MINICar}" alt="BMWLogo" class="banner-image" />
+                        </aura:if>
+                        <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+                            <img src="{!$Resource.MotoCar}" alt="BMWLogo" class="banner-image" />
+                        </aura:if>
+
+
+                        <!-- Navbar -->
+                        <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+                            id="layout-navbar">
+                            <div class="app-brand demo logo-mobile">
+                                <a class="app-brand-link">
+                                    <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+                                        <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo"
+                                            style="max-width: 175px;" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+                                        <img src="{!$Resource.communityMINI}" alt="BMWLogo" style="max-width: 175px;" />
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+                                        <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo"
+                                            style="max-width: 175px;" />
+                                    </aura:if>
+                                </a>
+                            </div>
+                            <div class=" layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                                <a class="nav-item nav-link px-0 me-xl-4">
+                                    <i class="bx bx-menu bx-sm"> </i>
+                                </a>
+                            </div>
+                            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                                <!-- /Search -->
+                                <ul class="navbar-nav flex-row align-items-center ms-auto">
+                                    <!-- Place this tag where you want the button to render. -->
+                                    <li class="nav-item lh-1 me-3 welcome-text">
+                                        <span>
+                                            <ui:outputText value="{!v.userName}" />
+                                        </span>
+                                    </li>
+                                </ul>
+                                <!-- Search -->
+                                <div class=" hamburguesa navbar-nav align-items-center">
+                                    <div id="barMenu" onclick="{! c.showMenu }" style=" top:0;left:0;">
+                                        <div style="width: 30px;height: 3px;background-color: black;margin: 6px 0;">
+                                        </div>
+                                        <div style="width: 30px;height: 3px;background-color: black;margin: 6px 0;">
+                                        </div>
+                                        <div style="width: 30px;height: 3px;background-color: black;margin: 6px 0;">
+                                        </div>
+                                    </div>
+                                    <div class="nav-item d-flex align-items-center"></div>
+                                </div>
+                            </div>
+                        </nav>
+                        <!-- / Navbar -->
+                        <!-- Content wrapper -->
+                        <div class="content-wrapper">
+                            <!-- Content -->
+                            <div class="container-xxl flex-grow-1 container-p-y">
+                                <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                                    <!-- Search -->
+                                    <div class=" navbar-nav align-items-center">
+                                        <h4 class="fw-bold py-3 mb-4 title-principal">Citas de taller.</h4>
+                                    </div>
+                                    <!-- /Search -->
+                                    <div class="navbar-nav  ms-auto ">
+                                        <button class="btn cambiarMarca  btn-primary btn-block"
+                                            onclick="{! c.mostrarCambiarMarca }"> Cambiar marca </button>
+                                    </div>
+                                </div>
+
+                                <div class="slds-m-around_xx-large">
+                                    <aura:if isTrue="{!v.isModalChangeMarca}">
+
+                                        <!-- Modal/Popup Box starts here-->
+                                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+                                            aria-modal="true" aria-describedby="modal-content-id-1"
+                                            class="slds-modal slds-fade-in-open">
+                                            <div class="slds-modal__container">
+                                                <!-- Modal/Popup Box Header Starts here-->
+                                                <header class="slds-modal__header">
+                                                    <div id="creandocita1_">
+                                                        <span class="citation-message"> Estas en {!v.marcaSelected}
+                                                        </span> <br />
+                                                        <div class="cambio-marca">
+                                                            <b>¿Quieres cambiar?: </b>
+                                                            <lightning:combobox class="form-control" id="checkMarcas"
+                                                                name="general" placeholder="Marcas"
+                                                                options="{! v.marcasPagina }"
+                                                                onchange="{! c.handleOnChangeSelectedMarca }" />
+                                                            <br />
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="creandocita2_" style="padding-top:2px">
+                                                        <lightning:button variant="neutral" label="Volver"
+                                                            title="Volver" onclick="{! c.cerrarCambiarMarca }" />
+
+                                                        <lightning:button variant="brand"
+                                                            label="Presiona para confirmar"
+                                                            title="Presiona para confirmar"
+                                                            onclick="{! c.handleAceptarMarca }" />
+                                                    </div>
+
+                                                </header>
+
+                                            </div>
+                                        </section>
+                                        <div class="slds-backdrop slds-backdrop_open"></div>
+                                    </aura:if>
+                                </div>
+
+
+
+                                <aura:if isTrue="{!v.isModalMinutes}">
+                                    <div class="slds-m-around_xx-large">
+                                        <!-- Modal/Popup Box starts here-->
+                                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+                                            aria-modal="true" aria-describedby="modal-content-id-1"
+                                            class="slds-modal slds-fade-in-open">
+                                            <div class="slds-modal__container">
+                                                <!-- Modal/Popup Box Header Starts here-->
+                                                <header class="slds-modal__header">
+                                                    <div id="creandocita1_" style="margin: 0 auto">
+                                                        <span class="citation-message"> Tiene 3 minutos para elegir.
+                                                        </span> <br />
+                                                    </div>
+                                                    <br />
+                                                    <div id="creandocita2_" style="padding-top:2px">
+                                                        <lightning:button variant="neutral" label="Volver"
+                                                            title="Volver" onclick="{! c.cerrarAceptaMinutes }" />
+                                                        <lightning:button variant="brand"
+                                                            label="Presiona para confirmar"
+                                                            title="Presiona para confirmar"
+                                                            onclick="{! c.handleAceptaMinutes }" />
+                                                    </div>
+
+                                                </header>
+
+                                            </div>
+                                        </section>
+                                        <div class="slds-backdrop slds-backdrop_open"></div>
+                                    </div>
+                                </aura:if>
+
+
+                                <div class="slds-m-around_xx-large">
+                                    <aura:if isTrue="{!v.isModalOtro}">
+
+                                        <!-- Modal/Popup Box starts here-->
+                                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+                                            aria-modal="true" aria-describedby="modal-content-id-1"
+                                            class="slds-modal slds-fade-in-open">
+                                            <div class="slds-modal__container">
+                                                <!-- Modal/Popup Box Header Starts here-->
+                                                <header class="slds-modal__header">
+                                                    <div id="creandocita1_">
+                                                        <span class="citation-message"> Otro cliente esta viendo este
+                                                            horario, por favor seleccione otro. </span> <br />
+                                                    </div>
+                                                    <br />
+                                                    <br />
+                                                    <div id="creandocita2_" style="padding-top:2px">
+                                                        <lightning:button variant="neutral" label="Volver"
+                                                            title="Volver" onclick="{! c.cerrarModalOtro }" />
+                                                    </div>
+
+                                                </header>
+
+                                            </div>
+                                        </section>
+                                        <div class="slds-backdrop slds-backdrop_open"></div>
+                                    </aura:if>
+                                </div>
+
+                                <div class="slds-m-around_xx-large">
+                                    <aura:if isTrue="{!v.isModalOffMinutes}">
+
+                                        <!-- Modal/Popup Box starts here-->
+                                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01"
+                                            aria-modal="true" aria-describedby="modal-content-id-1"
+                                            class="slds-modal slds-fade-in-open">
+                                            <div class="slds-modal__container">
+                                                <!-- Modal/Popup Box Header Starts here-->
+                                                <header class="slds-modal__header">
+                                                    <div id="creandocita1_">
+                                                        <span class="citation-message"> Tiempo agotado. </span> <br />
+                                                    </div>
+                                                    <br />
+                                                    <br />
+                                                    <div id="creandocita2_" style="padding-top:2px">
+                                                        <lightning:button variant="brand"
+                                                            label="Presiona para confirmar"
+                                                            title="Presiona para confirmar"
+                                                            onclick="{! c.handleAceptaOffMinutes }" />
+                                                    </div>
+
+                                                </header>
+
+                                            </div>
+                                        </section>
+                                        <div class="slds-backdrop slds-backdrop_open"></div>
+                                    </aura:if>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card-2 mb-4">
+                                            <div class="card-body">
+                                                <!--JD-->
+                                                <div id="calendarComponent" class="calendar-wrapper z-depth-2">
+                                                    <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+                                                        <div class="desktop"
+                                                            style="margin: auto; width: 100%; padding: 0px; box-shadow: 1px 1px 6px grey;">
+                                                            <img src="{!$Resource.encabezadoBMW}" alt="BMWHeader" />
+                                                        </div>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+                                                        <div class="desktop"
+                                                            style="margin: auto; width: 100%; padding: 0px; box-shadow: 1px 1px 6px grey;">
+                                                            <img src="{!$Resource.encabezadoMini}" alt="BMWHeader" />
+                                                        </div>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+                                                        <div class="desktop"
+                                                            style="margin: auto; width: 100%; padding: 0px; box-shadow: 1px 1px 6px grey;">
+                                                            <img src="{!$Resource.encabezadoMotos}" alt="BMWHeader" />
+                                                        </div>
+                                                    </aura:if>
+
+                                                    <div class="testJD" id="testJD" style="display:none; ">
+
+                                                        <div class="slds-m-around_xx-large">
+                                                            <aura:if isTrue="{!v.isModalOpenConfirmation}">
+                                                                <!-- Modal/Popup Box starts here-->
+                                                                <section role="dialog" tabindex="-1"
+                                                                    aria-labelledby="modal-heading-01" aria-modal="true"
+                                                                    aria-describedby="modal-content-id-1"
+                                                                    class="slds-modal slds-fade-in-open">
+                                                                    <div class="slds-modal__container">
+                                                                        <!-- Modal/Popup Box Header Starts here-->
+                                                                        <header class="slds-modal__header">
+
+                                                                            <lightning:button variant="neutral"
+                                                                                label="Volver" title="Volver"
+                                                                                onclick="{! c.closeModel }" />
+                                                                            <lightning:button class="cancelButton"
+                                                                                variant="destructive"
+                                                                                label="Cancelar cita"
+                                                                                title="Cancelar cita"
+                                                                                onclick="{! c.cancelCurrentCitation }" />
+
+                                                                        </header>
+
+                                                                    </div>
+                                                                </section>
+                                                                <div class="slds-backdrop slds-backdrop_open"></div>
+                                                            </aura:if>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <!-- Modals -->
+
+                                                    <div class="slds-m-around_xx-large">
+                                                        <aura:if isTrue="{!v.isModalCitaMovil}">
+
+                                                            <!-- Modal/Popup Box starts here-->
+                                                            <section role="dialog" tabindex="-1"
+                                                                aria-labelledby="modal-heading-01" aria-modal="true"
+                                                                aria-describedby="modal-content-id-1"
+                                                                class="slds-modal slds-fade-in-open">
+                                                                <div class="slds-modal__container popup-container">
+                                                                    <!-- Modal/Popup Box Header Starts here-->
+                                                                    <header class="slds-modal__header popup-header">
+                                                                        <div class="popup1_" id="creandocita1_"
+                                                                            style="">
+                                                                            <button
+                                                                                style="top:0 !important;width:17px !important;right:1px !important;border: none !important; "
+                                                                                class="slds-button slds-button_icon slds-modal__close mybuttonx"
+                                                                                title="Close"
+                                                                                onclick="{!c.closeModalConfirmacion}">
+                                                                                X
+                                                                            </button>
+
+                                                                            <span class="citation-message"> Se ha
+                                                                                solicitado una cita en </span>
+
+                                                                            <div class="popup-test">
+                                                                                <p><b>Lugar: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.serviceCenterSelectedName}" />
+                                                                                </p>
+                                                                                <p><b>Servicio: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.serviceSelected}" />
+                                                                                </p>
+
+                                                                            </div>
+
+                                                                            <span class="citation-message"> Datos
+                                                                                personales: </span>
+                                                                            <div class="popup-test">
+                                                                                <p><b>Nombre: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.userName}" />
+                                                                                </p>
+                                                                                <p><b>Correo electrónico: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.userEmail}" />
+                                                                                </p>
+                                                                                <p><b>Teléfono: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.userPhone}" />
+                                                                                </p>
+                                                                            </div>
+
+                                                                            <br />
+
+                                                                            <p>Una vez su cita haya sido formalizada por
+                                                                                un asesor le estará llegando el correo
+                                                                                de confirmación con la fecha y hora
+                                                                                acordada bajo la disponibilidad de la
+                                                                                móvil.</p>
+
+                                                                            <br />
+
+                                                                            <div id="creandocita2_"
+                                                                                style="padding-top:2px">
+                                                                                <lightning:button variant="neutral"
+                                                                                    label="Volver" title="Volver"
+                                                                                    onclick="{! c.closeModelConfirmation }" />
+                                                                                <aura:if isTrue="{!v.tipoCita != true}">
+                                                                                    <lightning:button variant="brand"
+                                                                                        label="Presiona para confirmar"
+                                                                                        title="Presiona para confirmar"
+                                                                                        onclick="{! c.reload }" />
+                                                                                </aura:if>
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    </header>
+
+                                                                </div>
+                                                            </section>
+                                                            <div class="slds-backdrop slds-backdrop_open"></div>
+                                                        </aura:if>
+                                                    </div>
+
+
+
+
+
+                                                    <div class="slds-m-around_xx-large">
+                                                        <aura:if isTrue="{!v.isModalOpenConfirmation}">
+
+                                                            <!-- Modal/Popup Box starts here-->
+                                                            <section role="dialog" tabindex="-1"
+                                                                aria-labelledby="modal-heading-01" aria-modal="true"
+                                                                aria-describedby="modal-content-id-1"
+                                                                class="slds-modal slds-fade-in-open">
+                                                                <div class="slds-modal__container popup-container">
+                                                                    <!-- Modal/Popup Box Header Starts here-->
+                                                                    <header class="slds-modal__header popup-header">
+                                                                        <div class="popup1_" id="creandocita1_"
+                                                                            style="">
+                                                                            <button
+                                                                                style="top:0 !important;width:17px !important;right:1px !important;border: none !important; "
+                                                                                class="slds-button slds-button_icon slds-modal__close mybuttonx"
+                                                                                title="Close"
+                                                                                onclick="{!c.closeModalConfirmacion}">
+                                                                                X
+                                                                            </button>
+
+                                                                            <span class="citation-message"> Detalles de
+                                                                                tu próxima cita </span>
+
+                                                                            <div class="popup-test">
+                                                                                <p><b>Lugar: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.serviceCenterSelectedName}" />
+                                                                                </p>
+                                                                                <p><b>Servicio: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.serviceSelected}" />
+                                                                                </p>
+                                                                                <p><b>Fecha y hora: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.startDateHourEsp + ' ' + v.selectedHour}" />
+                                                                                </p>
+                                                                                <p><b>Vehículo: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.selectedPlaca}" />
+                                                                                </p>
+                                                                            </div>
+
+                                                                            <span class="citation-message"> Datos
+                                                                                personales: </span>
+                                                                            <div class="popup-test">
+                                                                                <p><b>Nombre: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.userName}" />
+                                                                                </p>
+                                                                                <p><b>Correo electrónico: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.userEmail}" />
+                                                                                </p>
+                                                                                <p><b>Teléfono: </b>
+                                                                                    <ui:outputText
+                                                                                        value="{!v.userPhone}" />
+                                                                                </p>
+                                                                            </div>
+
+                                                                            <br />
+
+                                                                            <p>En caso de que la información sobre tus
+                                                                                datos personales no sea correcta, por
+                                                                                favor actualízalos por medio del
+                                                                                siguiente enlace:</p> <br /> <a
+                                                                                href="/">Próximamente</a>
+
+                                                                            <br />
+
+                                                                            <aura:if isTrue="{!v.tipoCita }">
+                                                                                <div class="mobile popup-Form"
+                                                                                    id="containerForm"
+                                                                                    style="max-height:300px;margin:2%;overflow-y: scroll;">
+
+                                                                                    <div id="containerFormulario">
+                                                                                        <label style="font-size:20px"
+                                                                                            for="lname">Por favor
+                                                                                            rellene el
+                                                                                            formulario:</label>
+
+                                                                                        <aura:iteration
+                                                                                            items="{!v.inputCount}"
+                                                                                            var="questionIndex">
+
+                                                                                            <lightning:input
+                                                                                                aura:id="{!questionIndex.Numero_de_pregunta__c}"
+                                                                                                type="text"
+                                                                                                name="{!questionIndex.Numero_de_pregunta__c}"
+                                                                                                messageWhenValueMissing="Debes completar este campo para continuar"
+                                                                                                class="form-control-custom form-control desktop-form-control"
+                                                                                                label="{! questionIndex.Pregunta__c + ':' }"
+                                                                                                value="" required="true"
+                                                                                                placeholder="Respuesta"
+                                                                                                onchange="{! c.handleOnChange }" />
+                                                                                        </aura:iteration>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </aura:if>
+
+                                                                            <!-- Prueba mobile -->
+                                                                            <!-- <div class="mobile" id="containerForm" style="max-height:300px;margin:2%;overflow-y: scroll;">
+                                                                            
+                                                                            <div id="containerFormulario">
+                                                                                <label style="font-size:17px" for="lname">Por favor rellene el formulario:</label>
+                                                                        
+                                                                                <aura:iteration items="{!v.inputCount}" var="questionIndex">
+                                                                        
+                                                                                    <lightning:input aura:id="{!questionIndex.Numero_de_pregunta__c}" type="text"
+                                                                                        name="{!questionIndex.Numero_de_pregunta__c}"
+                                                                                        messageWhenValueMissing="Debes completar este campo para continuar"
+                                                                                        class="form-control-custom form-control desktop-form-control" label="{! questionIndex.Pregunta__c + ':' }" value=""
+                                                                                        required="true" placeholder="Respuesta" onchange="{! c.handleOnChange }" />
+                                                                                </aura:iteration>
+                                                                            </div>
+                                                                        </div> -->
+
+                                                                            <div id="countdown"
+                                                                                style="padding-block:10px;width: 100px;font-size: 14px;color:red;border-style: solid;border-color: red;">
+                                                                            </div>
+                                                                            <br />
+
+                                                                            <div id="creandocita2_"
+                                                                                style="padding-top:2px">
+                                                                                <lightning:button variant="neutral"
+                                                                                    label="Volver" title="Volver"
+                                                                                    onclick="{! c.closeModelConfirmation }" />
+                                                                                <aura:if isTrue="{!v.tipoCita != true}">
+                                                                                    <lightning:button variant="brand"
+                                                                                        label="Presiona para confirmar"
+                                                                                        title="Presiona para confirmar"
+                                                                                        onclick="{! c.myTest }" />
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!v.tipoCita }">
+                                                                                    <lightning:button aura:id="myButton"
+                                                                                        disabled="true" variant="brand"
+                                                                                        label="Presiona para confirmar"
+                                                                                        title="Presiona para confirmar"
+                                                                                        onclick="{! c.myTest }" />
+                                                                                </aura:if>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <aura:if isTrue="{!v.tipoCita }">
+                                                                            <div class="desktop popupForm"
+                                                                                id="containerForm"
+                                                                                style="max-height:300px;margin:2%">
+
+                                                                                <div id="containerFormulario">
+                                                                                    <label style="font-size:20px"
+                                                                                        for="lname">Por favor rellene el
+                                                                                        formulario:</label>
+
+                                                                                    <aura:iteration
+                                                                                        items="{!v.inputCount}"
+                                                                                        var="questionIndex">
+
+                                                                                        <lightning:input
+                                                                                            aura:id="{!questionIndex.Numero_de_pregunta__c}"
+                                                                                            type="text"
+                                                                                            name="{!questionIndex.Numero_de_pregunta__c}"
+                                                                                            messageWhenValueMissing="Debes completar este campo para continuar"
+                                                                                            class="form-control-custom form-control desktop-form-control"
+                                                                                            label="{! questionIndex.Pregunta__c + ':' }"
+                                                                                            value="" required="true"
+                                                                                            placeholder="Respuesta"
+                                                                                            onchange="{! c.handleOnChange }" />
+                                                                                    </aura:iteration>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </aura:if>
+
+                                                                        <!-- Prueba desktop -->
+                                                                        <!-- <div class="desktop popupForm" id="containerForm" style="max-height:300px;margin:2%">
+                                                                    
+                                                                        <div id="containerFormulario">
+                                                                            <label style="font-size:23px" for="lname">Por favor rellene el formulario:</label>
+                                                                
+                                                                            <aura:iteration items="{!v.inputCount}" var="questionIndex">
+                                                                
+                                                                                <lightning:input aura:id="{!questionIndex.Numero_de_pregunta__c}" type="text"
+                                                                                    name="{!questionIndex.Numero_de_pregunta__c}"
+                                                                                    messageWhenValueMissing="Debes completar este campo para continuar"
+                                                                                    class="form-control-custom form-control desktop-form-control" label="{! questionIndex.Pregunta__c + ':' }" value=""
+                                                                                    required="true" placeholder="Respuesta" onchange="{! c.handleOnChange }" 
+                                                                                />
+                                                                            </aura:iteration>
+                                                                        </div>
+                                                                    </div> -->
+
+                                                                    </header>
+
+                                                                </div>
+                                                            </section>
+                                                            <div class="slds-backdrop slds-backdrop_open"></div>
+                                                        </aura:if>
+                                                    </div>
+
+
+
+
+                                                    <div class="slds-m-around_xx-large">
+                                                        <aura:if isTrue="{!v.isModalLibreDeCitas}">
+
+                                                            <!-- Modal/Popup Box starts here-->
+                                                            <section role="dialog" tabindex="-1"
+                                                                aria-labelledby="modal-heading-01" aria-modal="true"
+                                                                aria-describedby="modal-content-id-1"
+                                                                class="slds-modal slds-fade-in-open">
+                                                                <div class="slds-modal__container">
+                                                                    <!-- Modal/Popup Box Header Starts here-->
+                                                                    <header class="slds-modal__header">
+
+                                                                        <div id="">
+                                                                            <button
+                                                                                style="top:0 !important;right:-0.3rem !important "
+                                                                                class="slds-button slds-button_icon slds-modal__close"
+                                                                                title="Close"
+                                                                                onclick="{!c.closeModelNoCita}">
+                                                                                X
+                                                                            </button>
+                                                                            <!--title="Tu cita ha sido creada." <span class="citation-message"> Tu cita ha sido creada. </span> -->
+                                                                            <br />
+                                                                            <p><b>. </b>
+
+                                                                            </p>
+
+                                                                            <p>
+                                                                                Este espacio esta ocupado por otro
+                                                                                medio, por favor refresque la pagina
+                                                                                para obtener las fechas mas recientes.​
+                                                                            </p>
+
+                                                                            <br />
+                                                                        </div>
+                                                                        <br />
+                                                                        <div id="creandocita2_" style="padding-top:2px">
+                                                                            <lightning:button variant="brand"
+                                                                                label="Confirmar" title="Confirmar"
+                                                                                onclick="{!c.closeModelNoCita}" />
+                                                                        </div>
+
+                                                                    </header>
+
+                                                                </div>
+                                                            </section>
+                                                            <div class="slds-backdrop slds-backdrop_open"></div>
+                                                        </aura:if>
+                                                    </div>
+
+
+
+                                                    <aura:if isTrue="{!v.isModalOpenFinalConfirmation}">
+                                                        <div class="slds-m-around_xx-large">
+                                                            <!-- Modal/Popup Box starts here-->
+                                                            <section role="dialog" tabindex="-1"
+                                                                aria-labelledby="modal-heading-01" aria-modal="true"
+                                                                aria-describedby="modal-content-id-1"
+                                                                class="slds-modal slds-fade-in-open">
+                                                                <div class="slds-modal__container">
+                                                                    <!-- Modal/Popup Box Header Starts here-->
+                                                                    <header class="slds-modal__header">
+
+                                                                        <div id="creandocita1_ popup1_">
+                                                                            <button
+                                                                                style="top:0 !important;width:17px !important;right:1px !important;border: none !important;border-radius: 50%; "
+                                                                                class="slds-button slds-button_icon slds-modal__close mybuttonx"
+                                                                                title="Close" onclick="{!c.reload}">
+                                                                                X
+                                                                            </button>
+                                                                            <ui:message class="citation-message-Confirm"
+                                                                                severity="" closable="false"> <span
+                                                                                    style="font-size: 22px;padding-top: 10px;padding-bottom: 10px;">
+                                                                                    Su cita en nuestro servicio taller
+                                                                                    ha sido creada. </span></ui:message>
+                                                                            <!--title="Tu cita ha sido creada." <span class="citation-message"> Tu cita ha sido creada. </span> -->
+                                                                            <br />
+                                                                            <p><b>Lugar: </b>
+                                                                                <ui:outputText
+                                                                                    value="{!v.serviceCenterSelectedName}" />
+                                                                            </p>
+                                                                            <p><b>Servicio: </b>
+                                                                                <ui:outputText
+                                                                                    value="{!v.serviceSelected}" />
+                                                                            </p>
+                                                                            <p><b>Fecha y hora: </b>
+                                                                                <ui:outputText
+                                                                                    value="{!v.startDateHourEsp + ' ' + v.selectedHour}" />
+                                                                            </p>
+                                                                            <p>
+                                                                                Hemos enviado a su email la confirmación
+                                                                                de su cita.​
+                                                                            </p>
+                                                                            <br />
+                                                                        </div>
+                                                                        <br />
+                                                                        <div id="creandocita2_" style="padding-top:2px">
+
+                                                                            <lightning:button variant="neutral"
+                                                                                label="Reservar nueva cita"
+                                                                                title="Reservar nueva cita"
+                                                                                onclick="{! c.reload }" />
+                                                                            <lightning:button variant="brand"
+                                                                                label="Agregar a calendario"
+                                                                                title="Agregar a calendario"
+                                                                                onclick="{!c.openUrl}" />
+                                                                        </div>
+
+                                                                    </header>
+
+                                                                </div>
+                                                            </section>
+                                                            <div class="slds-backdrop slds-backdrop_open"></div>
+
+
+                                                            <!-- Modal/Popup Box starts here
+                                                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                                                            <div class="slds-modal__container">
+                                                                Modal/Popup Box Header Starts here
+                                                                <header class="slds-modal__header">
+                                                                    
+                                                                    <div id="creandocita3_" style="padding-top:2px">
+                                                                        <ui:message title="Tu cita ha sido creada." severity="confirm" closable="false">Tu cita ha sido creada.</ui:message>
+                                                                        <p><b>Lugar:  </b>
+                                                                            <ui:outputText value="{!v.serviceCenterSelectedName}" />
+                                                                        </p>
+                                                                        <p><b>Servicio:  </b>
+                                                                            <ui:outputText value="{!v.serviceSelected}" />
+                                                                        </p>
+                                                                        <p><b>Fecha y hora:  </b>
+                                                                            <ui:outputText value="{!v.selectedDate + ' '+ v.selectedHour}" />
+                                                                        </p>
+                                                                        <ui:outputText value="{!v.myResult}" />
+                                                                        <lightning:button variant="brand" label="Reservar nueva cita" title="Reservar nueva cita" onclick="{! c.reload }" />
+                                                                    </div>
+                                                                </header>
+
+                                                            </div>
+                                                        </section>
+                                                        <div class="slds-backdrop slds-backdrop_open"></div> -->
+                                                        </div>
+                                                    </aura:if>
+
+
+
+                                                    <!-- Modals -->
+
+                                                    <div class="container">
+                                                        <div class="row row-header-custom" id="verificarSection">
+
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <lightning:combobox class="start-select"
+                                                                        label="Seleccione el servicio: "
+                                                                        aura:id="options" name="options"
+                                                                        placeholder="{!v.Servicio}"
+                                                                        options="{! v.optionsService }"
+                                                                        onchange="{!c.handleOnChangeSelectedService}"
+                                                                        value="{!v.selectedValue}">
+
+                                                                    </lightning:combobox>
+
+                                                                </div>
+                                                            </div>
+                                                            <!-- <div class="row"> -->
+                                                            <!--<aura:if isTrue="{!v.serviceSelected == 'Mecánica Rápida'}">-->
+                                                            <div class="additionalServices" id="additionalServices"
+                                                                style="display:none">
+                                                                <div class="sidebar-events" id="additionalTableService"
+                                                                    style="padding: 0px 0px 0px 0px;">
+                                                                </div>
+                                                                <!-- <ui:inputText class="paddingText"  label="Desea reportar un fallo" value="{!v.additionalComments}" updateOn="change" change="{!c.onChangeComment}" /> -->
+                                                                <div class="row additionalServices"
+                                                                    id="seleccionVehiculo">
+                                                                    <div class="col-md-12" style="margin:0;">
+                                                                        <lightning:combobox class="form-control"
+                                                                            name="ownVehicule"
+                                                                            label="Desea reportar un fallo: "
+                                                                            placeholder="Desea reportar un fallo"
+                                                                            options="{!v.optionsErrors}"
+                                                                            id="userOptions"
+                                                                            onchange="{!c.onChangeComment}" />
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <!--</aura:if>-->
+                                                            <div class="errorMessage" id="errorMessage"
+                                                                style="display:none;">
+                                                                <div
+                                                                    style="background-color: #f8d7da;color: #721c24;font-size: 20px;border-color: #f5c6cb;border-radius: 4px; padding: 20px; border: 1px solid transparent;">
+                                                                    Para continuar, debes de seleccionar al menos un
+                                                                    servicio o agregar un comentario.</div>
+
+                                                                <!-- </div> -->
+                                                                <br />
+
+                                                            </div>
+                                                            <div class="col-md-6" id="vehicleSelection"
+                                                                style="display:none">
+                                                                <!-- <lightning:combobox class="form-control" name="vehicle" label="Seleccione el tipo de vehículo: " placeholder="Tipo Vehículo" options="{!v.optionsVehicule}" onchange="{! c.handleOnChangeVehiculeSelection }" /> -->
+                                                            </div>
+                                                            <div class="row additionalServices" id="seleccionVehiculo">
+
+                                                                <div class="col-md-12" id="ownVehicule"
+                                                                    style="display:none;margin:0;">
+                                                                    <aura:if isTrue="{!v.hasNoAssets}">
+                                                                        <ui:message title="Error." severity="Error"
+                                                                            closable="false">No tienes vehículo asociado
+                                                                            en esta marca, click <a
+                                                                                onclick="{! c.mostrarCambiarMarca }">aquí</a>
+                                                                            para cambiar de marca.</ui:message>
+                                                                        <aura:set attribute="else">
+                                                                            <aura:if
+                                                                                isTrue="{!v.vehicleSelected=='Vehículo Propio'}">
+                                                                                <lightning:combobox class="form-control"
+                                                                                    name="ownVehicule"
+                                                                                    label="Seleccione vehículo: "
+                                                                                    placeholder="*En caso que su vehículo no esta asignado a su perfil por favor diríjase a Asistencia en línea"
+                                                                                    options="{!v.userAssets}"
+                                                                                    id="userAssets"
+                                                                                    onchange="{!c.handleOnOwnChange}"
+                                                                                    onclick="{!c.handleKMVisivility}" />
+                                                                            </aura:if>
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                                </div>
+
+
+                                                                <div class="col-md-6" id="vehiculeId"
+                                                                    style="display:none; margin:0;">
+                                                                    <lightning:input
+                                                                        class="form-control-custom form-control"
+                                                                        label="Ingrese la placa del vehículo "
+                                                                        value="{!v.vehicleId}" placeholder="Placa"
+                                                                        onchange="{! c.handleOnChangeVehiculeId }" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="contenedorTablaFea"
+                                                                style="margin-bottom: 20px;">
+                                                                <div id="vehicleInfo"
+                                                                    class="row additionalServices tablaInteriorInfo"
+                                                                    style="display:none;margin-left: 12px;width: 94%;margin-bottom:20px !important;">
+                                                                    <p class="textoInformacion"
+                                                                        style="font-size: 1.6rem">Información de su
+                                                                        vehículo:</p>
+                                                                    <br />
+                                                                    <table id="vehicleInfoTable"
+                                                                        class="textoInformacion" style="font-size:18px">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th style="width: 20%;">Marca</th>
+                                                                                <th style="width: 20%;">Modelo</th>
+                                                                                <th style="width: 20%;">Año</th>
+                                                                                <th style="width: 20%;">Color</th>
+                                                                                <th style="width: 20%;">Placa</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <div id="errorExistingCitation" style="display:none">
+                                                                <div
+                                                                    style="background-color: #f8d7da;color: #721c24;font-size: 20px;border-color: #f5c6cb;border-radius: 4px; padding: 15px; border: 1px solid transparent;">
+                                                                    No puedes continuar debido a que tu vehículo actual
+                                                                    ya tiene una cita asignada.</div>
+
+                                                            </div>
+                                                            <br></br>
+
+                                                            <aura:if
+                                                                isTrue="{! v.vehicleSelected =='Vehículo Propio' || v.vehicleSelected =='Vehículo de alguien más' }">
+
+                                                                <div class="row">
+                                                                    <div class="col-md-12" id="estimatedKM"
+                                                                        style="margin:0;display:none">
+
+                                                                        <lightning:input aura:id="inputKm" type="number"
+                                                                            messageWhenBadInput="Debes ingresar únicamente valores numéricos"
+                                                                            messageWhenValueMissing="Debes completar este campo para continuar"
+                                                                            class="form-control-custom form-control paddingText"
+                                                                            label="Ingrese el km de su vehículo:"
+                                                                            value="{!v.estimatedKM}"
+                                                                            placeholder="Ingrese el km de su vehículo"
+                                                                            onchange="{! c.handleOnChangeEstimatedKM }" />
+                                                                    </div>
+                                                                </div>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.estimatedKM != ''}">
+
+                                                                <div class="col-md-4" id="verifyCalendarButton">
+                                                                    <lightning:button variant="brand"
+                                                                        label="Verificar espacios" title="Brand action"
+                                                                        onclick="{! c.handleVerifyCalendar}"
+                                                                        class="btn btn-primary me-1 form-control" />
+                                                                </div>
+
+                                                            </aura:if>
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="alertExistingCitation"
+                                                        style="display:none; padding:0 50px 40px;">
+                                                        <!-- <p>Estimado(a):</p> <p>Usted ya cuenta con una reservación:</p> <p> Vehículo placa: <b> <ui:outputText value="{!v.eventCarId}" /> </b> </p> <p> Fecha y Hora: <b> <ui:outputText value="{!v.eventStartDate}" /> </b> </p> <p> Ubicación y tipo de servicio: <b> <ui:outputText value="{!v.eventLocation}" /> </b> </p> <lightning:button class="cancelButton" variant="destructive" label="Cancelar cita" title="Cancelar cita" onclick="{! c.cancelCurrentCitation }" />-->
+                                                    </div>
+
+                                                    <!-- Modals here-->
+
+                                                    <div class="slds-m-around_xx-large">
+                                                        <aura:if isTrue="{!v.isModalNewCase}">
+
+                                                            <!-- Modal/Popup Box starts here-->
+                                                            <section role="dialog" tabindex="-1"
+                                                                aria-labelledby="modal-heading-01" aria-modal="true"
+                                                                aria-describedby="modal-content-id-1"
+                                                                class="slds-modal slds-fade-in-open">
+                                                                <div class="slds-modal__container">
+                                                                    <!-- Modal/Popup Box Header Starts here-->
+                                                                    <header class="slds-modal__header">
+
+                                                                        <div id="">
+                                                                            <button
+                                                                                style="top:0 !important;right:-0.3rem !important "
+                                                                                class="slds-button slds-button_icon slds-modal__close"
+                                                                                title="Close"
+                                                                                onclick="{!c.closeModelCase}">
+                                                                                X
+                                                                            </button>
+                                                                            <!--title="Tu cita ha sido creada." <span class="citation-message"> Tu cita ha sido creada. </span> -->
+                                                                            <br />
+                                                                            <p><b>. </b>
+
+                                                                            </p>
+
+                                                                            <lightning:input type="textarea"
+                                                                                label="¿En que podemos ayudarle?"
+                                                                                class="slds-textarea"
+                                                                                value="{!v.descripcionCase}" />
+
+                                                                            <br />
+                                                                        </div>
+                                                                        <br />
+                                                                        <div id="creandocita2_" style="padding-top:2px">
+                                                                            <lightning:button variant="brand"
+                                                                                label="Confirmar" title="Confirmar"
+                                                                                onclick="{!c.createCase}" />
+                                                                        </div>
+
+                                                                    </header>
+
+                                                                </div>
+                                                            </section>
+                                                            <div class="slds-backdrop slds-backdrop_open"></div>
+                                                        </aura:if>
+                                                    </div>
+
+                                                    <div class="slds-m-around_xx-large">
+                                                        <aura:if isTrue="{!v.isModalOpenSoporte}">
+
+                                                            <!-- Modal/Popup Box starts here-->
+                                                            <section role="dialog" tabindex="-1"
+                                                                aria-labelledby="modal-heading-01" aria-modal="true"
+                                                                aria-describedby="modal-content-id-1"
+                                                                class="slds-modal slds-fade-in-open">
+                                                                <div class="slds-modal__container">
+                                                                    <!-- Modal/Popup Box Header Starts here-->
+                                                                    <header class="slds-modal__header">
+
+                                                                        <div id="">
+                                                                            <button
+                                                                                style="top:0 !important;right:-0.3rem !important "
+                                                                                class="slds-button slds-button_icon slds-modal__close"
+                                                                                title="Close"
+                                                                                onclick="{!c.closeSoporte}">
+                                                                                X
+                                                                            </button>
+                                                                            <!--title="Asistencia en línea." <span class="citation-message"> Tu cita ha sido creada. </span> -->
+                                                                            <br />
+                                                                            <span style="margin-top: 30px;"
+                                                                                class="citation-message"> Asistencia en
+                                                                                línea. </span>
+                                                                            <br />
+
+
+                                                                            <button type="button"
+                                                                                style="background-color: #25d366 !important; margin-top:15px"
+                                                                                class="btn btn-success"><a
+                                                                                    style="color:#ffffff !important;"
+                                                                                    href="https://api.whatsapp.com/send?phone=50687954888&amp;text=Soporte%20Modulo%20de%20Autogestión"
+                                                                                    target="_blank">WhatsApp</a></button>
+                                                                            <br />
+                                                                        </div>
+                                                                        <br />
+                                                                        <div id="creandocita2_" style="padding-top:2px">
+                                                                        </div>
+
+                                                                    </header>
+
+                                                                </div>
+                                                            </section>
+                                                            <div class="slds-backdrop slds-backdrop_open"></div>
+                                                        </aura:if>
+                                                    </div>
+
+
+                                                    <div class="slds-m-around_xx-large">
+                                                        <aura:if isTrue="{!v.isModalOpenExistingCitation}">
+
+                                                            <!-- Modal/Popup Box starts here-->
+                                                            <section role="dialog" tabindex="-1"
+                                                                aria-labelledby="modal-heading-01" aria-modal="true"
+                                                                aria-describedby="modal-content-id-1"
+                                                                class="slds-modal slds-fade-in-open">
+                                                                <div class="slds-modal__container">
+                                                                    <!-- Modal/Popup Box Header Starts here-->
+                                                                    <header class="slds-modal__header">
+                                                                        <lightning:buttonIcon iconName="utility:close"
+                                                                            onclick="{! c.closeModel }"
+                                                                            alternativeText="close"
+                                                                            variant="bare-inverse"
+                                                                            class="slds-modal__close" />
+
+                                                                        <!--Modal/Popup Box Body Starts here-->
+                                                                        <p class="p-mobile">Estimado(a):</p>
+                                                                        <p class="p-mobile-single">Usted ya cuenta con
+                                                                            una reservación:</p>
+                                                                        <p class="p-mobile-single">Vehículo placa: <b>
+                                                                                <ui:outputText
+                                                                                    value="{!v.eventCarId}" />
+                                                                            </b></p>
+                                                                        <p class="p-mobile-single">Fecha y Hora: <b>
+                                                                                <ui:outputText
+                                                                                    value="{!v.eventStartDate}" />
+                                                                            </b></p>
+                                                                        <p class="p-mobile-single">
+                                                                            Ubicación y tipo de servicio:
+                                                                            <b>
+                                                                                <ui:outputText
+                                                                                    value="{!v.eventLocation}" />
+                                                                            </b>
+                                                                        </p>
+                                                                        <br />
+                                                                        <br />
+                                                                        <lightning:button variant="neutral"
+                                                                            label="Volver" title="Volver"
+                                                                            onclick="{! c.closeModel }" />
+                                                                        <lightning:button class="cancelButton"
+                                                                            variant="destructive" label="Cancelar cita"
+                                                                            title="Cancelar cita"
+                                                                            onclick="{! c.cancelCurrentCitation }" />
+
+
+                                                                    </header>
+
+                                                                </div>
+                                                            </section>
+                                                            <div class="slds-backdrop slds-backdrop_open"></div>
+                                                        </aura:if>
+                                                    </div>
+
+                                                    <div class="slds-m-around_xx-large"
+                                                        id="confirmationOfCancelledCitation" style="display:none">
+
+
+                                                        <!-- Modal/Popup Box starts here-->
+                                                        <section role="dialog" tabindex="-1"
+                                                            aria-labelledby="modal-heading-01" aria-modal="true"
+                                                            aria-describedby="modal-content-id-1"
+                                                            class="slds-modal slds-fade-in-open">
+                                                            <div class="slds-modal__container">
+                                                                <!-- Modal/Popup Box Header Starts here-->
+                                                                <header class="slds-modal__header">
+
+                                                                    <div id="creandocita3_" class="cancel-appoinment">
+                                                                        <ui:message class="cancel-appoinment"
+                                                                            title="Tu cita ha sido cancelada."
+                                                                            severity="confirm" closable="false">Tu cita
+                                                                            ha sido cancelada correctamente.
+                                                                        </ui:message>
+
+                                                                        <lightning:button variant="brand"
+                                                                            label="Reservar nueva cita"
+                                                                            title="Reservar nueva cita"
+                                                                            onclick="{! c.reload }" />
+                                                                    </div>
+                                                                </header>
+
+                                                            </div>
+                                                        </section>
+                                                        <div class="slds-backdrop slds-backdrop_open"></div>
+
+                                                    </div>
+
+                                                    <div id="vehiculeIdSoonEvent"
+                                                        style="display:none; padding:0 50px 40px;">
+                                                        <p>Estimado(a):</p>
+                                                        <p>
+                                                            El vehículo seleccionado ya cuenta con una
+                                                            reservación.
+                                                        </p>
+                                                        <p>
+                                                            Por favor comuníquese con el dueño del vehículo o
+                                                            con el equipo de soporte.
+                                                        </p>
+                                                        <p><b>Soporte:</b> +(506) XXXX-XXXX</p>
+                                                    </div>
+
+                                                    <!-- Modals here | End of Modals-->
+                                                    <div class="centroDeServicio" id="centroDeServicio"
+                                                        style="display:none">
+                                                        <div class="header-text"
+                                                            style="margin-left: 74px;margin-bottom:15px">
+                                                            <label style="font-size: 1.6rem;color:#262626;">Seleccione
+                                                                Sucursal</label>
+                                                        </div>
+                                                        <br />
+                                                        <lightning:tabset onselect="{! c.handleChangeServiceCenter }"
+                                                            variant="scoped" selectedTabId="{!v.selTabId}"
+                                                            class="tabset">
+                                                            <aura:iteration items="{! v.tabs }" var="tab">
+                                                                <lightning:tab label="{! tab.label }" id="{! tab.id }">
+                                                                </lightning:tab>
+                                                            </aura:iteration>
+                                                        </lightning:tabset>
+                                                    </div>
+
+                                                    <!-- Modals here | End of Modals-->
+                                                    <div class="centroDeServicio" id="centroDeServicio2"
+                                                        style="display:none">
+                                                        <div class="header-text"
+                                                            style="margin-left: 74px;margin-bottom:15px">
+                                                            <label style="font-size: 1.6rem;color:#262626;">Seleccione
+                                                                Sucursal</label>
+                                                        </div>
+                                                        <br />
+                                                        <lightning:tabset 
+                                                            variant="scoped" selectedTabId="{!v.selTabId}"
+                                                            class="tabset">
+                                                            <aura:iteration items="{! v.tabs }" var="tab">
+                                                                <lightning:tab label="{! tab.label }" id="{! tab.id }">
+                                                                </lightning:tab>
+                                                            </aura:iteration>
+                                                        </lightning:tabset>
+                                                    </div>
+
+
+                                                    <div class="slds-m-around_xx-large" id="terminosYcondiciones"
+                                                        style="display:none">
+
+                                                        <!-- Modal/Popup Box starts here-->
+                                                        <section role="dialog" tabindex="-1"
+                                                            aria-labelledby="modal-heading-01" aria-modal="true"
+                                                            aria-describedby="modal-content-id-1"
+                                                            class="slds-modal slds-fade-in-open">
+                                                            <div class="slds-modal__container">
+                                                                <!-- Modal/Popup Box Header Starts here-->
+                                                                <header class="slds-modal__header">
+
+                                                                    <div class="terms-container">
+                                                                        <div style="height: 300px; overflow: scroll;">
+                                                                            <p><strong>POLITICA DE PRIVACIDAD DE LA INFORMACION
+                                                                              </strong></p>
+                                                    
+                                                                            <p><strong>CONSENTIMIENTO INFORMADO
+                                                                              </strong></p>
+                                                    
+                                                                            <p>Bavarian Motors Costa Rica S.A. respetuosa de la Ley 8968 “Ley de Protección de la Persona
+                                                                              frente al tratamiento de sus
+                                                                              Datos Personales”, y su reglamento, previo a incluir su información personal a nuestra Base de
+                                                                              Datos, y en cumplimiento
+                                                                              del artículo cinco de la citada norma, le solicita emitir formalmente su Consentimiento
+                                                                              Informado, para lo cual hace de su
+                                                                              conocimiento la siguiente información de interés: <strong>Existencia de una Base de
+                                                                                Datos</strong>: Se hace del
+                                                                              formal conocimiento que la
+                                                                              información personal y de contacto que los clientes nos brinden a través de los diferentes
+                                                                              medios de captación, estarán
+                                                                              siendo almacenados en la Base de Datos identificada como “Clientes”, cuyo responsable es
+                                                                              Bavarian Motors Costa Rica S.A.
+                                                                              A través de medios digitales o físicos, el responsable de la base de datos estará solicitando
+                                                                              a los clientes brinden información
+                                                                              personal, de contacto y/o relacionada con el producto que desee adquirir, esta información
+                                                                              podrá ser opcional o de carácter
+                                                                              obligatorio para cumplir con los fines de la relación comercial y de servicio que exista entre
+                                                                              Bavarian Motors Costa Rica S.A
+                                                                              y el cliente. La información personal que nos facilite el cliente deberá ser actual, veraz y
+                                                                              exacta. Todo dato solicitado que se
+                                                                              identifica como obligatorio, tiene esa condición en virtud de que no es posible dar la
+                                                                              atención debida sin haber registrado
+                                                                              esa información básica. El no completar los datos requeridos impide la correcta y oportuna
+                                                                              atención de la solicitud, compra
+                                                                              o servicio. El resto de la información que no está identificada como obligatoria, es meramente
+                                                                              opcional, lo que implica que
+                                                                              el usuario se encuentra en total libertad de facilitarla o no dejar los espacios en blanco.
+                                                                              <strong> Detalle de los Fines de nuestra Base
+                                                                                de Datos </strong>: La información personal relacionada al cliente será almacenada y
+                                                                              utilizada por
+                                                                              Bavarian Motors Costa Rica S.A
+                                                                              con el fin primordial de brindar el servicio solicitado por el cliente, y en forma secundaria
+                                                                              remitirle información relacionada
+                                                                              con nuestros productos así como ofrecerle los diversos servicios que presta Bavarian Motors
+                                                                              C.R. S.A. Consecuentemente,
+                                                                              se le informa que el medio de contacto consignado podrá ser empleado por el responsable de la
+                                                                              Base de Datos, para el
+                                                                              envío de ofertas, promociones, encuestas, y demás información con prospección comercial del
+                                                                              responsable y entidades
+                                                                              relacionadas dentro del mismo grupo de interés económico. La información almacenada en la Base
+                                                                              de Datos, se mantendrá
+                                                                              custodiada mientras el responsable cumple con el servicio principal y cualquier otro vinculado
+                                                                              a dicha prestación principal,
+                                                                              o hasta que haya transcurrido el plazo mínimo de diez años en que la empresa responsable deba
+                                                                              almacenar la información
+                                                                              para cumplir ante entidades fiscalizadoras. <strong> Destinatarios que tendrán acceso a la
+                                                                                información
+                                                                                personal: </strong> El Destinatario
+                                                                              principal de la información es el responsable de la Base de Datos en Costa Rica; Bavarian
+                                                                              Motors CR. S.A., pero podrá ser
+                                                                              almacenada y compartida con BMW Mexico, Latin America and The Caribbean, Oficinas Regionales
+                                                                              de BMW para
+                                                                              Latinoamérica y el Caribe, con domicilio en Distrito Federal, México, Bosques de Las Lomas
+                                                                              05120, únicamente para efectos
+                                                                              de control interno de calidad del servicio, garantizando que no se utilizará la información
+                                                                              recabada en este servidor para
+                                                                              propósito distinto al que hemos declarado. De la misma forma podrá ser transferida a BMW Group
+                                                                              información de los
+                                                                              clientes, recolectada legítimamente a través de canales autorizados de Bavarian Motors C.R.
+                                                                              S.A, con ocasión de la
+                                                                              adquisición de diferentes productos y servicios, como lo es el BMW ConnectedDrive, y cualquier
+                                                                              otro que a futuro sea
+                                                                              ofrecido a los clientes. Mayor información será desarrollada y comunicada a los clientes por
+                                                                              los medios idóneos que
+                                                                              proporcione la entidad responsable. Con la excepción antes indicada, se garantiza al usuario
+                                                                              la no transferencia a terceros,
+                                                                              salvo su previo y expreso consentimiento. Bavarian Motors C.R S.A. no vende, transfiere, total
+                                                                              parcial, onerosa y
+                                                                              gratuitamente la información personal de sus clientes. <strong> Tratamiento de la Información:
+                                                                              </strong> Hacemos
+                                                                              de su conocimiento que
+                                                                              el tratamiento de la información será llevada a cabo por el responsable mediante Protocolos de
+                                                                              Actuación y de Seguridad,
+                                                                              lo que garantiza el correcto, confidencial, y eficiente servicio. Hemos implementado Políticas
+                                                                              de Seguridad y
+                                                                              Confidencialidad, y se han aplicado todas las medidas de seguridad físicas y lógicas,
+                                                                              razonables para la protección de la
+                                                                              información de los clientes con el fin de evitar un uso no autorizado o fuera de los fines
+                                                                              antes indicados. Para mayor
+                                                                              información en relación con el servicio de BMW ConnectedDrive puede dirigirse directamente a
+                                                                              info@redmotorscr.com
+                                                                              Cualquier información adicional que el usuario requiera en relación al manejo de la base de
+                                                                              datos podrá ser consultada al
+                                                                              correo electrónico <a
+                                                                                href="mailto:protecciondedatos@redmotorscr.com">protecciondedatos@redmotorscr.com</a>.
+                                                                              <strong> Derechos de acceso, rectificación,
+                                                                                oposición o cancelación: </strong> En
+                                                                              apego y respeto al derecho de Autodeterminación Informativa en relación con su vida y el libre
+                                                                              ejercicio de los derechos a
+                                                                              la personalidad que le asiste a toda persona, nuestros clientes que deseen ejercer sus
+                                                                              derechos de acceso, rectificación,
+                                                                              oposición o cancelación podrán hacerlo por los siguientes medios: i) Comunicándose al teléfono
+                                                                              2547-5088; ii) Enviando
+                                                                              correo electrónico <a
+                                                                                href="mailto:protecciondedatos@redmotorscr.com">protecciondedatos@redmotorscr.com</a>. En
+                                                                              ambos casos; personal calificado
+                                                                              atenderá su solicitud y lo
+                                                                              resolverá en un plazo menor a cinco días hábiles. De la misma forma, todo usuario que no desee
+                                                                              recibir correos electrónicos
+                                                                              puede directamente darse de baja en el sistema, con la opción de “Desincribirme”, de la misma
+                                                                              forma las opciones para
+                                                                              darse de baja del sistema BMW ConnectedDrive serán visibles a través del Portal My BMW.
+                                                                              <strong> De la
+                                                                                identidad y dirección del
+                                                                                responsable de la base de datos. </strong> La base de datos “Clientes” es una Base de Datos
+                                                                              de Bavarian
+                                                                              Motors CR. S.A, empresa
+                                                                              domiciliada en San José, La Uruca, frente a la subestación eléctrica de la Compañía Nacional
+                                                                              de Fuerza y Luz. Leido lo anterior
+                                                                              y cumplido con el mandato legal que impone el artículo cinco de la Ley de Protección de la
+                                                                              Persona frente al Tratamiento
+                                                                              de sus Datos Personales, al darle click al botón de Aceptar usted reconoce que: i) Ha leído y
+                                                                              entendido los alcances de esta
+                                                                              Política de Privacidad, ii) No tiene dudas relacionadas con la forma, medio, y fin para el
+                                                                              cual se le ha solicitado la información
+                                                                              en el sitio; iii) Acepta expresamente, en forma voluntaria, su registro en la Base de Datos
+                                                                              Clientes de Bavarian Motors CR.
+                                                                            </p>
+                                                    
+                                                                            <p>S.A; iv) Autoriza el tratamiento de la información otorgada según fue detallado y para los
+                                                                              fines indicados, v) Fue informado
+                                                                              de los medios por los cuales podrá ejercer los derechos que le asisten. San José, Costa Rica 6
+                                                                              enero, 2025.</p>
+                                                    
+                                                                          </div>
+                                                                        <br />
+
+                                                                        <lightning:input aura:id="boxPack"
+                                                                            type="checkbox"
+                                                                            label="He leído y acepto los Términos y Condiciones"
+                                                                            onchange="{!c.setVisible}"
+                                                                            required="true" />
+
+
+
+                                                                        <lightning:button variant="brand"
+                                                                            aura:id="btnAceptar" label="Aceptar"
+                                                                            title="Aceptar" disabled="true"
+                                                                            onclick="{! c.closeModalTerminos }" />
+                                                                    </div>
+                                                                </header>
+
+                                                            </div>
+                                                        </section>
+                                                        <div class="slds-backdrop slds-backdrop_open"></div>
+
+                                                    </div>
+                                                    <!-- VEHICULOS Y CORREOS -->
+                                                    <div class="slds-m-around_xx-large" id="vehiculosYcorreos"
+                                                        style="display:none">
+
+                                                        <!-- Modal/Popup Box starts here-->
+                                                        <section role="dialog" tabindex="-1"
+                                                            aria-labelledby="modal-heading-01" aria-modal="true"
+                                                            aria-describedby="modal-content-id-1"
+                                                            class="slds-modal slds-fade-in-open">
+                                                            <div class="slds-modal__container">
+                                                                <!-- Modal/Popup Box Header Starts here-->
+                                                                <header class="slds-modal__header">
+
+                                                                    <div class="terms-container">
+                                                                        <div style="height: 300px; overflow: scroll;">
+                                                                            <p><strong>Hemos detectado estos correos y
+                                                                                    vehículos asociados a tu
+                                                                                    cuenta</strong></p>
+                                                                            <table id="vehiculosCorreos" class=""
+                                                                                style="font-size:18px">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th style="width: 20%;">Placa
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <aura:iteration
+                                                                                        items="{!v.listaCoches}"
+                                                                                        var="item">
+                                                                                        <tr>
+                                                                                            <td>{!item.Name}</td>
+                                                                                        </tr>
+                                                                                    </aura:iteration>
+                                                                                </tbody>
+                                                                            </table>
+                                                                            <br />
+                                                                            <p><strong>Si desea modificar esta lista por
+                                                                                    favor ingrese a la seccion "Gestiona
+                                                                                    tus vehiculos"</strong></p>
+                                                                        </div>
+                                                                        <br />
+
+                                                                        <lightning:button variant="brand"
+                                                                            label="Aceptar" title="Aceptar"
+                                                                            onclick="{! c.closeModalVehiculos }" />
+                                                                    </div>
+                                                                </header>
+
+                                                            </div>
+                                                        </section>
+                                                        <div class="slds-backdrop slds-backdrop_open"></div>
+
+                                                    </div>
+
+                                                    <!-- CALENDARIO -->
+                                                    <div id="container" style="display:none">
+                                                        <div id="containerCalendario" class="">
+                                                            <div class="calendar-header">
+                                                                <a class="prev-button" id="prev">
+                                                                    <i class="material-icons">keyboard_arrow_left
+                                                                    </i>
+                                                                </a>
+                                                                <a class="next-button" id="next">
+                                                                    <i class="material-icons">keyboard_arrow_right
+                                                                    </i>
+                                                                </a>
+                                                                <div class="row header-title">
+                                                                    <div class="header-text">
+                                                                        <h3 id="month-name">February</h3>
+                                                                        <h5 id="todayDayName">
+                                                                            Today is Friday 7 Feb
+                                                                        </h5>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="">
+                                                            <div class="calendar-content">
+                                                                <div id="calendar-table" class="calendar-cells">
+                                                                    <div id="table-header">
+                                                                        <div class="row">
+                                                                            <div class="col">Mon</div>
+                                                                            <div class="col">Tue</div>
+                                                                            <div class="col">Wed</div>
+                                                                            <div class="col">Thu</div>
+                                                                            <div class="col">Fri</div>
+                                                                            <div class="col">Sat</div>
+                                                                            <div class="col">Sun</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="table-body" class=""></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="popup" id="testToggle" style="">
+                                                                <span class="popuptext" id="myPopup">
+                                                                    <lightning:button variant="base" label="Continuar"
+                                                                        title="Continuar" onclick="{! c.myTest }" />
+                                                                </span>
+                                                            </div>
+                                                            <br />
+                                                            <br />
+                                                            <br />
+                                                            <div class="fixed" id="sidebarMovil"
+                                                                style="display:none;background-color: white;text-align:center">
+                                                                <div class="" style="padding-bottom:40px;">
+                                                                    <lightning:button variant="brand"
+                                                                        label="Reservacion tentativa conforme a la disponibilidad de la movil"
+                                                                        title="Reservacion tentativa conforme a la disponibilidad de la movil"
+                                                                        onclick="{! c.nuevaCitaMovil }" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="fixed" id="sidebar" style="display:none">
+                                                                <div class="sidebar-title">
+                                                                    <h4 id="eventDayName" class="month-name">
+                                                                        Date
+                                                                    </h4>
+
+                                                                    <h5 id="sidebar-texttitle"
+                                                                        class="available-Citations">
+                                                                        Citas Disponibles: 0
+
+                                                                    </h5>
+                                                                </div>
+                                                                <div class="container">
+                                                                    <div class="sidebar-events row" id="sidebarEvents">
+
+                                                                    </div>
+                                                                    <div class="empty-message">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="calendar-footer" style="display:none">
+                                                        <div class="emptyForm" id="emptyForm">
+                                                            <h4 id="emptyFormTitle">No events now</h4>
+                                                            <a class="addEvent" id="changeFormButton">Add new
+                                                            </a>
+                                                        </div>
+                                                        <div class="addForm" id="addForm">
+                                                            <h4>Add new event</h4>
+                                                            <div class="row">
+                                                                <div class="input-field col s6">
+                                                                    <input id="eventTitleInput" type="text"
+                                                                        class="validate" />
+                                                                    <label for="eventTitleInput">Title </label>
+                                                                </div>
+                                                                <div class="input-field col s6">
+                                                                    <input id="eventDescInput" type="text"
+                                                                        class="validate" />
+                                                                    <label for="eventDescInput">Description
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="addEventButtons">
+                                                                <a class="waves-effect waves-light btn blue lighten-2"
+                                                                    id="addEventButton">Add
+                                                                </a>
+                                                                <a class="waves-effect waves-light btn grey lighten-2"
+                                                                    id="cancelAdd">Cancel
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--Aquí va lo de JD-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- / Content -->
+                        </div>
+                        <!-- Footer -->
+                        <!-- <footer class="content-footer footer bg-footer-theme">
+                            <div
+                                class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+
+                                <a class="mb-2 mb-md-0" onclick="{! c.mostrarTerminos }">Politica de Confidencialidad y Proteccion de Datos</a>
+                                <div class="mb-2 mb-md-0">
+                                    © 2025. Comunidad RedMotors. By PortalNet.
+                                </div>
+                                <div></div>
+                            </div>
+                        </footer> -->
+                        <footer class="content-footer footer bg-footer-theme">
+                            <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                              <div><a onclick="{! c.mostrarTerminos }">Politica de Confidencialidad y Proteccion de Datos</a></div>
+                              <div class="mb-2 mb-md-0">
+                                © 2025. Comunidad RedMotors. By PortalNet.
+                              </div>
+                            </div>
+                          </footer>
+                        <!-- / Footer -->
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!-- Content wrapper -->
+                </div>
+                <!-- / Layout page -->
+            </div>
+            <!-- Overlay -->
+            <div id="overlayMenu" onclick="{! c.hideMenu }" class="layout-overlay layout-menu-toggle"></div>
+            <!-- Core JS -->
+            <!-- build:js assets/vendor/js/core.js -->
+            <!-- endbuild -->
+            <!-- Vendors JS -->
+            <!-- Main JS -->
+        </aura:if>
+        <!-- <button class="floating-button desktop"
+            style="position: fixed;bottom: -1px;right: 20px;z-index: 999; border-radius: 50%;background-color:transparent;border-color:transparent;  padding: 10px;"
+            onclick="{!c.openModalCase}">
+            <div class="main-div" style="width: 300px;height: 50px;">
+                <div class="blue-circle"
+                    style="display: flex;height: 50px;width: 50px;background-color: white;border-radius: 50%;position: absolute;left: 5px;z-index: 999;top: 15px">
+                    <div class="text-div"
+                        style="top: 9%;left: 10%;background-color:white;height: 40px;width: 40px;position: absolute;border-radius:50px;height: 40px;width: 40px;background-position:center;">
+                        <img src="{!$Resource.chatImage}" alt="Italian Trulli" /></div>
+                </div>
+                <div class="black-side"
+                    style="display: flex;justify-content: center;align-items: center;width: 100%;height: 40%;top: 0;position: absolute;background-color: black;color: white;border-top-left-radius: 5px;border-top-right-radius: 5px;font-weight: bold;">
+                    <p class="desktop">BMW</p>
+                    <p class="mobile">Consultas</p>
+                </div>
+                <div class="gray-side"
+                    style="display: flex;justify-content: center;align-items: center;width: 100%;height: 60%;bottom: 0;position: absolute;background-color: white;border-style: outset;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;font-weight: bold;">
+                    <p class="desktop">¿Tienes dudas?</p>
+                </div>
+            </div>
+        </button>
+
+        <button class="floating-button mobile"
+            style="position: fixed;z-index: 999;bottom: 25px;right: 20px;border-radius: 15px;background-color:transparent;border-color: transparent; width:85px"
+            onclick="{!c.openModalCase}">
+            <div>
+                <div class="cons-container">
+                    <p>Consultas</p>
+                </div>
+                <div class="bottom-container">
+                    <img src="{!$Resource.chatImage}" alt="Italian Trulli" />
+                </div>
+            </div>
+        </button> -->
+
+        <button onclick="{!c.openModalCase}" class="consulta-btn" aria-label="Abrir chat de consultas">
+            <img src="{!$Resource.chatImage}" />
+            <span class="consulta-btn-text">Consultas</span>
+        </button>
+    </body>
+
+    </html>
+</aura:component>

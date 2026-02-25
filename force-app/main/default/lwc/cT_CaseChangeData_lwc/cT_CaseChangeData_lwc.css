@@ -1,0 +1,328 @@
+.test {
+  display: block;
+}
+
+.modal-content {
+    position: relative; /* IMPORTANTE para el overlay */
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    min-width: 350px;
+}
+
+/* Overlay del Spinner */
+.spinner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.custom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFF;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  text-align: center;
+}
+
+.second-title {
+  font-size: 15px;
+  font-weight: 500; 
+  margin: 0;
+  text-align: left;
+  margin-right: 10px;
+}
+
+.second-title a {
+  margin-left: 5px;
+}
+
+/* .btn-cont-layout {
+  position: absolute;
+  right: 20px;
+  top: 17px;
+} */
+
+.btn-layout {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.top-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.info-data-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #FFF;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.client-data {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: auto;
+}
+
+.bottom-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  /* height: 80px; */
+}
+
+.options-check {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container p {
+  margin-left: 5px;
+}
+
+.edit-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.edit-zone-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 5px 0;
+  /* width: 100%; */
+  align-items: flex-end;
+}
+
+.edit-container span{
+  width: auto !important;
+  font-size: 17px;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.btn-cont-layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  row-gap: 5px;
+  column-gap: 5px;
+}
+
+/* Estilos tabla */
+
+.table-container {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+}
+th {
+  background-color: #009879;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+tr:hover {
+  background-color: #f1f1f1;
+}
+.active {
+  color: #009879;
+  font-weight: bold;
+}
+.inactive {
+  color: #ff6b6b;
+}
+@media screen and (max-width: 600px) {
+  table {
+    font-size: 14px;
+  }
+  th, td {
+    padding: 8px 10px;
+  }
+  th {
+    display: none;
+  }
+  td {
+    display: block;
+    position: relative;
+    padding-left: 50%;
+  }
+  td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+}
+
+.info-case-vh {
+  display: flex;
+  flex-direction: column;
+  max-width: 40%;
+}
+
+.cust-modal {
+  width: auto !important;
+  max-width: 75% !important;
+}
+
+@media screen and (max-width: 768px) {
+  .second-title {
+    font-size: 12px;
+  }
+
+  .btn-cont-layout button {
+    font-size: 12px;
+  }
+
+  .info-case-vh {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    max-width: 35%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .btn-layout {
+    flex-direction: column;
+  }
+
+  .info-case-vh {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 3px;
+  }
+
+  .btn-cont-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .btn-cont-layout button {
+    width: 100%;
+    margin: 0 0px 3px 0px !important;
+  }
+
+  .second-title {
+    font-size: 16px;
+  }
+
+  .edit-container {
+    flex-direction: column !important;
+    align-items: center;
+    width: 100%;
+
+  }
+
+  .bottom-container {
+    padding: 0 !important;
+  }
+}
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-text {
+    visibility: visible;
+    width: 120px;
+    background-color: #fe0000; /* Azul de Salesforce */
+    color: white;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #fe0000 transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}

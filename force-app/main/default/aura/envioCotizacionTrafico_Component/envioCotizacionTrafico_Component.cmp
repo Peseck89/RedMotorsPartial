@@ -1,0 +1,4 @@
+<aura:component implements="force:lightningQuickAction,force:hasRecordId" controller="envioCotizacionTrafico">
+    <aura:attribute name="currentLead" type="Lead" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+</aura:component>

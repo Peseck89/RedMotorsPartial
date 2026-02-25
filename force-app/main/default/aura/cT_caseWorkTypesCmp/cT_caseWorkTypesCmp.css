@@ -1,0 +1,7 @@
+.THIS .slds-modal__container {
+    width: 80% !important;
+    max-width: 80% !important;
+}
+.THIS .alertCard{
+    background-color: rgb(205, 237, 247);
+}

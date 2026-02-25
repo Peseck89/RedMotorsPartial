@@ -1,0 +1,117 @@
+<template>
+    <div class="grid-container">
+        <div style="margin-bottom:20px" class="info-data-container">
+            <div class="top-container">
+                <lightning-icon class="icon-ctct" icon-name="standard:account" alternative-text="Cuenta"
+                    title="Cuenta"></lightning-icon>
+                <p class="primary-text">Creación de cuenta física</p>
+            </div>
+            <div class="bottom-container client-data">
+                <div class="create-account-body">
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Cargando..." size="medium"></lightning-spinner>
+                    </template>
+
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <!-- <lightning-input name="cedula" label="*Cédula" value={cedula}
+                                onchange={handleInputChange}></lightning-input> -->
+
+                            <lightning-input 
+                                type="number"
+                                name="cedula"
+                                label="*Cédula"                                                                
+                                value={cedula}
+                                minlength="9"
+                                max-length="12"
+                                onchange={handleInputChange}
+                                message-when-pattern-mismatch="Solo números de hasta 12 dígitos."
+                                disabled="true"
+                                pattern="[0-9]{9,12}">
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox name="pais" label="*País de Origen" value={pais}
+                            options={paisOptions}
+                                onchange={handlePaisChange}></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input type="text" name="firstName" label="*Primer Nombre" value={firstName}
+                            onchange={handleInputChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input type="text" name="secondName" label="*Segundo Nombre" value={secondName}
+                            onchange={handleInputChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input type="text" name="lastName" label="*Apellido" value={lastName}
+                            onchange={handleInputChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox name="genero" label="*Género" value={genero} options={generoOptions}
+                                onchange={handleInputChange}>
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input name="fechaNacimiento" type="date" label="*Fecha de Nacimiento"
+                                value={fechaNacimiento} onchange={handleInputChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox name="profesion" label="*Profesión" value={profesion}
+                                options={profesionOptions} onchange={handleInputChange}>
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox name="estadoCivil" label="*Estado Civil" value={estadoCivil}
+                                options={estadoCivilOptions} onchange={handleInputChange}>
+                            </lightning-combobox>
+                        </div>
+                    </div>
+
+                    <template if:true={mostrarError}>
+                        <div class="slds-text-color_error slds-m-top_small">
+                            <lightning-icon icon-name="utility:error" alternative-text="Error"
+                                size="x-small"></lightning-icon>
+                            <span> {mensajeError} </span>
+                        </div>
+                    </template>
+
+                    <div if:false={recordId} class="slds-m-top_medium slds-grid slds-grid_align-spread">
+                        <lightning-button label="Cancelar" variant="neutral"
+                            onclick={handleCancelar}></lightning-button>
+                        <lightning-button label="Crear Cliente" variant="brand"
+                            onclick={handleSiguiente}></lightning-button>
+                    </div>
+
+                    <template if:true={recordId}>
+                        <div class="slds-m-top_large">
+                            <br />
+                            <c-identificacionesdecuenta account-id={recordId} onactualizar={handleActualizacion}
+                                cedula={cedula}>
+                            </c-identificacionesdecuenta>
+                            <br />
+                            <c-correosdecuenta account-id={recordId} onactualizar={handleActualizacion}>
+                            </c-correosdecuenta>
+                            <br />
+                            <c-direccionesdecuenta account-id={recordId} onactualizar={handleActualizacion}>
+                            </c-direccionesdecuenta>
+                            <br />
+                            <c-contactosrelacionadoscuenta account-id={recordId} onactualizar={handleActualizacion}>
+                            </c-contactosrelacionadoscuenta>
+                            <br />
+                            <c-telefonoscuenta account-id={recordId} onactualizar={handleActualizacion}>
+
+                            </c-telefonoscuenta>
+                            <br />
+                            <div class="slds-m-top_medium slds-grid slds-grid_align-end">
+                                <lightning-button label="Finalizar" variant="success"
+                                    onclick={handleFinalizar}></lightning-button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>

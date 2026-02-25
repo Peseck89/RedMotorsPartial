@@ -1,0 +1,44 @@
+<!--
+  @description       : 
+  @author            : marcohernandezhp@gmail.com
+  @group             : 
+  @last modified on  : 05-17-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <div>     
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </template>
+
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick={handleCloseClick}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                            size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium slds-hyphenate">Registrar comentarios</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div class="slds-form">                          
+                        <div class="slds-form-element slds-form-element_stacked">
+                            <label class="slds-form-element__label" for="stacked-input-id-02">Descripción</label>
+                            <div class="slds-form-element__control">
+                                <textarea id="stacked-input-id-02" placeholder="Escriba aqui sus comentarios..." rows="5" 
+                                    class="slds-textarea" onchange={handleDescriptionChange}></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">                        
+                    <lightning-button label="Cancelar"  onclick={handleCloseClick} class="slds-m-right_medium"></lightning-button>
+                    <lightning-button label="Aceptar" onclick={handleAcceptClick} variant="brand"></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>    
+    </div>
+</template>

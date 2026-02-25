@@ -1,0 +1,113 @@
+<template>
+    <template if:true={showModal}>
+        <section class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- CABECERA -->
+                <header class="slds-modal__header slds-theme_warning">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Cerrar" onclick={handleClose}>
+                        <lightning-icon icon-name="utility:close" size="small" alternative-text="Cerrar"></lightning-icon>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Seguimiento Taller</h2>
+                    <p class="slds-text-body_small slds-m-top_x-small">
+                        Los siguientes casos tienen tareas de tipo <strong>"-Recordatorio al asesor"</strong> pendientes de confirmación de lectura.
+                    </p>
+                </header>
+
+                <!-- CONTENIDO -->
+                <div class="slds-modal__content slds-p-around_large">
+                    <template if:true={pendingCases}>
+                        <!-- <table class="slds-table slds-table_bordered slds-table_fixed-layout">
+                            <thead>
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col" style="width: 3rem;"></th>
+                                    <th scope="col">Caso</th>
+                                    <th scope="col">Asunto del Caso</th>
+                                    <th scope="col">Orden de Trabajo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={pendingCasesWithUrls} for:item="item">
+                                    <tr key={item.caseId}>
+                                        <td>
+                                            <lightning-input type="checkbox"
+                                                data-caseid={item.caseId}
+                                                onchange={handleCheckboxChange}>
+                                            </lightning-input>
+                                        </td>
+                                        <td>
+                                            <a href={item.caseIdUrl} target="_blank">{item.caseNumber}</a>
+                                        </td>
+                                        <td>{item.caseSubject}</td>
+                                        <td>
+                                            <template if:true={item.workOrderId}>
+                                                <a href={item.workOrderIdUrl} target="_blank">{item.workOrderNumber}</a>
+                                            </template>
+                                            <template if:false={item.workOrderId}>
+                                                —
+                                            </template>
+                                        </td>                                        
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table> -->
+                    
+                        <table class="slds-table slds-table_bordered slds-table_fixed-layout">
+                        <thead>
+                            <tr class="slds-text-title_caps">
+                                <th style="width:5%"></th>
+                                <th style="width:65%">Descripción</th>
+                                <th style="width:15%">Caso</th>
+                                <th style="width:15%">OT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={pendingCases} for:item="item">
+                                <tr key={item.taskId}>
+                                    <td>
+                                        <lightning-input type="checkbox"
+                                            data-taskid={item.taskId}
+                                            onchange={handleCheckboxChange}>
+                                        </lightning-input>
+                                    </td>
+                                    <td>{item.subjectFormatted}</td>
+                                    <td>
+                                        <a href={item.caseIdUrl} target="_blank">{item.caseNumber} </a>
+                                    </td>
+                                    <td>
+                                        <template if:true={item.workOrderId}>
+                                            <a href={item.workOrderIdUrl} target="_blank">{item.workOrderNumber}
+                                            </a>
+                                        </template>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+
+
+                    </template>
+                    <template if:false={pendingCases}>
+                        <p>No se encontraron casos pendientes de confirmación.</p>
+                    </template>
+                </div>
+
+                <!-- PIE -->
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="brand"
+                        label="Confirmar lectura"
+                        onclick={handleConfirmRead}>
+                    </lightning-button>
+                    <lightning-button variant="neutral"
+                        label="Cerrar"
+                        onclick={handleClose}
+                        class="slds-m-left_small">
+                    </lightning-button>
+                </footer>
+            </div>
+        </section>
+
+        <!-- BACKDROP -->
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

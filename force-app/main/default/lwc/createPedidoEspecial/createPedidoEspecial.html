@@ -1,0 +1,70 @@
+<!--
+  @description       : 
+  @author            : marcohernandezhp@gmail.com
+  @group             : 
+  @last modified on  : 01-03-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <article class="slds-card">
+        <div class="slds-card__header slds-border_bottom slds-p-bottom_small">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+              <div class="slds-media__figure">
+                <span class="slds-icon_container slds-icon-standard-opportunity">
+                    <lightning-icon icon-name="standard:quotes" alternative-text="Pedido especial" title="Pedido especial"></lightning-icon>
+                </span>                
+              </div>
+              <div class="slds-media__body">
+                <h2 class="slds-card__header-title">                  
+                    Crear pedido especial
+                </h2>
+              </div>
+            </header>
+        </div>        
+        <div class="slds-card__body slds-card__body_inner">            
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>            
+            <div class="c-container">
+                <lightning-layout horizontal-align="spread" multiple-rows>
+                    <lightning-layout-item size="6">                        
+                        <div class="custom-box">                            
+                            <lightning-input label="Marca" data-field-name="brand" onchange={handleBrandChange} value={brand} required="true"></lightning-input>
+                        </div>       
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6">                        
+                        <div class="custom-box">                            
+                            <lightning-input label="Modelo" data-field-name="model" onchange={handleModelChange} value={model} required="true"></lightning-input>                            
+                        </div>       
+                    </lightning-layout-item>                    
+                    <lightning-layout-item size="6">                        
+                        <div class="custom-box">                            
+                            <lightning-input label="Año" data-field-name="year" onchange={handleYearChange} value={year} required="true"></lightning-input>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6">                        
+                        <div class="custom-box">                            
+                            <lightning-input label="Color" data-field-name={color} onchange={handleColorChange} value={color} required="true"></lightning-input>
+                        </div>
+                    </lightning-layout-item>                                    
+                    <lightning-layout-item size="6">                        
+                        <div class="custom-box">                            
+                            <lightning-input label="Código de tapiceria" data-field-name={tapiceriaCode} onchange={handleTapiceriaCodeChange} value={tapiceriaCode}></lightning-input>
+                        </div>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-layout horizontal-align="spread" multiple-rows>
+                    <lightning-layout-item size="12">
+                        <div class="custom-box slds-m-top_medium">   
+                            <lightning-input-rich-text  label="Comentario" value={comments} onchange={handleCommentsChange}></lightning-input-rich-text>
+                        </div>
+                    </lightning-layout-item>                        
+                </lightning-layout>
+            </div>                          
+        </div>
+        <footer class="slds-card__footer">
+            <lightning-button label="Cancelar"  onclick={handleCancelClick} class="slds-m-right_medium"></lightning-button>
+            <lightning-button label="Aceptar" variant="brand" onclick={createPredidoEspecial}></lightning-button>      
+        </footer>
+    </article>    
+</template>

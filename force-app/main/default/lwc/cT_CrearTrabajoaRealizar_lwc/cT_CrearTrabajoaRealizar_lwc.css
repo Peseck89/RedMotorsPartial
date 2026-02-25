@@ -1,0 +1,41 @@
+.header-but-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.custom-td label {
+ display: none !important;
+}
+
+.slds-form-element__label {
+  display: none !important;
+}
+.custom-table-tr {
+  background: #fafafb;
+}
+
+.custom-table-tr th {
+  border: 1px solid #dee1e6;
+}
+
+.custom-td td {
+  border: 1px solid #dee1e6;
+}
+
+.test label {
+  display: none !important;
+}
+
+td, th {
+  padding: 10px !important;
+  text-align: center !important;
+}
+
+.cust-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -1,0 +1,93 @@
+<template>
+  <div class="main-content">
+    <div class="main-section bordered row-container">
+      <h2 class="second-title">Datos del Vehículo</h2>
+      <span><strong>{placa}</strong></span>
+    </div>
+    <div class="main-section">
+      <section>
+        <!-- <div class="car-data">
+          <div>
+            <lightning-icon class="icon-ctct" icon-name="standard:work_order" alternative-text="Email" title="Email"></lightning-icon>
+          </div>
+          <div class="info-car-container">
+            <label><strong>Número de Placa</strong></label>
+            <span>{placa}</span>
+          </div>
+        </div> -->
+        <div class="car-data">
+          <div>
+            <lightning-icon class="icon-ctct" icon-name="standard:travel_mode" alternative-text="Email" title="Email"></lightning-icon>
+          </div>
+          <div class="info-car-container">
+            <label><strong>Número de Chasis</strong></label>
+            <span>{numeroDeChasis}</span>
+          </div>
+        </div>
+        <div class="car-data">
+          <div>
+            <lightning-icon class="icon-ctct" icon-name="standard:goals" alternative-text="Email" title="Email"></lightning-icon>
+          </div>
+          <div class="info-car-container">
+            <label><strong>Marca - Modelo - Año</strong></label>
+            <span>{marca} - {modalodeloNvo} - {anio}</span>
+          </div>
+        </div>
+        <div class="car-data">
+          <div>
+            <lightning-icon class="icon-ctct" icon-name="standard:brand" alternative-text="Email" title="Email"></lightning-icon>
+          </div>
+          <div class="info-car-container">
+            <label><strong>Color</strong></label>
+            <span>{color}</span>
+          </div>
+        </div>
+      </section>
+      <section class="center-aligment">
+        <div class="circle"></div>
+        <div class="img-container">
+          <!-- <img if:true={noContieneImagen} src="https://images.vexels.com/media/users/3/154251/isolated/preview/fef0c563c39f2746c35604e969ffe3ef-bmw-car-front-view-silhouette.png?width=1130" alt="Default Car Image"> -->
+          <img if:true={noContieneImagen} src={imagenDefault} alt="Default Car Image">
+          <!-- <img if:true={noContieneImagen} src="https://connect.bmwhk.com/sites/default/files/model/thumb/2019/x5.png" alt="Default Car Image"> -->
+          <img if:false={noContieneImagen} src={imagenCoche} alt="Default Car Image">
+        </div>
+      </section>
+      <section>
+        <div class="car-data">
+          <div>
+            <lightning-icon class="icon-ctct" icon-name="standard:time_period" alternative-text="Email" title="Email"></lightning-icon>
+          </div>
+          <div class="info-car-container">
+            <label><strong>Próxima Visita <br> Programada</strong></label>
+            <span>{proxVisita}</span>
+          </div>
+        </div>
+        <div class="car-data">
+          <div>
+            <lightning-icon class="icon-ctct" icon-name="standard:dashboard" alternative-text="Email" title="Email"></lightning-icon>
+          </div>
+          <div class="info-car-container">
+            <label if:true={mostrarHoras}><strong>Horas de uso</strong></label>
+            <label if:false={mostrarHoras}><strong>Último kilometraje</strong></label>
+            <!-- <span>{ultKilometraje}</span> -->
+            <span>{formatedKilometraje}</span>
+          </div>
+        </div>
+        <div class="car-data">
+          <div>
+            <lightning-icon class="icon-ctct" icon-name="standard:people" alternative-text="Email" title="Email"></lightning-icon>
+          </div>
+          <div class="info-car-container">
+            <label><strong>Contacto</strong></label>
+            <span><strong>Nombre:</strong> {nombreContacto}</span>
+            <!-- <span><strong>Número de identificación:</strong> {cedContacto}</span>
+            <span><strong>Tipo de identificación:</strong> {tipoCedContacto}</span>
+            <span><strong>Correo:</strong> {correoContacto}</span>
+            <span><strong>Teléfono:</strong> {telContacto}</span>
+            <span><strong>Empresa:</strong> {empresa}</span> -->
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>

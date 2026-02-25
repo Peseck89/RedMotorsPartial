@@ -1,0 +1,3452 @@
+{
+  "fields": [
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Record ID",
+      "name": "Id",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "id"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Owner ID",
+      "name": "OwnerId",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [
+        "Group",
+        "User"
+      ],
+      "relationshipName": "Owner",
+      "sortable": true,
+      "type": "reference"
+    },
+    {
+      "aggregatable": false,
+      "custom": false,
+      "defaultValue": false,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Deleted",
+      "name": "IsDeleted",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "boolean"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Nombre del banco",
+      "name": "Name",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "string"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": "USD",
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Currency ISO Code",
+      "name": "CurrencyIsoCode",
+      "nillable": true,
+      "picklistValues": [
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Costa Rica Colon",
+          "validFor": null,
+          "value": "CRC"
+        },
+        {
+          "active": true,
+          "defaultValue": true,
+          "label": "U.S. Dollar",
+          "validFor": null,
+          "value": "USD"
+        }
+      ],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "picklist"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Created Date",
+      "name": "CreatedDate",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Created By ID",
+      "name": "CreatedById",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [
+        "User"
+      ],
+      "relationshipName": "CreatedBy",
+      "sortable": true,
+      "type": "reference"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Last Modified Date",
+      "name": "LastModifiedDate",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Last Modified By ID",
+      "name": "LastModifiedById",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [
+        "User"
+      ],
+      "relationshipName": "LastModifiedBy",
+      "sortable": true,
+      "type": "reference"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "System Modstamp",
+      "name": "SystemModstamp",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Last Viewed Date",
+      "name": "LastViewedDate",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": true,
+      "custom": false,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Last Referenced Date",
+      "name": "LastReferencedDate",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "datetime"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": "plaintextarea",
+      "filterable": false,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Restricciones",
+      "name": "Condiciones__c",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": false,
+      "type": "textarea"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": false,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Estado",
+      "name": "Estado__c",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "boolean"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": "plaintextarea",
+      "filterable": false,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Pie del PDF",
+      "name": "Pie_del_PDF__c",
+      "nillable": true,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": false,
+      "type": "textarea"
+    },
+    {
+      "aggregatable": true,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Familia2",
+      "name": "Familia2__c",
+      "nillable": true,
+      "picklistValues": [
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "3 PUERTAS",
+          "validFor": null,
+          "value": "3 PUERTAS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "48 Special",
+          "validFor": null,
+          "value": "48 Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "5 PUERTAS",
+          "validFor": null,
+          "value": "5 PUERTAS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ace",
+          "validFor": null,
+          "value": "Ace"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ACEMAN",
+          "validFor": null,
+          "value": "ACEMAN"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ADVENTURE",
+          "validFor": null,
+          "value": "ADVENTURE"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Adventure MT",
+          "validFor": null,
+          "value": "Adventure MT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ATV",
+          "validFor": null,
+          "value": "ATV"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ATV - KW",
+          "validFor": null,
+          "value": "ATV - KW"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BM111- X3 M40I Msport Edition",
+          "validFor": null,
+          "value": "BM111- X3 M40I Msport Edition"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BM112- X4 M40I Msport Edition",
+          "validFor": null,
+          "value": "BM112- X4 M40I Msport Edition"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BM161 i4 eDrive 40- M Package",
+          "validFor": null,
+          "value": "BM161 i4 eDrive 40- M Package"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BM197-M-M3 Competition",
+          "validFor": null,
+          "value": "BM197-M-M3 Competition"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Brute Force",
+          "validFor": null,
+          "value": "Brute Force"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CABRIO",
+          "validFor": null,
+          "value": "CABRIO"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CLUBMAN",
+          "validFor": null,
+          "value": "CLUBMAN"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Clubman Cooper",
+          "validFor": null,
+          "value": "Clubman Cooper"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Clubman Cooper S",
+          "validFor": null,
+          "value": "Clubman Cooper S"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Cooper 3 puertas",
+          "validFor": null,
+          "value": "Cooper 3 puertas"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Cooper 5 puertas",
+          "validFor": null,
+          "value": "Cooper 5 puertas"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Cooper S 3 puertas",
+          "validFor": null,
+          "value": "Cooper S 3 puertas"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "COUNTRYMAN",
+          "validFor": null,
+          "value": "COUNTRYMAN"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "COUNTRYMAN BEV",
+          "validFor": null,
+          "value": "COUNTRYMAN BEV"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Countryman Cooper",
+          "validFor": null,
+          "value": "Countryman Cooper"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Countryman cooper S",
+          "validFor": null,
+          "value": "Countryman cooper S"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "COUNTRYMAN JCW",
+          "validFor": null,
+          "value": "COUNTRYMAN JCW"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Cruiser",
+          "validFor": null,
+          "value": "Cruiser"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CVO 115th Anniversary Limited",
+          "validFor": null,
+          "value": "CVO 115th Anniversary Limited"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CVO Limited",
+          "validFor": null,
+          "value": "CVO Limited"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CVO Road Glide",
+          "validFor": null,
+          "value": "CVO Road Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CVO Street Glide",
+          "validFor": null,
+          "value": "CVO Street Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Doble Proposito",
+          "validFor": null,
+          "value": "Doble Proposito"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ELÉCTRICO",
+          "validFor": null,
+          "value": "ELÉCTRICO"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Eliminator",
+          "validFor": null,
+          "value": "Eliminator"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Enduro",
+          "validFor": null,
+          "value": "Enduro"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Familia en Prod",
+          "validFor": null,
+          "value": "Familia en Prod"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Familia Wizard",
+          "validFor": null,
+          "value": "Familia Wizard"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "FXDR™ 114",
+          "validFor": null,
+          "value": "FXDR™ 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "General",
+          "validFor": null,
+          "value": "General"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Heritage",
+          "validFor": null,
+          "value": "Heritage"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "I3",
+          "validFor": null,
+          "value": "I3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "i4",
+          "validFor": null,
+          "value": "i4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "i5",
+          "validFor": null,
+          "value": "i5"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "i-8",
+          "validFor": null,
+          "value": "I8"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Iron 1200",
+          "validFor": null,
+          "value": "Iron 1200"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "iX",
+          "validFor": null,
+          "value": "iX"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "iX1",
+          "validFor": null,
+          "value": "iX1"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "iX2",
+          "validFor": null,
+          "value": "iX2"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "iX3",
+          "validFor": null,
+          "value": "iX3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ixtest",
+          "validFor": null,
+          "value": "ixtest"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "JCW",
+          "validFor": null,
+          "value": "JCW"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Jet Ski",
+          "validFor": null,
+          "value": "Jet Ski"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "KLR",
+          "validFor": null,
+          "value": "KLR"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "KLX",
+          "validFor": null,
+          "value": "KLX"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "KX",
+          "validFor": null,
+          "value": "KX"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "M",
+          "validFor": null,
+          "value": "M"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "M3",
+          "validFor": null,
+          "value": "M3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "M4",
+          "validFor": null,
+          "value": "M4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MI24 - Clubman John Cooper Works",
+          "validFor": null,
+          "value": "MI24 - Clubman John Cooper Works"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MINI ejemplo",
+          "validFor": null,
+          "value": "MINI ejemplo"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MT50 - Low Rider S",
+          "validFor": null,
+          "value": "Low Rider S"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "M TEST",
+          "validFor": null,
+          "value": "M TEST"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Mule",
+          "validFor": null,
+          "value": "Mule"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MX - KT",
+          "validFor": null,
+          "value": "MX - KT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Naked",
+          "validFor": null,
+          "value": "Naked"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Naked KT",
+          "validFor": null,
+          "value": "Naked KT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ninja",
+          "validFor": null,
+          "value": "Ninja"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Off-Road",
+          "validFor": null,
+          "value": "Off-Road"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "QA FAMILY",
+          "validFor": null,
+          "value": "QA FAMILY"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "QA SSS",
+          "validFor": null,
+          "value": "QA SSS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger",
+          "validFor": null,
+          "value": "Ranger"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger Crew",
+          "validFor": null,
+          "value": "Ranger Crew"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger Diesel",
+          "validFor": null,
+          "value": "Ranger Diesel"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger EV",
+          "validFor": null,
+          "value": "Ranger EV"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger Full Size",
+          "validFor": null,
+          "value": "Ranger Full Size"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger HD",
+          "validFor": null,
+          "value": "Ranger HD"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger Mide Size",
+          "validFor": null,
+          "value": "Ranger Mide Size"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "RAV4",
+          "validFor": null,
+          "value": "RAV4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ridge",
+          "validFor": null,
+          "value": "Ridge"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Roadster",
+          "validFor": null,
+          "value": "Roadster"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "RZR",
+          "validFor": null,
+          "value": "RZR"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "S2",
+          "validFor": null,
+          "value": "S2"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Scrambler",
+          "validFor": null,
+          "value": "Scrambler"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 1",
+          "validFor": null,
+          "value": "Serie 1"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 2",
+          "validFor": null,
+          "value": "Serie 2"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 3",
+          "validFor": null,
+          "value": "Serie 3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 4",
+          "validFor": null,
+          "value": "Serie 4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 5",
+          "validFor": null,
+          "value": "Serie 5"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 6",
+          "validFor": null,
+          "value": "Serie 6"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 7",
+          "validFor": null,
+          "value": "Serie 7"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail 115th Anniversary Breakout 114",
+          "validFor": null,
+          "value": "Softail 115th Anniversary Breakout 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail 115th Anniversary Fat Boy 114",
+          "validFor": null,
+          "value": "Softail 115th Anniversary Fat Boy 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail 115th AnniversaryHeritage Classic 114",
+          "validFor": null,
+          "value": "Softail 115th AnniversaryHeritage Classic 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Breakout",
+          "validFor": null,
+          "value": "Softail Breakout"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Breakout 114",
+          "validFor": null,
+          "value": "Softail Breakout 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Deluxe",
+          "validFor": null,
+          "value": "Softail Deluxe"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Fat Bob 114",
+          "validFor": null,
+          "value": "Softail Fat Bob 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Fat Bob  FXFB",
+          "validFor": null,
+          "value": "Softail Fat Boy  FXFB"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Fat Boy",
+          "validFor": null,
+          "value": "Softail Fat Boy"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Fat Boy 114",
+          "validFor": null,
+          "value": "Softail Fat Boy 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Heritage Classic",
+          "validFor": null,
+          "value": "Softail Heritage Classic"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Heritage Classic 114",
+          "validFor": null,
+          "value": "Softail Heritage Classic 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Low Rider",
+          "validFor": null,
+          "value": "Softail Low Rider"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Soft trail Slim",
+          "validFor": null,
+          "value": "Softail Soft trail Slim"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Street Bob",
+          "validFor": null,
+          "value": "Softail Street Bob"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sport",
+          "validFor": null,
+          "value": "Sport"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sport Glide™",
+          "validFor": null,
+          "value": "Sport Glide™"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sport MT",
+          "validFor": null,
+          "value": "Sport MT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportsman",
+          "validFor": null,
+          "value": "Sportsman"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster 115th Anniversary 48",
+          "validFor": null,
+          "value": "Sportster 115th Anniversary 48"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster 48",
+          "validFor": null,
+          "value": "Sportster 48"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster Iron 883",
+          "validFor": null,
+          "value": "Sportster Iron 883"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster Roadster",
+          "validFor": null,
+          "value": "Sportster Roadster"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster Super Low",
+          "validFor": null,
+          "value": "Sportster Super Low"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster Super Low 1200T",
+          "validFor": null,
+          "value": "Sportster Super Low 1200T"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster XL 1200 Custom",
+          "validFor": null,
+          "value": "Sportster XL 1200 Custom"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sport Tourer",
+          "validFor": null,
+          "value": "Sport Tourer"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "SSSB",
+          "validFor": null,
+          "value": "SSSB"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "STANDARD",
+          "validFor": null,
+          "value": "STANDARD"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Street",
+          "validFor": null,
+          "value": "Street"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Street 750",
+          "validFor": null,
+          "value": "Street 750"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Street Rod",
+          "validFor": null,
+          "value": "Street Rod"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Super Moto",
+          "validFor": null,
+          "value": "Super Moto"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Super Sport",
+          "validFor": null,
+          "value": "Super Sport"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Super Sport KT",
+          "validFor": null,
+          "value": "Super Sport KT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Teryx",
+          "validFor": null,
+          "value": "Teryx"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "TOUR",
+          "validFor": null,
+          "value": "TOUR"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring",
+          "validFor": null,
+          "value": "Touring"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring 115TH Anniversary Street Glide",
+          "validFor": null,
+          "value": "Touring 115TH Anniversary Street Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring 115TH Anniversary Street Glide Special",
+          "validFor": null,
+          "value": "Touring 115TH Anniversary Street Glide Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring 115TH Anniversary Ultra Limited",
+          "validFor": null,
+          "value": "Touring 115TH Anniversary Ultra Limited"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring MT",
+          "validFor": null,
+          "value": "Touring MT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring  Police Electra Glide",
+          "validFor": null,
+          "value": "Touring  Police Electra Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Police Road King",
+          "validFor": null,
+          "value": "Touring Police Road King"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road Glide",
+          "validFor": null,
+          "value": "Touring Road Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road Glide Special",
+          "validFor": null,
+          "value": "Touring Road Glide Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road Glide Ultra",
+          "validFor": null,
+          "value": "Touring Road Glide Ultra"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road King Classic",
+          "validFor": null,
+          "value": "Touring Road King Classic"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road King Special",
+          "validFor": null,
+          "value": "Touring Road King Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Street Glide",
+          "validFor": null,
+          "value": "Touring Street Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Street Glide Special",
+          "validFor": null,
+          "value": "Touring Street Glide Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Ultra Limited",
+          "validFor": null,
+          "value": "Touring Ultra Limited"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Ultra Limited Low",
+          "validFor": null,
+          "value": "Touring Ultra Limited Low"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Travel",
+          "validFor": null,
+          "value": "Travel"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Trike 115th Anniversary Tri Glide Ultra",
+          "validFor": null,
+          "value": "Trike 115th Anniversary Tri Glide Ultra"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Trike freewheeler",
+          "validFor": null,
+          "value": "Trike freewheeler"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Trike Tri Glide Ultra",
+          "validFor": null,
+          "value": "Trike Tri Glide Ultra"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Urban",
+          "validFor": null,
+          "value": "Urban"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "URBAN MOBILITY",
+          "validFor": null,
+          "value": "URBAN MOBILITY"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Versys",
+          "validFor": null,
+          "value": "Versys"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Vulcan",
+          "validFor": null,
+          "value": "Vulcan"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "W175",
+          "validFor": null,
+          "value": "W175"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "W800",
+          "validFor": null,
+          "value": "W800"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X1",
+          "validFor": null,
+          "value": "X1"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X2",
+          "validFor": null,
+          "value": "X2"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X3",
+          "validFor": null,
+          "value": "X3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X3M",
+          "validFor": null,
+          "value": "X3M"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X4",
+          "validFor": null,
+          "value": "X4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X4M",
+          "validFor": null,
+          "value": "X4M"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X5",
+          "validFor": null,
+          "value": "X5"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X6",
+          "validFor": null,
+          "value": "X6"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X7",
+          "validFor": null,
+          "value": "X7"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "xe12",
+          "validFor": null,
+          "value": "xe12"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "xe14",
+          "validFor": null,
+          "value": "xe14"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "XM",
+          "validFor": null,
+          "value": "XM"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Youth",
+          "validFor": null,
+          "value": "Youth"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Z",
+          "validFor": null,
+          "value": "Z"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Z125",
+          "validFor": null,
+          "value": "Z125"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Z400",
+          "validFor": null,
+          "value": "Z400"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Z900",
+          "validFor": null,
+          "value": "Z900"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MN-BMW-HERITAGE-R12-GS",
+          "validFor": null,
+          "value": "MN-BMW-HERITAGE-R12-GS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MN-BMW-HERITAGE-R12-GS-719",
+          "validFor": null,
+          "value": "MN-BMW-HERITAGE-R12-GS-719"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X6M",
+          "validFor": null,
+          "value": "X6M"
+        }
+      ],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "picklist"
+    },
+    {
+      "aggregatable": true,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Orden en el sitio web",
+      "name": "Orden_en_el_sitio_web__c",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "double"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "MarcaDescartado",
+      "name": "Marca__c",
+      "nillable": true,
+      "picklistValues": [
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BMW",
+          "validFor": null,
+          "value": "BMW"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MINI",
+          "validFor": null,
+          "value": "MINI"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "KAWASAKI",
+          "validFor": null,
+          "value": "KAWASAKI"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "POLARIS",
+          "validFor": null,
+          "value": "POLARIS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BMW MOTO",
+          "validFor": null,
+          "value": "BMW MOTO"
+        }
+      ],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": false,
+      "type": "multipicklist"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": false,
+      "inlineHelpText": null,
+      "label": "Familia",
+      "name": "Familia__c",
+      "nillable": true,
+      "picklistValues": [
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "3 PUERTAS",
+          "validFor": "QAAA",
+          "value": "3 PUERTAS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "48 Special",
+          "validFor": "",
+          "value": "48 Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "5 PUERTAS",
+          "validFor": "QAAA",
+          "value": "5 PUERTAS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ace",
+          "validFor": "",
+          "value": "Ace"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ACEMAN",
+          "validFor": "QAAA",
+          "value": "ACEMAN"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ADVENTURE",
+          "validFor": "",
+          "value": "ADVENTURE"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Adventure MT",
+          "validFor": "",
+          "value": "Adventure MT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ATV",
+          "validFor": "",
+          "value": "ATV"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ATV - KW",
+          "validFor": "",
+          "value": "ATV - KW"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BM111- X3 M40I Msport Edition",
+          "validFor": "",
+          "value": "BM111- X3 M40I Msport Edition"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BM112- X4 M40I Msport Edition",
+          "validFor": "",
+          "value": "BM112- X4 M40I Msport Edition"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BM161 i4 eDrive 40- M Package",
+          "validFor": "",
+          "value": "BM161 i4 eDrive 40- M Package"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BM197-M-M3 Competition",
+          "validFor": "",
+          "value": "BM197-M-M3 Competition"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Brute Force",
+          "validFor": "",
+          "value": "Brute Force"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CABRIO",
+          "validFor": "",
+          "value": "CABRIO"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CLUBMAN",
+          "validFor": "QAAA",
+          "value": "CLUBMAN"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Clubman Cooper",
+          "validFor": "QAAA",
+          "value": "Clubman Cooper"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Clubman Cooper S",
+          "validFor": "QAAA",
+          "value": "Clubman Cooper S"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Cooper 3 puertas",
+          "validFor": "QAAA",
+          "value": "Cooper 3 puertas"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Cooper 5 puertas",
+          "validFor": "QAAA",
+          "value": "Cooper 5 puertas"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Cooper S 3 puertas",
+          "validFor": "QAAA",
+          "value": "Cooper S 3 puertas"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "COUNTRYMAN",
+          "validFor": "QAAA",
+          "value": "COUNTRYMAN"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "COUNTRYMAN BEV",
+          "validFor": "QAAA",
+          "value": "COUNTRYMAN BEV"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Countryman Cooper",
+          "validFor": "QAAA",
+          "value": "Countryman Cooper"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Countryman cooper S",
+          "validFor": "QAAA",
+          "value": "Countryman cooper S"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "COUNTRYMAN JCW",
+          "validFor": "QAAA",
+          "value": "COUNTRYMAN JCW"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Cruiser",
+          "validFor": "",
+          "value": "Cruiser"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CVO 115th Anniversary Limited",
+          "validFor": "",
+          "value": "CVO 115th Anniversary Limited"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CVO Limited",
+          "validFor": "",
+          "value": "CVO Limited"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CVO Road Glide",
+          "validFor": "",
+          "value": "CVO Road Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "CVO Street Glide",
+          "validFor": "",
+          "value": "CVO Street Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Doble Proposito",
+          "validFor": "",
+          "value": "Doble Proposito"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ELÉCTRICO",
+          "validFor": "QAAA",
+          "value": "ELÉCTRICO"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Eliminator",
+          "validFor": "",
+          "value": "Eliminator"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Enduro",
+          "validFor": "",
+          "value": "Enduro"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Familia en Prod",
+          "validFor": "",
+          "value": "Familia en Prod"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Familia Wizard",
+          "validFor": "",
+          "value": "Familia Wizard"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "FXDR™ 114",
+          "validFor": "",
+          "value": "FXDR™ 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "General",
+          "validFor": "",
+          "value": "General"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Heritage",
+          "validFor": "",
+          "value": "Heritage"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "I3",
+          "validFor": "gAAA",
+          "value": "I3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "i4",
+          "validFor": "gAAA",
+          "value": "i4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "i5",
+          "validFor": "gAAA",
+          "value": "i5"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "i-8",
+          "validFor": "gAAA",
+          "value": "I8"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Iron 1200",
+          "validFor": "",
+          "value": "Iron 1200"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "iX",
+          "validFor": "gAAA",
+          "value": "iX"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "iX1",
+          "validFor": "gAAA",
+          "value": "iX1"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "iX2",
+          "validFor": "gAAA",
+          "value": "iX2"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "iX3",
+          "validFor": "gAAA",
+          "value": "iX3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "ixtest",
+          "validFor": "",
+          "value": "ixtest"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "JCW",
+          "validFor": "",
+          "value": "JCW"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Jet Ski",
+          "validFor": "",
+          "value": "Jet Ski"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "KLR",
+          "validFor": "",
+          "value": "KLR"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "KLX",
+          "validFor": "",
+          "value": "KLX"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "KX",
+          "validFor": "",
+          "value": "KX"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "M",
+          "validFor": "gAAA",
+          "value": "M"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "M3",
+          "validFor": "",
+          "value": "M3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "M4",
+          "validFor": "",
+          "value": "M4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MI24 - Clubman John Cooper Works",
+          "validFor": "",
+          "value": "MI24 - Clubman John Cooper Works"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MINI ejemplo",
+          "validFor": "",
+          "value": "MINI ejemplo"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MT50 - Low Rider S",
+          "validFor": "",
+          "value": "Low Rider S"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "M TEST",
+          "validFor": "",
+          "value": "M TEST"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Mule",
+          "validFor": "",
+          "value": "Mule"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MX - KT",
+          "validFor": "",
+          "value": "MX - KT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Naked",
+          "validFor": "",
+          "value": "Naked"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Naked KT",
+          "validFor": "",
+          "value": "Naked KT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ninja",
+          "validFor": "",
+          "value": "Ninja"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Off-Road",
+          "validFor": "",
+          "value": "Off-Road"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "QA FAMILY",
+          "validFor": "",
+          "value": "QA FAMILY"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "QA SSS",
+          "validFor": "",
+          "value": "QA SSS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger",
+          "validFor": "",
+          "value": "Ranger"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger Crew",
+          "validFor": "",
+          "value": "Ranger Crew"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger Diesel",
+          "validFor": "",
+          "value": "Ranger Diesel"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger EV",
+          "validFor": "",
+          "value": "Ranger EV"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger Full Size",
+          "validFor": "",
+          "value": "Ranger Full Size"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger HD",
+          "validFor": "",
+          "value": "Ranger HD"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ranger Mide Size",
+          "validFor": "",
+          "value": "Ranger Mide Size"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "RAV4",
+          "validFor": "",
+          "value": "RAV4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Ridge",
+          "validFor": "",
+          "value": "Ridge"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Roadster",
+          "validFor": "",
+          "value": "Roadster"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "RZR",
+          "validFor": "",
+          "value": "RZR"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "S2",
+          "validFor": "",
+          "value": "S2"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Scrambler",
+          "validFor": "gAAA",
+          "value": "Scrambler"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 1",
+          "validFor": "gAAA",
+          "value": "Serie 1"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 2",
+          "validFor": "gAAA",
+          "value": "Serie 2"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 3",
+          "validFor": "gAAA",
+          "value": "Serie 3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 4",
+          "validFor": "gAAA",
+          "value": "Serie 4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 5",
+          "validFor": "gAAA",
+          "value": "Serie 5"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 6",
+          "validFor": "gAAA",
+          "value": "Serie 6"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Serie 7",
+          "validFor": "gAAA",
+          "value": "Serie 7"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail 115th Anniversary Breakout 114",
+          "validFor": "",
+          "value": "Softail 115th Anniversary Breakout 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail 115th Anniversary Fat Boy 114",
+          "validFor": "",
+          "value": "Softail 115th Anniversary Fat Boy 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail 115th AnniversaryHeritage Classic 114",
+          "validFor": "",
+          "value": "Softail 115th AnniversaryHeritage Classic 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Breakout",
+          "validFor": "",
+          "value": "Softail Breakout"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Breakout 114",
+          "validFor": "",
+          "value": "Softail Breakout 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Deluxe",
+          "validFor": "",
+          "value": "Softail Deluxe"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Fat Bob 114",
+          "validFor": "",
+          "value": "Softail Fat Bob 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Fat Bob  FXFB",
+          "validFor": "",
+          "value": "Softail Fat Boy  FXFB"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Fat Boy",
+          "validFor": "",
+          "value": "Softail Fat Boy"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Fat Boy 114",
+          "validFor": "",
+          "value": "Softail Fat Boy 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Heritage Classic",
+          "validFor": "",
+          "value": "Softail Heritage Classic"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Heritage Classic 114",
+          "validFor": "",
+          "value": "Softail Heritage Classic 114"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Low Rider",
+          "validFor": "",
+          "value": "Softail Low Rider"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Soft trail Slim",
+          "validFor": "",
+          "value": "Softail Soft trail Slim"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Softail Street Bob",
+          "validFor": "",
+          "value": "Softail Street Bob"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sport",
+          "validFor": "",
+          "value": "Sport"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sport Glide™",
+          "validFor": "",
+          "value": "Sport Glide™"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sport MT",
+          "validFor": "",
+          "value": "Sport MT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportsman",
+          "validFor": "",
+          "value": "Sportsman"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster 115th Anniversary 48",
+          "validFor": "",
+          "value": "Sportster 115th Anniversary 48"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster 48",
+          "validFor": "",
+          "value": "Sportster 48"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster Iron 883",
+          "validFor": "",
+          "value": "Sportster Iron 883"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster Roadster",
+          "validFor": "",
+          "value": "Sportster Roadster"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster Super Low",
+          "validFor": "",
+          "value": "Sportster Super Low"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster Super Low 1200T",
+          "validFor": "",
+          "value": "Sportster Super Low 1200T"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sportster XL 1200 Custom",
+          "validFor": "",
+          "value": "Sportster XL 1200 Custom"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Sport Tourer",
+          "validFor": "",
+          "value": "Sport Tourer"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "SSSB",
+          "validFor": "",
+          "value": "SSSB"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "STANDARD",
+          "validFor": "",
+          "value": "STANDARD"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Street",
+          "validFor": "",
+          "value": "Street"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Street 750",
+          "validFor": "",
+          "value": "Street 750"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Street Rod",
+          "validFor": "",
+          "value": "Street Rod"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Super Moto",
+          "validFor": "",
+          "value": "Super Moto"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Super Sport",
+          "validFor": "",
+          "value": "Super Sport"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Super Sport KT",
+          "validFor": "",
+          "value": "Super Sport KT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Teryx",
+          "validFor": "",
+          "value": "Teryx"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "TOUR",
+          "validFor": "",
+          "value": "TOUR"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring",
+          "validFor": "",
+          "value": "Touring"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring 115TH Anniversary Street Glide",
+          "validFor": "",
+          "value": "Touring 115TH Anniversary Street Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring 115TH Anniversary Street Glide Special",
+          "validFor": "",
+          "value": "Touring 115TH Anniversary Street Glide Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring 115TH Anniversary Ultra Limited",
+          "validFor": "",
+          "value": "Touring 115TH Anniversary Ultra Limited"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring MT",
+          "validFor": "",
+          "value": "Touring MT"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring  Police Electra Glide",
+          "validFor": "",
+          "value": "Touring  Police Electra Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Police Road King",
+          "validFor": "",
+          "value": "Touring Police Road King"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road Glide",
+          "validFor": "",
+          "value": "Touring Road Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road Glide Special",
+          "validFor": "",
+          "value": "Touring Road Glide Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road Glide Ultra",
+          "validFor": "",
+          "value": "Touring Road Glide Ultra"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road King Classic",
+          "validFor": "",
+          "value": "Touring Road King Classic"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Road King Special",
+          "validFor": "",
+          "value": "Touring Road King Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Street Glide",
+          "validFor": "",
+          "value": "Touring Street Glide"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Street Glide Special",
+          "validFor": "",
+          "value": "Touring Street Glide Special"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Ultra Limited",
+          "validFor": "",
+          "value": "Touring Ultra Limited"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Touring Ultra Limited Low",
+          "validFor": "",
+          "value": "Touring Ultra Limited Low"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Travel",
+          "validFor": "",
+          "value": "Travel"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Trike 115th Anniversary Tri Glide Ultra",
+          "validFor": "",
+          "value": "Trike 115th Anniversary Tri Glide Ultra"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Trike freewheeler",
+          "validFor": "",
+          "value": "Trike freewheeler"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Trike Tri Glide Ultra",
+          "validFor": "",
+          "value": "Trike Tri Glide Ultra"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Urban",
+          "validFor": "",
+          "value": "Urban"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "URBAN MOBILITY",
+          "validFor": "",
+          "value": "URBAN MOBILITY"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Versys",
+          "validFor": "",
+          "value": "Versys"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Vulcan",
+          "validFor": "",
+          "value": "Vulcan"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "W175",
+          "validFor": "",
+          "value": "W175"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "W800",
+          "validFor": "",
+          "value": "W800"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X1",
+          "validFor": "gAAA",
+          "value": "X1"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X2",
+          "validFor": "gAAA",
+          "value": "X2"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X3",
+          "validFor": "gAAA",
+          "value": "X3"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X3M",
+          "validFor": "gAAA",
+          "value": "X3M"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X4",
+          "validFor": "gAAA",
+          "value": "X4"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X4M",
+          "validFor": "gAAA",
+          "value": "X4M"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X5",
+          "validFor": "gAAA",
+          "value": "X5"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X6",
+          "validFor": "gAAA",
+          "value": "X6"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X7",
+          "validFor": "gAAA",
+          "value": "X7"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "xe12",
+          "validFor": "",
+          "value": "xe12"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "xe14",
+          "validFor": "",
+          "value": "xe14"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "XM",
+          "validFor": "",
+          "value": "XM"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Youth",
+          "validFor": "",
+          "value": "Youth"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Z",
+          "validFor": "gAAA",
+          "value": "Z"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Z125",
+          "validFor": "",
+          "value": "Z125"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Z400",
+          "validFor": "",
+          "value": "Z400"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "Z900",
+          "validFor": "",
+          "value": "Z900"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MN-BMW-HERITAGE-R12-GS",
+          "validFor": "",
+          "value": "MN-BMW-HERITAGE-R12-GS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MN-BMW-HERITAGE-R12-GS-719",
+          "validFor": "",
+          "value": "MN-BMW-HERITAGE-R12-GS-719"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "X6M",
+          "validFor": "",
+          "value": "X6M"
+        }
+      ],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": false,
+      "type": "multipicklist"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": false,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Todas las marcas",
+      "name": "Todas_las_marcas__c",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "boolean"
+    },
+    {
+      "aggregatable": false,
+      "custom": true,
+      "defaultValue": false,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Todas las familias",
+      "name": "Todas_las_familias__c",
+      "nillable": false,
+      "picklistValues": [],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "boolean"
+    },
+    {
+      "aggregatable": true,
+      "custom": true,
+      "defaultValue": null,
+      "extraTypeInfo": null,
+      "filterable": true,
+      "groupable": true,
+      "inlineHelpText": null,
+      "label": "Marca",
+      "name": "Marca_principal__c",
+      "nillable": true,
+      "picklistValues": [
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BMW",
+          "validFor": null,
+          "value": "BMW"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "MINI",
+          "validFor": null,
+          "value": "MINI"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "KAWASAKI",
+          "validFor": null,
+          "value": "KAWASAKI"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "POLARIS",
+          "validFor": null,
+          "value": "POLARIS"
+        },
+        {
+          "active": true,
+          "defaultValue": false,
+          "label": "BMW MOTO",
+          "validFor": null,
+          "value": "BMW MOTO"
+        }
+      ],
+      "referenceTo": [],
+      "relationshipName": null,
+      "sortable": true,
+      "type": "picklist"
+    }
+  ],
+  "label": "Banco",
+  "childRelationships": [
+    {
+      "cascadeDelete": true,
+      "childSObject": "AIInsightValue",
+      "deprecatedAndHidden": false,
+      "field": "SobjectLookupValueId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "AIRecordInsight",
+      "deprecatedAndHidden": false,
+      "field": "TargetId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "AgentWork",
+      "deprecatedAndHidden": false,
+      "field": "WorkItemId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "AttachedContentDocument",
+      "deprecatedAndHidden": false,
+      "field": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "AttachedContentDocuments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "AttachedContentNote",
+      "deprecatedAndHidden": false,
+      "field": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "AttachedContentNotes",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "Attachment",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Attachments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "Banco__Share",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Shares",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "CollaborationGroupRecord",
+      "deprecatedAndHidden": false,
+      "field": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordAssociatedGroups",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "CombinedAttachment",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "CombinedAttachments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ContactRequest",
+      "deprecatedAndHidden": false,
+      "field": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ContactRequests",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "ContentDistribution",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "ContentDocumentLink",
+      "deprecatedAndHidden": false,
+      "field": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ContentDocumentLinks",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ContentDocumentLinkChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ContentVersion",
+      "deprecatedAndHidden": false,
+      "field": "FirstPublishLocationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ContentVersionChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "FirstPublishLocationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "DuplicateRecordItem",
+      "deprecatedAndHidden": false,
+      "field": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "DuplicateRecordItems",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EmailMessageChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelatedToId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EngagementTopic",
+      "deprecatedAndHidden": false,
+      "field": "TopicId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "EngagementInitiatedTopic",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EngagementTopicChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "TopicId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "EntitySubscription",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "FeedSubscriptionsForEntity",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EventChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "EventRelation",
+      "deprecatedAndHidden": false,
+      "field": "RelationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "EventRelations",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "EventRelationChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "FeedComment",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "FeedItem",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "FlowExecutionErrorEvent",
+      "deprecatedAndHidden": false,
+      "field": "ContextRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "FlowOrchestrationWorkItem",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "FlowOrchestrationWorkItems",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "FlowRecordRelation",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "NetworkActivityAudit",
+      "deprecatedAndHidden": false,
+      "field": "ParentEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ParentEntities",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "NetworkFeedResponseMetric",
+      "deprecatedAndHidden": false,
+      "field": "ParentRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "NetworkUserHistoryRecent",
+      "deprecatedAndHidden": false,
+      "field": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "NetworkUserHistoryRecentToRecord",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "Note",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Notes",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "NoteAndAttachment",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "NotesAndAttachments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "PendingServiceRouting",
+      "deprecatedAndHidden": false,
+      "field": "WorkItemId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "PendingServiceRoutingInteractionInfo",
+      "deprecatedAndHidden": false,
+      "field": "PrimaryRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "PendingServiceRoutingInteractionInfo",
+      "deprecatedAndHidden": false,
+      "field": "TargetObjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "ProcessException",
+      "deprecatedAndHidden": false,
+      "field": "AttachedToId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ProcessExceptions",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ProcessExceptionEvent",
+      "deprecatedAndHidden": false,
+      "field": "AttachedToId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "ProcessInstance",
+      "deprecatedAndHidden": false,
+      "field": "TargetObjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ProcessInstances",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "ProcessInstanceHistory",
+      "deprecatedAndHidden": false,
+      "field": "TargetObjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ProcessSteps",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "Propiedades_de_la_cuota__c",
+      "deprecatedAndHidden": false,
+      "field": "Banco__c",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Propiedades_de_las_cuotas__r",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "RecordAction",
+      "deprecatedAndHidden": false,
+      "field": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordActions",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "RecordActionHistory",
+      "deprecatedAndHidden": false,
+      "field": "ParentRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordActionHistories",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "RecordAlert",
+      "deprecatedAndHidden": false,
+      "field": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordAlertParent",
+      "restrictedDelete": true
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "RecordAlert",
+      "deprecatedAndHidden": false,
+      "field": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordAlertWhat",
+      "restrictedDelete": true
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "SurveySubject",
+      "deprecatedAndHidden": false,
+      "field": "SubjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "SurveySubjectEntities",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "TaskChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "TaskRelation",
+      "deprecatedAndHidden": false,
+      "field": "RelationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "TaskRelations",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "TaskRelationChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelationId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "TopicAssignment",
+      "deprecatedAndHidden": false,
+      "field": "EntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "TopicAssignments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": true,
+      "childSObject": "UserDefinedLabelAssignment",
+      "deprecatedAndHidden": false,
+      "field": "ItemId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "UserDefinedLabelAssignments",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "VideoCall",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "VideoRelatedRecords",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "VideoCallChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "VoiceCall",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RelatedRecords",
+      "restrictedDelete": false
+    },
+    {
+      "cascadeDelete": false,
+      "childSObject": "VoiceCallChangeEvent",
+      "deprecatedAndHidden": false,
+      "field": "RelatedRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": null,
+      "restrictedDelete": false
+    }
+  ],
+  "custom": true,
+  "name": "Banco__c",
+  "queryable": true
+}

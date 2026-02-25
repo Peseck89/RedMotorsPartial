@@ -1,0 +1,388 @@
+<aura:component
+  implements="lightning:isUrlAddressable,force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+  access="global" controller="communityManageWorks_ctrl">
+
+  <aura:handler name="init" value="this" action="{!c.doInit}" />
+  <aura:attribute name="controllerFirstRun" type="boolean" default="false" />
+  <aura:attribute name="activeSections" type="List" default="['A']" />
+  <aura:attribute name="activeSectionsMessage" type="String" default="" />
+  <aura:attribute name="isOpen" type="Boolean" default="true" />
+  <aura:attribute name="isOpen2" type="Boolean" default="true" />
+  <aura:attribute name="isOpen3" type="Boolean" default="true" />
+
+  <aura:attribute name="caseId" type="String" default="" />
+  <aura:attribute name="estadoActual" type="String" default="" />
+
+  <aura:attribute name="steps" type="List" default="[
+  'Sin etapa', 'Recibido', 'Ingreso Torre de Control', 'Programación', 'Asignado',
+  'En Proceso', 'Pruebas', 'Trabajo externo', 'Pintura', 'Creando presupuesto',
+  'Presupuesto autorizado', 'Presupuesto listo', 'Control de calidad', 'Lavado',
+  'Pedido especial (Varado)', 'Pedido especial (Rodando)', 'Vehículo Listo', 'Entregado'
+  ]" />
+
+  <aura:attribute name="stages" type="List" />
+  <aura:attribute name="currentStage" type="String" />
+
+  <aura:attribute name="activeIndex" type="Integer" default="0" />
+  <aura:attribute name="stepWrappers" type="List" />
+
+  <html lang="en" class="light-style layout-menu-fixed">
+  <!--Community Calendar Components -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes" />
+
+  <!-- CSS -->
+  <ltng:require styles="{!$Resource.CommunityCalendarStyle}" /> <!-- Nuestros CSSs -->
+  <ltng:require styles="{!$Resource.CommunityCalendarStyleComplement}" /> <!-- Nuestros CSSs -->
+  <ltng:require styles="{!$Resource.CustomerCommunitiesAdditionalStyles}" /> <!-- Nuestros CSSs -->
+
+  <ltng:require styles="{!$Resource.CustomerCommunity_corecss}" /> <!-- Template CSSs -->
+  <ltng:require styles="{!$Resource.CustomerCommunity_themeDefault}" /> <!-- Template CSSs -->
+  <ltng:require styles="{!$Resource.CustomerCommunityFiles + 'CustomerCommunity/assets/vendor/fonts/boxicons.css'}" />
+  <!-- Template CSSs -->
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>Estado del vehículo en el taller</title>
+    <meta name="description" content="" />
+    <!-- Fonts -->
+  </head>
+
+  <body>
+    <aura:if isTrue="{!v.isLoading}">
+      <div class="spinner-container"
+        style="background-color: rgba(0, 0, 0, 0.9);top: 0;left: 0;position:fixed;width: 100%;height: 100%; align-items: center;justify-content: center;z-index: 9999;">
+        <div class="slds-spinner slds-spinner_medium">
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+    </aura:if>
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+          <div class="app-brand demo">
+            <a class="app-brand-link">
+              <a class="app-brand-link">
+                <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo" style="max-width: 175px;" />
+                <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+                  <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+                  <img src="{!$Resource.communityMINI}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+                  <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+              </a>
+            </a>
+            <a class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none"> <i
+                class="bx bx-chevron-left bx-sm align-middle"> </i> </a>
+          </div>
+          <div class="menu-inner-shadow"></div>
+          <ul class="menu-inner py-1">
+            <li class="menu-header small text-uppercase">
+              <span class="menu-header-text">Estado del vehículo en el taller</span>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link menu-toggle " href="{!'/s/?servicio=' + v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                <div class="under" data-i18n="Authentications">Nueva Cita</div>
+              </a>
+              <ul class="menu-sub"></ul>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link menu-toggle"
+                href="{!'/s/communitycancelappointments?id=' + v.contactId + '&amp;marca=' +  v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                <div class="under" data-i18n="Authentications">Modificar Cita</div>
+              </a>
+              <ul class="menu-sub"></ul>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link menu-toggle"
+                href="{!'/s/communityappointmentshistory?id=' + v.contactId + '&amp;marca=' +  v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                <div class="under" data-i18n="Authentications">Historial de Citas</div>
+              </a>
+              <ul class="menu-sub"></ul>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link menu-toggle" onclick="{! c.openSoporte }">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                <div class="under" data-i18n="Authentications">Asistencia en Linea</div>
+              </a>
+              <ul class="menu-sub"></ul>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link menu-toggle" href="{!'/s/gestionavehiculos?id=' + v.contactId}">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                <div class="under" data-i18n="Authentications">Gestiona tus vehiculos</div>
+              </a>
+              <ul class="menu-sub"></ul>
+            </li>
+            <!-- Components -->
+            <li class="menu-header small text-uppercase">
+              <span class="menu-header-text">Mi Perfil </span>
+            </li>
+            <!-- Cards -->
+            <li class="menu-item">
+              <a class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"> </i>
+                <div class="under" data-i18n="Basic">Próximamente</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link" href="{!'/s/communitymanageworks?id=' + v.contactId}">
+                <i class="menu-icon tf-icons bx bx-collection"> </i>
+                <div class="under" data-i18n="Basic">Gestionar trabajos a realizar</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link" href="{!'/s/communitywsvehiclestatus?id=' + v.contactId}">
+                <i class="menu-icon tf-icons bx bx-collection"> </i>
+                <div class="under active" data-i18n="Basic">Estado del vehículo en el taller</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link" href="{!'/s/communityinspectionhistory?id=' + v.contactId}">
+                <i class="menu-icon tf-icons bx bx-collection"> </i>
+                <div class="under" data-i18n="Basic">Historial de inspecciones</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link" href="/secur/logout.jsp">
+                <i class="menu-icon tf-icons bx bx-collection"> </i>
+                <div class="under" data-i18n="Basic">LogOut</div>
+              </a>
+            </li>
+          </ul>
+        </aside>
+        <!-- / Menu -->
+        <!-- Layout container -->
+        <div class="layout-page">
+          <nav
+            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            id="layout-navbar">
+            <div class="app-brand demo logo-mobile">
+              <a class="app-brand-link">
+                <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+                  <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+                  <img src="{!$Resource.communityMINI}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+                  <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+              </a>
+            </div>
+            <div class=" layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+              <a class="nav-item nav-link px-0 me-xl-4">
+                <i class="bx bx-menu bx-sm"> </i>
+              </a>
+            </div>
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              <!-- /Search -->
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <!-- Place this tag where you want the button to render. -->
+                <li class="nav-item lh-1 me-3 welcome-text">
+                  <span>
+                    <ui:outputText value="{!v.userName}" />
+                  </span>
+                </li>
+              </ul>
+              <!-- Search -->
+              <div class=" hamburguesa navbar-nav align-items-center">
+                <div id="barMenu" onclick="{! c.showMenu }" style=" top:0;left:0;">
+                  <div style="width: 30px;height: 3px;background-color: black;margin: 6px 0;"></div>
+                  <div style="width: 30px;height: 3px;background-color: black;margin: 6px 0;"></div>
+                  <div style="width: 30px;height: 3px;background-color: black;margin: 6px 0;"></div>
+                </div>
+                <div class="nav-item d-flex align-items-center"></div>
+              </div>
+            </div>
+          </nav>
+
+          <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+            <img src="{!$Resource.BMWCar}" alt="BMWLogo" class="banner-image-mw" />
+          </aura:if>
+          <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+            <img src="{!$Resource.MINICar}" alt="BMWLogo" class="banner-image-mw" />
+          </aura:if>
+          <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+            <img src="{!$Resource.MotoCar}" alt="BMWLogo" class="banner-image-mw" />
+          </aura:if>
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div id="barMenu" class="hamburguesa" onclick="{! c.showMenu }" style=" top:0;left:0;">
+                <div style="width: 35px;height: 5px;background-color: black;margin: 6px 0;"></div>
+                <div style="width: 35px;height: 5px;background-color: black;margin: 6px 0;"></div>
+                <div style="width: 35px;height: 5px;background-color: black;margin: 6px 0;"></div>
+              </div>
+              <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                <!-- Search -->
+                <div class=" navbar-nav align-items-center">
+                  <h4 class="fw-bold py-3 second margin cancelMargin">Estado del vehículo en el taller</h4>
+                </div>
+                <!-- /Search -->
+                <div class="navbar-nav  ms-auto ">
+                  <button style="margin-top: 0px;" class="btn cambiarMarca btn-primary btn-block"
+                    onclick="{! c.mostrarCambiarMarca }"> Cambiar marca </button>
+                </div>
+              </div>
+              <div class="bannercontainer">
+                <img src="{!$Resource.bannerBmwS2}" alt="BMW Banner" class="banner-image-mw" />
+              </div>
+              <div class="slds-m-around_xx-large">
+                <aura:if isTrue="{!v.isModalChangeMarca}">
+                  <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                    aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                      <header class="slds-modal__header">
+                        <div id="creandocita1_">
+                          <span class="citation-message"> Estas en {!v.marcaSelected} </span> <br />
+                          <div class="cambio-marca">
+                            <b>¿Quieres cambiar?: </b>
+                            <lightning:combobox class="form-control" id="checkMarcas" name="general"
+                              placeholder="Marcas" options="{! v.marcasPagina }"
+                              onchange="{! c.handleOnChangeSelectedMarca }" />
+                            <br />
+                          </div>
+                        </div>
+                        <div id="creandocita2_" style="padding-top:2px">
+                          <lightning:button variant="neutral" label="Volver" title="Volver"
+                            onclick="{! c.cerrarCambiarMarca }" />
+
+                          <lightning:button variant="brand" label="Presiona para confirmar"
+                            title="Presiona para confirmar" onclick="{! c.handleAceptarMarca }" />
+                        </div>
+
+                      </header>
+
+                    </div>
+                  </section>
+                  <div class="slds-backdrop slds-backdrop_open"></div>
+                </aura:if>
+              </div>
+              <img src="{!$Resource.BMWCar}" alt="BMWLogo" class="banner-image" />
+              <div>
+                <div class="progress-indicator-title align-items-left">
+                  <lightning:icon iconName="utility:success" alternativeText="Success!" variant="Success"
+                    title="success variant" />
+                  <h4>{!v.estadoActual}</h4>
+                </div>
+
+                <!-- <div class="slds-progress" style="max-width:95%;">
+                  <ol class="slds-progress__list">
+                    <aura:iteration items="{!v.stepWrappers}" var="stepWrapper">
+                      <li class="{!stepWrapper.stepClass}">
+                        <div class="slds-progress__marker" tabindex="0">
+                          <span class="slds-assistive-text">{!stepWrapper.step}</span>
+                        </div>
+                      </li>
+                    </aura:iteration>
+                  </ol>
+                  <div class="slds-progress-bar slds-progress-bar_x-small" aria-valuemin="0" aria-valuemax="100"
+                    aria-valuenow="{!v.activeIndex / (v.steps.length - 1) * 100}" aria-label="Progress bar description"
+                    role="progressbar">
+                    <span class="slds-progress-bar__value"
+                      style="{! 'width:' + (v.activeIndex / (v.steps.length - 1) * 100) + '%'}">
+                      <span class="slds-assistive-text">Progress: {!v.activeIndex / (v.steps.length - 1) * 100}%</span>
+                    </span>
+                  </div>
+
+                  <aura:iteration items="{!v.stepWrappers}" var="stepWrapper">
+                    <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom" role="tooltip"
+                      style="{!stepWrapper.tooltipPosition}">
+                      <div class="slds-popover__body">{!stepWrapper.step}</div>
+                    </div>
+                  </aura:iteration>
+                </div> -->
+                
+                <!-- Timeline Container -->
+                <div class="timeline-container">
+                  <ul class="timeline">
+                      <aura:iteration items="{!v.stages}" var="stage">
+                          <li class="{!stage.class}">
+                              {!stage.Nombre_Mostrar__c}
+                          </li>
+                      </aura:iteration>
+                  </ul>
+                </div>
+                <!-- <div class="timeline-container">
+                  <ul class="timeline">
+                    <li class="active-tl">Sin etapa</li>
+                    <li class="active-tl">Ingreso</li>
+                    <li class="actual-tl">Inspección</li>
+                    <li>En proceso</li>
+                    <li>Espera repuestos</li>
+                    <li>Lavado</li>
+                    <li>Listo</li>
+                  </ul>
+                </div> -->
+
+                <div class="comments">
+                  <p>Comentarios: </p>
+                  <textarea></textarea>
+                  <!-- Aquí puedes agregar comentarios si los hay -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <footer style="position: sticky; bottom:10px" class="content-footer footer bg-footer-theme">
+            <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+              <div class="mb-2 mb-md-0">
+                © 2023. Comunidad RedMotors. By PortalNet.
+              </div>
+              <div><a onclick="{! c.mostrarTerminos }">Terminos y condiciones</a></div>
+            </div>
+          </footer>
+          <div class="content-backdrop fade"></div>
+        </div>
+      </div>
+    </div>
+    <div id="overlayMenu" onclick="{! c.hideMenu }" class="layout-overlay layout-menu-toggle"></div>
+    <button class="floating-button desktop"
+      style="position: fixed;bottom: -1px;right: 20px;z-index: 999; border-radius: 50%;background-color:transparent;border-color:transparent;  padding: 10px;"
+      onclick="{!c.openModalCase}">
+      <!-- <lightning:icon iconName="standard:service_crew" size="large" alternativeText="Support Icon" /> -->
+      <div class="main-div" style="width: 300px;height: 50px;">
+        <div class="blue-circle"
+          style="display: flex;height: 50px;width: 50px;background-color: white;border-radius: 50%;position: absolute;left: 5px;z-index: 999;">
+          <div class="text-div"
+            style="top: 9%;left: 10%;background-color:white;height: 40px;width: 40px;position: absolute;border-radius:50px;height: 40px;width: 40px;background-position:center;">
+            <img src="{!$Resource.chatImage}" alt="Italian Trulli" />
+          </div>
+        </div>
+        <div class="black-side"
+          style="display: flex;justify-content: center;align-items: center;width: 100%;height: 40%;top: 0;position: absolute;background-color: black;color: white;border-top-left-radius: 5px;border-top-right-radius: 5px;font-weight: bold;">
+          <p>BMW</p>
+        </div>
+        <div class="gray-side"
+          style="display: flex;justify-content: center;align-items: center;width: 100%;height: 60%;bottom: 0;position: absolute;background-color: white;border-style: outset;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;font-weight: bold;">
+          <p>¿Tienes dudas?</p>
+        </div>
+      </div>
+    </button>
+    <button class="floating-button mobile"
+      style="position: fixed;z-index: 999;bottom: 25px;right: 20px;border-radius: 15px;background-color:transparent;border-color: transparent; width:85px"
+      onclick="{!c.openModalCase}">
+      <div>
+        <div class="cons-container">
+          <p>Consultas</p>
+        </div>
+        <div class="bottom-container">
+          <img src="{!$Resource.chatImage}" alt="Italian Trulli" />
+        </div>
+      </div>
+    </button>
+  </body>
+
+  </html>
+</aura:component>

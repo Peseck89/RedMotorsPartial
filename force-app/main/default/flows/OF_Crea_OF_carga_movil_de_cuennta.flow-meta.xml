@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <assignments>
+        <description>si el esta en blanco se asigna</description>
+        <name>Asigno_telefono</name>
+        <label>Asigno telefono</label>
+        <locationX>374</locationX>
+        <locationY>491</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Movil_Altica__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>BuscaCuentas.Telefono_Altica__c</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Encontro_Cuenta</name>
+        <label>Encontro Cuenta</label>
+        <locationX>585</locationX>
+        <locationY>519</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Loencontro</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>BuscaCuentas</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asigno_telefono</targetReference>
+            </connector>
+            <label>Lo encontro</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>M_vil_Altica_null</name>
+        <label>Móvil_Altica null</label>
+        <locationX>601</locationX>
+        <locationY>271</locationY>
+        <defaultConnectorLabel>no</defaultConnectorLabel>
+        <rules>
+            <name>si</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Movil_Altica__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>BuscaCuentas</targetReference>
+            </connector>
+            <label>telefono. es nulo</label>
+        </rules>
+    </decisions>
+    <description>La crear la OF si el Teléfono esta nulo lo carga de la Cuenta</description>
+    <interviewLabel>OF Crea OF carga movil de cuennta {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>OF Crea OF carga movil de cuennta</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Busca cuentas</description>
+        <name>BuscaCuentas</name>
+        <label>Busca Cuentas</label>
+        <locationX>620</locationX>
+        <locationY>403</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Encontro_Cuenta</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Nombre_Cliente_Altica__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>490</locationX>
+        <locationY>48</locationY>
+        <connector>
+            <targetReference>M_vil_Altica_null</targetReference>
+        </connector>
+        <object>Oportunidad_de_Financiamiento__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>registro  de cy=uenta</description>
+        <name>Cuenta</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Account</objectType>
+    </variables>
+</Flow>

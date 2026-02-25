@@ -1,0 +1,192 @@
+<template>
+    <div>
+        <template if:true={isLoading}>
+            <div>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <header>
+            <div class="slds-page-header slds-page-header_record-home">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-opportunity">
+                                    <lightning-icon icon-name="standard:contract"
+                                        alternative-text="Gestión de Tareas"
+                                        title="Gestión de Tareas"></lightning-icon>
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1>
+                                            <span>Tareas</span>
+                                            <span class="slds-page-header__title slds-truncate"
+                                                title="Gestión de Tareas">Gestión de Tareas</span>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <article class="slds-card slds-m-top_small">
+        <div class="slds-border_bottom">
+            <div class="slds-card__body slds-p-around_small">
+                <div class="slds-grid slds-grid_align-center slds-gutters">
+                    <template if:true={isCaseRequired}>
+                        <div class="slds-col slds-size_2-of-12">
+                            <div class="slds-form-element">
+                                <c-lookup selection={caseInitialSelection} errors={caseErrors}
+                                    label="Seleccione el caso" onsearch={handleCaseSearch} required="true"
+                                    onselectionchange={handleCaseSelectionChange} placeholder="Buscar ...">
+                                </c-lookup>
+                            </div>
+                        </div>
+                    </template>                    
+                    <div class="slds-col slds-size_2-of-12">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="select-01">
+                                <abbr class="slds-required" title="required">* </abbr>Acción a realizar</label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-select_container">
+                                    <select class="slds-select" id="select-01" required=""
+                                        onchange={handleActionChange}>
+                                        <option value="detalle" selected={isEmptyAction}>Detalle del caso</option>
+                                        <option value="asignar">Asignar</option>
+                                        <option value="iniciar">Iniciar</option>
+                                        <option value="pausar">Pausar</option>
+                                        <option value="completar">Completar</option>
+                                        <option value="reasignar">Reasignar</option>
+                                        <option value="reanudar">Reanudar caso</option>
+                                        <option value="consultar-tareas">Consultar tareas</option>
+                                        <option value="tiempo-improductivo">Registrar tiempo improductivo</option>
+                                        <option value="cierre-taller">Cierre de taller</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                 
+                    <template if:true={showTaller}>
+                        <div class="slds-col slds-size_2-of-12">
+                            <lightning-combobox name="taller" label="Taller" value={inputTallerId} options={territories} onchange={handleTallerChange}></lightning-combobox>
+                        </div>
+                    </template>                    
+                    <template if:true={showMechanicElement}>
+                        <div class="slds-col slds-size_2-of-12">
+                            <c-lookup selection={mechanicInitialSelection} errors={errors} label="Seleccione el mecánico"
+                                onsearch={handleMechanicSearch} 
+                                onselectionchange={handleMechanicSelectionChange} placeholder="Buscar ...">
+                            </c-lookup>
+                        </div>
+                    </template>
+                    <template if:true={showWorkStepStatus}>
+                        <div class="slds-col slds-size_2-of-12">
+                            <lightning-combobox
+                            label="Estatus"
+                            value={status}
+                            placeholder="Seleccionar estatus"
+                            options={statusOptions}
+                            onchange={handlStatusChange}></lightning-combobox>
+                        </div>
+                    </template>  
+                    <div class="slds-col slds-size_1-of-12">
+                        <lightning-input type="checkbox" checked={showParentTasks} label={showMessageInfo} title="Indica si la pantalla muestra solo tareas padres tareas hijas" onchange={handleShowParentTasksChange}></lightning-input>                                                      
+                    </div>   
+                    <div class="slds-col slds-size_2-of-12">
+                        <lightning-combobox label="Tipo de cargo" options={tipoCargoOptions} value={selectedTipoCargo} onchange={handleTipoCargoChange} placeholder="Seleccione un tipo de cargo"></lightning-combobox> 
+                    </div>
+                                 
+                </div>
+            </div>
+        </div>
+
+
+        <template if:true={showRecords}>
+            <template if:true={isConsultarTareas}>
+                <c-c-t_-asigna-mecanico-consultar-tareas  records={workSteps} columns={columns} > </c-c-t_-asigna-mecanico-consultar-tareas>     
+            </template>
+            <template if:false={isConsultarTareas}>
+                <div class="slds-text-align_center slds-text-heading_medium slds-m-around_medium">Favor seleccione las
+                    tarea(s) por {inputAction}</div>
+                <lightning-datatable hide-checkbox-column={isHideCheckboxColumn} max-row-selection={maxRowSelection}
+                    key-field="Id" columns={columns} data={workSteps} onrowselection={handleWorkStepSelection}
+                    selected-rows={selectedWorkStepIds} class="slds-m-top_medium">
+                </lightning-datatable>
+            </template>
+
+            <template if:false={isHideCheckboxColumn}>
+                <div class="slds-card__footer" style="display: flex;justify-content:center;">
+                    <div>
+                        <div class="slds-button-group" role="group">
+                            <button class="slds-button slds-button_neutral"
+                                onclick={handleCancelClick}>Cancelar</button>
+                        </div>
+                        <div class="slds-button-group" role="group">
+                            <button class="slds-button slds-button_brand" onclick={handleAcceptClick} disabled={isEnableAcceptButton}>Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </template>
+
+        <template if:true={isModalOpen}>
+            <c-create-h-i-m onclosemodal={handleCloseModal}></c-create-h-i-m>
+        </template>
+
+        <template if:true={isHIMModalOpen}>
+            <c-create-h-i-m-from-tasks work-step-ids={selectedWorkStepIds} onclosemodal={handleCloseHIMEvent}
+                onaccept={handleAcceptEvent}></c-create-h-i-m-from-tasks>
+        </template>
+
+        <c-modal>
+            <span slot="header">
+                Confirmación ?
+            </span>
+            <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                <h2>El mecanico ya cuenta con una tarea en curso, desea pausar e iniciar una nueva tarea ?</h2>
+            </div>
+
+            <fieldset class="slds-form-element slds-form-element_compound">
+                <legend class="slds-form-element__legend slds-form-element__label">Información de la tarea</legend>
+                <div class="slds-form-element__control">
+                    <div class="slds-form-element__row">
+                        <div class="slds-size_1-of-3">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="input-01">Tarea</label>
+                                <div class="slds-form-element__control">
+                                    <input type="text" id="input-task-name" readonly class="slds-input" value={taskName}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-3">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="input-02">Caso</label>
+                                <div class="slds-form-element__control">
+                                    <input type="text" id="input-case-number" readonly class="slds-input" value={taskCaseNumber} />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-3">
+                        </div>                        
+                    </div>
+                </div>
+            </fieldset>
+            <span slot="footer">
+                <button class="slds-button slds-button_neutral" onclick={handleCancelPauseAndStartClick}>Cancelar</button>
+                <button class="slds-button slds-button_brand" onclick={handlePauseAndStartClick}>Aceptar</button>
+            </span>
+        </c-modal>
+
+        <template if:true={IsCaseNotEmpty}>
+            <c-r-m-_-event record-id={inputCaseId} action="refresh-asignacion-mecanico" onrefreshworksteps={handleRefreshWorkStepsEvent}></c-r-m-_-event>
+        </template>
+
+    </article>
+</template>

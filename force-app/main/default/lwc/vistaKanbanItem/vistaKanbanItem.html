@@ -1,0 +1,25 @@
+<!--
+  @description       : Representa una columna del componente Vista Kanban New
+  @author            : marcohernandezhp@gmail.com
+  @group             : Redmotors
+  @last modified on  : 02-25-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <ul style="padding-left: 10px; padding-right: 10px;" data-stage={stageName} ondragover={handleDragOver} ondrop={handleDrop}> 
+        <template if:true={isLoading}>
+            <div>Cargando...</div>
+        </template>
+        <!-- <template if:false={isLoading}> -->
+            <!-- <template if:true={recordsFound}> -->
+                <template for:each={workStepsUpdated} for:item="workStep">
+                    <c-c-T_vista-kanban-card stage={stageName} strstatus={workStep.stageName} record={workStep} key={workStep.Id}>
+                    </c-c-T_vista-kanban-card>
+                </template>
+            <!-- </template> -->
+            <!-- <template if:false={recordsFound}>
+                <div>No se encontraron registros.</div>
+            </template> -->
+        <!-- </template> -->
+    </ul>    
+</template>

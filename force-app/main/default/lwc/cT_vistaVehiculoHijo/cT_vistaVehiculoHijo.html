@@ -1,0 +1,32 @@
+<template>
+    <template if:true={isSameStage}>
+   <li class="slds-item slds-var-m-around_small" draggable="true" ondragstart={itemDragStart}>
+       <article class="slds-tile slds-tile_board">
+        <lightning-layout multiple-rows="true">
+            <lightning-layout-item class="slds-p-around_xx-small" size=10>
+            </lightning-layout-item>
+           <lightning-layout-item class="slds-p-around_xx-small" size=2>
+            <template if:true={amarillo}>
+            <span class="btnColor"  style="height: 25px;width: 25px;background-color: #FFFF00;border-radius: 50%;display: inline-block;"></span>
+            </template>
+            <template if:true={verde}>
+                <span class="btnColor"  style="height: 25px;width: 25px;background-color: #00ff00;border-radius: 50%;display: inline-block;"></span>
+            </template>
+            <template if:true={rojo}>
+                <span class="btnColor"  style="height: 25px;width: 25px;background-color: #ff0000;border-radius: 50%;display: inline-block;"></span>
+            </template>
+            <template if:true={azul}>
+                <span class="btnColor"  style="height: 25px;width: 25px;background-color: #0000ff;border-radius: 50%;display: inline-block;"></span>
+            </template>
+           </lightning-layout-item>
+        </lightning-layout>
+           <div class="slds-tile__detail slds-text-body_small">
+               <p class="slds-text-heading_small">Ini: {record.StartTime}</p>
+               <p class="slds-text-heading_small">Fin: {record.EndTime}</p>
+               <p class="slds-text-heading_small">Tarea: {record.Tarea}</p>
+               <p class="slds-text-heading_small">Mecánico: {record.Mecanico}</p>
+           </div>
+       </article>
+   </li>
+</template>
+</template>

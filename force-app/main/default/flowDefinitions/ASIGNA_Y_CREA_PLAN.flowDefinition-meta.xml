@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionNumber>4</activeVersionNumber>
+    <description>SELECCIONA DE LISTADO DE TIPOS DE TRABAJO DE UN CASO UNO DE LOS REGISTROS EXISTENTES Y CREA BAJO SU ORDEN DE TRABAJO UN PLAN DE TRABAJO BASANDO AL REGISTRO BAJO EL QUE SE CREA SI ES EL QUE CORRESPONDE AL TIPO DE CARGO (TTC) O TIPPO DE GASTO (OT).</description>
+    <masterLabel>CREAR UN PLAN DESDE UN TIPO DE TRABAJO DEL CASO</masterLabel>
+</FlowDefinition>

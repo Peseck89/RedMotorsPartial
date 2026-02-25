@@ -1,0 +1,59 @@
+<template>
+    <lightning-card title="Chatter" icon-name="standard:feed">
+        <template if:true={hasFeedItems}>
+            <template for:each={feedItems} for:item="item">
+                <div key={item.Id} class="feed-item">
+                    <p><b>Mensaje: </b>{item.Body}</p>
+                    <p><b>Creado por: </b>{item.CreatedByName}</p>
+                    <p><b>Creado el: </b> {item.CreatedDate}</p>
+                    <!-- Attachments Section -->
+                    <template if:true={item.Attachments}>
+                        <p><b>Imágenes relacionadas:</b></p>
+                        <div class="attachments">
+                            <template for:each={item.Attachments} for:item="attachment">
+                                <div key={attachment.Id} class="attachment">
+                                    <img src={attachment.Url} alt={attachment.Title} class="attachment-img"/>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <!-- Comments Section -->
+                    <template if:true={item.Comments}>
+                        <template for:each={item.Comments} for:item="comment">
+                            <div key={comment.Id} class="comment">
+                                <p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mensaje: </b>{comment.CommentBody}</p>
+                                <p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creado por: </b>{comment.CreatedBy.Name}</p>
+                                <p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creado el: </b> {comment.CreatedDate}</p>
+                                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                            </div>
+                        </template>
+                    </template> 
+                     <!-- 
+                     <template if:false={item.showNewComment}>
+                        <div class="aligned">
+                            <lightning-button label="Comentar" data-id={item.Id} onclick={toggleCommentSection}></lightning-button>
+                        </div>
+                    </template>                     
+                   <template if:true={item.showNewComment}>
+                        <div class="new-comment-section">
+                            <div class="aligned">
+                                <lightning-textarea label="Nuevo comentario" data-id={item.Id} value={newComment} onchange={handleCommentChange}></lightning-textarea>
+                                <lightning-button label="Publicar comentario" data-id={item.Id} onclick={handlePostComment}></lightning-button>
+                            </div>
+                        </div>
+                     </template>--> 
+                    <!-- <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>-->
+                </div>
+            </template>
+        </template>
+        <template if:false={hasFeedItems}>
+            <p>No hay publicaciones de chatter.</p>
+        </template>
+
+        <!-- New Post Section -->
+        <lightning-textarea label="Nueva publicación" value={newPost} onchange={handlePostChange}></lightning-textarea>
+        <lightning-file-upload label="cargar imagenes" record-id={recordId} onuploadfinished={handleUploadFinished}></lightning-file-upload>
+        <lightning-button label="Post" onclick={handlePostNew}></lightning-button>
+    </lightning-card>
+</template>

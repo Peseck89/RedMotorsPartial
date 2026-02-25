@@ -1,0 +1,21 @@
+<template>
+    <template if:true={lineItems}>
+
+        <!-- Display total general above all tables, aligned to the right -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <strong><h2>Total General: {totalGeneral}</h2></strong>
+        </div>
+
+        <lightning-datatable
+            key-field="codigoArticulo"
+            data={lineItems}
+            columns={columns}
+            max-row-selection="0">
+        </lightning-datatable>
+
+    </template>
+    
+    <template if:true={error}>
+        <p>{error}</p>
+    </template>
+</template>

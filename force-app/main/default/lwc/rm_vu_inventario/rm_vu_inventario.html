@@ -1,0 +1,71 @@
+<template>
+    <article class="slds-card">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <div class="slds-card__body">
+            <lightning-layout pull-to-boundary="small" multiple-rows="true" class="slds-p-around_medium">
+                <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12"
+                    medium-device-size="6" large-device-size="6">
+                    <lightning-combobox label="Tipo de vehiculo" options={recordTypesOptions} name="tipoVehiculo" 
+                    variant="label-inline" onchange={handleTipoVehiculoChange} dropdown-alignment="left"
+                    placeholder="Todos" value={tipoVehiculo}></lightning-combobox>
+                    <lightning-input name="brand" label="Marca" value={brand} type="search" variant="label-inline"
+                        placeholder="Buscar por marca ..." onchange={handleBrandChange}></lightning-input>
+                    <lightning-input name="model" label="Modelo" value={model} type="search" variant="label-inline" 
+                        placeholder="Buscar por modelo ..." onchange={handleModelChange}></lightning-input>
+                    <lightning-input name="internalColor" value={internalColor} type="search" variant="label-inline"
+                        placeholder="Buscar por color interior ..." onchange={handleColorInternoChange}
+                        label="Color Interior"></lightning-input>
+                    <lightning-combobox label="Lista de precios" options={priceBooks}
+                        variant="label-inline" onchange={handlePriceBookChange} dropdown-alignment="left" name="priceBookId"
+                        placeholder="Todos" value={priceBookId}></lightning-combobox>
+                </lightning-layout-item>
+
+                <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12"
+                    medium-device-size="6" large-device-size="6">
+                    <lightning-input name="year" label="Año" value={year} type="search" variant="label-inline"
+                        placeholder="Buscar por año ..." onchange={handleYearChange}></lightning-input>
+                    <lightning-input name="placa" label="Placa" value={placa} type="search" variant="label-inline"
+                        placeholder="Buscar por placa..." onchange={handlePlacaChange}></lightning-input>
+                    <lightning-input name="externalColor" label="Color Exterior" value={externalColor} type="search"
+                        variant="label-inline" placeholder="Buscar por color exterior ..."
+                        onchange={handleColorExternoChange}></lightning-input>
+                    <lightning-combobox label="Tipo de Combustible" options={tipoCombustibleOptions}
+                    variant="label-inline" onchange={handleTipoCombustibleChange} dropdown-alignment="left" name="tipoCombustible"
+                    value={tipoCombustible}></lightning-combobox>
+                </lightning-layout-item>
+            </lightning-layout>
+
+
+            <div style="height:350px;">
+                <lightning-datatable max-row-selection={maxRowSelection} selected-rows={_selectedRecordIds}
+                    onrowselection={handleRecordsSelection} key-field="Id" data={records} columns={columns}>
+                </lightning-datatable>
+            </div>
+        </div>
+
+        <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+            <div>
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button_neutral" disabled={isEnablePrevButton}
+                        onclick={handleBackClick}>Pag. Anterior</button>
+                    <button class="slds-button slds-button_neutral" disabled={isEnableNextButton}
+                        onclick={handleNextClick}>Sig. Pagina</button>
+                </div>
+                <span class="slds-m-left_medium">{totalRecords} registros encontrados, Pagina {pageNumber} de 
+                    {totalPages}</span>
+            </div>
+            <div>
+                <lightning-button-menu label="Exportar a CSV" variant="brand" alternative-text="Exportar a CSV" icon-name="utility:settings" class="slds-m-right_large" onselect={handleExportSelect}>
+                    <lightning-menu-item value="comma" label="Exportar usando el separador (,)"  title="Al exportar a csv se usara el , como separador"></lightning-menu-item>
+                    <lightning-menu-item value="semicolon" label="Exportar usando el separador (;)" title="Al exportar a csv se usara el ; como separador."></lightning-menu-item>
+                </lightning-button-menu>
+                
+                <slot name="actions">
+                </slot>
+            </div>
+        </footer>
+    </article>
+</template>

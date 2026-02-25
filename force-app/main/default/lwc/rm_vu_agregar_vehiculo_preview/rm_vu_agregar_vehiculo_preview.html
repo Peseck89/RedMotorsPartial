@@ -1,0 +1,99 @@
+<template>
+    <article class="slds-card">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>        
+        <div class="slds-card__body">
+            <div class="slds-form slds-m-around_small slds-p-around_small" role="list">
+                <div class="slds-form__row">                        
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">   
+                            <lightning-input type="text"  label="Marca" value={prodXBodItem.productBrand} disabled> </lightning-input>                                
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text"  label="Año" value={prodXBodItem.productYear} disabled> </lightning-input>                                                          -->
+                        </div>
+                    </div>                              
+                </div> 
+
+                <div class="slds-form__row">                        
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">   
+                            <lightning-input type="text"  label="Modelo" value={prodXBodItem.productModel} disabled> </lightning-input>                                                           
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text"  label="Placa" value={prodXBodItem.productCode} disabled> </lightning-input>                                
+                        </div>
+                    </div>                              
+                </div>
+
+                <div class="slds-form__row">                        
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text"  label="Color" value={prodXBodItem.productColor} disabled> </lightning-input>                                
+                        </div>
+                    </div>                              
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">                               
+                            <lightning-input type="text"  label="Color Externo" value={prodXBodItem.productColorExterno} disabled> </lightning-input>                              
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="slds-form__row">                        
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">             
+                            <lightning-input type="text"  label="Tipo de combustible" value={prodXBodItem.productTipoCombustible} disabled> </lightning-input>   
+                        </div>
+                    </div>                              
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">   
+                            <lightning-input type="text"  label="Bodega" value={prodXBodItem.bodegaName} disabled> </lightning-input>                                
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="slds-form__row">                        
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <div class="slds-text-heading_medium">
+                                <lightning-formatted-number value={prodXBodItem.unitPrice} format-style="currency" currency-code={prodXBodItem.currencyCode}></lightning-formatted-number>
+                            </div>    
+                        </div>
+                    </div>                              
+                 
+                </div>                                 
+
+                <template if:true={hasQuotes}>      
+                    <p>Por defecto el nuevo vehiculo seleccionado se agregara a un nuevo presupuesto, si desea agregarlo a un presupuesto existente favor de indicar el la casilla de abajo.</p>          
+                    <div class="slds-form__row">                        
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">   
+                                <lightning-input type="checkbox"  label="Agregar a presupuesto existente" onchange={handleFlagAddToExistingQuoteChange}> </lightning-input>                                
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <template if:true={showQuoteInput}>
+                                    <lightning-combobox name="quoteId" label="Presupuesto" placeholder="Seleccione presupuesto" value={inputQuoteId} options={quoteOptions} onchange={handleQuoteInputChange}></lightning-combobox>
+                                </template>
+                            </div>
+                        </div>                              
+                    </div>  
+                </template>               
+            </div>
+        </div>
+        <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+            <div></div> 
+            <div>      
+                <lightning-button variant="brand-outline" label="Regresar" title="Regresar" onclick={handleGoBackClick} class="slds-m-left_small"></lightning-button>          
+                <lightning-button variant="brand" label="Agregar vehiculo" title="Agregar vehiculo" disabled={isDisableAcceptButton}
+                    onclick={handleAddItemClick} class="slds-m-left_x-small"></lightning-button>                                                   
+            </div>               
+        </footer>       
+    </article> 
+</template>

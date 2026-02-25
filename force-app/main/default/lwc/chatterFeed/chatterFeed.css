@@ -1,0 +1,16 @@
+.attachments {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.attachment {
+    margin-right: 20px; /* Espacio entre imágenes */
+}
+
+.attachment-img {
+    width: 250px;
+    height: auto;
+}
+.aligned {
+    margin-left: 32px; 
+}

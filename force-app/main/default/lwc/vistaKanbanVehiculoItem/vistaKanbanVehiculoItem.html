@@ -1,0 +1,17 @@
+<!--
+  @description       : 
+  @author            : marcohernandezhp@gmail.com
+  @group             : 
+  @last modified on  : 02-27-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <ul key={recordItem.Id} style="padding-left: 10px; padding-right: 10px;" data-stage={stageName} ondragover={handleDragOver} ondrop={handleDrop}>
+        <template if:true={recordsFound}>
+            <template for:each={workStepsUpdated} for:item="workStep">
+                <c-c-T_vista-kanban-card stage={stageName} record={workStep} key={workStep.Id}>
+                </c-c-T_vista-kanban-card>
+            </template>
+        </template>
+    </ul>
+</template>

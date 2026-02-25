@@ -1,0 +1,94 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" controller="ModifyEventController" >
+    
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="searchString"   type="string" default="" description="String to search"/>
+    <aura:attribute name="selectedRecord" type="Object" default="" description="selected Record Details" />
+    <aura:attribute name="recordsList" 	  type="List"   description="List of Records having data" />
+    <aura:attribute name="message" 		  type="String" default="" />
+    <aura:attribute name="mainMessage" 	  type="String" default="" />
+	<aura:attribute name="EventRecord" 	  type="Object" default="" description="Event Record Details" />
+    <aura:attribute name="tipoCargoCliente" type="Boolean" default="true" />
+    
+    <aura:html tag="style">
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }       
+        .slds-modal__content{
+        overflow-y:hidden !important;
+        height:unset !important;
+        max-height:unset !important;
+        }
+    </aura:html>
+    
+    <div>
+        <!--div class= "slds-modal__header">
+            <h1>        
+                <span class="slds-align_absolute-center  slds-m-around_small slds-page-header__title slds-truncate" title="Modify Event">Modify Event</span>
+            </h1>
+        </div-->
+        <div class="modal-header slds-modal__header slds-size_1-of-1">
+            <span class="slds-align_absolute-center  slds-m-around_small slds-page-header__title slds-truncate" title="Modify Event">Modify Event</span>
+        </div>
+        	<div class="slds-modal__content slds-p-around_medium" >
+                <div>
+                    <lightning:spinner class="slds-hide" aura:id="SpinnerMain" alternativeText="Loading" size="small" variant="brand"/>
+                    <span class="slds-media slds-listbox__option_entity">{!v.mainMessage}</span>
+                    <label class="slds-form-element__label">Número de Placa</label>
+                    <div class="slds-combobox_container" >
+                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aura:id="resultsDiv" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                <div aura:id="lookup-pill" class="{! 'slds-pill-container ' + if(v.selectedRecord == '','slds-hide','') }" style="height: 32px !IMPORTANT;">                                  
+                                    <lightning:pill class="fullWidth" label="{!v.selectedRecord.label}" name="{!v.selectedRecord.value}" onremove="{! c.removeItem }" >
+                                        <aura:set attribute="media">
+                                            <lightning:icon iconName="standard:asset_object" size="x-small" alternativeText="Asset"/>
+                                        </aura:set>
+                                    </lightning:pill>
+                                </div>
+                                <div aura:id="lookupField" class="{! if(v.selectedRecord == '','slds-show','slds-hide') }">
+                                    <lightning:icon class="slds-combobox__input-entity-icon" iconName="standard:asset_object" size="large" alternativeText="icon"/>
+                                    <lightning:input aura:id="inputLookup" class="inputBox" placeholder="Search" onblur="{!c.blurEvent}"  onclick="{!c.showRecords}" onkeyup="{!c.searchRecords}" value="{!v.searchString}" autoComplete="off" variant="label-hidden" id="combobox-id-1" />
+                                    <lightning:icon class="slds-input__icon" iconName="utility:search" size="x-small" alternativeText="search"/>
+                                    <lightning:spinner class="slds-hide" aura:id="Spinner" alternativeText="Loading" size="small" variant="brand"/>
+                                </div>
+                            </div>
+                            <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" style="{! 'max-height:' + (8 + (v.recordCount * 40)) + 'px' }">
+                                <ul class="slds-listbox slds-listbox_vertical recordListBox" role="presentation">
+                                    <aura:if isTrue="{!empty(v.message)}" >
+                                        <aura:iteration items="{!v.recordsList}" var="rec" >
+                                            <li id="{!rec.value}" class="slds-listbox__item eachItem" onmousedown="{!c.selectItem}">
+                                                <div class="slds-media slds-listbox__option_entity">
+                                                    <lightning:icon iconName="standard:asset_object" size="medium" alternativeText="icon" />
+                                                    <span class="verticalAlign slds-truncate">{!rec.label}</span>
+                                                </div>
+                                            </li>
+                                        </aura:iteration>
+                                        <aura:set attribute="else">
+                                            <li class="slds-listbox__item">
+                                                <span class="slds-media slds-listbox__option_entity">{!v.message}</span>
+                                            </li>
+                                        </aura:set>
+                                    </aura:if>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <lightning:input type="checkbox" name="tipo1" label="Tipo de Cargo | Cliente"  class="slds-p-vertical_small" checked="{!v.EventRecord.tipoCargoCliente}" />
+                <lightning:input type="checkbox" name="tipo2" label="Tipo de Cargo | Aseguradora"  class="slds-p-vertical_small" checked="{!v.EventRecord.tipoCargoAseguradora}" />
+                <lightning:input type="checkbox" name="tipo3" label="Tipo de Cargo | Garantía"  class="slds-p-vertical_small"  checked="{!v.EventRecord.tipoCargoGarantia}"/>	
+                <lightning:input type="checkbox" name="tipo4" label="Tipo de Cargo | BSI"  class="slds-p-vertical_small"  checked="{!v.EventRecord.tipoCargoBci}" />
+            </div>
+        <!--div class="slds-clearfix slds-modal__footer">
+            <lightning:button variant="Neutral" label="Close" title="Close" onclick="{!c.handleCloseClick}" class=" slds-float_right slds-m-horizontal_xx-small"></lightning:button>
+            <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.handleClick}" class=" slds-float_right slds-m-horizontal_xx-small"></lightning:button>
+        </div-->
+        <div class="modal-footer slds-modal__footer slds-size_1-of-1">
+            <lightning:button variant="Neutral" label="Close" title="Close" onclick="{!c.handleCloseClick}" ></lightning:button>
+            <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.handleClick}" ></lightning:button>
+        </div>
+    </div>
+</aura:component>

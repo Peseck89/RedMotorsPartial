@@ -1,0 +1,33 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-card  variant="Narrow" >
+      <div class="lightningLWCdataTable">
+        <lightning-datatable 
+              data={data} 
+              columns={columns}
+              key-field="id" 
+              show-row-number-column
+              hide-checkbox-column
+              onclick={handleClickRow}
+              onrowselection={handleRowSelection}
+              wrap-text-max-lines="3"
+              max-row-selection="1">
+          </lightning-datatable>
+      </div>
+    </lightning-card>
+     <!-- Modal/Popup Box LWC starts here -->
+     <div if:true={waitingSoftlandResponse}>
+      <section role="dialog" tabindex="-1" style="background-color: #f0ffff00;" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+          <div class="slds-modal__container" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+              <!-- Modal/Popup Box LWC header here -->
+              <!-- Modal/Popup Box LWC body starts here -->
+              <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+                  <lightning-spinner style="background-color: #f0ffff00;"   size="large"  alternative-text="Loading...">
+                  </lightning-spinner>
+              </div>
+              <!-- Modal/Popup Box LWC footer starts here -->
+          </div>
+          <div class="slds-backdrop slds-backdrop_open" style="opacity: 0.8;"></div>
+          </section>
+      </div>
+  </template>

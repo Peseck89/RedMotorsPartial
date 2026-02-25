@@ -1,0 +1,45 @@
+<template>
+    <lightning-card title="KPI Principales – Estado del Taller">
+
+        <div class="kpi-grid">
+
+            <div class="kpi-card">
+                <div class="kpi-title">Vehículos activos en taller</div>
+                <div class="kpi-value">{kpis.casosAbiertos}</div>
+                <div class="kpi-sub">Casos abiertos</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">Sin actualización +2 días</div>
+                <div class="kpi-value">{kpis.sinUpdate2}</div>
+                <div class="kpi-sub">Casos sin update</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">Sin contacto +5 días</div>
+                <div class="kpi-value">{kpis.sinContacto5}</div>
+                <div class="kpi-sub">Sin contacto reciente</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-title">Taller con más retrasos</div>
+                <div class="kpi-value">{kpis.sucursalConMasRetrasos}</div>
+                <div class="kpi-sub">{kpis.cantidadAlertasSucursal} alertas</div>
+            </div>
+
+        </div>
+
+        <div class="kpi-list-container">
+            <div class="kpi-list-title">Asesores con más retrasos</div>
+
+            <template for:each={kpis.asesoresConMasRetrasos} for:item="item">
+                <div key={item.nombre} class="kpi-list-item">
+                    <div class="kpi-list-order">{item.orden}</div>
+                    <div class="kpi-list-name">{item.nombre}</div>
+                    <div class="kpi-list-count">{item.cantidad} casos</div>
+                </div>
+            </template>
+        </div>
+
+    </lightning-card>
+</template>

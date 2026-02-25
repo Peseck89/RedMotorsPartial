@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Send_Email_Action_1</name>
+        <label>Copy 2 of Copy 2 of Copy 2 of Copy 2 of Copy 2 of Copy 2 of Send Email Action 1</label>
+        <locationX>1370</locationX>
+        <locationY>539</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Asignado_nivel_6__r.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AlertaCasoSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>TextoBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>logEmailOnSend</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Send_Email_Action_1</name>
+        <label>Copy 2 of Copy 2 of Copy 2 of Copy 2 of Copy 2 of Send Email Action 1</label>
+        <locationX>1106</locationX>
+        <locationY>539</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Asignado_nivel_5__r.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AlertaCasoSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>TextoBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>logEmailOnSend</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Send_Email_Action_1</name>
+        <label>Copy 2 of Copy 2 of Copy 2 of Copy 2 of Send Email Action 1</label>
+        <locationX>842</locationX>
+        <locationY>539</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Asignado_nivel_4__r.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AlertaCasoSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>TextoBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>logEmailOnSend</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Copy_2_of_Copy_2_of_Copy_2_of_Send_Email_Action_1</name>
+        <label>Copy 2 of Copy 2 of Copy 2 of Send Email Action 1</label>
+        <locationX>578</locationX>
+        <locationY>539</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Asignado_nivel_3__r.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AlertaCasoSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>TextoBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>logEmailOnSend</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Copy_2_of_Copy_2_of_Send_Email_Action_1</name>
+        <label>Copy 2 of Copy 2 of Send Email Action 1</label>
+        <locationX>314</locationX>
+        <locationY>539</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Asignado_nivel_2__r.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AlertaCasoSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>TextoBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>logEmailOnSend</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Copy_2_of_Send_Email_Action_1</name>
+        <label>Copy 2 of Send Email Action 1</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Asignado_nivel_1__r.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AlertaCasoSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>TextoBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>logEmailOnSend</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Email_Action_1</name>
+        <label>Send Email Action 1</label>
+        <locationX>842</locationX>
+        <locationY>323</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>CorreoAsignaciones</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$Record.Owner:User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AlertaCasoSubject</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>TextoBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>logEmailOnSend</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>61.0</apiVersion>
+    <decisions>
+        <name>CorreoAsignaciones</name>
+        <label>CorreoAsignaciones</label>
+        <locationX>842</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Nivel_1</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Asignaci_n_responsable__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Nivel 1</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.OwnerId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Asignado_nivel_1__r.Id</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_Send_Email_Action_1</targetReference>
+            </connector>
+            <label>Nivel 1</label>
+        </rules>
+        <rules>
+            <name>Nivel_2</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Asignaci_n_responsable__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Nivel 2</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.OwnerId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Asignado_nivel_1__r.Id</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_Copy_2_of_Send_Email_Action_1</targetReference>
+            </connector>
+            <label>Nivel 2</label>
+        </rules>
+        <rules>
+            <name>Nivel_3</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Asignaci_n_responsable__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Nivel 3</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.OwnerId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Asignado_nivel_1__r.Id</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_Copy_2_of_Copy_2_of_Send_Email_Action_1</targetReference>
+            </connector>
+            <label>Nivel 3</label>
+        </rules>
+        <rules>
+            <name>Nivel_4</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Asignaci_n_responsable__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Nivel 4</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.OwnerId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Asignado_nivel_1__r.Id</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Send_Email_Action_1</targetReference>
+            </connector>
+            <label>Nivel 4</label>
+        </rules>
+        <rules>
+            <name>Nivel_5</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Asignaci_n_responsable__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Nivel 5</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.OwnerId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Asignado_nivel_1__r.Id</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Send_Email_Action_1</targetReference>
+            </connector>
+            <label>Nivel 5</label>
+        </rules>
+        <rules>
+            <name>Nivel_6</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Asignaci_n_responsable__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Nivel 6</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.OwnerId</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Asignado_nivel_1__r.Id</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Copy_2_of_Send_Email_Action_1</targetReference>
+            </connector>
+            <label>Nivel 6</label>
+        </rules>
+    </decisions>
+    <formulas>
+        <name>AlertaCasoSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;Alerta de Caso Escalado: &quot; + {!$Record.Subject}</expression>
+    </formulas>
+    <interviewLabel>AlertCasoEscalado {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>AlertCasoEscalado</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>716</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Send_Email_Action_1</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Asignaci_n_responsable__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>RecordTypeId</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>0124U00000111E9QAI</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>RecordTypeId</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>0124U00000111EAQAY</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Cerrado</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Asignaci_n_responsable__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Asignaci_n_responsable__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Nivel 1</stringValue>
+            </value>
+        </filters>
+        <object>Case</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>TextoBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+&lt;html dir=&quot;ltr&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot; lang=&quot;es&quot;&gt;
+	&lt;head&gt;
+		&lt;meta charset=&quot;UTF-8&quot;&gt;
+			&lt;meta content=&quot;width=device-width, initial-scale=1&quot; name=&quot;viewport&quot;&gt;
+				&lt;meta name=&quot;x-apple-disable-message-reformatting&quot;&gt;
+					&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+						&lt;meta content=&quot;telephone=no&quot; name=&quot;format-detection&quot;&gt;
+							&lt;title&gt;Correo caso&lt;/title&gt;
+							&lt;!--[if (mso 16)]&gt;&lt;style type=&quot;text/css&quot;&gt;     a {text-decoration: none;}     &lt;/style&gt;&lt;![endif]--&gt;
+							&lt;!--[if gte mso 9]&gt;&lt;style&gt;sup { font-size: 100% !important; }&lt;/style&gt;&lt;![endif]--&gt;
+							&lt;!--[if gte mso 9]&gt;&lt;xml&gt; &lt;o:OfficeDocumentSettings&gt; &lt;o:AllowPNG&gt;&lt;/o:AllowPNG&gt; &lt;o:PixelsPerInch&gt;96&lt;/o:PixelsPerInch&gt; &lt;/o:OfficeDocumentSettings&gt; &lt;/xml&gt;
+&lt;![endif]--&gt;
+							&lt;style type=&quot;text/css&quot;&gt;.rollover:hover .rollover-first { max-height:0px!important; display:none!important;}.rollover:hover .rollover-second { max-height:none!important; display:block!important;}.rollover span { font-size:0px;}u + .body img ~ div div { display:none;}#outlook a { padding:0;}span.MsoHyperlink,span.MsoHyperlinkFollowed { color:inherit; mso-style-priority:99;}a.es-button { mso-style-priority:100!important; text-decoration:none!important;}a[x-apple-data-detectors] { color:inherit!important; text-decoration:none!important; font-size:inherit!important; font-family:inherit!important; font-weight:inherit!important; line-height:inherit!important;}.es-desk-hidden { display:none; float:left; overflow:hidden; width:0; max-height:0; line-height:0; mso-hide:all;} .es-button-border:hover &gt; a.es-button { color:#ffffff!important;}@media only screen and (max-width:600px) {h1 { font-size:30px!important; text-align:left }
+ h2 { font-size:24px!important; text-align:left } h3 { font-size:20px!important; text-align:left } .es-m-p20b { padding-bottom:20px!important } *[class=&quot;gmail-fix&quot;] { display:none!important } p, a { line-height:150%!important } h1, h1 a { line-height:120%!important } h2, h2 a { line-height:120%!important } h3, h3 a { line-height:120%!important } h4, h4 a { line-height:120%!important } h5, h5 a { line-height:120%!important } h6, h6 a { line-height:120%!important } h4 { font-size:24px!important; text-align:left } h5 { font-size:20px!important; text-align:left } h6 { font-size:16px!important; text-align:left } .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size:30px!important } .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a { font-size:24px!important } .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3 a { font-size:20px!important }
+ .es-header-body h4 a, .es-content-body h4 a, .es-footer-body h4 a { font-size:24px!important } .es-header-body h5 a, .es-content-body h5 a, .es-footer-body h5 a { font-size:20px!important } .es-header-body h6 a, .es-content-body h6 a, .es-footer-body h6 a { font-size:16px!important } .es-menu td a { font-size:14px!important } .es-header-body p, .es-header-body a { font-size:14px!important } .es-content-body p, .es-content-body a { font-size:14px!important } .es-footer-body p, .es-footer-body a { font-size:14px!important } .es-infoblock p, .es-infoblock a { font-size:12px!important } .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3, .es-m-txt-c h4, .es-m-txt-c h5, .es-m-txt-c h6 { text-align:center!important } .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3, .es-m-txt-r h4, .es-m-txt-r h5, .es-m-txt-r h6 { text-align:right!important }
+ .es-m-txt-j, .es-m-txt-j h1, .es-m-txt-j h2, .es-m-txt-j h3, .es-m-txt-j h4, .es-m-txt-j h5, .es-m-txt-j h6 { text-align:justify!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3, .es-m-txt-l h4, .es-m-txt-l h5, .es-m-txt-l h6 { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img { display:inline!important } .es-m-txt-r .rollover:hover .rollover-second, .es-m-txt-c .rollover:hover .rollover-second, .es-m-txt-l .rollover:hover .rollover-second { display:inline!important } .es-m-txt-r .rollover span, .es-m-txt-c .rollover span, .es-m-txt-l .rollover span { line-height:0!important; font-size:0!important } .es-spacer { display:inline-table } a.es-button, button.es-button { font-size:18px!important; line-height:120%!important } a.es-button, button.es-button, .es-button-border { display:inline-block!important } .es-m-fw, .es-m-fw.es-fw, .es-m-fw .es-button { display:block!important }
+ .es-m-il, .es-m-il .es-button, .es-social, .es-social td, .es-menu { display:inline-block!important } .es-adaptive table, .es-left, .es-right { width:100%!important } .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width:100%!important; max-width:600px!important } .adapt-img { width:100%!important; height:auto!important } .es-mobile-hidden, .es-hidden { display:none!important } .es-desk-hidden { width:auto!important; overflow:visible!important; float:none!important; max-height:inherit!important; line-height:inherit!important; display:table-row!important } tr.es-desk-hidden { display:table-row!important } table.es-desk-hidden { display:table!important } td.es-desk-menu-hidden { display:table-cell!important } .es-menu td { width:1%!important } table.es-table-not-adapt, .esd-block-html table { width:auto!important } .es-social td { padding-bottom:10px } .h-auto { height:auto!important } }
+@media screen and (max-width:384px) {.mail-message-content { width:414px!important } }&lt;/style&gt;
+						&lt;/head&gt;
+						&lt;body class=&quot;body&quot; style=&quot;width:100%;height:100%;padding:0;Margin:0&quot;&gt;
+							&lt;div dir=&quot;ltr&quot; class=&quot;es-wrapper-color&quot; lang=&quot;es&quot; style=&quot;background-color:#F6F6F6&quot;&gt;
+								&lt;!--[if gte mso 9]&gt;&lt;v:background xmlns:v=&quot;urn:schemas-microsoft-com:vml&quot; fill=&quot;t&quot;&gt; &lt;v:fill type=&quot;tile&quot; color=&quot;#f6f6f6&quot;&gt;&lt;/v:fill&gt; &lt;/v:background&gt;&lt;![endif]--&gt;
+								&lt;table class=&quot;es-wrapper&quot; width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;background-color:#F6F6F6&quot;&gt;
+									&lt;tr&gt;
+										&lt;td valign=&quot;top&quot; style=&quot;padding:0;Margin:0&quot;&gt;
+											&lt;table class=&quot;es-header&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; align=&quot;center&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important;background-color:transparent;background-repeat:repeat;background-position:center top&quot;&gt;
+												&lt;tr&gt;
+													&lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
+														&lt;table class=&quot;es-header-body&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot; role=&quot;none&quot;&gt;
+															&lt;tr&gt;
+																&lt;td align=&quot;left&quot; style=&quot;padding:0;Margin:0;padding-top:20px;padding-right:20px;padding-left:20px&quot;&gt;
+																	&lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; width=&quot;100%&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px&quot;&gt;
+																		&lt;tr&gt;
+																			&lt;td valign=&quot;top&quot; align=&quot;center&quot; style=&quot;padding:0;Margin:0;width:560px&quot;&gt;
+																				&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; role=&quot;presentation&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px&quot;&gt;
+																					&lt;tr&gt;
+																						&lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0;font-size:0px&quot;&gt;
+																							&lt;img src=&quot;https://ehxeqpz.stripocdn.email/content/guids/CABINET_acb286200a147884b697334b6b8ba60e6526faf6b747b3e2060647d7f175b4c5/images/redmlogocolor_uPR.png&quot; alt style=&quot;display:block;font-size:14px;border:0;outline:none;text-decoration:none&quot; width=&quot;115&quot;/&gt;
+																						&lt;/tr&gt;
+																					&lt;/table&gt;
+																				&lt;/td&gt;
+																			&lt;/tr&gt;
+																		&lt;/table&gt;
+																	&lt;/td&gt;
+																&lt;/tr&gt;
+															&lt;/table&gt;
+														&lt;/td&gt;
+													&lt;/tr&gt;
+												&lt;/table&gt;
+												&lt;table class=&quot;es-content&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; align=&quot;center&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important&quot;&gt;
+													&lt;tr&gt;
+														&lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
+															&lt;table class=&quot;es-content-body&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot; role=&quot;none&quot;&gt;
+																&lt;tr&gt;
+																	&lt;td align=&quot;left&quot; style=&quot;padding:20px;Margin:0&quot;&gt;
+																		&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; role=&quot;none&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px&quot;&gt;
+																			&lt;tr&gt;
+																				&lt;td valign=&quot;top&quot; align=&quot;center&quot; style=&quot;padding:0;Margin:0;width:560px&quot;&gt;
+																					&lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#ffffff&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#ffffff&quot; role=&quot;presentation&quot;&gt;
+																						&lt;tr&gt;
+																							&lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0;padding-top:30px;padding-bottom:30px&quot;&gt;
+																								&lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:45px;letter-spacing:0;color:#333333;font-size:30px&quot;&gt;
+																									&lt;strong&gt;
+																										&lt;span style=&quot;color:#000000&quot;&gt;Alerta de caso escalado&lt;/span&gt;
+																									&lt;/strong&gt;
+																								&lt;/p&gt;
+																								&lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:30px;letter-spacing:0;color:#696969;font-size:30px&quot;&gt;Detalles del caso:&lt;/p&gt;
+																							&lt;/td&gt;
+																						&lt;/tr&gt;
+																						&lt;tr&gt;
+																							&lt;td align=&quot;Left&quot; style=&quot;padding:0;Margin:0;padding-bottom:30px;padding-left:40px;padding-right:40px&quot;&gt;
+																								&lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:26px;letter-spacing:0;color:#333333;font-size:17px&quot;&gt;
+																								Estimado equipo,&lt;br&gt;&lt;br&gt;
+
+																								El caso mencionado ha sido escalado y requiere atención inmediata. Por favor, revisen los detalles y tomen las acciones necesarias.&lt;br&gt;&lt;br&gt;
+
+																								ID del Caso: {!$Record.CaseNumber}&lt;br&gt;
+																								
+																								Cliente: {!$Record.Account.FirstName} {!$Record.Account.LastName}&lt;br&gt;
+
+																								Asunto: {!$Record.Subject}&lt;br&gt;
+
+																								Estado: {!$Record.Status}&lt;br&gt;&lt;br&gt;
+																								
+																								
+																								Este es un mensaje automático generado por Salesforce.
+																								&lt;/p&gt;
+																							&lt;/td&gt;
+																						&lt;/tr&gt;
+																						&lt;tr&gt;
+																							&lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0;padding-bottom:30px&quot;&gt;
+																								&lt;span class=&quot;msohide es-button-border&quot; style=&quot;border-style:solid;border-color:#ee272c;background:#ee272c;border-width:0px;display:inline-block;border-radius:30px;width:auto;mso-hide:all&quot;&gt;
+																									&lt;a href=&quot;https://redmotors.lightning.force.com/lightning/r/Case/{!$Record.Id}/view&quot; class=&quot;es-button es-button-1720444452388&quot; target=&quot;_blank&quot; style=&quot;mso-style-priority:100 !important;text-decoration:none !important;mso-line-height-rule:exactly;color:#FFFFFF;font-size:18px;padding:10px 20px;display:inline-block;background:#ee272c;border-radius:30px;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;font-weight:normal;font-style:normal;line-height:22px;width:auto;text-align:center;letter-spacing:0;mso-padding-alt:0;mso-border-alt:10px solid #ee272c&quot;&gt;Ver caso en Salesforce&lt;/a&gt;
+																								&lt;/span&gt;
+																							&lt;/td&gt;
+																						&lt;/tr&gt;
+																						&lt;tr&gt;
+																							&lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0;font-size:0px&quot;&gt;
+																								&lt;img class=&quot;adapt-img&quot; src=&quot;https://ehxeqpz.stripocdn.email/content/guids/CABINET_acb286200a147884b697334b6b8ba60e6526faf6b747b3e2060647d7f175b4c5/images/p90343281crophighres.jpg&quot; alt style=&quot;display:block;font-size:14px;border:0;outline:none;text-decoration:none&quot; width=&quot;560&quot;/&gt;
+																							&lt;/tr&gt;
+																						&lt;/table&gt;
+																					&lt;/td&gt;
+																				&lt;/tr&gt;
+																			&lt;/table&gt;
+																		&lt;/td&gt;
+																	&lt;/tr&gt;
+																&lt;/table&gt;
+															&lt;/td&gt;
+														&lt;/tr&gt;
+													&lt;/table&gt;
+												&lt;/td&gt;
+											&lt;/tr&gt;
+										&lt;/table&gt;
+									&lt;/div&gt;
+								&lt;/body&gt;
+							&lt;/html&gt;</text>
+    </textTemplates>
+</Flow>

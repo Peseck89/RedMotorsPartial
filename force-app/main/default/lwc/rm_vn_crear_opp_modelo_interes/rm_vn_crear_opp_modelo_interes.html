@@ -1,0 +1,176 @@
+<template>
+    <lightning-modal-header label="Crear oportunidad de producto de interes"></lightning-modal-header>
+
+    <lightning-modal-body>
+        <template if:true={showModeloInteresScreen}>
+            <c-rm_vn_inventario_fantasia onrecordselect={handleVehicleSelection}>
+            </c-rm_vn_inventario_fantasia>
+        </template>
+
+        <template if:true={showConfirmationScreen}>
+
+            <!-- Mostrar errores aqui -->
+            <template if:true={displayError}>
+                <div class="slds-p-around_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <h2>{messageError}</h2>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+
+            <lightning-layout pull-to-boundary="small" multiple-rows="true" class="slds-p-around_medium">
+
+                <template if:true={ventanaActual}>
+                    <div class="slds-form slds-m-around_small slds-p-around_small">
+                        <div class="slds-form__row">
+                            <div class="slds-form__item" role="listitem">
+
+                                <lightning-record-edit-form object-api-name="Opportunity" data-id="oppForm">
+                                    <lightning-messages></lightning-messages>
+
+                                    <lightning-input-field field-name="Tipo_de_Cliente__c" onchange={handleTipoCliente} required></lightning-input-field>
+
+                                    <template if:true={esConquista}>
+                                        <lightning-input-field field-name="Tipo_de_Uso_del_Veh_culo__c" onchange={handleTipoUso} required></lightning-input-field>
+                                    </template>
+
+                                    <lightning-input-field field-name="contacto__c" onchange={handleContact} value={contactCuenta} required></lightning-input-field>
+                                    <lightning-input-field field-name="Departamento__c" onchange={handleDepartamento} required></lightning-input-field>
+                                    <lightning-input-field field-name="Cuenta_de_Facturaci_n__c" value={cuentaFacturacion} onchange={handleCuentaFacturacion} required></lightning-input-field>
+                                    <lightning-input-field field-name="Forma_de_Pago__c" onchange={handleFormaPago} required></lightning-input-field>
+
+                                    <template if:true={esFinanciado}>
+                                        <lightning-input-field field-name="Plazo_en_Meses__c" onchange={handlePlazoMeses} required></lightning-input-field>
+                                        <lightning-input-field field-name="Prima__c" onchange={handlePrima} required></lightning-input-field>
+                                    </template>
+
+                                    <lightning-input-field field-name="Entidad__c" onchange={handleEntidad} required></lightning-input-field>
+                                    <lightning-input-field field-name="LeadSource" onchange={handleLeadSource} required></lightning-input-field>
+                                    <lightning-input-field field-name="RealizaTestDrivePicklist__c" onchange={handleRealiza} required></lightning-input-field>
+                                    <lightning-input-field field-name="aniodelvehiculo__c" onchange={handleAnio} required></lightning-input-field>
+
+                                    <!-- ✅ NUEVOS CAMPOS (NO son input-field porque no son del objeto Opportunity en el form) -->
+                                    <!-- <lightning-input
+                                    label="Número de Identificación"
+                                    value={numeroIdentificacion}
+                                    onchange={handleNumeroIdentificacion}
+                                    required>
+                                    </lightning-input>
+
+                                    <lightning-input
+                                    label="Tipo de Identificación"
+                                    value={tipoIdentificacion}
+                                    onchange={handleTipoIdentificacion}
+                                    required>
+                                    </lightning-input> -->
+
+                                    <lightning-input-field field-name="Fecha_Posible_Compra__c" onchange={handleFechaPosibleCompra} required></lightning-input-field>
+
+                                    <p>Este campo hace referencia al campo "Año del vh actual" que se encuentra en la sección "Datos del cliente" en la oportunidad.</p>
+                                </lightning-record-edit-form>
+
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <template if:false={ventanaActual}>
+                    <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12" medium-device-size="6" large-device-size="6">
+                        <template if:true={showAccountInput}>
+                            <c-lookup
+                                selection={accountInitialSelection}
+                                errors={accountErrors}
+                                label="Cuenta"
+                                required="true"
+                                onsearch={handleAccountSearch}
+                                onselectionchange={handleAccountSelectionChange}
+                                new-record-options={newRecordOptions}
+                                onnewrecordevent={handleNewRecordEvent}>
+                            </c-lookup>
+                        </template>
+                    </lightning-layout-item>
+
+                    <template if:true={cuentaError}>
+                        <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12" medium-device-size="6" large-device-size="6">
+                            <lightning-input style="margin-bottom: 10px;" required if:true={cuentaError} onchange={cambiarNombre} type="text" value={nameCuenta} name="cambioName" label="Completar Nombre"></lightning-input>
+                            <lightning-input style="margin-bottom: 10px;" required if:true={cuentaError} onchange={cambiarApellido} type="text" value={apellidoCuenta} name="cambioApellido" label="Completar Apellido"></lightning-input>
+                            <lightning-input style="margin-bottom: 10px;" required if:true={cuentaError} onchange={cambiarPhone} type="text" value={telCuenta} name="cambioTel" label="Completar Telefono"></lightning-input>
+                            <lightning-input style="margin-bottom: 10px;" required if:true={cuentaError} onchange={cambiarEmail} type="text" value={emailCuenta} name="cambioEmail" label="Completar Email"></lightning-input>
+                            <lightning-input style="margin-bottom: 10px;" required if:true={cuentaError} onchange={cambiarEmailFact} type="text" value={correoFact} name="cambioEmail" label="Completar Email Facturacion"></lightning-input>
+
+                            <lightning-button label="Actualizar Cuenta" required if:true={cuentaError} type="button" variant="brand"
+                                class="slds-m-left_small" onclick={actualizarCuenta}>
+                            </lightning-button>
+                        </lightning-layout-item>
+                    </template>
+
+                    <template if:true={cuentaErrorEmpresarial}>
+                        <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12" medium-device-size="6" large-device-size="6">
+                            <lightning-input style="margin-bottom: 10px;" required if:true={cuentaErrorEmpresarial} onchange={cambiarNombre} type="text" value={nameCuenta} name="cambioName" label="Completar Nombre"></lightning-input>
+                            <lightning-input style="margin-bottom: 10px;" required if:true={cuentaErrorEmpresarial} onchange={cambiarPhone} type="text" value={telCuenta} name="cambioTel" label="Completar Telefono"></lightning-input>
+                            <lightning-input style="margin-bottom: 10px;" required if:true={cuentaErrorEmpresarial} onchange={cambiarEmail} type="text" value={emailCuenta} name="cambioEmail" label="Completar Email"></lightning-input>
+                            <lightning-input style="margin-bottom: 10px;" required if:true={cuentaErrorEmpresarial} onchange={cambiarEmailFact} type="text" value={correoFact} name="cambioEmail" label="Completar Email Facturacion"></lightning-input>
+
+                            <lightning-button label="Actualizar Cuenta" required if:true={cuentaErrorEmpresarial} type="button" variant="brand"
+                                class="slds-m-left_small" onclick={actualizarCuenta}>
+                            </lightning-button>
+                        </lightning-layout-item>
+                    </template>
+
+                    <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12" medium-device-size="6" large-device-size="6">
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12" medium-device-size="6" large-device-size="12">
+                        <div class="slds-m-around_medium">Modelo de interes seleccionado</div>
+                        <lightning-datatable data={selectedVehicle} columns={columns} key-field="id" hide-checkbox-column="true">
+                        </lightning-datatable>
+                    </lightning-layout-item>
+                </template>
+
+            </lightning-layout>
+        </template>
+    </lightning-modal-body>
+
+    <lightning-modal-footer>
+        <template if:true={showModeloInteresScreen}>
+            <lightning-button
+                label="Siguiente"
+                type="button"
+                variant="brand"
+                class="slds-m-left_small"
+                onclick={handleShowConfirmationScreenClick}
+                disabled={isNextButtonDisabled}>
+            </lightning-button>
+        </template>
+
+        <template if:true={showConfirmationScreen}>
+            <lightning-button label="Regresar" onclick={handleShowModeloInteresScreenClick}></lightning-button>
+
+            <template if:true={ventanaActual}>
+                <lightning-button
+                    label="Crear oportunidad"
+                    type="button"
+                    variant="brand"
+                    disabled={isCreateOpportunityDisabled}
+                    class="slds-m-left_small"
+                    onclick={handleCreateOpportunity}>
+                </lightning-button>
+            </template>
+
+            <template if:false={ventanaActual}>
+                <lightning-button
+                    label="Continuar"
+                    type="button"
+                    variant="brand"
+                    disabled={isCreateOpportunityDisabled}
+                    class="slds-m-left_small"
+                    onclick={handleCreateOpportunity}>
+                </lightning-button>
+            </template>
+        </template>
+    </lightning-modal-footer>
+</template>

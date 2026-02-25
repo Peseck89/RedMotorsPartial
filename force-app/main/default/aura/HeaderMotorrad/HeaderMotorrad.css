@@ -1,0 +1,43 @@
+.THIS .main-header {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-around; */
+  justify-content: flex-start;
+  border-bottom: 1px solid #707070;
+  margin-bottom: 4%;
+  position: fixed;
+  top: 0px;
+  background: #FFF;
+  width: 80%; 
+  z-index: 1000;
+}
+
+.THIS .header-logo {
+  width: 240px;
+}
+
+@media screen and (max-width: 768px) {
+  .THIS .header-logo {
+    width: 140px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .THIS .main-header {
+    width: 90%
+  }
+
+  .THIS .header-logo {
+    width: 90px
+  }
+}
+
+@media (min-width: 820px) and (max-width: 1200px) {
+  .THIS .header-logo {
+    width: 150px;
+  }
+
+  .THIS .main-header {
+    width: 85%;
+  }
+}

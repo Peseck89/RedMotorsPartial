@@ -1,0 +1,109 @@
+<template>
+    <template if:true={isVisible}>
+        <!-- Spinner mientras procesa -->
+        <template if:true={isLoading}>
+            <lightning-spinner
+                alternative-text="Procesando"
+                size="medium">
+            </lightning-spinner>
+        </template>
+
+        <!-- Contenido normal cuando NO está cargando -->
+        <template if:false={isLoading}>
+            <template if:true={hasPendingApproval}>
+                <div class="slds-m-around_medium">
+                    <div class="pending-approval-msg">
+                        Hay una aprobación pendiente. Debe esperar esta aprobación para poder enviar una nueva aprobación.
+                    </div>
+                </div>
+            </template>
+
+            <template if:false={hasPendingApproval}>
+                <template if:true={hasData}>
+                    <div class="slds-m-around_medium">
+                        <div class="slds-text-heading_small slds-m-bottom_small">
+                            Tipos de cargo (Interno) relacionados
+                        </div>
+
+                        <div class="tc-table">
+                            <div class="tc-row tc-head">
+                                <div class="tc-cell tc-cell--check">check</div>
+                                <div class="tc-cell">Puntos de trabajo</div>
+                                <div class="tc-cell">Centro de costo</div>
+                                <div class="tc-cell tc-cell--amount">Monto</div>
+                                <div class="tc-cell tc-cell--status">Estado Aprobación</div>
+                            </div>
+
+                            <template for:each={rows} for:item="r">
+                                <div class="tc-row" key={r.id}>
+                                    <div class="tc-cell tc-cell--check">
+                                        <lightning-input
+                                            type="checkbox"
+                                            data-id={r.id}
+                                            checked={r.checked}
+                                            onchange={handleCheck}
+                                            disabled={r.disableCheck}>
+                                        </lightning-input>
+                                    </div>
+                                    <div class="tc-cell">
+                                        {r.aliasProducto}
+                                    </div>
+                                    <div class="tc-cell">
+                                        {r.centroCostoName}
+                                    </div>
+                                    <div class="tc-cell tc-cell--amount">
+                                        <lightning-formatted-number
+                                            value={r.precio}
+                                            format-style="currency"
+                                            currency-code={r.currencyIsoCode}>
+                                        </lightning-formatted-number>
+                                    </div>
+                                    <div class="tc-cell tc-cell--status">
+                                        {r.estadoAprobacion}
+                                    </div>
+                                </div>
+                            </template>
+
+                        </div>
+
+                        <div class="slds-m-top_medium slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                            <div class="slds-col slds-size_2-of-3">
+                                <lightning-textarea
+                                    label="Comentario del solicitante (requerido)"
+                                    value={comment}
+                                    onchange={handleComment}
+                                    required
+                                    message-when-value-missing="Comentario es obligatorio">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-text-align_right slds-size_1-of-3">
+                                <div class="slds-text-heading_medium slds-m-bottom_small">
+                                    Total:
+                                    <lightning-formatted-number
+                                        value={total}
+                                        format-style="currency"
+                                        currency-code={currencyCode}>
+                                    </lightning-formatted-number>
+                                </div>
+                                <lightning-button
+                                    variant="brand"
+                                    label="Enviar aprobación"
+                                    title="Enviar aprobación"
+                                    onclick={handleSubmit}
+                                    disabled={disableSubmit}>
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <template if:true={noData}>
+                    <div class="slds-m-around_medium slds-text-color_error slds-text-heading_small">
+                        No hay tipos de cargo interno relacionados.
+                    </div>
+                </template>
+            </template>
+        </template>
+    </template>
+</template>

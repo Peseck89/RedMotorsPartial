@@ -1,0 +1,8 @@
+<template>
+    <template if:true={isMobile}>
+        <c-rm_vn_crear_opp_home_movil brand="BMW"  year={year}></c-rm_vn_crear_opp_home_movil>
+    </template>
+    <template if:false={isMobile}>
+        <c-rm_vn_crear_opp_home brand="BMW"  year={year}></c-rm_vn_crear_opp_home>
+    </template>
+</template>

@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_the_email</name>
+        <label>Send the email</label>
+        <locationX>176</locationX>
+        <locationY>384</locationY>
+        <actionName>ct_traficoOrigenWeb</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>leads</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_the_email_MINI</name>
+        <label>Send the email MINI</label>
+        <locationX>440</locationX>
+        <locationY>384</locationY>
+        <actionName>ct_traficoOrigenWeb</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>leads</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <decisions>
+        <name>saber_marca</name>
+        <label>saber marca</label>
+        <locationX>440</locationX>
+        <locationY>276</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>isBMW</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordType__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>BMW</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_the_email</targetReference>
+            </connector>
+            <label>isBMW</label>
+        </rules>
+        <rules>
+            <name>isMini</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordType__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>MINI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_the_email_MINI</targetReference>
+            </connector>
+            <label>isMini</label>
+        </rules>
+    </decisions>
+    <formulas>
+        <name>getfamilia</name>
+        <dataType>String</dataType>
+        <expression>RIGHT({!$Record.Vehiculo_cotizacion__c}, LEN({!$Record.Vehiculo_cotizacion__c}) - FIND(&quot; &quot;, {!$Record.Vehiculo_cotizacion__c}))</expression>
+    </formulas>
+    <interviewLabel>trafico cotizador web {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>trafico cotizador web</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>LeadSource</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Cotizador Web</stringValue>
+            </value>
+        </filters>
+        <object>Lead</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <scheduledPaths>
+            <name>send_1_minute_later</name>
+            <connector>
+                <targetReference>saber_marca</targetReference>
+            </connector>
+            <label>send 1 minute later</label>
+            <offsetNumber>2</offsetNumber>
+            <offsetUnit>Minutes</offsetUnit>
+            <recordField>CreatedDate</recordField>
+            <timeSource>RecordField</timeSource>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>BMWTemplate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:Tahoma;border-collapse: collapse;width:600px;font-family:Tahoma;border: 1px solid;border-color: white;margin:0 auto;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;border: 1px solid;border-color:#E5E6E6;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+            &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                 &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 25px;&quot;&gt;
+                     &lt;p style=&quot;font-weight: bold;font-size:20px;&quot;&gt;Sr. (a) {!$Record.FirstName} {!$Record.LastName}&lt;/p&gt;
+                     &lt;p Style=&quot;font-size:22px;&quot;&gt; 
+Gracias por su interés en BMW. A continuación encontrará nuestras opciones para usted.&lt;/p&gt;
+                 &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;td style = &quot;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;font-size:22px;&quot;&gt;
+                    &lt;span&gt;BMW {!$Record.Familia1__c}&lt;/span&gt;
+                    &lt;/td&gt;
+					&lt;td style=&quot;padding-left: 20px;font-size:22px;&quot;&gt;
+                    &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id={!$Record.DocumentId__c}&amp;oid=00D0P000000Dvkz&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+		&lt;tr&gt;
+          &lt;td style=&quot;padding:5px;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td style = &quot;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;font-size:22px;&quot;&gt;
+                    &lt;span&gt;
+En el archivo adjunto a este email podrá encontrar la cotización y opciones de financiamiento del modelo elegido.&lt;/span&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+                 &lt;tr&gt;
+                &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                &lt;/tr&gt;
+                
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+
+
+		&lt;tr&gt;
+          	&lt;td style=&quot;padding-top: 20px;&quot;&gt;
+               &lt;span style=&quot;padding-left: 20px; font-family: Tahoma; font-size: 22px;font-weight: bold;font-size:16px;&quot;&gt;{!$Record.Modelo_cotizacion__c}&lt;/span&gt;
+			&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+          	&lt;table style=&quot;width:600px;padding-left: 20px;padding-right: 20px;font-size:22px;&quot;&gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;padding-left: 15px;&quot;&gt;Cuota mensual:&lt;/td&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;padding-left: 15px;&quot;&gt;Monto de prima:&lt;/td&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;padding-left: 15px;&quot;&gt;Precio:&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+              	&lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;font-weight: bold;padding-left: 15px;&quot;&gt;{!$Record.Cuota_mensual_cotizacion__c}&lt;/td&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;font-weight: bold;padding-left: 15px;&quot;&gt;{!$Record.Prima_cotizacion__c}&lt;/td&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;font-weight: bold;padding-left: 15px;&quot;&gt;{!$Record.Precio_cotizacion__c}&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr &gt;
+          &lt;td style=&quot;padding-top: 20px;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+              &lt;tr&gt;
+                &lt;td&gt;
+                  &lt;span style=&quot;padding-left: 20px; font-family: Tahoma; font-size: 20px;&quot;&gt; En caso de dudas contacte a su asesor: &lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;
+          &lt;td style=&quot;&quot;&gt;
+            &lt;table &gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: Tahoma; font-size: 22px; line-height: 27px;&quot;&gt;
+
+                  &lt;span style=&quot;font-size: 22px;font-weight: bold;&quot;&gt; {!$Record.Owner_Name__c} &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 22px;&quot;&gt; Iniciar WhatsApp: &lt;a style=&quot;color:#3379a1;&quot; href=&quot;https://api.whatsapp.com/send?phone={!$Record.Owner:User.MobilePhone}&quot;&gt;{!$Record.Owner:User.MobilePhone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 22px;&quot;&gt; Enviar email: &lt;a style=&quot;color:#3379a1;&quot; href=&quot;mailto:{!$Record.Owner:User.Email}&quot;&gt;{!$Record.Owner:User.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+              
+            &lt;/table&gt;
+            
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;br&gt;
+                  &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH0000004RMh&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; style=&quot;max-width: 676.207px; height:100px;&quot; title=&quot;logo&quot; /&gt;
+                  &lt;/td&gt;
+              &lt;/tr&gt;
+
+
+            &lt;tr&gt;
+                
+            &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border-top: 2px solid; border-color: #E5E6E6;font-size:22px&quot;  &gt;
+
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH0000004Qgg&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; style=&quot;max-width: 676.207px; height:30px;&quot; title=&quot;logo&quot; /&gt;
+                    &lt;span&gt; Visítenos en:&lt;/span&gt;
+                &lt;/td&gt;
+ 
+                &lt;td style=&quot;padding-right: 10px;padding-left: -30px;text-align:left;&quot;&gt;
+                    &lt;a style=&quot;color:#3379a1;&quot; href=&quot;https://www.waze.com/es-419/live-map/directions/bmw-uruca-uruca,-san-jose?utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.w.180813923.1808204771.2247866&quot;&gt;Uruca&lt;/a&gt;
+                    
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 10px;padding-left: -30px;&quot;&gt;
+                    &lt;a style=&quot;color:#3379a1;&quot; href=&quot;https://www.waze.com/es-419/live-map/directions/cr/san-jose/san-rafael/bmw-bavarian-motors?navigate=yes&amp;utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.ChIJ2XnMrXn8oI8RceU0yvZt5cs&quot;&gt;Escazú&lt;/a&gt;
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 10px;padding-left: -30px;&quot;&gt;
+                    &lt;a style=&quot;color:#3379a1;&quot; href=&quot;https://www.waze.com/es-419/live-map/directions/bmw-pinares-pinares,-sanchez,-curridabat?utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.w.180879459.1808663519.730125&quot;&gt;Pinares&lt;/a&gt;
+
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+            &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>MINITemplate</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;table style=&quot;background-color:white;font-family:Tahoma;border-collapse: collapse;width:600px;font-family:Tahoma;border: 1px solid;border-color: white;margin:0 auto; &quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+  &lt;tr&gt;
+    &lt;td align=&quot;center&quot;&gt;
+      &lt;table style=&quot;width:600px;background-color:white;border: 1px solid;border-color:#E5E6E6;&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; &gt;
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:10px; &quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+            &lt;table  style=&quot;background-color:#E5E6E6;width:100%;&quot;&gt;
+              &lt;tr&gt;
+                 &lt;td style=&quot;text-align:left;background-color:#E5E6E6; padding: 25px;&quot;&gt;
+                     &lt;p style=&quot;font-weight: bold;font-size:22px;&quot;&gt;Sr. (a) {!$Record.FirstName} {!$Record.LastName}&lt;/p&gt;
+                     &lt;p Style=&quot;font-size:22px;&quot;&gt; 
+Gracias por su interés en MINI. A continuación encontrará nuestras opciones para usted.&lt;/p&gt;
+                 &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+          &lt;td style=&quot;padding:5px;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;
+            &lt;td style = &quot;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;font-size:22px&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;font-size:20px;&quot;&gt;
+                    &lt;span&gt;MINI {!$Record.Familia1__c}&lt;/span&gt;
+                    &lt;/td&gt;
+					&lt;td style=&quot;padding-left: 20px;font-size:20px;&quot;&gt;
+                    &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id={!$Record.DocumentId__c}&amp;oid=00D0P000000Dvkz&quot; style=&quot;max-width: 676.207px; height:150px;&quot; title=&quot;logo&quot; /&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+              &lt;/table&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+		&lt;tr&gt;
+          &lt;td style=&quot;padding:5px;&quot;&gt;&amp;nbsp;&lt;/td&gt;
+        &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td style = &quot;&quot;&gt;
+              &lt;table style=&quot;width:100%;background-color:#white;height:30px;font-size:22px&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  &gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding-left: 20px;font-size:22px;&quot;&gt;
+                    &lt;span&gt;
+En el archivo adjunto a este email podrá encontrar la cotización y opciones de financiamiento del modelo elegido.&lt;/span&gt;
+                    &lt;/td&gt;
+
+                &lt;/tr&gt;
+                 &lt;tr&gt;
+                &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+                &lt;/tr&gt;
+                
+              &lt;/table&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+
+
+		&lt;tr&gt;
+          	&lt;td style=&quot;padding-top: 20px;&quot;&gt;
+               &lt;span style=&quot;padding-left: 20px; font-family: Tahoma; font-size: 22px;font-weight: bold;font-size:16px;&quot;&gt;{!$Record.Modelo_cotizacion__c}&lt;/span&gt;
+			&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;
+          	&lt;table style=&quot;width:600px;padding-left: 20px;padding-right: 20px;font-size:22px&quot;&gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;&quot;&gt;Cuota mensual:&lt;/td&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;&quot;&gt;Monto de prima:&lt;/td&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;&quot;&gt;Precio:&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+              	&lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;font-weight: bold;&quot;&gt;{!$Record.Cuota_mensual_cotizacion__c}&lt;/td&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;font-weight: bold;&quot;&gt;{!$Record.Prima_cotizacion__c}&lt;/td&gt;
+                &lt;td style=&quot;background:#E5E6E6;width:33%;height:30px;font-weight: bold;&quot;&gt;{!$Record.Precio_cotizacion__c}&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+        &lt;tr &gt;
+          &lt;td style=&quot;padding-top: 20px;&quot;&gt;
+            &lt;table style=&quot;width:100%;background-color:white;height:30px;&quot;  &gt;
+              &lt;tr&gt;
+                &lt;td&gt;
+                  &lt;span style=&quot;padding-left: 20px; font-family: Tahoma; font-size: 22px;&quot;&gt; En caso de dudas contacte a su asesor: &lt;/span&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+
+        &lt;tr&gt;&lt;td style=&quot;padding:5px; &quot;&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;
+
+
+
+        &lt;tr&gt;
+          &lt;td style=&quot;&quot;&gt;
+            &lt;table style=&quot;font-size:22px&quot; &gt;
+              &lt;tr&gt;
+                &lt;td style=&quot;color:#6C6C6C;padding-left: 20px; font-family: Tahoma; font-size: 16px; line-height: 27px;&quot;&gt;
+
+                  &lt;span style=&quot;font-size: 22px;font-weight: bold;&quot;&gt; {!$Record.Owner_Name__c} &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 22px;&quot;&gt; Iniciar WhatsApp: &lt;a style=&quot;color:#3379a1;&quot; href=&quot;https://api.whatsapp.com/send?phone={!$Record.Owner:User.MobilePhone}&quot;&gt;{!$Record.Owner:User.MobilePhone}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                    &lt;span style=&quot;font-size: 22px;&quot;&gt; Enviar email: &lt;a style=&quot;color:#3379a1;&quot; href=&quot;mailto:{!$Record.Owner:User.Email}&quot;&gt;{!$Record.Owner:User.Email}&lt;/a&gt;  &lt;/span&gt;&lt;br&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+              
+            &lt;/table&gt;
+            
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;br&gt;
+                  &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0150P000004zrEB&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; style=&quot;max-width: 676.207px; height:100px;&quot; title=&quot;logo&quot; /&gt;
+                  &lt;/td&gt;
+              &lt;/tr&gt;
+
+
+            &lt;tr&gt;
+                
+            &lt;td style = &quot;padding:20px;&quot;&gt;
+            &lt;table style=&quot;padding:20px;width:100%;background-color:white;text-align:center;border-top: 2px solid; border-color: #E5E6E6;&quot;  &gt;
+
+              &lt;tr&gt;
+                &lt;td style=&quot;text-align:left;&quot;&gt;
+                    &lt;img alt=&quot;logo&quot; src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH0000004Qgg&amp;oid=00D0P000000Dvkz&amp;lastMod=1665782772000&quot; style=&quot;max-width: 676.207px; height:30px;&quot; title=&quot;logo&quot; /&gt;
+                    
+                &lt;/td&gt;
+                &lt;td style=&quot;text-align:left;font-size:22px&quot;&gt;
+                    Visítenos en:
+                &lt;/td&gt;
+                &lt;td style=&quot;padding-right: 300px;padding-left: 30px;&quot;&gt;
+                    &lt;a style=&quot;color:#3379a1;font-size:22px&quot; href=&quot;https://www.waze.com/es-419/live-map/directions/bmw-uruca-uruca,-san-jose?utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location&amp;to=place.w.180813923.1808204771.2247866&quot;&gt;MINI URUCA&lt;/a&gt;
+                    
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/table&gt;
+          &lt;/td&gt;
+            &lt;/tr&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;</text>
+    </textTemplates>
+</Flow>

@@ -1,0 +1,4 @@
+<aura:component implements="flexipage:availableForAllPageTypes">
+    <!--<lightning:button label="Abrir calendario vista desktop" onclick="{!c.redirectToURL}" />-->
+    https://redmotors.lightning.force.com/lightning/o/Event/home
+</aura:component>

@@ -1,0 +1,92 @@
+<!-- quoteServiceBudget.html -->
+<template>
+    <lightning-card title="Enviar Presupuesto a BMW Service">
+        <div class="slds-p-around_medium">
+            <!-- Step 1: Selección de tareas -->
+            <template if:true={showStep1}>
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Paso 1: Seleccionar Tareas</h2>
+                
+                <lightning-datatable
+                    key-field="id"
+                    data={quoteLineItems}
+                    columns={columns}
+                    selected-rows={selectedRows}
+                    onrowselection={handleRowSelection}
+                ></lightning-datatable>
+                
+                <div class="slds-m-top_medium">
+                    <lightning-button
+                        label="Siguiente"
+                        variant="brand"
+                        onclick={handleNext}
+                        disabled={isNextDisabled}
+                    ></lightning-button>
+                </div>
+            </template>
+
+            <!-- Step 2: Revisión y envío -->
+            <template if:true={showStep2}>
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Paso 2: Revisar y Enviar</h2>
+                
+                <div class="tareas-container">
+                    <template for:each={groupedItems} for:item="bloque">
+                        <div key={bloque.key} class="bloque-tarea slds-m-bottom_large">
+                            <h3 class="slds-text-heading_small">{bloque.nombreTarea}</h3>
+                            
+                            <div class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                <table class="slds-table slds-table_bordered">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col">Cantidad</th>
+                                            <th scope="col">Precio Unitario</th>
+                                            <th scope="col">Total</th>
+                                            <th scope="col">Tipo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template for:each={bloque.items} for:item="item">
+                                            <tr key={item.Id}>
+                                                <td>{item.Product2.Name}</td>
+                                                <td>{item.Quantity}</td>
+                                                <td>{item.unitPriceFormatted}</td>
+                                                <td>{item.totalPriceFormatted}</td>
+                                                <td>{item.BMW_TipoDeArticulo__c}</td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="slds-text-align_right slds-m-top_small">
+                                <strong>Total Tarea: {bloque.totalTareaFormatted}</strong>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <div class="slds-m-top_medium slds-grid slds-grid_align-spread">
+                    <lightning-button
+                        label="Atrás"
+                        variant="neutral"
+                        onclick={handleBack}
+                    ></lightning-button>
+                    
+                    <lightning-button
+                        label="Enviar a Service"
+                        variant="brand"
+                        onclick={handleSendToService}
+                        disabled={isSending}
+                    ></lightning-button>
+                </div>
+            </template>
+
+            <!-- Loading spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center">
+                    <lightning-spinner alternative-text="Cargando"></lightning-spinner>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

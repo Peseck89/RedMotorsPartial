@@ -1,0 +1,181 @@
+<aura:component implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" controller="CommunityCalendarController">
+  <aura:handler name="init" value="this" action="{!c.doInit}"/>
+  <aura:attribute name="userInfo" type="user"/>
+  <aura:attribute name="response" type="String"/>
+  <aura:attribute name="serviceSelected" type="String"/>
+  <aura:attribute name="myResult" type="String"/>
+  <aura:attribute name="services" type="Object" default='[ {"Mecánica Rápida":[{ "label":"Escazú","id":"0054U000009hipBQAQ" }, { "label":"Pavas","id":"0054U000009hiw2QAA" }, { "label":"Pinares","id":"0054U000009hiwHQAQ" }, { "label":"Uruca","id":"0054U000009hiwMQAQ" } ], "Diagnóstico":[ { "label":"Pavas","id":"0054U000009hiwCQAQ" }, { "label":"Uruca","id":"0054U000009hiwRQAQ" } ], "Otobai":[ { "label":"Pavas","id":"0054U00000Bes4GQAR" } ], "Enderezado y Pintura":[ { "label":"Uruca","id":"0054U000009hiwWQAQ"}]}]'/>
+  <aura:attribute name="serviceCenterSelected" type="String"/>
+  <aura:attribute name="selectedDate" type="Date"/>
+  <aura:attribute name="serviceCenters" type="List"/>
+  <aura:attribute name="optionsService" type="List" default="[{'label': 'Mecánica Rápida', 'value': 'Mecánica Rápida'}, {'label': 'Enderezado y Pintura', 'value': 'Enderezado y Pintura'}, {'label': 'Diagnóstico', 'value': 'Diagnóstico'}, {'label': 'Otobai', 'value': 'Otobai'},]"/>
+  <aura:attribute name="tabs" type="Object[]" />
+  <aura:attribute name="selTabId" type="String"/>
+  <aura:method name="logParam"
+               description="Sample method with parameter">
+    <aura:attribute name="message" type="String" default="default message" />
+  </aura:method>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      </meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    </meta>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  </link>
+<ltng:require styles="{!$Resource.CommunityCalendarStyle}" />
+<ltng:require styles="{!$Resource.CommunityCalendarStyleComplement}" />
+<ltng:require scripts="{!join(',', 
+                       $Resource.CommunityCalendarFiles + '/jquery.min.js',
+                       $Resource.CommunityCalendarFiles + '/materialize.min.js', 
+                       $Resource.CommunityCalendarFiles + '/popper.min.js',
+                       $Resource.CommunityCalendarFiles + '/bootstrap.min.js' )}" afterScriptsLoaded="{!c.myFunction}" />
+</head>
+<body>
+  <div class="main-wrapper">
+    <div class="content-wrapper grey lighten-3">
+      <div class="container">
+        <div class="calendar-wrapper z-depth-2">
+          <div class="header-background" style="margin: auto; width: 100%; padding: 0px; box-shadow: 1px 1px 6px grey;">
+          </div>
+          <div class="testJD" id ="testJD" style="display:none; padding-top:50px;padding-bottom:50px">
+            <table style="text-align: center;">
+              <tr id="creandocita1">
+                <span> Tu cita está siendo creada. 
+                </span>
+              </tr>
+              <tr id ="creandocita2" style="padding-top:2px">
+                <lightning:button variant="brand" label="Presiona para continuar..." title="Presiona para continuar..." onclick="{! c.myTest }" />
+              </tr>
+              <tr id ="creandocita3" style="padding-top:2px; display:none" >
+                <ui:message title="Tu cita ha sido creada." severity="confirm" closable="false">
+                  Tu cita ha sido creada.
+                </ui:message>
+                <ui:outputText value="{!v.myResult}"/>	
+              </tr>
+            </table>
+          </div>
+          <table id="verificarSection">
+            <tr>
+              <td >
+                <lightning:combobox style="width:80%" name="general" label="Servicio" placeholder="Servicio" options="{! v.optionsService }" onchange="{! c.handleOnChangeSelectedService }" />
+              </td>
+              <td>
+                <!-- Brand variant: Identifies the primary action in a group of buttons -->
+                <lightning:button variant="brand" label="Verificar espacios" title="Brand action" onclick="{! c.handleVerifyCalendar }" />
+              </td>
+            </tr>
+          </table>
+          <div id ="container" style="display:none">
+            <div class="" >
+              <div class="calendar-header">
+                <a class="prev-button" id="prev">
+                  <i class="material-icons">keyboard_arrow_left
+                  </i>
+                </a>
+                <a class="next-button" id="next">
+                  <i class="material-icons">keyboard_arrow_right
+                  </i>
+                </a>
+                <div class="row header-title">
+                  <div class="header-text">
+                    <h3 id="month-name">February
+                    </h3>
+                    <h5 id="todayDayName">Today is Friday 7 Feb
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <div class="calendar-content">
+                <div id="calendar-table" class="calendar-cells">
+                  <div id="table-header">
+                    <div class="row">
+                      <div class="col">Mon
+                      </div>
+                      <div class="col">Tue
+                      </div>
+                      <div class="col">Wed
+                      </div>
+                      <div class="col">Thu
+                      </div>
+                      <div class="col">Fri
+                      </div>
+                      <div class="col">Sat
+                      </div>
+                      <div class="col">Sun
+                      </div>
+                    </div>
+                  </div>
+                  <div id="table-body" class="">
+                  </div>
+                </div>
+              </div>
+              <div class="popup" id="testToggle" style="">
+                <span class="popuptext" id="myPopup">
+                  <lightning:button variant="base" label="Continuar" title="Continuar" onclick="{! c.myTest }"/>
+                </span>
+              </div>
+              <div class="centroDeServicio" style="display:none">
+                <lightning:tabset onselect="{! c.handleChangeServiceCenter }" variant="scoped" selectedTabId="{!v.selTabId}">
+                  <aura:iteration items="{! v.tabs }" var="tab">
+                    <lightning:tab label="{! tab.label }" id="{! tab.id }">
+                    </lightning:tab>
+                  </aura:iteration>
+                </lightning:tabset>
+              </div>
+              <div class="fixed" id="sidebar" style="display:none">
+                <div class="sidebar-title">
+                  <h4 id= "sidebar-texttitle">Citas Disponibles: 
+                    <ui:outputText value="{!v.selTabId }"/>	
+                  </h4>
+                  <h5 id="eventDayName">Date
+                  </h5>
+                </div>
+                <div class="sidebar-events" id="sidebarEvents">
+                  <div class="empty-message">Lo sentimos, no hay citas disponibles en la fecha seleccionada.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="calendar-footer" style="display:none">
+            <div class="emptyForm" id="emptyForm">
+              <h4 id="emptyFormTitle">No events now
+              </h4>
+              <a class="addEvent" id="changeFormButton">Add new
+              </a>
+            </div>
+            <div class="addForm" id="addForm">
+              <h4>Add new event
+              </h4>
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="eventTitleInput" type="text" class="validate">
+                  </input>
+                <label for="eventTitleInput">Title
+                </label>
+              </div>
+              <div class="input-field col s6">
+                <input id="eventDescInput" type="text" class="validate">
+                </input>
+              <label for="eventDescInput">Description
+              </label>
+            </div>
+          </div>
+          <div class="addEventButtons">
+            <a class="waves-effect waves-light btn blue lighten-2" id="addEventButton">Add
+            </a>
+            <a class="waves-effect waves-light btn grey lighten-2" id="cancelAdd">Cancel
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+</body>
+</html>
+</aura:component>

@@ -1,0 +1,49 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable" access="global" controller="BMW_LineaPlantillaEmpresa" >
+    <!--<c:bMw_CrearLineaPlantilla />-->
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="parentRecordId" type="String" />
+    <aura:attribute name="lineaPlantilla" type="Object"/>
+    <aura:attribute name="EmpresaPlantilla" type="String" />
+    <!--<p>{!v.parentRecordId}</p>-->
+    <!--<p>{!v.EmpresaPlantilla}</p>-->
+    <lightning:card>
+
+        <lightning:navigation aura:id="navService"/>
+        <lightning:recordEditForm objectApiName="Linea_Plantilla_de_Presupuesto__c"
+        onsuccess="{!c.handleSubmit}">
+            <lightning:messages />
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning:inputField fieldName="Product__c" />
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning:inputField fieldName="Cantidad__c" />
+                    </div>
+                </div>
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning:inputField fieldName="Descuento__c" />
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning:inputField fieldName="BMW_PrecioDeVenta__c" />
+                    </div>
+                </div>
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning:inputField fieldName="BMW_Alias__c"/>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning:inputField fieldName="Plantilla_de_Presupuesto__c" value="{!v.parentRecordId}"/>
+                    </div>
+                </div>
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning:inputField class="slds-hidden" fieldName="Empresa__c" value="{!v.EmpresaPlantilla}"/>
+                    </div>
+                </div>
+            <lightning:button label="Guardar y Nuevo" variant="brand" type="submit"/>
+            <lightning:button label="Regresar a Plantilla" variant="brand-outline" onclick="{! c.regresarPlantilla }"/>
+        </lightning:recordEditForm>
+    </lightning:card>
+</aura:component>

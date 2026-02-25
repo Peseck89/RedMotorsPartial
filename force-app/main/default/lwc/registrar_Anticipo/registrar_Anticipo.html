@@ -1,0 +1,30 @@
+<template>
+  <template if:false={synced}> 
+    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+        <span class="slds-assistive-text">error</span>
+        <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small" title="Description of icon when needed">
+          <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#error"></use>
+          </svg>
+        </span>
+        <h2>La oportunidad requiere tener un presupuesto syncronizado.</h2>
+    </div>
+  </template>
+  <template if:true={synced}>
+    <template if:true={isLoading}>
+      <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+    </template>    
+    <template if:true={showTieneAnticipos}>
+      <c-registrar_-anticipo_-presentar onconfirmcontinue={handlConfirmContinue} opp-id={recordId}></c-registrar_-anticipo_-presentar>
+    </template>
+    <template if:true={showSearchPaymentScreen}>
+          <c-registrar_-anticipo_-consultar onpaymentvalidated={handlePaymentValidatedEvent} onshowloading={handleShowLoadingEvent} onhideloading={handleHideLoadingEvent} opp-id={recordId}></c-registrar_-anticipo_-consultar>
+    </template>
+    <template if:true={showConfirPaymentScreen}>
+      <c-registrar_-anticipo_-confirmar ongotostepone={handlGoToStepOneEvent} onconfirm={handleConfirmEvent} identifier={identifier} amount={amount}></c-registrar_-anticipo_-confirmar>
+    </template>
+    <template if:true={showSelectOpportunityScreen}>
+      <c-registrar_-anticipo_-select_-vehicle ongotosteptwo={handlGoToStepTwoEvent} opp-id={recordId} identifier={identifier} amount={amount} prod-name={ProduName}> </c-registrar_-anticipo_-select_-vehicle>
+    </template>    
+  </template>
+</template>

@@ -1,0 +1,24 @@
+<template>
+  <div class="timeline-section">
+    <div class="timeline-body">
+      <div class="bordered">
+        <h2 class="second-title">Otros vehículos</h2>
+      </div>
+      <lightning-accordion style="width: 100%;"
+          allow-multiple-sections-open onsectiontoggle={handleSectionToggle}
+          active-section-name={activeSections}>
+
+          <lightning-accordion-section name="A" label="Otro vehiculo:" style="background-color: #FFF; border-radius:10px">
+            <!-- <p>Datos Otro Vehiculo</p> -->
+            <lightning-datatable
+                key-field="id"
+                data={data}
+                columns={columns}>
+            </lightning-datatable>
+          </lightning-accordion-section>
+
+        </lightning-accordion>
+
+    </div>
+  </div>
+</template>

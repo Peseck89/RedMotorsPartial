@@ -1,0 +1,125 @@
+<!--
+  @description       : 
+  @author            : marcohernandezhp@gmail.com
+  @group             : Redmotors
+  @last modified on  : 06-20-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <article class="slds-card">
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="#" class="slds-card__header-link slds-truncate"
+                            title="Crear oportunidad - Seleccionar Inventario">
+                            <span>Crear oportunidad - Seleccionar Inventario</span>
+                        </a>
+                    </h2>
+                </div>
+            </header>
+        </div>
+
+        <div class="slds-card__body">
+            <div class="slds-form slds-m-around_small slds-p-around_small" role="list">
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Marca" placeholder="Escriba aqui..."
+                                onchange={handleBrandChange} value={brand} required="true" disabled={itemsAdded}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Año" placeholder="Escriba aqui..."
+                                onchange={handleYearChange} value={year} required="true" disabled={itemsAdded}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Modelo" onchange={handleModelChange} value={model}
+                                placeholder="Escriba aqui..."> </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Vin" placeholder="Escriba aqui..."
+                                onchange={handleVinChange} value={vin}> </lightning-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Color Interno" placeholder="Escriba aqui..."
+                                onchange={handleColorInternoChange} value={intColor}> </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-input type="text" label="Color Externo" placeholder="Escriba aqui..."
+                                onchange={handleColorExternoChange} value={extColor}> </lightning-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element slds-form-element_horizontal ">
+                            <lightning-combobox name="TipoCombustible" label="Combustible" placeholder="-- Seleccionar --" value={tipoCombustible}
+                            onchange={handleCombustibleChange} options={tipoCombustibleOptions}>
+                        </lightning-combobox>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <!-- <template if:true={showClearButton}>
+                            <lightning-button variant="destructive-text" label="Clear" title="Clear"
+                                onclick={handleClearClick} class="slds-m-left_x-small"></lightning-button>
+                        </template> -->
+                    </div>
+                </div>
+            </div>
+
+            <div style="height:400px;">
+                <lightning-datatable selected-rows={selectedProdXBodItemIds}
+                    onrowselection={handleProdXBoditemsSelection} key-field="Id" data={records} columns={columns}>
+                </lightning-datatable>
+            </div>
+        </div>
+
+        <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+            <div>
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button_neutral" disabled={isEnablePrevButton}
+                        onclick={handleBackClick}>Pag. Anterior</button>
+                    <button class="slds-button slds-button_neutral" disabled={isEnableNextButton}
+                        onclick={handleNextClick}>Sig. Pagina</button>
+                </div>
+                <span class="slds-m-left_medium">{totalRecords} registros encontrados, Pagina {pageNumber} de
+                    {totalPages}</span>
+            </div>
+            <div>
+                <!-- <span slot="actions"> -->
+                <!-- <lightning-button variant="brand-outline" label="Atras" title="Cancelar"
+                        onclick={handleBackClick} class="slds-m-left_small"></lightning-button> -->
+
+                <lightning-button variant="brand" label="Continuar" title="Continuar" disabled={disableNextButton}
+                    onclick={handleNextStepClick} class="slds-m-left_x-small"></lightning-button>
+                <!-- </span> -->
+            </div>
+        </footer>
+    </article>
+</template>

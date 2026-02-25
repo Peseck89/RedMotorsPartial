@@ -1,0 +1,153 @@
+<template>
+    <article class="slds-card">
+
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <div class="slds-card__body">
+            <template if:true={nodata}>                            
+                <div class="slds-form slds-m-around_small slds-p-around_small" role="list">
+                    <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <c-rm_vn_get_record_opp_record_types
+                                    onrecordtypeselected={handleBrandChange}
+                                    onisloading={handleIsLoadingRecordType}
+                                    empty-option="true"
+                                    ></c-rm_vn_get_record_opp_record_types>
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <lightning-input type="text" label="Año" placeholder="Escriba aqui..."
+                                    onchange={handleYearChange} value={year} disabled={yearInputDisabled}>
+                                </lightning-input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <lightning-input type="text" label="Modelo" onchange={handleModelChange} value={model}
+                                    disabled={modelInputDisabled} placeholder="Escriba aqui..."> </lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <lightning-input type="text" label="Vin" placeholder="Escriba aqui..."
+                                    onchange={handleVinChange} value={vin}> </lightning-input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <lightning-input type="text" label="Color Interno" placeholder="Escriba aqui..."
+                                    onchange={handleColorInternoChange} value={internalColor}> </lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <lightning-input type="text" label="Color Externo" placeholder="Escriba aqui..."
+                                    onchange={handleColorExternoChange} value={externalColor}> </lightning-input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slds-form__row">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <c-rm_vn_tipo_combustible_combobox onselectedtipocombustibleevent={handleSelectedTipoCombustibleEvent}></c-rm_vn_tipo_combustible_combobox>
+                            </div>
+                        </div>
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">
+                                <lightning-combobox name="status" label="Estado de Vehículo"
+                                placeholder="-- Seleccionar --" value={selectedStatus}
+                                onchange={handleStatusChange} options={statusOptions}>
+                                </lightning-combobox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div style="height:250px;"> -->
+                    <lightning-datatable 
+                        hide-checkbox-column
+                        selected-rows={selectedRows} 
+                        max-row-selection="1"
+                        onrowselection={handleRecordsSelection} 
+                        key-field="Id" 
+                        data={records} 
+                        columns={columns}
+                        is-loading={isLoading}
+                        onrowaction={handleRowAction}
+                        >
+                    </lightning-datatable>
+                <!-- </div> -->
+            </template>
+            <template if:false={nodata}>
+                <lightning-datatable 
+                hide-checkbox-column
+                selected-rows={selectedRows} 
+                max-row-selection="1"
+                onrowselection={handleRecordsSelection} 
+                key-field="Id" 
+                data={recordsError} 
+                columns={columnsError}
+                is-loading={isLoading}
+                onrowaction={handleRowAction}
+                >
+            </lightning-datatable>
+            </template>
+        </div>
+
+        <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+            <div>
+                <template if:false={nodata}>
+                    <div class="slds-button-group" role="group">
+                        <button class="slds-button slds-button_neutral" disabled={isEnablePrevButtonError}
+                            onclick={handleBackClickError}>Pag. Anterior</button>
+                        <button class="slds-button slds-button_neutral" disabled={isEnableNextButtonError}
+                            onclick={handleNextClickError}>Sig. Pagina</button>
+                    </div>
+                    <span class="slds-m-left_medium">{totalRecordsError} registros encontrados, Pagina {pageNumberError} de
+                        {totalPagesError}</span>
+                </template>
+                <template if:true={nodata}>
+                    <div class="slds-button-group" role="group">
+                        <button class="slds-button slds-button_neutral" disabled={isEnablePrevButton}
+                            onclick={handleBackClick}>Pag. Anterior</button>
+                        <button class="slds-button slds-button_neutral" disabled={isEnableNextButton}
+                            onclick={handleNextClick}>Sig. Pagina</button>
+                    </div>
+                    <span class="slds-m-left_medium">{totalRecords} registros encontrados, Pagina {pageNumber} de
+                        {totalPages}</span>
+                </template>
+            </div>
+            <div>
+                <template if:true={nodata}>
+                    <lightning-button variant="brand-outline" label="Productos con error" title="Mostrar productos con errores" onclick={mostrarErrores} class="slds-m-left_x-small"></lightning-button>
+                    <slot name="actions">
+                    </slot>                    
+                </template>
+                <template if:false={nodata}>
+                    <lightning-button variant="brand-outline" label="Tabla de productos" title="Mostrar productos con errores" onclick={mostrarNormal} class="slds-m-left_x-small"></lightning-button>
+                    <slot name="actions">
+                    </slot>   
+                </template>                
+            </div>
+            <div>
+                <lightning-button-menu label="Exportar a CSV" variant="brand" alternative-text="Exportar a CSV" icon-name="utility:settings" class="slds-m-right_large" onselect={handleExportSelect}>
+                    <lightning-menu-item value="comma" label="Exportar usando el separador (,)"  title="Al exportar a csv se usara el , como separador"></lightning-menu-item>
+                    <lightning-menu-item value="semicolon" label="Exportar usando el separador (;)" title="Al exportar a csv se usara el ; como separador."></lightning-menu-item>
+                </lightning-button-menu>
+                <slot name="actions">
+                </slot>
+            </div>
+        </footer>
+    </article>
+</template>

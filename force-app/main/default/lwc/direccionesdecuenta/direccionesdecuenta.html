@@ -1,0 +1,150 @@
+<template>
+    <lightning-card>
+        <div class="head-container">
+            <template if:false={isJuridico}>
+                <h1 style="padding-left: 12px;">Direcciones</h1>
+            </template>
+            <template if:true={isJuridico}>
+                <h1 style="padding-left: 12px;">Direcciones Empresariales</h1>
+            </template>
+            <div class="slds-p-horizontal_small slds-p-bottom_small">
+                <lightning-button label="Agregar" variant="brand" onclick={handleAgregar}></lightning-button>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-text-title">Dirección</th>
+                        <th class="slds-text-title">Provincia</th>
+                        <th class="slds-text-title">Cantón</th>
+                        <th class="slds-text-title">Distrito</th>
+                        <th class="slds-text-title">Principal</th> <!-- Nueva columna -->
+                        <th class="slds-text-title">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template if:true={primerDireccion}>
+                        <tr class="slds-hint-parent">
+                            <td style="word-break: break-word; white-space: normal;" >{primerDireccion.Direccion__c}</td>
+                            <td>{primerDireccion.ProvinciaNombre}</td>
+                            <td>{primerDireccion.CantonNombre}</td>
+                            <td>{primerDireccion.DistritoNombre}</td>
+                            <td>
+                                <lightning-input 
+                                    type="checkbox" 
+                                    checked={primerDireccion.Direccion_principal__c} 
+                                    disabled 
+                                    class="slds-m-left_small">
+                                </lightning-input>
+                            </td>
+                            <td>
+                                <button class="slds-button" onclick={handleEditar} data-id={primerDireccion.Id}>
+                                    <lightning-icon icon-name="utility:edit" size="small"></lightning-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                    
+                    <template if:true={otrasDirecciones}>
+                        <tr>
+                            <td colspan="6">
+                                <div class="slds-text-align_center">
+                                    <lightning-button if:true={mostrarDropdown}
+                                        label="Ocultar"
+                                        icon-name="utility:close"
+                                        onclick={toggleDropdown}>
+                                    </lightning-button>
+                                    <lightning-button if:false={mostrarDropdown}
+                                        label="Mostrar más"
+                                        icon-name="utility:add"
+                                        onclick={toggleDropdown}>
+                                    </lightning-button>                        
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+
+                    <template if:true={mostrarDropdown}>
+                        <template for:each={otrasDirecciones} for:item="direccion">
+                            <tr key={direccion.Id} class="slds-hint-parent">
+                                <td style="word-break: break-word; white-space: normal;">{direccion.Direccion__c}</td>
+                                <td>{direccion.ProvinciaNombre}</td>
+                                <td>{direccion.CantonNombre}</td>
+                                <td>{direccion.DistritoNombre}</td>
+                                <td>
+                                    <lightning-input 
+                                        type="checkbox" 
+                                        checked={direccion.Direccion_principal__c} 
+                                        disabled 
+                                        class="slds-m-left_small">
+                                    </lightning-input>
+                                </td>
+                                <td>
+                                    <button class="slds-button" onclick={handleEditar} data-id={direccion.Id}>
+                                        <lightning-icon icon-name="utility:edit" size="small"></lightning-icon>
+                                    </button>
+                                    <button class="slds-button" onclick={handleEliminar} data-id={direccion.Id}>
+                                        <lightning-icon icon-name="utility:delete" size="small"></lightning-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">{modalTitle}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-textarea
+                        label="Dirección"
+                        value={direccionActual.Direccion__c}
+                        onchange={handleInputChange}>
+                    </lightning-textarea>
+
+                    <lightning-combobox
+                        label="Provincia"
+                        value={direccionActual.Provincia__c}
+                        options={provincias}
+                        onchange={handleProvinciaChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="Cantón"
+                        value={direccionActual.Canton__c}
+                        options={cantones}
+                        onchange={handleCantonChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="Distrito"
+                        value={direccionActual.Distrito__c}
+                        options={distritos}
+                        onchange={handleDistritoChange}>
+                    </lightning-combobox>
+
+                    <lightning-input
+                        type="checkbox"
+                        label="Dirección principal"
+                        checked={direccionActual.Direccion_principal__c}
+                        onchange={handleDireccionPrincipalChange}>
+                    </lightning-input>
+
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancelar" onclick={cerrarModal}></lightning-button>
+                    <lightning-button label="Guardar" variant="brand" onclick={guardarDireccion}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

@@ -1,0 +1,9 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable,force:lightningQuickActionWithoutHeader" access="global">
+    <aura:attribute name="recordId" type="String" />
+    <aura:html tag="style">
+        .slds-modal__container {
+            min-width: 90vw;
+        }
+    </aura:html>
+    <c:cT_CrearTrabajoaRealizar_lwc recId="{!v.recordId}" onclose="{!c.handleClose}" />
+</aura:component>

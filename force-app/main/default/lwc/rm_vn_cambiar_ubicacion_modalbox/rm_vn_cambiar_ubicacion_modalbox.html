@@ -1,0 +1,51 @@
+<template>
+    <lightning-modal-header label={title}></lightning-modal-header>
+    <lightning-modal-body>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <!-- Mostrar el registro y permitir la edicion usa los componentes standard -->
+        <lightning-card title="Producto por Bodega" icon-name="standard:product">
+            <lightning-record-edit-form record-id={recordId} object-api-name="ProductoXBodega__c">
+
+                <!-- Mostrar errores aqui -->
+                <template if:true={displayError}>
+                    <div class="slds-p-around_medium">
+                        <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                            <h2>{messageError}</h2>
+                        </div>
+                    </div>
+                </template>
+
+                <div class="slds-p-around_medium">
+                    <label for="productVin">Vin</label>
+                    <p>{productVin}</p>
+                </div>
+
+                <div class="slds-p-around_medium">
+                    <label for="productName">Detalle</label>
+                    <p>{productName}</p>
+                </div>
+
+                <!-- Mostrar el nombre de la bodega -->
+                <div class="slds-p-around_medium">
+                    <label for="productVin">Bodega Origen</label>
+                    <lightning-output-field field-name="Bodega__c" variant="label-hidden"></lightning-output-field>
+                </div>
+
+                <!-- Mostrar el nombre de la bodega -->
+                <div class="slds-p-around_medium" style="height: 200px;">
+                    <c-lookup selection={initialSelection} errors={errors} onsearch={handleLookupSearch}
+                        onselectionchange={handleSelectionChange} label="Bodega Destino" name="bodegaDestinoId"
+                        placeholder="Trabajos a realizar">
+                    </c-lookup>
+                </div>
+
+            </lightning-record-edit-form>
+        </lightning-card>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Actualizar" onclick={handleSaveClick} varian="brand"
+            disabled={isSaveButtonDisabled}></lightning-button>
+    </lightning-modal-footer>
+</template>

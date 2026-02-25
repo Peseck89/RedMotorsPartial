@@ -1,0 +1,297 @@
+<template>
+  <div class="grid-container">
+    <div class="info-data-container">
+      <div class="top-container">
+        <lightning-icon class="icon-ctct" icon-name="standard:service_contract" alternative-text="Email"
+          title="Email"></lightning-icon>
+        <p class="primary-text">
+          Datos Generales
+        </p>
+      </div>
+      <div class="bottom-container client-data">
+        <span><strong>Asesor: </strong>{asesor}</span>
+        <span><strong>Servicio: </strong>{servicio}</span>
+        <span><strong>Fecha Ingreso: </strong>{fechaEntrada}</span>
+        <span><strong>Cita: </strong><a href={cita}>{cita}</a></span>
+        <span><strong>Origen de la cita: </strong>{origenCita}</span>
+        <span><strong>Días en proceso: </strong>{diasEnProceso}</span>
+
+        <div class="edit-zone-info">
+          <span class="span-container">
+            <strong>Requiere lavado: </strong>
+            <div if:false={showEditZoneLavado} style="margin-left: 5px;">
+              {lavadoFormat}
+            </div>
+            <div if:true={showEditZoneLavado} class="checkboxs-containers">
+              <div class="checkboxs-containers-child">
+                Sí:
+                <lightning-input style="margin-left: 5px;" type="checkbox" data-value="true" checked={lavado}
+                  disabled={lavado} onchange={handleCheckboxChangeLavado}>
+                </lightning-input>
+              </div>
+              <div class="checkboxs-containers-child">
+                No:
+                <lightning-input style="margin-left: 5px;" type="checkbox" data-value="false" checked={noLavado}
+                  disabled={noLavado} onchange={handleCheckboxChangeLavado}>
+                </lightning-input>
+              </div>
+            </div>
+          </span>
+
+          <div if:true={showEditZoneLavado} style="display: flex; justify-content:flex-end; width:100%">
+            <lightning-button variant="destructive" onclick={handleEditZoneLavado} label="Cancelar" title="Cancelar"
+              class="slds-m-left_x-small"></lightning-button>
+            <!-- <lightning-button variant="brand" onclick={handleSaveLavado} label="Guardar" title="Guardar"
+              class="slds-m-left_x-small"></lightning-button> -->
+          </div>
+
+          <lightning-button-icon if:false={showEditZoneLavado} onclick={handleEditZoneLavado} icon-name="utility:edit"
+            alternative-text="Editar" title="Edit"></lightning-button-icon>
+        </div>
+
+        <div class="edit-zone-info">
+          <span class="span-container" style="align-items: center;">
+            <strong>Objetos de valor: </strong>
+            <div if:false={showEditZoneObjetoValor} style="margin-left: 5px;">
+              {objetoValorFormat}
+            </div>
+            <div if:true={showEditZoneObjetoValor} class="checkboxs-containers">
+              <div class="checkboxs-containers-child">
+                Sí:
+                <lightning-input style="margin-left: 5px;" type="checkbox" data-value="true" checked={objetoValor}
+                  disabled={objetoValor} onchange={handleCheckboxChangeObjetoValor}>
+                </lightning-input>
+              </div>
+              <div class="checkboxs-containers-child">
+                No:
+                <lightning-input style="margin-left: 5px;" type="checkbox" data-value="false" checked={noObjetoValor}
+                  disabled={noObjetoValor} onchange={handleCheckboxChangeObjetoValor}>
+                </lightning-input>
+              </div>
+            </div>
+            <div if:false={showEditZoneObjetoValor} class="text-area-container">
+              <textarea if:true={objetoValor} style="margin-left: 5px;"
+                onchange={handleTextareaChangeObjetoValorTXT}>{objetoValorTXT}</textarea>
+              <lightning-button if:true={objetoValor} variant="brand" onclick={handleSaveObjetoValorTXT}
+                label="Guardar comentario" title="Guardar comentario" class="slds-m-left_x-small"></lightning-button>
+            </div>
+          </span>
+
+          <div if:true={showEditZoneObjetoValor} style="display: flex; justify-content:flex-end; width:100%">
+            <lightning-button variant="destructive" onclick={handleEditZoneObjetoValor} label="Cancelar"
+              title="Cancelar" class="slds-m-left_x-small"></lightning-button>
+            <!-- <lightning-button variant="brand" onclick={handleSaveObjetoValor} label="Guardar" title="Guardar"
+              class="slds-m-left_x-small"></lightning-button> -->
+          </div>
+
+          <lightning-button-icon if:false={showEditZoneObjetoValor} onclick={handleEditZoneObjetoValor}
+            icon-name="utility:edit" alternative-text="Editar" title="Edit"></lightning-button-icon>
+        </div>
+
+        <!-- <div if:true={objetoValor} class="edit-zone-info">
+          <div style="border: none; padding: 0; display:flex; flex-direction:row">
+            <span class="span-container">
+              <strong>Objetos de valor: </strong>
+            </span>
+            <span if:false={showEditZoneObjetoValorTXT} style="border: none; padding: 0; margin-left: 5px; width: max-content;">{objetoValorTXT}</span>
+            <textarea style="margin-left: 5px;" onchange={handleTextareaChangeObjetoValorTXT}>{objetoValorTXT}</textarea>
+          </div>
+
+          <div style="display: flex; justify-content:flex-end; width:100%">
+            <lightning-button variant="destructive" onclick={handleEditZoneObjetoValorTXT} label="Cancelar" title="Cancelar"
+              class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="brand" onclick={handleSaveObjetoValorTXT} label="Guardar" title="Guardar"
+              class="slds-m-left_x-small"></lightning-button>
+          </div>
+          <lightning-button-icon if:false={showEditZoneObjetoValorTXT} onclick={handleEditZoneObjetoValorTXT} icon-name="utility:edit" alternative-text="Editar"
+              title="Edit"></lightning-button-icon>
+        </div> -->
+
+        <div class="edit-zone-info">
+          <div style="border: none; padding: 0; display:flex; flex-direction:row">
+            <span style="border: none; padding: 0; width: max-content;"><strong>Número de guía: </strong></span>
+            <span if:false={showEditZoneNumGuia}
+              style="border: none; padding: 0; margin-left: 5px; width: max-content;">{numeroGuia}</span>
+            <textarea if:true={showEditZoneNumGuia} style="margin-left: 5px;"
+              onchange={handleTextareaChangeGuia}>{numeroGuia}</textarea>
+          </div>
+
+          <div if:true={showEditZoneNumGuia} style="display: flex; justify-content:flex-end; width:100%">
+            <lightning-button variant="destructive" onclick={handleEditZoneNumGuia} label="Cancelar" title="Cancelar"
+              class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="brand" onclick={handleSaveNumGuia} label="Guardar" title="Guardar"
+              class="slds-m-left_x-small"></lightning-button>
+          </div>
+          <lightning-button-icon if:false={showEditZoneNumGuia} onclick={handleEditZoneNumGuia} icon-name="utility:edit"
+            alternative-text="Editar" title="Edit"></lightning-button-icon>
+        </div>
+
+        <div class="edit-zone-info">
+          <div style="border: none; padding: 0; display:flex; flex-direction:row">
+            <span style="border: none; padding: 0; width: max-content;"><strong>Color de guía: </strong></span>
+            <span if:false={showEditZoneColorGuia}
+              style="border: none; padding: 0; margin-left: 5px; width: max-content;">{colorGuia}</span>
+            <textarea if:true={showEditZoneColorGuia} onchange={handleTextareaChangeColorGuia}
+              style="margin-left: 5px;">{colorGuia}</textarea>
+          </div>
+
+          <div if:true={showEditZoneColorGuia} style="display: flex; justify-content:flex-end; width:100%">
+            <lightning-button variant="destructive" onclick={handleEditZoneColorGuia} label="Cancelar" title="Cancelar"
+              class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="brand" onclick={handleSaveColorGuia} label="Guardar" title="Guardar"
+              class="slds-m-left_x-small"></lightning-button>
+          </div>
+
+          <lightning-button-icon if:false={showEditZoneColorGuia} onclick={handleEditZoneColorGuia}
+            icon-name="utility:edit" alternative-text="Editar" title="Edit"></lightning-button-icon>
+        </div>
+
+        <div class="edit-zone-info">
+          <span class="span-container">
+            <strong>¿Dejar repuestos usados en el vehículo?: </strong>
+            <div if:false={showEditZoneRepuesto} style="margin-left: 5px;">
+              {repuestoFormat}
+            </div>
+            <div if:true={showEditZoneRepuesto} class="checkboxs-containers">
+              <div class="checkboxs-containers-child">
+                Sí:
+                <lightning-input style="margin-left: 5px;" type="checkbox" data-value="true" checked={repuesto}
+                  disabled={repuesto} onchange={handleCheckboxChangeRepuesto}>
+                </lightning-input>
+              </div>
+              <div class="checkboxs-containers-child">
+                No:
+                <lightning-input style="margin-left: 5px;" type="checkbox" data-value="false" checked={noRepuesto}
+                  disabled={noRepuesto} onchange={handleCheckboxChangeRepuesto}>
+                </lightning-input>
+              </div>
+            </div>
+          </span>
+
+          <div if:true={showEditZoneRepuesto} style="display: flex; justify-content:flex-end; width:100%">
+            <lightning-button variant="destructive" onclick={handleEditZoneRepuesto} label="Cancelar" title="Cancelar"
+              class="slds-m-left_x-small"></lightning-button>
+            <!-- <lightning-button variant="brand" onclick={handleSaveLavado} label="Guardar" title="Guardar"
+              class="slds-m-left_x-small"></lightning-button> -->
+          </div>
+
+          <lightning-button-icon if:false={showEditZoneRepuesto} onclick={handleEditZoneRepuesto}
+            icon-name="utility:edit" alternative-text="Editar" title="Edit"></lightning-button-icon>
+        </div>
+
+        <span style="border: none; padding-bottom:0"><strong>Detalle de estado: </strong>{selectedStatusDetail}</span>
+        <div class="slds-p-horizontal_medium" style="display: flex; align-items: flex-end; padding-left: 0">
+          <lightning-combobox class="picklist-label" value={selectedStatusDetail}
+            placeholder="Seleccionar detalle de estado" options={picklistOptions}
+            onchange={handleChange}></lightning-combobox>
+
+          <lightning-button label="Save" onclick={handleSave} class="slds-m-top_medium"
+            style="margin: 0 0 2px 15px;"></lightning-button>
+
+        </div>
+        <span style="border: none; padding-bottom:0"><strong>Tipo de Combustible: </strong>{tipoCombustibleLabel}</span>
+        <div class="slds-p-horizontal_medium" style="display: flex; align-items: flex-end; padding-left: 0">
+          <lightning-combobox class="picklist-label" value={tipoCombustible}
+            placeholder="Seleccionar tipo de combustible" options={tipoCombustibleOptions}
+            onchange={handleCombustibleChange}>
+          </lightning-combobox>
+        </div>
+
+        <template if:true={showGasolinaField}>
+          <span style="border: none; padding-bottom:0"><strong>Nivel de Combustible:
+            </strong>{nivelCombustibleLabel}</span>
+          <div class="slds-p-horizontal_medium" style="display: flex; align-items: flex-end; padding-left: 0">
+            <lightning-combobox class="picklist-label" value={nivelCombustible} placeholder="Seleccionar nivel"
+              options={nivelCombustibleOptions} onchange={handleNivelCombustibleChange}>
+            </lightning-combobox>
+            <lightning-button label="Guardar" onclick={handleSaveCombustible} class="slds-m-top_medium"
+              style="margin: 0 0 2px 15px;">
+            </lightning-button>
+          </div>
+        </template>
+
+        <template if:true={showElectricoField}>
+          <span style="border: none; padding-bottom:0"><strong>Porcentaje de Carga: </strong>{porcentajeCarga}</span>
+          <div class="slds-p-horizontal_medium" style="display: flex; align-items: flex-end; padding-left: 0">
+            <lightning-input type="number" min="0" max="100" value={porcentajeCarga}
+              onchange={handlePorcentajeCargaChange} placeholder="Ingrese porcentaje (0-100)">
+            </lightning-input>
+            <lightning-button label="Guardar" onclick={handleSaveCombustible} class="slds-m-top_medium"
+              style="margin: 0 0 2px 15px;">
+            </lightning-button>
+          </div>
+        </template>
+        <span style="border: none; padding-bottom:0"><strong>Prioridad del caso: </strong>{prioridadCasoLabel}</span>
+        <div class="slds-p-horizontal_medium" style="display: flex; align-items: flex-end; padding-left: 0">
+          <lightning-combobox class="picklist-label" value={prioridadCaso} placeholder="Seleccionar prioridad del caso"
+            options={prioridadCasoOptions} onchange={handlePrioridadChange}>
+          </lightning-combobox>
+          <lightning-button label="Guardar" onclick={handleSavePriority} class="slds-m-top_medium"
+            style="margin: 0 0 2px 15px;">
+          </lightning-button>
+        </div>
+        <!-- <div class="three-grid-container">
+            <div class="grid-items">
+            </div>
+            <div class="grid-items">
+              <span><strong>Observaciones: </strong>{obcervaciones}</span>
+              <span><strong>Consecutivo: </strong>{consecutivo}</span>
+              <span><strong>Record Type: </strong>{recordType}</span>
+              <span><strong>Estátus: </strong>{estatus}</span>
+              <span><strong>Prioridad: </strong>{prioridad}</span>
+              <span><strong>Origen del caso: </strong>{origenCaso}</span>
+              
+            </div>
+            <div class="grid-items">
+              <span><strong>Owner del caso: </strong>{ownerCaso}</span>
+              <span><strong>Fecha Abierto: </strong>{fechaAbierto}</span>
+              <span><strong>Fecha Cerrado </strong>{fechaCerrado}</span>
+              <span><strong>Fecha Entrada: </strong>{fechaEntrada}</span>
+              <span><strong>Mecanico Asignado: </strong>{mecanicoAsignado}</span>
+            </div>
+          </div> -->
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px" class="info-data-container">
+      <div class="top-container">
+        <lightning-icon class="icon-ctct" icon-name="standard:user_role" alternative-text="Email"
+          title="Email"></lightning-icon>
+        <p class="primary-text">
+          Detalle Asesor
+        </p>
+      </div>
+      <div class="bottom-container client-data">
+        <div if:false={showEditZone} class="edit-zone">
+          <span style="border: none;"><strong></strong>{comentarios}</span>
+          <lightning-button-icon onclick={handleEditZone} icon-name="utility:edit" alternative-text="Editar"
+            title="Edit"></lightning-button-icon>
+        </div>
+        <div if:true={showEditZone} class="edit-zone">
+          <textarea style="min-width: 100%;" onchange={handleTextareaChange}>{comentarios}</textarea>
+        </div>
+        <div if:true={showEditZone} style="display: flex; justify-content:flex-end; width:100%">
+          <lightning-button variant="destructive" onclick={handleEditZone} label="Cancelar" title="Cancelar"
+            class="slds-m-left_x-small"></lightning-button>
+          <lightning-button variant="brand" onclick={handleSaveComen} label="Guardar" title="Guardar"
+            class="slds-m-left_x-small"></lightning-button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <div class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:contact" alternative-text="Email" title="Email"></lightning-icon>
+          <p class="primary-text">
+            Contacto
+          </p>
+        </div>        
+        <div class="bottom-container client-data">
+          <span><strong>Ejem: </strong>{}</span>
+        </div>
+      </div> -->
+
+    <!-- </div> -->
+  </div>
+</template>

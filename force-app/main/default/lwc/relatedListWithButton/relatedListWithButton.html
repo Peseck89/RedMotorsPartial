@@ -1,0 +1,89 @@
+<template>
+    <lightning-card title={title}>
+        <!-- Botones superiores como una lista relacionada estándar -->
+        <div class="slds-m-bottom_small slds-grid slds-grid_align-spread">
+            <lightning-button-group>
+                <lightning-button label="Nuevo" onclick={openModal} disabled={btnNewDisable} ></lightning-button>
+                
+            </lightning-button-group>
+
+            
+        </div>
+
+        <!-- Tabla relacionada -->
+        <lightning-datatable
+            key-field="Id"
+            data={records}
+            columns={columns}
+            onrowaction={handleRowAction}
+            hide-checkbox-column>
+        </lightning-datatable>
+    </lightning-card>
+
+
+    <!-- Modal -->
+    <template if:true={isModalOpen}>
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" style='justify-content:flex-start'>
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">Nueva Nota Técnica</h2>
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-record-edit-form
+                        record-id={recordIdNota}
+                        object-api-name={objectApiName}
+                        onsuccess={handleSuccess}>
+                        
+                        <!-- Aquí defines los campos -->
+                        <lightning-input-field disabled={readOnly}	onchange={handleTecnicoChange} field-name="Tecnico__c"></lightning-input-field>
+
+                        
+                        <template lwc:if={recordIdNota}> 
+                             <lightning-input-field disabled="true"	 field-name="MecanicoLiderFx__c"></lightning-input-field>
+                        </template>
+                        <template lwc:else>
+                            <lightning-input type="text" disabled="true" label="Mecanico Lider" value={mecLiderName}></lightning-input>
+                        </template>
+                        <template lwc:if={isML}>
+                             <lightning-input-field disabled="true"	 field-name="NotasTecnico__c"></lightning-input-field>
+                             <lightning-input-field field-name="PN_NotasMecanicoLider__c"></lightning-input-field>
+                        </template>
+                        <template lwc:else>
+                            <lightning-input-field disabled={readOnly}	 field-name="NotasTecnico__c"></lightning-input-field>
+                            <lightning-input-field disabled="true"	 field-name="PN_NotasMecanicoLider__c"></lightning-input-field>
+                        </template>
+                       
+                        <lightning-input-field disabled={readOnly}	 field-name="GeneroPresupuesto__c"></lightning-input-field>
+                        
+                        <lightning-input-field disabled="true" value={recordId}	 field-name="Case__c"></lightning-input-field>
+                         <!--<lightning-input type="text" disabled="true" label="Caso" value={recordId}></lightning-input>-->
+
+                        <template if:true={editMecLider}>
+                            <template if:true={generoPresupuesto}>
+                                <lightning-input-field 	 field-name="AprobarPresupuesto__c"></lightning-input-field>
+                            </template>
+                            <lightning-input-field onchange={handlePruebaChange}	 field-name="RequierePrueba__c"></lightning-input-field>
+                            <template if:true={reqPrueba}>
+                                <lightning-input-field 	 field-name="Prueba__c"></lightning-input-field>
+                            </template>
+                            <lightning-input-field 	 field-name="AprobarNota__c"></lightning-input-field>
+                        </template>
+
+                        <template if:true={viewCaseOwner}>  
+                            <lightning-input-field disabled={readOnly}	 field-name="RequierePrueba__c"></lightning-input-field>
+                            <lightning-input-field disabled={readOnly}	 field-name="Prueba__c"></lightning-input-field>
+                            <lightning-input-field disabled={readOnly}	 field-name="AprobarPresupuesto__c"></lightning-input-field>
+                        </template>
+                    </lightning-record-edit-form>
+                </div>
+
+                <footer class="slds-modal__footer slds-grid slds-grid_align-end">
+                    <lightning-button variant="neutral" label="Cancelar" onclick={closeModal}></lightning-button>
+                    <lightning-button variant="brand" label="Guardar" onclick={submitForm}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

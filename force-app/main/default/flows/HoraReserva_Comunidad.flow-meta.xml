@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>57.0</apiVersion>
+    <interviewLabel>HoraReserva Comunidad {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>HoraReserva Comunidad</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>set_cancelado</name>
+        <label>set cancelado</label>
+        <locationX>308</locationX>
+        <locationY>288</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Estado__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Cancelado</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Estado__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Reservado</stringValue>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Estado__c</field>
+            <value>
+                <stringValue>Cancelado</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <object>Horas_Reserva__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <scheduledPaths>
+            <name>esperar_3_min</name>
+            <connector>
+                <targetReference>set_cancelado</targetReference>
+            </connector>
+            <label>esperar 3 min</label>
+            <offsetNumber>3</offsetNumber>
+            <offsetUnit>Minutes</offsetUnit>
+            <recordField>CreatedDate</recordField>
+            <timeSource>RecordField</timeSource>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

@@ -1,0 +1,1305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>alerta 30 días</description>
+        <name>Copia_1_de_Copia_1_de_Enviar_correo</name>
+        <label>Copia 1 de Copia 1 de Enviar correo</label>
+        <locationX>2200</locationX>
+        <locationY>900</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>iterateOpps</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>jcarvajal@redmotorscr.com,{!userEmail}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Oportunidad sin cambiar de etapa en 30 días.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoEmail5</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>alerta 30 días</description>
+        <name>Copia_1_de_Copia_2_de_Enviar_correo</name>
+        <label>Copia 1 de Copia 2 de Enviar correo</label>
+        <locationX>264</locationX>
+        <locationY>900</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Cambiar_Cerrada_Perdida</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>userEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Oportunidad sin cambiar de etapa en 6 meses.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoEmail8</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>alerta 30 días</description>
+        <name>Copia_1_de_Copia_3_de_Enviar_correo</name>
+        <label>Copia 1 de Copia 3 de Enviar correo</label>
+        <locationX>528</locationX>
+        <locationY>900</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Cambiar_Cerrada_Perdida</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>userEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Oportunidad sin cambiar de etapa en 30 días.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoEmail9</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>alerta 30 días</description>
+        <name>Copia_1_de_Enviar_correo</name>
+        <label>Copia 1 de Enviar correo</label>
+        <locationX>1936</locationX>
+        <locationY>900</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>iterateOpps</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>jsanso@redmotorscr.com,{!userEmail}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Oportunidad sin cambiar de etapa en 30 días.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoEmail4</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>alerta 30 días</description>
+        <name>Copia_2_de_Copia_2_de_Enviar_correo</name>
+        <label>Copia 2 de Copia 2 de Enviar correo</label>
+        <locationX>968</locationX>
+        <locationY>900</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Copy_1_of_Cambiar_Cerrada_Perdida</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>userEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Oportunidad sin cambiar de etapa en 6 meses.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoEmail8</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>alerta 30 días</description>
+        <name>Copia_2_de_Copia_3_de_Enviar_correo</name>
+        <label>Copia 2 de Copia 3 de Enviar correo</label>
+        <locationX>1232</locationX>
+        <locationY>900</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Copy_1_of_Cambiar_Cerrada_Perdida</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>userEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Oportunidad sin cambiar de etapa en 30 días.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoEmail9</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>alerta 30 días</description>
+        <name>Copia_2_de_Enviar_correo</name>
+        <label>Copia 2 de Enviar correo</label>
+        <locationX>2640</locationX>
+        <locationY>900</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>iterateOpps</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>userEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Oportunidad sin cambiar de etapa en 6 meses.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoEmail6</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>alerta 30 días</description>
+        <name>Copia_3_de_Enviar_correo</name>
+        <label>Copia 3 de Enviar correo</label>
+        <locationX>2904</locationX>
+        <locationY>900</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>iterateOpps</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>userEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Oportunidad sin cambiar de etapa en 6 meses.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoEmail7</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>alerta 30 días</description>
+        <name>Enviar_correo</name>
+        <label>Enviar correo</label>
+        <locationX>1672</locationX>
+        <locationY>792</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>iterateOpps</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>abarbozav@redmotorscr.com,{!userEmail}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Oportunidad sin cambiar de etapa en 30 días.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>correoEmail3</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <assignments>
+        <name>getOwnerEmail</name>
+        <label>getOwnerEmail</label>
+        <locationX>1936</locationX>
+        <locationY>468</locationY>
+        <assignmentItems>
+            <assignToReference>userEmail</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>iterateOpps.Owner.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>buscarAnticipo</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Copia_1_de_que_tipo_registro</name>
+        <label>Copia 1 de que tipo registro</label>
+        <locationX>2904</locationX>
+        <locationY>792</locationY>
+        <defaultConnector>
+            <targetReference>iterateOpps</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Copia_1_de_es_BMW</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.RecordTypeId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>0120P000000arDlQAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_2_de_Enviar_correo</targetReference>
+            </connector>
+            <label>Copia 1 de es BMW</label>
+        </rules>
+        <rules>
+            <name>Copia_1_de_es_MINI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.RecordTypeId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>0120P000000arDoQAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_3_de_Enviar_correo</targetReference>
+            </connector>
+            <label>Copia 1 de es MINI</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Copia_2_de_que_tipo_registro</name>
+        <label>Copia 2 de que tipo registro</label>
+        <locationX>528</locationX>
+        <locationY>792</locationY>
+        <defaultConnector>
+            <targetReference>Cambiar_Cerrada_Perdida</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Copia_2_de_es_BMW</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.RecordTypeId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>0120P000000arDlQAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_1_de_Copia_2_de_Enviar_correo</targetReference>
+            </connector>
+            <label>Copia 2 de es BMW</label>
+        </rules>
+        <rules>
+            <name>Copia_2_de_es_MINI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.RecordTypeId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>0120P000000arDoQAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_1_de_Copia_3_de_Enviar_correo</targetReference>
+            </connector>
+            <label>Copia 2 de es MINI</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Copia_3_de_que_tipo_registro</name>
+        <label>Copia 3 de que tipo registro</label>
+        <locationX>1232</locationX>
+        <locationY>792</locationY>
+        <defaultConnector>
+            <targetReference>Copy_1_of_Cambiar_Cerrada_Perdida</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Copia_3_de_es_BMW</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.RecordTypeId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>0120P000000arDlQAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_2_de_Copia_2_de_Enviar_correo</targetReference>
+            </connector>
+            <label>Copia 3 de es BMW</label>
+        </rules>
+        <rules>
+            <name>Copia_3_de_es_MINI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.RecordTypeId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>0120P000000arDoQAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_2_de_Copia_3_de_Enviar_correo</targetReference>
+            </connector>
+            <label>Copia 3 de es MINI</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>LOGICA_TIEMPOS</name>
+        <label>LOGICA TIEMPOS</label>
+        <locationX>1936</locationX>
+        <locationY>684</locationY>
+        <defaultConnector>
+            <targetReference>iterateOpps</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>Regla_1</name>
+            <conditionLogic>((1 AND 6) OR 5) AND (2 OR 3 OR 4)</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.DiasCreada__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>180.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Test Drive</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Oportunidad Calificada</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Usado</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Days_Changed__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>180.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Days_Changed__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_2_de_que_tipo_registro</targetReference>
+            </connector>
+            <label>Regla 1</label>
+        </rules>
+        <rules>
+            <name>Regla_2</name>
+            <conditionLogic>((1 AND 5) OR 4) AND 2 AND 3</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.DiasCreada__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>180.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Oferta</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>buscarAnticipo</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Days_Changed__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>180.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Days_Changed__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_3_de_que_tipo_registro</targetReference>
+            </connector>
+            <label>Regla 2</label>
+        </rules>
+        <rules>
+            <name>Regla_3</name>
+            <conditionLogic>( 1 OR 2 OR 3 ) AND 4 AND ( 5 OR 6 ) AND 7</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Oportunidad Calificada</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Test Drive</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Usado</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.RecordTypeId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>0120P000000arDlQAI</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Sucursal__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Escazú</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Sucursal__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pinares</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Days_Changed__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>31.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Enviar_correo</targetReference>
+            </connector>
+            <label>Regla 3</label>
+        </rules>
+        <rules>
+            <name>Regla_4</name>
+            <conditionLogic>( 1 OR 2 OR 3 ) AND 4</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Oportunidad Calificada</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Test Drive</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Usado</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Days_Changed__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>31.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>que_tipo_registro</targetReference>
+            </connector>
+            <label>Regla 4</label>
+        </rules>
+        <rules>
+            <name>antes_de_cerrar</name>
+            <conditionLogic>( 1 OR 2 OR 3 OR 4 ) AND ((5 AND 7) OR 6)</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Oportunidad Calificada</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Test Drive</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Oferta</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Usado</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.DiasCreada__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <numberValue>179.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Days_Changed__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <numberValue>179.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Days_Changed__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_1_de_que_tipo_registro</targetReference>
+            </connector>
+            <label>antes de cerrar</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>que_tipo_registro</name>
+        <label>que tipo registro</label>
+        <locationX>2200</locationX>
+        <locationY>792</locationY>
+        <defaultConnector>
+            <targetReference>iterateOpps</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>es_BMW</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.RecordTypeId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>0120P000000arDlQAI</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>iterateOpps.Sucursal__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Uruca</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_1_de_Enviar_correo</targetReference>
+            </connector>
+            <label>es BMW</label>
+        </rules>
+        <rules>
+            <name>es_MINI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>iterateOpps.RecordTypeId</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>0120P000000arDoQAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copia_1_de_Copia_1_de_Enviar_correo</targetReference>
+            </connector>
+            <label>es MINI</label>
+        </rules>
+    </decisions>
+    <description>1. Si la oportunidad tiene más de 6 meses en estado Calificada, Test Drive  o Usado y el tipo de registro es BMW y MINI pasa de forma automática a Cerrada-Perdida.
+ 
+
+2. Si la oportunidad tiene más de 6 meses en estado Oferta, pasa de forma automática a Cerrada-Perdida. Siempre y cuando no tenga un recibo/anticipo de reserva (validar marcas)
+
+
+3. Si la oportunidad se encuentra en estado igual a Calificada,Test Drive, Usado y el tipo de registro es BMW y además la sucursal sea igual a Escazú o Pinares y tiene más de un mes sin cambiar de etapa envía un correo a  Alejandro Barboza con copia a Rebeca Zamora: rzamora@redmotorscr.com (especificar mensajes) 
+
+
+4. Si la oportunidad se encuentra en estado igual a Calificada,Test Drive,Usado y el tipo de registro es BMW y no cambia de estado en un mes se le envía un correo electrónico a Juan Sanso jsanso@redmotorscr.com  con copia a Rebeca Zamora: rzamora@redmotorscr.com. (especificar mensajes) 
+
+
+5. Misma regla que el punto 4 pere para MINI ; Si la oportunidad se encuentra en estado igual a Calificada,Test Drive,Usado y el tipo de registro es MINI y no cambia de estado en un mes se le envía un correo electrónico a Jaime Carvajal jcarvajal@redmotorscr.com  con copia a Rebeca Zamora.  (especificar mensajes) 
+
+Adicional
+
+-Notificación al asesor o propietario de la OP, un día antes de que estas se cierren como perdidas o bien se cumplas las reglas antes mencionadas
+-Encuesta de cerrada perdida (Nohelia pasa referencias)</description>
+    <interviewLabel>cambioStageAutomatico {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>cambioStageAutomatico</label>
+    <loops>
+        <name>iterateOpps</name>
+        <label>iterateOpps</label>
+        <locationX>176</locationX>
+        <locationY>360</locationY>
+        <collectionReference>getOpportunity</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>getOwnerEmail</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>buscarAnticipo</name>
+        <label>buscarAnticipo</label>
+        <locationX>1936</locationX>
+        <locationY>576</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>LOGICA_TIEMPOS</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Oportunidad__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>iterateOpps.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Anticipo__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>getOpportunity</name>
+        <label>getOpportunity</label>
+        <locationX>176</locationX>
+        <locationY>252</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>iterateOpps</targetReference>
+        </connector>
+        <filterLogic>(1 OR 2 OR 8 OR 10) AND (3 OR 4) AND 5 AND 6 AND 7 AND 9</filterLogic>
+        <filters>
+            <field>StageName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Oportunidad Calificada</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>StageName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Test Drive</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>RecordTypeId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>0120P000000arDlQAI</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>RecordTypeId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>0120P000000arDoQAI</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>fechaentrega__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Campana__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>7010P000001rR1fQAE</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>fechaentrega__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>StageName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Usado</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Days_Changed__c</field>
+            <operator>GreaterThanOrEqualTo</operator>
+            <value>
+                <numberValue>31.0</numberValue>
+            </value>
+        </filters>
+        <filters>
+            <field>StageName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Oferta</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Opportunity</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Cambiar_Cerrada_Perdida</name>
+        <label>Cambiar Cerrada-Perdida</label>
+        <locationX>528</locationX>
+        <locationY>1092</locationY>
+        <connector>
+            <targetReference>iterateOpps</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>iterateOpps.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>RazonVentaPerdida__c</field>
+            <value>
+                <stringValue>No se localizó</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StageName</field>
+            <value>
+                <stringValue>Cerrada Perdida</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>hasActivity__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Copy_1_of_Cambiar_Cerrada_Perdida</name>
+        <label>Copy 1 of Cambiar Cerrada-Perdida</label>
+        <locationX>1232</locationX>
+        <locationY>1092</locationY>
+        <connector>
+            <targetReference>iterateOpps</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>iterateOpps.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>RazonVentaPerdida__c</field>
+            <value>
+                <stringValue>No se localizó</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StageName</field>
+            <value>
+                <stringValue>Cerrada Perdida</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>hasActivity__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>getOpportunity</targetReference>
+        </connector>
+        <schedule>
+            <frequency>Daily</frequency>
+            <startDate>2023-08-14</startDate>
+            <startTime>19:00:00.000Z</startTime>
+        </schedule>
+        <triggerType>Scheduled</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>correoEmail3</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html style=&quot;overflow-y: hidden;&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;height: auto; min-height: auto;background:#f5f5f9;&quot;&gt;&lt;div style=&quot;width:600px;margin: 0 auto;padding: 10px;position: relative;background-color:white;&quot;&gt;&lt;br /&gt;
+&lt;div style=&quot;background:#F4F4F4; width:500px;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333;font-size:25px;font-weight:bold&quot;&gt;Oportunidad sin cambiar de etapa en 30 días.&lt;/div&gt;              
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt;	Estimado Alejandro Barboza:&lt;/p&gt;
+&lt;br/&gt;
+La Oportunidad {!iterateOpps.Name} de BMW se encuentra en etapa {!iterateOpps.StageName} sin presentar ningún movimiento en los últimos 30 días.
+&lt;br/&gt;
+&lt;br /&gt;
+&lt;p&gt; Para acceder a esta oportunidad haga clic en el siguiente link:&lt;/p&gt;&lt;p style=&quot;font-weight: bold;&quot;&gt; https://redmotors.my.salesforce.com/{!iterateOpps.Id}&lt;/p&gt;
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt; Salesforce &lt;/p&gt;
+&lt;/div&gt;
+&lt;br /&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>correoEmail4</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html style=&quot;overflow-y: hidden;&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;height: auto; min-height: auto;background:#f5f5f9;&quot;&gt;&lt;div style=&quot;width:600px;margin: 0 auto;padding: 10px;position: relative;background-color:white;&quot;&gt;&lt;br /&gt;
+&lt;div style=&quot;background:#F4F4F4; width:500px;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333;font-size:25px;font-weight:bold&quot;&gt;Oportunidad sin cambiar de etapa en 30 días.&lt;/div&gt;              
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt;	Estimado Juan Sanso:&lt;/p&gt;
+&lt;br/&gt;
+La Oportunidad {!iterateOpps.Name} de BMW se encuentra en etapa {!iterateOpps.StageName} sin presentar ningún movimiento en los últimos 30 días.
+&lt;br/&gt;
+&lt;br /&gt;
+&lt;p&gt; Para acceder a esta oportunidad haga clic en el siguiente link:&lt;/p&gt;&lt;p style=&quot;font-weight: bold;&quot;&gt; https://redmotors.my.salesforce.com/{!iterateOpps.Id}&lt;/p&gt;
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt; Salesforce &lt;/p&gt;
+&lt;/div&gt;
+&lt;br /&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>correoEmail5</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html style=&quot;overflow-y: hidden;&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;height: auto; min-height: auto;background:#f5f5f9;&quot;&gt;&lt;div style=&quot;width:600px;margin: 0 auto;padding: 10px;position: relative;background-color:white;&quot;&gt;&lt;br /&gt;
+&lt;div style=&quot;background:#F4F4F4; width:500px;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333;font-size:25px;font-weight:bold&quot;&gt;Oportunidad sin cambiar de etapa en 30 días.&lt;/div&gt;              
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt;	Estimado Jaime Carvajal:&lt;/p&gt;
+&lt;br/&gt;
+La Oportunidad {!iterateOpps.Name} de MINI se encuentra en etapa {!iterateOpps.StageName} sin presentar ningún movimiento en los últimos 30 días.
+&lt;br/&gt;
+&lt;br /&gt;
+&lt;p&gt; Para acceder a esta oportunidad haga clic en el siguiente link:&lt;/p&gt;&lt;p style=&quot;font-weight: bold;&quot;&gt; https://redmotors.my.salesforce.com/{!iterateOpps.Id}&lt;/p&gt;
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt; Salesforce &lt;/p&gt;
+&lt;/div&gt;
+&lt;br /&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>correoEmail6</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html style=&quot;overflow-y: hidden;&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;height: auto; min-height: auto;background:#f5f5f9;&quot;&gt;&lt;div style=&quot;width:600px;margin: 0 auto;padding: 10px;position: relative;background-color:white;&quot;&gt;&lt;br /&gt;
+&lt;div style=&quot;background:#F4F4F4; width:500px;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333;font-size:25px;font-weight:bold&quot;&gt; Oportunidad sin cambiar de etapa en 6 meses.&lt;/div&gt;              
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt;	Estimado {!iterateOpps.Owner.FirstName} {!iterateOpps.Owner.LastName}:&lt;/p&gt;
+&lt;br/&gt;
+La Oportunidad {!iterateOpps.Name} de BMW se encuentra en etapa {!iterateOpps.StageName} sin presentar ningún movimiento en los ultimos 6 meses, pasará a etapa cerrada perdida.
+&lt;br/&gt;
+&lt;br /&gt;
+&lt;p&gt; Para acceder a esta oportunidad haga clic en el siguiente link:&lt;/p&gt;&lt;p style=&quot;font-weight: bold;&quot;&gt; https://redmotors.my.salesforce.com/{!iterateOpps.Id}&lt;/p&gt;
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt; Salesforce &lt;/p&gt;
+&lt;/div&gt;
+&lt;br /&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>correoEmail7</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html style=&quot;overflow-y: hidden;&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;height: auto; min-height: auto;background:#f5f5f9;&quot;&gt;&lt;div style=&quot;width:600px;margin: 0 auto;padding: 10px;position: relative;background-color:white;&quot;&gt;&lt;br /&gt;
+&lt;div style=&quot;background:#F4F4F4; width:500px;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333;font-size:25px;font-weight:bold&quot;&gt; Oportunidad sin cambiar de etapa en 6 meses.&lt;/div&gt;              
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt;	Estimado {!iterateOpps.Owner.FirstName} {!iterateOpps.Owner.LastName}:&lt;/p&gt;
+&lt;br/&gt;
+La Oportunidad {!iterateOpps.Name} de MINI se encuentra en etapa {!iterateOpps.StageName} sin presentar ningún movimiento en los ultimos 6 meses, pasará a etapa cerrada perdida.
+&lt;br/&gt;
+&lt;br /&gt;
+&lt;p&gt; Para acceder a esta oportunidad haga clic en el siguiente link:&lt;/p&gt;&lt;p style=&quot;font-weight: bold;&quot;&gt; https://redmotors.my.salesforce.com/{!iterateOpps.Id}&lt;/p&gt;
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt; Salesforce &lt;/p&gt;
+&lt;/div&gt;
+&lt;br /&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>se cerro mensaje</description>
+        <name>correoEmail8</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html style=&quot;overflow-y: hidden;&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;height: auto; min-height: auto;background:#f5f5f9;&quot;&gt;&lt;div style=&quot;width:600px;margin: 0 auto;padding: 10px;position: relative;background-color:white;&quot;&gt;&lt;br /&gt;
+&lt;div style=&quot;background:#F4F4F4; width:500px;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333;font-size:25px;font-weight:bold&quot;&gt; Oportunidad a etapa cerrada perdida.&lt;/div&gt;              
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt;	Estimado {!iterateOpps.Owner.FirstName} {!iterateOpps.Owner.LastName}:&lt;/p&gt;
+&lt;br/&gt;
+La Oportunidad {!iterateOpps.Name} de BMW pasará a la etapa Cerrada perdida.
+&lt;br/&gt;
+&lt;br /&gt;
+&lt;p&gt; Para acceder a esta oportunidad haga clic en el siguiente link:&lt;/p&gt;&lt;p style=&quot;font-weight: bold;&quot;&gt; https://redmotors.my.salesforce.com/{!iterateOpps.Id}&lt;/p&gt;
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt; Salesforce &lt;/p&gt;
+&lt;/div&gt;
+&lt;br /&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>correoEmail9</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;html style=&quot;overflow-y: hidden;&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;height: auto; min-height: auto;background:#f5f5f9;&quot;&gt;&lt;div style=&quot;width:600px;margin: 0 auto;padding: 10px;position: relative;background-color:white;&quot;&gt;&lt;br /&gt;
+&lt;div style=&quot;background:#F4F4F4; width:500px;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333;font-size:25px;font-weight:bold&quot;&gt; Oportunidad a etapa cerrada perdida.&lt;/div&gt;              
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt;	Estimado {!iterateOpps.Owner.FirstName} {!iterateOpps.Owner.LastName}:&lt;/p&gt;
+&lt;br/&gt;
+La Oportunidad {!iterateOpps.Name} de MINI pasará a la etapa Cerrada perdida.
+&lt;br/&gt;
+&lt;br /&gt;
+&lt;p&gt; Para acceder a esta oportunidad haga clic en el siguiente link:&lt;/p&gt;&lt;p style=&quot;font-weight: bold;&quot;&gt; https://redmotors.my.salesforce.com/{!iterateOpps.Id}&lt;/p&gt;
+&lt;br /&gt;
+&lt;p style=&quot;width:580px&quot;&gt; Salesforce &lt;/p&gt;
+&lt;/div&gt;
+&lt;br /&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>correoRegla3</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>userEmail</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

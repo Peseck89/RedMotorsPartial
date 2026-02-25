@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>57.0</apiVersion>
+    <description>Esto se crea como un flujo temporal en caso de que se creen respuestas de pedido con estado cancelado a futuro esto se debe eliminar.</description>
+    <interviewLabel>Elimina Automáticamente las respuestas Pedido cuando se colocan como canceladas {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Elimina Automáticamente las respuestas Pedido cuando se colocan como canceladas</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordDeletes>
+        <name>Delete_Respuesta_Pedido</name>
+        <label>Delete Respuesta Pedido</label>
+        <locationX>176</locationX>
+        <locationY>335</locationY>
+        <inputReference>$Record</inputReference>
+    </recordDeletes>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Delete_Respuesta_Pedido</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Estado__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Cancelado</stringValue>
+            </value>
+        </filters>
+        <object>Respuesta_pedido__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

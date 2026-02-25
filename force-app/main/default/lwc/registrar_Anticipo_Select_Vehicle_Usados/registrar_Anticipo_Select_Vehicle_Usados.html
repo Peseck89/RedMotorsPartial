@@ -1,0 +1,57 @@
+<template>
+    <article class="slds-card">         
+        <div class="slds-card__header slds-grid">
+            <h2 class="slds-card__header-title">
+                Registrar anticipo
+            </h2>
+        </div>
+        <div class="slds-card__body"> 
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>     
+
+            <template if:true={hasVehicles}>
+                <lightning-layout class="x-large">
+                    <lightning-layout-item size="4"></lightning-layout-item>
+                    <lightning-layout-item size="4">
+                        <lightning-input type="text"  label="Identificador" value={identifier} disabled> </lightning-input>                                
+                    </lightning-layout-item>
+                    <lightning-layout-item size="4"></lightning-layout-item>
+                </lightning-layout>
+    
+                <lightning-layout class="x-large" > 
+                    <lightning-layout-item size="4">                    
+                    </lightning-layout-item>
+                    <lightning-layout-item size="4">
+                        <lightning-combobox label="Vehiculo" value={inputVehicleId}  options={vehicleOptions} onchange={handleVehicleChange}></lightning-combobox>
+                    </lightning-layout-item>
+                        <lightning-layout-item size="4">                    
+                        </lightning-layout-item>               
+                </lightning-layout>
+    
+                <lightning-layout class="x-large">
+                    <lightning-layout-item size="4"></lightning-layout-item>
+                    <lightning-layout-item size="4">
+                        <lightning-input type="text"  label="Monto" value={amount} disabled> </lightning-input>                                
+                    </lightning-layout-item>
+                    <lightning-layout-item size="4"></lightning-layout-item>
+                </lightning-layout>
+            </template>
+            <template if:false={hasVehicles}> 
+                    <span class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                        No se encontraron vehiculos disponibles en la oportunidad.<br/>
+                        Es probable que ya se encuentren separados.
+                    </span>
+            </template>            
+        </div>
+        <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+            <div></div> 
+            <div>                                  
+                <lightning-button label="Atras" title="Atras" onclick={handleBackClick} class="slds-m-left_x-small"></lightning-button>                                                   
+                <template if:true={hasVehicles}>
+                    <lightning-button variant="brand" type="button" label="Aplicar" title="Aplicar" onclick={handleAcceptClick} class="slds-m-left_x-small" disabled={isLoading}></lightning-button>                                                                     
+                </template>
+            </div>             
+        </footer>       
+    </article> 
+</template>

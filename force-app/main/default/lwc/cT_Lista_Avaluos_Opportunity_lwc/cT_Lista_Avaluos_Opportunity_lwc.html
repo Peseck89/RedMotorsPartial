@@ -1,0 +1,143 @@
+<template>
+  <!-- Modal de Selección -->
+  <div class="slds-modal__container" style="width: 90%">
+    <div class="slds-modal__header top-container">
+      <lightning-icon class="icon-ctct" icon-name="standard:job_profile" alternative-text="Email"
+        title="Email"></lightning-icon>
+      <p class="primary-text" style="margin-left: 5px;">
+        Buscar y seleccionar Avalúo
+      </p>
+    </div>
+    <div class="slds-modal__header top-container" style="align-items: flex-end">
+
+      <lightning-combobox name="tipoVehiculo" label="Tipo de Vehículo" value={selectedType} options={tipoOpciones}
+        onchange={handleTypeChange} class="slds-m-left_small"></lightning-combobox>
+
+      <lightning-input type="search" label="Buscar por Placa" value={placaBusqueda} onchange={handlePlacaChange}
+        class="slds-m-right_small"></lightning-input>
+
+      <lightning-button label="Buscar" variant="brand" onclick={handleSearch} class="slds-m-left_small"
+        style="margin-bottom: 1.5px;"></lightning-button>
+    </div>
+    <div class="slds-modal__content" style="box-shadow: -2px 5px 18px #00000021;">
+      <template for:each={avaluos} for:item="avaluo">
+        <div key={avaluo.Id} class="slds-p-around_small">
+          <lightning-card>
+            <div class="heading-info">
+              <a href={avaluo.recordUrl} target="_blank" class="slds-text-link" style="font-size: 20px;">
+                Avalúo: {avaluo.Name}
+              </a>
+            </div>
+            <p><strong>Placa: </strong>{avaluo.Placa__c}</p>
+            <p><strong>Marca: </strong>{avaluo.Marca__c} | <strong>Modelo: </strong>{avaluo.Modelo__c}</p>
+            <p><strong>Valor Sugerido Valuador: </strong> {avaluo.CurrencyIsoCode}&nbsp;
+              <lightning-formatted-number value={avaluo.Valor_Sugerido__c} maximum-fraction-digits="2"
+                minimum-fraction-digits="2"></lightning-formatted-number>
+            </p>
+            <p><strong>Valor Sugerido Jefe Usados: </strong>
+              <template if:true={avaluo.Valor_Sugerido_Jefe_Usados__c}>
+                {avaluo.CurrencyIsoCode}&nbsp;
+                <lightning-formatted-number value={avaluo.Valor_Sugerido_Jefe_Usados__c} maximum-fraction-digits="2"
+                  minimum-fraction-digits="2"></lightning-formatted-number>
+              </template>
+              <template if:false={avaluo.Valor_Sugerido_Jefe_Usados__c}>
+                Sin valor sugerido de jefe de usados
+              </template>
+
+
+              <!-- {avaluo.CurrencyIsoCode}&nbsp; 
+              <lightning-formatted-number value={avaluo.Valor_Sugerido_Jefe_Usados__c} 
+                maximum-fraction-digits="2"
+                minimum-fraction-digits="2"></lightning-formatted-number> -->
+            </p>
+            <br />
+            <lightning-button label="Ver Detalles" onclick={handleViewDetails} data-id={avaluo.Id}>
+            </lightning-button>
+          </lightning-card>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Modal de Detalles -->
+  <template if:true={selectedAvaluo}>
+    <div class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container" style="max-width: 90%;">
+        <div class="slds-modal__header cust-header">
+          <h2 class="slds-text-heading_medium">Detalles del Avalúo - Placa: {selectedAvaluo.Placa__c}</h2>
+          <button class="slds-button slds-button_icon" title="Close" onclick={closeDetailsModal}>
+            <lightning-icon icon-name="utility:close"></lightning-icon>
+          </button>
+        </div>
+
+        <div class="slds-modal__content">
+          <lightning-layout multiple-rows>
+            <!-- Columna 1 -->
+            <lightning-layout-item size="6" padding="around-small">
+              <p><strong>VIN:</strong> {selectedAvaluo.VIN__c}</p>
+              <p><strong>Tracción:</strong> {selectedAvaluo.Tracci_n__c}</p>
+              <p><strong>Carrocería:</strong> {selectedAvaluo.Carrocer_a__c}</p>
+              <p><strong>Chasis:</strong> {selectedAvaluo.N_mero_de_Chasis__c}</p>
+              <p><strong>Año:</strong> {selectedAvaluo.Anio_Number__c}</p>
+              <template if:true={selectedAvaluo.Opportunity__c}>
+
+              </template>
+            </lightning-layout-item>
+
+            <!-- Columna 2 -->
+            <lightning-layout-item size="6" padding="around-small">
+              <p><strong>Color:</strong> {selectedAvaluo.Color__c}</p>
+              <p><strong>Combustible:</strong> {selectedAvaluo.Combustible__c}</p>
+              <p><strong>Embargos:</strong> {selectedAvaluo.Cantidad_de_Embargos__c}</p>
+              <p><strong>Propietario:</strong> {selectedAvaluo.Propietario__c}</p>
+            </lightning-layout-item>
+          </lightning-layout>
+
+          <div class="slds-p-top_medium" style="padding-inline: 12px; padding-bottom: 12px">
+            <p><strong>Observaciones: </strong></p>
+            <p>{selectedAvaluo.Observaciones__c}</p>
+            <p><strong>Valor Sugerido: </strong> {selectedAvaluo.CurrencyIsoCode}&nbsp;
+              <lightning-formatted-number value={selectedAvaluo.Valor_Sugerido__c} maximum-fraction-digits="2"
+                minimum-fraction-digits="2"></lightning-formatted-number>
+            </p>
+            <p><strong>Valor Sugerido Jefe Usados: </strong>
+              <template if:true={selectedAvaluo.Valor_Sugerido_Jefe_Usados__c}>
+                {selectedAvaluo.CurrencyIsoCode}&nbsp;
+                <lightning-formatted-number value={selectedAvaluo.Valor_Sugerido_Jefe_Usados__c}
+                  maximum-fraction-digits="2" minimum-fraction-digits="2"></lightning-formatted-number>
+              </template>
+              <template if:false={selectedAvaluo.Valor_Sugerido_Jefe_Usados__c}>
+                Sin valor sugerido de jefe de usados
+              </template>
+
+            </p>
+            <!-- <template if:true={promediosData}>
+              <p><strong>Promedio Sistema: </strong>
+                {promediosData.Promedio_Valuador__c}</p>
+            </template>
+            <template if:false={promediosData}>
+              <p>No hay promedios disponibles para este vehículo.</p>
+            </template> -->
+            <lightning-input style="width: 50%;" type="number" label="Kilometraje" value={kilometraje}
+              onchange={handleKilometrajeChange} class="slds-m-right_small" required>
+            </lightning-input>
+          </div>
+        </div>
+
+        <div class="slds-modal__footer">
+
+          <lightning-button label="Cancelar" onclick={closeDetailsModal} style="margin-right: 5px;"></lightning-button>
+          <lightning-button label="Ligar" variant="brand" onclick={handleLigarAvaluo}>
+          </lightning-button>
+        </div>
+      </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+  <!-- Spinner -->
+  <template if:true={loading}>
+    <div class="backgroundInverse">
+      <lightning-spinner alternative-text="Loading" variant="inverse" style="background-color: #18181896;"></lightning-spinner>
+    </div>
+  </template>  
+</template>

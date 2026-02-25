@@ -1,0 +1,166 @@
+<!-- <template>
+    <template if:true={isFirstStep}>
+        <lightning-card title="Creación de cuentas Red Motors">
+            <div class="slds-p-around_medium">
+                <lightning-record-edit-form object-api-name="Account">
+                    <lightning-radio-group 
+                        name="tipoCliente" 
+                        label="" 
+                        options={tipoClienteOptions} 
+                        value={tipoCliente} 
+                        type="radio"
+                        onchange={handleChangeTipoCliente}>
+                    </lightning-radio-group>
+                    <label for="tipoDeClienteCampo">*Tipo de Cliente</label>
+                    <lightning-input-field field-name="Tipos_de_cuenta__c" variant="label-hidden" data-id="tipoDeClienteCampo" > </lightning-input-field>
+                    <label for="tipoDeIdentificacion">*Tipo de Identificación</label>
+                    <lightning-input-field field-name="Tipo_de_Documento__c" variant="label-hidden" data-id="tipoDeIdentificacion"> </lightning-input-field>
+                    <label for="Pais">*País de la Identificación</label>
+                    <lightning-input-field field-name="PaisPicklist__c" variant="label-hidden" data-id="Pais"> </lightning-input-field>
+                    <label for="Cedula">*Identificación</label>
+                    <lightning-input-field field-name="Cedula__c" variant="label-hidden" data-id="Cedula"></lightning-input-field>
+                    <template if:true={mostrarError}>
+                        <div class="slds-text-color_error slds-m-top_small">
+                            <lightning-icon icon-name="utility:error" alternative-text="Error" size="x-small"></lightning-icon>
+                            <span> Validaciones y campos que dan problema </span>
+                        </div>
+                    </template>
+                    <div class="slds-m-top_medium slds-grid slds-grid_align-spread">
+                        <lightning-button label="Cancelar" variant="neutral"></lightning-button>
+                        <lightning-button label="Siguiente" variant="brand" onclick={handleSiguiente}></lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </div>
+        </lightning-card>
+    </template>
+    <template if:true={isCuentaPersonal}>
+        <c-creacion-account-fisica tipocliente={tipoCliente} tipodeclientecampo={tipoDeClienteCampo} tipodeidentificacion={tipoDeIdentificacion} pais={Pais} cedula={Cedula}></c-creacion-account-fisica>
+    </template>
+    <template if:true={isCuentaEmpresarial}>
+        <c-creacion-account-juridica tipocliente={tipoCliente} tipodeclientecampo={tipoDeClienteCampo} tipodeidentificacion={tipoDeIdentificacion} pais={Pais} cedula={Cedula}></c-creacion-account-juridica>
+    </template>
+</template> -->
+
+<template>
+    <template if:true={isFirstStep}>
+        <div class="grid-container">
+            <div style="margin-bottom:20px" class="info-data-container">
+                <div class="top-container">
+                    <lightning-icon class="icon-ctct" icon-name="standard:people" alternative-text="Email"
+                        title="Icon "></lightning-icon>
+                    <p class="primary-text">
+                        Creación de cuentas Red Motors
+                    </p>
+                </div>
+                <div class="bottom-container client-data">
+                    <div class="create-account-body">
+                        <lightning-record-edit-form object-api-name="Account" record-type-id={recordTypeId}>
+                            <div class="checkbox-container">
+                                <lightning-input type="checkbox" label="Cliente Fisico" name="Fisico"
+                                    checked={clienteFisico} onchange={handleClienteFisico} disabled={clienteFisico}>
+                                </lightning-input>
+
+                                <lightning-input type="checkbox" label="Cliente Juridico" name="Juridico"
+                                    checked={clienteJuridico} onchange={handleClienteJuridico} disabled={clienteJuridico}>
+                                </lightning-input>
+                            </div>
+                            <label for="tipoDeClienteCampo">*Tipo de Cliente</label>
+                            <lightning-input-field 
+                            field-name="Tipos_de_cuenta__c" 
+                            variant="label-hidden"
+                            data-id="tipoDeClienteCampo"
+                            value={tipoDeClienteCampo}
+                            onchange={handleChangeTipoDeClienteCampo}>
+                            </lightning-input-field>
+                            <!-- <label for="tipoDeIdentificacion">*Tipo de Identificación</label>
+                            <lightning-input-field field-name="Tipo_de_Documento__c" variant="label-hidden"
+                                data-id="tipoDeIdentificacion"> </lightning-input-field> -->
+                            <label for="tipoDeIdentificacion">*Tipo de Identificación</label>
+                            <lightning-combobox
+                                name="tipoDeIdentificacion"
+                                data-id="tipoDeIdentificacion"
+                                label=""
+                                variant="label-hidden"
+                                value={tipoDeIdentificacion}
+                                placeholder="Selecciona un tipo de identificación"
+                                options={tipoDocumentoOptions}
+                                onchange={handleChangeTipoDocumento}>
+                            </lightning-combobox>
+
+
+                            <label for="Pais">*País de la Identificación</label>
+                            <lightning-combobox
+                                name="Pais"
+                                data-id="Pais"
+                                label=""
+                                variant="label-hidden"
+                                value={Pais}
+                                options={paisOptions}
+                                onchange={handleChangePais}
+                                disabled={deshabilitarPais}>
+                            </lightning-combobox>
+
+                            <!-- Campo Cedula REEMPLAZADO -->
+                            <label for="Cedula">*Identificación</label>
+                            <lightning-input 
+                                type="number"
+                                name="Cedula"
+                                label=""
+                                variant="label-hidden"
+                                data-id="Cedula"
+                                value={Cedula}
+                                minlength="9"
+                                max-length="12"
+                                oninput={handleInputCedula}
+                               
+                                pattern="[0-9]{9,12}">
+                            </lightning-input>
+                            <!-- Fin del cambio -->
+
+                            <template if:true={mostrarError}>
+                                <div class="slds-text-color_error slds-m-top_small">
+                                    <lightning-icon icon-name="utility:error" alternative-text="Error" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                    <strong>Corrige los siguientes campos obligatorios:</strong>
+                                    <ul class="slds-list_dotted slds-m-left_large slds-m-top_x-small">
+                                        <template for:each={camposInvalidos} for:item="campo">
+                                            <li key={campo}>{campo}</li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </template>
+
+                            <div class="slds-m-top_medium slds-grid slds-grid_align-spread">
+                                <lightning-button label="Cancelar" variant="neutral" onclick={handleCancelar}></lightning-button>
+                                <lightning-button label="Siguiente" variant="brand" onclick={handleSiguiente}></lightning-button>
+                            </div>
+                        </lightning-record-edit-form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <div class="second-step-container">
+        <template if:true={isCuentaPersonal}>
+            <c-creacion-account-fisica 
+                account-id={accountId} 
+                tipocliente={tipoCliente}
+                tipodeclientecampo={tipoDeClienteCampo}
+                tipodeidentificacion={tipoDeIdentificacion}
+                pais={Pais}
+                cedula={Cedula}>
+            </c-creacion-account-fisica>
+        </template>
+
+        <template if:true={isCuentaEmpresarial}>
+            <c-creacion-account-juridica 
+                account-id={accountId} 
+                tipocliente={tipoCliente}
+                tipodeclientecampo={tipoDeClienteCampo}
+                tipodeidentificacion={tipoDeIdentificacion}
+                pais={Pais}
+                cedula={Cedula}>
+            </c-creacion-account-juridica>
+        </template>
+    </div>
+</template>

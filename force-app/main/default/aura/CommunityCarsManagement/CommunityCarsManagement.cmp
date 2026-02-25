@@ -1,0 +1,636 @@
+<aura:component
+  implements="lightning:isUrlAddressable,force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+  access="global" controller="communityManageWorks_ctrl">
+
+  <!-- <aura:handler name="init" value="this" action="{!c.doInit}" /> -->
+  <aura:attribute name="controllerFirstRun" type="boolean" default="false" />
+
+  <!-- Todos los ids a actualizar -->
+  <aura:attribute name="dataToUpdate" type="Object[]" />
+  <aura:handler name="init" value="this" action="{!c.init}" />
+  <!-- Informacion del vehiculo -->
+  <aura:attribute name="vehiculoId" type="String" />
+  <aura:attribute name="placa" type="String" />
+  <aura:attribute name="marca" type="String" />
+  <aura:attribute name="modelo" type="String" />
+  <aura:attribute name="annio" type="String" />
+  <aura:attribute name="kilometraje" type="String" />
+  <aura:attribute name="garantias" type="String" />
+  <aura:attribute name="seguros" type="String" />
+  <aura:attribute name="descripcionCase" type="String" />
+  <aura:attribute name="motivoBaja" type="String" />
+  <!-- Informacion del propietario -->
+  <aura:attribute name="propietario" type="String" default="" />
+  <aura:attribute name="contacto" type="String" default="" />
+  <aura:attribute name="cedula" type="String" default="" />
+  <aura:attribute name="telefono" type="String" default="" />
+  <aura:attribute name="correo" type="String" default="" />
+  <aura:attribute name="ubicacion" type="String" default="" />
+  <aura:attribute name="recepcionista" type="String" default="" />
+  <aura:attribute name="fechaEntrada" type="String" default="" />
+  <aura:attribute name="direccion" type="String" default="" />
+  <aura:attribute name="todosNombres" type="Object[]" />
+  <aura:attribute name="tipoVehiculo" type="String" default="" />
+  <aura:attribute name="assets" type="List" default="[]" />
+
+  <aura:attribute name="marcaUrl" type="String" default="" />
+  <aura:attribute name="userName" type="String" default="" />
+  <aura:attribute name="isModalChangeMarca" type="boolean" default="false" /> 
+  <aura:attribute name="quitarVehiculo" type="boolean" default="false" /> 
+  <aura:attribute name="marcaSelected" type="String" default="BMW" />
+  <aura:attribute name="marcasPagina" type="List"
+    default="[{'label': 'BMW', 'value': 'BMW'}, {'label': 'MINI', 'value': 'MINI'}, {'label': 'Motorrad', 'value': 'Motorrad'}]" />
+
+  <aura:attribute name="isModalNewCase" type="Boolean" default="false" />
+
+  <aura:attribute name="activeIndex" type="Integer" default="0" />
+  <aura:attribute name="stepWrappers" type="List" />
+
+  <aura:attribute name="isModalOpenSoporte" type="boolean" default="false" />
+
+  <html lang="en" class="light-style layout-menu-fixed">
+  <!--Community Calendar Components -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes" />
+
+  <!-- CSS -->
+  <ltng:require styles="{!$Resource.CommunityCalendarStyle}" /> <!-- Nuestros CSSs -->
+  <ltng:require styles="{!$Resource.CommunityCalendarStyleComplement}" /> <!-- Nuestros CSSs -->
+  <ltng:require styles="{!$Resource.CustomerCommunitiesAdditionalStyles}" /> <!-- Nuestros CSSs -->
+
+  <ltng:require styles="{!$Resource.CustomerCommunity_corecss}" /> <!-- Template CSSs -->
+  <ltng:require styles="{!$Resource.CustomerCommunity_themeDefault}" /> <!-- Template CSSs -->
+  <ltng:require styles="{!$Resource.CustomerCommunityFiles + 'CustomerCommunity/assets/vendor/fonts/boxicons.css'}" />
+  <!-- Template CSSs -->
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>Información de mi auto</title>
+    <meta name="description" content="" />
+    <!-- Fonts -->
+  </head>
+
+  <body>
+    <aura:if isTrue="{!v.isLoading}">
+      <div class="spinner-container"
+        style="background-color: rgba(0, 0, 0, 0.9);top: 0;left: 0;position:fixed;width: 100%;height: 100%; align-items: center;justify-content: center;z-index: 9999;">
+        <div class="slds-spinner slds-spinner_medium">
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+    </aura:if>
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+          <div class="app-brand demo">
+            <a class="app-brand-link" href="{!'/s/?servicio=' + v.marcaSelected}">
+              <a class="app-brand-link" href="{!'/s/?servicio=' + v.marcaSelected}">
+                <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+                  <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+                  <img src="{!$Resource.communityMINI}" alt="MINI Logo" style="max-width: 175px;" />
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+                  <img src="{!$Resource.BMWServiceLogo}" alt="Motorrad Logo" style="max-width: 175px;" />
+                </aura:if>
+              </a>
+            </a>
+            <a class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none"> <i
+                class="bx bx-chevron-left bx-sm align-middle"> </i> </a>
+          </div>
+          <div class="menu-inner-shadow"></div>
+          <ul class="menu-inner py-1">
+            <li class="menu-header small text-uppercase">
+              <span class="menu-header-text">Citas de Servicio</span>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link menu-toggle " href="{!'/s/communitymenu?servicio=' + v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                <div class="under" data-i18n="Authentications">Nueva Cita</div>
+              </a>
+              <ul class="menu-sub"></ul>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link menu-toggle"
+                href="{!'/s/communitycancelappointments?id=' + v.contactId + '&amp;marca=' +  v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                <div class="under" data-i18n="Authentications">Modificar Cita</div>
+              </a>
+              <ul class="menu-sub"></ul>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link menu-toggle"
+                href="{!'/s/communityappointmentshistory?id=' + v.contactId + '&amp;marca=' +  v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"> </i>
+                <div class="under" data-i18n="Authentications">Historial de Citas</div>
+              </a>
+              <ul class="menu-sub"></ul>
+            </li>
+
+            <!-- Components -->
+
+            <li class="menu-header small text-uppercase">
+              <span class="menu-header-text">Presupuestos</span>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link" href="{!'/s/communitymanageworksmenu?servicio=' + v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-collection"> </i>
+                <div class="under " data-i18n="Basic">Aprobar presupuesto</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link" href="{!'/s/communityinspectionhistory?servicio=' + v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-collection"> </i>
+                <div class="under" data-i18n="Basic">Historial de inspecciones</div>
+              </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+              <span class="menu-header-text">Perfil </span>
+            </li>
+            <!-- Cards -->
+            <li class="menu-item">
+              <a class="menu-link" href="{!'/s/communityprofile?servicio=' + v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-collection"> </i>
+                <div class="under " data-i18n="Basic">Perfil</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a class="menu-link" href="{!'/s/communitycarsmanagement?servicio=' + v.marcaSelected}">
+                <i class="menu-icon tf-icons bx bx-collection"> </i>
+                <div class="under active" data-i18n="Basic">Información de mi auto</div>
+              </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+              <a class="menu-link" onclick="{! c.openSoporte }">
+                <div style="font-size: 13px; color:#697A8D" class="under" data-i18n="Authentications">Asistencia en
+                  Linea</div>
+              </a>
+            </li>
+            <li class="menu-header small text-uppercase" style="margin-top: 0;">
+              <a class="menu-link" href="/secur/logout.jsp">
+                <div style="font-size: 13px; color:#697A8D" class="under" data-i18n="Basic">LogOut</div>
+              </a>
+            </li>
+          </ul>
+        </aside>
+        <!-- / Menu -->
+        <!-- Layout container -->
+        <div class="layout-page">
+          <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+            <img src="{!$Resource.BMWCar}" alt="BMWLogo" class="banner-image" />
+          </aura:if>
+          <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+            <img src="{!$Resource.MINICar}" alt="BMWLogo" class="banner-image" />
+          </aura:if>
+          <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+            <img src="{!$Resource.MotoCar}" alt="BMWLogo" class="banner-image" />
+          </aura:if>
+
+          <nav
+            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            id="layout-navbar">
+            <div class="app-brand demo logo-mobile">
+              <a class="app-brand-link">
+                <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+                  <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+                  <img src="{!$Resource.communityMINI}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+                  <img src="{!$Resource.BMWServiceLogo}" alt="BMWLogo" style="max-width: 175px;" />
+                </aura:if>
+              </a>
+            </div>
+            <div class=" layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+              <a class="nav-item nav-link px-0 me-xl-4">
+                <i class="bx bx-menu bx-sm"> </i>
+              </a>
+            </div>
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              <!-- /Search -->
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <!-- Place this tag where you want the button to render. -->
+                <li class="nav-item lh-1 me-3 welcome-text">
+                  <span>
+                    <ui:outputText value="{!v.userName}" />
+                  </span>
+                </li>
+              </ul>
+              <!-- Search -->
+              <div class=" hamburguesa navbar-nav align-items-center">
+                <div id="barMenu" onclick="{! c.showMenu }" style=" top:0;left:0;">
+                  <div style="width: 30px;height: 3px;background-color: black;margin: 6px 0;"></div>
+                  <div style="width: 30px;height: 3px;background-color: black;margin: 6px 0;"></div>
+                  <div style="width: 30px;height: 3px;background-color: black;margin: 6px 0;"></div>
+                </div>
+                <div class="nav-item d-flex align-items-center"></div>
+              </div>
+            </div>
+          </nav>
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div id="barMenu" class="hamburguesa" onclick="{! c.showMenu }" style=" top:0;left:0;">
+                <div style="width: 35px;height: 5px;background-color: black;margin: 6px 0;"></div>
+                <div style="width: 35px;height: 5px;background-color: black;margin: 6px 0;"></div>
+                <div style="width: 35px;height: 5px;background-color: black;margin: 6px 0;"></div>
+              </div>
+              <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                <!-- Search -->
+                <div class=" navbar-nav align-items-center">
+                  <h4 class="fw-bold py-3 second margin cancelMargin">Información de mi auto</h4>
+                </div>
+                <!-- /Search -->
+                <div class="navbar-nav  ms-auto ">
+                  <button style="margin-top: 0px;" class="btn cambiarMarca btn-primary btn-block"
+                    onclick="{! c.mostrarCambiarMarca }"> Cambiar marca </button>
+                </div>
+              </div>
+              <div class="bannercontainer">
+                <aura:if isTrue="{!v.marcaSelected == 'BMW'}">
+                  <img src="{!$Resource.bannerBmwS2}" alt="BMW Banner" class="banner-image-mw" />
+                  <!-- <img src="{!$Resource.BMWCar}" alt="BMWLogo" class="banner-image-mw" /> -->
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'MINI'}">
+                  <img src="{!$Resource.bannerMINIS2}" alt="BMWLogo" class="banner-image-mw" />
+                </aura:if>
+                <aura:if isTrue="{!v.marcaSelected == 'Motorrad'}">
+                  <img src="{!$Resource.MotoCar}" alt="BMWLogo" class="banner-image-mw" />
+                </aura:if>
+              </div>
+              <div class="slds-m-around_xx-large">
+                <aura:if isTrue="{!v.isModalChangeMarca}">
+                  <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                    aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                      <header class="slds-modal__header">
+                        <div id="creandocita1_">
+                          <span class="citation-message"> Estas en {!v.marcaSelected} </span> <br />
+                          <div class="cambio-marca">
+                            <b>¿Quieres cambiar?: </b>
+                            <lightning:combobox class="form-control" id="checkMarcas" name="general"
+                              placeholder="Marcas" options="{! v.marcasPagina }"
+                              onchange="{! c.handleOnChangeSelectedMarca }" />
+                            <br />
+                          </div>
+                        </div>
+                        <div id="creandocita2_" style="padding-top:2px">
+                          <lightning:button variant="neutral" label="Volver" title="Volver"
+                            onclick="{! c.cerrarCambiarMarca }" />
+
+                          <lightning:button variant="brand" label="Presiona para confirmar"
+                            title="Presiona para confirmar" onclick="{! c.handleAceptarMarca }" />
+                        </div>
+
+                      </header>
+
+                    </div>
+                  </section>
+                  <div class="slds-backdrop slds-backdrop_open"></div>
+                </aura:if>
+              </div>
+              <!-- <img src="{!$Resource.BMWCar}" alt="BMWLogo" class="banner-image" /> -->
+              <h2 class="component-title">Información de mi auto</h2>
+              <div class="container_d">
+                <aura:iteration items="{!v.assets}" var="asset">
+                  <div class="container_c">
+                    <div class="header_c">
+                      <h1 class="title_c">{!asset.asset.numeroDePlaca__c}</h1>
+                      <button class="btn btn-primary btn-block" data-id="{!asset.asset.Id}"
+                        onclick="{!c.handleOpenDesasignar}">Desasignar</button>
+                      <!-- <button class="btn btn-primary btn-block" data-id="{!asset.Id}"
+                        onclick="{!c.handleDesasignar}">Desasignar</button> -->
+                    </div>
+                    <div class="form_c">
+                      <div class="field_c">
+                        <label class="label_c">Marca</label>
+                        <p class="input_c">{!asset.asset.Marca_Nvo__c}</p>
+                      </div>
+                      <div class="field_c">
+                        <label class="label_c">Modelo</label>
+                        <p class="input_c">{!asset.asset.Modelo_Nvo2__c}</p>
+                      </div>
+                      <div class="field_c">
+                        <label class="label_c">Año</label>
+                        <p class="input_c">{!asset.asset.Anio__c}</p>
+                      </div>
+                      <div class="field_c">
+                        <label class="label_c">Kilometraje</label>
+                        <p class="input_c">{!asset.asset.Kilometros__c} KM</p>
+                      </div>
+                      <div class="field_c">
+                        <label for="field5" class="label_c">Seguros</label>
+                        <p class="input_c">{!asset.seguros[0].Tipo_seguro__c}</p>
+                      </div>
+                      <!-- <div class="field_c">
+                        <label for="field6" class="label_c">Garantias</label>
+                        <p class="input_c">{!v.garantias}</p>
+                      </div> -->
+                    </div>
+                  </div>
+                </aura:iteration>
+              </div>
+            </div>
+          </div>
+
+          <aura:if isTrue="{!v.quitarVehiculo}">
+            <div class="slds-m-around_xx-large" id="modalMens">
+              <!-- Modal/Popup Box starts here-->
+              <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                  <!-- Modal/Popup Box Header Starts here-->
+                  <header class="slds-modal__header">
+
+                    <div id="creandocita1_">
+                      <button style="top:0 !important;right: 0 !important "
+                        class="slds-button slds-button_icon slds-modal__close" title="Close" onclick="{!c.reload}">
+                        X
+                      </button>
+                      <br/>
+                      <p><b>El vehiculo sera desasociado de su cuenta.</b></p>
+                      <br />
+                      <lightning:textarea name="inputMotivo" value="{!v.motivoBaja}" label="Motivo:" style="width: 300px;"/>
+                      <input type="text" id="vehiculoId" value="{!v.vehiculoId}" style="display: none;" />
+                      <br />
+                    </div>
+                    <br />
+                    <div id="creandocita2_" style="padding-top:2px">
+                      <lightning:button variant="neutral" label="Volver" title="Volver" onclick="{! c.reload }" />
+                      <lightning:button variant="destructive" label="Confirmar" title="Confirmar"
+                        onclick="{!c.handleDesasignar}" />
+                    </div>
+
+                  </header>
+
+                </div>
+              </section>
+              <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+          </aura:if>
+
+
+          <div class="slds-m-around_xx-large">
+            <aura:if isTrue="{!v.isModalNewCase}">
+
+              <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                  <header class="slds-modal__header">
+
+                    <div id="">
+                      <button style="top:0 !important;right:-0.3rem !important "
+                        class="slds-button slds-button_icon slds-modal__close" title="Close"
+                        onclick="{!c.closeModelCase}">
+                        X
+                      </button>
+                      <br />
+                      <lightning:input type="textarea" label="¿En que podemos ayudarle?" class="slds-textarea"
+                        value="{!v.descripcionCase}" />
+                      <br />
+                    </div>
+                    <br />
+                    <div id="creandocita2_" style="padding-top:2px">
+                      <lightning:button variant="brand" label="Confirmar" title="Confirmar" onclick="{!c.createCase}" />
+                    </div>
+
+                  </header>
+
+                </div>
+              </section>
+              <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+          </div>
+
+          <div class="slds-m-around_xx-large">
+            <aura:if isTrue="{!v.isModalOpenSoporte}">
+
+              <!-- Modal/Popup Box starts here-->
+              <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                  <!-- Modal/Popup Box Header Starts here-->
+                  <header class="slds-modal__header">
+
+                    <div id="">
+                      <button style="top:0 !important;right:0 !important "
+                        class="slds-button slds-button_icon slds-modal__close" title="Close"
+                        onclick="{!c.closeSoporte}">
+                        X
+                      </button>
+                      <!--title="Asistencia en línea." <span class="citation-message"> Tu cita ha sido creada. </span> -->
+                      <br />
+                      <span style="margin-top: 30px;" class="citation-message"> Asistencia en
+                        línea. </span>
+                      <br />
+
+
+                      <button type="button" style="background-color: #25d366 !important; margin-top:15px"
+                        class="btn btn-success"><a style="color:#ffffff !important;"
+                          href="https://api.whatsapp.com/send?phone=50687954888&amp;text=Soporte%20Modulo%20de%20Autogestión"
+                          target="_blank">WhatsApp</a></button>
+                      <br />
+                    </div>
+                    <br />
+                    <div id="creandocita2_" style="padding-top:2px">
+                    </div>
+
+                  </header>
+
+                </div>
+              </section>
+              <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+          </div>
+
+          <!-- Inicia terminos y condiciones -->
+          <div class="slds-m-around_xx-large" id="terminosYcondiciones" style="display:none">
+
+            <!-- Modal/Popup Box starts here-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+              aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+              <div class="slds-modal__container">
+                <!-- Modal/Popup Box Header Starts here-->
+                <header class="slds-modal__header">
+
+                  <div class="terms-container">
+                    <div style="height: 300px; overflow: scroll;">
+                      <p><strong>POLITICA DE PRIVACIDAD DE LA INFORMACION
+                        </strong></p>
+
+                      <p><strong>CONSENTIMIENTO INFORMADO
+                        </strong></p>
+
+                      <p>Bavarian Motors Costa Rica S.A. respetuosa de la Ley 8968 “Ley de Protección de la Persona
+                        frente al tratamiento de sus
+                        Datos Personales”, y su reglamento, previo a incluir su información personal a nuestra Base de
+                        Datos, y en cumplimiento
+                        del artículo cinco de la citada norma, le solicita emitir formalmente su Consentimiento
+                        Informado, para lo cual hace de su
+                        conocimiento la siguiente información de interés: <strong>Existencia de una Base de
+                          Datos</strong>: Se hace del
+                        formal conocimiento que la
+                        información personal y de contacto que los clientes nos brinden a través de los diferentes
+                        medios de captación, estarán
+                        siendo almacenados en la Base de Datos identificada como “Clientes”, cuyo responsable es
+                        Bavarian Motors Costa Rica S.A.
+                        A través de medios digitales o físicos, el responsable de la base de datos estará solicitando
+                        a los clientes brinden información
+                        personal, de contacto y/o relacionada con el producto que desee adquirir, esta información
+                        podrá ser opcional o de carácter
+                        obligatorio para cumplir con los fines de la relación comercial y de servicio que exista entre
+                        Bavarian Motors Costa Rica S.A
+                        y el cliente. La información personal que nos facilite el cliente deberá ser actual, veraz y
+                        exacta. Todo dato solicitado que se
+                        identifica como obligatorio, tiene esa condición en virtud de que no es posible dar la
+                        atención debida sin haber registrado
+                        esa información básica. El no completar los datos requeridos impide la correcta y oportuna
+                        atención de la solicitud, compra
+                        o servicio. El resto de la información que no está identificada como obligatoria, es meramente
+                        opcional, lo que implica que
+                        el usuario se encuentra en total libertad de facilitarla o no dejar los espacios en blanco.
+                        <strong> Detalle de los Fines de nuestra Base
+                          de Datos </strong>: La información personal relacionada al cliente será almacenada y
+                        utilizada por
+                        Bavarian Motors Costa Rica S.A
+                        con el fin primordial de brindar el servicio solicitado por el cliente, y en forma secundaria
+                        remitirle información relacionada
+                        con nuestros productos así como ofrecerle los diversos servicios que presta Bavarian Motors
+                        C.R. S.A. Consecuentemente,
+                        se le informa que el medio de contacto consignado podrá ser empleado por el responsable de la
+                        Base de Datos, para el
+                        envío de ofertas, promociones, encuestas, y demás información con prospección comercial del
+                        responsable y entidades
+                        relacionadas dentro del mismo grupo de interés económico. La información almacenada en la Base
+                        de Datos, se mantendrá
+                        custodiada mientras el responsable cumple con el servicio principal y cualquier otro vinculado
+                        a dicha prestación principal,
+                        o hasta que haya transcurrido el plazo mínimo de diez años en que la empresa responsable deba
+                        almacenar la información
+                        para cumplir ante entidades fiscalizadoras. <strong> Destinatarios que tendrán acceso a la
+                          información
+                          personal: </strong> El Destinatario
+                        principal de la información es el responsable de la Base de Datos en Costa Rica; Bavarian
+                        Motors CR. S.A., pero podrá ser
+                        almacenada y compartida con BMW Mexico, Latin America and The Caribbean, Oficinas Regionales
+                        de BMW para
+                        Latinoamérica y el Caribe, con domicilio en Distrito Federal, México, Bosques de Las Lomas
+                        05120, únicamente para efectos
+                        de control interno de calidad del servicio, garantizando que no se utilizará la información
+                        recabada en este servidor para
+                        propósito distinto al que hemos declarado. De la misma forma podrá ser transferida a BMW Group
+                        información de los
+                        clientes, recolectada legítimamente a través de canales autorizados de Bavarian Motors C.R.
+                        S.A, con ocasión de la
+                        adquisición de diferentes productos y servicios, como lo es el BMW ConnectedDrive, y cualquier
+                        otro que a futuro sea
+                        ofrecido a los clientes. Mayor información será desarrollada y comunicada a los clientes por
+                        los medios idóneos que
+                        proporcione la entidad responsable. Con la excepción antes indicada, se garantiza al usuario
+                        la no transferencia a terceros,
+                        salvo su previo y expreso consentimiento. Bavarian Motors C.R S.A. no vende, transfiere, total
+                        parcial, onerosa y
+                        gratuitamente la información personal de sus clientes. <strong> Tratamiento de la Información:
+                        </strong> Hacemos
+                        de su conocimiento que
+                        el tratamiento de la información será llevada a cabo por el responsable mediante Protocolos de
+                        Actuación y de Seguridad,
+                        lo que garantiza el correcto, confidencial, y eficiente servicio. Hemos implementado Políticas
+                        de Seguridad y
+                        Confidencialidad, y se han aplicado todas las medidas de seguridad físicas y lógicas,
+                        razonables para la protección de la
+                        información de los clientes con el fin de evitar un uso no autorizado o fuera de los fines
+                        antes indicados. Para mayor
+                        información en relación con el servicio de BMW ConnectedDrive puede dirigirse directamente a
+                        info@redmotorscr.com
+                        Cualquier información adicional que el usuario requiera en relación al manejo de la base de
+                        datos podrá ser consultada al
+                        correo electrónico <a
+                          href="mailto:protecciondedatos@redmotorscr.com">protecciondedatos@redmotorscr.com</a>.
+                        <strong> Derechos de acceso, rectificación,
+                          oposición o cancelación: </strong> En
+                        apego y respeto al derecho de Autodeterminación Informativa en relación con su vida y el libre
+                        ejercicio de los derechos a
+                        la personalidad que le asiste a toda persona, nuestros clientes que deseen ejercer sus
+                        derechos de acceso, rectificación,
+                        oposición o cancelación podrán hacerlo por los siguientes medios: i) Comunicándose al teléfono
+                        2547-5088; ii) Enviando
+                        correo electrónico <a
+                          href="mailto:protecciondedatos@redmotorscr.com">protecciondedatos@redmotorscr.com</a>. En
+                        ambos casos; personal calificado
+                        atenderá su solicitud y lo
+                        resolverá en un plazo menor a cinco días hábiles. De la misma forma, todo usuario que no desee
+                        recibir correos electrónicos
+                        puede directamente darse de baja en el sistema, con la opción de “Desincribirme”, de la misma
+                        forma las opciones para
+                        darse de baja del sistema BMW ConnectedDrive serán visibles a través del Portal My BMW.
+                        <strong> De la
+                          identidad y dirección del
+                          responsable de la base de datos. </strong> La base de datos “Clientes” es una Base de Datos
+                        de Bavarian
+                        Motors CR. S.A, empresa
+                        domiciliada en San José, La Uruca, frente a la subestación eléctrica de la Compañía Nacional
+                        de Fuerza y Luz. Leido lo anterior
+                        y cumplido con el mandato legal que impone el artículo cinco de la Ley de Protección de la
+                        Persona frente al Tratamiento
+                        de sus Datos Personales, al darle click al botón de Aceptar usted reconoce que: i) Ha leído y
+                        entendido los alcances de esta
+                        Política de Privacidad, ii) No tiene dudas relacionadas con la forma, medio, y fin para el
+                        cual se le ha solicitado la información
+                        en el sitio; iii) Acepta expresamente, en forma voluntaria, su registro en la Base de Datos
+                        Clientes de Bavarian Motors CR.
+                      </p>
+
+                      <p>S.A; iv) Autoriza el tratamiento de la información otorgada según fue detallado y para los
+                        fines indicados, v) Fue informado
+                        de los medios por los cuales podrá ejercer los derechos que le asisten. San José, Costa Rica 6
+                        enero, 2025.</p>
+
+                    </div>
+                    <br />
+
+                    <lightning:input aura:id="boxPack" type="checkbox"
+                      label="He leído y acepto los Términos y Condiciones" onchange="{!c.setVisible}" required="true" />
+
+                    <br />
+
+                    <lightning:button variant="brand" aura:id="btnAceptar" label="Aceptar" title="Aceptar"
+                      disabled="true" onclick="{! c.closeModalTerminos }" />
+                  </div>
+                </header>
+
+              </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+
+          </div>
+          <!-- Termina terminos y condiciones  -->
+
+          <!-- <footer style="position: sticky; bottom:10px" class="content-footer footer bg-footer-theme"> -->
+          <footer class="content-footer footer bg-footer-theme">
+            <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+              <div><a onclick="{! c.mostrarTerminos }">Politica de Confidencialidad y Proteccion de Datos</a></div>
+              <div class="mb-2 mb-md-0">
+                © 2025. Comunidad RedMotors. By PortalNet.
+              </div>
+            </div>
+          </footer>
+          <div class="content-backdrop fade"></div>
+        </div>
+      </div>
+    </div>
+    <div id="overlayMenu" onclick="{! c.hideMenu }" class="layout-overlay layout-menu-toggle"></div>
+    <button onclick="{!c.openModalCase}" class="consulta-btn" aria-label="Abrir chat de consultas">
+      <img src="{!$Resource.chatImage}" />
+      <span class="consulta-btn-text">Consultas</span>
+    </button>
+  </body>
+
+  </html>
+</aura:component>

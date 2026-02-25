@@ -1,0 +1,165 @@
+<template>
+    <lightning-card title="Consultar Garantía Vehículo" icon-name="standard:vehicle">
+        <div class="slds-p-around_medium">
+            <div class="data-container">
+          <div class="top-container">
+            <p class="primary-text">
+              Buscar vehículo existente por:
+              <span if:true={vehiculoPlaca}> Placa</span>
+              <span if:true={vehiculoVin}> VIN</span>
+            </p>
+          </div>
+          <div class="bottom-container" style="height: auto;">
+            <div class="checkbox-container" style="justify-content: space-between;">
+              <div class="checkbox-container" style="margin-bottom: 10px;">
+                <lightning-input onchange={handleSearchPlaca} type="checkbox-button"
+                  placeholder="Buscar vehículo por placa" name="inputPlaca" checked={vehiculoPlaca}
+                  disabled={vehiculoPlaca}>
+                </lightning-input>
+                <p style="font-size: 13px; font-weight: lighter">Buscar vehículo por placa</p>
+              </div>
+              <div class="checkbox-container" style="margin-bottom: 10px;">
+                <lightning-input onchange={handleSearchVin} type="checkbox-button" placeholder="Buscar vehículo por VIN"
+                  name="inputVin" checked={vehiculoVin} disabled={vehiculoVin}>
+                </lightning-input>
+                <p style="font-size: 13px; font-weight: lighter">Buscar vehículo por VIN</p>
+              </div>
+            </div>
+
+            <c-reusable-lookup if:true={vehiculoPlaca} label="Buscar vehículo por placa"
+              selected-icon-name="standard:asset" object-label="Asset" object-api-name="Asset" field-api-name="Name"
+              placeholder="Ingrese placa..." other-field-api-name="numeroDePlaca__c"
+              onvalueselected={handleSeleccion} required>
+            </c-reusable-lookup>
+
+            <c-reusable-lookup if:true={vehiculoVin} label="Buscar vehículo por VIN"
+              selected-icon-name="standard:asset" object-label="Asset" object-api-name="Asset"
+              field-api-name="NumeroDeChasis__c" other-field-api-name="numeroDePlaca__c" placeholder="Ingrese VIN..."
+              onvalueselected={handleSeleccion}>
+            </c-reusable-lookup>
+
+          </div>
+        </div>
+            <!-- <c-reusable-lookup label="Buscar vehículo por placa" selected-icon-name="standard:asset"
+                object-label="Asset" object-api-name="Asset" field-api-name="numeroDePlaca__c"
+                placeholder="Ingrese placa..." other-field-api-name="Name" onvalueselected={handleSeleccion} required>
+            </c-reusable-lookup> -->
+
+            <div class="slds-m-top_medium">
+                <lightning-button label="Consultar Garantía" variant="brand" onclick={validarGarantia}
+                    disabled={isButtonDisabled}>
+                </lightning-button>
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Cargando..." size="small"></lightning-spinner>
+                </template>
+            </div>
+        </div>
+
+        <!-- Modal de resultados -->
+        <template if:true={mostrarModal}>
+            <div class="slds-modal slds-fade-in-open" role="dialog">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium">Resultado de Garantía</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <p class="slds-text-heading_small">
+                            <strong>{resultado.mensaje}</strong>
+                        </p>
+                        <p class="slds-m-top_small">Período evaluado: {resultado.fechaInicio} al {resultado.fechaFin}</p>
+
+                        <div class="slds-m-top_medium">
+                            <lightning-button label={toggleDetailsLabel} variant="neutral" onclick={toggleDetalles}>
+                            </lightning-button>
+                        </div>
+
+                        <template if:true={mostrarDetalles}>
+                            <div class="slds-m-top_large">
+                                <h3 class="slds-text-title_bold">Detalle de trabajos de garantía:</h3>
+
+                                <template if:true={hasDetalles}>
+                                    <div class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                        <table class="slds-table slds-table_bordered">
+                                            <thead>
+                                                <tr class="slds-line-height_reset">
+                                                    <th scope="col">
+                                                        <div class="slds-truncate">Fecha</div>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="slds-truncate">Trabajo Realizado</div>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="slds-truncate">Asesor</div>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="slds-truncate">Sucursal</div>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="slds-truncate">Caso</div>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="slds-truncate">NPS</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template for:each={detallesCompletos} for:item="detalle">
+                                                    <tr key={detalle.casoId} class="slds-hint-parent">
+                                                        <td>
+                                                            <!-- <lightning-formatted-date-time value={detalle.fecha}
+                                                                                                                year="numeric" month="numeric" day="numeric">
+                                                                                                            </lightning-formatted-date-time> -->
+                                                            <div class="slds-truncate">{detalle.fecha}</div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="slds-truncate">{detalle.trabajoRealizado}</div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="slds-truncate">{detalle.asesor}</div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="slds-truncate">{detalle.sucursal}</div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="slds-truncate">
+                                                                <a onclick={handleCaseClick} target="_blank" data-id={detalle.casoId} class="slds-text-link">
+                                                                    {detalle.caso}
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="slds-truncate">{detalle.nps}</div>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+                                <template if:false={hasDetalles}>
+                                    <p>No se encontraron trabajos de garantía</p>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Cargando..." size="small"></lightning-spinner>
+                    </template>
+                    <footer class="slds-modal__footer">
+                        <template if:true={resultado.aplicaGarantia}>
+                            <lightning-button label="Agendar Cita" variant="brand" onclick={agendarCita}>
+                            </lightning-button>
+                        </template>
+                        <template if:false={resultado.aplicaGarantia}>
+                            <lightning-button label="Ir a BMW Service" variant="brand" onclick={irABMWService}>
+                            </lightning-button>
+                        </template>
+                        <lightning-button label="Cerrar" variant="neutral" onclick={cerrarModal}>
+                        </lightning-button>
+                    </footer>
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </lightning-card>
+</template>

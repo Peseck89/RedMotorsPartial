@@ -1,0 +1,66 @@
+.THIS .consulta-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #FFF;
+  color: #1c69d4;
+  border: 1px solid #1c69d4;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 999;
+}
+
+.THIS .consulta-btn:hover {
+  background-color: #FFF;
+  transform: scale(1.05);
+}
+
+.THIS .consulta-btn:focus {
+  outline: none;
+}
+
+.THIS .consulta-btn img {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  margin-right: 5px;
+}
+
+.THIS .consulta-btn-text {
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .THIS .consulta-btn {
+      padding: 8px 16px;
+      font-size: 14px;
+  }
+
+  .THIS .consulta-btn img {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .THIS .consulta-btn {
+      padding: 8px;
+      border-radius: 50%;
+  }
+
+  .THIS .consulta-btn-text {
+      display: none;
+  }
+
+  .THIS .consulta-btn img {
+      margin-right: 0;
+  }
+}

@@ -1,0 +1,373 @@
+<template>
+    <div>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <header>
+            <div class="slds-page-header slds-page-header_record-home">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-opportunity">
+                                    <lightning-icon icon-name="standard:contract"
+                                        alternative-text="Consulta General de Tareas"
+                                        title="Consulta General de Tareas"></lightning-icon>
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1>
+                                            <span>Pasos de trabajo</span>
+                                            <span class="slds-page-header__title slds-truncate"
+                                                title="Consulta General de Tareas">Consulta General de Tareas</span>
+                                        </h1>
+                                    </div>
+                                </div>                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-page-header__col-actions">
+                        <div class="slds-page-header__controls">
+                            <div class="slds-page-header__control">
+                                <ul class="slds-button-group-list">
+                                    <li>
+                                        <lightning-button-icon-stateful icon-name="utility:filterList"
+                                            class="slds-m-left_xx-small" selected={showFilters}
+                                            onclick={handleShowFiltersClick} alternative-text="Filtrar">
+                                        </lightning-button-icon-stateful>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <article class="slds-card slds-m-top_small">
+            <template if:false={showFilters}>
+                <c-c-t_-summary></c-c-t_-summary>                                
+            </template>
+            <template if:true={showFilters}>
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size="3" padding="around-small" >
+                        <div class="custom-box ">
+                            <lightning-dual-listbox name="territories" label="Territorios"
+                                source-label="Disponibles" selected-label="Seleccionados" options={territories}
+                                value={selectedTerritories} onchange={handleTerritoryChange}>
+                            </lightning-dual-listbox>                            
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="3" padding="around-small">
+                        <div class="custom-box ">
+                            <lightning-dual-listbox name="workStepStatuses" label="Estados de tareas"
+                                source-label="Disponibles" selected-label="Seleccionados" options={workStepStatuses}
+                                value={selectedWorkStepStatus} onchange={handleWorkStepStatusChange}>
+                            </lightning-dual-listbox>                             
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" padding="around-small">
+                        <div class="custom-box ">
+                            <lightning-input type="search" value={inputCaseNumber}
+                            placeholder="Ej. 000000" label="Número de caso" minlength="8"
+                            onchange={handleCaseNumberChange}> </lightning-input>                            
+                            
+                            <lightning-input type="search" value={inputPlate}
+                            placeholder="Ej. ABCDEF" label="Placa"
+                            onchange={handlePlateChange}> </lightning-input> 
+                            
+                            <lightning-input type="search" value={inputVIN}
+                            placeholder="Ej. 101010020202020" label="VIN" onchange={handleVINChange}>
+                            </lightning-input>                            
+
+                            <c-lookup selection={initialSelection} errors={errors} label="Mecánico"
+                            onsearch={handleMechanicSearch} onselectionchange={handleMechanicSelectionChange}
+                            placeholder="Ej. Ruth">                                  
+                            </c-lookup>                            
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" padding="around-small">
+                        <div class="custom-box">                            
+                            <lightning-input type="date" value={inputCreationDateFrom} label="Desde" placeholder="01/01/1980"
+                            onchange={handleCreationDateFromChange}></lightning-input>
+
+                            <lightning-input type="date" value={inputCreationDateTo} label="Hasta" placeholder="01/01/1980"
+                            onchange={handleCreationDateToChange}></lightning-input>  
+
+                            <div class="slds-m-top_medium">
+                                <lightning-input type="checkbox" checked={showParentTasks} label={showMessageInfo} title="Indica si la pantalla muestra solo tareas trabajos ó subtrabajos" onchange={handleShowParentTasksChange}></lightning-input>                                 
+                            </div>                            
+
+                            <div class="slds-p-top_xx-small slds-text-align_right">
+                                <button class="slds-button slds-button_brand slds-m-top_medium"
+                                    onclick={handleApplyFiltersClick}>Aplicar</button>
+                                <button class="slds-button slds-button_neutral slds-m-top_medium"
+                                    onclick={handleResetClick}>Limpiar filtros</button>
+                            </div>
+                        </div>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </template>
+
+            <template if:false={showFilters}>
+                <template if:false={showCaseStatusColumn}>
+                    <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                        <span class="slds-assistive-text">Atención!</span>
+                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small"
+                            title="Description of icon when needed">
+                            <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#warning"></use>
+                            </svg>
+                        </span>
+                        <h2>Filtro por estatus de tarea o mecánico aplicado.
+                        </h2>
+                    </div>
+                </template>
+                <div class="slds-card__body">
+                    <table
+                        class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout"
+                        role="grid" aria-label="Tareas agrupadas por caso" style="height: 650px;">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Caso"># Caso</div>
+                                </th>
+                                <template if:true={showCaseStatusColumn}>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title="Estado del caso">Estado</div>
+                                    </th>
+                                </template>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Número de placa">Placa</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Número de serie">Serie</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_right" title="Minutos trabajados">Minutos
+                                        trabajados</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_right" title="Minutos iniciales">Minutos
+                                        iniciales</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_right" title="Minutos iniciales">Fecha
+                                        creación caso</div>
+                                </th>
+                                <th scope="col">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={cases} for:item="record">
+                                <tr class="slds-hint-parent" key={record.id}>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate" title="Número de caso">
+                                            <a target="_blank" href={record.caseURL} tabindex="-1">{record.CaseNumber}                    
+                                            </a>
+                                            <template if:true={record.approvedStatus}>                                                                                                    
+                                                    <lightning-icon icon-name="utility:check" alternative-text="Aprovada" size="xx-small" title="Order de trabajo aprovada." class="slds-m-left_xx-small icon-color-green"></lightning-icon>
+                                            </template>
+                                        </div>
+                                    </td>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <td role="gridcell">
+                                            <template if:false={record.hasWorkStepsRelated}>
+                                                <span class="slds-badge" style="background-color:rgb(251 251 172);">Sin
+                                                    tareas</span>
+                                            </template>
+                                            <template if:true={record.hasWorkStepsRelated}>
+                                                <template if:false={record.caseAssigned}>
+                                                    <template if:true={record.caseStarted}>
+                                                        <template if:true={record.caseCompleted}>
+                                                            <template if:true={record.isRed}>
+                                                                <span class="slds-badge"
+                                                                    style="background-color:#fb617b;color:white;">Completado</span>
+                                                            </template>
+                                                            <template if:true={record.isGreen}>
+                                                                <span class="slds-badge"
+                                                                    style="background-color:#f2f8e7;">Completado</span>
+                                                            </template>
+                                                        </template>
+                                                        <template if:false={record.caseCompleted}>
+                                                            <template if:true={record.isRed}>
+                                                                <span class="slds-badge"
+                                                                    style="background-color:#fb617b;color:white;">En
+                                                                    curso</span>
+                                                            </template>
+                                                            <template if:true={record.isGreen}>
+                                                                <span class="slds-badge"
+                                                                    style="background-color:#f2f8e7;">En curso</span>
+                                                            </template>
+                                                        </template>
+                                                    </template>
+                                                    <template if:false={record.caseStarted}>
+                                                        <span class="slds-badge" style="background-color:#e1e1e1;">No
+                                                            iniciado</span>
+                                                    </template>
+                                                </template>
+                                                <template if:true={record.caseAssigned}>
+                                                    <span class="slds-badge"
+                                                        style="background-color:#eafbfe;">Asignado</span>
+                                                </template>
+                                            </template>
+                                        </td>
+                                    </template>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate" title="Número de placa">
+                                            {record.placa}
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate" title="Número de serie">
+                                            {record.vin}
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate slds-text-align_right"
+                                            title="Total de minutos trabajados">
+                                            {record.minutesWorked} mins.
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate slds-text-align_right"
+                                            title="Total de minutos iniciales">
+                                            {record.startingMinutes} mins.
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate slds-text-align_right"
+                                            title="Fecha de creación del caso">
+                                            <lightning-formatted-date-time value={record.CreatedDate} year="numeric"
+                                                month="2-digit" day="2-digit" time-zone="America/Costa_Rica">
+                                            </lightning-formatted-date-time>
+                                        </div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate slds-text-align_center"
+                                            title="Ver detalle de las tareas">
+                                            <lightning-button label="Ver Detalle" title="Ver Detalle"
+                                                icon-name="utility:preview" class="slds-m-left_x-small"
+                                                data-id={record.Id} onclick={handleShowDetailClick}></lightning-button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <template if:true={record.showDetail}>
+                                    <tr key={record.Id}>
+                                        <template if:true={showCaseStatusColumn}>
+                                            <td colspan="8" class="slds-p-top_medium slds-p-bottom_medium"
+                                                style="background-color: gainsboro;">
+                                                <c-view-case-detail case-id={record.CaseNumber}
+                                                    onrefreshcases={handleRefreshCasesEvent}
+                                                    territories={selectedTerritories} statuses-filter={selectedWorkStepStatus}                                                    
+                                                    show-parent-tasks={showParentTasks}
+                                                    mechanic={inputMechanicId}></c-view-case-detail>
+                                            </td>
+                                        </template>
+                                        <template if:false={showCaseStatusColumn}>
+                                            <td colspan="7" class="slds-p-top_medium slds-p-bottom_medium"
+                                                style="background-color: gainsboro;">
+                                                <c-view-case-detail case-id={record.CaseNumber}
+                                                    onrefreshcases={handleRefreshCasesEvent}
+                                                    territories={selectedTerritories} statuses-filter={selectedWorkStepStatus}
+                                                    show-parent-tasks={showParentTasks}
+                                                    mechanic-filter={inputMechanicId}></c-view-case-detail>
+                                            </td>
+                                        </template>
+                                    </tr>
+                                </template>
+                            </template> 
+
+                            <!-- start filas agregadas para mosytrar correctamente el modal-->
+                            <template if:true={fewRecords}>
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col" style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr>
+
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col"  style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr>
+                                
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col"  style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr>
+                                
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col"  style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr>
+                                
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col"  style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr>
+                                
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col"  style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr>
+                                
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col"  style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr> 
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col"  style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr>
+                                
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col" style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr>
+                                
+                                <tr>
+                                    <th scope="col" colspan="7" style="border-color:white;">&#32;</th>
+                                    <template if:true={showCaseStatusColumn}>
+                                        <th scope="col" style="border-color:white;">&#32;</th>
+                                    </template>
+                                </tr>                                
+                            </template>
+                            <!-- end filas agregadas para mosytrar correctamente el modal-->
+                        </tbody>
+                    </table>
+                </div>
+                <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+                    <div>
+                        <div class="slds-button-group" role="group">
+                            <button class="slds-button slds-button_neutral" disabled={isEnablePrevButton}
+                                onclick={handleBackClick}>Atras</button>
+                            <button class="slds-button slds-button_neutral" disabled={isEnableNextButton}
+                                onclick={handleNextClick}>Siguiente</button>
+                        </div>
+                        <span class="slds-m-left_medium">{totalRecords} casos encontrados, Pagina {pageNumber} de
+                            {totalPages}</span>
+                    </div>
+                </footer>
+            </template>
+        </article>
+    </div>
+</template>

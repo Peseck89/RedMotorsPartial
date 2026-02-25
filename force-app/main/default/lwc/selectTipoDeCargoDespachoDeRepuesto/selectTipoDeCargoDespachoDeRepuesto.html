@@ -1,0 +1,15 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-card title="Seleccione uno o mas tipos de cargo">
+            <lightning-dual-listbox name="languages"
+                                    id="list1"
+                                    source-label="Available"
+                                    selected-label="Selected"
+                                    options={options}
+                                    onchange={handleChange}></lightning-dual-listbox>
+                                    <br/>
+            <div>
+                <button style="float: right;" class="slds-button slds-button_brand" slot="actions" onclick={handleCrearReporte}>Crear reporte</button>
+            </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,157 @@
+<!-- quoteServiceBudget.html -->
+<template>
+    <lightning-card title="Enviar Presupuesto a BMW Service">
+        <div class="slds-p-around_medium">
+            <!-- Step 1: Selección de tareas -->
+            <template if:true={showStep1}>
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Paso 1: Seleccionar Tareas</h2>
+                
+                <template if:true={hasTareas}>
+                    <div class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <table class="slds-table slds-table_bordered slds-table_striped">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th scope="col" class="slds-size_1-of-12">Seleccionar</th>
+                                    <th scope="col" class="slds-size_3-of-12">Tarea</th>
+                                    <th scope="col" class="slds-size_2-of-12">Prioridad</th>
+                                    <th scope="col" class="slds-size_2-of-12">Total Tarea</th>
+                                    <th scope="col" class="slds-size_1-of-12">Items</th>
+                                    <th scope="col" class="slds-size_2-of-12">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={tareasAgrupadas} for:item="tarea">
+                                    <tr key={tarea.id} class={tarea.rowClass}>
+                                        <td>
+                                            <lightning-input
+                                                type="checkbox"
+                                                data-id={tarea.id}
+                                                checked={tarea.isSelected}
+                                                onchange={handleCheckboxChange}
+                                            ></lightning-input>
+                                        </td>
+                                        <td>
+                                            <div class="slds-truncate" title={tarea.tareaName}>
+                                                {tarea.tareaName}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <!-- <span class={tarea.prioridadClass}>{tarea.prioridad}</span> -->
+                                            <span class={tarea.prioridadClass}>{tarea.prioridadDisplay}</span>
+                                        </td>
+                                        <td>{tarea.totalTareaFormatted}</td>
+                                        <td>{tarea.cantidadItems}</td>
+                                        <td>
+                                            <span title={tarea.statusTooltip} class="slds-truncate">
+                                                {tarea.statusText}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="slds-m-top_small slds-text-align_right">
+                        <strong>Tareas seleccionadas: {selectedTareasCount}</strong>
+                    </div>
+                </template>
+                
+                <template if:true={showNoTareasMessage}>
+                    <div class="slds-text-align_center slds-p-around_large">
+                        <p>No se encontraron tareas en esta cotización</p>
+                    </div>
+                </template>
+                
+                <div class="slds-m-top_medium">
+                    <lightning-button
+                        label="Siguiente"
+                        variant="brand"
+                        onclick={handleNext}
+                        disabled={isNextButtonDisabled}
+                    ></lightning-button>
+                </div>
+            </template>
+
+            <!-- Step 2: Items de tareas seleccionadas -->
+            <template if:true={showStep2}>
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Paso 2: Items a Enviar</h2>
+                
+                <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                    <div class="slds-grid slds-grid_align-spread">
+                        <div><strong>Tareas: {selectedTareasCount}</strong></div>
+                        <div><strong>Items: {totalItemsSeleccionados}</strong></div>
+                        <div><strong>Total: {totalMontoFormatted}</strong></div>
+                    </div>
+                </div>
+                
+                <!-- Mostrar items agrupados por tarea -->
+                <template for:each={itemsAgrupadosPorTarea} for:item="grupo">
+                    <div key={grupo.tarea.id} class="slds-box slds-m-bottom_large">
+                        <h3 class="slds-text-heading_small slds-m-bottom_small">
+                            {grupo.tarea.tareaName} - Total: {grupo.totalTareaFormatted}
+                        </h3>
+                        <p class="slds-text-body_small slds-m-bottom_medium">
+                            Prioridad: <span class={grupo.tarea.prioridadClass}>{grupo.tarea.prioridadDisplay}</span> | 
+                            Items: {grupo.tarea.cantidadItems}
+                        </p>
+                        
+                        <!-- Tabla de items por tarea -->
+                        <div class="slds-table slds-table_bordered slds-table_cell-buffer">
+                            <table class="slds-table slds-table_bordered slds-table_striped">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Descripción</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">P. Unitario</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={grupo.items} for:item="item">
+                                        <tr key={item.Id}>
+                                            <td>{item.productName}</td>
+                                            <td>
+                                                <div class="slds-truncate" title={item.description}>
+                                                    {item.description}
+                                                </div>
+                                            </td>
+                                            <td>{item.tipo}</td>
+                                            <td>{item.Quantity}</td>
+                                            <td>{item.unitPriceFormatted}</td>
+                                            <td>{item.totalPriceFormatted}</td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </template>
+                
+                <div class="slds-m-top_large slds-grid slds-grid_align-spread">
+                    <lightning-button
+                        label="Atrás"
+                        variant="neutral"
+                        onclick={handleBack}
+                        disabled={isSending}
+                    ></lightning-button>
+                    
+                    <lightning-button
+                        label="Enviar a Service"
+                        variant="brand"
+                        onclick={handleSendToService}
+                        disabled={isSending}
+                    ></lightning-button>
+                </div>
+            </template>
+
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center">
+                    <lightning-spinner alternative-text="Cargando"></lightning-spinner>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,31 @@
+<template>
+    <lightning-card title="Case Files">
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Preview</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">File Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={files} for:item="file">
+                    <tr key={file.id}>
+                        <td>
+                            <img src={file.preview} alt="File Preview" width="50" height="50" class="file-preview" onclick={handleImageClick} data-id={file.id}/>
+                        </td>
+                        <td>{file.title}</td>
+                        <td>{file.fileType}</td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </lightning-card>
+    <template if:true={isModalOpen}>
+        <c-image-carousel-modal
+            files={files}
+            selected-id={selectedFileId}
+            onclose={handleModalClose}>
+        </c-image-carousel-modal>
+    </template>
+</template>

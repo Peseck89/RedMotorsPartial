@@ -1,0 +1,175 @@
+.THIS {
+    background-color: white;
+}
+
+.THIS.hide {
+ 	display: none;
+
+}
+ .THIS.btn {
+ 	margin-bottom: 10px;
+ }
+
+.THIS label.uiLabel {
+    padding-right: 12px;
+}
+
+.THIS .right-align {
+    text-align: right;
+}
+
+.THIS .fl-table {
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+    border-spacing: 0 15px;
+    border-collapse: separate;
+}
+
+.THIS .fl-table td {
+    text-align: center;
+    padding: 8px;
+}
+.THIS .fl-table th{
+    text-align: center;
+    padding: 8px;
+     position: sticky;
+}
+
+.THIS .fl-table td {
+   --border-right: 3px solid #d4d4d4;
+    font-size: 12px;
+    font-size: large;
+}
+
+.THIS .fl-table thead th {
+    color: #ffffff;
+    background: #040404;
+}
+.THIS .fl-table tr {
+    --box-shadow: 0 2px 10px rgb(0 0 0 / 15%);
+    --border-radius: 10px;
+    box-shadow: 1px 0px 5px 2px rgb(0 0 0 / 15%);
+    border-radius: 7px;
+}
+
+.THIS .fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #3a3b3f;
+}
+
+.THIS .fl-table tr:nth-child(even) {
+    background: #F5F5F5;
+}
+
+ /* ALL Only */
+        
+.THIS .table-scroll {
+  position: relative;
+  width:100%;
+  z-index: 1;
+  margin: auto;
+  overflow: auto;
+  height: 490px;
+}
+        
+.THIS .bigtable {
+  height: 650px;
+  
+}
+
+.THIS .reduceFont {
+  border-spacing: 0 10px;
+  font-size: revert;
+}
+
+.THIS .table-scroll table {
+  width: 100%;
+  min-width: 1580px;
+  margin: auto;
+  border-spacing: 0 15px;
+  border-collapse: separate;   
+  border-radius: 5px;
+  font-size: large;
+  font-weight: 500;
+  --border: none;
+  --width: 100%;
+  --max-width: 100%;
+  --white-space: nowrap;
+  --background-color: white;
+  --border-spacing: 0 15px;
+  
+
+}
+.THIS .table-wrap {
+  /*position: relative;*/
+}
+.THIS .table-scroll th,
+.THIS .table-scroll td {
+  padding: 5px 10px;
+  --border: 1px solid #000;
+  background: #fff;
+  text-align: center;
+  --vertical-align: top;
+  overflow: hidden;
+  white-space: nowrap;
+  -moz-text-overflow: ellipsis;        
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+.THIS .table-scroll thead th {
+  background: #333;
+  color: #fff;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+
+
+.THIS th:nth-child(1) {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.THIS th:nth-last-child(1)
+{
+  position: -webkit-sticky;
+  position: sticky;
+  right: 0;
+  z-index: 2;
+}        
+.THIS thead th:nth-child(1),.THIS thead th:nth-last-child(1),
+.THIS tfoot th:first-child {
+  z-index: 5;
+}
+
+.THIS .slds-button{
+            position: unset;
+}        
+
+.THIS .table-scroll thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #3a3b3f;
+}
+
+.THIS tr:nth-child(even) {
+    background: #F5F5F5;
+}
+        
+.THIS .exampleHolder{
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    background: transparent;
+}

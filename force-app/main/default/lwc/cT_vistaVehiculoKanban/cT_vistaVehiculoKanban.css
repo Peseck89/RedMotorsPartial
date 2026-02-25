@@ -1,0 +1,150 @@
+.card_wrapper{
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-around;
+    background: #fff;
+}
+
+.column_heading{
+    padding: 0.5rem 0.25rem;
+    font-size: 16px;
+    background: #005fb2;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.stageContainer{
+    float:left;
+    border: 2px solid #d8dde6;
+    margin: 0.05rem;
+    border-radius: .25rem;
+}
+
+.ui {
+    height: 75vh;
+    display: grid;
+    grid-template-rows: 1fr;
+    background-color: #ffffff00;;
+    color: #eee;            
+}
+
+.navbar {
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar.app {
+    /*background-color: #0067a3;*/
+    font-size: 1.5rem;
+}
+
+.navbar.board {
+    font-size: 1.1rem;
+}
+
+.lists {
+    display: flex;
+    overflow-x: auto;
+}
+
+.lists>* {
+    flex: 0 0 auto;
+    margin-right: 10px;
+}
+
+.lists::after {
+    content: "";
+    flex: 0 0 10px;
+}
+
+.list {
+    width: 250px;
+    background-color: #f6f9fa;
+    border-radius: 6px;
+    height: calc(100% - 4px);
+    border-top: 4px #447bb1;
+    border-top-style: solid;
+}
+
+.list>* {
+    background-color: #f6f9fa;
+    color: #333;
+    padding: 0 10px;
+}
+
+.list header {
+    line-height: 36px;
+    font-size: 16px;
+    font-weight: bold;
+
+}
+
+.list footer {
+    line-height: 36px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: #888;
+}
+
+.list ul {
+    list-style: none;
+    margin: 0;
+    max-height: calc(100% - 36px - 36px);
+    overflow-y: auto;
+    padding-bottom: 5px;
+}
+
+.list ul li {
+    background-color: #fff;
+    /*padding: 10px;*/
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgb(0 0 0 / 8%);
+}
+
+.list ul li:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.list ul li img {
+    display: block;
+    width: calc(100% + 2 * 10px);
+    margin: -10px 0 10px -10px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.card-shadow {
+    box-shadow: 0 1px 8px #dfdcdc;
+}
+
+.custom-css{
+    --lwc-fontFamily:Roboto-Regular;
+    --lwc-formLabelFontSize:1rem;
+    --lwc-colorTextLabel:#000000;
+    color:#b4b9c7;
+    font-family: sans-serif;
+}
+
+.card_left_color_red{
+    border:0px;
+    /*border-left: 4px #ff6609;
+    border-left-style: solid;*/
+}
+
+.card_left_color_green{
+    border:0px;
+    border-left: 6px #24a03f;
+    border-left-style: solid;
+}
+
+.card_left_color_blue{
+    border:0px;
+    border-left: 6px #1d61c7;
+    border-left-style: solid;
+}        
+
+.card-header-custom {
+    color: #bdbdbf;
+    font-size: 10px;
+}

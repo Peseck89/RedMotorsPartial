@@ -1,0 +1,9 @@
+<aura:component
+  implements="force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+  access="global" controller="CommunityCalendarController">
+  <body class="THIS">
+    <header class="main-header">
+      <img src="{!$Resource.LogoMiniWalk}" class="header-logo" onclick="{!c.navigateToLogin}"/>
+    </header>
+  </body>
+</aura:component>

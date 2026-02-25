@@ -1,0 +1,29 @@
+<!--
+  @description       : 
+  @author            : marcohernandezhp@gmail.com
+  @group             : 
+  @last modified on  : 12-01-2022
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+
+    <article class="slds-card">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <template if:true={showProductSearcher}>
+            <c-product-searcher onproductselection={handleProductSelectionEvent} title="Agregar vehiculo" is-vehicle brand={brand} model={model} family={family}>
+                <span slot="actions">
+                    <lightning-button variant="brand-outline" label="Pedido especial" title="Pedido especial" onclick={handleCreateSpecialOrderClick}
+                        class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button variant="brand" label="Incluir presupuesto" title="Incluir presupuesto" disabled={isDisableAcceptButton}
+                        onclick={handleAcceptClick} class="slds-m-left_x-small"></lightning-button>
+                </span>
+            </c-product-searcher>
+        </template>
+        
+        <template if:true={showPedidoEspecialForm}>
+            <c-create-pedido-especial opportunity-id={recordId} onclosewindow={handleCloseWindowEvent}></c-create-pedido-especial>
+        </template>
+    </article>
+</template>

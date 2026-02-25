@@ -1,0 +1,41 @@
+<aura:component controller="PdfSignatureClass" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable,force:lightningQuickAction" access="global">
+    <!-- Atributo para recibir el recordId -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="pdfVisualforce" type="String"/>
+    <aura:attribute name="pdfFirmado" type="String" default="SignedWorkOrderPDF"/>
+    <aura:attribute name="button" type="String" default="Orden de trabajo firmada"/>
+    <aura:attribute name="buttonOriginal" type="String"/>
+    <aura:attribute name="imagenTipo" type="String"/>
+    <aura:attribute name="infoInComplete" type="Boolean"/>
+    <aura:attribute name="direccionIncomplete" type="Boolean"/>
+    <aura:attribute name="kilometrajeIncomplete" type="Boolean"/>
+
+    <!-- Estilos personalizados para el modal -->
+    <aura:html tag="style">
+        .slds-modal__container {
+            min-width: 90vw;
+        }
+    </aura:html>
+    <aura:if isTrue="{!v.direccionIncomplete}">
+        Debe asegurarse de actualizar la dirección del vehículo antes de firmar la Orden de trabajo.
+        <aura:set attribute="else">
+            <aura:if isTrue="{!v.kilometrajeIncomplete}">
+                <p>
+                    Debe asegurarse de actualizar las horas de uso del vehículo antes de firmar la Orden de trabajo.
+                </p>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.infoInComplete}">
+                        Debe asegurarse que los campos: Kilometraje, Propietario, Cuenta de facturación y Contacto estén
+                        llenos antes de firmar la Orden de trabajo.
+                        <aura:set attribute="else">
+                            <c:pdfSignatureComponent recId="{!v.recordId}" visualforcePDF="{!v.pdfVisualforce}"
+                                visualforceFirmado="{!v.pdfFirmado}" fromButton="{!v.button}"
+                                tipoImagen="{!v.imagenTipo}" />
+                        </aura:set>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+        </aura:set>
+    </aura:if>
+</aura:component>

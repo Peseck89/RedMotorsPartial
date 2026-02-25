@@ -1,0 +1,171 @@
+<template>
+    <template if:true={firstScreen}>
+        <lightning-card title="Creación de Trabajos a realizar del Caso">
+            <div class="slds-form slds-form_stacked slds-var-m-around_xx-large">
+
+                <!-- ComboBox de Orden -->
+                <template if:true={showWorkOrderCombo}>
+                    <lightning-combobox data-id="Orden" id="workOrderId" name="Orden" label="Orden"
+                        placeholder="--Seleccionar--" value="selectedWorkOrderId" options={workOrdersOptions} required
+                        onchange={handleOrdenSelection}>
+                    </lightning-combobox>
+                </template>
+
+                <!-- Lookup de Trabajos a realizar con asterisco de requerido -->
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="TipoDeTrabajo">
+                        <span class="slds-required">*</span> Trabajos a realizar
+                    </label>
+                    <c-lookup selection={initialSelection} errors={errors} onsearch={handleLookupsearch}
+                        onselectionchange={handleTipoTrabajoLookupSelectionChange} id="TipoDeTrabajo"
+                        placeholder="Trabajos a realizar" required>
+                    </c-lookup>
+                </div>
+
+                <!-- Lightning Layout para Tipo de Cargo y Aseguradora/Centro de Costo -->
+                <lightning-layout>
+                    <lightning-layout-item>
+                        <!-- Ajuste de ancho para que Tipo de Cargo sea consistente -->
+                        <lightning-combobox style="width: 200px;" data-id="TipoCargo" id="TipoCargo" name="TipoCargo" 
+                            label="Tipo de Cargo" placeholder="--Seleccionar--" value="" options={options} required
+                            onchange={handleTipoCargoSelection} message-when-value-missing={tipoCargoRequeridoMessage}>
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item>
+                        <template if:true={showAseguradora}>
+                            <c-lookup errors={errors} onsearch={handleLookupsearch} id="Aseguradora"
+                                onselectionchange={handleLookupSelectionChange} label="Aseguradora"
+                                placeholder="Aseguradora">
+                            </c-lookup>
+                        </template>
+                        <template if:true={showCentroCosto}>
+                            <c-lookup errors={errors} onsearch={handleLookupsearch} id="CentroCosto"
+                                onselectionchange={handleLookupSelectionChange} label="Centro de Costo"
+                                placeholder="Centro de Costo">
+                            </c-lookup>
+                        </template>
+                    </lightning-layout-item>
+                </lightning-layout>
+
+                <!-- Lightning Layout para Categoría de Presupuesto y Aprobador en la misma línea -->
+                <lightning-layout>
+                    <!-- Categoría de Presupuesto -->
+                    <lightning-layout-item>
+                        <lightning-combobox style="width: 200px;" data-id="CategoriaDePresupuesto" id="CategoriaDePresupuesto" 
+                            name="CategoriaDePresupuesto" label="Categoría de Presupuesto" placeholder="--Seleccionar--" 
+                            value="" options={optionsCategoriaDePresupuesto} required onchange={handleCategoriaDePresupuestoChange}>
+                        </lightning-combobox>
+                    </lightning-layout-item>
+
+                    <!-- Aprobador -->
+                    <lightning-layout-item>
+                        <lightning-combobox style="width: 200px;" data-id="Aprobador" id="Aprobador" name="Aprobador" 
+                            label="Aprobador" placeholder="--Seleccionar--" value="" options={optionsAprobador} required 
+                            onchange={handleAprobadorChange}>
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                </lightning-layout>
+
+                <!-- Categoría de Presupuesto 
+                <div class="row">
+                    <lightning-combobox style="width: 200px;" data-id="CategoriaDePresupuesto" id="CategoriaDePresupuesto" name="CategoriaDePresupuesto" label="Categoría de Presupuesto"
+                        placeholder="--Seleccionar--" value="" options={optionsCategoriaDePresupuesto} required
+                        onchange={handleCategoriaDePresupuestoChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="row">
+                    <lightning-combobox style="width: 200px;" data-id="Aprobador" id="Aprobador" name="Aprobador" label="Aprobador"
+                        placeholder="--Seleccionar--" value="" options={optionsAprobador} required
+                        onchange={handleAprobadorChange}>
+                    </lightning-combobox>
+                </div>
+                    -->
+                <!-- Comentarios -->
+                <div class="row">
+                    <lightning-textarea data-id="Comments" name="comments" label="Comentarios"
+                        onchange={handleNumberChange}></lightning-textarea>
+                </div>
+
+                <!-- Botones alineados a la derecha en la misma línea -->
+                <div class="slds-grid slds-grid_align-end slds-m-top_large">
+                    <lightning-button variant="neutral" label="Nuevo tipo de trabajo" onclick={handleCrear} class="slds-var-m-right_small"></lightning-button>
+                    <lightning-button variant="brand" label="Siguiente" onclick={handleSubmit} disabled={isNextButtonStepOneDisabled}></lightning-button>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+
+    <template if:true={secondScreen}>
+        <lightning-card>
+            <lightning-layout>
+                <c-search-mano-de-obra recid={recId} centrodecosto={centroDeCosto} aseguradora={aseguradora}
+                    tipodecargo={tipoDeCargo} tipodetrabajoid={tipoDeTrabajoId} tipodetrabajocaso={tipoDeTrabajoCaso}
+                    nombretrabajo={tipoCargoSeleccionado}>
+                </c-search-mano-de-obra>
+            </lightning-layout>
+        </lightning-card>
+    </template>
+
+    <template if:true={thirdScreen}>
+        <lightning-card>
+            <br />
+            <br />
+            <br />
+            <lightning-record-form object-api-name="tiposDeTrabajo__c" fields={myFields} layout-type="Full" columns="2"
+                oncancel={handleCancelTrabajo} onsuccess={handleSuccessTrabajo}>
+            </lightning-record-form>
+        </lightning-card>
+    </template>
+
+    <!-- Modal de Validación de Asset -->
+    <template if:true={assetValidationFlag}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-label="Meaningful description of the modal content"
+            class="slds-modal slds-fade-in-open slds-align_absolute-center">
+            <div class="slds-modal__container" style="width: 20%;">
+                <div class="slds-modal__content slds-var-p-around_medium slds-align_absolute-center"
+                    id="modal-content-id-1" style="border-top-right-radius: 0.25rem; border-top-left-radius: 0.25rem;">
+                    <lightning-record-edit-form object-api-name="Asset" record-id={assetId}
+                        onsuccess={handleSubmitAsset} onerror={handleErrorAsset} data-id="Save">
+                        <header class="slds-modal__header slds-text-align_center">
+                            <h1 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Información
+                                necesaria para continuar</h1>
+                        </header>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-text-align_center">
+                                <label for="assetNameFieldId">Número de placa</label>
+                                <lightning-input-field id="assetNameFieldId" data-type="assetField"
+                                    data-name="Asset_Name" field-name="Name" variant="label-hidden"
+                                    required></lightning-input-field>
+                                <lightning-input-field data-type="assetField" data-name="Asset_Tipo_de_veh_culo__c"
+                                    field-name="Tipo_de_veh_culo__c" required></lightning-input-field>
+                                <lightning-input-field data-type="assetField" data-name="Asset_Marca_Nvo__c"
+                                    field-name="Marca_Nvo__c" required></lightning-input-field>
+                                <lightning-input-field data-type="assetField" data-name="Asset_Modelo_Nvo__c"
+                                    field-name="Modelo_Nvo__c" required></lightning-input-field>
+                                <lightning-input-field data-type="assetField" data-name="Asset_Marca_Otros__c"
+                                    field-name="Marca_Otros__c"></lightning-input-field>
+                                <lightning-input-field data-type="assetField" data-name="Asset_Modelo_Otros__c"
+                                    field-name="Modelo_Otros__c"></lightning-input-field>
+                                <lightning-input-field data-type="assetField" data-name="Asset_Anio__c"
+                                    field-name="Anio__c" required></lightning-input-field>
+                                <lightning-input-field data-type="assetField" data-name="Asset_NumeroDeChasis__c"
+                                    field-name="NumeroDeChasis__c" required></lightning-input-field>
+                            </div>
+                        </div>
+                        <footer class="slds-modal__footer" style="text-align: center;">
+                            <lightning-button data-id="Save" class="slds-var-m-top_small" variant="brand" type="submit"
+                                name="update" label="Guardar"></lightning-button>
+                        </footer>
+                    </lightning-record-edit-form>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Validación de Cuenta para Email y Teléfono -->
+    <c-account-validation if:true={accountValidationFlag} record-id={accountId} asset-id={assetId}
+        is-physical={isPhysical} account-validation={validationObject} onupdateaccount={handleUpdateAccount}
+        onupdatecase={handleUpdateCase} onupdateasset={handleUpdateAsset} onupdatecontact={handleUpdateContact}
+        onupdatepersonaccount={handleUpdatePersonAccount} onupdatempresarialaccount={handleUpdateEmpresarialAccount}>
+    </c-account-validation>
+</template>

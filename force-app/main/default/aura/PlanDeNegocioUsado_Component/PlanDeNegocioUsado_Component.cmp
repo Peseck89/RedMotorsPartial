@@ -1,0 +1,63 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable,force:lightningQuickAction,lightning:availableForFlowScreens" access="global" controller="savePDFfile">
+    
+    <aura:attribute name="messagePDF" type="String"/>
+    <aura:attribute name="instanceURL" type="String"/>
+    <aura:attribute name="descuentoAprobado" type="Boolean" default="false"/>
+    <aura:attribute name="vehiculoReservado" type="Boolean" default="false"/>
+    <aura:attribute name="envioFormalizacion" type="Boolean" default="false"/>
+    <aura:attribute name="hasContact" type="Boolean" default="false"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    
+    <!--aura handler with waiting and donewaiting events-->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>    
+    
+    <!--loading spinner start-->
+    <div class="exampleHolder">
+        <lightning:spinner aura:id="mySpinner" class="slds-hide"/>
+    </div>
+    <!-- Loading spinner end-->  
+    
+    <aura:if isTrue="{! v.messagePDF == 'Success'}">
+        <!-- <iframe src="{! v.instanceURL + '/apex/cT_newPlanNegocio?Id=' + v.recordId }" width="100%" height="1000px;" frameBorder="0"/> -->
+        <span>Se abrio el pdf en una ventana nueva.</span>
+    </aura:if>
+    <aura:if isTrue="{! !v.hasContact}">
+        <div class="slds-form__item" role="listitem">
+            <div class="slds-form-element slds-form-element_horizontal ">  
+                <span>Para visualizar el Plan de Negocio debe agregar Contacto a la oportunidad.
+                    Por favor ingrese un contacto a la oportunidad. 
+                </span>
+            </div>
+        </div>
+        <aura:set attribute="else">
+            <aura:if isTrue="{! !v.descuentoAprobado}">
+                <div class="slds-form__item" role="listitem">
+                    <div class="slds-form-element slds-form-element_horizontal ">  
+                        <span>Para visualizar el Plan de Negocio el descuento pendiente debe ser aprobado por quien corresponda.
+                            Por favor diríjase al botón "Enviar solicitud de descuento" que se encuentra en la oportunidad. 
+                        </span>
+                    </div>
+                </div>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{! !v.vehiculoReservado}">
+                        <div class="slds-form__item" role="listitem">
+                            <div class="slds-form-element slds-form-element_horizontal ">  
+                                <span>No hay ningún vehículo reservado. </span>
+                            </div>
+                        </div>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{! !v.envioFormalizacion}">
+                                <div class="slds-form__item" role="listitem">
+                                    <div class="slds-form-element slds-form-element_horizontal ">  
+                                        <span>No se ha enviado a formalización. </span>
+                                    </div>
+                                </div>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>  
+                </aura:set>
+            </aura:if>
+        </aura:set>
+    </aura:if>
+</aura:component>

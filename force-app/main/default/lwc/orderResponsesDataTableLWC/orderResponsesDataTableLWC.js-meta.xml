@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <isExposed>true</isExposed>
+
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="responseList" type="@salesforce/schema/Respuesta_pedido__c[]" label="Respuestas del Pedido" role="inputOnly"/>
+            <property name="recordId" type="String" label="ID WorkOrder" role="inputOnly"/>
+            <property name="workOrderNumber" type="String" label="# Work Order" role="inputOnly"/>
+            <property name="compania" type="String" label="Compañía" role="inputOnly"/>
+            <property name="hasSurvey" type="String" label="Encuesta" role="inputOnly"/>
+            <property name="disableSoftlandSync" type="boolean" label="Disable Sync Button" role="inputOnly"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

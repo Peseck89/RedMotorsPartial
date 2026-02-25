@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Env_a_correo</name>
+        <label>Envía correo</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>luis.sandoval.rocha@gmail.com,sandra.e.lopezlopez@gmail.com,ssoto@redmotorscr.com,john.navarro@portalnetcr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>composeEmailContent</name>
+            <value>
+                <stringValue>True</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>Asunto</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>Cuerpo</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>64.0</apiVersion>
+    <decisions>
+        <name>decide_garantias_no_nulo</name>
+        <label>decide garantias no nulo</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>si_hay_garant_a</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Obtener_territorio_garantias</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>decide_si_territorio_es_de_garant_as</targetReference>
+            </connector>
+            <label>si hay garantía</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>decide_si_territorio_es_de_garant_as</name>
+        <label>decide si territorio es de garantías</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>territorio_de_servicio_es_garant_as</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.ServiceTerritory__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Obtener_territorio_garantias.Id</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Env_a_correo</targetReference>
+            </connector>
+            <label>territorio de servicio es garantías</label>
+        </rules>
+    </decisions>
+    <formulas>
+        <name>HoraInicio</name>
+        <dataType>String</dataType>
+        <expression>IF(
+  VALUE(MID(TEXT({!$Record.StartDateTime}- (6/24)), 12, 2)) = 0 
+  || VALUE(MID(TEXT({!$Record.StartDateTime} - (6/24)), 12, 2)) = 12,
+  &quot;12&quot;,
+  TEXT(
+    VALUE(MID(TEXT({!$Record.StartDateTime} - (6/24)), 12, 2)) -
+    IF(VALUE(MID(TEXT({!$Record.StartDateTime} - (6/24)), 12, 2)) &lt; 12, 0, 12)
+  )
+)
+&amp; &quot;:&quot; &amp;
+MID(TEXT({!$Record.StartDateTime} - (6/24)), 15, 2)
+&amp; &quot;:&quot; &amp;
+MID(TEXT({!$Record.StartDateTime} - (6/24)), 18, 2)
+&amp; &quot; &quot; &amp;
+IF(
+  VALUE(MID(TEXT({!$Record.StartDateTime} - (6/24)), 12, 2)) &lt; 12,
+  &quot;AM&quot;,
+  &quot;PM&quot;
+)</expression>
+    </formulas>
+    <interviewLabel>Evento prioritario garantía alerta {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Evento prioritario garantía alerta</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Obtener_territorio_garantias</name>
+        <label>Obtener territorio garantias</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>decide_garantias_no_nulo</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Garantías</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ServiceTerritory</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Obtener_territorio_garantias</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Estado__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Asistió</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Estado__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>Event</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>Asunto</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Cliente con múltiples casos de garantía – Atención requerida en taller</text>
+    </textTemplates>
+    <textTemplates>
+        <name>Cuerpo</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Estimado {!Obtener_territorio_garantias.Owner:User.FirstName} {!Obtener_territorio_garantias.Owner:User.LastName}, &lt;br&gt;&lt;br&gt;
+
+Le notifico que el cliente: {!$Record.BMW_Cuenta__c}, se ha presentado en la sucursal: {!$Record.Service_Territory_Formula__c}, para una cita de servicio programada hoy a las {!HoraInicio}. Este cliente registra más de 3 casos de garantía en el último año, por lo que le solicito estar especialmente atento durante su atención.&lt;br&gt;&lt;br&gt;
+
+Detalles del vehículo:&lt;br&gt;&lt;br&gt;
+
+Marca y modelo: {!$Record.Activo__r.Marca_Nvo__c} {!$Record.Activo__r.Modelo_Nvo__c}&lt;br&gt;&lt;br&gt;
+
+Placa: {!$Record.Activo__r.numeroDePlaca__c}&lt;br&gt;&lt;br&gt;
+
+Servicio requerido: {!$Record.Asunto_Formula__c}&lt;br&gt;&lt;br&gt;
+
+Sucursal: {!$Record.Service_Territory_Formula__c}&lt;br&gt;&lt;br&gt;
+
+Hora de cita: {!HoraInicio}&lt;br&gt;&lt;br&gt;
+Caso: &lt;a href=&quot;https://redmotors--partial.sandbox.lightning.force.com/{!$Record.Case__c}&quot;&gt; Link al caso &lt;/a&gt;&lt;br&gt;&lt;br&gt;
+
+Saludos.&lt;br&gt;&lt;br&gt;</text>
+    </textTemplates>
+</Flow>

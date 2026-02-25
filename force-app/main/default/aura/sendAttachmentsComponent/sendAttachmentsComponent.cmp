@@ -1,0 +1,128 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" controller="SendAttachmentsController"
+                >
+    <!--Declare Attributes-->
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="currentOpp" type="Oportunidad_de_Financiamiento__c"/>
+    <aura:attribute name="UserList" type="String[]" default="[]" description="User Picklist Values"/>
+    <aura:attribute name="selectedUserList" type="String[]" default="[]" description="Selected User Picklist Values"/>
+    <aura:attribute name="routeInput" type="Map"/>
+    
+    <aura:attribute name="attachmentsList" type="Attachment[]" />
+    <aura:attribute name="selectedAttachments" type="Attachment[]" />
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="isAnyError" type="boolean" default="false"/>
+    <aura:attribute name="isAttachmentSent" type="boolean" default="false"/>
+    
+    <aura:dependency resource="markup://force:navigateToSObject" type="EVENT"/>
+    
+    
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    
+    <div>
+        <header class="slds-builder-header">
+            <div class="slds-builder-header__item">
+                <div class="slds-builder-header__item-label slds-media slds-media_center">
+                    <div class="slds-media__body" style="font-size: 18px;">Enviar archivos adjuntos</div>
+                </div>
+            </div>
+        </header>
+    </div>
+    
+    <aura:if isTrue="{!v.isAnyError}">
+        <div class="demo-only" style="height:4rem">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                    <span class="slds-assistive-text">error</span>
+                    <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                        <lightning:icon iconName="utility:error" variant="inverse" size="medium" alternativeText="Cerca"/>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small ">{!$Label.c.Error_al_enviar_archivos_adjuntos}</h2>
+                    </div>
+                    <div class="slds-notify__close">
+                        <button onclick="{! c.closeError }" class="slds-button slds-button_icon slds-button_icon-inverse" title="Cerca">
+                            <lightning:icon iconName="utility:close" variant="inverse" size="medium" alternativeText="Cerca"/>
+                            <span class="slds-assistive-text">Cerca</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.isAttachmentSent}">
+        <div class="demo-only" style="height:4rem">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                    <span class="slds-assistive-text">success</span>
+                    <span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                        <lightning:icon iconName="utility:check" variant="inverse" size="medium" alternativeText="Cerca"/>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small ">{!$Label.c.Adjuntos_enviados_exitosamente}</h2>
+                    </div>
+                    <div class="slds-notify__close">
+                        <button onclick="{! c.closeSuccess }" class="slds-button slds-button_icon slds-button_icon-inverse" title="Close">
+                            <lightning:icon iconName="utility:close" variant="inverse" size="medium" alternativeText="Cerca"/>
+                            <span class="slds-assistive-text">Cerca</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    
+    
+    <div class="slds-grid slds-wrap slds-m-around_small">
+        <div class="slds-col slds-size_5-of-12">
+            <div class="slds-m-around_x-small">
+                <lightning:dualListbox aura:id="selectUser"
+                                       name="Users"
+                                       label="Enviar a"
+                                       sourceLabel="Usuarios disponibles"
+                                       selectedLabel="Usuarios seleccionados"
+                                       options="{!v.UserList}"
+                                       value="{!v.selectedUserList}"
+                                       size="4"
+                                       onchange="{!c.handleUserChange}"/>
+                
+            </div>
+            
+            
+        </div>
+        <div class="slds-col slds-size_4-of-12" style="margin-top:37px;">
+            <lightning:input aura:id="ccEmail"  name="cc" value="" label="Correo electrónico CC" />
+        </div>
+        
+        <div class="slds-col slds-size_3-of-12">
+            <div class="slds-float_right">
+                <lightning:button variant="brand" label="Enviar" title="Enviar" onclick="{! c.sendAttachmnets }" />
+                <a href="{! '/'+ v.recordId}" class="slds-button slds-button_neutral">Cancelar</a>
+            </div>
+        </div>
+        
+        <div style="height: 300px" class="slds-m-top_large">
+            <lightning:datatable
+                                 columns="{! v.columns }"
+                                 data="{! v.attachmentsList }"
+                                 keyField="id"
+                                 onrowselection="{! c.updateSelectedAttachments }"/>
+        </div>
+    </div>
+    
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+</aura:component>

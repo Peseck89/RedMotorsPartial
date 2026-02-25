@@ -1,0 +1,118 @@
+<template>
+  <template if:true={canRender}>
+    <section class="slds-card">
+      <div class="slds-card__header slds-grid">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-approval" title="Historial Aprobaciones">
+              <lightning-icon icon-name="standard:approval" size="small"></lightning-icon>
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <h2 class="slds-card__header-title">
+              <span>Historial Aprobaciones ({instancesLength})</span>
+            </h2>
+          </div>
+          <div class="slds-no-flex">
+            <lightning-button label="Refrescar" onclick={refresh} disabled={isBusy}></lightning-button>
+          </div>
+        </header>
+      </div>
+
+      <!-- Spinner overlay -->
+      <template if:true={isBusy}>
+        <div class="slds-is-relative" style="min-height: 48px;">
+          <lightning-spinner alternative-text="Procesando..." size="small"></lightning-spinner>
+        </div>
+      </template>
+
+      <div class="slds-card__body slds-card__body_inner">
+        <!-- FEED estilo estándar -->
+        <ul class="slds-feed__list">
+          <template for:each={instances} for:item="pi">
+            <li key={pi.id} class="slds-feed__item">
+              <article class="slds-post">
+                <header class="slds-post__header slds-media slds-media_center slds-has-flexi-truncate">
+                  <div class="slds-media__figure">
+                    <span class="slds-avatar slds-avatar_circle slds-avatar_large">
+                      <span class="slds-assistive-text">actor</span>
+                    </span>
+                  </div>
+                  <div class="slds-media__body">
+                    <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                      <p class="slds-text-body_regular slds-truncate">
+                        <strong>Estado: </strong>{pi.status}
+                        <template if:true={pi.submittedByName}> • <strong>Enviado por:</strong> {pi.submittedByName}</template>
+                        <template if:true={pi.lastActorName}> • <strong>Último modificado:</strong> {pi.lastActorName}</template>
+                      </p>
+                      <p class="slds-text-title slds-m-left_small">
+                        <lightning-formatted-date-time value={pi.createdDate} year="numeric" month="2-digit" day="2-digit"></lightning-formatted-date-time>
+                      </p>
+                    </div>
+                  </div>
+                </header>
+                <div class="slds-post__content">
+                  <template for:each={pi.steps} for:item="st">
+                    <div key={st.id} class="slds-m-vertical_x-small">
+                      <p class="slds-text-title_bold">{st.stepStatus}</p>
+                      <p class="slds-text-body_small">
+                        <template if:true={st.actorName}><strong>Usuario:</strong> {st.actorName} • </template>
+                        <strong>Fecha:</strong>
+                        <lightning-formatted-date-time value={st.createdDate} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit"></lightning-formatted-date-time>
+                        <template if:true={st.comments}>
+                          <br/>
+                          <strong>Comentarios:</strong> {st.comments}
+                        </template>
+                        <!-- Mostrar "Comentarios Asesor" solo cuando la instancia está pendiente -->
+                       
+                      </p>
+                    </div>
+                  </template>
+                   <template if:true={pi.isPending}>
+                            <br/>
+                          <div class="slds-m-top_x-small slds-p-around_x-small slds-box slds-box_xx-small">
+                            <p class="slds-text-title_bold">Comentarios Asesor:</p>
+                            <p class="slds-text-body_small">{advisorComment}</p>
+                          </div>
+                  </template>
+                </div>
+              </article>
+            </li>
+          </template>
+        </ul>
+
+        <!-- PENDING APPROVALS con acciones -->
+        <template if:true={hasMyWorkitems}>
+          <div class="slds-m-top_large">
+            <h3 class="slds-text-title_caps slds-m-bottom_small">Aprobaciones Pendientes</h3>
+            <lightning-datatable
+              key-field="id"
+              data={myWorkitems}
+              columns={wiColumns}
+              onrowaction={handleRowAction}>
+            </lightning-datatable>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <!-- Modal comentarios -->
+    <template if:true={showDialog}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <h2 class="slds-modal__title">{dialogTitle}</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning-textarea label="Comentarios (opcional)" value={comments} onchange={onComments}></lightning-textarea>
+          </div>
+          <footer class="slds-modal__footer">
+            <lightning-button variant="neutral" label="Cancelar" onclick={closeDialog} disabled={isBusy}></lightning-button>
+            <lightning-button variant="brand" label={confirmLabel} onclick={confirmAction} disabled={isBusy}></lightning-button>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+  </template>
+</template>

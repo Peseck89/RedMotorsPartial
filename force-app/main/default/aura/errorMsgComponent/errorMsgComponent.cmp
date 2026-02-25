@@ -1,0 +1,11 @@
+<aura:component implements="lightning:actionOverride"  access="global" >
+        <!-- Show the message to ui -->
+        <div class="slds-notify slds-notify_toast slds-theme_error">
+            <span class="slds-assistive-text">error</span>
+            <div class="slds-notify__content">
+                <h5 class="slds-text-heading_small slds-align_absolute-center">Error Message </h5>
+                <br/>
+                <p class="slds-align_absolute-center">"error message"</p>                
+            </div>
+        </div>
+</aura:component>

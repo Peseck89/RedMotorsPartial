@@ -1,0 +1,13 @@
+<template>
+    <ul style="padding-left: 10px; padding-right: 10px;" data-stage={stageName} ondragover={handleDragOver}
+        ondrop={handleDrop}>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Procesando..." size="medium"></lightning-spinner>
+        </template>
+        <template for:each={workStepsUpdated} for:item="workStep">
+            <c-c-T_vista-kanban-card stage={stageName} strstatus={workStep.stageName} record={workStep}
+                key={workStep.Id}>
+            </c-c-T_vista-kanban-card>
+        </template>
+    </ul>
+</template>

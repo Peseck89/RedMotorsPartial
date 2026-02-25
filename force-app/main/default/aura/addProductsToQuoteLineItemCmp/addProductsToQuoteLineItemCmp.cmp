@@ -1,0 +1,14 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable,force:lightningQuickActionWithoutHeader"  access="global" >
+    
+    <aura:attribute name="recordId" type="String"/>
+    
+    <aura:html tag="style">
+    .slds-modal__container {
+        min-width: 90vw;
+    }
+	</aura:html>
+	
+    <c:addProductsToQuoteLineItem recId="{!v.recordId}"/>
+     
+
+</aura:component>

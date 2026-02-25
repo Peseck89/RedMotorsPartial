@@ -1,0 +1,19 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,lightning:isUrlAddressable,force:lightningQuickAction" access="global" controller="savePDFfile">
+    
+    <aura:attribute name="messagePDF" type="String"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <!--aura handler with waiting and donewaiting events-->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>    
+    
+    <!--loading spinner start-->
+    <div class="exampleHolder">
+        <lightning:spinner aura:id="mySpinner" class="slds-hide"/>
+    </div>
+    <!-- Loading spinner end-->  
+
+    <aura:renderIf isTrue="{! v.messagePDF == 'Success'}">
+        <iframe src="{! 'https://redmotors.lightning.force.com/apex/ChecklistMotosPDFBeta?Id=' + v.recordId }" width="100%" height="1000px;" frameBorder="0"/>
+    </aura:renderIf>
+</aura:component>

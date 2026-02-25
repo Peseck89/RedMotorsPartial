@@ -1,0 +1,71 @@
+<!-- sldsValidatorIgnore -->
+<template>
+  <lightning-card  variant="Narrow" >
+    <h1 if:true={softlandConfirmation} class="updated-order slds-align_absolute-center">¡Pedido Actualizado!</h1>
+    <h1 if:false={softlandConfirmation} class="no-updated-order slds-align_absolute-center">¡Atención: Pedido Desactualizado!</h1>
+    <div class="slds-clearfix msg-container">
+      <h1 slot="title" >
+        <lightning-button class="btn-sync slds-float_right" label="Sincronizar" variant="success" icon-name="utility:upload" onclick={handleSoftlandSync} disabled={hasSurvey}></lightning-button>
+        <lightning-button class="btn-sync slds-float_right" label="Consultar Softland" variant="brand" icon-name="utility:filter" onclick={handleGetLastResponses}></lightning-button>
+      </h1>
+      <h2><lightning-icon icon-name="standard:recent" size="small"></lightning-icon>Respuesta Softland:</h2>
+      <h2 class="date">{lastSyncDateValue}</h2>
+    </div>
+    <div if:false={errorValidacion1}>
+    <div class="lightningLWCdataTable">
+      <lightning-datatable 
+            data={data} 
+            columns={columns}
+            key-field="id" 
+            show-row-number-column
+            hide-checkbox-column
+            onclick={handleClickRow}
+            onrowselection={handleRowSelection}
+            wrap-text-max-lines="3"
+            max-row-selection="1">
+        </lightning-datatable>
+    </div>
+    </div>
+    <template if:true={isShowModal}>
+      Debe de agregar una Aseguradora cuando el tipo de gasto es Aseguradora
+      <lightning-record-edit-form
+      object-api-name="WorkOrder"
+      record-id={recordId}
+      >
+    <lightning-input-field id="aseguradoraNueva" field-name="BMW_Aseguradora__c"> </lightning-input-field>
+    <div class="slds-var-m-top_medium">
+        <lightning-button variant="brand" type="submit" label="Guardar" onclick={handleSaveAse}>
+        </lightning-button>
+    </div>
+</lightning-record-edit-form>
+    </template>
+    <template if:true={CostosModal}>
+      Debe de agregar Centro de Costos cuando el tipo de gasto es Interno
+      <lightning-record-edit-form
+      object-api-name="WorkOrder"
+      record-id={recordId}
+      >
+    <lightning-input-field field-name="BMW_CentroDeCosto__c"> </lightning-input-field>
+    <div class="slds-var-m-top_medium">
+        <lightning-button variant="brand" type="submit" label="Guardar" onclick={handleSaveCos}>
+        </lightning-button>
+    </div>
+</lightning-record-edit-form>
+    </template>
+  </lightning-card>
+   <!-- Modal/Popup Box LWC starts here -->
+   <div if:true={waitingSoftlandResponse}>
+    <section role="dialog" tabindex="-1" style="background-color: #f0ffff00;" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+            <!-- Modal/Popup Box LWC header here -->
+            <!-- Modal/Popup Box LWC body starts here -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="background-color: #f0ffff00;box-shadow: 0 2px 3px 0 rgb(0 0 0 / 0%);">
+                <lightning-spinner style="background-color: #f0ffff00;"   size="large"  alternative-text="Loading...">
+                </lightning-spinner>
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+        </div>
+        <div class="slds-backdrop slds-backdrop_open" style="opacity: 0.8;"></div>
+        </section>
+    </div>
+</template>

@@ -1,0 +1,314 @@
+<!--
+  @description       : Componente consola de taller vista tradicional
+  @author            : Marco Hernandez
+  @group             : Redmotors
+  @last modified on  : 07-24-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <div class="slds-box container-gray">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <div class="c-container container-gray">
+            <div class="slds-p-around_medium lgc-bg" style="float: left;">
+                <lightning-button-icon icon-name={iconShowFilter} onclick={handleShowFilterClick}
+                    alternative-text="Filtros" class="slds-m-left_xx-small" size="small">
+                </lightning-button-icon>                
+            </div>
+            <template if:true={showFilters}>
+                <lightning-layout class="slds-grid_align-center ">
+                    <lightning-layout-item padding="around-small">
+                        <lightning-combobox name="taller" label="Taller" value={inputStore} options={talleres.data} onchange={handleTallerChange}></lightning-combobox>
+                    </lightning-layout-item>
+                    <!-- <lightning-layout-item padding="around-small">
+                        <lightning-combobox name="serviceType" label="Tipo de servicio" value={inputServiceType} options={serviceTypeOptions} onchange={handleServiceTypeChange}></lightning-combobox>
+                    </lightning-layout-item> -->
+                    <lightning-layout-item padding="around-small">
+                        <lightning-combobox name="status" label="Estado" value={inputStatus} options={workStepStatusOptions} onchange={handleStatusChange}></lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-input type="search"  placeholder="Escriba aqui el número de orden" label="Orden de trabajo" minlength="8" onchange={handleWorkOrderNumberChange} value={inputWorkOrderNumber}> </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-input type="search"  placeholder="Escriba aqui el número de caso" label="Número de caso" minlength="8" onchange={handleCaseNumberChange} value={inputCaseNumber}> </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-input type="search"  placeholder="Escriba aqui el número de placa" label="Placa" onchange={handlePlateChange} value={inputPlate}> </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-input type="search"  placeholder="Escriba aqui el número de VIN" label="VIN" onchange={handleVINChange} value={inputVIN}> </lightning-input>
+                    </lightning-layout-item>                    
+                </lightning-layout>
+                <lightning-layout class="slds-grid_align-center " style="text-align: center;">
+                    <lightning-layout-item flexibility="auto" padding="around-small">
+                        <lightning-input type="date" label="Desde" value={inputCreationDateFrom}  onchange={handleCreationDateFromChange}></lightning-input>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="around-small">
+                        <lightning-input class="inpHoy" type="date" label="Hasta" value={inputCreationDateTo} onchange={handleCreationDateToChange}></lightning-input>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item padding="around-small" style="display: flex;align-items: end;">                        
+                            <lightning-button-icon icon-name="utility:refresh" onclick={handleRefreshClick} alternative-text="Actualizar" class="slds-m-around_xxx-small" >
+                            </lightning-button-icon>                        
+                    </lightning-layout-item>
+
+                </lightning-layout>
+            </template>
+        </div>
+
+        <div style="margin-left:10px;margin-right:10px;margin-bottom:10px;" class="tscroll ">
+            <table style="margin-bottom:15px;margin-top:10px;border-top:0px;" class="slds-table slds-table_cell-buffer "
+                aria-labelledby="element-with-table-label other-element-with-table-label">
+                <thead>
+                    <tr style="height:60px">
+                        <th scope="col" class="container-gray">
+                            Estado
+                        </th>
+                        <th scope="col" class="container-gray">
+                            Mecánico
+                        </th>
+                        <th scope="col" class="container-gray" style="max-width: 250px;">
+                            Acción
+                        </th>
+                        <th scope="col" class="container-gray">
+                            #OT
+                        </th>
+                        <th scope="col" class="container-gray">
+                            #Caso
+                        </th>
+                        <th scope="col" class="container-gray">
+                            Matrícula
+                        </th>
+                        <template if:true={showCurrentTimeColumn}>
+                            <th scope="col" class="container-gray">
+                                Tiempo en curso
+                            </th>
+                        </template>
+                        <th style="width: 110px;" scope="col" class="container-gray">
+                            Minutos trabajados
+                        </th>
+                        <th style="width: 110px;" scope="col" class="container-gray">
+                            Minutos iniciales
+                        </th>
+                        <th style="width: 110px;" scope="col" class="container-gray">
+                            Fecha de inicio
+                        </th>
+                        <th style="width: 110px;" scope="col" class="container-gray">
+                            Fecha de OT
+                        </th>
+                        <th scope="col" class="container-gray">
+                            Trabajo a realizar
+                        </th>
+                        <th scope="col" class="container-gray">
+                            Cliente
+                        </th>
+                        <th scope="col" class="container-gray">
+                            Propietario
+                        </th>
+                        <th scope="col" class="container-gray">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={workSteps} for:item="record">
+                        <tr style="height: 50px;padding: 20px" key={record.id} class="alternateRow">
+                            <td style="word-wrap:break-word;">
+                                <span class="slds-badge" style={record.statusBackground} >{record.statusName}</span>
+                            </td>
+                            <td style="word-wrap:break-word;">
+                                <div class="slds-media slds-media_center; align-items: center;">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-avatar slds-avatar_circle">
+                                            <abbr class="slds-avatar__initials slds-icon-standard-user"
+                                                title="person name">{record.mechanicAlias}</abbr>
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <strong>{record.mechanicName} </strong>
+                                        <div class="slds-text-title">Mecánico</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="white-space: pre-wrap;">
+                                <div style="max-width: 250px;">
+                                    <a href={record.workStepURL} target="_blank">{record.Name}</a>
+                                </div>
+                            </td>
+                            <td>
+                                <a target="_blank" href={record.workOrderURL}>{record.workOrderNumber}</a>
+                            </td>
+                            <td>
+                                <a target="_blank" href={record.caseURL}>{record.caseNumber}</a>
+                            </td>
+                            <td>
+                                <a target="_blank" href={record.vehicleURL}>{record.vehiclePlaca}</a>
+                            </td>
+                            <template if:true={showCurrentTimeColumn}>
+                                <td style="text-align: right;">
+                                    <span class="slds-m-right_xxx-small">{record.hoursWorked} hrs.</span>
+                                    <span class="slds-m-right_xxx-small">{record.totalMinutesWorked} mins.</span>
+                                    {record.secondsWorked} secs.
+                                </td>
+                            </template>
+                            <td style="word-wrap:break-word;text-align: right;">
+                                <template if:true={record.isRunning}>
+                                    <lightning-formatted-number value={record.totalMinutesWorked} maximum-fraction-digits="0"></lightning-formatted-number>.{record.secondsWorked} mins.
+                                </template>
+                                <template if:true={record.isPaused}>
+                                    <lightning-formatted-number value={record.totalMinutesPaused} maximum-fraction-digits="0"></lightning-formatted-number>.{record.secondsPaused} mins.
+                                </template>
+                                <template if:true={record.isCompleted}>
+                                    <lightning-formatted-number value={record.totalMinutesWorkedWithoutPause} maximum-fraction-digits="0"></lightning-formatted-number> mins.
+                                </template>
+                                <template if:true={record.isDefault}>
+                                    <lightning-formatted-number value={record.totalMinutesWorkedWithoutPause} maximum-fraction-digits="0"></lightning-formatted-number> mins.
+                                </template>                                                                                               
+                            </td>
+                            <td style="word-wrap:break-word;text-align: right;">
+                                {record.startingMinutes} mins.
+                            </td>
+                            <td style="word-wrap: break-word;">
+                                <lightning-formatted-date-time value={record.StartTime} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" hour12={ampm} time-zone="America/Costa_Rica">
+                                </lightning-formatted-date-time>
+                            </td>
+                            <td style="word-break:break-all">
+                                <lightning-formatted-date-time value={record.workOrderCreatedDate} year="numeric" month="2-digit" day="2-digit" time-zone="America/Costa_Rica"></lightning-formatted-date-time>
+                            </td>
+                            <td  style="white-space: pre-wrap;">
+                                <div style="max-width: 300px;">
+                                    {record.workTypeName}
+                                </div>
+                            </td>
+                            <td style="white-space: pre-wrap;">
+                                <div style="max-width: 250px;">
+                                    {record.accountName}
+                                </div>                          
+                            </td>
+                            <td style="white-space: pre-wrap;">
+                                <div style="max-width: 250px;">
+                                    {record.workOrderOwnerName}
+                                </div>
+                            </td>
+                            <td>
+                                <template if:true={record.showMenu}>
+                                    <lightning-button-menu menu-alignment="bottom-right" alternative-text="Show menu"
+                                        style="position: relative;z-index:9;" icon-size="x-small">
+
+                                        <template if:true={record.showStartButton}>
+                                            <lightning-menu-item name={record.Id} value={record.Id}
+                                                label="Iniciar" onclick={handleClickIniciar} class="btnIniciar">
+                                            </lightning-menu-item>
+                                        </template>
+
+                                        <template if:true={record.showPauseButton}>
+                                            <lightning-menu-item name={record.Id} value={record.Id}
+                                                label="Pausar" onclick={handleClickPausa} class="btnPausa">
+                                            </lightning-menu-item>
+                                        </template>
+
+                                        <template if:true={record.showContinueButton}>
+                                            <lightning-menu-item name={record.Id} value={record.Id}
+                                                label="Reanudar" onclick={handleClickReanudar} class="btnReanudar">
+                                            </lightning-menu-item>
+                                        </template>
+
+                                        <template if:true={record.showAssignButton}>
+                                            <lightning-menu-item name={record.mechanicName} value={record.Id} label={record.assignmentLabel} onclick={handleOpenMondalWindow}></lightning-menu-item>
+                                        </template>
+
+                                        <template if:true={record.showCompleteButton}>
+                                            <lightning-menu-item name={record.Id} value={record.Id} label="Completar" onclick={handleClickCompletar}></lightning-menu-item>
+                                        </template>
+                                    </lightning-button-menu>
+                                </template>
+                            </td>
+                        </tr>
+                        <tr key={record.id} class="alternateRow" style="height: 15px;">
+                            <td class="container-gray" style="height: 15px;" colspan="14"></td>                           
+                            <template if:true={showCurrentTimeColumn}>
+                                <td class="container-gray"></td>
+                            </template>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+
+            <div class="slds-card__footer" style="display: flex;justify-content: space-between;">
+                <div>
+                    <div class="slds-button-group" role="group">
+                        <button class="slds-button slds-button_neutral" disabled={isEnablePrevButton} onclick={handleBackClick}>Atras</button>                
+                        <button class="slds-button slds-button_neutral" disabled={isEnableNextButton} onclick={handleNextClick}>Siguiente</button>
+                    </div> 
+                    <span class="slds-m-left_medium">{totalRecords} tareas encontradas, Pagina {pageNumber} de {totalPages}</span>
+                </div>           
+                <div class="slds-button-group" role="group">
+                </div>        
+            </div>            
+        </div>
+
+
+        <template if:true={isModalOpen}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                    </template>
+
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                                size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{assignmentTitle}</h2>
+                    </header>
+
+
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <template if:true={hasMechanicAssigned}>
+                            <lightning-input type="text" value={currentMechanicName} label="Mecánico asignado." readonly></lightning-input>
+                            <br>
+                        </template>
+                        <template if:true={hasMechanicAssigned}>
+                            <p><b>Seleccione el nuevo mecánico.</b></p>
+                        </template>
+                        <template if:false={hasMechanicAssigned}>
+                            <p><b>Seleccione el mecánico.</b></p>
+                        </template>                        
+                        <c-lookup selection={initialSelection} errors={errors} onsearch={handleLookupSearch}  required="true" onselectionchange={handleLookupSelectionChange} placeholder="Buscar">
+                        </c-lookup>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeModal}
+                            title="Cancel">Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,9 @@
+<!-- DisplayRecordFields.cmp -->
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="fields" type="String[]" default="['Id','Activo__c']" />
+    <lightning:recordForm recordId="{!v.recordId}" 
+                          objectApiName="Event"
+                          mode="readonly"
+                          fields="{!v.fields}" />
+</aura:component>

@@ -1,0 +1,83 @@
+<template>
+    <lightning-card title="Configuración de Opciones en Producto" icon-name="custom:custom63">
+        <template lwc:if={showStep1}>
+            <c-create-brand-family-category-values
+            type-form= 'Marca'
+            curret-step=1
+            record-type-id={recordTypeId}
+            record-type-descripton={recordTypeDescripton}
+            label={label}
+            record-type-api-name={recordTypeApiName}
+            step1={showStep1}
+            is-wizard={showStep1}
+            onnext={handleNext}
+            onfinish={handleFinish}>
+            </c-create-brand-family-category-values>
+        </template>
+
+        <template lwc:if={showStep2}>
+            <c-create-brand-family-category-values
+            type-form= 'Categoria'
+            curret-step=2
+            record-type-id={recordTypeId}
+            record-type-descripton={recordTypeDescripton}
+            label={label}
+            record-type-api-name={recordTypeApiName}
+            step2={showStep2}
+            w-brand={brand}
+            is-wizard={showStep2}
+            onnext={handleNext}
+            onprevious={handlePrevious}
+            onfinish={handleFinish}>
+            </c-create-brand-family-category-values>
+        </template>
+        <template if:true={showStep3}>
+            <c-create-brand-family-category-values
+            type-form='Grupo'
+            curret-step=3
+            record-type-id={recordTypeId}
+            record-type-descripton={recordTypeDescripton}
+            label={label}
+            record-type-api-name={recordTypeApiName}
+            step3={showStep3}
+            w-brand={brand}
+            w-category={category}
+            is-wizard={showStep3}
+            onprevious={handlePrevious}
+            onnext={handleNext}>
+            </c-create-brand-family-category-values>
+        </template>
+        <template if:true={showStep4}>
+            <c-create-brand-family-category-values
+            type-form='Familia'
+            curret-step=4
+            record-type-id={recordTypeId}
+            record-type-descripton={recordTypeDescripton}
+            label={label}
+            record-type-api-name={recordTypeApiName}
+            step4={showStep4}
+            w-brand={brand}
+            w-category={category}
+            w-group={group}
+            is-wizard={showStep4}
+            onnext={handleNext}>
+            </c-create-brand-family-category-values>
+        </template>
+        <template if:true={showStep5}>
+            <c-create-brand-family-category-values
+            type-form='Producto'
+            curret-step=5
+            record-type-id={recordTypeId}
+            record-type-descripton={recordTypeDescripton}
+            label={label}
+            record-type-api-name={recordTypeApiName}
+            step5={showStep5}
+            w-brand={brand}
+            w-category={category}
+            w-group={group}
+            w-family={family}
+            is-wizard={showStep5}>
+            </c-create-brand-family-category-values>
+        </template>
+    </lightning-card>
+</template>

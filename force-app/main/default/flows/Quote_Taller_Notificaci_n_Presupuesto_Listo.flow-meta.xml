@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Email</name>
+        <label>Send Email</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>recipientAddresses</name>
+            <value/>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>CurrentUser</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>composeEmailContent</name>
+            <value>
+                <stringValue>True</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>asunto</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>&lt;p&gt;{!NotificacionQuoteListo}&lt;/p&gt;</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <stringValue></stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>logEmailOnSend</name>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>65.0</apiVersion>
+    <formulas>
+        <name>asunto</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.QuoteNumber} &amp;  &apos; - Presupuesto listo para su gestión&apos;</expression>
+    </formulas>
+    <interviewLabel>Quote - Taller Notificación Presupuesto Listo {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Quote - Taller Notificación Presupuesto Listo</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Send_Email</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Presupuesto listo</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>Quote</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>NotificacionQuoteListo</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;!-- CONTENEDOR 600px CENTRADO --&gt;
+
+&lt;table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; align=&quot;center&quot; width=&quot;600&quot; style=&quot;width:600px;max-width:100%;background-color:#f1f1f1;&quot;&gt;
+
+ &lt;tr&gt;
+
+  &lt;td align=&quot;center&quot; style=&quot;padding:5px;&quot;&gt;
+
+   &lt;!-- HEADER CON LOGO --&gt;
+
+   &lt;table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background-color:#f1f1f1;&quot;&gt;
+
+    &lt;tr&gt;
+
+     &lt;td align=&quot;center&quot; style=&quot;padding:0;&quot;&gt;
+
+      &lt;img src=&quot;https://ehxeqpz.stripocdn.email/content/guids/CABINET_acb286200a147884b697334b6b8ba60e6526faf6b747b3e2060647d7f175b4c5/images/redmlogocolor_uPR.png&quot; 
+
+         
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+   &lt;/table&gt;
+
+
+
+   &lt;!-- CUERPO BLANCO --&gt;
+
+   &lt;table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background-color:#ffffff;&quot;&gt;
+
+    &lt;!-- TÍTULO --&gt;
+
+    &lt;tr&gt;
+
+     &lt;td align=&quot;center&quot; style=&quot;padding:10px 20px 5px 20px;&quot;&gt;
+
+      &lt;p style=&quot;margin:0;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:24px;color:#333333;&quot;&gt;&lt;b&gt;Solicitud de aprobación&lt;/b&gt;&lt;/p&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+
+
+    &lt;!-- TEXTO --&gt;
+
+    &lt;tr&gt;
+
+     &lt;td align=&quot;left&quot; style=&quot;padding:10px 30px;&quot;&gt;
+
+      &lt;p style=&quot;margin:0 0 12px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#333333;&quot;&gt;
+
+
+
+
+
+
+
+       Estimado {!$Record.Owner:User.FirstName},&lt;br&gt;
+
+
+
+Por este medio le informo que el proceso correspondiente al número {!$Record.QuoteNumber} se ha completado exitosamente y ya se encuentra listo para su gestión.&lt;br&gt;
+
+
+
+Saludos cordiales,&lt;br&gt;
+
+
+
+      &lt;/p&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+
+
+    &lt;!-- BOTÓN --&gt;
+
+    &lt;tr&gt;
+
+     &lt;td align=&quot;center&quot; style=&quot;padding:10px;&quot;&gt;
+
+      &lt;table role=&quot;presentation&quot; border=&quot;0&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;
+
+       &lt;tr&gt;
+
+        &lt;td bgcolor=&quot;#ee272c&quot; align=&quot;center&quot; style=&quot;padding:10px 20px;border-radius:24px;&quot;&gt;
+
+         &lt;a href=&quot;https://redmotors--partial.sandbox.lightning.force.com/lightning/r/Quote/{!$Record.Id}/view&quot;&gt;
+
+          &lt;font face=&quot;Arial, Helvetica, sans-serif&quot; size=&quot;3&quot; color=&quot;white&quot;&gt;Abrir Orden de Trabajo&lt;/font&gt;
+
+         &lt;/a&gt;
+
+        &lt;/td&gt;
+
+       &lt;/tr&gt;
+
+      &lt;/table&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+
+
+    &lt;!-- LINK DE RESPALDO --&gt;
+
+    &lt;tr&gt;
+
+     &lt;td align=&quot;center&quot; style=&quot;padding:0 30px 15px 30px;&quot;&gt;
+
+      &lt;p style=&quot;margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#7a7a7a;&quot;&gt;
+
+       Si el botón no funciona, copie y pegue este enlace en su navegador:&lt;br&gt;
+
+       &lt;a href=&quot;https://redmotors--partial.sandbox.lightning.force.com/lightning/r/Quote/{!$Record.Id}/view&quot;&gt;
+
+        https://redmotors--partial.sandbox.lightning.force.com/lightning/r/Quote/{!$Record.Id}/view
+
+       &lt;/a&gt;
+
+      &lt;/p&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+
+
+    &lt;!-- IMAGEN INFERIOR --&gt;
+
+    &lt;tr&gt;
+
+     &lt;td align=&quot;center&quot; style=&quot;padding:0;&quot;&gt;
+
+      &lt;img src=&quot;https://ehxeqpz.stripocdn.email/content/guids/CABINET_acb286200a147884b697334b6b8ba60e6526faf6b747b3e2060647d7f175b4c5/images/p90343281crophighres.jpg&quot; width=&quot;560&quot;&gt;
+
+     &lt;/td&gt;
+
+    &lt;/tr&gt;
+
+   &lt;/table&gt;
+
+  &lt;/td&gt;
+
+ &lt;/tr&gt;
+
+&lt;/table&gt;</text>
+    </textTemplates>
+</Flow>

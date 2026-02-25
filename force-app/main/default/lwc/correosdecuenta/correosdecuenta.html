@@ -1,0 +1,135 @@
+<template>
+    <lightning-card>
+        <div class="head-container">
+            <template if:false={isJuridico}>
+                <h1 style="padding-left: 12px;">Correos</h1>
+            </template>
+            <template if:true={isJuridico}>
+                <h1 style="padding-left: 12px;">Correos Empresariales</h1>
+            </template>
+            <div class="slds-p-horizontal_small slds-p-bottom_small">
+                <lightning-button label="Agregar" variant="brand" onclick={handleAgregar}></lightning-button>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-text-title"><div class="slds-truncate">Correo</div></th>
+                        <th class="slds-text-title"><div class="slds-truncate">Tipo de Comunicación</div></th>
+                        <th class="slds-text-title"><div class="slds-truncate">Correo Principal</div></th>
+                        <th class="slds-text-title"><div class="slds-truncate">Activo</div></th>
+                        <th class="slds-text-title"><div class="slds-truncate">Acciones</div></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template if:true={primerCorreo}>
+                        <tr class="slds-hint-parent">
+                            <td>{primerCorreo.Name}</td>
+                            <td>{primerCorreo.Tipo_de_datos_de_comunicaci_n__rName}</td>
+                            <td>
+                                <lightning-input type="checkbox" checked={primerCorreo.Principal__c} disabled></lightning-input>
+                            </td>
+                            <td>
+                                <lightning-input type="checkbox" checked={primerCorreo.Activo__c} disabled></lightning-input>
+                            </td>
+                            <td>
+                                <button class="slds-button" onclick={handleEditar} data-id={primerCorreo.Id}>
+                                    <lightning-icon icon-name="utility:edit" size="small"></lightning-icon>
+                                </button>
+                                <!-- <button class="slds-button" onclick={handleEliminar} data-id={primerCorreo.Id}>
+                                    <lightning-icon icon-name="utility:delete" size="small"></lightning-icon>
+                                </button> -->
+                            </td>
+                        </tr>
+                    </template>
+
+                    <template if:true={otrosCorreos}>
+                        <tr>
+                            <td colspan="5">
+                                <div class="slds-text-align_center">
+                                    <lightning-button if:true={mostrarDropdown}
+                                        label="Ocultar" 
+                                        icon-name="utility:close" 
+                                        onclick={toggleDropdown}></lightning-button>
+                                    <lightning-button if:false={mostrarDropdown}
+                                        label="Mostrar más" 
+                                        icon-name="utility:add" 
+                                        onclick={toggleDropdown}></lightning-button>                        
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+
+                    <template if:true={mostrarDropdown}>
+                        <template for:each={otrosCorreos} for:item="correo">
+                            <tr key={correo.Id} class="slds-hint-parent">
+                                <td>{correo.Name}</td>
+                                <td>{correo.Tipo_de_datos_de_comunicaci_n__rName}</td>
+                                <td>
+                                    <lightning-input type="checkbox" checked={correo.Principal__c} disabled></lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input type="checkbox" checked={correo.Activo__c} disabled></lightning-input>
+                                </td>
+                                <td>
+                                    <button class="slds-button" onclick={handleEditar} data-id={correo.Id}>
+                                        <lightning-icon icon-name="utility:edit" size="small"></lightning-icon>
+                                    </button>
+                                    <button class="slds-button" onclick={handleEliminar} data-id={correo.Id}>
+                                        <lightning-icon icon-name="utility:delete" size="small"></lightning-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">{modalTitle}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input
+                        label="Correo"
+                        type="email"
+                        value={correoActual.Name}
+                        onchange={handleCorreoChange}>
+                    </lightning-input>
+
+                    <lightning-combobox
+                        label="Tipo de Comunicación"
+                        value={correoActual.Tipo_de_datos_de_comunicaci_n__c}
+                        options={tiposDatosComunicacion}
+                        onchange={handleTipoDatoChange}>
+                    </lightning-combobox>
+
+                    <lightning-input
+                        type="checkbox"
+                        label="Correo Principal"
+                        checked={correoActual.Principal__c}
+                        onchange={handlePrincipalChange}>
+                    </lightning-input>
+
+                    <lightning-input
+                        type="checkbox"
+                        label="Activo"
+                        checked={correoActual.Activo__c}
+                        onchange={handleActivoChange}>
+                    </lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancelar" onclick={cerrarModal}></lightning-button>
+                    <lightning-button label="Guardar" variant="brand" onclick={guardarCorreo}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

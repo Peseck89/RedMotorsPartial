@@ -1,0 +1,69 @@
+<template>
+    <div class="grid-container">
+        <div style="margin-bottom:20px" class="info-data-container">
+            <div class="top-container">
+                <lightning-icon class="icon-ctct" icon-name="standard:account" alternative-text="Cuenta" title="Cuenta"></lightning-icon>
+                <p class="primary-text">Creación de cuenta jurídica</p>
+            </div>
+            <div class="bottom-container client-data">
+                <div class="create-account-body">
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Cargando..." size="large"></lightning-spinner>
+                    </template>
+
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <div class="slds-col slds-size_1-of-2">
+                            <label class="slds-form-element__label">*Cédula</label>
+                            <lightning-input name="cedula" value={cedula} disabled></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <label class="slds-form-element__label">*Razón Social</label>
+                            <lightning-input name="nombre" value={nombre} onchange={handleInputChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <label class="slds-form-element__label">*País de Origen</label>
+                            <lightning-input name="pais" value={pais} disabled></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <!-- <label class="slds-form-element__label">*Giro del Negocio</label>
+                            <lightning-input name="giro" value={giro} onchange={handleInputChange}></lightning-input> -->
+                            <lightning-combobox name="giro" label="*Giro del Negocio" value={giro}
+                            options={giroNegocioOptions}
+                                onchange={handleInputChange}></lightning-combobox>
+                        </div>
+                    </div>
+
+                    <template if:true={mostrarError}>
+                        <div class="slds-text-color_error slds-m-top_small">
+                            <lightning-icon icon-name="utility:error" size="x-small"></lightning-icon>
+                            <span> Completa todos los campos obligatorios </span>
+                        </div>
+                    </template>
+
+                    <div if:false={recordId} class="slds-m-top_medium slds-grid slds-grid_align-spread buttons-container">
+                        <lightning-button label="Cancelar" variant="neutral" onclick={handleCancelar}></lightning-button>
+                        <lightning-button label="Siguiente" variant="brand" onclick={handleSiguiente}></lightning-button>
+                    </div>
+
+                    <template if:true={recordId}>
+                        <br/>
+                        <c-identificacionesdecuenta account-id={recordId} onactualizar={handleActualizacion} tipocliente={tipocliente} cedula={cedula}></c-identificacionesdecuenta>
+                        <br/>
+                        <c-direccionesdecuenta account-id={recordId} onactualizar={handleActualizacion} tipocliente={tipocliente}></c-direccionesdecuenta>
+                        <br/>
+                        <c-correosdecuenta account-id={recordId} onactualizar={handleActualizacion} tipocliente={tipocliente}></c-correosdecuenta>
+                        <br/>
+                        <c-contactosrelacionadoscuenta account-id={recordId} onactualizar={handleActualizacion} tipocliente={tipocliente}></c-contactosrelacionadoscuenta>
+                        <br/>
+                        <c-telefonoscuenta account-id={recordId} tipocliente={tipocliente} onactualizar={handleActualizacion}></c-telefonoscuenta>
+                    
+                        <div class="slds-m-top_medium slds-grid slds-grid_align-end">
+                            <lightning-button label="Finalizar" variant="success" onclick={handleFinalizar}></lightning-button>
+                        </div>
+                    </template>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

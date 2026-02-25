@@ -1,0 +1,52 @@
+<template>
+    <div class="grid-container">
+        <div class="info-data-container">
+            <div class="top-container">
+                <lightning-icon class="icon-ctct" icon-name="standard:list_fee" alternative-text="Email" title="Email"></lightning-icon>
+                <p class="primary-text">Presupuestos</p>
+            </div>
+            <div class="one-grid-container">
+                <br />
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Presupuesto</th>
+                            <th>Propietario</th>
+                            <!-- <th>Tipo de Cargo</th> -->
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template if:true={workOrders}>
+                            <template for:each={workOrders} for:item="wo">
+                                <tr key={wo.Id}>
+                                    <!-- Caso -->
+                                    <td>
+                                        <!-- <a href="#" data-record-id={wo.Id} onclick={openWorkOrderRecord}>
+                                            {wo.Opportunity.WorkOrder__r.Case.CaseNumber}
+                                        </a> -->
+                                        <a href="#" data-record-id={wo.Id} onclick={openWorkOrderRecord}>
+                                            {wo.Name}
+                                        </a>
+                                    </td>
+                
+                                    <td>{wo.Account.Name}</td>
+  
+                                    <!-- <td>{wo.CurrencyIsoCode} {wo.GrandTotal}</td> -->
+                                    <td>{wo.CurrencyIsoCode} {wo.formattedGrandTotal}</td>
+
+                                </tr>
+                            </template>
+                        </template>
+                        <template if:false={workOrders}>
+                            <tr>
+                                <td colspan="4">No se encontraron presupuestos relacionados.</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+                <br />
+            </div>
+        </div>
+    </div>
+</template>

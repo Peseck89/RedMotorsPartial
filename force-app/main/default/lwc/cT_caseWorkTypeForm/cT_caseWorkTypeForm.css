@@ -1,0 +1,12 @@
+[data-status='true'] {
+    visibility: hidden;
+}
+
+[data-status='false'] {
+    visibility: visible;
+}
+
+.custom-error-header{
+    background: #b71616;
+    color: white;
+}

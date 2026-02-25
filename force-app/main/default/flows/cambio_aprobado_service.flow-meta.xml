@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <decisions>
+        <name>a_cerrado</name>
+        <label>a cerrado</label>
+        <locationX>336</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>es_cerrado</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Estado_aprobaci_n_service__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Aprobado</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Ya_estaba_cerrado</targetReference>
+            </connector>
+            <label>es cerrado</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Ya_estaba_cerrado</name>
+        <label>Ya estaba cerrado</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>actualizar_el_wo</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>el_WO_ya_estaba_cerrado</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RM_WorkOrder__r.Cliente_aprueba_presupuesto_en_service__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_2_of_actualizar_el_wo</targetReference>
+            </connector>
+            <label>el WO ya estaba cerrado</label>
+        </rules>
+    </decisions>
+    <description>is locked + reinciio de cliente aprueba</description>
+    <interviewLabel>cambio aprobado service {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>cambio aprobado service</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>actualizar_el_wo</name>
+        <label>actualizar el wo</label>
+        <locationX>182</locationX>
+        <locationY>731</locationY>
+        <inputAssignments>
+            <field>Cliente_aprueba_presupuesto_en_service__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>isLocked__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record.RM_WorkOrder__r</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Copy_2_of_actualizar_el_wo</name>
+        <label>Copy 2 of actualizar el wo</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <connector>
+            <targetReference>actualizar_el_wo</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Cliente_aprueba_presupuesto_en_service__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>isLocked__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record.RM_WorkOrder__r</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>210</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>a_cerrado</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Estado_aprobaci_n_service__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>tiposDeTrabajoCaso__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

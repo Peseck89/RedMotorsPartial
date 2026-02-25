@@ -1,0 +1,55 @@
+<template>
+    <lightning-card title="">
+        <div class="pdf-container">
+            <iframe src={pdfUrl} class="pdf-frame"></iframe>
+        </div>
+        <div>
+            <lightning-input 
+                type="text" 
+                label="Nombre" 
+                onchange={handleNombreChange}  
+                value={nombreFirma} 
+                required>
+            </lightning-input>
+        </div>
+        <div class="signature-container">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+            <div class="canvas-wrapper">
+                    <canvas class="signature-pad" lwc:dom="manual"></canvas>
+                    <div class="canvas-line"></div>
+                </div>            <div class="button-group">
+                <lightning-button 
+                    label="Borrar Firma" 
+                    onclick={handleClearSignature} 
+                    disabled={isClearButtonDisabled}>
+                </lightning-button>
+                <lightning-button 
+                    label="Guardar Firma" 
+                    variant="brand" 
+                    onclick={handleSaveSignature} 
+                    disabled={isSaveButtonDisabled}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+    <template if:true={showModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">¿Enviar orden de trabajo firmada?</h2>
+                </header>
+                <div class="slds-modal__content">
+                    ¿Desea enviar la orden de trabajo firmada al correo de {contactName} ({contactEmail})?
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="No Enviar" onclick={handlecloseModal}></lightning-button>
+                    <lightning-button variant="brand" label="Enviar" onclick={handleConfirmEmailSend}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+</template>

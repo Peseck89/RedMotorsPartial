@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <decisions>
+        <description>si la lista anterior trae resultados</description>
+        <name>hay_registros_0</name>
+        <label>hay registros</label>
+        <locationX>182</locationX>
+        <locationY>695</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>si_tiene_producto_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>encontrar_relacionado_0.Product2.Id</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Product2.Id</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>marca_checkbox_0</targetReference>
+            </connector>
+            <label>si tiene producto</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>IfWorkOrder</name>
+        <label>IfWorkOrder</label>
+        <locationX>336</locationX>
+        <locationY>455</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>WorkOrderNotNull</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetWorkOrder</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>encontrar_relacionado_0</targetReference>
+            </connector>
+            <label>WorkOrderNotNull</label>
+        </rules>
+    </decisions>
+    <description>Version 55</description>
+    <interviewLabel>Enviar Prod a Order {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Enviar Prod a Order</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>este paso buscara los productos con mismo codigo que pertenezcan a la orden</description>
+        <name>encontrar_relacionado_0</name>
+        <label>encontrar relacionado</label>
+        <locationX>182</locationX>
+        <locationY>575</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>hay_registros_0</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>WorkOrderId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Quote.Opportunity.WorkOrder__r.RootWorkOrder.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Product2Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Product2.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>WorkOrderLineItem</object>
+        <sortField>Id</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>GetWorkOrder</name>
+        <label>GetWorkOrder</label>
+        <locationX>336</locationX>
+        <locationY>335</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IfWorkOrder</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Quote.Opportunity.WorkOrder__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>WorkOrder</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <description>al encontrar el producto entonces lo marca como ya enviado</description>
+        <name>marca_checkbox_0</name>
+        <label>marca checkbox</label>
+        <locationX>50</locationX>
+        <locationY>815</locationY>
+        <inputAssignments>
+            <field>Enviado_a_la_orden__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>210</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>GetWorkOrder</targetReference>
+        </connector>
+        <object>QuoteLineItem</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

@@ -1,0 +1,1073 @@
+<template>
+  <template if:false={infoData}>
+    <!-- <template if:true={infoData}> -->
+    <div class="title-container">
+      <div class="slds-p-around_medium lgc-bg">
+        <h2 class="second-title">
+          Nueva Cita:
+        </h2>
+      </div>
+    </div>
+    <div class="slds-p-around_medium lgc-bg main-container">
+      <div class="inputs-container">
+
+        <div class="data-container">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:service_appointment" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Fecha Seleccionada: <lightning-formatted-date-time value={fechaSeleccionada} year="numeric"
+                month="numeric" day="numeric" hour="2-digit" minute="2-digit" time-zone={timeZoneOffset}
+                hour12={ampm}></lightning-formatted-date-time>
+            </p>
+          </div>
+        </div>
+
+        <div class="data-container">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:visits" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Origen
+            </p>
+          </div>
+          <template if:true={esContact}>
+            <div class="bottom-container">
+              <lightning-select class="select-a" name="origen" label="Origen" value={value} options={optionsContact}
+                onchange={handleChange} required></lightning-select>
+            </div>
+          </template>
+          <template if:false={esContact}>
+            <div class="bottom-container">
+              <lightning-select class="select-a" name="origen" label="Origen" value={value} options={options}
+                onchange={handleChange} required></lightning-select>
+            </div>
+          </template>
+
+        </div>
+
+        <div class="data-container">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:travel_mode" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Buscar vehículo existente por:
+              <span if:true={vehiculoPlaca}> Placa</span>
+              <span if:true={vehiculoVin}> VIN</span>
+            </p>
+          </div>
+          <div class="bottom-container" style="height: auto;">
+            <div class="checkbox-container" style="justify-content: space-between;">
+              <div class="checkbox-container" style="margin-bottom: 10px;">
+                <lightning-input onchange={handleSearchPlaca} type="checkbox-button"
+                  placeholder="Buscar vehículo por placa" name="inputPlaca" checked={vehiculoPlaca}
+                  disabled={vehiculoPlaca}>
+                </lightning-input>
+                <p style="font-size: 13px; font-weight: lighter">Buscar vehículo por placa</p>
+              </div>
+              <div class="checkbox-container" style="margin-bottom: 10px;">
+                <lightning-input onchange={handleSearchVin} type="checkbox-button" placeholder="Buscar vehículo por VIN"
+                  name="inputVin" checked={vehiculoVin} disabled={vehiculoVin}>
+                </lightning-input>
+                <p style="font-size: 13px; font-weight: lighter">Buscar vehículo por VIN</p>
+              </div>
+            </div>
+
+            <c-reusable-lookup if:true={vehiculoPlaca} label="Buscar vehículo existente por placa"
+              selected-icon-name="standard:asset" object-label="Asset" object-api-name="Asset" field-api-name="Name"
+              placeholder={placeholder} other-field-api-name="numeroDePlaca__c"
+              onvalueselected={handleValueSelectedOnPlaca} onchange={handleValueSelectedOnPlaca} required>
+            </c-reusable-lookup>
+
+            <c-reusable-lookup if:true={vehiculoVin} label="Buscar vehículo existente por VIN"
+              selected-icon-name="standard:asset" object-label="Asset" object-api-name="Asset"
+              field-api-name="NumeroDeChasis__c" other-field-api-name="numeroDePlaca__c" placeholder={placeholder}
+              onvalueselected={handleValueSelectedOnVIN} onchange={handleValueSelectedOnVIN}>
+            </c-reusable-lookup>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; background: #f7f7f7;"
+      class="slds-modal__footer">
+      <lightning-button variant="neutral" label="Crear nuevo vehículo" onclick={openModal} title="Crear nuevo vehículo"
+        icon-name="utility:add" icon-position="right" class="slds-m-right_x-small"></lightning-button>
+      <lightning-button variant="brand" label="Siguiente" title="Siguiente" onclick={validaSeleccion}
+        icon-name="utility:forward" icon-position="right" class="slds-m-left_x-small">
+      </lightning-button>
+    </footer>
+  </template>
+
+  <template if:true={infoData}>
+    <!-- <template if:false={infoData}> -->
+    <div class="title-container">
+      <div class="slds-p-around_medium lgc-bg btn-layout">
+        <h2 class="second-title">
+          Datos de la cita
+        </h2>
+        <div class="btn-cont-layout">
+          <button class="slds-button slds-button_brand" onclick={handleChangeAccuntOwner}
+            title="Actualizar propietario">Actualizar propietario</button>
+          <button class="slds-button slds-button_brand" onclick={handleEditContact}
+            title="Actualizar contacto">Actualizar contacto</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="colums-container">
+      <div style="width: 33.33%;" class="slds-p-around_medium lgc-bg main-container">
+
+        <div class="info-data-container">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:people" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Propietario
+            </p>
+          </div>
+          <div class="bottom-container client-data">
+            <span><strong>Nombre: </strong>{nombreCuenta}</span>
+            <span><strong>Cédula: </strong>{identificacion}</span>
+            <span><strong>Teléfono: </strong>{telefono}</span>
+            <span if:false={personalAccount}><strong>Correo: </strong>{correoElectronico}</span>
+            <span if:true={personalAccount}><strong>Correo: </strong>{personalEmail}</span>
+            <span><strong>Código Softland: </strong>{cedula}</span>
+          </div>
+        </div>
+
+        <!-- <div if:false={personalAccount} class="info-data-container"> -->
+        <div class="info-data-container">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:employee_contact" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Contacto
+            </p>
+          </div>
+          <div if:true={personalAccount} class="bottom-container client-data">
+            <!-- <span><strong>Nombre: </strong>{nombreCuenta}</span>
+            <span><strong>Cédula: </strong>{identificacion}</span>
+            <span><strong>Teléfono: </strong>{telefono}</span>
+            
+            <span><strong>Correo personal: </strong>{personalEmail}</span> -->
+            <span><strong>Nombre: </strong>{contactName} {apellidoContacto} </span>
+            <!-- <span><strong>Cédula: </strong>{identificacionContacto}</span> -->
+            <span><strong>Teléfono: </strong>{contactPhone}</span>
+            <span><strong>Correo: </strong>{contactEmail}</span>
+          </div>
+          <div if:false={personalAccount} class="bottom-container client-data">
+            <span><strong>Nombre: </strong>{contactName} {apellidoContacto} </span>
+            <!-- <span><strong>Cédula: </strong>{identificacionContacto}</span> -->
+            <span><strong>Teléfono: </strong>{contactPhone}</span>
+            <span><strong>Correo: </strong>{contactEmail}</span>
+          </div>
+        </div>
+
+        <div class="info-data-container">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:travel_mode" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Vehículo
+            </p>
+          </div>
+          <div class="bottom-container client-data">
+            <span><strong>Tipo: </strong>{tipoVehiculo}</span>
+            <span><strong>Número de placa: </strong>{placa}</span>
+            <span><strong>VIN: </strong>{numeroChasis}</span>
+            <span><strong>Año: </strong>{anioVehiculo}</span>
+            <span><strong>Color: </strong>{color}</span>
+            <span><strong>Marca: </strong>{marcaVehiculo}</span>
+            <span><strong>Modelo: </strong>{modeloVehiculo}</span>
+            <span><strong>Marca otros: </strong>{marcaOtros}</span>
+            <span><strong>Modelo otros: </strong>{modeloOtros}</span>
+          </div>
+        </div>
+
+      </div>
+      <!-- Segunda columna -->
+      <div style="width: 33.33%;" class="slds-p-around_medium lgc-bg main-container">
+        <div class="info-data-container">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:app_form_participant" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Seleccionar calendario y asesor
+            </p>
+          </div>
+          <div style="width: 100%; align-items:stretch;" class="bottom-container client-data">
+            <template if:true={tieneCalendario}>
+              <lightning-combobox name="calendario" required="true" label="Calendario" value={calendarioSel}
+                placeholder={calendarioSel} options={optionsCalendario} onchange={handleChangeCalendario}>
+              </lightning-combobox>
+            </template>
+            <template if:false={tieneCalendario}>
+              <lightning-combobox name="calendario" required="true" label="Calendario" value={calendarioSel}
+                placeholder="Seleccione el calendario" options={optionsCalendario} onchange={handleChangeCalendario}>
+              </lightning-combobox>
+            </template>
+            <template if:true={tieneAsesor}>
+              <lightning-combobox name="asesor" label="Asesor" required="true" value={valueAsesor}
+                placeholder={nombreAsesor} options={optionsAsesor} onchange={handleChangeAsesor}>
+              </lightning-combobox>
+            </template>
+            <template if:false={tieneAsesor}>
+              <lightning-combobox name="asesor" label="Asesor" required="true" value={valueAsesor}
+                placeholder="Seleccione el asesor" options={optionsAsesor} onchange={handleChangeAsesor}>
+              </lightning-combobox>
+            </template>
+
+          </div>
+        </div>
+        <div class="info-data-container" style="min-width: 100%;">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:schedule_objective" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Fecha de reserva para cita
+            </p>
+          </div>
+          <div style="align-items: stretch;" class="bottom-container client-data">
+            <p style="font-size: 13px; font-weight: 500">Fecha y hora seleccionada:</p>
+            <p style="font-size: 13px; font-weight: lighter"><lightning-formatted-date-time value={fechaSeleccionada}
+                year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" time-zone={timeZoneOffset}
+                hour12={ampm}></lightning-formatted-date-time>
+            </p>
+            <lightning-textarea style="margin: 10px 0 20px 0; width: 100%" name="comentarios" label="Comentarios"
+              onchange={cambiarDescripcion} value={descripcion}></lightning-textarea>
+
+            <div class="checkbox-container">
+              <lightning-input onchange={handleChangeDateAndHou} type="checkbox-button" label="Editar Fecha/Hora"
+                name="input1"></lightning-input>
+              <p style="font-size: 13px; font-weight: lighter">Editar fecha/hora</p>
+            </div>
+            <div if:true={mostrarHorarios} class="checkbox-container">
+              <p>Sugerencias de horarios:</p>
+              <p>{optionsHorarios}</p>
+            </div>
+            <div class="checkbox-container" if:true={editDateAndHour}>
+
+              <lightning-input style="margin-bottom: 10px;" onchange={validarHorarios} type="datetime"
+                name="cambioFecha" label="Seleccionar Fecha"></lightning-input>
+            </div>
+            <!-- <lightning-input style="margin-bottom: 10px;" if:true={mostrarFechaCambio} type="date" name="cambioHora" label="Seleccionar Hora" ></lightning-input> -->
+            <!-- <div class="checkbox-container" if:true={mostrarFechaCambio}>
+              <lightning-select name="origen" label="Horarios disponibles" value={value} options={optionsHorarios} onchange={handleChangeHora} required></lightning-select>
+            </div> -->
+            <div style="margin-top: 20px;" class="checkbox-container" if:true={mostrarFechaCambio}>
+              <button class="slds-button slds-button_brand" onclick={cambiarHorarios} title="OK">Confirmar</button>
+            </div>
+          </div>
+        </div>
+
+        <template if:true={mostrarHorariosSugeridos}>
+          <div class="info-data-container">
+            <div class="top-container">
+              <lightning-icon class="icon-ctct" icon-name="standard:schedule_objective" alternative-text="Email"
+                title="Email"></lightning-icon>
+              <p class="primary-text">
+                Horarios sugeridos para Garantías
+              </p>
+            </div>
+            <div style="width: 100%; align-items:stretch;" class="bottom-container client-data">
+              <!-- Contenido principal -->
+              <div class="schedule-grid">
+                <template for:each={horariosSugeridos} for:item="dia">
+                  <div key={dia.fecha} class="date-card">
+                    <div class="date-header">
+                      <h3>Fecha: {dia.fecha}</h3>
+                    </div>
+                    <div class="hours-grid">
+                      <template for:each={dia.horarios} for:item="hora">
+                        <div key={hora} class="hour-slot">
+                          <!-- Cambio: Botón para seleccionar hora -->
+                          <button onclick={handleHoraSeleccionada}
+                            data-fecha={dia.fecha} data-hora={hora}>
+                            {hora}
+                          </button>
+                        </div>
+                      </template>  
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+            </div>
+          </div>
+        </template>
+
+        <div class="info-data-container">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:service_request_detail" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Tipo de seguro
+            </p>
+          </div>
+          <div style="width: 100%; align-items:stretch;" class="bottom-container client-data">
+            <p>{seguroVehiculo}</p>
+          </div>
+        </div>
+
+      </div>
+      <!-- Tercera columna -->
+      <div style="width: 33.33%;" class="slds-p-around_medium lgc-bg main-container">
+        <div class="info-data-container" style="min-width: 100%;">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:work_contract" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Planes de mantenimiento
+            </p>
+          </div>
+          <div class="bottom-container client-data">
+            <p if:false={hasWarrantyPlan}>NO HAY UN PLAN DE MANTENIMIENTO ASOCIADO A ESTE VEHÍCULO</p>
+            <div class="bottom-container client-data" if:true={hasWarrantyPlan} style="padding: 0 !important;">
+              <span><strong>Plan de mantenimiento: </strong>{AssetWarrantyNumber}</span>
+              <span><strong>Término de plan de mantenimiento: </strong>{AssetWarrantyTerm}</span>
+              <span><strong>Fecha de inicio: </strong>{AssetWarrantyStartDate}</span>
+              <span><strong>Fecha final: </strong>{AssetWarrantyEfectiveEndDate}</span>
+              <span><strong>Efecto a partir de: </strong>{AssetWarrantyEfectiveStartDate}</span>
+              <span><strong>Tipo de plan de mantenimiento: </strong>{AssetWarantyType}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-data-container" style="width: max-content !important; min-width: 95%; max-width: 100%">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:service_appointment_capacity_usage"
+              alternative-text="Email" title="Email"></lightning-icon>
+            <p class="primary-text">
+              Otras citas reservadas para este vehículo
+            </p>
+          </div>
+          <div style="height: 300px;" class="bottom-container table-data">
+            <lightning-datatable key-field="id" data={data} columns={columns}>
+            </lightning-datatable>
+          </div>
+        </div>
+
+        <div class="info-data-container" style="min-width: 100%;">
+          <div class="top-container">
+            <lightning-icon class="icon-ctct" icon-name="standard:file" alternative-text="Email"
+              title="Email"></lightning-icon>
+            <p class="primary-text">
+              Archivos
+            </p>
+          </div>
+          <div style="align-items: center;" class="bottom-container client-data">
+            <lightning-file-upload name="fileUploader" accept={acceptedFormats} record-id={myRecordId}
+              onuploadfinished={handleUploadFinished} multiple>
+            </lightning-file-upload>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; background: #f7f7f7;"
+      class="slds-modal__footer">
+      <button class="slds-button slds-button_neutral" onclick={appointmentBack} title="Cancel">Anterior</button>
+      <button class="slds-button slds-button_brand" onclick={crearEvento} title="OK">Agendar</button>
+    </footer>
+
+  </template>
+
+  <template if:true={showSpinner}>
+    <div class="backgroundInverse">
+      <lightning-spinner style="background-color: transparent !important;" alternative-text="Loading"
+        variant="inverse"></lightning-spinner>
+    </div>
+  </template>
+
+  <!--Use template if:true to display/hide popup based on isModalOpen value-->
+  <template if:true={isModalOpen}>
+    <!-- Modal/Popup Box LWC starts here -->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+      aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <!-- Modal/Popup Box LWC header here -->
+        <header style="border-top-left-radius: 10px; border-top-right-radius: 10px;"
+          class="slds-modal__header top-container">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+            onclick={closeModal}>
+            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+              size="small"></lightning-icon>
+            <span class="slds-assistive-text">Close</span>
+          </button>
+          <lightning-icon class="icon-ctct" icon-name="standard:travel_mode" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Crear nuevo vehículo</h2>
+        </header>
+
+        <!-- Modal/Popup Box LWC body starts here -->
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+          <!-- <div if:true={firstStep}>
+                  <lightning-select name="origen" label="Origen" value={value} options={options} onchange={handleChange} required></lightning-select>
+                </div> -->
+          <div class="information-container" if:true={firstStep}>
+            <div class="left-clmn">
+              <lightning-input value={placa} type="text" label="Placa" onchange={setPlaca}></lightning-input>
+              <lightning-select name="tipoVehiculo" label="Tipo de vehículo" value={modalValue} options={modalOptions}
+                onchange={handleChangeTipo} required></lightning-select>
+              <lightning-select name="marcaNvo" label="Marca" value={modalValue} options={modalOptionsMarca}
+                onchange={handleChangeMarca} required></lightning-select>
+              <lightning-select name="modeloNvo" label="Modelo" value={modalValue} options={modalOptionsModelo}
+                onchange={handleChangeModelo} required></lightning-select>
+              <lightning-input value={numeroChasis} type="text" label="Número de chasis" onchange={setNumeroChasis}
+                required></lightning-input>
+              <lightning-input value={motor} type="text" label="Motor" onchange={setMotor} required></lightning-input>
+              <lightning-input value={color} type="text" label="Color" onchange={setColor}></lightning-input>
+              <lightning-input value={anioVehiculo} type="text" label="Año del vehículo" onchange={setAnio}
+                required></lightning-input>
+              <lightning-input if:true={mostrarHoras} value={kilometros} type="number" label="Horas de uso"
+                onchange={setKilimetros} required></lightning-input>
+              <lightning-input if:false={mostrarHoras} value={kilometros} type="number" label="Kilometros"
+                onchange={setKilimetros} required></lightning-input>
+              <!-- <lightning-input if:true={accountExists} type="search" label="Buscar cuenta" placeholder="Cuenta" required></lightning-input> -->
+              <c-reusable-lookup if:true={accountExists} label="Buscar cuenta" selected-icon-name="standard:account"
+                object-label="Account" object-api-name="Account" field-api-name="Name"
+                other-field-api-name="CorreoElectronicoEmpresarial__c" onvalueselected={handleValueSelectedOnAccount}>
+              </c-reusable-lookup>
+              <div class="checkbox-container" style="margin-top: 10px;">
+                <lightning-input onchange={handleAccountExistsChange} type="checkbox-button" label="Cuenta no Existe"
+                  placeholder="Cuenta no Existe" name="input4"></lightning-input>
+                <p style="font-size: 13px; font-weight: lighter">Cuenta no existe</p>
+              </div>
+              <!-- <lightning-input type="checkbox" label="Cuenta no Existe" placeholder="Cuenta no Existe" onchange={handleAccountExistsChange}></lightning-input> -->
+            </div>
+            <div class="right-clmn" if:false={accountExists}>
+              <lightning-input value={nombreCuenta} if:true={empAccount} onchange={cambiarNombreCuenta} type="text"
+                label="Nombre de la Cuenta" required></lightning-input>
+              <lightning-input value={nombreCuenta} if:false={empAccount} onchange={cambiarNombreCuenta} type="text"
+                label="Nombre" required></lightning-input>
+              <lightning-input value={apellido} type="text" onchange={cambiarApellidoCuenta} label="Apellido"
+                required></lightning-input>
+              <lightning-input value={cedulaBuscada} type="text" label="Cédula" onchange={setCedulaBuscar}
+                required></lightning-input>
+              <lightning-input value={telefono} type="text" onchange={cambiarTelefonoCuenta}
+                label="Teléfono"></lightning-input>
+              <lightning-input value={correoElectronico} type="email" onchange={cambiarCorreoCuenta}
+                label="Correo Electrónico"></lightning-input>
+              <lightning-input value={nombreEncargado} onchange={setNombreEncargado} if:true={empAccount} type="text"
+                label="Nombre encargado de la cuenta" required></lightning-input>
+              <lightning-input value={telefonoEncargado} onchange={setTelefonoEncargado} if:true={empAccount}
+                type="text" label="Teléfono encargado de la cuenta" required></lightning-input>
+              <div class="checkbox-container" style="margin-top: 10px;">
+                <lightning-input onchange={handleEmpAccount} type="checkbox-button" label="Cuenta Empresarial"
+                  placeholder="Cuenta Empresarial" name="input5"></lightning-input>
+                <p style="font-size: 13px; font-weight: lighter">Cuenta empresarial</p>
+              </div>
+              <!-- <lightning-input type="checkbox" label="Cuenta Empresarial" placeholder="Cuenta Empresarial" onchange={handleEmpAccount}></lightning-input> -->
+            </div>
+
+          </div>
+          <div if:true={secondStep} class="information-container">
+            <div style="align-items: stretch;" class="bottom-container client-data">
+              <lightning-input value={nombreCuenta} type="text" label="Nombre" required></lightning-input>
+              <lightning-input value={apellido} type="text" label="Apellido" required></lightning-input>
+              <lightning-input value={correoElectronico} type="email" onchange={cambiarCorreoCuenta} label="Correo"
+                required></lightning-input>
+              <lightning-input value={telefono} type="tel" onchange={cambiarTelefonoCuenta} label="Teléfono"
+                required></lightning-input>
+              <!-- <lightning-input value={nombreCuenta} type="text" label="Profesión"></lightning-input> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal/Popup Box LWC footer starts here -->
+        <footer if:true={accountExists} style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"
+          class="slds-modal__footer">
+          <button if:true={firstStep} class="slds-button slds-button_neutral" onclick={closeModal}
+            title="Cancel">Cancelar</button>
+          <button if:true={secondStep} class="slds-button slds-button_neutral" onclick={previousStep}
+            title="Anterior">Anterior</button>
+          <!-- <button if:false={secondStep}  class="slds-button slds-button_brand" onclick={submitDetails} title="Siguiente cuenta existe">Siguiente</button> -->
+          <button if:false={secondStep} class="slds-button slds-button_brand" onclick={crearVehiculo}
+            title="Crear vehículo">Crear</button>
+        </footer>
+
+        <footer if:false={accountExists} style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"
+          class="slds-modal__footer">
+          <button if:true={firstStep} class="slds-button slds-button_neutral" onclick={closeModal}
+            title="Cancel">Cancelar</button>
+          <button if:true={secondStep} class="slds-button slds-button_neutral" onclick={previousStep}
+            title="Anterior">Anterior</button>
+          <button if:false={secondStep} class="slds-button slds-button_brand" onclick={submitDetails}
+            title="Siguiente cuenta no existe">Siguiente</button>
+          <button if:true={secondStep} class="slds-button slds-button_brand" onclick={crearVehiculo}
+            title="Crear vehículo">Crear</button>
+        </footer>
+
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+  <!-- Actualizar Propietario -->
+  <template if:true={editAccountOwner}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true"
+      aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header style="border-top-left-radius: 10px; border-top-right-radius: 10px;"
+          class="slds-modal__header top-container">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Cerrar"
+            onclick={handleChangeAccuntOwner}>
+            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+              size="small"></lightning-icon>
+            <span class="slds-assistive-text">Cerrar</span>
+          </button>
+          <lightning-icon class="icon-ctct" icon-name="standard:decision" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">¿Desea cambiar el propietario
+            asociado al
+            vehículo?</h2>
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+          <div if:false={stepTwo} class="info-data-container">
+            <div class="bottom-container client-data">
+              <div class="options-check">
+                <div class="checkbox-container">
+                  <lightning-input onchange={accountChange} type="checkbox-button" label="Cambio de cuenta"
+                    name="input1" checked={cambioCuenta}></lightning-input>
+                  <p style="font-size: 13px; font-weight: lighter">Cambio de propietario</p>
+                </div>
+                <div class="checkbox-container">
+                  <lightning-input onchange={accountUpdate} type="checkbox-button" label="Cambio de cuenta"
+                    name="input1" checked={actuCuenta}></lightning-input>
+                  <p style="font-size: 13px; font-weight: lighter">Actualizar propietario</p>
+                </div>
+              </div>
+              <div if:true={actuCuenta} style="width: 100%;">
+                <lightning-input type="text" value={nombreCuenta} label="Nombre" onchange={cambiarNombreCuenta} disabled
+                  required></lightning-input>
+                <lightning-input type="text" value={identificacion} label="Número de cédula"
+                  onchange={cambiarIdentificacionCuenta} disabled required></lightning-input>
+                <lightning-input type="text" value={telefono} label="Teléfono" onchange={cambiarTelefonoCuenta}
+                  required></lightning-input>
+                <lightning-input if:false={personalAccount} type="text" value={correoElectronico} label="Correo"
+                  onchange={cambiarCorreoCuenta} required></lightning-input>
+                <lightning-input if:true={personalAccount} type="text" value={personalEmail} label="Correo"
+                  onchange={cambiarCorreoCuenta} required></lightning-input>
+              </div>
+              <div if:true={cambioCuenta} style="width: 100%;">
+                <div if:false={noExisteCuenta}>
+                  <c-reusable-lookup label="Buscar cuenta personal o empresarial" selected-icon-name="standard:account"
+                    object-label="Account" object-api-name="Account" field-api-name="Name"
+                    other-field-api-name="Cedula__c" onvalueselected={handleValueSelectedOnAccount}
+                    onchange={handleValueSelectedOnAccount}>
+                  </c-reusable-lookup>
+                </div>
+                <div class="checkbox-container" style="margin: 10px 0;">
+                  <lightning-input onchange={notAccountExists} type="checkbox-button" label="No existe cuenta"
+                    name="input2"></lightning-input>
+                  <p style="font-size: 13px; font-weight: lighter">No existe cuenta</p>
+                </div>
+                <div if:true={noExisteCuenta}>
+                  <div class="checkbox-container" style="margin: 10px 0;">
+                    <lightning-input onchange={empAccountSelect} type="checkbox-button" label="Cuenta Empresarial"
+                      name="input3"></lightning-input>
+                    <p style="font-size: 13px; font-weight: lighter">Cuenta Empresarial</p>
+                  </div>
+                  <p><strong>DIMEX:</strong> requiere 12 dígitos</p>
+                  <p><strong>Física:</strong> requiere 10 dígitos</p>
+                  <p style="margin-bottom: 10px;"><strong>Jurídica:</strong>requiere 11 dígitos</p>
+                  <lightning-input type="text" label="Cédula (Ingresar sin guión)" onchange={setCedulaBuscar}
+                    required></lightning-input>
+                  <lightning-input if:true={cuentaEmpresarial} type="text" label="Nombre encargado de la cuenta"
+                    required></lightning-input>
+                  <lightning-input if:true={cuentaEmpresarial} type="text" label="Teléfono encargado de la cuenta"
+                    required></lightning-input>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div if:true={stepTwo} class="info-data-container">
+            <div style="align-items: stretch;" class="bottom-container client-data">
+              <lightning-input type="text" value={nombreCuenta} onchange={cambiarNombreCuenta} label="Nombre"
+                required></lightning-input>
+              <lightning-input type="text" if:false={cuentaEmpresarial} value={apellido}
+                onchange={cambiarApellidoCuenta} label="Apellido" required></lightning-input>
+              <lightning-input type="text" value={correoElectronico} onchange={cambiarCorreoCuenta} label="Correo"
+                required></lightning-input>
+              <lightning-input type="tel" value={telefono} onchange={cambiarTelefonoCuenta} label="Teléfono"
+                required></lightning-input>
+            </div>
+          </div>
+
+        </div>
+
+        <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" class="slds-modal__footer">
+          <!-- Boton cancelar y atras -->
+          <button if:false={stepTwo} class="slds-button slds-button_neutral" onclick={handleChangeAccuntOwner}
+            title="Cancel">Cancelar</button>
+          <button if:true={stepTwo} class="slds-button slds-button_neutral" onclick={handleBackStepTwo}
+            title="Atrás">Atrás</button>
+          <!-- Botones de siguiente condicionales -->
+          <button if:true={noExisteCuenta} class="slds-button slds-button_brand" onclick={handleStepTwo}
+            title="Siguiente">Siguiente</button>
+          <button if:true={nextButton} class="slds-button slds-button_brand" onclick={actualizarCuenta}
+            title="Actualizar Información">Siguiente.</button>
+          <button if:true={actuCuenta} class="slds-button slds-button_brand" onclick={actualizarCuenta}
+            title="Actualizar Información">Siguiente.</button>
+          <!-- Boton para crear la cuenta en paso 2 -->
+          <button if:true={stepTwo} class="slds-button slds-button_brand" onclick={actualizarCuenta} title="OK">Crear
+            Cuenta</button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+  <!-- Actualizar Contacto -->
+  <template if:true={editContact}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-03" aria-modal="true"
+      aria-describedby="modal-content-id-3" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header style="border-top-left-radius: 10px; border-top-right-radius: 10px;"
+          class="slds-modal__header top-container">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Cerrar"
+            onclick={handleEditContact}>
+            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+              size="small"></lightning-icon>
+            <span class="slds-assistive-text">Cerrar</span>
+          </button>
+          <lightning-icon class="icon-ctct" icon-name="standard:product_transfer_state" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">¿Desea cambiar el contacto asociado
+            al
+            vehículo?</h2>
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+          <div class="info-data-container">
+            <div class="bottom-container client-data">
+              <div class="options-check">
+                <div class="checkbox-container">
+                  <lightning-input onchange={accountChange} type="checkbox-button" label="Cambio de cuenta"
+                    name="input1" checked={cambioCuenta}></lightning-input>
+                  <p style="font-size: 13px; font-weight: lighter">Cambio de contacto</p>
+                </div>
+                <div class="checkbox-container">
+                  <lightning-input onchange={accountUpdate} type="checkbox-button" label="Cambio de cuenta"
+                    name="input1" checked={actuCuenta}></lightning-input>
+                  <p style="font-size: 13px; font-weight: lighter">Actualizar contacto</p>
+                </div>
+
+              </div>
+              <div if:true={actuCuenta} style="width: 100%;">
+                <lightning-input type="text" disabled value={contactName} label="Nombre" onchange={setNombreContacto}
+                  required></lightning-input>
+                <lightning-input type="text" disabled value={apellidoContacto} label="Apellido"
+                  onchange={setApellidoContacto} required></lightning-input>
+                <lightning-input type="text" disabled value={identificacionContacto} label="Cédula"
+                  onchange={setCedulaContacto} required></lightning-input>
+                <!-- <lightning-combobox 
+                        label="Tipo de Identificación" 
+                        value={tipoIdentificacion} 
+                        placeholder="Seleccione un tipo" 
+                        options={picklistOptions} 
+                        onchange={setTipoIdentificacionContacto} 
+                        required>
+                      </lightning-combobox> -->
+                <lightning-input type="text" value={contactEmail} label="Correo" onchange={setCorreoContacto}
+                  required></lightning-input>
+                <lightning-input type="text" value={contactPhone} label="Teléfono" onchange={setTelefonoContacto}
+                  required></lightning-input>
+              </div>
+              <div if:true={cambioCuenta} style="width: 100%;">
+                <c-reusable-lookup label="Buscar contacto" selected-icon-name="standard:contact" object-label="Contact"
+                  object-api-name="Contact" field-api-name="Name" other-field-api-name="email"
+                  onvalueselected={handleValueSelectedOnContacto} onchange={handleValueSelectedOnContacto}>
+                </c-reusable-lookup>
+                <div class="checkbox-container" style="margin: 10px 0;">
+                  <lightning-input onchange={notAccountExists} type="checkbox-button" label="No existe contacto"
+                    name="input2"></lightning-input>
+                  <p style="font-size: 13px; font-weight: lighter">No existe contacto</p>
+                </div>
+                <div if:true={noExisteCuenta}>
+                  <lightning-input type="text" label="Nombre" onchange={setNombreContacto} required></lightning-input>
+                  <lightning-input type="text" label="Apellido" onchange={setApellidoContacto}
+                    required></lightning-input>
+                  <lightning-combobox label="Tipo de Identificación" value={tipoIdentificacion}
+                    placeholder="Seleccione un tipo" options={picklistOptions} onchange={setTipoIdentificacionContacto}
+                    required>
+                  </lightning-combobox>
+                  <lightning-input type="text" label="Cédula" onchange={setCedulaContacto} required></lightning-input>
+                  <lightning-input type="tel" label="Teléfono" required
+                    onchange={setTelefonoContacto}></lightning-input>
+                  <lightning-input type="email" label="Correo electrónico" onchange={setCorreoContacto}
+                    required></lightning-input>
+                  <div class="checkbox-container" style="margin: 10px 0;">
+                    <lightning-input type="checkbox-button" label="Principal" name="input3"
+                      onchange={contactoPrincipal}></lightning-input>
+                    <p style="font-size: 13px; font-weight: lighter">Principal</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" onclick={handleEditContact} title="Cancel">Cancelar</button>
+          <button if:true={cambioCuenta} class="slds-button slds-button_brand" onclick={actualizarContacto}
+            title="OK">Confirmar</button>
+          <button if:true={actuCuenta} class="slds-button slds-button_brand" onclick={actualizarContacto}
+            title="OK">Confirmar</button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+  <!-- Crear contacto -->
+  <template if:true={showCrtContactModal}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-04" aria-modal="true"
+      aria-describedby="modal-content-id-4" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header style="border-top-left-radius: 10px; border-top-right-radius: 10px;"
+          class="slds-modal__header top-container">
+          <!-- <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Cerrar"
+                onclick={clsCreateContactModal}>
+                <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                <span class="slds-assistive-text">Cerrar</span>
+              </button> -->
+          <lightning-icon class="icon-ctct" icon-name="standard:customers" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Asignar contacto</h2>
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+          <div class="info-data-container">
+            <div class="bottom-container client-data">
+              <div style="width: 100%;">
+                <c-reusable-lookup label="Buscar contacto" selected-icon-name="standard:contact" object-label="Contact"
+                  object-api-name="Contact" field-api-name="Name" other-field-api-name="email"
+                  onvalueselected={handleValueSelectedOnContacto} onchange={handleValueSelectedOnContacto}>
+                </c-reusable-lookup>
+                <div class="checkbox-container" style="margin: 10px 0;">
+                  <lightning-input onchange={notAccountExists} type="checkbox-button" label="No existe contacto"
+                    name="input2"></lightning-input>
+                  <p style="font-size: 13px; font-weight: lighter">No existe contacto</p>
+                </div>
+                <div if:true={noExisteCuenta}>
+                  <lightning-input onchange={setNombreContacto} type="text" label="Nombre" required></lightning-input>
+                  <lightning-input onchange={setApellidoContacto} type="text" label="Apellido"
+                    required></lightning-input>
+                  <lightning-input onchange={setTelefonoContacto} type="tel" label="Teléfono"
+                    required></lightning-input>
+                  <lightning-input type="email" onchange={setCorreoContacto} label="Correo electrónico"
+                    required></lightning-input>
+                  <!-- <div class="checkbox-container" style="margin: 10px 0;">             
+                        <lightning-input type="checkbox-button" label="Principal"
+                            name="input3"></lightning-input>
+                        <p style="font-size: 13px; font-weight: lighter">Principal</p>
+                      </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" class="slds-modal__footer">
+          <!-- <button class="slds-button slds-button_brand" onclick={clsCrearContacto} title="Confirmar">Confirmar</button> -->
+          <button if:true={noExisteCuenta} class="slds-button slds-button_brand" onclick={actualizarContacto}
+            title="OK">Crear contacto</button>
+          <button if:false={noExisteCuenta} class="slds-button slds-button_brand" onclick={actualizarContacto}
+            title="OK">Asignar contacto</button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+  <!-- Poner Km -->
+  <template if:true={showCrtMotos}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-04" aria-modal="true"
+      aria-describedby="modal-content-id-4" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header style="border-top-left-radius: 10px; border-top-right-radius: 10px;"
+          class="slds-modal__header top-container">
+
+          <lightning-icon class="icon-ctct" icon-name="standard:customers" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <h2 id="modal-heading-15" class="slds-text-heading_medium slds-hyphenate">Llenar kilometraje</h2>
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-15">
+          <div class="info-data-container">
+            <div class="bottom-container client-data">
+              <div style="width: 100%;">
+                <lightning-input value={kilometros} type="number" label="Kilometros" onchange={setKilimetros}
+                  required></lightning-input>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" class="slds-modal__footer">
+          <!-- <button class="slds-button slds-button_brand" onclick={clsCrearContacto} title="Confirmar">Confirmar</button> -->
+          <button class="slds-button slds-button_brand" onclick={cerrarModal} title="OK">Guardar</button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+  <!-- Oblidago aceptar duplicado -->
+  <template if:true={existeOtroEvento}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-04" aria-modal="true"
+      aria-describedby="modal-content-id-4" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header style="border-top-left-radius: 10px; border-top-right-radius: 10px;"
+          class="slds-modal__header top-container">
+
+          <lightning-icon class="icon-ctct" icon-name="standard:customers" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <h2 id="modal-heading-16" class="slds-text-heading_medium slds-hyphenate">Evento duplicado.</h2>
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-16">
+          <div class="info-data-container">
+            <div class="bottom-container client-data">
+              <div style="width: 100%;">
+                <p style="font-size: 13px; font-weight: bold; margin-bottom: 10px;">En esta fecha ya hay otra cita a la
+                  misma hora.</p>
+                <p style="font-size: 13px; margin-bottom: 10px;">Si desea puede agendarla o volver y elegir una nueva
+                  fecha.</p>
+                <template if:false={esContact}>
+                  <lightning-input type="checkbox" label="De acuerdo agendar a pesar de la alerta" name="input2"
+                    onchange={setAceptaDup} required></lightning-input>
+                </template>
+                <template if:true={esContact}> "No permitido para usuarios CallCenter”</template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" class="slds-modal__footer">
+          <button class="slds-button slds-button_brand" onclick={cerrarModalDup} title="Volver">Volver</button>
+          <button class="slds-button slds-button_brand" onclick={cerrarDupConfirma} disabled={botonDup}
+            title="OK">Guardar</button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+
+  <!-- Cita creada -->
+  <template if:true={citaCreadaExit}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-05" aria-modal="true"
+      aria-describedby="modal-content-id-5" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header style="border-top-left-radius: 10px; border-top-right-radius: 10px; position: relative;"
+          class="slds-modal__header top-container">
+
+          <!-- Ícono principal -->
+          <lightning-icon class="icon-ctct" icon-name="standard:service_appointment" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <!-- Título del modal -->
+          <h2 id="modal-heading-05" class="slds-text-heading_medium slds-hyphenate">
+            Cita reservada con éxito
+          </h2>
+
+          <!-- Botón de cerrar (colocado dentro del header) -->
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Cerrar"
+            disabled={urlExiste} onclick={irAevento} style="position: absolute; top: 0.5rem; right: 0.5rem;">
+            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+              size="small"></lightning-icon>
+            <span class="slds-assistive-text">Cerrar</span>
+          </button>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-5">
+
+          <div style="margin: 0;" class="info-data-container">
+            <div class="bottom-container client-data" style="align-items: center;">
+              <p class="slds-text-heading_medium slds-m-bottom_medium">Se ha reservado la cita para:</p>
+              <span><strong>Fecha y hora de la cita: </strong><lightning-formatted-date-time value={fechaSeleccionada}
+                  year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit"
+                  time-zone={timeZoneOffset} hour12={ampm}></lightning-formatted-date-time>
+              </span>
+              <span><strong>Sucursal y servicio: </strong>{serviceTerritory}</span>
+              <span><strong>Asesor: </strong>{valueAsesor}</span>
+
+              <div class="info-data-container" style="box-shadow: 0px 0px 10px 1px #0001;">
+                <div class="top-container">
+                  <lightning-icon class="icon-ctct" icon-name="standard:people" alternative-text="Email"
+                    title="Email"></lightning-icon>
+                  <p class="primary-text">
+                    Propietario
+                  </p>
+                </div>
+                <div class="bottom-container client-data">
+                  <span><strong>Nombre: </strong>{nombreCuenta}</span>
+                  <span><strong>Cédula: </strong>{identificacion}</span>
+                  <span><strong>Teléfono: </strong>{telefono}</span>
+                  <span if:false={personalAccount}><strong>Correo: </strong>{correoElectronico}</span>
+                  <span if:true={personalAccount}><strong>Correo: </strong>{personalEmail}</span>
+                  <span><strong>Código Softland: </strong>{cedula}</span>
+                </div>
+              </div>
+
+              <div class="info-data-container" style="box-shadow: 0px 0px 10px 1px #0001;">
+                <div class="top-container">
+                  <lightning-icon class="icon-ctct" icon-name="standard:contact" alternative-text="Email"
+                    title="Email"></lightning-icon>
+                  <p class="primary-text">
+                    Contacto
+                  </p>
+                </div>
+                <div if:true={personalAccount} class="bottom-container client-data">
+                  <!-- <span><strong>Contacto cuenta: </strong>{nombreCuenta}</span>
+                      <span><strong>Cédula: </strong>{identificacion}</span>
+                      <span><strong>Teléfono contacto: </strong>{telefono}</span>
+                      <span><strong>Correo contacto: </strong>{correoElectronico}</span> -->
+                  <span><strong>Nombre: </strong>{contactName} {apellidoContacto}</span>
+                  <span><strong>Teléfono contacto: </strong>{contactPhone}</span>
+                  <span><strong>Correo contacto: </strong>{contactEmail}</span>
+                </div>
+                <div if:false={personalAccount} class="bottom-container client-data">
+                  <span><strong>Nombre: </strong>{contactName} {apellidoContacto}</span>
+                  <span><strong>Teléfono contacto: </strong>{contactPhone}</span>
+                  <span><strong>Correo contacto: </strong>{contactEmail}</span>
+                </div>
+              </div>
+
+              <div class="info-data-container" style="box-shadow: 0px 0px 10px 1px #0001;">
+                <div class="top-container">
+                  <lightning-icon class="icon-ctct" icon-name="standard:travel_mode" alternative-text="Email"
+                    title="Email"></lightning-icon>
+                  <p class="primary-text">
+                    Vehículo
+                  </p>
+                </div>
+                <div class="bottom-container client-data" style="padding-top: 0;">
+                  <span><strong>Tipo: </strong>{tipoVehiculo}</span>
+                  <span><strong>Número de placa: </strong>{placa}</span>
+                  <span><strong>VIN: </strong>{numeroChasis}</span>
+                  <span><strong>Año: </strong>{anioVehiculo}</span>
+                  <span><strong>Color: </strong>{color}</span>
+                  <span><strong>Marca: </strong>{marcaVehiculo}</span>
+                  <span><strong>Modelo: </strong>{modeloVehiculo}</span>
+                  <span><strong>Marca otros: </strong>{marcaOtros}</span>
+                  <span><strong>Modelo otros: </strong>{modeloOtros}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" disabled={urlExiste} onclick={irAevento} title="Ir a Cita">Ir
+            a
+            cita creada</button>
+          <button class="slds-button slds-button_brand" onclick={irAcalendario} title="Crear nueva cita">Crear nueva
+            cita</button>
+        </footer>
+      </div>
+
+      <!-- </div> -->
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+  <!-- Error al crear cita -->
+  <template if:true={errCrearCita}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-06" aria-modal="true"
+      aria-describedby="modal-content-id-6" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header style="border-top-left-radius: 10px; border-top-right-radius: 10px;"
+          class="slds-modal__header top-container">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Cerrar"
+            onclick={handleCloseErrModal}>
+            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+              size="small"></lightning-icon>
+            <span class="slds-assistive-text">Cerrar</span>
+          </button>
+          <lightning-icon class="icon-ctct" icon-name="standard:customers" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <h2 id="modal-heading-06" class="slds-text-heading_medium slds-hyphenate">Ocurrió un error al crear la cita
+          </h2>
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-6">
+          <div class="info-data-container">
+            <div class="bottom-container client-data" style="align-items: stretch;">
+              <p class="slds-text-heading_medium slds-m-bottom_medium">Intente nuevamente</p>
+            </div>
+          </div>
+        </div>
+
+        <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" title="Regresar"
+            onclick={handleCloseErrModal}>Anterior</button>
+          <button class="slds-button slds-button_brand" title="Confirmar" onclick={crearEvento}>Volver a
+            intentar</button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+  <template if:true={campaniasTec}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-07" aria-modal="true"
+      aria-describedby="modal-content-id-7" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header style="border-top-left-radius: 10px; border-top-right-radius: 10px;"
+          class="slds-modal__header top-container">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Cerrar"
+            onclick={closeCampTec}>
+            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+              size="small"></lightning-icon>
+            <span class="slds-assistive-text">Cerrar</span>
+          </button>
+          <lightning-icon class="icon-ctct" icon-name="standard:service_request_detail" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <h2 id="modal-heading-07" class="slds-text-heading_medium slds-hyphenate">Campañas técnicas activas</h2>
+        </header>
+
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-7">
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Descripción</th>
+                  <th>Activa</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template for:each={campanias} for:item="campania">
+                  <tr key={campania.Id} class="slds-hint-parent">
+                    <td data-label="Nombre">{campania.Name}</td>
+                    <td data-label="Categoría">{campania.Categoria__c}</td>
+                    <td data-label="Descripción">{campania.Descripcion__c}</td>
+                    <td data-label="Activa">
+                      <span class="active">
+                        Sí
+                      </span>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <footer style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" class="slds-modal__footer">
+          <button class="slds-button slds-button_destructive" onclick={closeCampTec} title="Siguiente">Cerrar</button>
+          <button class="slds-button slds-button_brand" onclick={handleConfirmacion} title="Siguiente">Confirmación de
+            lectura</button>
+        </footer>
+
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+</template>

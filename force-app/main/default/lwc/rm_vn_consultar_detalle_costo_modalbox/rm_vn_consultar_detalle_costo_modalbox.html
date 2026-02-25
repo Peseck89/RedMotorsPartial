@@ -1,0 +1,28 @@
+<template>
+    <lightning-modal-header label={productName}></lightning-modal-header>
+    <lightning-modal-body> 
+        <lightning-layout>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <p class="slds-text-heading_medium"></p>
+                <lightning-datatable 
+                hide-checkbox-column
+                max-row-selection="0"
+                key-field="Id" 
+                data={records} 
+                columns={columns}
+                >
+            </lightning-datatable>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <!-- <lightning-button label="Exportar" onclick={handleExportToExcel} varian="brand" disabled={isExportDisabled}></lightning-button> -->
+        <lightning-button-menu label="Exportar a CSV" variant="brand" alternative-text="Exportar a CSV" icon-name="utility:settings" class="slds-m-left_large" onselect={handleExportSelect}>
+            <lightning-menu-item value="comma" label="Exportar usando el separador (,)"  title="Al exportar a csv se usara el , como separador"></lightning-menu-item>
+            <lightning-menu-item value="semicolon" label="Exportar usando el separador (;)" title="Al exportar a csv se usara el ; como separador."></lightning-menu-item>
+        </lightning-button-menu>
+    </lightning-modal-footer>
+</template>

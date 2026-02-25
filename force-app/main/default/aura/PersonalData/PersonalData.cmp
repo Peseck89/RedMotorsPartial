@@ -1,0 +1,38 @@
+<aura:component
+  implements="force:hasRecordId,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+  access="global" controller="CommunityCalendarController">
+  <html>
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+      <title> Mis Datos</title>
+      <meta name="description" content="" />
+    </head>
+    <body class="THIS">
+      <div class="container">
+        <section class="info-header">
+          <h1>MIS DATOS</h1>
+          <h2>Le damos la bienvenida a nuestra agencia. <br/>
+              Por favor actualice la información solicitada.
+          </h2>
+        </section>
+        <section class="main-section">
+          <lightning:input name="input-name" label="Nombre" required="true"/>
+          <lightning:input name="input-lastname" label="Apellido" required="true"/>
+          <lightning:input name="input-phone" label="Teléfono" required="true"/>
+          <lightning:input name="input-email" label="E-mail" required="true"/>
+
+          <lightning:select name="select-buy" label="Fecha estimada de compra" required="true">
+            <option value="">Elige una opción...</option>
+            <option value="1">De 0 a 3 meses</option>
+            <option value="2">De 3 a 6 meses</option>
+            <option value="3">Mayor a 6 meses</option>
+        </lightning:select>
+          
+          <lightning:button class="send-button" label="Enviar" onclick="{!c.navigateToComponent2}" />
+        </section>
+      </div>
+    </body>
+  </html>
+</aura:component>

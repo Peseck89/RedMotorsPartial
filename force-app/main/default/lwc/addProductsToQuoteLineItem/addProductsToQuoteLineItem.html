@@ -1,0 +1,135 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <!--Opportunity recordId is: {recId}-->
+    <lightning-card>
+        <template if:false={visibleFlag}>
+            <h3 slot="title">
+                <lightning-icon icon-name="standard:product" size="small"></lightning-icon> Busqueda de Productos
+            </h3>
+
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="5" padding="slds-p-bottom_medium" style="height: 80px;">
+                    <div class=" slds-var-p-around_medium ">
+                        <p class="slds-var-p-horizontal_small">
+                            <lightning-input    type="search" 
+                                                class="slds-var-m-bottom_small" 
+                                                label="Buscar producto"
+                                                onchange={searchProductAction} 
+                                                value={productName}>
+                            </lightning-input>
+                        </p>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" padding="slds-p-bottom_medium" style="height: 80px;">
+                    <div class="slds-var-p-around_medium">
+                        <div>
+                            <template if:true={options}>
+                                <lightning-combobox name="tipotrabajo" 
+                                                    data-id="comboTipotrabajo"
+                                                    label="Tipo producto"
+                                                    placeholder="Todos"
+                                                    value="ServiceTerritory"
+                                                    options={options}
+                                                    onchange={searchProductAction}>
+                                </lightning-combobox>
+                            </template>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" padding="slds-p-bottom_medium" style="height: 80px;">
+                    <div class="slds-var-p-around_medium">
+                        <div>
+                            <template if:true={optionsSearchCriteria}>
+                                <lightning-combobox name="searchCriteria"
+                                                    data-id="comboSearchCriteria" 
+                                                    label="Buscar por"
+                                                    placeholder="Codigo"
+                                                    value="xCodigo"
+                                                    options={optionsSearchCriteria}
+                                                    onchange={searchProductAction}>
+                                </lightning-combobox>
+                            </template>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <br/>
+            <p class="slds-var-p-horizontal_small">
+                <b style="color: #0070d2;">Productos seleccionados: {quantityselected} &nbsp;</b>
+                <lightning-icon icon-name="utility:preview" alternative-text="Preview" title="Preview" size="x-small" onclick={showSelectedProducts}></lightning-icon>
+            </p>
+
+            <button class="slds-button slds-button_brand" slot="actions" onclick={handleNavigate}>Siguiente</button>
+            <button class="slds-button slds-button_outline-brand" slot="actions" onclick={handleClose}>Cancel</button>
+
+            <div data-id="addTable" style="display: flex;">
+                <div style="min-height: 10px; max-height: 500px; flex: 1;">
+                    <div class="slds-table_col-bordered slds-table_bordered" style="height: 100%;">
+                        <lightning-datatable    data={productList_test}
+                                                onrowselection={selectProducts}
+                                                columns={cols} 
+                                                key-field="ID"
+                                                selected-rows={selectedRows}>
+                        </lightning-datatable>
+                    </div>
+                </div>
+            </div>
+
+        </template>
+
+        <template if:true={visibleFlag}>
+            <h3 slot="title">
+                <lightning-icon icon-name="standard:product" size="small"></lightning-icon> Editar productos
+            </h3>
+            <p class="slds-p-horizontal_small">
+                <b style="color: #0070d2;">Productos seleccionados: {quantityselected}</b>
+            </p>
+            <button class="slds-button slds-button_brand" slot="actions" onclick={handleNavigate}>Anterior</button>
+
+            <div>
+                <c-edit-products-to-quote-line-item lines={quoteList}
+                                                    quoteids={idList}
+                                                    productids={productIds}
+                                                    recid={recId}
+                                                    ondeleteline={handleDeleteLine}>
+                </c-edit-products-to-quote-line-item>
+            </div>
+
+        </template>
+    </lightning-card>
+
+    <template if:true={showSelectedProductsFlag}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container"   style="width: 80%;" >
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header custom-error-header">
+                    <h1 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate" style="padding-left: 20px;padding-right: 20px;"><b>Productos Seleccionados:</b></h1>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" style="text-align: center;">
+                    <div style="display: flex;">
+                        <div style="min-height: 10px; max-height: 500px; flex: 1;">
+                            <div class="slds-table_col-bordered slds-table_bordered" style="height: 100%;">
+                                <lightning-datatable 
+                                    data={productList} 
+                                    onrowselection={deselectProducts}
+                                    columns={cols} 
+                                    key-field="ID"
+                                    selected-rows={selectedRows}>
+                                </lightning-datatable>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer" style="text-align: center;">
+                    <button  class="slds-button  slds-button_brand" onclick={closeSelectedProducts} title="Cancel">OK</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+
+</template>

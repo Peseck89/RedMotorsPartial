@@ -1,0 +1,604 @@
+<aura:component implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" controller="ShowWorkStepController" access="global">
+    <lightning:empApi aura:id="empApi" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="territoryFilter1" type="List"/>
+    <aura:attribute name="tipoDeServiceFilter2" type="List"/>
+    <aura:attribute name="UserListFilter3" type="List"/>
+    <!--aura:attribute name="responseWrapperList" type="List" /-->
+    <aura:attribute name="flagInterval" type="boolean" default="false"/>
+    <aura:attribute name="isOn" type="Boolean" default="false" />
+    <aura:attribute name="responseWrapperRec" type="Object" />
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="territoryValue" type="String"/>
+    <aura:attribute name="tipoValue" type="String"/>
+    <aura:attribute name="userValue" type="String"/>
+    <aura:attribute name="backgroundColor" type="String"/>
+    <aura:attribute name="recId" type="Id"/>
+    <aura:attribute name="isStartButtonClick" type="boolean" default="false"/>
+    <aura:attribute name="isCompleteButtonClick" type="boolean" default="false"/>
+    <aura:attribute name="isPauseButtonClick" type="boolean" default="false"/>
+    <aura:attribute name="isUnPauseButtonClick" type="boolean" default="false"/>
+    <aura:attribute name="toggleFilter" type="boolean" default="true"/>
+    <aura:attribute name="StartDateValue" type="Date" default=""/>
+    <aura:attribute name="EndDateValue" type="Date" default=""/>
+    <aura:attribute name="statusValue" type="String"/>
+    <aura:attribute name="StatusFilter4" type="List"/>
+    <aura:attribute name="isAddContactButtonClick" type="boolean" default="false"/>
+    <aura:attribute name="fields" type="String[]" default="['FirstName','LastName','AccountId']" />
+    <aura:attribute name="newCreatedContactRecordId" type="String"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <aura:attribute name="contactLookupValue" type="String"/>
+    <aura:attribute name="isChangeContactButtonClick" type="boolean" default="false"/>
+    <aura:attribute name="showCurrentDateTime" type="dateTime" />
+    <aura:attribute name="workStepObject" type="List" />
+    <aura:attribute name="pageNumber" type="Integer" default="1"/>
+    <aura:attribute name="pageSize" type="Integer" default="20"/>
+    <aura:attribute name="isLastPage" type="Boolean" default="false"/>
+    <aura:attribute name="resultSize" type="Integer" default="0"/>
+    <aura:attribute name="hidePrevPage" type="Boolean" default="true"/>
+    <lightning:navigation aura:id="navService"/>
+    
+    <lightning:layoutItem size="12" padding="around-small">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-12">
+            <lightning:buttonIcon iconName="utility:filterList" onclick="{! c.filter }" alternativeText="close" />
+        </div>
+        <div class="slds-col">
+    		<h2 class=" slds-align_absolute-center slds-p-top_small slds-text-heading_medium">CENTRAL DE ACTIVIDADES DEL TALLER</h2>
+ 		</div>
+        </div>
+        <aura:if isTrue="{!v.toggleFilter}">
+        <div class="slds-grid slds-wrap slds-grid_align-center" style="padding:5px;">
+         <div class="slds-col" style="width: 30%;margin-right: 20px;">
+             <div class="slds-form-element">
+                        <label class="slds-form-element__label">Taller</label>
+                        <div class="slds-form-element__controller">
+                            <ui:inputSelect class="slds-select" aura:id="territoryId" value="{!v.territoryValue}" change="{!c.handleTerritoryOnChange}">
+                                <ui:inputSelectOption text="--None--"/>
+                                <aura:iteration items="{!v.territoryFilter1}" var="terrritoryVal">
+                                    <ui:inputSelectOption text="{!terrritoryVal}"/>
+                                </aura:iteration>
+                            </ui:inputSelect>
+                        </div>
+                    </div>
+              </div>
+            <div class="slds-col" style="width: 30%;">
+              <div class="slds-form-element" >
+                        <label class="slds-form-element__label">Tipo De Servicio</label>
+                        <ui:inputSelect class="slds-select" aura:id="tipoId" value="{!v.tipoValue}" change="{!c.handleTipoDeServiceOnChange}">
+                            <ui:inputSelectOption text="--None--"/>
+                            <aura:iteration items="{!v.tipoDeServiceFilter2}" var="tipoServiceVal">
+                                <ui:inputSelectOption text="{!tipoServiceVal}"/>
+                            </aura:iteration>
+                        </ui:inputSelect>
+                    </div>
+  		 </div>
+         <div class="slds-col" style="width: 30%;margin-left: 20px;">
+              <div class="slds-form-element">
+                        <label class="slds-form-element__label">Estado</label>
+                        <ui:inputSelect class="slds-select" aura:id="statusId" value="{!v.statusValue}" change="{!c.handleStausOnChange}">
+                            <!--ui:inputSelectOption text="Nueva"/>
+                            <aura:iteration items="{!v.StatusFilter4}" var="statusVal">
+                                <ui:inputSelectOption text="{!statusVal}"/>
+                            </aura:iteration-->
+                            <ui:inputSelectOption text="All" />
+                             <ui:inputSelectOption text="Nueva" value="true"/>
+                            <ui:inputSelectOption text="En curso" />
+                            <ui:inputSelectOption text="En pausa" />
+                            <ui:inputSelectOption text="Completada"/>
+                            <ui:inputSelectOption text="No aplicable" />                            
+                        </ui:inputSelect>
+                    </div>
+         </div>       
+        </div>
+        <div class="slds-grid slds-wrap slds-grid_align-end">
+ 		<div class="slds-col slds-size_6-of-12" >
+              <div class="slds-form-element" style="width: 40%;float: right;padding: 5px;">
+                        <ui:inputDate aura:id="startDate" label="Desde" class="field" value="{!v.StartDateValue}" change="{!c.handleStartDateOnChange}" displayDatePicker="true" />
+              </div>
+         </div>
+         <div class="slds-col slds-size_6-of-12">
+              <div class="slds-form-element" style="width: 40%;padding: 5px;">
+                        <ui:inputDate aura:id="endDate" label="Hasta" class="field" value="{!v.EndDateValue}" change="{!c.handleEndDateOnChange}" displayDatePicker="true" />
+                </div>
+         </div> 
+        </div>
+        <div class=""><!-- slds-p-top_x-large-->
+
+            
+                <div class="slds-col slds-size_4-of-12 slds-m-bottom--medium slds-p-left_small slds-p-right_small">
+                    <div class="slds-form-element">
+                        <!--label class="slds-form-element__label">User</label>
+                        <ui:inputSelect class="slds-select" aura:id="userId" value="{!v.userValue}" change="{!c.handleChangeTerritoryFilter1}">
+                            <ui:inputSelectOption text="None"/>
+                            <aura:iteration items="{!v.UserListFilter3}" var="userVal">
+                                <ui:inputSelectOption text="{!userVal}"/>
+                            </aura:iteration>
+                        </ui:inputSelect-->
+                        <lightning:recordEditForm objectApiName="WorkStep">
+                            <lightning:inputField fieldName="For_Filter__c" onchange="{!c.handleContactLookupChange}"/>
+                        </lightning:recordEditForm>
+                    </div>
+                </div> 
+        </div>
+         </aura:if> 
+        
+        <!-- Tabla MFC -->
+
+        
+<div aura:id="containerTable" id="table-scroll" class="table-scroll slds-scrollable" style="width:100% !important;">
+  <table id="main-table" class="main-table ">
+    <thead>
+      <tr>
+        <th scope="col">Status</th>
+        <th scope="col">Titulo de la Tarea</th>
+        <th scope="col">Mecánico</th>
+        <th scope="col">Número de OT</th>
+        <th scope="col">Placa Vehículo</th>
+        <!--<th scope="col">VIN</th>
+        <th scope="col">Modelo</th>-->
+         <aura:if isTrue="{!v.statusValue=='En curso'}"> 
+          <th scope="col">Tiempo en Curso</th>
+         </aura:if>
+        <th scope="col">Minutos Trabajados</th>
+        <th scope="col">Horas Iniciales</th>
+        <th scope="col">Fecha y Hora de Inicio</th>
+        <th scope="col">Fecha de OT</th>
+        <th scope="col">Estado</th>
+             
+        <th scope="col">Cliente</th>
+        <th scope="col">Propietario de la OT</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+        <aura:iteration items="{!v.responseWrapperRec.wmList}" var="wrapObj"> 
+      <tr aura:id="row" style="{!wrapObj.bcolor + ';'}"> 
+         <th data-label="indicator" style="border-bottom-left-radius: 5px;border-top-left-radius: 5px">
+           <img src="{!$Resource.ShowWorkStepResources + '/Images/'+ wrapObj.color}" style="width: 45px;"/>
+         </th>
+                                      <td data-label="workStepName" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.workStepName}">
+                                    {!wrapObj.workStepName}
+                                </div>
+                            </td>
+           <td data-label="accountName" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <!--div class="slds-truncate" title="{!wrapObj.accountName}">
+                                    <ui:inputSelect class="slds-select slds-size_4-of-12" aura:id="conId" >
+                                        <ui:inputSelectOption text="None"/>
+                                        <aura:iteration items="{!wrapObj.associatedContacts}" var="conObj">
+                                            <ui:inputSelectOption text="{!conObj}"/>
+                                        </aura:iteration>
+                                    </ui:inputSelect>
+                                </div-->
+                                <div class="slds-truncate" title="{!wrapObj.contactName}">
+                                    {!wrapObj.contactName}
+                                </div>
+                            </td>
+          <td class="nav" data-label="workOrderOwnerNumber" data-record="{!wrapObj.workOrderID}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.workOrderOwnerNumber}">
+                                     <a href="" onclick="{!c.navToRecord}">{!wrapObj.workOrderOwnerNumber}</a>
+                                </div>
+                            </td>
+                   
+                            <td class="nav" data-label="assetName" data-record="{!wrapObj.assetID}"  style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.assetName}">
+                                    
+                                    <a href="" onclick="{!c.navToRecord}">{!wrapObj.assetName}</a>
+                                </div>
+                            </td>
+          					<!--
+                            <td data-label="VIN" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.VIN}">
+                                    {!wrapObj.VIN}
+                                </div>
+                            </td>
+                            <td data-label="Modelo" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.Modelo}">
+                                    {!wrapObj.Modelo}
+                                </div>
+                            </td>
+       						-->
+          					 <aura:if isTrue="{!v.statusValue=='En curso'}"> 
+                              <td data-label="Tiempototaltrabajado"  style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate"  id="{!wrapObj.recordId}" title="Tiempo trabajado">                                  
+                                   
+                                </div>
+                              </td>
+                             </aura:if>
+          					
+                            <td data-label="Tiempotrabajadoenmins"  data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.Tiempotrabajadoenmins}">                                  
+                                    {!wrapObj.Tiempotrabajadoenmins}
+                                </div>
+                            </td>
+                            <td data-label="Cantidaddehoras" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.Cantidaddehoras}">
+                                    {!wrapObj.Cantidaddehoras}
+                                </div>
+                            </td>
+                            <td data-label="StartTime" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.StartTime}">
+                                    {!wrapObj.StartTime}
+                                </div>
+                            </td>
+                            
+                            <td data-label="OTDate" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.workOrderDate}">
+                                    {!wrapObj.workOrderDate}
+                                </div>
+                            </td>
+       						
+                            <td class="nav" data-label="status" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'+'color: #0176d3;font-weight: bolder;'}">
+                                <div class="slds-truncate" title="{!wrapObj.status}">
+                                    <a href="" onclick="{!c.navToRecord}">{!wrapObj.status}</a>
+                                </div>
+                            </td>
+                            <!--
+                            <td data-label="caseNumber" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.caseNumber}">
+                                    {!wrapObj.caseNumber}
+                                </div>
+                            </td>
+							
+                            <td data-label="workPlanName" data-record="{!wrapObj.recordId}" style="{!'background-color: ' + wrapObj.color + ';'}">
+                                <div class="slds-truncate" title="{!wrapObj.workPlanName}">
+                                    {!wrapObj.workPlanName}
+                                </div>
+                            </td>-->
+                           
+                            <td data-label="accountName" data-record="{!wrapObj.recordId}" >
+                                <div class="slds-truncate" title="{!wrapObj.accountName}">
+                                    {!wrapObj.accountName}
+                                </div>
+                            </td>
+          <td data-label="workOrderOwnerName" data-record="{!wrapObj.recordId}" style="border-bottom-right-radius: 5px;border-top-right-radius: 5px; border-right:2px solid #f3f3f38c;" >
+           <div class="slds-truncate" title="{!wrapObj.workOrderOwnerName}">
+              {!wrapObj.workOrderOwnerName}      
+           </div>
+        </td> 
+                            <th data-label="ChangeOwner" data-record="{!wrapObj.recordId}" class="test" style="border-radius: 7px;border-right: 1px solid #d4d4d4;">
+                                <div class="slds-grid slds-size_small" title="changeOwner" style="width: 100%;">
+                                     <lightning:buttonGroup>
+                                            <!--button style="background-color:#037ffc; color:white; margin-right:3px;" label="Change Owner" title="Change Owner" onclick="{!c.handleChangeOwnerClick }">Change Owner</button-->
+                                         <lightning:button  label="Asignar" title="Asignar" onclick="{!c.handleChangeContactClick}"/>
+                                            <!--button style="background-color:#037ffc; color:white; margin-right:3px;" label="Add Contact" title="Add Contact" onclick="{!c.handleAddNewContactClick }">Add Contact</button-->
+                                            <aura:if isTrue="{!and(wrapObj.status == 'Nueva' , wrapObj.contactName != null)}"> 
+                                                <lightning:button  label="Iniciar" title="Iniciar Trabajo" onclick="{!c.handleStartClick }" />
+                                         		<lightning:button  label="Completar" title="Completar el paso" onclick="{!c.handleCompleteClick }" />
+                                            </aura:if>
+                                            <aura:if isTrue="{!and(wrapObj.status == 'En curso' , wrapObj.contactName != null)}"> 
+                                                <lightning:button label="Pausar" title="Pausar" onclick="{!c.handlePauseClick }" />
+                                                <lightning:button label="Completar" title="Completar el paso" onclick="{!c.handleCompleteClick }" />
+                                            </aura:if>
+                                            <aura:if isTrue="{!and(wrapObj.status == 'En pausa' , wrapObj.contactName != null)}"> 
+                                                <lightning:button  label="Continuar" title="Continuar" onclick="{!c.handleUnPauseClick }" />
+                                                <lightning:button  label="Completar" title="Completar el paso" onclick="{!c.handleCompleteClick }" />
+                                            </aura:if>
+                                            <aura:if isTrue="{!or(wrapObj.status == 'No aplicable', wrapObj.status == 'None')}"> 
+                                                <aura:if isTrue="{!wrapObj.contactName != null}"> 
+                                                    <lightning:button  label="Completar" title="Completar el paso" onclick="{!c.handleCompleteClick }" />
+                                                </aura:if>
+                                        	</aura:if>
+                                    </lightning:buttonGroup>
+                                </div>
+                            </th>
+         <!--  <th>First top Column</th>
+          <th>First top Column</th>
+        <td>Cell content
+          test </td>
+        <td><a href="#">Cell content longer</a></td>
+        <td>Cell content with more content and more content Cell </td>
+        <td>Cell content</td>
+        <td>Cell content</td>
+        <td>Cell content</td>
+        <td>Cell content</td>-->
+        
+      </tr>
+     
+     
+        </aura:iteration>
+    </tbody>
+  </table>
+</div>
+<lightning:layoutItem padding="around-small" flexibility="auto" class="right-align">
+            <lightning:button label="Prev" iconName="utility:chevronleft" iconPosition="left"
+                              onclick="{!c.onPrev}" disabled="{! v.hidePrevPage}"/>
+            <aura:if isTrue="{!((v.pageNumber-1)*v.pageSize+v.resultSize) == 0}">
+                <span class="slds-p-horizontal_small">
+                    Página {!v.pageNumber} | Mostrando Datos de {! ((v.pageNumber-1)*v.pageSize)+' a '+((v.pageNumber-1)*v.pageSize+v.resultSize)}
+                </span>
+                <aura:set attribute="else">
+                    Página {!v.pageNumber} | Mostrando Datos de {! ((v.pageNumber-1)*v.pageSize+1)+' a '+((v.pageNumber-1)*v.pageSize+v.resultSize)}
+                </aura:set>
+            </aura:if>
+            <lightning:button label="Next" iconName="utility:chevronright" iconPosition="right" 
+                              disabled="{! v.isLastPage}" onclick="{!c.onNext}"/>
+        </lightning:layoutItem>
+        <!-- -->
+   
+        <div class="slds-m-around_xx-large">          
+            <aura:if isTrue="{!v.isModalOpen}">            
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container" >
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Cambiar Propietario</h2>
+                        </header>
+                        
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <lightning:recordEditForm recordId="{!v.recId}" objectApiName="WorkStep" onsuccess="{!c.handleOnSuccess}">
+                                <lightning:messages />                            
+                                <lightning:inputField fieldName="mecanico__c" />
+                                <lightning:button class="slds-m-top_small slds-float_right" variant="brand" type="submit" name="update" label="Update" />
+                            </lightning:recordEditForm>
+                            <br/><br/><br/><br/><br/>
+                        </div>
+                        <!--Modal/Popup Box Footer Starts here-->                  
+                        
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>    
+        
+        <div class="slds-m-around_xx-large">
+            <aura:if isTrue="{!v.isStartButtonClick}">            
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container" >
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Iniciar Trabajo</h2>
+                        </header>
+                        
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <!--aura:iteration items="{!v.workStepObject}" var="workstep"-->
+                                <div class="slds-col ">
+                                    <lightning:input type="dateTime" aura:id="startDateField" label="Start Date" value="{!v.showCurrentDateTime}" disabled="true"/>
+                                        <div class="slds-form-element" Style="display:none;">
+                                            <label class="slds-form-element__label">Status</label>
+                                            <ui:inputSelect class="slds-select" aura:id="statusField">
+                                                <!--ui:inputSelectOption text="None"/-->
+                                                <!--aura:iteration items="{!v.StatusFilter4}" var="statusVal">
+                                                    <ui:inputSelectOption text="{!statusVal}" />
+                                                </aura:iteration-->
+                                                <ui:inputSelectOption text="Nueva" />
+                                                <ui:inputSelectOption text="En curso" value="true"/>
+                                                <ui:inputSelectOption text="En pausa" />
+                                                <ui:inputSelectOption text="Completada"/>
+                                                <ui:inputSelectOption text="No aplicable" />
+                                            </ui:inputSelect>
+                                        </div>   
+                                    <lightning:recordEditForm aura:id="iniciarForm" recordId="{!v.recId}" objectApiName="WorkStep">
+                                        <lightning:messages />  
+                                        <div class="slds-col slds-size_1-of-1">
+                                            <!--lightning:inputField aura:id="Mecnicasignadofield" fieldName="Mec_nico_asignado__c" /-->
+                                            <lightning:inputField aura:id="descField" fieldName="Description" />
+                                        </div>
+                                    </lightning:recordEditForm>  
+                                </div>
+                            <!--/aura:iteration-->
+                            <lightning:button variant="brand" label="Update" name="Update" onclick="{!c.updateIniciar}" class="slds-m-top_small slds-float_right" />
+                        </div>        
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>
+        
+        <div class="slds-m-around_xx-large">
+            <aura:if isTrue="{!v.isPauseButtonClick}">            
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container" >
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{!c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                        <header class="slds-modal__header">
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Pausar</h2>
+                        </header>
+                        
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <lightning:recordEditForm aura:id="editform2" recordId="{!v.recId}" objectApiName="WorkStep" onsuccess="{!c.handleOnSuccessPause}">
+                                <lightning:messages />  
+                                <div class="slds-col slds-size_1-of-1">
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label">Status</label>
+                                        <ui:inputSelect class="slds-select" disabled="true">                                    
+                                            <ui:inputSelectOption text="Nueva" />
+                                            <ui:inputSelectOption text="En curso" />
+                                            <ui:inputSelectOption text="En pausa" value="true"/>
+                                            <ui:inputSelectOption text="Completada"/>
+                                            <ui:inputSelectOption text="No aplicable" />
+                                        </ui:inputSelect>
+                                    </div>
+                                    <lightning:inputField fieldName="Hora_de_inicio_de_pausa__c" value="{!v.showCurrentDateTime}" disabled="true"/>
+                                </div>
+                                <lightning:button class="slds-m-top_small slds-float_right" variant="brand" type="submit" name="update1" label="Update" />
+                            </lightning:recordEditForm>                        
+                        </div>
+                        <!--Modal/Popup Box Footer Starts here-->                  
+                        
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>
+        
+        <div class="slds-m-around_xx-large">
+            <aura:if isTrue="{!v.isUnPauseButtonClick}">            
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container" >
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{!c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                        <header class="slds-modal__header">
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Quitar Pausa</h2>
+                        </header>
+                        
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label">Status</label>
+                                <ui:inputSelect class="slds-select" disabled="true">                                    
+                                    <ui:inputSelectOption text="Nueva" />
+                                    <ui:inputSelectOption text="En curso" value="true"/>
+                                    <ui:inputSelectOption text="En pausa" />
+                                    <ui:inputSelectOption text="Completada"/>
+                                    <ui:inputSelectOption text="No aplicable" />
+                                </ui:inputSelect>
+                            </div>
+                            <lightning:recordEditForm aura:id="editform2" recordId="{!v.recId}" objectApiName="WorkStep" onsuccess="{!c.handleOnSuccessUnPause}">
+                                <lightning:messages />  
+                                <div class="slds-col slds-size_1-of-1">
+                                    <lightning:inputField fieldName="Hora_de_inicio_de_pausa__c" disabled = "true" />
+                                    <lightning:inputField fieldName="Hora_de_finalizaci_n_de_pausa__c" value ="{!v.showCurrentDateTime}" disabled = "true"/>
+                                    <!--lightning:inputField fieldName="Trabajo_Pausado__c" /-->
+                                </div>
+                                <lightning:button class="slds-m-top_small slds-float_right" variant="brand" type="submit" name="update1" label="Update" />
+                            </lightning:recordEditForm>                        
+                        </div>
+                        <!--Modal/Popup Box Footer Starts here-->                  
+                        
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>
+        
+        <div class="slds-m-around_xx-large">
+            <aura:if isTrue="{!v.isCompleteButtonClick}">            
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container" >
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{!c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                        <header class="slds-modal__header">
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Completar el paso</h2>
+                        </header>
+                        
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                             <div class="slds-col ">
+                                 <div class="slds-form-element">
+                                     <label class="slds-form-element__label">Status</label>
+                                     <ui:inputSelect class="slds-select" aura:id="statusFieldOnComplete" disabled="true">
+                                         <!--ui:inputSelectOption text="None"/-->
+                                         <!--aura:iteration items="{!v.StatusFilter4}" var="statusVal">
+                                                    <ui:inputSelectOption text="{!statusVal}"/>
+                                                </aura:iteration-->
+                                         <ui:inputSelectOption text="Nueva" />
+                                         <ui:inputSelectOption text="En curso" />
+                                         <ui:inputSelectOption text="En pausa" />
+                                         <ui:inputSelectOption text="Completada" value="true"/>
+                                         <ui:inputSelectOption text="No aplicable" />
+                                     </ui:inputSelect>
+                                 </div>
+                            <lightning:recordEditForm aura:id="editformOnComplete" recordId="{!v.recId}" objectApiName="WorkStep">
+                                <lightning:messages />  
+                                <div class="slds-col slds-size_1-of-1">
+                                    <lightning:inputField aura:id="startTimeIdOnComplete" fieldName="StartTime" disabled="true"/>                                    
+                                    <lightning:input type="dateTime" aura:id="endTimeIdOnComplete" label="End Date" value="{!v.showCurrentDateTime}" disabled="true"/>
+                                    <lightning:OutputField aura:id="TotaldeIdOnComplete" fieldName="Total_de_tiempo_trabajado_en_minutos__c" />
+                                </div>
+                            </lightning:recordEditForm>
+                             <lightning:button variant="brand" label="Update" name="Update" onclick="{!c.updateCompletar}" class="slds-m-top_small slds-float_right" />
+                            </div>
+                        </div>
+                        <!--Modal/Popup Box Footer Starts here-->
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>
+        
+        <div class="slds-m-around_xx-large">
+            <aura:if isTrue="{!v.isAddContactButtonClick}">            
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open modalSection">
+                    <div class="slds-modal__container" >
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Completar el paso</h2>
+                        </header>
+                        
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                           <lightning:recordForm
+                                                  objectApiName="Contact"
+                                                  fields="{!v.fields}"
+                                                  error="Error"
+                                                  recordTypeId="0124U00000111H7QAI"
+                                                  onsuccess="{!c.handleNewCreatedContactSuccess}" />
+                        </div>                        
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open backdropDiv"></div>
+            </aura:if>
+        </div>
+        
+        <div class="slds-m-around_xx-large">
+            <aura:if isTrue="{!v.isChangeContactButtonClick}">            
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container" >
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{!c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                        <header class="slds-modal__header">
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Asignar a Team</h2>
+                        </header>
+                        
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <lightning:recordEditForm aura:id="editformContact" recordId="{!v.recId}" objectApiName="WorkStep" onsuccess="{!c.handleOnSuccessChangeContact}">
+                                <lightning:messages />  
+                                <div class="slds-col slds-size_1-of-1">
+                                    <lightning:inputField fieldName="team__c" />
+                                </div><br/><br/><br/><br/><br/><br/><br/>
+                                <lightning:button class="slds-m-top_small slds-float_right" variant="brand" type="submit" name="update1" label="Update" />
+                            </lightning:recordEditForm>                        
+                        </div>
+                        <!--Modal/Popup Box Footer Starts here-->
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>        
+        
+    </lightning:layoutItem>
+</aura:component>

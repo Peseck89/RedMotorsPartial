@@ -1,0 +1,65 @@
+.THIS .info-header h1 {
+  font-size: 35px;
+  margin-bottom: 15px;
+}
+
+.THIS .info-header h2 {
+  font-size: 25px;
+  color: #707070;
+}
+
+.THIS .container section {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.THIS .main-section input {
+  width: 30%;
+  border-radius: 30px;
+}
+
+.THIS .main-section select {
+  width: 30%;
+  border-radius: 30px;
+}
+
+.THIS .send-button {
+  padding: 5px 35px;
+  border: none;
+  background: #000;
+  color: #fff;
+  border-radius: 30px;
+  margin-top: 15px;
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+  .THIS .container section {
+    width: 100%;
+  }
+
+  .THIS .main-section input {
+    width: 50%;
+  }
+
+  .THIS .main-section select {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .THIS .container section {
+    width: 100%;
+  }
+
+  .THIS .main-section input {
+    width: 70%;
+  }
+
+  .THIS .main-section select {
+    width: 70%;
+  }
+
+  .THIS .info-header h2 {
+    font-size: 17px;
+  }
+}

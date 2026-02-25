@@ -1,0 +1,136 @@
+<template>
+    <lightning-card>
+        <div class="head-container">
+            <template if:false={isJuridico}>
+                <h1 style="padding-left: 12px;">Identificaciones</h1>
+            </template>
+            <template if:true={isJuridico}>
+                <h1 style="padding-left: 12px;">Identificaciones Empresariales</h1>
+            </template>
+            <div class="slds-p-horizontal_small slds-p-bottom_small">
+                <lightning-button label="Agregar" variant="brand" onclick={handleAgregar}></lightning-button>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-text-title">Tipo</th>
+                        <th class="slds-text-title">Número</th>
+                        <th class="slds-text-title">País</th>
+                        <th class="slds-text-title">Principal</th>
+                        <th class="slds-text-title">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template if:true={primerIdentificacion}>
+                        <tr class="slds-hint-parent">
+                            <td>{primerIdentificacion.Tipo_de_documento__rName}</td>
+                            <td>{primerIdentificacion.Identificaci_n__c}</td>
+                            <td>{primerIdentificacion.Pais__c}</td>
+                            <td>
+                                <template if:true={primerIdentificacion.Identificacion_principal__c}>
+                                    <lightning-icon icon-name="utility:check" size="x-small"></lightning-icon>
+                                </template>
+                            </td>
+                            <td>
+                                <button class="slds-button" onclick={handleEditar} data-id={primerIdentificacion.Id}>
+                                    <lightning-icon icon-name="utility:edit" size="small"></lightning-icon>
+                                </button>
+                                <!-- <button class="slds-button" onclick={handleEliminar} data-id={primerIdentificacion.Id}>
+                                    <lightning-icon icon-name="utility:delete" size="small"></lightning-icon>
+                                </button> -->
+                            </td>
+                        </tr>
+                    </template>
+
+                    <template if:true={otrasIdentificaciones}>
+                        <tr>
+                            <td colspan="5">
+                                <div class="slds-text-align_center">
+                                    <lightning-button if:true={mostrarDropdown}
+                                        label="Ocultar"
+                                        icon-name="utility:close"
+                                        onclick={toggleDropdown}></lightning-button>
+                                    <lightning-button if:false={mostrarDropdown}
+                                        label="Mostrar más"
+                                        icon-name="utility:add"
+                                        onclick={toggleDropdown}></lightning-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+
+                    <template if:true={mostrarDropdown}>
+                        <template for:each={otrasIdentificaciones} for:item="identificacion">
+                            <tr key={identificacion.Id} class="slds-hint-parent">
+                                <td>{identificacion.Tipo_de_documento__rName}</td>
+                                <td>{identificacion.Identificaci_n__c}</td>
+                                <td>{identificacion.Pais__c}</td>
+                                <td>
+                                    <!-- <template if:true={identificacion.Identificacion_principal__c}>
+                                        <lightning-icon icon-name="utility:check" size="x-small"></lightning-icon>
+                                    </template> -->
+                                </td>
+                                <td>
+                                    <button class="slds-button" onclick={handleEditar} data-id={identificacion.Id}>
+                                        <lightning-icon icon-name="utility:edit" size="small"></lightning-icon>
+                                    </button>
+                                    <button class="slds-button" onclick={handleEliminar} data-id={identificacion.Id}>
+                                        <lightning-icon icon-name="utility:delete" size="small"></lightning-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">{modalTitle}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-input
+                        label="Número de Identificación"
+                        type="number"
+                        value={identificacionActual.Identificaci_n__c}
+                        onchange={handleNumeroChange}>
+                    </lightning-input>
+
+                    <lightning-combobox
+                        label="Tipo de Identificación"
+                        value={identificacionActual.Tipo_de_documento__c}
+                        options={tipoIdentificacionOptions}
+                        onchange={handleTipoChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="País"
+                        value={identificacionActual.Pais__c}
+                        options={paisOptions}
+                        onchange={handlePaisChange}
+                        disabled={deshabilitarPais}>
+                    </lightning-combobox>
+
+                    <!-- <lightning-input
+                        type="checkbox"
+                        label="¿Identificación principal?"
+                        checked={identificacionActual.Identificacion_principal__c}
+                        onchange={handlePrincipalChange}>
+                    </lightning-input> -->
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancelar" onclick={cerrarModal}></lightning-button>
+                    <lightning-button label="Guardar" variant="brand" onclick={guardarIdentificacion}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

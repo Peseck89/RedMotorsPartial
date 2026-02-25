@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="automotiveDataCreator">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage">
+            <property name="typeForm" type="String" label="Tipo de Mantenimiento (Familia, Marca o Categoría)" description="Parametro dinamico" />
+            <property name="recordTypeId" type="String" label="ID del recordtype" description="Id del recordtype" />
+            <property name="recordTypeDescripton" type="String" label="Descripón del recordtype IMPORTANTE como esta actualmente" description="Parametro dinamico" />
+            <property name="label" type="String" label="Label como esta en el recordtype como Producto Red Motors en Product2" description="Parametro dinamico" />
+            <property name="recordTypeApiName" type="String" label="ApiName del RecordType como Producto_Red_Motors" description="Parametro dinamico" />
+            <property name="isWizard" type="Boolean" label="Es config Wizard" description="Parametro dinamico" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

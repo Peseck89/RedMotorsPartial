@@ -1,0 +1,45 @@
+<!--
+  @description       : Componente muestra una tarea en formato card, vista kanban
+  @author            : Marco Hernandez
+  @group             : Redmotors
+  @last modified on  : 09-02-2022
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <template if:true={isSameStage}>
+        <li class="slds-card card-shadow card_left_color_red " draggable="true" key={recordItem.Id}  ondragstart={handleDragStart}>
+            <div style="padding: 10px;">                                                       
+                <div class="slds-m-top_x-small" style="display: flex;align-items: center;justify-content: space-between;">
+                    <div>
+                            <template if:true={isRunningStatus}>                                
+                                <div class="slds-text-title" style="font-family: sans-serif;">
+                                    <strong>Trabajado:</strong> <span class="slds-m-around_xxx-small" style="">{record.hoursWorked}hrs. {record.minutesWorked}mins. {record.secondsWorked}secs.</span>
+                                </div>
+                            </template>
+                            <template if:true={isPauseStatus}>                                
+                                <div class="slds-text-title" style="font-family: sans-serif;">
+                                   <strong>Pausa:</strong> <span  class="slds-m-around_xxx-small"  style="">{record.minutesPaused}.{record.secondsPaused}mins.</span>
+                                </div> 
+                            </template>
+                            
+                            <div class="slds-text-title" style="font-family: sans-serif;">
+                                <strong>Inicial:</strong> <span  class="slds-m-around_xxx-small"  style="">{record.startingMinutes}mins.</span>
+                            </div>                            
+                            <div class="slds-text-title slds-m-around_xxx-small" style="font-family: sans-serif;"><strong>Caso: </strong> <a href="#" data-id={record.caseId} data-object="Case" onclick={navigateToRecord}> {record.caseNumber}</a></div>
+                            <div class="slds-text-title" style="font-family: sans-serif;"><strong>Orden: </strong> <a href="#" data-id={record.workOrderId} data-object="WorkOrder" onclick={navigateToRecord}> {record.workOrderNumber}</a></div>
+                            <div class="slds-text-title" style="font-family: sans-serif;"><strong>Mecánico: </strong>  {record.mechanicName}</div>
+                            <div class="slds-text-title" style="font-family: sans-serif;"><strong>Tarea: </strong> <a href="#" data-id={record.id} data-object="WorkStep"  onclick={navigateToRecord}> {record.name}</a></div>
+                            <div class="slds-text-title" style="font-family: sans-serif;"><strong>Placa:</strong> <span class="slds-text-title_caps"> {record.vehiclePlateNumber}</span></div>
+                            <div class="slds-text-title" style="font-family: sans-serif;"><strong>Cliente: </strong> <a href="#" data-id={record.customerId}  data-object="Account" onclick={navigateToRecord}>{record.customerName}</a></div>
+                    </div>
+                    <div style="text-align: right;">                        
+                        <span style={color}></span>                        
+                    </div>
+                </div>
+            </div> 
+            <div style="padding: 5px 10px 5px 10px;background-color: #f9f9f9;color:#494848;font-size: 10px;text-align: right;font-family: sans-serif;">
+                Fecha Creación {record.createdDate}
+            </div>            
+        </li>
+    </template>
+</template>

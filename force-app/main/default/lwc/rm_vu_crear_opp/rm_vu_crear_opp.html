@@ -1,0 +1,15 @@
+<template>
+    <template if:true={showSelectInventory}>
+        <c-rm_vu_inventario oninventoryselecion={handleVehicleSelectionEvent} default-selected-item={prodXBodegaId} brand={brand} year={year} model={model} vin={vin} internal-color={internalColor} external-color={externalColor} tipo-combustible={tipoCombustible} placa={placa}>
+            <span slot="actions">
+                <lightning-button variant="brand" label="Continuar" title="Continuar" disabled={disableNextButton}
+                    onclick={handleGoNextStepHandle} class="slds-m-left_x-small"></lightning-button>
+            </span>
+        </c-rm_vu_inventario>
+    </template>
+    <template if:true={showConfirmation}>
+        <c-rm_vu_crear_opp_confirmar ongobackstep={handleGoBackEvent} onnextstep={handleGoNextStepHandle}
+            account-id={recordId} records={selectedProdXBodItems} show-account-input={showAccountInput}
+            onclose={handlCloseEvent}></c-rm_vu_crear_opp_confirmar>
+    </template>
+</template>

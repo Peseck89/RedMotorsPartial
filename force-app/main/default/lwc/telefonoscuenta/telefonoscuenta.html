@@ -1,0 +1,143 @@
+<template>
+    <lightning-card>
+        <div class="head-container">
+            <template if:false={isJuridico}>
+                <h1 style="padding-left: 12px;">Teléfonos</h1>
+            </template>
+            <template if:true={isJuridico}>
+                <h1 style="padding-left: 12px;">Teléfonos Empresariales</h1>
+            </template>
+            <div class="slds-p-horizontal_small slds-p-bottom_small">
+                <lightning-button label="Agregar" variant="brand" onclick={handleAgregar}></lightning-button>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-text-title">Número</th>
+                        <th class="slds-text-title">Código de área</th>
+                        <th class="slds-text-title">Clase</th>
+                        <th class="slds-text-title">Tipo de Comunicación</th>
+                        <th class="slds-text-title">Teléfono principal</th>
+                        <th class="slds-text-title">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template if:true={primerTelefono}>
+                        <tr class="slds-hint-parent">
+                            <td>{primerTelefono.N_mero_de_tel_fono__c}</td>
+                            <td>{primerTelefono.C_digo_de_rea__c}</td>
+                            <td>{primerTelefono.Tipo_telefono__c}</td>
+                            <td>{primerTelefono.Tipo_de_datos_de_comunicaci_n__r.Name}</td>
+                            <td>
+                                <lightning-input type="checkbox" checked={primerTelefono.Telefono_principal__c} disabled class="slds-m-left_small"></lightning-input>
+                            </td>
+                            <td>
+                                <button class="slds-button" onclick={handleEditar} data-id={primerTelefono.Id}>
+                                    <lightning-icon icon-name="utility:edit" size="small"></lightning-icon>
+                                </button>
+                                <!-- <button class="slds-button" onclick={handleEliminar} data-id={primerTelefono.Id}>
+                                    <lightning-icon icon-name="utility:delete" size="small"></lightning-icon>
+                                </button> -->
+                            </td>
+                        </tr>
+                    </template>
+
+                    <template if:true={otrosTelefonos}>
+                        <tr>
+                            <td colspan="6">
+                                <div class="slds-text-align_center">
+                                    <lightning-button if:true={mostrarDropdown}
+                                     label="Ocultar" 
+                                     icon-name="utility:close" 
+                                     onclick={toggleDropdown}></lightning-button>
+                                    <lightning-button if:false={mostrarDropdown}
+                                     label="Mostrar más" 
+                                     icon-name="utility:add" 
+                                     onclick={toggleDropdown}></lightning-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+
+                    <template if:true={mostrarDropdown}>
+                        <template for:each={otrosTelefonos} for:item="telefono">
+                            <tr key={telefono.Id} class="slds-hint-parent">
+                                <td>{telefono.N_mero_de_tel_fono__c}</td>
+                                <td>{telefono.C_digo_de_rea__c}</td>
+                                <td>{telefono.Tipo_telefono__c}</td>
+                                <td>{telefono.Tipo_de_datos_de_comunicaci_n__r.Name}</td>
+                                <td>
+                                    <lightning-input type="checkbox" checked={telefono.Telefono_principal__c} disabled class="slds-m-left_small"></lightning-input>
+                                </td>
+                                <td>
+                                    <button class="slds-button" onclick={handleEditar} data-id={telefono.Id}>
+                                        <lightning-icon icon-name="utility:edit" size="small"></lightning-icon>
+                                    </button>
+                                    <button class="slds-button" onclick={handleEliminar} data-id={telefono.Id}>
+                                        <lightning-icon icon-name="utility:delete" size="small"></lightning-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">{modalTitle}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+
+                    <lightning-combobox
+                        label="Clase"
+                        value={telefonoActual.Tipo_telefono__c}
+                        options={tiposTelefono}
+                        onchange={handleTipoChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="Tipo de Comunicación"
+                        value={telefonoActual.Tipo_de_datos_de_comunicaci_n__c}
+                        options={tiposDatosComunicacion}
+                        onchange={handleTipoDatoChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="Código de Área"
+                        value={telefonoActual.C_digo_de_rea__c}
+                        options={codigosArea}
+                        onchange={handleCodigoChange}>
+                    </lightning-combobox>
+
+                    <lightning-input
+                        label="Número de Teléfono"
+                        type="number"
+                        value={telefonoActual.N_mero_de_tel_fono__c}
+                        onchange={handleNumeroChange}>
+                    </lightning-input>
+
+                    <lightning-input
+                        type="checkbox"
+                        label="Teléfono principal"
+                        checked={telefonoActual.Telefono_principal__c}
+                        onchange={handleTelefonoPrincipalChange}>
+                    </lightning-input>
+
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancelar" onclick={cerrarModal}></lightning-button>
+                    <lightning-button label="Guardar" variant="brand" onclick={guardarTelefono}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

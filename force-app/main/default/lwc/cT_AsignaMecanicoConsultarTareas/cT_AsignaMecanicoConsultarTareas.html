@@ -1,0 +1,98 @@
+<template>
+    <div class="slds-card__body">
+        <table
+            class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_fixed-layout"
+            role="grid" aria-label="Tareas agrupadas por caso">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Mecanico"># Orden</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="No. Caso"># Caso</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="No. Orden">Acción</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Estado">Horas iniciales</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Fecha creación caso">Tiempo transcurrido</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Tarea">Placa</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Minutos iniciales">Fecha OT</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Minutos trabajados">Estado</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Vinrie">Asignado a</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Placa">Trabajo a realizar</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={records} for:item="record">
+                    <tr class={record.statusBackground} key={record.id}>
+                        <td role="gridcell">
+                            <div class="slds-truncate">
+                                <a href={record.WorkOrderURL} target="_blank" class={record.classLink}>{record.WorkOrderNumber}</a>                                                                      
+                            </div>
+                        </td>
+                        <td role="gridcell">
+                            <div class="slds-truncate">
+                                <a href={record.CaseURL} target="_blank"  class={record.classLink}>{record.CaseNumber}</a>
+                            </div>
+                        </td>
+                        <td role="gridcell">
+                            <div class="slds-truncate">
+                                <a href={record.WorkStepURL} target="_blank"  class={record.classLink}>{record.WorkStepName}</a>
+                            </div>
+                        </td>                        
+                        <td role="gridcell">
+                            <div class="slds-truncate">                                            
+                                <span class="slds-badge" style="background-color:#f2f8e7;">{record.startingMinutes}</span>
+                            </div>
+                        </td>
+                        <td role="gridcell">
+                            <div class="slds-truncate">
+                                {record.WorkTime}
+                            </div>
+                        </td>                        
+                        <td role="gridcell">
+                            <div class="slds-truncate">
+                                {record.CT_Placa__c}
+                            </div>
+                        </td> 
+                        <td role="gridcell">
+                            <div class="slds-truncate">
+                                {record.WorkOrderCreationDate}
+                            </div>
+                        </td>
+                        <td role="gridcell">
+                            <div class="slds-truncate">
+                                {record.Status}
+                            </div>
+                        </td>
+                        <td role="gridcell">
+                            <div class="slds-truncate">
+                                {record.CT_AsignadoA__c}
+                            </div>
+                        </td>
+                        <td role="gridcell">
+                            <div class="slds-truncate">
+                                {record.CT_TipoDeTrabajoDelCaso__c}
+                            </div>
+                        </td> 
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+</template>

@@ -1,0 +1,87 @@
+<template>
+  <div class="grid-container">
+    <!-- <div class="slds-p-around_medium lgc-bg main-container"> -->
+      <div style="margin-bottom:20px" class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:people" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <p class="primary-text">
+            Propietario
+          </p>
+        </div>
+        <div class="bottom-container client-data">
+          <span><strong>Nombre: </strong><a href={accountUrl}>{accountName}</a></span>
+          <span><strong>Correo: </strong>{email}</span>
+          <span><strong>Teléfono: </strong>{accountPhone}</span>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:20px" class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:employee_contact" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <p class="primary-text">
+            Contacto
+          </p>
+        </div>
+        <div class="bottom-container client-data">
+          <span><strong>Nombre: </strong><a href={contactUrl}>{contactName}</a></span>
+          <span><strong>Correo: </strong>{contactEmail}</span>
+          <span><strong>Teléfono: </strong>{contactPhone}</span>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:20px" class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:contract" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <p class="primary-text">
+            Datos de Facturación
+          </p>
+        </div>
+        <div class="bottom-container client-data">
+          <span><strong>Nombre: </strong>{invoiceName}</span>
+          <span><strong>Correo: </strong>{invoiceEmail}</span>
+          <span><strong>Teléfono: </strong>{invoicePhoneNumber}</span>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:20px" class="info-data-container ">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:contract" alternative-text="Email"
+            title="Email"></lightning-icon>
+          <p class="primary-text">
+            Comentarios de la cuenta
+          </p>
+        </div>
+        <div class="bottom-container client-data">
+          <div if:false={showEditZone}  class="edit-zone">
+            <span style="border: none;"><strong></strong>{comentVisibles}</span>
+            <lightning-button-icon onclick={handleEditZone}  icon-name="utility:edit" alternative-text="Editar" title="Add user"></lightning-button-icon>
+          </div>
+          <div if:true={showEditZone} class="edit-zone">
+            <textarea onchange={handleEditZoneChange} style="min-width: 100%;">{comentVisibles}</textarea>
+          </div>
+          <div if:true={showEditZone} style="display: flex; justify-content:flex-end; width:100%">
+            <lightning-button variant="destructive" onclick={handleEditZone} label="Cancelar" title="Cancelar" class="slds-m-left_x-small"></lightning-button>
+            <lightning-button variant="brand" label="Guardar" title="Guardar" onclick={guardarComentarios} class="slds-m-left_x-small"></lightning-button>
+          </div>
+        </div>
+      </div>
+      
+
+  
+    <!-- <div class="info-data-container">
+        <div class="top-container">
+          <lightning-icon class="icon-ctct" icon-name="standard:contact" alternative-text="Email" title="Email"></lightning-icon>
+          <p class="primary-text">
+            Contacto
+          </p>
+        </div>        
+        <div class="bottom-container client-data">
+          <span><strong>Ejem: </strong>{}</span>
+        </div>
+      </div> -->
+    <!-- </div> -->
+  </div>
+</template>

@@ -1,0 +1,6 @@
+<design:component>
+    <design:attribute name="pdfVisualforce" label="Nombre de la Visualforce Page para firmar" description="Especifica el nombre de la página de Visualforce que deseas usar para ingresar firma"/>
+    <design:attribute name="pdfFirmado" label="Nombre de la Visualforce Page con PDF ya firmado" description="Especifica el nombre de la página de Visualforce que deseas usar para PDF firmado"/>
+    <design:attribute name="button" label="Nombre del botón que contiene el PDF firmado" description="Especifica el nombre del botón que contiene el PDF  (con firma)"/>
+    <design:attribute name="buttonOriginal" label="Nombre del botón que contiene el PDF sin firmar" description="Especifica el nombre del botón que contiene el PDF original (sin firmar)"/>
+</design:component>

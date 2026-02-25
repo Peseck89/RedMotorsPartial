@@ -1,0 +1,33 @@
+<!--
+  @description       : LWC componente que permite consultar y agregar un vehiculo usado desde inventario
+  @author            : marcohernandezhp@gmail.com
+  @group             : Redmotors
+  @last modified on  : 09-03-2023
+  @last modified by  : marcohernandezhp@gmail.com
+-->
+<template>
+    <lightning-quick-action-panel header="Agregar vehiculo usado">
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <template if:true={isStepOne}>
+            <c-rm_vu_inventario record-id={recordId} prod-x-bod-item={prodXBodItem}
+                oninventoryselecion={handleVehicleSelectionEvent} brand={brand} year={year} model={model} vin={vin}
+                color-interno={colorInterno} color-externo={colorExterno} tipo-combustible={tipoCombustible}
+                placa={placa}>
+                <span slot="actions">
+
+                    <lightning-button variant="brand" label="Siguiente" title="Siguiente" disabled={isVehicleSelected}
+                        onclick={handleContinueClick} class="slds-m-left_x-small"></lightning-button>
+                </span>
+            </c-rm_vu_inventario>
+        </template>
+
+        <template if:true={isStepTwo}>
+            <c-rm_vu_agregar_vehiculo_preview opp-id={recordId} ongobacktosteptwo={handleGoToInventoryScreenEvent} onaddnewitem={handleAddNewItemEvent}
+                prod-x-bodega-id={prodXBodegaId} prod-x-bod-item={prodXBodItem}></c-rm_vu_agregar_vehiculo_preview>
+        </template>
+    </lightning-quick-action-panel>
+</template>

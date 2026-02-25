@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>enviar_BMW</name>
+        <label>enviar BMW</label>
+        <locationX>264</locationX>
+        <locationY>1106</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>get_selcted</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>get_selcted.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>bmwservice@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Bienvenido a BMW Service​</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>BMWEmail</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <assignments>
+        <name>get_email</name>
+        <label>get email</label>
+        <locationX>528</locationX>
+        <locationY>890</locationY>
+        <assignmentItems>
+            <assignToReference>emailsSelected</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>get_selcted.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>queReenvia</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>set_the_filter</name>
+        <label>set the filter</label>
+        <locationX>176</locationX>
+        <locationY>458</locationY>
+        <assignmentItems>
+            <assignToReference>CustomerName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Filtrar</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Copy_1_of_GET_USERS_COMM</targetReference>
+        </connector>
+    </assignments>
+    <choices>
+        <name>Bienvenida</name>
+        <choiceText>Bienvenida</choiceText>
+        <dataType>Boolean</dataType>
+        <value>
+            <booleanValue>true</booleanValue>
+        </value>
+    </choices>
+    <choices>
+        <name>bienvenida1</name>
+        <choiceText>bienvenida</choiceText>
+        <dataType>Boolean</dataType>
+        <value>
+            <booleanValue>true</booleanValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Contrasena</name>
+        <choiceText>Contraseña</choiceText>
+        <dataType>Boolean</dataType>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </choices>
+    <decisions>
+        <name>queReenvia</name>
+        <label>queReenvia</label>
+        <locationX>528</locationX>
+        <locationY>998</locationY>
+        <defaultConnector>
+            <targetReference>get_selcted</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>emailBienvenida</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Bienvenida</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>enviar_BMW</targetReference>
+            </connector>
+            <label>emailBienvenida</label>
+        </rules>
+        <rules>
+            <name>emailReset</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Contrasena</leftValueReference>
+                <operator>WasSelected</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>crearReset</targetReference>
+            </connector>
+            <label>emailReset</label>
+        </rules>
+    </decisions>
+    <description>botones reenvio contrasñea y bienvenida + sin header + user + menos query</description>
+    <dynamicChoiceSets>
+        <description>display the list of contacts</description>
+        <name>Selectcontacts</name>
+        <dataType>String</dataType>
+        <displayField>Name</displayField>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Community_User__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>No</stringValue>
+            </value>
+        </filters>
+        <object>Contact</object>
+        <sortField>Name</sortField>
+        <sortOrder>Asc</sortOrder>
+        <valueField>Email</valueField>
+    </dynamicChoiceSets>
+    <formulas>
+        <name>getAlias</name>
+        <dataType>String</dataType>
+        <expression>LEFT({!get_selcted.LastName}+TEXT({!$Flow.CurrentDate}), 8)</expression>
+    </formulas>
+    <interviewLabel>reenviosComunidad {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>reenviosComunidad</label>
+    <loops>
+        <name>get_selcted</name>
+        <label>get selcted</label>
+        <locationX>176</locationX>
+        <locationY>782</locationY>
+        <collectionReference>ListUsers.selectedRows</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>get_email</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>mostrarEmail</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordCreates>
+        <name>crearReset</name>
+        <label>crearReset</label>
+        <locationX>528</locationX>
+        <locationY>1106</locationY>
+        <connector>
+            <targetReference>get_selcted</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Email__c</field>
+            <value>
+                <elementReference>get_selcted.Email</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>First_Name__c</field>
+            <value>
+                <elementReference>get_selcted.FirstName</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Last_Name__c</field>
+            <value>
+                <elementReference>get_selcted.LastName</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Peticion_de_envio__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>Copy_1_of_GET_USERS_COMM</name>
+        <label>Copy 1 of GET USERS COMM</label>
+        <locationX>176</locationX>
+        <locationY>566</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>List_Community</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ProfileId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>00e4U000001FEiZQAW</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <elementReference>CustomerName</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>User</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Email</queriedFields>
+        <queriedFields>ContactId</queriedFields>
+        <queriedFields>FirstName</queriedFields>
+        <queriedFields>LastName</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>GET_USERS_COMM</name>
+        <label>GET USERS COMM</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Filter</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ProfileId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>00e4U000001FEiZQAW</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>ContactId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>User</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Email</queriedFields>
+        <queriedFields>ContactId</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <screens>
+        <name>Filter</name>
+        <label>Filter</label>
+        <locationX>176</locationX>
+        <locationY>350</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>set_the_filter</targetReference>
+        </connector>
+        <fields>
+            <name>filtrotexto</name>
+            <fieldText>&lt;p&gt;Ingrese el nombre de la persona a quien reenviara la información.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Filtrar</name>
+            <dataType>String</dataType>
+            <fieldText>Filtrar</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>List_Community</name>
+        <label>List Community</label>
+        <locationX>176</locationX>
+        <locationY>674</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>get_selcted</targetReference>
+        </connector>
+        <fields>
+            <name>ListUsers</name>
+            <dataTypeMappings>
+                <typeName>T</typeName>
+                <typeValue>User</typeValue>
+            </dataTypeMappings>
+            <extensionName>flowruntime:datatable</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>label</name>
+                <value>
+                    <stringValue>Data Table</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>selectionMode</name>
+                <value>
+                    <stringValue>MULTI_SELECT</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>minRowSelection</name>
+                <value>
+                    <numberValue>1.0</numberValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>tableData</name>
+                <value>
+                    <elementReference>Copy_1_of_GET_USERS_COMM</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>columns</name>
+                <value>
+                    <stringValue>[{&quot;apiName&quot;:&quot;FirstName&quot;,&quot;guid&quot;:&quot;column-973a&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:0,&quot;label&quot;:&quot;First Name&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;LastName&quot;,&quot;guid&quot;:&quot;column-3548&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:1,&quot;label&quot;:&quot;Last Name&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;Email&quot;,&quot;guid&quot;:&quot;column-6445&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:2,&quot;label&quot;:&quot;Email&quot;,&quot;type&quot;:&quot;email&quot;}]</stringValue>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>mostrarEmail</name>
+        <label>mostrarEmail</label>
+        <locationX>176</locationX>
+        <locationY>1382</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>displaySelected</name>
+            <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 16px;&quot;&gt;&amp;nbsp;El correo se ha enviado a:&lt;/strong&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt; &lt;/span&gt;&lt;strong style=&quot;font-size: 16px;&quot;&gt; {!emailsSelected}&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Send_community</name>
+        <label>Send community</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>GET_USERS_COMM</targetReference>
+        </connector>
+        <fields>
+            <name>Community_Message</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 16px;&quot;&gt;En este componente podra realizar el reenvio de comunidad.&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Send_community_Section1</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Send_community_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>4</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Send_community_Section1_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Que_desea_reenviar</name>
+                    <choiceReferences>Bienvenida</choiceReferences>
+                    <choiceReferences>Contrasena</choiceReferences>
+                    <dataType>Boolean</dataType>
+                    <fieldText>¿Qué desea reenviar?</fieldText>
+                    <fieldType>RadioButtons</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>4</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Send_community_Section1_Column3</name>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>4</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Send_community</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>BMWEmail</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html charset=UTF-8&quot; /&gt;
+
+    &lt;link href=&quot;https://db.onlinewebfonts.com/c/8503adf008ebf781c6342c58254552e4?family=BMWTypeNext+Pro&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;title&gt;Bienvenido a BMW SERVICE&lt;/title&gt;
+
+&lt;/head&gt;
+
+&lt;body style=&quot;width:100%;font-family: BMWTypeNext Pro, arial; font-size: 18px;&quot;&gt;
+&lt;table role=&quot;presentation&quot; style=&quot;max-width:600px;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff; margin: 0 auto&quot;&gt;&lt;tr&gt;
+        &lt;td align=&quot;center&quot; style=&quot;padding:0;&quot;&gt;
+            &lt;table role=&quot;presentation&quot; style=&quot;width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;&quot;&gt;
+                &lt;tr&gt;
+                    &lt;td align=&quot;center&quot; &gt;
+                        &lt;img src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH000002H2It&amp;oid=00D0P000000Dvkz&quot; alt=&quot;&quot; width=&quot;100%&quot; style=&quot;height:auto;display:block;&quot; /&gt;
+                    &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding:36px 20px 10px 20px;&quot;&gt;
+                        &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                            &lt;tr&gt;
+                                &lt;td style=&quot;color:#707070;&quot;&gt;
+                                    &lt;h1 style=&quot;font-size:24px;margin:0 0 20px 0;&quot;&gt;Estimado cliente,&lt;/h1&gt;
+                                    &lt;p style=&quot;font-weight: light; color: #707070&quot;&gt;
+                                        Red Motors le da la bienvenida a nuestro portal BMW Service.
+                                    &lt;/p&gt;
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                            &lt;tr&gt;
+                                &lt;td style=&quot;padding:0;&quot;&gt;
+                                    &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                                        &lt;p style=&quot;font-weight: light; color: #707070; margin: 7px 0&quot;&gt;
+                                          Desde este sitio podrás gestionar las citas de mantenimiento de tu vehículo o moto BMW y MINI de manera más ágil.
+                                        &lt;/p&gt;
+                                    &lt;/table&gt;
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                            &lt;tr&gt;
+                              &lt;td style=&quot;padding:0;&quot;&gt;
+                                  &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;&quot;&gt;
+                                    &lt;p style=&quot;font-weight: light; color: #707070; margin-bottom:45px&quot;&gt;
+                                      Para registrarte solo debés de ingresar en el siguiente botón.
+                                    &lt;/p&gt;
+                                  &lt;/table&gt;
+                              &lt;/td&gt;
+                          &lt;/tr&gt;
+                          &lt;tr&gt;
+                            &lt;td&gt;
+                              &lt;a href=&quot;https://redmotors.my.site.com/ForgotPassword?Email={!get_selcted.Email}&quot;&gt;&lt;img alt=&quot;logo&quot;
+                                  src=&quot;https://redmotors.file.force.com/servlet/servlet.ImageServer?id=015PH000002Jh9l&amp;oid=00D0P000000Dvkz&quot;
+                                  style=&quot;max-width: 676.207px; height:40px;&quot; title=&quot;logo&quot; /&gt;&lt;/a&gt;
+                            &lt;/td&gt;
+                          &lt;/tr&gt;
+                        &lt;/table&gt;
+                    &lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td style=&quot;padding:30px 20px;&quot;&gt;
+                        &lt;table role=&quot;presentation&quot; style=&quot;width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;&quot;&gt;
+                            &lt;tr&gt;
+                                &lt;td style=&quot;padding:0;width:50%;line-height:4px;color:#707070&quot; align=&quot;left&quot;&gt;
+                                    &lt;p&gt;&lt;b&gt;
+                                      RedMotors CR
+                                    &lt;/b&gt;&lt;/p&gt;
+                                    &lt;p&gt;Agencia BMW, diagonal a la&lt;/p&gt;
+                                    &lt;p&gt;gasolinera Delta en La Uruca, San José&lt;/p&gt;
+                                    &lt;p&gt;BMW La Uruca: 2547 5000&lt;/p&gt;
+                                    &lt;p&gt;&lt;a href=&quot;https://www.bmw.co.cr&quot; style=&quot;color: #707070;&quot;&gt;www.bmw.co.cr&lt;/a&gt;&lt;/p&gt;
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                        &lt;/table&gt;
+                    &lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/table&gt;
+        &lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>contactID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>CustomerName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>emailsSelected</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>getEmail</name>
+        <dataType>Picklist</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>listAccountId</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>ListEmail</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,6 @@
+<aura:component controller="doCalloutCancelarPedidoSoftland" implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global">
+	<aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="btnDisabled" type="Boolean"/>
+    
+    <button class="slds-button slds-button_brand" disabled="{!v.btnDisabled}" style="width:100%;" onclick="{!c.echo}">Cancelar Pedido en Softland</button>
+</aura:component>

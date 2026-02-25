@@ -1,0 +1,26 @@
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<template>
+
+  
+    
+    <lightning-card>
+
+            <div   class="slds-float--right" style="padding: 10px;" >
+                <lightning-button-group>
+                    <!--
+                    <lightning-button label="Edit" disabled></lightning-button>-->
+                    <lightning-button label="Guardar" 
+                    variant="brand-outline"
+                    onclick={handleSave}
+                    icon-name="utility:save"
+
+                    ></lightning-button>
+                </lightning-button-group>
+                </div>
+
+                <lightning-datatable data={productList_test} onrowselection={selectProducts} columns={COLS}
+                        key-field="ID" selected-rows={selectedRows}></lightning-datatable>
+                    
+    </lightning-card>
+</template>

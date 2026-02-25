@@ -1,0 +1,160 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <article class="slds-card">
+
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <div class="slds-card__body">
+            <template if:true={showFilters}>
+                <div class="slds-form " role="list">
+                    <template if:true={showFiltersVehiculoManoObra}>
+                        <div class="slds-form__row">
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-combobox label="Seleccione el tipo *" value={productType}
+                                        options={productTypeOptions}
+                                        onchange={handleProductTypeChange}></lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template if:false={showVehicleFilters}>
+                        <div class="slds-form__row">
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-combobox label="Vehiculo" placeholder="Seleccione una opción"
+                                        value={inputVehiculoCompatibleId} options={vehicleOptions}
+                                        onchange={handleVehicleCompatibleChange}></lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <template if:false={isManoObra}>
+                                        <c-lookup selection={bodegaInitialSelection} errors={bodegaErrors}
+                                            label="Bodega" onsearch={handleBodegaSearch}
+                                            onselectionchange={handleBodegaSelectionChange} placeholder="Ej. Uruca">
+                                        </c-lookup>
+                                    </template>
+                                    &#32;
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template if:true={showVehicleFilters}>
+                        <div class="slds-form__row">
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <c-rm_vn_get_record_opp_record_types selected-record-type-id={brand}
+                                        onrecordtypeselected={handleBrandChange}></c-rm_vn_get_record_opp_record_types>
+
+                                </div>
+                            </div>
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-input type="text" label="Año" placeholder="Escriba aqui..."
+                                        onblur={handleYearChange} value={year} required="true"> </lightning-input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-form__row">
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-input type="text" label="Modelo" onblur={handleModelChange} value={model}
+                                        required="false"> </lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-input type="text" label="Vin" placeholder="Escriba aqui..."
+                                        onblur={handleVinChange} value={vin}> </lightning-input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-form__row">
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-input type="text" label="Color Interno" placeholder="Escriba aqui..."
+                                        onblur={handleColorInternoChange} value={intColor}> </lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-input type="text" label="Color Externo" placeholder="Escriba aqui..."
+                                        onblur={handleColorExternoChange} value={extColor}> </lightning-input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-form__row">
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-input type="text" label="Nombre" placeholder="Escriba aqui..."
+                                        onblur={handleRecordNameChange} value={productName}> </lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-combobox name="vehiculoTransito" label="Es Vehiculo en Transito"
+                                        placeholder="-- Seleccionar --" value={vehiculoTransito}
+                                        onchange={handleVehiculoTransitoChange} options={vehiculoTransitoOptions}>
+                                    </lightning-combobox>
+                                </div>
+                            </div>
+                        </div>
+
+                    </template>
+
+                    <template if:false={showVehicleFilters}>
+                        <div class="slds-form__row">
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-input type="search" label="Nombre" onblur={handleRecordNameChange}
+                                        value={productName}> </lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-form__item" role="listitem">
+                                <div class="slds-form-element slds-form-element_horizontal ">
+                                    <lightning-input type="search" label="Código" onblur={handleVinChange} value={vin}>
+                                    </lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <div style="height:350px;">
+                <lightning-datatable max-row-selection={maxRowSelection} onrowselection={handleProductSelection}
+                    selected-rows={selectedProductIds} key-field="Id" data={products} columns={dynamicColumns}>
+                </lightning-datatable>
+            </div>
+        </div>
+
+        <footer class="slds-card__footer" style="display: flex;justify-content: space-between;">
+            <div>
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button_neutral" disabled={isEnablePrevButton}
+                        onclick={handleBackClick}>Atras</button>
+                    <button class="slds-button slds-button_neutral" disabled={isEnableNextButton}
+                        onclick={handleNextClick}>Siguiente</button>
+                </div>
+                <span class="slds-m-left_medium">{totalRecords} registros encontrados, Pagina {pageNumber} de
+                    {totalPages}</span>
+            </div>
+            <div>
+                <slot name="actions">
+                </slot>
+            </div>
+        </footer>
+    </article>
+</template>

@@ -1,0 +1,20 @@
+<template>
+  <div class="timeline-section">
+    <div class="timeline-body">
+      <div class="bordered">
+        <h2 class="second-title">Comentarios del vehículo - OPP: <a href={oppUrl}>{consecutivoOpp}</a></h2>
+      </div>
+      <div class="comments-box">
+        <template if:true={tieneRel}>
+          <span><strong>Comentarios plan cliente: </strong>{comentario}</span>
+          <span class="divider"></span>
+          <span><strong>Comentarios plan negocio: </strong>{comentarioNegocio}</span>
+        </template>
+        <template if:false={tieneRel}>
+          <span>Este vehículo no tiene una oportunidad relacionada</span>
+        </template>
+      </div>
+
+    </div>
+  </div>
+</template>

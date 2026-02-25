@@ -1,0 +1,48 @@
+<template>
+    <lightning-card title="Confirmar Envío a Aprobación">
+        <!-- Spinner mientras carga -->
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Cargando" size="medium"></lightning-spinner>
+        </template>
+
+        <!-- Mensaje de bloqueo / error -->
+        <template if:true={showError}>
+            <div class="slds-p-around_medium slds-text-color_error">
+                {errorMessage}
+            </div>
+        </template>
+
+        <!-- Contenido principal cuando todo está OK -->
+        <template if:true={showForm}>
+            <div class="slds-p-around_medium">
+                <p><b>Centro de Costos:</b> {centroDeCostosName}</p>
+                <p><b>Total del Quote:</b> {totalQuote}</p>
+                <p><b>Estatus de Aprobación:</b> {estatusAprobacion}</p>
+
+                <div class="slds-m-top_medium">
+                    <lightning-textarea
+                        label="Comentarios para el Aprobador"
+                        value={comentarios}
+                        onchange={handleCommentChange}>
+                    </lightning-textarea>
+                </div>
+
+                <div class="slds-m-top_medium slds-text-align_right">
+                    <lightning-button
+                        variant="neutral"
+                        label="Cancelar"
+                        onclick={handleCancel}>
+                    </lightning-button>
+
+                    <lightning-button
+                        class="slds-m-left_small"
+                        variant="brand"
+                        label="Enviar a Aprobación"
+                        onclick={handleEnviar}
+                        disabled={isCommentEmpty}>
+                    </lightning-button>
+                </div>
+            </div>
+        </template>
+    </lightning-card>
+</template>
