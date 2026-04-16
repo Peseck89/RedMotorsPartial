@@ -3,13 +3,13 @@ public with sharing class CT_VistaVehiculoController {
     public static List<WorkStep> getInfoTallerEstado2(Boolean bolAnidado, String strEstado,String strTipo,String strDesde,String strHasta,String strOrden,String strVehiculo) {
         Id userId = UserInfo.getUserId();
         Id territorioUsuario = null;
-        FSL__User_Territory__c usTerr = new FSL__User_Territory__c();
+        FSL__User_Territory__c usTerr = null;
         try {
-        usTerr = [Select FSL__ServiceTerritory__c From FSL__User_Territory__c
-                                        Where FSL__User__c =: userId LIMIT 1];
+            usTerr = [SELECT FSL__ServiceTerritory__c FROM FSL__User_Territory__c
+                      WHERE FSL__User__c =: userId LIMIT 1];
         } catch (Exception e) {
         }
-        if(usTerr != null){
+        if (usTerr != null) {
             territorioUsuario = usTerr.FSL__ServiceTerritory__c;
         }
         if(strOrden != '%'){
