@@ -18,7 +18,7 @@ public class CaseChecklistController
     public String tipoDeVehiculo {get;set;}	
     public Boolean hayDibujo {get;set;}	
     public String dibujoImagen {get;set;}	
-    public Quote quoteRelacionado { get; set; } // Nueva propiedad para Quote
+    public Quote quoteRelacionado { get; set; }
     public String quoteNumber {get;set;}
     public Boolean infoInComplete {get;set;}
  	public Firma__c firma { get; private set; }
@@ -35,9 +35,8 @@ public class CaseChecklistController
     	'Mula' => 'ChecklistMulaPDF',
     	'Cuadraciclo' => 'ChecklistCuadraPDF'
 		};
-        Case caso = [Select Id,Marca__c, AssetId, Asset.Tipo_de_veh_culo__c From Case Where Id =: caseId];
-           System.debug('caso.Asset.Tipo_de_veh_culo__c '+caso.Asset.Tipo_de_veh_culo__c);
-            if(caso.Asset.Tipo_de_veh_culo__c != null){
+        Case caso = [SELECT Id, Marca__c, AssetId, Asset.Tipo_de_veh_culo__c FROM Case WHERE Id =: caseId];
+        if (caso.Asset.Tipo_de_veh_culo__c != null) {
                 visualforceName = mapTipoVehiculoVisualforce.get(caso.Asset.Tipo_de_veh_culo__c);
             }
         List<Firma__c> firmas = [
@@ -59,10 +58,6 @@ public class CaseChecklistController
         }
         tipoDeVehiculo = 'Automóvil';
         hayDibujo = false;
-        caseId = controller.getId();	
-        //caseId = ApexPages.currentPage().getParameters().get('id');	
-        System.debug('controller.getId()');	
-        System.debug('RECORD ID IN CaseChecklistController ----- ' + caseId);	
         infoInComplete = true;
         cs = [SELECT Id, ContactId, Kilometraje__c,Cuenta_de_Facturacion__c, Marca__c, CaseNumber,RecordType.Name, Asset.marca__c,AssetId, Asset.numeroDePlaca__c, Asset.NumeroDeChasis__c, Asset.Kilometros__c,	
               OwnerId, Asset.Combustible__c, Asset.modelo__c,Asset.motor__c, Asset.Color__c, Asset.anio__c, Asset.Tipo_de_veh_culo__c,	
@@ -77,8 +72,8 @@ public class CaseChecklistController
               FROM Case	
               WHERE Id =: caseId	
               LIMIT 1];	
-         if(cs.ContactId != null && cs.Kilometraje__c != null & cs.OwnerId != null && cs.Cuenta_de_Facturacion__c != null
-              ){infoInComplete = false;
+        if (cs.ContactId != null && cs.Kilometraje__c != null && cs.OwnerId != null && cs.Cuenta_de_Facturacion__c != null) {
+            infoInComplete = false;
         }
         if(cs.Asset.Tipo_de_veh_culo__c != null){ tipoDeVehiculo = cs.Asset.Tipo_de_veh_culo__c;
         }
@@ -100,8 +95,7 @@ public class CaseChecklistController
                 }
                 
             }
-        } catch(DmlException e) {	
-            	
+        } catch(Exception e) {
         }
         fechaEntrada = cs.FechaEntrada__c != null ? cs.FechaEntrada__c.format() : '';	
         
@@ -115,30 +109,19 @@ public class CaseChecklistController
                cambioPropietario = cambios[0];
              }
         
-        System.debug('Cs ********** ' + cs);
-        
-
-        List<WorkOrder> OT = new List<WorkOrder>();	
+        List<WorkOrder> OT = new List<WorkOrder>();
         List<Opportunity> Opp = new List<Opportunity>();
         List<Quote> quote = new List<Quote>();
-        try {	
-            OT = [SELECT Id, AssetId,Kilometros__c,/*Fecha_de_Entrada__c,*/Fecha_prevista_de_entrega__c,Asset.Anio__c FROM WorkOrder Where AssetId =: cs.AssetId AND CaseId =:caseId ORDER BY CreatedDate DESC];
-            System.debug('OT ************ :' + OT);
-             if(OT.size()>0){   
-             Opp = [SELECT Id, Name, StageName, Amount FROM Opportunity WHERE WorkOrder__c = :OT[0].Id LIMIT 1];
-            System.debug('Opp ** ' + Opp);
-              if(Opp.size()>0){    quote = [SELECT Id, Name,QuoteNumber FROM Quote WHERE OpportunityId = :Opp[0].Id LIMIT 1];
-            System.debug('quote ** ' + quote);
-            
-             if (quote.size() > 0) {
-                quoteRelacionado = quote[0];  // Asignamos el primer quote encontrado a la propiedad quoteRelacionado
-                 quoteNumber = quote[0].QuoteNumber;
-                 System.debug('quoteNumber ** ' + quoteNumber);
+        OT = [SELECT Id, AssetId, Kilometros__c, Fecha_prevista_de_entrega__c, Asset.Anio__c FROM WorkOrder WHERE AssetId =: cs.AssetId AND CaseId =: caseId ORDER BY CreatedDate DESC];
+        if (OT.size() > 0) {
+            Opp = [SELECT Id, Name, StageName, Amount FROM Opportunity WHERE WorkOrder__c = :OT[0].Id LIMIT 1];
+            if (Opp.size() > 0) {
+                quote = [SELECT Id, Name, QuoteNumber FROM Quote WHERE OpportunityId = :Opp[0].Id LIMIT 1];
+                if (quote.size() > 0) {
+                    quoteRelacionado = quote[0];
+                    quoteNumber = quote[0].QuoteNumber;
+                }
             }
-           }
-          }
-        } catch(DmlException e) {	
-            	
         }	
         	
             	
@@ -153,10 +136,8 @@ public class CaseChecklistController
               Tipotrabajo__c,Ordenamiento__c,Alias_Articulo__c From tiposDeTrabajoCaso__c Where Caso__c =:caseId 
                    //  And Tipotrabajo__r.Name != '-Control final' And Tipotrabajo__r.Name!= 'CONTROL FINAL'  And Tipotrabajo__r.Name!= 'Control final'  And Tipotrabajo__r.Name!= 'Lavado Red Motos' 
                      Order by Ordenamiento__c ASC];	
-        List<WorkOrder> ordenesTrabajo = [Select Id,Fecha_de_Apertura__c,/*Fecha_de_Entrada__c,*/ Fecha_prevista_de_entrega__c,Asset.Anio__c, WorkOrderNumber From WorkOrder Where CaseId =:caseId];	
-        System.debug('listTipos ******************** :' + listTipos);	
-        System.debug('ordenesTrabajo ********************** : ' + ordenesTrabajo);	
-        if(ordenesTrabajo.size()>0){	
+        ordenesTrabajo = [SELECT Id, Fecha_de_Apertura__c, Fecha_prevista_de_entrega__c, Asset.Anio__c, WorkOrderNumber FROM WorkOrder WHERE CaseId =: caseId];
+        if (ordenesTrabajo.size() > 0) {	
             apertura = ordenesTrabajo[0].Fecha_de_Apertura__c;	
             workOrderNumber = ordenesTrabajo[0].WorkOrderNumber;	
             //fechaEntrada = ordenesTrabajo[0].Fecha_de_Entrada__c != null ? ordenesTrabajo[0].Fecha_de_Entrada__c.format() : '';	
@@ -169,9 +150,7 @@ public class CaseChecklistController
                                            ];	
         }      	
         	
-       Ubi = [Select id, ServiceTerritoryId, CaseId FROM WorkOrder WHERE CaseId =: caseId limit 1];	
-       System.debug('Ubi *********************** : ' + Ubi);	
-        	
+        Ubi = [SELECT Id, ServiceTerritoryId, CaseId FROM WorkOrder WHERE CaseId =: caseId LIMIT 1];
     }	
     	
 }
