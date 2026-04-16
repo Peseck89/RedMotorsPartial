@@ -57,71 +57,58 @@ public class BMW_QuotePDFController_v2 {
                LIMIT 1];
         
         ordenaTrabajos = [select id,Quantity,Description,Discount,UnitPrice,TotalPrice,BMW_Producto_Custom__c,
-        BMW_TipoDeArticulo__c, Product2.Name,Product2.Codigo_de_Producto__c,BMW_Dispinible__c
-                                                                from QuoteLineItem where QuoteId =: recordId  order by createddate ASC];
-        
-        List<QuoteLineItem> listTipos = [Select Id From QuoteLineItem Where Id =:recordId Order by createddate ASC];
-        
-        List<WorkOrder> OTrelated = [Select Id, AssetId,Kilometros__c,WorkOrderNumber From WorkOrder Where Id =: cot.Opportunity.WorkOrder__c ORDER BY CreatedDate DESC limit 1];
-        System.debug('OTrelated **** ' + OTrelated);
-        
-         wolisRelated = [SELECT Id, Estado_entrega__c, Estado_reserva__c, Estado_Solicitud_Compra__c, NombreProducto__c, 
-           WorkOrderId, Quantity, Discount, UnitPrice, TotalPrice,BMW_CodigoDeProducto__c
-           FROM WorkOrderLineItem 
-           WHERE WorkOrderId = :cot.Opportunity.WorkOrder__c
-           ORDER BY CreatedDate ASC];
+                         BMW_TipoDeArticulo__c, Product2.Name,Product2.Codigo_de_Producto__c,BMW_Dispinible__c
+                         from QuoteLineItem where QuoteId =: recordId order by createddate ASC];
 
-        System.debug('wolisRelated **** ' + wolisRelated);
-        
+        List<WorkOrder> OTrelated = [Select Id, AssetId,Kilometros__c,WorkOrderNumber From WorkOrder Where Id =: cot.Opportunity.WorkOrder__c ORDER BY CreatedDate DESC limit 1];
+
+        wolisRelated = [SELECT Id, Estado_entrega__c, Estado_reserva__c, Estado_Solicitud_Compra__c, NombreProducto__c,
+                       WorkOrderId, Quantity, Discount, UnitPrice, TotalPrice,BMW_CodigoDeProducto__c
+                       FROM WorkOrderLineItem
+                       WHERE WorkOrderId = :cot.Opportunity.WorkOrder__c
+                       ORDER BY CreatedDate ASC];
+
         List<WorkOrder> OT = new List<WorkOrder>();
-        try {
-               OT = [Select Id, AssetId,Kilometros__c From WorkOrder Where AssetId =: cot.Opportunity.BMW_PlacaDeVehiculoOElVIN__c ORDER BY CreatedDate DESC limit 1];
-               
-            System.debug('OT **** ' + OT);
-        } catch(DmlException e) {
-            
+        if (cot.Opportunity.BMW_PlacaDeVehiculoOElVIN__c != null) {
+            OT = [Select Id, AssetId,Kilometros__c From WorkOrder Where AssetId =: cot.Opportunity.BMW_PlacaDeVehiculoOElVIN__c ORDER BY CreatedDate DESC limit 1];
         }
-            
-                if(OT.size() > 0){
-                    if(OT[0].Kilometros__c != null && OT[0].Kilometros__c != 0){kilometros= OT[0].Kilometros__c;}else{kilometros=cot.Opportunity.BMW_PlacaDeVehiculoOElVIN__r.Kilometros__c;}
-                }else{kilometros=cot.Opportunity.BMW_PlacaDeVehiculoOElVIN__r.Kilometros__c;}
-                if (cot.GrandTotal != null && cot.GrandTotal >= 0) {
-                   Decimal centavoDecimal;
-               centavoDecimal = (cot.SumTotal__c - Integer.valueOf(cot.SumTotal__c))*100;
-               Centavos = Integer.valueOf(centavoDecimal);
-                Long n = cot.SumTotal__c.longValue();
-                TotalTexto = NumberToWord.english_number(n);
+
+        if (OT.size() > 0) {
+            if (OT[0].Kilometros__c != null && OT[0].Kilometros__c != 0) {
+                kilometros = OT[0].Kilometros__c;
             } else {
-                TotalTexto = null;
+                kilometros = cot.Opportunity.BMW_PlacaDeVehiculoOElVIN__r.Kilometros__c;
             }
-            
-        system.debug('cot'+cot);
+        } else {
+            kilometros = cot.Opportunity.BMW_PlacaDeVehiculoOElVIN__r.Kilometros__c;
+        }
+
+        if (cot.GrandTotal != null && cot.GrandTotal >= 0 && cot.SumTotal__c != null) {
+            Decimal centavoDecimal = (cot.SumTotal__c - Integer.valueOf(cot.SumTotal__c)) * 100;
+            Centavos = Integer.valueOf(centavoDecimal);
+            Long n = cot.SumTotal__c.longValue();
+            TotalTexto = NumberToWord.english_number(n);
+        } else {
+            TotalTexto = null;
+        }
+
         montoMaterial = 0;
         montoManoDeObra = 0;
         montoSubcontrato = 0;
         montoPintura = 0;
         montoVarios = 0;
-                montoVarios2 = 0;
+        montoVarios2 = 0;
         montoPintura2 = 0;
 
-        System.debug('QuoteLineItems '+cot.QuoteLineItems);
-        if(cot.QuoteLineItems != null && cot.QuoteLineItems.size()>0){
-            for(QuoteLineItem qli : cot.QuoteLineItems){
-                System.debug('qli.BMW_TipoDeArticulo__c '+qli.BMW_TipoDeArticulo__c);
-                if(qli.BMW_TipoDeArticulo__c == 'Materiales'){montoMaterial = montoMaterial +qli.TotalPrice;
-                }
-                if(qli.BMW_TipoDeArticulo__c == 'Mano de Obra'){montoManoDeObra = montoManoDeObra +qli.TotalPrice;
-                     System.debug('qli.TotalPrice '+qli.TotalPrice);
-                    System.debug('montoManoDeObra '+montoManoDeObra);
-                }
-                if(qli.BMW_TipoDeArticulo__c == 'Subcontrato'){montoSubcontrato = montoSubcontrato +qli.TotalPrice;
-                }
-                if(qli.BMW_TipoDeArticulo__c == 'Pintura'){montoPintura = montoPintura +qli.TotalPrice;
-                }
-                if(qli.BMW_TipoDeArticulo__c == 'Varios'){montoVarios = montoVarios +qli.TotalPrice;
-                }
+        if (cot.QuoteLineItems != null && cot.QuoteLineItems.size() > 0) {
+            for (QuoteLineItem qli : cot.QuoteLineItems) {
+                if (qli.BMW_TipoDeArticulo__c == 'Materiales')   { montoMaterial     += qli.TotalPrice; }
+                if (qli.BMW_TipoDeArticulo__c == 'Mano de Obra') { montoManoDeObra   += qli.TotalPrice; }
+                if (qli.BMW_TipoDeArticulo__c == 'Subcontrato')  { montoSubcontrato  += qli.TotalPrice; }
+                if (qli.BMW_TipoDeArticulo__c == 'Pintura')      { montoPintura      += qli.TotalPrice; }
+                if (qli.BMW_TipoDeArticulo__c == 'Varios')       { montoVarios       += qli.TotalPrice; }
             }
-        }  
+        }
     }
 
 }
