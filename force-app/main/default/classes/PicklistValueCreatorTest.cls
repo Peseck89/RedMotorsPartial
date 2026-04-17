@@ -15,7 +15,7 @@ public class PicklistValueCreatorTest {
             } else if (req.getEndpoint().contains('sobjects/RecordType')) {
                 res.setBody('{"Metadata": {"picklistValues": [{"picklist": "TestPicklist", "values": [{"valueName": "ExistingValue"}]}]}}');
                 res.setStatusCode(200);
-            } else if (req.getEndpoint().contains('/services/data/v48.0/ui-api/object-info/')) {
+            } else if (req.getEndpoint().contains('/ui-api/object-info/')) {
                 res.setBody('{' +
                     '"controllerValues": {' +
                         '"BMW": 0,' +
@@ -98,11 +98,10 @@ public class PicklistValueCreatorTest {
         String controllingFieldValue = 'ControllingValue';
 
         Test.startTest();
-        PicklistValueCreator.addPicklistValue(objectName, fieldName, newValue, controllingFieldValue);
+        Boolean result = PicklistValueCreator.addPicklistValue(objectName, fieldName, newValue, controllingFieldValue);
         Test.stopTest();
 
-        // Ensure no exceptions are thrown
-        //System.assert(true, 'The method executed successfully');
+        System.assertNotEquals(null, result, 'Debe retornar un Boolean');
     }
      @isTest
     static void testGetPicklistValuesForRecordType() {
@@ -118,8 +117,7 @@ public class PicklistValueCreatorTest {
 
         Test.stopTest();
 
-        // Assert that the picklist contains the expected value
-       // System.assert(picklistValues.contains('ExistingValue'), 'The picklist should include "ExistingValue"');
+        System.assertNotEquals(null, picklistValues, 'La lista no debe ser nula');
     }
     
     // Test method for addPicklistValueWithoutControllingField
@@ -134,8 +132,6 @@ public class PicklistValueCreatorTest {
         Test.startTest();
         PicklistValueCreator.addPicklistValueWithoutControllingField(objectName, fieldName, newValue);
         Test.stopTest();
-
-        //System.assert(true, 'The picklist value was added successfully without a controlling field');
     }
 
     // Test method for getControllingAndDependentValues

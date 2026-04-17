@@ -16,8 +16,7 @@ public with sharing class PicklistValueCreator {
         String query = 'SELECT Id, Metadata FROM CustomField WHERE DeveloperName = \'' + fieldName + 
                        '\' AND TableEnumOrId = \'' + objectName + '\'';
         String endpoint = baseUrl + '/services/data/v63.0/tooling/query/?q=' + EncodingUtil.urlEncode(query, 'UTF-8');
-        system.debug('endpoint');
-        system.debug(endpoint);
+        System.debug('endpoint: ' + endpoint);
         HttpRequest queryReq = new HttpRequest();
         queryReq.setEndpoint(endpoint);
         queryReq.setMethod('GET');
@@ -110,8 +109,7 @@ public with sharing class PicklistValueCreator {
             Http getHttp = new Http();
             HttpResponse getResponse = getHttp.send(getRequest);
             system.debug('Respuesta TOOLING API para: CAMPO '+ picklistFieldName);
-            //system.debug(getResponse.getBody());
-            
+
             if (getResponse.getStatusCode() == 200) {
                 // Parse the response
                 Map<String, Object> recordTypeData = (Map<String, Object>) JSON.deserializeUntyped(getResponse.getBody());
@@ -128,10 +126,7 @@ public with sharing class PicklistValueCreator {
                             system.debug(values);
                             for (Object valueObj : values) {
                                 Map<String, Object> valueMap = (Map<String, Object>) valueObj;
-                                //if (valueMap.get('active') == true) { // Only add active values
-                                    picklistValues.add((String) valueMap.get('valueName'));
-                                    //System.debug(valueMap.get('valueName'));
-                               //}
+                                picklistValues.add((String) valueMap.get('valueName'));
                             }
                             break;
                         }
@@ -379,23 +374,20 @@ public with sharing class PicklistValueCreator {
             patchRequest.setEndpoint(endpoint);
             patchRequest.setMethod('PATCH');
             patchRequest.setTimeout(120000);
-            //ßpatchRequest.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
-            patchRequest.setHeader('Content-Type', 'application/json');
+patchRequest.setHeader('Content-Type', 'application/json');
             patchRequest.setBody((patchData));
     
             // Debug the URL and request body for PATCH
             System.debug('PATCH Request URL endpoint: ' + endpoint);
             System.debug('patchData: ' + patchData);
 
-           // System.debug('PATCH Request Body: ' + patchRequest.getBody());
-            
             Http patchHttp = new Http();
             HttpResponse patchResponse = patchHttp.send(patchRequest);
             System.debug('RESPONSE : ' + patchResponse);
             Boolean isDuplicate = patchResponse.getBody().contains('Duplicate') || patchResponse.getBody().contains('duplicate');
             if (patchResponse.getStatusCode() == 204 || isDuplicate) {
-                System.debug('Record Type updated successfully.'); return 204;
-                 
+                System.debug('Record Type updated successfully.');
+                return 204;
             } else {
                 System.debug('Failed to update record type: ' + patchResponse.getBody());
             }
