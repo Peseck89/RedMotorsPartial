@@ -37,7 +37,6 @@ public with sharing class RM_WorkStep_Trg_Handler extends TriggerHandler{
     }
 
     public override void beforeUpdate(){
-        // Check the flag before calling the function
         if (!skipValidarTrabajoSubtrabajoEnCurso) {
             workStepService.validarTrabajoSubtrabajoEnCurso();
         }

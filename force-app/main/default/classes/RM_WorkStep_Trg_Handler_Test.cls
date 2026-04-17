@@ -24,7 +24,7 @@ public class RM_WorkStep_Trg_Handler_Test {
         
         WorkStep actividadCompletada = [SELECT Id,StartTime,EndTime FROM WorkStep WHERE Id = :workStep.Id LIMIT 1];
         Assert.areNotEqual(null, actividadCompletada.StartTime, 'Se esperaba que la tarea tuviera una fecha de inicio');
-        Assert.areNotEqual(null, actividadCompletada.StartTime, 'Se esperaba que la tarea tuviera una fecha fin');
+        Assert.areNotEqual(null, actividadCompletada.EndTime, 'Se esperaba que la tarea tuviera una fecha fin');
     }
 
     @IsTest
@@ -223,17 +223,8 @@ public class RM_WorkStep_Trg_Handler_Test {
             UPDATE workSteps;
         Test.stopTest();
 
-        // List<tiposDeTrabajoCaso__c> ttcs = [SELECT Id,RM_ModoTrabajo__c FROM tiposDeTrabajoCaso__c WHERE Id = :workSteps[0].Tipo_de_trabajo_del_caso__c];
- 
-        // Assert.isTrue(ttcs.size() > 0 && ttcs[0].RM_ModoTrabajo__c != null, 'Se esperaba que el modo de trabajo no estuviera vacío');
-
-        // workSteps[0].Status = null;
-
-        // UPDATE workSteps;
-
-        // List<tiposDeTrabajoCaso__c> ttcs2 = [SELECT Id,RM_ModoTrabajo__c FROM tiposDeTrabajoCaso__c WHERE Id = :workSteps[0].Tipo_de_trabajo_del_caso__c];
-
-        // Assert.isTrue(ttcs2.size() > 0 && ttcs2[0].RM_ModoTrabajo__c == null);
+        List<tiposDeTrabajoCaso__c> ttcs = [SELECT Id,RM_ModoTrabajo__c FROM tiposDeTrabajoCaso__c WHERE Id = :workSteps[0].Tipo_de_trabajo_del_caso__c];
+        Assert.isTrue(ttcs.size() > 0 && ttcs[0].RM_ModoTrabajo__c != null, 'Se esperaba que el modo de trabajo no estuviera vacío');
     }
 
     @IsTest
@@ -378,7 +369,6 @@ public class RM_WorkStep_Trg_Handler_Test {
         Test.stopTest();
 
         WorkStep parentWorkStep = [SELECT Id,Status FROM WorkStep WHERE Id = :parentWorkStepId LIMIT 1];
-        System.debug('@parentWorkStep@'+parentWorkStep);
         Assert.isTrue(parentWorkStep.Status == 'Completada', 'Se esperaba que el estatus del trabajo fuera Completada');
     }
 }
