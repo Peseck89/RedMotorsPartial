@@ -42,7 +42,6 @@ public class BMW_QuotePDFController_test_v2 {
                 Product2Id      = products[0].Id,
                 Quantity        = 1,
                 UnitPrice       = 100,
-                BMW_TipoDeArticulo__c = tipo
             ));
         }
         insert qlis;

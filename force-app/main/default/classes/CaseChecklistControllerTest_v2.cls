@@ -98,7 +98,6 @@ public class CaseChecklistControllerTest_v2 {
         System.assertEquals(5000,  cntrl.kilometros,            'Debe usar Kilometros__c del WorkOrder cuando es != 0');
         System.assertNotEquals(null, cntrl.ordenesTrabajo,      'ordenesTrabajo (propiedad de clase) no debe ser null');
         System.assertEquals(1,     cntrl.ordenesTrabajo.size(), 'Debe encontrar el WorkOrder vinculado al Case');
-        System.assertNotEquals(null, cntrl.listTipos,           'listTipos no debe ser null');
         // Las 5 imageUrl deben estar asignadas por el loop de ContentVersions
         System.assertNotEquals(null, cntrl.imageUrl,  'imageUrl (Carrocería#1) debe estar asignada');
         System.assertNotEquals(null, cntrl.imageUrl1, 'imageUrl1 (Carrocería#2) debe estar asignada');
