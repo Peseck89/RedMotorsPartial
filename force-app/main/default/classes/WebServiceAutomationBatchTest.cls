@@ -26,6 +26,8 @@ public class WebServiceAutomationBatchTest {
         Test.startTest();
         WebServiceAutomationBatch.runBatch(conDoc);
         Test.stopTest();
+
+        Assert.areNotEqual(null, conDoc, 'El ContentDocument debe existir');
     }
     @istest
     public Static void runtest1(){
@@ -43,6 +45,8 @@ public class WebServiceAutomationBatchTest {
         insert opp;
 		
         WebServiceAutomationBatch.processOpportunity(opp.Id);
+
+        Assert.areNotEqual(null, opp.Id, 'La oportunidad debe haberse insertado');
     }
 
 }

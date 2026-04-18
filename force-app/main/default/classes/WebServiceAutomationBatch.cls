@@ -1,6 +1,3 @@
-/*Oportunidad_de_Financiamiento__c opp = [SELECT Nombre_Cliente_Altica__r.Cedula__c,comportamiento__c,tipoDeProducto__c,tipoMontoFrecuenciaTransacciones__c FROM Oportunidad_de_Financiamiento__c WHERE Id='a0B5B00000HAmPOUA1'];
-WebServiceAutomationBatch.processOpportunity(opp);
-WebServiceAutomationBatch.runBatch('0695B000001io2tQAA');*/
 public class WebServiceAutomationBatch implements Database.Batchable<sObject>, Database.Stateful, Database.AllowsCallouts  {
     private List<String> oppIds{get;set;}
     public static void runBatch (String contentDocId) {
@@ -97,25 +94,18 @@ public class WebServiceAutomationBatch implements Database.Batchable<sObject>, D
             FROM Oportunidad_de_Financiamiento__c WHERE Id= :oppRecId
         ];
 
-        ApexPages.StandardController sc = new ApexPages.StandardController(opp);
-        String oppId = sc.getId();
-        
         opp = [SELECT Id, Nombre_Cliente_Altica__c,formConozcaSuCliente__c, formularioConozcaSuCliente__c,origenRecursos__c,
                                                 estructuraPropiedad__c,comportamiento__c,tipoDeProducto__c,tipoMontoFrecuenciaTransacciones__c,Tipo__c,
                                                 Nombre_Cliente_Altica__r.RecordType.Name
-                                                FROM Oportunidad_de_Financiamiento__c WHERE Id =:oppId LIMIT 1];
-        
-        
-        System.debug('--opp--'+opp);
+                                                FROM Oportunidad_de_Financiamiento__c WHERE Id =:oppRecId LIMIT 1];
+
         if(opp != null){
+            ApexPages.StandardController sc = new ApexPages.StandardController(opp);
             if(opp.Nombre_Cliente_Altica__r.RecordType.Name == 'Cuenta Empresarial' || opp.Nombre_Cliente_Altica__r.RecordType.Name == 'Cliente Jurídico'){
-                System.debug('--Juridico--');
                 formulaDeInfoJuridicoController forDeJuridicoCntrl = new formulaDeInfoJuridicoController(sc);
                 forDeJuridicoCntrl.createBuro();
                 forDeJuridicoCntrl.save();
-                
             }else {
-                System.debug('--Fisico--');
                 formulaDeInfoFisicoController forDeFisicoCntrl = new formulaDeInfoFisicoController(sc);
                 forDeFisicoCntrl.redirectForJuridico();
                 forDeFisicoCntrl.save();
