@@ -17,7 +17,7 @@ public with sharing class AnticipoTriggerHandlerTest {
         List<Opportunity> oppList = [SELECT Id FROM Opportunity LIMIT 1];        
         Test.setMock(HttpCalloutMock.class, new WSRelAntMock());
         Anticipo__c anticipo = TestDataFactory.createAnticipo(oppList[0],true);
-        System.debug(anticipo);        
+        Assert.areNotEqual(null, anticipo.Id, 'El anticipo debe haberse creado');
     }
 
 
