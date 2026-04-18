@@ -337,13 +337,6 @@ public with sharing class ct_nuevoAccountController {
             throw new AuraHandledException('Debe seleccionar el tipo de la cuenta.');
         }
 
-        // // «Cuenta personal» / «Cuenta empresarial»
-        // if(tipoCuenta == 'Cliente Jurídico' ){
-        //     tipoCuenta = 'Cuenta empresarial';
-        // }else{
-        //     tipoCuenta = 'Cuenta personal';
-        // }
-
         return [
             SELECT Id, Tipo_de_documento__r.Name,Tipo_de_documento__c,Tipo_de_cuenta__r.Name FROM TiposDocumentoxTiposCuenta__c 
             WHERE Tipo_de_cuenta__r.Name =: tipoCuenta
@@ -351,63 +344,6 @@ public with sharing class ct_nuevoAccountController {
             ];
     }
 
-    public static void testDummy() {
-        Integer i = 0;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-    }
 
     @AuraEnabled
     public static void eliminarCuenta(Id accountId) {
@@ -432,8 +368,8 @@ public with sharing class ct_nuevoAccountController {
         List<Account> lstAcc = [
             SELECT Id 
             FROM Account 
-            WHERE Cedula__c = :cedula 
-            //AND Tipos_de_cuenta__c = :tipoCuenta
+            WHERE Cedula__c = :cedula
+            AND Tipos_de_cuenta__c = :tipoCuenta
             LIMIT 1
         ];
 
@@ -445,201 +381,9 @@ public with sharing class ct_nuevoAccountController {
     @AuraEnabled(cacheable=true)
     public static Boolean esPerfilAdministrador() {
         User u = [SELECT Profile.Name FROM User WHERE Id = :UserInfo.getUserId()];
-        return u.Profile.Name == 'System Administrator'; // Ajusta el nombre exacto del perfil
+        return u.Profile.Name == 'System Administrator';
     }
 
 
-    public static void testDummy2() {
-        Integer i = 0;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-    }
     
 }

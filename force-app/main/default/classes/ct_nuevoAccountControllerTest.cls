@@ -56,11 +56,11 @@ public class ct_nuevoAccountControllerTest {
         insert tel;
 
         Test.startTest();
-        ct_nuevoAccountController.testDummy2();
+        ct_nuevoAccountController.actualizarCorreoYTelefono(acc.Id);
         Test.stopTest();
 
         Account actualizado = [SELECT Phone FROM Account WHERE Id = :acc.Id];
-        
+        Assert.areNotEqual(null, actualizado.Phone, 'Se esperaba que el teléfono principal se asignara a la cuenta');
     }
 
     @isTest
@@ -82,6 +82,7 @@ public class ct_nuevoAccountControllerTest {
         Test.stopTest();
 
         Account actualizado = [SELECT Cedula__c FROM Account WHERE Id = :acc.Id];
+        Assert.areEqual('957655321', actualizado.Cedula__c, 'La cédula debe haberse actualizado');
     }
 
     @isTest
@@ -93,7 +94,6 @@ public class ct_nuevoAccountControllerTest {
         insert acc;
 
         Account result = ct_nuevoAccountController.getAccountById(acc.Id);
-        ct_nuevoAccountController.testDummy();
         System.assertEquals(acc.Id, result.Id);
     }
 }
