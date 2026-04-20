@@ -33,7 +33,6 @@ public with sharing class TipoCargoApprovalController {
         if (workOrderId == null) return new List<RowDTO>();
 
         String internoValue = '2';
-        Id woId = workOrderId;
 
         List<TipoCargo__c> tcs = [
             SELECT
@@ -53,7 +52,7 @@ public with sharing class TipoCargoApprovalController {
             AND Work_Order_Line_Item__c IN (
                 SELECT Id
                 FROM WorkOrderLineItem
-                WHERE WorkOrderId = :woId
+                WHERE WorkOrderId = :workOrderId
             )
         ];
 
@@ -126,16 +125,6 @@ public with sharing class TipoCargoApprovalController {
         if (String.isBlank(comment)) { throw new AuraHandledException('El comentario del solicitante es obligatorio.');
         }
 
-        // ¿Ya hay aprobación pendiente?
-        Boolean hasPending = [
-            SELECT COUNT()
-            FROM ProcessInstance
-            WHERE TargetObjectId = :workOrderId
-            AND Status = 'Pending'
-        ] > 0;
-
-        // Traemos los TipoCargo seleccionados (con sus WOLI y Centro de Costo)
-        // NOTA: usa tu API real de lookup a WOLI si difiere.
         List<TipoCargo__c> tcs = [
             SELECT Id, Precio__c, CentroCosto__c, CentroCosto__r.Aprobador__c,
                    Work_Order_Line_Item__c
