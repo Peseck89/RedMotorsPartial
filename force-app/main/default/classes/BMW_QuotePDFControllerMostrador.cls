@@ -217,8 +217,6 @@ for (BloqueTarea bloque1 : bloquesOrdenados) {
 // Asignamos la lista final al atributo expuesto
 this.bloques = bloquesOrdenados;
     
-        List<QuoteLineItem> listTipos = [Select Id From QuoteLineItem Where Id =:recordId Order by createddate ASC];
-        
         List<WorkOrder> OT = new List<WorkOrder>();
         try {
                OT = [Select Id, AssetId,Kilometros__c From WorkOrder Where AssetId =: cot.Opportunity.BMW_PlacaDeVehiculoOElVIN__c ORDER BY CreatedDate DESC limit 1];

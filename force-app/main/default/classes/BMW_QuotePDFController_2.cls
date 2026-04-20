@@ -71,8 +71,6 @@ public with sharing class BMW_QuotePDFController_2 {
           cambioPropietario = null;
           }
         
-        List<QuoteLineItem> listTipos = [Select Id From QuoteLineItem Where Id =:recordId Order by createddate ASC];
-        
         List<WorkOrder> OT = new List<WorkOrder>();
         try {
                OT = [Select Id, AssetId,Kilometros__c From WorkOrder Where AssetId =: cot.Opportunity.BMW_PlacaDeVehiculoOElVIN__c ORDER BY CreatedDate DESC limit 1];
@@ -93,24 +91,19 @@ public with sharing class BMW_QuotePDFController_2 {
                 TotalTexto = null;
             }
             
-        system.debug('cot'+cot);
         montoMaterial = 0;
         montoManoDeObra = 0;
         montoSubcontrato = 0;
         montoPintura = 0;
         montoVarios = 0;
-                montoVarios2 = 0;
+        montoVarios2 = 0;
         montoPintura2 = 0;
 
-        System.debug('QuoteLineItems '+cot.QuoteLineItems);
         if(cot.QuoteLineItems != null && cot.QuoteLineItems.size()>0){
             for(QuoteLineItem qli : cot.QuoteLineItems){
-                System.debug('qli.BMW_TipoDeArticulo__c '+qli.BMW_TipoDeArticulo__c);
                 if(qli.BMW_TipoDeArticulo__c == 'Materiales'){montoMaterial = montoMaterial +qli.TotalPrice;
                 }
                 if(qli.BMW_TipoDeArticulo__c == 'Mano de Obra'){montoManoDeObra = montoManoDeObra +qli.TotalPrice;
-                     System.debug('qli.TotalPrice '+qli.TotalPrice);
-                    System.debug('montoManoDeObra '+montoManoDeObra);
                 }
                 if(qli.BMW_TipoDeArticulo__c == 'Subcontrato'){montoSubcontrato = montoSubcontrato +qli.TotalPrice;
                 }
