@@ -61,12 +61,10 @@ public class CorreoControllerTest {
 
         Test.startTest();
         CorreoController.eliminarCorreo(correo.Id);
-        CorreoController.dummy();
         Test.stopTest();
 
         List<Correo__c> resultado = [SELECT Id FROM Correo__c WHERE Id = :correo.Id];
         System.assertEquals(0, resultado.size());
-        //
     }
 
 

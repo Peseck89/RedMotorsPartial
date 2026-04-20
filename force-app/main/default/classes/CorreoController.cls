@@ -1,146 +1,4 @@
 public with sharing class CorreoController {
-
-    public static void dummy(){
-        Integer i = 0;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-        i = i+1;
-    }
     
     
     @AuraEnabled(cacheable=false)
@@ -299,9 +157,7 @@ public with sharing class CorreoController {
             FROM   Account
             WHERE  Id = :accountId
         ];
-        if(lstAcc.size()>0){
-
-        }else{
+        if(lstAcc.isEmpty()){
             List<Contacto_por_cuenta__c> lstContact = [Select Id,Account__c from Contacto_por_cuenta__c Where Contact__c =:accountId ];
             accountId = lstContact[0].Account__c;
         }
@@ -322,7 +178,7 @@ public with sharing class CorreoController {
             SELECT Id, Name
             FROM   Tipo_de_datos_de_comunicaci_n__c
             WHERE  Correo_Electrenico__c = TRUE
-                   AND Tipo_de_cuenta__c = :tipoCuenta   // ⬅️ solo los que correspondan
+                   AND Tipo_de_cuenta__c = :tipoCuenta
             ORDER  BY Name
         ];
     }
