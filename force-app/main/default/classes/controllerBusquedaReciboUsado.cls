@@ -26,9 +26,7 @@ public with sharing class controllerBusquedaReciboUsado {
         showBlockSearchMoto = false;
         showBlockSearchCar = false;
         showTypeRecord = true;
-        System.debug(' ** ID USER PROFILE ** ' + idUserProfile);
         nameProfile = [SELECT Name FROM Profile WHERE Id =: idUserProfile LIMIT 1].Name;
-        System.debug(' ** USER PROFILE NAME ** ' + nameProfile);
         if(nameProfile == 'Asesor de Ventas BMW' || nameProfile == 'Asesor de Ventas MINI'){
             showFields = false;
         }else{
@@ -38,7 +36,6 @@ public with sharing class controllerBusquedaReciboUsado {
             reciboId = ApexPages.currentPage().getParameters().get('Id');
             tipoRegistro = [SELECT RecordType.Name FROM ReciboUsado__c WHERE Id =: reciboId].RecordType.Name;
             showTypeRecord = false;
-            System.debug(' ** TIPO REGISTRO ** ' + tipoRegistro);
             if(tipoRegistro == 'Automóvil'){
                 showBlockSearchCar = true;
             }else{
@@ -48,8 +45,6 @@ public with sharing class controllerBusquedaReciboUsado {
     }
 
     public void showSearchBlock(){
-        System.debug(' ** Metodo Mostrar Bloques Busqueda ** ');
-        System.debug(tipoVehiculo);
         if(tipoVehiculo == 'Automóvil'){
             showBlockSearchCar = true;
             showBlockSearchMoto = false;
@@ -67,7 +62,6 @@ public with sharing class controllerBusquedaReciboUsado {
     //Metodo para realizar el calculo del avaluo de autos
     public void Buscar() {  
         Double sumavalorfinal = 0;
-        Double sumavalorSugerido = 0;
         Double sumavalorInventario = 0;
         Double sumaReciboJefeUsado = 0;
         Double sumaValorFinalSugerido = 0;
@@ -77,8 +71,8 @@ public with sharing class controllerBusquedaReciboUsado {
         Boolean sumoAnio = false;
         Boolean restoAnio = false;
         Double sumValorFinalVenta = 0;
-        Integer count = 0; 
-        
+        Integer count = 0;
+
         //Consulta los valores de Recibo
         if(reciboId != null && reciboId != ''){
             //Aqui
@@ -89,7 +83,6 @@ public with sharing class controllerBusquedaReciboUsado {
                         From ReciboUsado__c 
                         where Id =: reciboId];
         }else{
-            System.debug(' ** Marca ** ' + recibo.Marca__c);
             if(recibo.Marca__c == null || recibo.Marca__c == ''){
                 sinErrores = false;
                 ApexPages.addMessage(New ApexPages.Message(ApexPages.Severity.ERROR, 'Campo Marca Obligatorio'));
@@ -122,7 +115,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     EstiloUsado__c =: recibo.EstiloUsado__c and Trasmision__c =: recibo.Trasmision__c and  
                                                     Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0];
             if(valorMinimo.isEmpty() && valorMinimo.size() == 0 ){
-                System.debug(' ** SE SUMA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) + 1);
                 sumoAnio = true;
                 valorMinimo = [Select Id, Valor_final__c 
@@ -132,7 +124,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0];
             }
             if(valorMinimo.isEmpty() && valorMinimo.size() == 0 ){
-                System.debug(' ** SE RESTA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) - 2);
                 sumoAnio = false;
                 restoAnio = true;
@@ -142,8 +133,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     EstiloUsado__c =: recibo.EstiloUsado__c and Trasmision__c =: recibo.Trasmision__c and  
                                                     Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0];
             }
-            System.debug('***LIST Valor minim: ' + valorMinimo);
-            System.debug('***LIST Valor minim: ' + valorMinimo.size());
 
             //Valor MAX
             List<ReciboUsado__c> valorMaximo = [Select Id, Valor_final__c 
@@ -152,7 +141,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     EstiloUsado__c =: recibo.EstiloUsado__c and Trasmision__c =: recibo.Trasmision__c and 
                                                     Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0];
             if(valorMaximo.isEmpty() && valorMaximo.size() == 0 ){
-                System.debug(' ** SE SUMA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) + 1);
                 sumoAnio = true;
                 valorMaximo = [Select Id, Valor_final__c 
@@ -162,7 +150,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0];
             }
             if(valorMaximo.isEmpty() && valorMaximo.size() == 0 ){
-                System.debug(' ** SE RESTA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) - 2);
                 sumoAnio = false;
                 restoAnio = true;
@@ -172,8 +159,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     EstiloUsado__c =: recibo.EstiloUsado__c and Trasmision__c =: recibo.Trasmision__c and 
                                                     Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0];
             }
-            System.debug('***LIST Valor minim: ' + valorMaximo);
-            System.debug('***LIST Valor minim: ' + valorMaximo.size());
 
             //Valor Promedio
             List<ReciboUsado__c> valorPromedio = [Select Id, Valor_final__c 
@@ -189,7 +174,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                             EstiloUsado__c =: recibo.EstiloUsado__c and Trasmision__c =: recibo.Trasmision__c and 
                                                             Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0 ORDER BY Fecha_de_recibo__c DESC LIMIT 1 ];
             if(ultimoRegistroCreado.isEmpty() && ultimoRegistroCreado.size() == 0 ){
-                System.debug(' ** SE SUMA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) + 1);
                 sumoAnio = true;
                 ultimoRegistroCreado = [Select Id, Valor_final__c, Fecha_de_recibo__c
@@ -199,7 +183,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                         Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0 ORDER BY Fecha_de_recibo__c DESC LIMIT 1 ];
             }
             if(ultimoRegistroCreado.isEmpty() && ultimoRegistroCreado.size() == 0 ){
-                System.debug(' ** SE RESTA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) - 2);
                 sumoAnio = false;
                 restoAnio = true;
@@ -209,8 +192,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                         EstiloUsado__c =: recibo.EstiloUsado__c and Trasmision__c =: recibo.Trasmision__c and 
                                         Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0 ORDER BY Fecha_de_recibo__c DESC LIMIT 1 ];
             }
-            System.debug('***LIST Valor minim: ' + ultimoRegistroCreado);
-            System.debug('***LIST Valor minim: ' + ultimoRegistroCreado.size());
             
             List<ReciboUsado__c> ultimaVenta = [Select Id, Valor_final__c, Fecha_de_venta__c
                                                 From ReciboUsado__c 
@@ -225,7 +206,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                         Where Marca__c =: recibo.Marca__c and Ano__c =: recibo.Ano__c and 
                                                             EstiloUsado__c =: recibo.EstiloUsado__c and Trasmision__c =: recibo.Trasmision__c and 
                                                             Combustible__c =: recibo.Combustible__c and Traccion__c =: recibo.Traccion__c and Valor_final__c > 0];
-            System.debug(' ** lista inventario size ** ' + inventarioPromedio.size());
 
             //Valor Sugerido de Venta
             List<ReciboUsado__c> reciboSugeridoVenta = [Select Id, ReciboJefeUsados__c, Valor_final__c, ValorReciboCliente__c, Valor_sugerido_de_recibo__c 
@@ -287,7 +267,6 @@ public with sharing class controllerBusquedaReciboUsado {
                 recibo.Dias_inventario_promedio__c = sumavalorInventario/inventarioPromedio.Size();         
           
                 //Valor Sugerido de Venta -reciboSugeridoVenta
-                System.debug(' ** lista recibo usados base ** ' + reciboSugeridoVenta);
                 for(ReciboUsado__c ru : reciboSugeridoVenta){
                     if(ru.Valor_final__c != null && ru.Valor_final__c > 0){
                         if(ru.ReciboJefeUsados__c != null && ru.ReciboJefeUsados__c > 0){
@@ -300,24 +279,17 @@ public with sharing class controllerBusquedaReciboUsado {
                         }
                     }
                 }
-                System.debug(' ** total recibo jefe usado ** ' + sumaReciboJefeUsado);
-                System.debug(' ** total valor final ** ' + sumaValorFinalSugerido);
                 sumaMargenReal = ((sumaValorFinalSugerido - sumaReciboJefeUsado) / sumaReciboJefeUsado); 
-                System.debug(' ** suma margen real ** ' + sumaMargenReal);
                 Average = sumaMargenReal;
                 if(reciboId != null && reciboId != ''){
                     if(recibo.ReciboJefeUsados__c > 0 && recibo.ReciboJefeUsados__c != null){
-                        System.debug(' ** monto recibo jefe usado base, valor sugerido recibo ** ' + recibo.ReciboJefeUsados__c);
                         recibo.Valor_sugerido_de_recibo__c = recibo.ReciboJefeUsados__c;
                     }else if(recibo.ValorReciboCliente__c != null && recibo.ValorReciboCliente__c > 0){
-                        System.debug(' ** monto valor avaluo base, valor sugerido recibo ** ' + recibo.ReciboJefeUsados__c);
                         recibo.Valor_sugerido_de_recibo__c = recibo.ValorReciboCliente__c;
                     }
                     if(recibo.ReciboJefeUsados__c > 0 && recibo.ReciboJefeUsados__c != null){
-                        System.debug(' ** monto recibo jefe usado base, valor sugerido venta ** ' + recibo.ReciboJefeUsados__c);
                         recibo.Valor_Sugerido_Venta__c = recibo.ReciboJefeUsados__c * (1 + Average);
                     }else if(recibo.ValorReciboCliente__c != null && recibo.ValorReciboCliente__c > 0){
-                        System.debug(' ** monto valor avaluo base, valor sugerido venta ** ' + recibo.ReciboJefeUsados__c);
                         recibo.Valor_Sugerido_Venta__c = recibo.ValorReciboCliente__c * (1 + Average);
                     }
                 }else{
@@ -325,8 +297,6 @@ public with sharing class controllerBusquedaReciboUsado {
                     if(!ultimoRegistroCreado.isEmpty() && ultimoRegistroCreado.size() > 0){
                         paramDate = ultimoRegistroCreado[0].Fecha_de_recibo__c;
                         paramDate2 = paramDate.addMonths(-3);
-                        System.debug(' ** fecha 1 ** ' + paramDate);
-                        System.debug(' ** fecha  2 **  ' + paramDate2);
                         
                         List<ReciboUsado__c> listTemp = [SELECT Id, ValorReciboCliente__c, Fecha_de_recibo__c, Score__c, ReciboJefeUsados__c, Valor_final__c
                                                             FROM ReciboUsado__c 
@@ -334,7 +304,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                             EstiloUsado__c =: recibo.EstiloUsado__c AND Trasmision__c =: recibo.Trasmision__c AND 
                                                             Combustible__c =: recibo.Combustible__c AND Fecha_de_recibo__c >= :paramDate2 AND Fecha_de_recibo__c <= :paramDate];
                         recibo.Valor_sugerido_de_recibo__c = 0;
-                        System.debug(' ** LISTA RECIBO USADOS CONSULTA ** ' + listTemp);
                         if(!listTemp.isEmpty() && listTemp.size() > 0){
                             Double montoDepreciacion = 0;
                             Double saldoInicial = 0;
@@ -346,7 +315,6 @@ public with sharing class controllerBusquedaReciboUsado {
                             Integer countTemp2 = 0;  
                             Double margenUtilidadObjetivo = Double.valueOf(LABEL.MargenUtilidadObjetivoAuto);
 
-                            System.debug(' ** MARGEN UTILIDAD OBJETIVO ** ' + margenUtilidadObjetivo);
                             recibo.Score__c = 0;
                             sumaReciboJefeUsado = 0;
                             count = 0;
@@ -354,51 +322,36 @@ public with sharing class controllerBusquedaReciboUsado {
 
                             for(ReciboUsado__c r : listTemp){
                                 if(r.Valor_final__c != null && r.Valor_final__c > 0){
-                                    System.debug(' ** RECIBO USADO ** ' + r);
                                     if(r.ReciboJefeUsados__c != null && r.ReciboJefeUsados__c > 0){
                                         annoDiferencia = System.Date.today().year() - Integer.valueOf(r.Fecha_de_recibo__c.year());
-                                        System.debug(' ** DIFERENCIA DE ANIOS ** ' + annoDiferencia);
                                         saldoInicial = r.ReciboJefeUsados__c;
                                         while(countTemp < annoDiferencia){
-                                            System.debug(' ** SALDO INICIAL ** ' + saldoInicial);
                                             montoDepreciacion = saldoInicial * 0.10;
-                                            System.debug(' ** MONTO DEPRECIACION ** ' + montoDepreciacion);
                                             saldoInicial = saldoInicial - montoDepreciacion;
-                                            System.debug(' ** SALDO INICIAL ** ' + saldoInicial);
                                             countTemp =  countTemp + 1;
                                         }
                                         countTemp = 0;
                                         count = count + 1;
                                         valorAvaluoDepreciado = valorAvaluoDepreciado + saldoInicial;
-                                        System.debug(' ** VALOR AVALUO DEPRECIADO ** ' + valorAvaluoDepreciado);
                                         margen = (r.Valor_final__c / r.ReciboJefeUsados__c) - 1;
-                                        System.debug(' ** MARGEN ** ' + margen);
                                         sumMargen = sumMargen + margen;
-                                        System.debug(' ** SUMATORIA MARGEN ** ' + sumMargen);
                                         if(r.Score__c != null){
                                             recibo.Score__c = recibo.Score__c + r.Score__c;
                                         }
                                         countTemp2 = countTemp2 + 1;
                                     }else if(r.ValorReciboCliente__c != null && r.ValorReciboCliente__c > 0){
                                         annoDiferencia = System.Date.today().year() - Integer.valueOf(r.Fecha_de_recibo__c.year());
-                                        System.debug(' ** DIFERENCIA DE ANIOS ** ' + annoDiferencia);
                                         saldoInicial = r.ValorReciboCliente__c;
                                         while(countTemp < annoDiferencia){
-                                            System.debug(' ** SALDO INICIAL ** ' + saldoInicial);
                                             montoDepreciacion = saldoInicial * 0.10;
-                                            System.debug(' ** MONTO DEPRECIACION ** ' + montoDepreciacion);
                                             saldoInicial = saldoInicial - montoDepreciacion;
-                                            System.debug(' ** SALDO INICIAL ** ' + saldoInicial);
                                             countTemp =  countTemp + 1;
                                         }
                                         countTemp = 0;
                                         count = count + 1;
                                         valorAvaluoDepreciado = valorAvaluoDepreciado + saldoInicial;
-                                        System.debug(' ** VALOR AVALUO DEPRECIADO ** ' + valorAvaluoDepreciado);
                                         margen = (r.Valor_final__c / r.ValorReciboCliente__c) - 1;
-                                        System.debug(' ** MARGEN ** ' + margen);
                                         sumMargen = sumMargen + margen;
-                                        System.debug(' ** SUMATORIA MARGEN ** ' + sumMargen);
                                         if(r.Score__c != null){
                                             recibo.Score__c = recibo.Score__c + r.Score__c;
                                         }
@@ -407,7 +360,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                 }
                             }
                             sumMargen = sumMargen / countTemp2;
-                            System.debug(' ** PROMEDIO MARGEN ** ' + sumMargen);
                             recibo.Valor_sugerido_de_recibo__c = valorAvaluoDepreciado / countTemp2;
                             if(sumoAnio){
                                 recibo.Valor_sugerido_de_recibo__c = recibo.Valor_sugerido_de_recibo__c * 0.9;
@@ -440,7 +392,6 @@ public with sharing class controllerBusquedaReciboUsado {
     */ 
     public void BuscarMoto() {  
         Double sumavalorfinal = 0;
-        Double sumavalorSugerido = 0;
         Double sumavalorInventario = 0;
         Double sumaReciboJefeUsado = 0;
         Double sumaValorFinalSugerido = 0;
@@ -451,7 +402,6 @@ public with sharing class controllerBusquedaReciboUsado {
         Boolean restoAnio = false;
         Integer count = 0;
         
-        System.debug(' ** METODO MOTOCICLETA ** '); 
         //Consulta los valores de Recibo
         if(reciboId != null && reciboId != ''){
             recibo = [Select Id, Name, Marca__c, Ano__c, Modelo__c, Valor_final__c, Valor_minimo__c, Valor_maximo__c, Valor_promedio__c, ReciboJefeUsados__c, 
@@ -461,7 +411,6 @@ public with sharing class controllerBusquedaReciboUsado {
                         From ReciboUsado__c 
                         where Id =: reciboId];
         }else{
-            System.debug(' ** Marca ** ' + recibo.Marca__c);
             if(recibo.Marca__c == null || recibo.Marca__c == ''){
                 sinErrores = false;
                 ApexPages.addMessage(New ApexPages.Message(ApexPages.Severity.ERROR, 'Campo Marca Obligatorio'));
@@ -484,7 +433,6 @@ public with sharing class controllerBusquedaReciboUsado {
         }
 
         if(sinErrores){
-            System.debug(' ** RECIBO USADO ** ' + recibo);
             //Valor MIN
             List<ReciboUsado__c> valorMinimo = [Select Id, Valor_final__c 
                                                 From ReciboUsado__c 
@@ -492,7 +440,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     Modelo__c =: recibo.Modelo__c and Cilindraje__c =: recibo.Cilindraje__c and  
                                                     Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and Valor_final__c > 0];
             if(valorMinimo.isEmpty() && valorMinimo.size() == 0){
-                System.debug(' ** SE SUMA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) + 1);
                 sumoAnio = true;
                 valorMinimo = [Select Id, Valor_final__c 
@@ -502,7 +449,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and Valor_final__c > 0];
             }
             if(valorMinimo.isEmpty() && valorMinimo.size() == 0){
-                System.debug(' ** SE RESTA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) - 2);
                 sumoAnio = false;
                 restoAnio = true;
@@ -512,8 +458,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     Modelo__c =: recibo.Modelo__c and Cilindraje__c =: recibo.Cilindraje__c and  
                                                     Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and Valor_final__c > 0];
             }
-            System.debug('***LIST Valor minim: ' + valorMinimo);
-            System.debug('***LIST Valor minim: ' + valorMinimo.size());
 
             //Valor MAX
             List<ReciboUsado__c> valorMaximo = [Select Id, Valor_final__c 
@@ -522,7 +466,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     Modelo__c =: recibo.Modelo__c and Cilindraje__c =: recibo.Cilindraje__c and  
                                                     Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and Valor_final__c > 0];
             if(valorMaximo.isEmpty() && valorMaximo.size() == 0){
-                System.debug(' ** SE SUMA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) + 1);
                 sumoAnio = true;
                 valorMaximo = [Select Id, Valor_final__c 
@@ -532,7 +475,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and Valor_final__c > 0];
             }
             if(valorMaximo.isEmpty() && valorMaximo.size() == 0){
-                System.debug(' ** SE RESTA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) - 2);
                 sumoAnio = false;
                 restoAnio = true;
@@ -542,8 +484,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     Modelo__c =: recibo.Modelo__c and Cilindraje__c =: recibo.Cilindraje__c and  
                                                     Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and Valor_final__c > 0];
             }
-            System.debug('***LIST Valor max: ' + valorMaximo);
-            System.debug('***LIST Valor max: ' + valorMaximo.size());
 
             //Valor Promedio
             List<ReciboUsado__c> valorPromedio = [Select Id, Valor_final__c 
@@ -560,7 +500,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and Valor_final__c > 0 
                                                     ORDER BY Fecha_de_recibo__c DESC LIMIT 1 ];
             if(ultimoRegistroCreado.isEmpty() && ultimoRegistroCreado.size() == 0){
-                System.debug(' ** SE SUMA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) + 1);
                 sumoAnio = true;
                 ultimoRegistroCreado = [Select Id, Valor_final__c, Fecha_de_recibo__c
@@ -571,7 +510,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                     ORDER BY Fecha_de_recibo__c DESC LIMIT 1 ];
             }
             if(ultimoRegistroCreado.isEmpty() && ultimoRegistroCreado.size() == 0){
-                System.debug(' ** SE RESTA UN AÑO MAS ** ');
                 recibo.Ano__c = String.valueOf(Integer.valueOf(recibo.Ano__c) - 2);
                 sumoAnio = false;
                 restoAnio = true;
@@ -596,7 +534,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                                         Where Marca__c =: recibo.Marca__c and Ano__c =: recibo.Ano__c and 
                                                             Modelo__c =: recibo.Modelo__c and Cilindraje__c =: recibo.Cilindraje__c and  
                                                             Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and Valor_final__c > 0];
-            System.debug(' ** lista inventario size ** ' + inventarioPromedio.size());
 
             //Valor Sugerido de Venta
             List<ReciboUsado__c> reciboSugeridoVenta = [Select Id, ReciboJefeUsados__c, Valor_final__c, ValorReciboCliente__c, Valor_sugerido_de_recibo__c,
@@ -659,7 +596,6 @@ public with sharing class controllerBusquedaReciboUsado {
                 recibo.Dias_inventario_promedio__c = sumavalorInventario/inventarioPromedio.Size();         
           
                 //Valor Sugerido de Venta -reciboSugeridoVenta
-                System.debug(' ** lista recibo usados base ** ' + reciboSugeridoVenta);
                 for(ReciboUsado__c ru : reciboSugeridoVenta){
                     if(ru.Valor_final__c != null && ru.Valor_final__c > 0){
                         if(ru.ReciboJefeUsados__c != null && ru.ReciboJefeUsados__c > 0){
@@ -672,24 +608,17 @@ public with sharing class controllerBusquedaReciboUsado {
                         }
                     }
                 }
-                System.debug(' ** total recibo jefe usado ** ' + sumaReciboJefeUsado);
-                System.debug(' ** total valor final ** ' + sumaValorFinalSugerido);
                 sumaMargenReal = ((sumaValorFinalSugerido - sumaReciboJefeUsado) / sumaReciboJefeUsado); 
-                System.debug(' ** suma margen real ** ' + sumaMargenReal);
                 Average = sumaMargenReal;
                 if(reciboId != null && reciboId != ''){
                     if(recibo.ReciboJefeUsados__c > 0 && recibo.ReciboJefeUsados__c != null){
-                        System.debug(' ** monto recibo jefe usado base, valor sugerido recibo ** ' + recibo.ReciboJefeUsados__c);
                         recibo.Valor_sugerido_de_recibo__c = recibo.ReciboJefeUsados__c;
                     }else if(recibo.ValorReciboCliente__c != null && recibo.ValorReciboCliente__c > 0){
-                        System.debug(' ** monto valor avaluo base, valor sugerido recibo ** ' + recibo.ReciboJefeUsados__c);
                         recibo.Valor_sugerido_de_recibo__c = recibo.ValorReciboCliente__c;
                     }
                     if(recibo.ReciboJefeUsados__c > 0 && recibo.ReciboJefeUsados__c != null){
-                        System.debug(' ** monto recibo jefe usado base, valor sugerido venta ** ' + recibo.ReciboJefeUsados__c);
                         recibo.Valor_Sugerido_Venta__c = recibo.ReciboJefeUsados__c * (1 + Average);
                     }else if(recibo.ValorReciboCliente__c != null && recibo.ValorReciboCliente__c > 0){
-                        System.debug(' ** monto valor avaluo base, valor sugerido venta ** ' + recibo.ReciboJefeUsados__c);
                         recibo.Valor_Sugerido_Venta__c = recibo.ValorReciboCliente__c * (1 + Average);
                     }
                 }else{
@@ -697,35 +626,14 @@ public with sharing class controllerBusquedaReciboUsado {
                     if(!ultimoRegistroCreado.isEmpty() && ultimoRegistroCreado.size() > 0){
                         paramDate = ultimoRegistroCreado[0].Fecha_de_recibo__c;
                         paramDate2 = paramDate.addMonths(-3);
-                        System.debug(' ** fecha 1 ** ' + paramDate);
-                        System.debug(' ** fecha  2 **  ' + paramDate2);
                         
                         List<ReciboUsado__c> listTemp = [SELECT Id, ValorReciboCliente__c, Fecha_de_recibo__c, Score_Motos__c, ReciboJefeUsados__c, Valor_final__c,
                                                             Ano__c
-                                                            FROM ReciboUsado__c 
-                                                            Where Marca__c =: recibo.Marca__c and Ano__c =: recibo.Ano__c and 
-                                                                Modelo__c =: recibo.Modelo__c and Cilindraje__c =: recibo.Cilindraje__c and  
-                                                                Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and 
+                                                            FROM ReciboUsado__c
+                                                            Where Marca__c =: recibo.Marca__c and Ano__c =: recibo.Ano__c and
+                                                                Modelo__c =: recibo.Modelo__c and Cilindraje__c =: recibo.Cilindraje__c and
+                                                                Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and
                                                                 Fecha_de_recibo__c >= :paramDate2 AND Fecha_de_recibo__c <= :paramDate];
-                        if(listTemp.isEmpty() && listTemp.size() == 0){
-                            listTemp = [SELECT Id, ValorReciboCliente__c, Fecha_de_recibo__c, Score_Motos__c, ReciboJefeUsados__c, Valor_final__c,
-                                                            Ano__c
-                                                            FROM ReciboUsado__c 
-                                                            Where Marca__c =: recibo.Marca__c and Ano__c =: recibo.Ano__c and 
-                                                                Modelo__c =: recibo.Modelo__c and Cilindraje__c =: recibo.Cilindraje__c and  
-                                                                Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and 
-                                                                Fecha_de_recibo__c >= :paramDate2 AND Fecha_de_recibo__c <= :paramDate];
-                        }
-                        if(listTemp.isEmpty() && listTemp.size() == 0){
-                            listTemp = [SELECT Id, ValorReciboCliente__c, Fecha_de_recibo__c, Score_Motos__c, ReciboJefeUsados__c, Valor_final__c,
-                                                            Ano__c
-                                                            FROM ReciboUsado__c 
-                                                            Where Marca__c =: recibo.Marca__c and Ano__c =: recibo.Ano__c and 
-                                                                Modelo__c =: recibo.Modelo__c and Cilindraje__c =: recibo.Cilindraje__c and  
-                                                                Segmento__c =: recibo.Segmento__c and Gama__c =: recibo.Gama__c and 
-                                                                Fecha_de_recibo__c >= :paramDate2 AND Fecha_de_recibo__c <= :paramDate];
-                        }
-                        System.debug(' ** LISTA USADOS ** ' + listTemp);
 
                         recibo.Valor_sugerido_de_recibo__c = 0;
                         if(!listTemp.isEmpty() && listTemp.size() > 0){
@@ -739,7 +647,6 @@ public with sharing class controllerBusquedaReciboUsado {
                             Integer countTemp2 = 0; 
                             Double margenUtilidadObjetivo = Double.valueOf(LABEL.MargenUtilidadObjetivoMoto);
                             
-                            System.debug(' ** MARGEN UTILIDAD OBJETIVO ** ' + margenUtilidadObjetivo);
                             recibo.Score_Motos__c = 0;
                             sumaReciboJefeUsado = 0;
                             count = 0;
@@ -748,48 +655,34 @@ public with sharing class controllerBusquedaReciboUsado {
                                 if(r.Valor_final__c != null && r.Valor_final__c > 0){
                                     if(r.ReciboJefeUsados__c != null && r.ReciboJefeUsados__c > 0){
                                         annoDiferencia = System.Date.today().year() - Integer.valueOf(r.Fecha_de_recibo__c.year());
-                                        System.debug(' ** DIFERENCIA DE ANIOS ** ' + annoDiferencia);
                                         saldoInicial = r.ReciboJefeUsados__c;
                                         while(countTemp < annoDiferencia){
-                                            System.debug(' ** SALDO INICIAL ** ' + saldoInicial);
                                             montoDepreciacion = saldoInicial * 0.10;
-                                            System.debug(' ** MONTO DEPRECIACION ** ' + montoDepreciacion);
                                             saldoInicial = saldoInicial - montoDepreciacion;
-                                            System.debug(' ** SALDO INICIAL ** ' + saldoInicial);
                                             countTemp =  countTemp + 1;
                                         }
                                         countTemp = 0;
                                         count = count + 1;
                                         valorAvaluoDepreciado = valorAvaluoDepreciado + saldoInicial;
-                                        System.debug(' ** VALOR AVALUO DEPRECIADO ** ' + valorAvaluoDepreciado);
                                         margen = (r.Valor_final__c / r.ReciboJefeUsados__c) - 1;
-                                        System.debug(' ** MARGEN ** ' + margen);
                                         sumMargen = sumMargen + margen;
-                                        System.debug(' ** SUMATORIA MARGEN ** ' + sumMargen);
                                         if(r.Score_Motos__c != null){
                                             recibo.Score_Motos__c = recibo.Score_Motos__c + r.Score_Motos__c;
                                         }
                                         countTemp2 = countTemp2 + 1;
                                     }else if(r.ValorReciboCliente__c != null && r.ValorReciboCliente__c > 0){
                                         annoDiferencia = System.Date.today().year() - Integer.valueOf(r.Fecha_de_recibo__c.year());
-                                        System.debug(' ** DIFERENCIA DE ANIOS ** ' + annoDiferencia);
                                         saldoInicial = r.ValorReciboCliente__c;
                                         while(countTemp < annoDiferencia){
-                                            System.debug(' ** SALDO INICIAL ** ' + saldoInicial);
                                             montoDepreciacion = saldoInicial * 0.10;
-                                            System.debug(' ** MONTO DEPRECIACION ** ' + montoDepreciacion);
                                             saldoInicial = saldoInicial - montoDepreciacion;
-                                            System.debug(' ** SALDO INICIAL ** ' + saldoInicial);
                                             countTemp =  countTemp + 1;
                                         }
                                         countTemp = 0;
                                         count = count + 1;
                                         valorAvaluoDepreciado = valorAvaluoDepreciado + saldoInicial;
-                                        System.debug(' ** VALOR AVALUO DEPRECIADO ** ' + valorAvaluoDepreciado);
                                         margen = (r.Valor_final__c / r.ValorReciboCliente__c) - 1;
-                                        System.debug(' ** MARGEN ** ' + margen);
                                         sumMargen = sumMargen + margen;
-                                        System.debug(' ** SUMATORIA MARGEN ** ' + sumMargen);
                                         if(r.Score_Motos__c != null){
                                             recibo.Score_Motos__c = recibo.Score_Motos__c + r.Score_Motos__c;
                                         }
@@ -798,7 +691,6 @@ public with sharing class controllerBusquedaReciboUsado {
                                 }
                             }
                             sumMargen = sumMargen / countTemp2;
-                            System.debug(' ** PROMEDIO MARGEN ** ' + sumMargen);
                             recibo.Valor_sugerido_de_recibo__c = valorAvaluoDepreciado / countTemp2;
                             if(sumoAnio){
                                 recibo.Valor_sugerido_de_recibo__c = recibo.Valor_sugerido_de_recibo__c * 0.9;
@@ -972,7 +864,6 @@ public with sharing class controllerBusquedaReciboUsado {
         try 
         {
             HttpResponse res =  http.send(req);
-            System.debug( res.getBody());
             
             apiResponse = (ResponseWrapper) JSON.deserialize(res.getBody(), ResponseWrapper.class);
             if(apiResponse.code == '00')
@@ -999,7 +890,6 @@ public with sharing class controllerBusquedaReciboUsado {
            }
         }
         catch(System.CalloutException e) {
-            System.debug('Callout error: '+ e); 
         }
     }
     
@@ -1028,25 +918,15 @@ public with sharing class controllerBusquedaReciboUsado {
         try 
         {
             HttpResponse res =  http.send(req);
-            System.debug(':::::'+ res.getBody());
             
             data = (DataWrapper) JSON.deserialize(res.getBody(), DataWrapper.class);
             
-            //List<ReciboUsado__c> reciboList = new List<ReciboUsado__c>();
             List<Marca_Modelo__c> lstMarcaModel = new List<Marca_Modelo__c>();
             DeleteRecordsBatch.startExecution([select id from Marca_Modelo__c]);
             if(data != null && data.recibos.size() > 0)
             {
                 for(ListResponseWrapper rec : data.recibos)
                 {
-                    /*
-                    reciboList.add(new ReciboUsado__c(Name = rec.recibido,
-                                                      Marca__c = rec.marca,
-                                                      Ano__c = rec.modelo,
-                                                      Modelo__c = rec.linea,
-                                                      Combustible__c = rec.combustible,
-                                                      Trasmision__c = rec.transmision));
-                    */
                     lstMarcaModel.add(new Marca_Modelo__c(
                                                     Marca__c = rec.marca, 
                                                     Linea__c = rec.linea,
@@ -1058,7 +938,6 @@ public with sharing class controllerBusquedaReciboUsado {
                 
                 if(lstMarcaModel.size() > 0)
                 {
-                    //insert reciboList;
                     InsertRecordsBatch.startExecution(lstMarcaModel);
                 }
                    
@@ -1067,7 +946,6 @@ public with sharing class controllerBusquedaReciboUsado {
         }
         catch(Exception e) {
             apexpages.addMessage(new ApexPages.message(Apexpages.Severity.ERROR, e.getMessage()));
-            System.debug('Callout error: '+ e); 
         }
     }
     
