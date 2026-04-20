@@ -20,19 +20,12 @@ public without sharing class QuoteTriggerHandlerTest_v2 {
     }
 
     @IsTest
-    public static void test_calculateTaxes(){
-        
-    }
-
-    @IsTest
     public static void test_addExpirationDate(){
         List<Opportunity> oppList = [SELECT Id FROM Opportunity LIMIT 1];
         System.assert(oppList.size()>0,'No opportunities found');
 
         Quote newQuote = TestDataFactory.createQuote(oppList[0],'15 Días',true);
         List<Quote> quoteList = [SELECT Id,ExpirationDate FROM Quote WHERE Id = :newQuote.Id LIMIT 1];
-        System.debug('@quoteList@'+quoteList[0].ExpirationDate);
-        System.debug('@expirationDate@'+Date.today().addDays(15));
         System.assert(Date.today().addDays(15) == quoteList[0].ExpirationDate, 'the expiration date is not valid ('+Date.today().addDays(15)+')');
     } 
     
