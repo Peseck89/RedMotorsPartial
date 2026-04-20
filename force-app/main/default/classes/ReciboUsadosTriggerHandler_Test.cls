@@ -58,10 +58,11 @@ private class ReciboUsadosTriggerHandler_Test {
         }
         
         update listReciboUsados;
-        
+
         Test.stopTest();
-        
-        
+
+        List<ReciboUsado__c> resultado = [SELECT Id, Serecibevehiculo__c FROM ReciboUsado__c LIMIT 1];
+        Assert.isFalse(resultado[0].Serecibevehiculo__c, 'Se esperaba que el campo Serecibevehiculo__c fuera false después del update');
     }
 
     

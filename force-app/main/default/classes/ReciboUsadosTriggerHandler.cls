@@ -7,25 +7,6 @@ public class ReciboUsadosTriggerHandler extends TriggerHandler {
     }
     
 	public override void BeforeInsert(){
-        /*
-        List<ReciboUsado__c> listRUCarro = new List<ReciboUsado__c>();
-		List<ReciboUsado__c> listRUMoto = new List<ReciboUsado__c>();
-
-		for(ReciboUsado__c r : newReciboUsados){
-			System.debug(' ** RECIBO USADO ** ' + r);
-			if(r.RecordTypeId == '0120x000000RVngAAG'){
-				listRUCarro.add(r);
-			}else{
-				listRUMoto.add(r);
-			}
-		}
-
-		if(!listRUCarro.isEmpty() && listRUCarro.size() > 0){
-			ReciboUsadoService.calculoRecibo(listRUCarro);
-		}
-		if(!listRUMoto.isEmpty() && listRUMoto.size() > 0){
-			ReciboUsadoService.calculoScoreMotos(listRUMoto);
-		}*/
 		ReciboUsadoService.buscarRU(newReciboUsados);
 		ReciboUsadoService.guardarDatosMayuscula(newReciboUsados);
     }
@@ -35,15 +16,12 @@ public class ReciboUsadosTriggerHandler extends TriggerHandler {
 		Set<Id> listRUMoto = new Set<Id>();
 
 		for(ReciboUsado__c r : newReciboUsados){
-            System.debug(' ** Id Record Type ** ' + r.RecordTypeId);
 			if(r.RecordTypeId == '0120P000000ESxJ'){
 				listRUCarro.add(r.Id);
 			}else{
 				listRUMoto.add(r.Id);
 			}
 		}
-		System.debug(' ** SIZE AUTOS ** ' + listRUCarro.size());
-        System.debug(' ** SIZE MOTOS ** ' + listRUMoto.size());
 		if(!listRUCarro.isEmpty() && listRUCarro.size() > 0){
 			ReciboUsadoService.calculoRecibo(listRUCarro);
 		}
@@ -64,9 +42,7 @@ public class ReciboUsadosTriggerHandler extends TriggerHandler {
 			}else{
 				listRUMoto.add(r.Id);
 			}
-            if(TRUE){
-                ExternalServiceCallerController.sendDataFromTrigger(r.Id);
-            }
+            ExternalServiceCallerController.sendDataFromTrigger(r.Id);
 		}
         
         Id recordTypeId1 = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Autos usados').getRecordTypeId();
@@ -91,7 +67,8 @@ public class ReciboUsadosTriggerHandler extends TriggerHandler {
 		if(!listRUCarro.isEmpty() && listRUCarro.size() > 0){
 			ReciboUsadoService.calculoRecibo(listRUCarro);
 		}
-		if(!listRUMoto.isEmpty() && listRUMoto.size() > 0){ ReciboUsadoService.calculoScoreMotos(listRUMoto);
+		if(!listRUMoto.isEmpty() && listRUMoto.size() > 0){
+			ReciboUsadoService.calculoScoreMotos(listRUMoto);
 		}
         
         //Obtenemos la lista de OPS que tienen al menos 1 recibo de usados con el check de se recibe vehiculo
