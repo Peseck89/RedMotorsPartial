@@ -36,19 +36,6 @@ public class walkingCommunityController_test {
         );
         insert adminUser;
 
-        Product2 prod = new Product2(
-            Name = 'Test Product Walking', walking_product__c = true, IsActive = true
-        );
-        insert prod;
-
-        // FIX: PricebookEntry real en vez de texto libre
-        Id stdPbId = Test.getStandardPricebookId();
-        PricebookEntry pbe = new PricebookEntry(
-            Pricebook2Id = stdPbId, Product2Id = prod.Id,
-            UnitPrice = 1000, IsActive = true
-        );
-        insert pbe;
-
         RecordType rtPA = [SELECT Id FROM RecordType
                            WHERE SobjectType = 'Account' AND DeveloperName = 'PersonAccount' LIMIT 1];
         Account acc = new Account(
@@ -64,7 +51,7 @@ public class walkingCommunityController_test {
             Email = 'carlosgarcia@test.com', MobilePhone = '87001234', Phone = '87001234',
             Numero_de_Identificacion_del__c = '222222222', Convertido_custom__c = false,
             LeadSource = 'Walking', Status = 'Open',
-            Codigo_de_Producto__c = pbe.Id,  // FIX: Id real
+            Codigo_de_Producto__c = '01u0P00000kPIZrQAO',
             Modelo_De_Inter_s1__c = MODELO_BMW,
             TDA__c = true, EsWeb2Lead_del__c = false, Ignorar_asignacion__c = true
         );
@@ -77,7 +64,7 @@ public class walkingCommunityController_test {
             Email = 'anaviejos@test.com', MobilePhone = '86001234', Phone = '86001234',
             Numero_de_Identificacion_del__c = '333333333', Convertido_custom__c = false,
             LeadSource = 'Walking', Status = 'Open',
-            Codigo_de_Producto__c = pbe.Id,  // FIX: Id real
+            Codigo_de_Producto__c = '01u0P00000kPIZrQAO',
             Modelo_De_Inter_s1__c = MODELO_BMW,
             TDA__c = true, EsWeb2Lead_del__c = false, Ignorar_asignacion__c = true
         );
