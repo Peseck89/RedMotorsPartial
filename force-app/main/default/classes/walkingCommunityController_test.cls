@@ -65,9 +65,12 @@ public class walkingCommunityController_test {
             Numero_de_Identificacion_del__c = '222222222', Convertido_custom__c = false,
             LeadSource = 'Walking', Status = 'Open',
             Codigo_de_Producto__c = pbe.Id,  // FIX: Id real
-            Marca__c = MARCA_BMW, Familia1__c = FAMILIA_BMW, Modelo_De_Inter_s1__c = MODELO_BMW
+            Modelo_De_Inter_s1__c = MODELO_BMW,
+            TDA__c = true, EsWeb2Lead_del__c = false, Ignorar_asignacion__c = true
         );
+        Test.startTest();
         insert leadBMW;
+        Test.stopTest();
 
         Lead leadBMWOld = new Lead(
             RecordTypeId = rtBMW, FirstName = 'Ana', LastName = 'Viejos',
@@ -75,7 +78,8 @@ public class walkingCommunityController_test {
             Numero_de_Identificacion_del__c = '333333333', Convertido_custom__c = false,
             LeadSource = 'Walking', Status = 'Open',
             Codigo_de_Producto__c = pbe.Id,  // FIX: Id real
-            Marca__c = MARCA_BMW, Familia1__c = FAMILIA_BMW, Modelo_De_Inter_s1__c = MODELO_BMW
+            Modelo_De_Inter_s1__c = MODELO_BMW,
+            TDA__c = true, EsWeb2Lead_del__c = false, Ignorar_asignacion__c = true
         );
         insert leadBMWOld;
         Test.setCreatedDate(leadBMWOld.Id, Date.today().addMonths(-8));
