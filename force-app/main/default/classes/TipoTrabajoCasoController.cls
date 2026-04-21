@@ -18,8 +18,7 @@ public without sharing class TipoTrabajoCasoController {
     
     @AuraEnabled(cacheable=false)
     public static tiposDeTrabajoCaso__c insertTipoDelCasoDeTrabajo (Id caseId,Id workOrderId,String aseguradoraId,String centroCostoId, String tipoDeCargo, String sugerenciaTaller, String comments, id tipoDeTrabajo, String aprobador, String categoriaDePresupuesto) {         
-        String commentario_JD = comments;
-        try {        
+        try {
             
            tiposDeTrabajoCaso__c newTTC = new tiposDeTrabajoCaso__c( 
                 Caso__c	= caseId, 
@@ -53,12 +52,11 @@ public without sharing class TipoTrabajoCasoController {
 
     @AuraEnabled(cacheable=true)
     public static String getWorkOrder (String caseId) {         
-        String idCaso = caseId;
         String ordenTrabajo = '';
         String casoReal = '';
         List<tiposDeTrabajoCaso__c> sacarElCaso = new List<tiposDeTrabajoCaso__c>();
         List<WorkOrder> listasOrders = new List<WorkOrder>();
-        sacarElCaso = [SELECT id,Caso__c FROM tiposDeTrabajoCaso__c WHERE id =: idCaso LIMIT 1];
+        sacarElCaso = [SELECT id,Caso__c FROM tiposDeTrabajoCaso__c WHERE id =: caseId LIMIT 1];
         if (sacarElCaso.size() > 0) {
             casoReal = sacarElCaso[0].Caso__c;
         }
@@ -71,10 +69,9 @@ public without sharing class TipoTrabajoCasoController {
 
     @AuraEnabled(cacheable=true)
     public static tiposDeTrabajoCaso__c getTipoTrabajo (String trabajoId) {         
-        String idTrabajo = trabajoId;
         tiposDeTrabajoCaso__c newTrabajo = new tiposDeTrabajoCaso__c();
         List<tiposDeTrabajoCaso__c> sacarElCaso = new List<tiposDeTrabajoCaso__c>();
-        sacarElCaso = [SELECT id,Caso__c,Tipotrabajo__c,Tipo_de_cargo__c,Nombre_TTC__c FROM tiposDeTrabajoCaso__c WHERE id =: idTrabajo LIMIT 1];
+        sacarElCaso = [SELECT id,Caso__c,Tipotrabajo__c,Tipo_de_cargo__c,Nombre_TTC__c FROM tiposDeTrabajoCaso__c WHERE id =: trabajoId LIMIT 1];
         if (sacarElCaso.size() > 0) {
             newTrabajo = sacarElCaso[0];
         }
@@ -112,8 +109,6 @@ public without sharing class TipoTrabajoCasoController {
     public static Id existsWorkOrder (Id caseId) { 
         
         Id workOrderId = [Select Id from WorkOrder where CaseId=:caseId limit 1].Id;
-        System.debug('workOrderId');
-        System.debug(workOrderId);
         return workOrderId;
 
     }
@@ -181,7 +176,6 @@ public without sharing class TipoTrabajoCasoController {
                     created_From__c = origin
                 );    
 
-                System.debug('sbtc '+sbtc);
 
                 Product2 product = [SELECT Id,Mano_de_obra_no_pasa_a_OT__c FROM Product2 WHERE id =:wr.productId];
 
@@ -208,24 +202,6 @@ public without sharing class TipoTrabajoCasoController {
                 subtipoTrabajoCaso.add(sbtc);
             }
             
-            /*
-            if(worklineitems.size() > 0){
-                upsert worklineitems;     
-                for (Subtipo_de_trabajo_del_caso__c sb : subtipoTrabajoCaso){
-                    
-                   System.debug('worklineitems '+worklineitems);
-                    System.debug('worklineitems[0].Id '+worklineitems[0].Id);
-                    String iddelwoli = worklineitems[0].Id;
-                      System.debug('iddelwoli '+iddelwoli);
-                    //if(!String.isBlank(sb.Articulo_Mano_de_Obra__c)){
-                      System.debug('iddelwoli2 '+iddelwoli);
-                    sb.Articulo_Mano_de_Obra__c = iddelwoli;
-                    System.debug('sb Articulo_Mano_de_Obra__c '+sb.Articulo_Mano_de_Obra__c);
-                       System.debug('sb '+sb);
-                    //}
-    
-                }
-            }*/
             if(worklineitems.size() > 0){
                 upsert worklineitems; // Inserta o actualiza los WorkOrderLineItems en la base de datos
             
@@ -237,7 +213,6 @@ public without sharing class TipoTrabajoCasoController {
                         
                         // Asocia el WorkOrderLineItem con el Subtipo de Trabajo
                         sb.Articulo_Mano_de_Obra__c = wlItem.Id;
-                        System.debug('Asociado Subtipo_de_trabajo_del_caso__c: ' + sb.Id + ' con WorkOrderLineItem: ' + wlItem.Id);
                     }
                 }
             }
@@ -276,14 +251,8 @@ public without sharing class TipoTrabajoCasoController {
         }
 
         Map<Id,WorkOrderLineItem> wolisMap = new Map<Id,WorkOrderLineItem>([SELECT Id, WorkOrderId,WorkOrder.BMW_Aseguradora__c,WorkOrder.BMW_CentroDeCosto__c FROM WorkOrderLineItem WHERE Id IN :woliIds]);
-        System.debug('@wolisMap@');
-        System.debug(wolisMap);
-        Set<Id> wolisIds = new Set<Id>();
-        for (WorkOrderLineItem woli: worklineitems){
-            wolisIds.add(woli.Id);
-        }
         List<tipoCargo__c> tipoCargoExistentes = new List<tipoCargo__c>();
-        tipoCargoExistentes = [Select Id From tipoCargo__c Where Work_Order_Line_Item__c IN: wolisIds];
+        tipoCargoExistentes = [Select Id From tipoCargo__c Where Work_Order_Line_Item__c IN: woliIds];
         if(tipoCargoExistentes.size()>0){ delete tipoCargoExistentes;
         }
         for (WorkOrderLineItem woli: worklineitems){
@@ -328,8 +297,6 @@ public without sharing class TipoTrabajoCasoController {
             tipoCargoList.add(newTipoCargo);
         }
 
-        System.debug('@tipoCargoList@');
-        System.debug(tipoCargoList);
 
         try {
             if (tipoCargoList.size() > 0) {                

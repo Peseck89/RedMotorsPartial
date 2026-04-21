@@ -61,7 +61,7 @@ public class EventTriggerHandlerTest {
         insert wt;
         
         User u = new User(
-            ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id,
+            ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator' LIMIT 1].Id,
             LastName = 'Calendario Pavas - Mecánica Rápida',
             Email = 'puser000@amamama.com',
             Username = 'puser000@amamama.com' + System.currentTimeMillis(),
