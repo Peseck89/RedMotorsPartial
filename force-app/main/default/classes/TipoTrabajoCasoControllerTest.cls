@@ -69,16 +69,6 @@ public class TipoTrabajoCasoControllerTest {
         );
         insert wo;
         
-        // Crear entrada de lista de precios
-        PricebookEntry standardPrice = new PricebookEntry(
-            Pricebook2Id = Test.getStandardPricebookId(),
-            Product2Id = prod.Id,
-            UnitPrice = 1,
-            IsActive = true,
-            UseStandardPrice = false
-        );
-        //insert standardPrice;
-        
         // Crear tipo de trabajo de caso
         tiposDeTrabajoCaso__c ttc = new tiposDeTrabajoCaso__c(
             Caso__c = casito.Id,
@@ -252,8 +242,8 @@ public class TipoTrabajoCasoControllerTest {
         Test.startTest();
         String result = TipoTrabajoCasoController.getWorkOrder(ttc.Id);
         Test.stopTest();
-        
-        //System.assertEquals('', result, 'Debería devolver cadena vacía cuando no hay orden de trabajo');
+
+        System.assertEquals('', result, 'Debería devolver cadena vacía cuando no hay orden de trabajo');
     }
     @IsTest
     static void test_GetTipoTrabajo_NoResults() {
