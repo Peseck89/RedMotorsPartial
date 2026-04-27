@@ -101,19 +101,20 @@ public class WebServiceAutomationBatch implements Database.Batchable<sObject>, D
 
         if(opp != null){
             ApexPages.StandardController sc = new ApexPages.StandardController(opp);
-            if(opp.Nombre_Cliente_Altica__r.RecordType.Name == 'Cuenta Empresarial' || opp.Nombre_Cliente_Altica__r.RecordType.Name == 'Cliente Jurídico'){
-                formulaDeInfoJuridicoController forDeJuridicoCntrl = new formulaDeInfoJuridicoController(sc);
-                forDeJuridicoCntrl.createBuro();
-                forDeJuridicoCntrl.save();
-            }else {
-                formulaDeInfoFisicoController forDeFisicoCntrl = new formulaDeInfoFisicoController(sc);
-                forDeFisicoCntrl.redirectForJuridico();
-                forDeFisicoCntrl.save();
-            }
+            // formulaDeInfoJuridicoController, formulaDeInfoFisicoController y CalculateRiskFactorController no existen en este org
+            // if(opp.Nombre_Cliente_Altica__r.RecordType.Name == 'Cuenta Empresarial' || opp.Nombre_Cliente_Altica__r.RecordType.Name == 'Cliente Jurídico'){
+            //     formulaDeInfoJuridicoController forDeJuridicoCntrl = new formulaDeInfoJuridicoController(sc);
+            //     forDeJuridicoCntrl.createBuro();
+            //     forDeJuridicoCntrl.save();
+            // }else {
+            //     formulaDeInfoFisicoController forDeFisicoCntrl = new formulaDeInfoFisicoController(sc);
+            //     forDeFisicoCntrl.redirectForJuridico();
+            //     forDeFisicoCntrl.save();
+            // }
         }
-       	
-        CalculateRiskFactorController calRiskFactCntrl = new CalculateRiskFactorController();
-        calRiskFactCntrl.oppId = opp.Id;
-        calRiskFactCntrl.calculateRiskFactor();
+
+        // CalculateRiskFactorController calRiskFactCntrl = new CalculateRiskFactorController();
+        // calRiskFactCntrl.oppId = opp.Id;
+        // calRiskFactCntrl.calculateRiskFactor();
     }
 }

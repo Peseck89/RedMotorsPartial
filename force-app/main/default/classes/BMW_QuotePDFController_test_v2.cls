@@ -41,7 +41,7 @@ public class BMW_QuotePDFController_test_v2 {
                 PricebookEntryId = pbe.Id,
                 Product2Id      = products[0].Id,
                 Quantity        = 1,
-                UnitPrice       = 100,
+                UnitPrice       = 100
             ));
         }
         insert qlis;
