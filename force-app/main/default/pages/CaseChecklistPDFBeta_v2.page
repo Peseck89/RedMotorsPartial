@@ -1,0 +1,608 @@
+<apex:page title="Presupuesto" standardController="Case" extensions="CaseChecklistController_v2" renderAs="pdf" showHeader="false"
+    sidebar="false">
+    <head>
+        <style type="text/css" media="print">
+            @page {
+                @bottom-left {
+                    content: element(footer);
+                }
+            }
+            div.footer {
+                display: block;
+                padding: 5px;
+                position: running(footer);
+            }
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+        </style>
+    </head>
+    <apex:pageBlock rendered="{!if(case.Marca__c =='Moto BMW',true,false)}">
+    <table style="background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333">
+      <tr>
+        <td>
+          <img style="margin-right:20px;" src="{!$Resource.logoMotoBMW}" width="200px" />
+        </td>
+        <td style="width:750px;">
+          <span style="padding-left:23px;font-width:bold;font-size:17px;">
+            <b>Red Motors CR S.A.
+
+            </b>
+            <br/>
+            <b style="font-size:10px;padding-left:25px;">
+              Cédula Jur. No 3-101-50 2521
+              <br/>
+            </b>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>Tel.:
+              </b> (506) 2105-8300
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Correo: bmwmotorradcr@redmotorscr.com
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              www.bmw-motorrad.cr
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>
+              </b> Costa Rica, San José, La Uruca, 400 metros al oeste de la plaza de  
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              deportes, diagonal a la nueva rotonda, Circunvalación Norte
+            </span>
+          </span>
+        </td>
+      </tr>
+    </table>
+  </apex:pageBlock>
+
+  <apex:pageBlock rendered="{!if(case.Marca__c =='Moto Kawa',true,false)}">
+    <table style="background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333">
+      <tr>
+        <td>
+          <img style="margin-right:20px;" src="{!$Resource.logoKawasakiRojo}" width="200px" />
+        </td>
+        <td style="width:750px;">
+          <span style="padding-left:23px;font-width:bold;font-size:17px;">
+            <b>Red Motors S.A.
+            </b>
+            <br/>
+            <b style="font-size:10px;padding-left:25px;">
+              Cédula Jur. No 3-101-720752
+              <br/>
+            </b>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>Tel.:
+              </b> (506) 2105-8300
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Correo: kawasakicr@redmotorscr.com
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              costarica.kawasaki-la.com
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Costa Rica, San José, La Uruca, 400 metros al oeste de la plaza de
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              deportes, diagonal a la nueva rotonda, Circunvalación Norte
+            </span>
+          </span>
+        </td>
+      </tr>
+    </table>
+  </apex:pageBlock>
+
+  <apex:pageBlock rendered="{!if(case.Marca__c =='Vehículo Polaris',true,false)}">
+    <table style="background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333">
+      <tr>
+        <td>
+          <img style="margin-right:20px;" src="{!$Resource.logoPolaris}" width="200px" />
+        </td>
+        <td style="width:750px;">
+          <span style="padding-left:23px;font-width:bold;font-size:17px;">
+            <b>Red Motors S.A.
+            </b>
+            <br/>
+            <b style="font-size:10px;padding-left:25px;">
+              Cédula Jur. No 3-101-720752
+              <br/>
+            </b>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>Tel.:
+              </b> (506) 2105-8300
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Correo: polariscr@redmotorscr.com
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Costa Rica, San José, La Uruca, 400 metros al oeste de la plaza de
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              deportes, diagonal a la nueva rotonda, Circunvalación Norte
+            </span>
+          </span>
+        </td>
+      </tr>
+    </table>
+  </apex:pageBlock>
+
+  <apex:pageBlock rendered="{!if(case.Marca__c !='Vehículo Polaris' && case.Marca__c !='Moto Kawa' && case.Marca__c !='Moto BMW',true,false)}">
+    <table style="background: #F4F4F4; width:100%;padding: 30px 50px;font-family: Arial, Helvetica, sans-serif;color:#333333">
+      <tr>
+        <td>
+          <img style="margin-right:20px;" src="{!$Resource.bmwminiLogo}" width="200px" />
+        </td>
+        <td style="width:750px;">
+          <span style="padding-left:23px;font-width:bold;font-size:17px;">
+            <b>Red Motors CR S.A.
+            </b>
+            <br/>
+            <b style="font-size:10px;padding-left:25px;">
+              Cédula Jur. No 3-101-502-521
+              <br/>
+            </b>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>Tel.:
+              </b> (506) 2547-5000
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              Taller@redmotorscr.com www.bmw.co.cr
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              <b>Apdo:
+              </b> 7461150
+              <br/>
+            </span>
+            <span style="font-size:10px;padding-left:25px;">
+              La Uruca, costado sur de la estación de servicio, San José, Costa Rica
+            </span>
+          </span>
+        </td>
+      </tr>
+    </table>
+  </apex:pageBlock>
+    <br/>
+    <br/>
+    <table style="font-size: 12px; font-family:sans-serif; width:100%;padding: 10px 20px;color:#333333;margin-top:-20px;">
+        <tr>
+            <td>
+                <span style="line-height: 0.428571;color: #333333;text-align: left;font-weight: bold;font-size: 16px;font-family:Arial, Helvetica, sans-serif;margin-top:-5px">Información del cliente:</span>
+            </td>
+            <td>
+                <span style="line-height: 0.428571;color: #333333;text-align: left;font-weight: bold;font-size: 16px;font-family:Arial, Helvetica, sans-serif;margin-top:-5px">Información del vehículo: </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Propietario:&nbsp;</span>
+                <apex:outputField value="{!case.Account.Name}" />&nbsp;&nbsp;
+                  <apex:repeat value="{!cambioPropietario}" var="cp">
+                    <apex:outputText value="Pendiente de actualización" 
+                     rendered="{!cp.Estado__c = 'Pendiente'}"
+                     style="font-weight:bold"/>
+                  </apex:repeat>
+            </td>
+            <td>
+                <span style="font-weight:bold">Matricula:&nbsp;</span>
+                <apex:outputField value="{!case.Asset.numeroDePlaca__c}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Contacto:&nbsp;</span>
+                <apex:outputField value="{!case.Contact.Name}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Marca:&nbsp;</span>
+                <apex:outputField value="{!case.Asset.marca__c}" /> 
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Cédula:&nbsp;</span>
+                <apex:outputField rendered="{! case.Contact.id != null}" value="{!case.Contact.Cedula__c}" />
+                <apex:outputField rendered="{! case.Contact.id == null}" value="{!case.Account.Cedula__c}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Vehículo:&nbsp; </span>
+                <apex:outputField value="{!case.Asset.Tipo_de_veh_culo__c}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Teléfono:&nbsp; </span>
+                <apex:outputField rendered="{! case.Contact.id != null}" value="{!case.Contact.Phone}" />
+                <apex:outputField rendered="{! case.Contact.id == null}" value="{!case.Account.Phone}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">VIN:</span> &nbsp;
+                <apex:outputField value="{!case.Asset.NumeroDeChasis__c}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">E-mail:&nbsp;</span>
+                <apex:outputField rendered="{! case.Contact.id != null}" value="{!case.Contact.Email}" />
+                <apex:outputField rendered="{! case.Contact.id == null && case.Account.RecordType.Name == 'Cuenta personal'}" value="{!case.Account.PersonEmail}" />
+                <apex:outputField rendered="{! case.Contact.id == null && case.Account.RecordType.Name == 'Cuenta Empresarial'}" value="{!case.Account.CorreoElectronicoEmpresarial__c}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Kms:&nbsp;</span>
+                <apex:outputText value="{0,number, ###,###}">
+                    <apex:param value="{!kilometros}" />
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Ubicación:</span> &nbsp;
+                <apex:repeat value="{!Ubi}" var="item">
+                    <apex:outputField value="{!item.ServiceTerritoryId}" />
+                    <br/>
+                </apex:repeat>
+            </td>
+            <td>
+                <span style="font-weight:bold">Cód. Modelo:&nbsp; </span>
+                <apex:outputField value="{!case.Asset.modelo__c}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Recepcionista:&nbsp;</span>
+                <apex:outputField value="{!case.OwnerId}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Combustible:</span>&nbsp;
+                <apex:outputField value="{!case.Asset.Combustible__c}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Fecha de apertura:&nbsp;</span>
+                <apex:outputField value="{!case.CreatedDate}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Color:&nbsp;</span>
+                <apex:outputField value="{!case.Asset.Color__c}" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight:bold">Dirección:&nbsp;</span>
+                <apex:outputField value="{!case.Account.BillingStreet}" />
+            </td>
+            <td>
+                <span style="font-weight:bold">Motor:&nbsp;</span>
+                <apex:outputField value="{!case.Asset.Motor__c}" />
+            </td>
+        </tr>
+    </table>
+    <hr style="display: block;height: 1px;border: 0;border-top: 1px solid #ccc;margin: 1em 0;padding: 0;" />
+    <div class="slds-card" id="generalData" style="width: 100%;margin: 10px auto;border: none;text-align:center;">
+        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__body">
+                <span style="line-height: 0.428571;color: #333333;text-align: center;font-weight: bold;font-size: 20px;font-family:Arial, Helvetica, sans-serif;">
+                    Orden de trabajo/Resguardo de depósito
+                    <br/>
+                </span>
+                <span style="display: inline-block;font-family:sans-serif; color:#333333;font-size:13px;text-align:center;margin-top:8px">
+                    Caso:
+                    <b>
+                        <apex:outputField value="{!Case.CaseNumber}" />
+                    </b>&nbsp;&nbsp;
+                </span>
+                <br/>
+                <span style="display: inline-block;font-family:sans-serif; color:#333333;font-size:13px;text-align:center;margin-top:8px">
+                    Orden de trabajo:
+                    <b>
+                        {!workOrderNumber}
+                    </b>&nbsp;&nbsp;
+                </span>
+            </div>
+        </header>
+    </div>
+    <hr style="display: block;height: 1px;border: 0;border-top: 1px solid #ccc;margin: 1em 0;padding: 0;" />
+    <div class="slds-card" id="otrosCostos" style="width: 100%;
+                                                    margin: 15px auto;
+                                                    padding: 10px;
+                                                    border: none;">
+        <table style="width:100%;margin-top:-10px;">
+            <tr>
+                <td>
+                    <table style="color:#333333; font-family: Arial, Helvetica, sans-serif; borde-collapse: collapse;width:100%;float:left;">
+                        <tr style="background-color: #E1E1E1; border: none;font-size: 10px;text-align:center;color: #8a8a8a;font-weight: bold;">
+
+                            <td colspan="3" style="padding:7px 5px">
+                                <b>Observaciones:</b>
+                            </td>
+                        </tr>
+                        <tr style="color: #333333;font-size: 10px;background:#FAFAFA;">
+                            <td colspan="3" style="text-align:center;border-right:1px solid #ffffff;padding:10px 5px;">
+                                <apex:outputField value="{!case.Description}" />
+                            </td>
+                        </tr>
+                        <tr style=" border: none;font-size: 10px;text-align:center;color: #333333;font-weight: bold; ">
+                            <td colspan="3" style="padding:7px 5px;border: none;font-size: 12px;text-align:center;color: #8a8a8a;font-weight: bold; margin-top:10px;">
+                                <br/>
+                                <br/> [&nbsp;&nbsp;&nbsp; ] No hay daños
+                                <br/>
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table style="color:#333333; font-family: Arial, Helvetica, sans-serif; border-collapse: collapse;width:80%; float:right;">
+                        <tr style="font-size: 14px;text-align:left;color: #333333;font-weight: bold;">
+                            <th colspan="4" style="padding:7px 5px 7px 8px;text-align:center;">
+                                <b>Anomalías:</b>
+                            </th>
+                        </tr>
+                        <tr style=" border: none;font-size: 10px;text-align:center;color: #333333;font-weight: bold;background-color: #FAFAFA">
+                            <td style="padding:30px 5px;border: none;font-size: 10px;text-align:center;color: #8a8a8a;font-weight: bold;">
+                                <apex:outputPanel rendered="{!if(imageURL == '',true,false)}">
+                                <apex:image url="{!$Resource.ImageDer}" width="130" height="130"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(imageURL != '',true,false)}">
+                                <apex:image url="{!imageUrl}" width="130px" height="130px"/>
+                                 </apex:outputPanel>
+                            </td>
+                            <apex:variable var="ImagenInicial" value="false" />
+                            <td style="padding:7px 5px;border: none;font-size: 10px;text-align:center;color: #8a8a8a;font-weight: bold;">
+                                <apex:outputPanel rendered="{!if(imageURL1 == '',true,false)}"> 
+                                   <apex:image url="{!$Resource.ImageFront}" width="130" height="130"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(imageURL1 != '',true,false)}">
+                                   <apex:image url="{!imageUrl1}" width="130px" height="130px"/>
+                                </apex:outputPanel>
+                            </td>
+                            <td style="padding:7px 5px;border: none;font-size: 10px;text-align:center;color: #8a8a8a;font-weight: bold;">
+                                <apex:outputPanel rendered="{!if(imageURL2 == '',true,false)}"> 
+                                   <apex:image url="{!$Resource.ImageLeft }" width="130" height="130"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(imageURL2 != '',true,false)}">
+                                   <apex:image url="{!imageUrl2}" width="130px" height="130px"/>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="color:#333333; font-family: Arial, Helvetica, sans-serif; border-collapse: collapse;width:80%; float:right;">
+                        <tr style=" border: none;font-size: 10px;text-align:center;color: #333333;font-weight: bold;background-color: #FAFAFA">
+                            <td style="padding:5px 25px 25px;border: none;font-size: 10px;text-align:right;color: #8a8a8a;font-weight: bold;width=50%">
+                                <apex:outputPanel rendered="{!if(imageURL3 == '',true,false)}"> 
+                                   <apex:image url="{!$Resource.ImageBack }" width="130" height="130"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(imageURL3 != '',true,false)}">
+                                   <apex:image url="{!imageUrl3}" width="130px" height="130px"/>
+                                </apex:outputPanel>
+                            </td>
+                            <td style="padding:5px 25px 25px;border: none;font-size: 10px;text-align:left;color: #8a8a8a;font-weight: bold;width=50%">
+                                <apex:outputPanel rendered="{!if(imageURL4 == '',true,false)}"> 
+                                   <apex:image url="{!$Resource.ImageTab }" width="130" height="130"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(imageURL4 != '',true,false)}">
+                                   <apex:image url="{!imageUrl4}" width="130px" height="130px"/>
+                                </apex:outputPanel>
+                            </td>
+                             
+                        </tr>
+                    </table>
+                  
+                </td>
+            </tr> 
+        </table>
+    </div>
+    
+    <hr style="display: block;height: 1px;border: 0;border-top: 1px solid #ccc;margin: 1em 0;padding: 0;" />
+    <hr style="display: block;height: 2px;border: 0;margin: 50px 0;padding: 0;" />
+    <table width="100%" cellspacing="6" style="font-size: 12px;  font-family:sans-serif;width:100%; border-collapse: collapse; text-align:left;">
+
+        <apex:repeat value="{!case.Tipos_de_Trabajo__r}" var="item">
+            <tr aria-selected="false" class="slds-hint-parent">
+                <td colspan="6" width="100%" style="background-color:#E1E1E1; padding:10px 10px;">
+                    <b>Trabajo</b>&nbsp;&nbsp;
+                    <apex:outputField value="{!item.Tipotrabajo__r.Name}" />
+                </td>
+            </tr>
+            <tr aria-selected="false" class="slds-hint-parent" Style="text-align:left;">
+                <td colspan="2" width="33%" style="padding:10px 10px;">
+                    <b>T. Cargo</b>&nbsp;&nbsp;
+                    <!--Mapear-->
+                    <apex:outputField value="{!item.Tipo_de_cargo__c}" />
+                </td>
+                <!--<td width="33%"><b>Núm. Aviso de Accidente</b>&nbsp;&nbsp;</td>-->
+                <td colspan="2" width="33%">
+                    <b></b>&nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr aria-selected="false" class="slds-hint-parent">
+                <td colspan="1" width="45%" Style="background-color: #F4F4F4; padding-left:10px;font-family:sans-serif; font-size:12px">
+                    <b>Trabajo a realizar:</b>
+                </td>
+                <td colspan="1" width="10%" Style="padding-left:10px;font-family:sans-serif; font-size:12px">
+                    <b>Taller:</b>
+                </td>
+                <td colspan="1" width="10%" Style="background-color: #F4F4F4; padding-left:10px;font-family:sans-serif; font-size:12px">
+                    <b>Cargo:</b>
+                </td>
+                <td colspan="1" width="10%" Style="padding-left:10px;font-family:sans-serif; font-size:12px">
+                    <b>Estado:</b>
+                </td>
+                <td colspan="1" width="10%" Style="background-color: #F4F4F4; padding-left:10px;font-family:sans-serif; font-size:12px">
+                    <b>N.Presup.:&nbsp;&nbsp; </b>
+                </td>
+                <td colspan="1" width="15%" Style="padding-left:60px;font-family:sans-serif; font-size:12px">
+                    <b>Horas</b>
+                </td>
+            </tr>
+            <apex:repeat value="{!subtipos}" var="itemm">
+                <tr>
+                    <td colspan="1" width="45%" Style="padding-left:10px; border-top: collapse; font-family:sans-serif; font-size:12px;">
+                        <apex:outputPanel rendered="{!if(itemm.Tipo_de_trabajo_del_caso__r.Name == item.Name,true,false)}">
+                            <apex:outputField value="{!itemm.Name}" />
+                        </apex:outputPanel>
+                    </td>
+                    <td colspan="1" width="10%" Style=" border-top: collapse;   font-family:sans-serif; font-size:12px;">
+                    </td>
+                    <td colspan="1" width="10%" Style=" border-top: collapse;   font-family:sans-serif; font-size:12px;">
+                    </td>
+                    <td colspan="1" width="10%" Style=" border-top: collapse;   font-family:sans-serif; font-size:12px;">
+                    </td>
+                    <td colspan="1" width="10%" Style=" border-top: collapse;    font-family:sans-serif; font-size:12px;">
+                    </td>
+                    <td colspan="1" width="15%" Style="border-top: collapse;  font-family:sans-serif; font-size:11px; padding-left:60px;">
+                        <apex:outputPanel rendered="{!if(itemm.Tipo_de_trabajo_del_caso__r.Name == item.Name,true,false)}">
+                            <apex:outputField value="{!itemm.Cantidad_de_horas__c}" />
+                        </apex:outputPanel>
+                    </td>
+                </tr>
+            </apex:repeat>
+            <tr aria-selected="false" class="slds-hint-parent">
+                <td style="padding-left:10px;font-family:sans-serif; font-size:12px" colspan="6">
+                    <b>Comentarios: </b> &#32;&#32;<apex:outputField value="{!item.ComentarioTTC__c}" />
+                </td>
+            </tr>
+            <tr Style="border-collapse: collapse;">
+                <td colspan="1" width="45%" Style="text-align:right; font-family:sans-serif; font-size:12px;">
+                    <b>
+                        <apex:outputText value="" />
+                    </b>
+                </td>
+                <td colspan="1" width="10%" Style="padding-left:10px; border-top: collapse;   font-family:sans-serif; font-size:12px;">
+                    <b>
+                        <apex:outputField value="{!item.Taller__c}" />
+                    </b>
+                </td>
+                <td colspan="1" width="10%" Style="background-color: #F4F4F4; padding-left:10px; border-top: collapse;   font-family:sans-serif; font-size:12px;">
+                    <b>
+                        <apex:outputField value="{!item.Tipo_de_cargo__c}" />
+                    </b>
+                </td>
+                <td colspan="1" width="10%" Style="padding-left:10px; border-top: collapse;font-family:sans-serif; font-size:12px;">
+                    <b>
+                        <apex:outputField value="{!item.FechaAlta__c}" />
+                    </b>
+                </td>
+                <td colspan="1" width="10%" Style="background-color: #F4F4F4; padding-left:10px; border-top: collapse;  font-family:sans-serif; font-size:12px;">
+                    <b>
+                        <apex:outputField value="{!item.Status__c}" />
+                    </b>
+                </td>
+                <td colspan="1" width="15%" Style="padding-left:60px; border-top: collapse; font-family:sans-serif; font-size:12px;">
+                    <b>
+                        <apex:outputField value="{!item.Horaa__c}" />
+                    </b>
+                </td>
+            </tr>           
+            <tr>
+            </tr>
+        </apex:repeat>      
+
+        <td colspan="5" width="85%" Style="background-color: #F4F4F4; border: none;font-size: 10px;text-align:left;color: #333333;padding:10px; text-align:right; padding:10px 10px;">
+            <b>Total de horas asignadas:</b>
+        </td>
+        <td colspan="1" width="15%" Style="background-color: #F4F4F4; border: none;font-size: 10px;text-align:left;color: #333333;padding:15px; text-align:right;">
+            <apex:outputField value="{!case.Total_Todas_las_horas__c}" />
+        </td>
+
+    </table>
+
+    <table width="100%" style="color: #333333;font-family: Arial, Helvetica, sans-serif;display:block;text-align:left;margin-top:20px;padding:20px;font-size:7px;;">
+        <tr aria-selected="false" class="slds-hint-parent">
+            <td role="gridcell" style="font-size: 10px;" colspan="9">
+                <br/> 1 - No se aceptan devoluciones después de 24 horas de la compra. Dentro de las 24 horas únicamente se recibirán
+                aquellos repuestos que se encuentren en el mismo estado en que se entregaron y se hará un crédito a favor
+                del cliente. Tampoco se aceptan devoluciones de accesorios eléctricos, roles, mangueras u otros materiales
+                de corte.
+                <br/> 2 – La cancelación de esta factura mediante cheque está condicionada a que el mismo sea pagado por el Banco
+                respectivo a su presentación.
+                <br/> 3 – Toda factura debe cancelarse en el plazo indicado. De lo contrario, devengará intereses moratorios del
+                3% mensual, los cuales aunque sean pagados no implicarán prórroga del plazo. Renuncio mi domicilio y a los
+                trámites de juicio ejecutivo y al mismo tiempo doy por aceptadas las condiciones de Código de Comercio, según
+                Artículo 460.
+                <br/> 4 – Este documento no es válido sin el sello de cancelado de Caja.
+                <br/> “AUTORIZADO MEDIANTE RESOLUCIÓN NO.11-97 DEL 12-08-97 DE LA D.G.T.D”
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </td>
+        </tr>
+        <tr aria-selected="false" class="slds-hint-parent">
+      <td role="gridcell" style="font-size: 10px;" colspan="9">
+        <span style="font-weight:bold">Política de garantía:</span><br/>
+         <br/> 1 – Los accesorios y repuestos están cubiertos por una garantía de dos (2) años, contados a partir de la fecha de entrega del producto al cliente. 
+         Excepto, piezas de desgaste, lubricantes o productos químicos. 
+         <br/> 2 – La garantía cubre la reparación o el cambio de la pieza o accesorio (caso no se pueda reparar) por defectos de fabricación.
+         <br/> 3 – Los productos deben de usarse o instalarse según las instrucciones o manual de reparaciones, un uso inadecuado o instalación incorrecta invalida la garantía.
+         <br/> 4 – Para otorgar la garantía, los defectos deben ser constatados o analizados a través de diagnóstico y análisis técnico de nuestro departamento de garantía.
+         5 – La reclamación de garantía de accesorios y repuestos se debe realizar exclusivamente en la sucursal donde ha adquiero el producto.
+         <br/> 6 – El diagnóstico y análisis técnico se debe realizar con herramienta especializada cuando todavía el accesorio/repuesto está instalado en el vehículo/motocicleta. 
+         Si el cliente, o quien autorice, desinstalar el accesorio/repuesto previamente no será posible determinar con certeza la causa del defecto y por lo tanto se considerará inviable otorgar la garantía.
+         <br/> 7 – Se debe de tomar en cuenta seguir las recomendaciones del fabricante en relación a la instalación, uso y conservación del accesorio/repuesto, además del mantenimiento del vehículo/motocicleta relacionado con el accesorio/repuesto.
+         <br/> 8 – El accesorio/repuesto instalado debe corresponder al modelo de vehículo/motocicleta para el cual fue diseñado.
+         <br/> 9 – El periodo de garantía esté vigente.
+         <br/>
+         <br/>
+         <br/>
+         <br/>
+         <br/>
+         <br/>
+      </td>
+    </tr>
+        <tr aria-selected="false" class="slds-hint-parent">
+            <td role="gridcell" style="color: #333333;font-family: Arial, Helvetica, sans-serif; font-size: 10px;text-align:center;"
+                colspan="2">
+               
+                <br/> ______________________________________<br/>
+                <span style="font-weight:bold"> Nombre de quien recibe</span><br/>
+                <span style="font-weight:bold"><apex:outputField value="{!case.OwnerId}" /></span><br/>             
+                <span>Tel: </span><apex:outputField value="{!case.Movil_Asesor__c}"/><br/>
+                Bavarian Motors S.A.<br/>
+                <apex:outputField value="{!case.Correo_Asesor__c}"/>
+            </td>
+            <td role="gridcell" style="color: #333333;font-family: Arial, Helvetica, sans-serif; font-size: 10px;text-align:center;"
+                colspan="2">
+                <br/>________________________________________<br/>
+                <span style="font-weight:bold"> Firma cliente</span><br/> 
+                <span style="font-weight:bold;color:blue"><u><apex:outputField value="{!case.Account.Name}"/></u></span><span style="font-weight:bold"><br/>
+                # Cédula:</span> <span><apex:outputField value="{!case.Account.Cedula__c}"/></span><br/> 
+               <span>Tel: </span><apex:outputField value="{!case.Telefono_cliente__c}"/><br/> 
+                <apex:outputField value="{!case.Correo_facturaci_n__c}"/>
+            </td>
+            <td role="gridcell" style="font-size: 10px;" colspan="5">
+
+            </td>
+        </tr>
+    </table>
+    <table width="100%" cellspacing="6" style="margin-top:20px;font-size: 12px;font-family: Arial, Helvetica, sans-serif;width:100%; border-collapse: collapse; text-align:left;">
+        <tr aria-selected="false" class="slds-hint-parent">
+            <td Style="height: 15px; color: #333333;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">Renuncia a los repuestos Sustituidos [&nbsp;&nbsp; ]</td>
+            <td Style="height: 15px; color: #333333;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">Vehiculo Conforme [SI]&nbsp;[NO]</td>
+            <td Style="height: 15px; color: #333333;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">Prueba de Carretera [SI]&nbsp;[NO]</td>
+            <td Style="height: 15px; color: #333333;font-family: Arial, Helvetica, sans-serif; font-size: 10px;">Autoriza repuestos de canje [&nbsp;&nbsp; ]</td>
+        </tr>
+    </table>
+    <footer style="color: #333333;font-family: Arial, Helvetica, sans-serif;display:block;text-align:center;margin-top:20px;padding:20px;font-size:7px;">
+        <p>- - - - - - - - - - - - - - - -&nbsp;&nbsp;&nbsp; Última página &nbsp;&nbsp;&nbsp;- - - - - - - - - - - - - - - -</p>
+    </footer>
+</apex:page>
