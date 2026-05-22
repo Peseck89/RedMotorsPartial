@@ -1,1563 +1,5 @@
 public with sharing class CommunityCalendarController {
-    
-    public List<Object> serviceTerritoriesWithOppHours;
-    public List<Object> events;
 
-
-    public static void dummy(){
-        Integer i = 0;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-    }
 
     @AuraEnabled
     public static void createCaseDesasocia(String vehiculoId,String motivoBaja){
@@ -1573,6 +15,7 @@ public with sharing class CommunityCalendarController {
         Case newCase = new Case();
         newCase.RecordTypeId = '012PH00000HBor9YAD';
         newCase.Origin = 'BMW Service Desasociar';
+        newCase.Creado_por_service__c = true;
         newCase.FechaEntrada__c = Date.today();
         newCase.AccountId = userr.Contact?.AccountId;
         newCase.Subject = 'Se ha solicitado la desasociación de un vehiculo.';
@@ -1587,104 +30,6 @@ public with sharing class CommunityCalendarController {
         newCase.SuppliedName = userr.FirstName;
         newCase.Service_Territory1__c  = '0HhPH0000003NEb0AM';
         insert newCase;
-        Integer i = 0;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
         // return capacity;
     }
 
@@ -1704,7 +49,7 @@ public with sharing class CommunityCalendarController {
         newCase.RecordTypeId = '012PH00000HBor9YAD';
         newCase.Origin = 'BMW Service Contactanos';
         newCase.FechaEntrada__c = Date.today();
-        
+        newCase.Creado_por_service__c = true;
         newCase.Type = 'Solicitud';
         newCase.Priority = 'Media';
         newCase.Subject = 'Se ha solicitado el agregado de un nuevo vehiculo.';
@@ -1724,61 +69,6 @@ public with sharing class CommunityCalendarController {
 
     @AuraEnabled(cacheable=true)
     public static List<community_config__c> getMarcasConfig(String marcaSel){
-        Integer i = 0;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
             List <community_config__c> userAssets = [Select Servicios__c,Servicio_con_acentos__c,Descripcion_de_servicio__c,Orden_servicio__c from community_config__c WHERE Marca__c =: marcaSel order by Orden_servicio__c];
             
 
@@ -1823,61 +113,6 @@ public with sharing class CommunityCalendarController {
 
     @AuraEnabled(cacheable=true)
     public static List<Object> getPreguntas(){
-        Integer i = 0;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-     i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
         List<Cuestionario_Comunidad__c> lstCuestionario = [Select Id,Numero_de_pregunta__c,Pregunta__c FROM Cuestionario_Comunidad__c order by Numero_de_pregunta__c];
         if(lstCuestionario.size()>0){
             return lstCuestionario;
@@ -1942,23 +177,9 @@ public with sharing class CommunityCalendarController {
             if(marcaSel == 'Motorrad'){
                 horasGlobales = [SELECT Tipo_de_Cita__c,Tiempo_de_cita_2__c,kmCero__c, kmMil__c, kmCincomil__c, kmDiezmil__c, kmQuincemil__c, kmVeintemil__c, kmVeinticinco__c, kmTreinta__c, kmTreintacinco__c, kmCuarenta__c, kmCuarentacinco__c FROM Hora_global__c WHERE Service_Territory__c = : lstServiceTerritory[0].id ];
                 horasExtra = [SELECT Tipo_de_Cita__c,Tiempo_de_cita_2__c,Hora_y_Fecha_de_Inicio__c,Hora_y_Fecha_de_Fin__c,kmCero__c, kmMil__c, kmCincomil__c, kmDiezmil__c, kmQuincemil__c, kmVeintemil__c, kmVeinticinco__c, kmTreinta__c, kmTreintacinco__c, kmCuarenta__c, kmCuarentacinco__c FROM hora_extraordinaria__c WHERE Service_Territory__c = : lstServiceTerritory[0].id ];
-                if(horasExtra.size()>0){
-                    // if(horasExtra[0].Hora_y_Fecha_de_Inicio__c <= resultDateTime  && horasExtra[0].Hora_y_Fecha_de_Fin__c >= Datetime.now()){
-                    if(false){
-                        extraValida = true;
-                    }
-                   
-                }
             }else{
                 horasGlobales = [SELECT Tipo_de_Cita__c,Tiempo_de_cita_2__c FROM Hora_global__c WHERE Service_Territory__c = : lstServiceTerritory[0].id ];
                 horasExtra = [SELECT Tipo_de_Cita__c,Tiempo_de_cita_2__c,Hora_y_Fecha_de_Inicio__c,Hora_y_Fecha_de_Fin__c FROM hora_extraordinaria__c WHERE Service_Territory__c = : lstServiceTerritory[0].id ];
-                if(horasExtra.size()>0){
-                    // if(horasExtra[0].Hora_y_Fecha_de_Inicio__c <= resultDateTime  && horasExtra[0].Hora_y_Fecha_de_Fin__c >= Datetime.now()){
-                    if(false){
-                        extraValida = true;
-                    }
-                   
-                }
             }
 
 
@@ -1980,61 +201,6 @@ public with sharing class CommunityCalendarController {
 
     @AuraEnabled(cacheable=true)
     public static List<Object> getSubServicios(String marcaSel,String servicioSelec){
-        Integer i = 0;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
         List <community_config__c> userAssets = [Select SubServicios__c from community_config__c WHERE Marca__c =: marcaSel AND Servicios__c =: servicioSelec];
 
         List<Object> options = new List<Object>();
@@ -2060,7 +226,6 @@ public with sharing class CommunityCalendarController {
             }
         }    
         
-        System.debug('options ' + options);
         return options;
     }
 
@@ -2085,61 +250,6 @@ public with sharing class CommunityCalendarController {
 
     @AuraEnabled(cacheable=true)
     public static Decimal getMecanicosSucursal(String marcaSel,String servicioSelec, String selectedService){
-        Integer i = 0;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
         
         Date currentDate = Date.today();
         // Set the time to midnight (00:00:00)
@@ -2236,8 +346,6 @@ public with sharing class CommunityCalendarController {
         List<Event_Shadow__c> events2 = [Select Id,Tipo_de_cita__c, ActivityDate__c,Asesor__c,Calendar__c,Calendar__r.LastName, StartDateTime__c, EndDateTime__c, OwnerId /*, ActivityDateTime__c*/ from
         Event_Shadow__c where OwnerId IN (Select Asesor__c from AsesorxCalendario__c where Service_Territory__r.ComunidadServiceName__c like: likeVariable2) and Estado2__c <>'Cancelada' and ActivityDate__c > :Date.today() LIMIT 100];
         
-        System.debug('JD TEST');
-        System.debug(events);
         List<Object> asesoresByCalendar = [select Calendario__r.LastName, Asesor__c from AsesorxCalendario__c];
         List<AsesorxCalendario__c> asesoresXCalendar = [select Calendario__r.LastName, Asesor__c,Calendario__c from AsesorxCalendario__c];
         List<Object> eventsResult = new List<Object>();
@@ -2255,8 +363,6 @@ public with sharing class CommunityCalendarController {
             newRow.add(a.Asesor__c);
             newRow.add(a.OwnerId);
             newRow.add(a.Tipo_de_cita__c);
-            System.debug(newRow);
-            System.debug(newRow);
             eventsResult.add(newRow);
         }
 
@@ -2285,9 +391,6 @@ public with sharing class CommunityCalendarController {
                         if(nombreCal2.contains(nombreSinSimbolo)){
                             cambia = true;
                             variableCalendario = obj.Calendario__c;
-                            System.debug( a2.Asesor__c);
-                            System.debug(obj.Calendario__c);
-                            System.debug('Cambio de cal');
                             newRow.add(variableCalendario);
 
                         }
@@ -2300,8 +403,6 @@ public with sharing class CommunityCalendarController {
             // }
             
             newRow.add(a2.Tipo_de_cita__c);
-            System.debug(newRow);
-            System.debug(newRow);
             eventsResult2.add(newRow);
         }
         
@@ -2319,7 +420,6 @@ public with sharing class CommunityCalendarController {
         results.add(capacityBySucursal);
         results.add(asesoresByCalendar);
         results.add(joinEvents);
-        System.debug(joinEvents);
         results.add(capacidadMecanicos);
         return results;
     }
@@ -2398,7 +498,6 @@ public with sharing class CommunityCalendarController {
     
     @AuraEnabled 
     public static List<Object> generateFakeEventsForServiceTOneDay (List<ServiceTerritory> serviceTerritory, Map<String, List<Time>> operatingHours, Date currentDate, List<Object> events, Datetime startDateTime, Datetime endDateTime){
-        System.debug(serviceTerritory);
         Map<Object, List<Object>> calendarAndServiceT = convertListToMapServiceTAndCalendarId();
     
 	    //List<Object> newRow = new List<Object> ();
@@ -2413,12 +512,9 @@ public with sharing class CommunityCalendarController {
                 
                 DateTime dt = currentDate +1;
                 String formattedDate = dt.format('yyyy-MM-dd');
-                System.debug('Formatted Date: ' + formattedDate);
                 String calendar = String.valueof(calendarAndServiceT.get(service.Id)[0]);
                    List<AsesorxCalendario__c> lstAseCal = [Select  Service_Territory__r.ComunidadServiceName__c from AsesorxCalendario__c where Calendario__c =:calendar ];
-                Integer cantidadDeAsesores = lstAseCal.size();            
-                System.debug(cantidadDeAsesores);
-                 
+                Integer cantidadDeAsesores = lstAseCal.size();
                 newRow.add(formattedDate);                        
                 newRow.add('04:00 AM'); 	// 0 = Start Time
                 newRow.add(endDate.format('h:mm a')); 	// 1 = End Time
@@ -2435,9 +531,6 @@ public with sharing class CommunityCalendarController {
                 newRow2.add('Asesor');
                 newRow2.add(calendarAndServiceT.get(service.Id)[0]); 
     
-                System.debug('Eventos');
-                System.debug(newRow.size());
-                
                 Integer maxNumberOfAsesores = Integer.valueOf(calendarAndServiceT.get(service.Id)[2]); 
                 for(Integer i = 0; i < maxNumberOfAsesores;i++){
                    if(!test.isRunningTest()){
@@ -2453,61 +546,6 @@ public with sharing class CommunityCalendarController {
     
     @AuraEnabled
     public static List<Object> generateNoAvailabilityDataWholeCompany (String likeVariable/*, List<Object> asesoresByCalendar, List<Object> capacityBySucursal*/) {
-        Integer i = 0;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
         List<Object> events = new List<Object> ();
         // serviceTWOH = service territories with operating hours
         List<AsesorxCalendario__c> lstAseCal =  new List<AsesorxCalendario__c>();
@@ -2554,9 +592,6 @@ public with sharing class CommunityCalendarController {
         List<Object> events = new List<Object> ();
         Map<String, List<Time>> operatingHours = convertListToMapOperatingHour();
         List<NoDisponibilidad_Servicio__c> noAvailabilityBySucursal = [Select Sucursal__c, Hora_y_Fecha_de_Inicio__c, Hora_y_Fecha_de_Fin__c from NoDisponibilidad_Servicio__c where  Hora_y_Fecha_de_Fin__c>= TODAY and Activo__c=True and Nivel_de_aplicaci_n__c ='Toda la sucursal' order by Hora_y_Fecha_de_Inicio__c desc];
-        System.debug('noAvailabilityBySucursal');
-        System.debug(noAvailabilityBySucursal);
-        System.debug('Size: ' + noAvailabilityBySucursal.size());
         List<AsesorxCalendario__c> lstAseCal =  new List<AsesorxCalendario__c>();
         if(noAvailabilityBySucursal.size()>0){
             // This list is going to be used as simulation of Events in Calendar. It means the spaces are set of hours not available in the Community.
@@ -2577,14 +612,8 @@ public with sharing class CommunityCalendarController {
                     }
                 }
                 Date firstDay = date.newinstance(record.Hora_y_Fecha_de_Inicio__c.year(), record.Hora_y_Fecha_de_Inicio__c.month(), record.Hora_y_Fecha_de_Inicio__c.day());
-                System.debug('firstDay');
-        		System.debug(firstDay);
                 Date lastDay = date.newinstance(record.Hora_y_Fecha_de_Fin__c.year(), record.Hora_y_Fecha_de_Fin__c.month(), record.Hora_y_Fecha_de_Fin__c.day());
-                System.debug('lastDay');
-        		System.debug(lastDay);
-                
                 if(firstDay < lastDay){
-                    System.debug('processign...');
                     Date currentDate = firstDay;
                     while(currentDate <= lastDay){
                         events = generateFakeEventsForServiceT(serviceTerritory, operatingHours, currentDate, events);
@@ -2603,7 +632,7 @@ public with sharing class CommunityCalendarController {
     public static List<Object> generateNoAvailabilityDataForSpecificService () {
         List<Object> events = new List<Object> ();
         Map<String, List<Time>> operatingHours = convertListToMapOperatingHour();
-        List<NoDisponibilidad_Servicio__c> noAvailabilityByService = [Select Service_Territory__r.ComunidadServiceName__c, Hora_y_Fecha_de_Inicio__c, Hora_y_Fecha_de_Fin__c from NoDisponibilidad_Servicio__c where Hora_y_Fecha_de_Fin__c>= TODAY and Activo__c=True and Nivel_de_aplicaci_n__c ='Servicio Específico' LIMIT 1];
+        List<NoDisponibilidad_Servicio__c> noAvailabilityByService = [Select Service_Territory__r.ComunidadServiceName__c, Hora_y_Fecha_de_Inicio__c, Hora_y_Fecha_de_Fin__c from NoDisponibilidad_Servicio__c where Hora_y_Fecha_de_Fin__c>= TODAY and Activo__c=True and Nivel_de_aplicaci_n__c ='Servicio Específico' ];
         
         if(noAvailabilityByService.size()>0){
             // This list is going to be used as simulation of Events in Calendar. It means the spaces are set of hours not available in the Community.
@@ -2644,122 +673,12 @@ public with sharing class CommunityCalendarController {
     
    @AuraEnabled 
     public static user fetchUser(){
-        Integer i = 0;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
        User u = [select Id,FirstName,LastName, Name, ProfileId,Contact.AccountId, Profile.Name, ContactId, Contact.Name, Contact.Email, Contact.Phone from User where id =: userInfo.getUserId()];
        return u;
     }
 
     @AuraEnabled 
     public static Object getNextUserCitation(Id contactRelatedToUser){
-        Integer i = 0;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
         //Id contactRelatedToUser = [Select ContactId from User where Id =: '0058N000000sq4xQAA' limit 1].ContactId;
         //userId='0038N000006hxhgQAA';
         List<Contact> lstAccRelated = [Select AccountId FROM Contact WHERE Id =: contactRelatedToUser];
@@ -2787,61 +706,6 @@ public with sharing class CommunityCalendarController {
     
     @AuraEnabled
     public static Object getUserAssets(String contactId,String modeoSel){
-        Integer i = 0;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
         String accId = '';
         List<Contact> lstContact = [Select AccountId From Contact where Id =: contactId ];
         List <Asset> userAssets  = new List <Asset>();
@@ -2864,76 +728,15 @@ public with sharing class CommunityCalendarController {
 
     @AuraEnabled
     public static Object getOperartingHours(){
-        Integer i = 0;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
         Map<Object, List<Object>> serviceTCalendar = convertListToMapServiceTAndCalendarId();
         List <List<Object>> result = new List<List<Object>>();
         if(serviceTCalendar.size()>0){
             List <ServiceTerritory> opsHours = [Select Id, ComunidadServiceName__c, OperatingHoursId, format(OperatingHours.Hora_inicio_comunidad__c), format(OperatingHours.Hora_fin_comunidad__c) from ServiceTerritory];
-            System.debug('opsHours');
-            System.debug(opsHours);
             if(opsHours.size()>0){
                 for(ServiceTerritory opHour: opsHours){
-                    
-                    
                     if(!test.isRunningTest() && serviceTCalendar.get(opHour.Id) != null){
                         List<Object> newLine = new List<Object>();
                         newline.add(opHour.Id);
-                        System.debug('opHour.Id');
-                        System.debug(opHour.Id);
                         newline.add(serviceTCalendar.get(opHour.Id)[0]); //To get the CalendarId
 
                         Datetime inicio = Datetime.newInstance(Date.today(), opHour.OperatingHours.Hora_inicio_comunidad__c);
@@ -3128,140 +931,6 @@ public with sharing class CommunityCalendarController {
                     }
                 }                                              
             }
-            Integer i = 0;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
             
         }
         return result;
@@ -3320,1473 +989,14 @@ public with sharing class CommunityCalendarController {
              }   
             }
           
-            Integer i = 0;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
             return result;
     }
 
-    public static void dummy2(){
-        Integer i = 0;
-            i++;
-            i++;
-            i++; i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-    }
-    
-    public static void dummy3(){
-        Integer i = 0;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-    }
+
+
 
     @AuraEnabled 
     public static void cancelCitation(Id citationId){
-        Integer i = 0;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
         Event_Shadow__c citation = [Select Id,ActivityDate__c, Estado2__c,WhatId__c,Activo__c from Event_Shadow__c where Id=:citationId limit 1];
         Datetime fechaBuscar = null;
         String Activo = '';
@@ -4833,7 +1043,7 @@ public with sharing class CommunityCalendarController {
 
         Case newCase = new Case();
         newCase.RecordTypeId = '012PH00000HBor9YAD';
-        
+        newCase.Creado_por_service__c = true;
         newCase.Origin = 'BMW Service Contactanos';
         newCase.FechaEntrada__c = Date.today();
         newCase.Priority = 'Media';
@@ -4849,104 +1059,6 @@ public with sharing class CommunityCalendarController {
         newCase.Type = 'Solicitud';
         newCase.Service_Territory1__c  = '0HhPH0000003NEb0AM';
         insert newCase;
-        Integer i = 0;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
         // return capacity;
     }
     
@@ -4999,61 +1111,6 @@ public with sharing class CommunityCalendarController {
 
     @AuraEnabled
     public static Boolean setTerminosYCondi() {
-        Integer i = 0;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-      i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
-        i++;
         Boolean contesto = true;
         List <User> horasOcupadas = [SELECT Id,Terminos_y_condiciones__c FROM User WHERE Id=: userInfo.getUserId()];
         If(horasOcupadas.size()>0){
@@ -5129,6 +1186,7 @@ public with sharing class CommunityCalendarController {
         // Set the REST endpoint
 
         request.setEndpoint('https://redmotors.my.salesforce.com/services/apexrest/Citas/');
+        //request.setEndpoint('https://redmotors--partial.sandbox.my.salesforce.com/services/apexrest/CitasField2/');
         request.setMethod('POST');
         request.setHeader('Authorization', 'Bearer ' + accessToken);
         request.setHeader('Content-Type', 'application/json');
@@ -5155,11 +1213,9 @@ public with sharing class CommunityCalendarController {
             Map<String, Object> responseBody = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
             if ((String) responseBody.get('ValidarCitaExitoso') == 'true') {
                 asesorId = (String) responseBody.get('asesorId');
-                System.debug('Asesor ID obtenido: ' + asesorId);
                 // Guardar el ID del asesor en la variable
                 // Ejemplo: this.asesorId = asesorId;
             } else {
-                System.debug('Error en la respuesta: ' + responseBody.get('mensajeError'));
             }
         } else {
             throw new AuraHandledException('Error: ' + response.getStatusCode() + ' ' + response.getBody());
@@ -5182,22 +1238,14 @@ public with sharing class CommunityCalendarController {
                     placaVehiculo = lstAsset[0].Name;
                 }
             }
-            System.debug('calendarId');
-            System.debug(calendarId);
             //proceso para calculo de horarios
             String nombrecalendario = getCalendarName(calendarId);
             String idServiceT = '';
             Integer minutosAgregar = 0;
             Decimal mecanicosExtra = 0;
-            System.debug('nombrecalendario');
-            System.debug(nombrecalendario);
             if(!nombrecalendario.contains('Calendario')){
-                System.debug('no tiene el calendario');
-                System.debug(nombrecalendario);
-                List<User> lstUser = [Select Id From User wehr];            
+                List<User> lstUser = [Select Id From User wehr];
             }
-            System.debug('idServiceT');
-            System.debug(idServiceT);
             Boolean citaSincro = false;
             List<ServiceTerritory> lstServiceT = [SELECT Id,cita_sincronica__c FROM ServiceTerritory WHERE ComunidadServiceName__c LIKE : nombrecalendario];
             if(lstServiceT.size()>0){
@@ -5207,28 +1255,10 @@ public with sharing class CommunityCalendarController {
                 }
             }
             
-            System.debug('lstServiceT');
-            System.debug(lstServiceT);
             List<Hora_global__c> lstHora = [SELECT Id,Tiempo_de_cita_2__c FROM Hora_global__c WHERE Service_Territory__c = :idServiceT];
-            System.debug('lstHora');
-            System.debug(lstHora);
             if(lstHora.size()>0){
-                System.debug('entro lista de lstHora');            
                 List<hora_extraordinaria__c> lstHoraExtra = [SELECT Id,Tiempo_de_cita_2__c,Mecanicos__c,Hora_y_Fecha_de_Inicio__c,Hora_y_Fecha_de_Fin__c FROM hora_extraordinaria__c WHERE Service_Territory__c = :idServiceT ];
-                System.debug('lstHoraExtra');
-                System.debug(lstHoraExtra);
-                
                 if(lstHoraExtra.size()>0){
-                    System.debug('entro lstHoraExtra');  
-                    System.debug('lstHoraExtra[0].Hora_y_Fecha_de_Inicio__c');
-                    System.debug(lstHoraExtra[0].Hora_y_Fecha_de_Inicio__c);
-                    System.debug('selectedStartHour.addMinutes(30)');
-                    System.debug(selectedStartHour.addMinutes(30));
-                    //
-                    System.debug('lstHoraExtra[0].Hora_y_Fecha_de_Fin__c ');
-                    System.debug(lstHoraExtra[0].Hora_y_Fecha_de_Fin__c );
-                    System.debug('selectedStartHour.addMinutes(30)');
-                    System.debug(selectedStartHour.addMinutes(30));
 
                     if(lstHoraExtra[0].Hora_y_Fecha_de_Inicio__c <= selectedStartHour.addMinutes(30) && lstHoraExtra[0].Hora_y_Fecha_de_Fin__c >= selectedStartHour.addMinutes(30) ){
                         minutosAgregar = integer.valueof(lstHoraExtra[0].Tiempo_de_cita_2__c);
@@ -5359,326 +1389,99 @@ public with sharing class CommunityCalendarController {
     }
 
     @AuraEnabled 
-    public static Object getUserHistory(String userId){
+    public static Object getUserHistory(String userId, String marca){
         
         User userr = fetchUser();
-        Id contactRelatedToUser = [Select ContactId from User where Id =: userr.Id limit 1].ContactId;
-        String accId = '';
 
-        List<Contact> lstContact = [Select AccountId From Contact where Id =: contactRelatedToUser ];
-        if(lstContact.size()>0){
+        Id contactRelatedToUser = [
+            SELECT ContactId 
+            FROM User 
+            WHERE Id = :userr.Id 
+            LIMIT 1
+        ].ContactId;
+
+        String accId = null;
+
+        List<Contact> lstContact = [
+            SELECT AccountId 
+            FROM Contact 
+            WHERE Id = :contactRelatedToUser
+        ];
+
+        if (!lstContact.isEmpty()) {
             accId = lstContact[0].AccountId;
         }
-        List <Asset> userAssets = [Select Id, Name, Anio__c, marca__c, modelo__c, color__c, numeroDePlaca__c from Asset where AccountId =: accId ];
-       
-     
-        List<Event_Shadow__c> result = [Select Id, StartDatetime__c,CreatedDate, Activo__r.numeroDePlaca__c,VehicleId__c, Activo__r.AccountId,CalendarName__c, AssessorName__c, Activo__c, Activo__r.ContactId, Estado__c,Estado2__c from Event_Shadow__c 
-                                        where Activo__c IN: userAssets and Activo__c != null and Activo__c != '' and Tipo_de_cita__c = 'Calendario'  order by StartDatetime__c desc];
-        if(result.size()>0){
-            return result;
+
+         List<Asset> userAssets = new  List<Asset>();
+
+        if(marca == 'Motorrad'){
+         userAssets = [SELECT Id, Name, Anio__c, marca__c, modelo__c, color__c, numeroDePlaca__c 
+                FROM Asset 
+                WHERE AccountId = :accId AND Tipo_de_veh_culo__c = 'Motocicleta'];
+        }else{
+            userAssets = [
+                SELECT Id, Name, Anio__c, marca__c, modelo__c, color__c, numeroDePlaca__c 
+                FROM Asset 
+                WHERE AccountId = :accId AND marca__c =: marca
+            ];
         }
+
+
+        // ===============================
+        // 1) TRAER TODOS LOS EVENTOS
+        // ===============================
+
+        List<Event_Shadow__c> rawList = [
+            SELECT 
+                Id, StartDatetime__c, CreatedDate,
+                Activo__r.numeroDePlaca__c, VehicleId__c, 
+                Activo__r.AccountId, CalendarName__c, 
+                AssessorName__c, Activo__c, 
+                Activo__r.ContactId, Estado__c, Estado2__c,Tipo_de_cita__c
+            FROM Event_Shadow__c
+            WHERE Activo__c IN :userAssets 
+            AND Activo__c != null 
+            AND Activo__c != '' 
+            AND Tipo_de_cita__c = 'Asesor'
+           
+            ORDER BY StartDatetime__c DESC
+        ];
+
+        // ======================================
+        // 2) MAPA PARA FILTRAR DUPLICADOS
+        // ======================================
+
+        Map<Datetime, Event_Shadow__c> uniqueMap = new Map<Datetime, Event_Shadow__c>();
+
+        for (Event_Shadow__c ev : rawList) {
+            Datetime key = ev.CreatedDate;
+
+            if (!uniqueMap.containsKey(key)) {
+                uniqueMap.put(key, ev);
+            }
+        }
+
+        // ======================================
+        // 3) OBTENER LISTA FINAL SIN DUPLICADOS
+        // ======================================
+
+        List<Event_Shadow__c> uniqueList = uniqueMap.values();
+
+
+        // ======================================
+        // 4) REGRESAR LISTA SIN DUPLICADOS
+        // ======================================
+        if(uniqueList.size()>0){
+            return uniqueList;
+
+        }        
         
-        Integer i =0;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
-        i = i +1;
         return '';
 
     }
     
     @AuraEnabled 
-    public static Object getUserHistoryActive(String userId){
+    public static Object getUserHistoryActive(String userId, String marca){
         
         User userr = fetchUser();
         Id contactRelatedToUser = [Select ContactId from User where Id =: userr.Id limit 1].ContactId;
@@ -5688,7 +1491,16 @@ public with sharing class CommunityCalendarController {
         if(lstContact.size()>0){
             accId = lstContact[0].AccountId;
         }
-        List <Asset> userAssets = [Select Id, Name, Anio__c, marca__c, modelo__c, color__c, numeroDePlaca__c from Asset where AccountId =: accId ];
+
+        List <Asset> userAssets = new List <Asset>();
+
+        if(marca == 'Motorrad'){
+            userAssets = [Select Id, Name, Anio__c, marca__c, modelo__c, color__c, numeroDePlaca__c from Asset where AccountId =: accId And Tipo_de_veh_culo__c = 'Motocicleta'];
+        }else{
+            userAssets = [Select Id, Name, Anio__c, marca__c, modelo__c, color__c, numeroDePlaca__c from Asset where AccountId =: accId And  marca__c =: marca];
+        }
+
+         
        
      
         List<Event_Shadow__c> result = [Select Id, StartDatetime__c, VehicleId__c, Activo__r.AccountId,CalendarName__c, AssessorName__c, Activo__c, Activo__r.ContactId, Estado2__c,Estado__c  from Event_Shadow__c 
@@ -5767,6 +1579,8 @@ public with sharing class CommunityCalendarController {
         String service = parts[1];
 
         request.setEndpoint('https://redmotors.my.salesforce.com/services/apexrest/Citas/');
+        //request.setEndpoint('https://redmotors--partial.sandbox.my.salesforce.com/services/apexrest/CitasField2/');
+        //request.setEndpoint('https://redmotors--partial.sandbox.my.salesforce.com/services/apexrest/Citas/');
         request.setMethod('POST');
         request.setHeader('Authorization', 'Bearer ' + accessToken);
         request.setHeader('Content-Type', 'application/json');
@@ -5802,6 +1616,7 @@ public with sharing class CommunityCalendarController {
         String service = parts[1];
 
         request.setEndpoint('https://redmotors.my.salesforce.com/services/apexrest/Citas/');
+        //request.setEndpoint('https://redmotors--partial.sandbox.my.salesforce.com/services/apexrest/CitasField2/');
         request.setMethod('POST');
         request.setHeader('Authorization', 'Bearer ' + accessToken);
         request.setHeader('Content-Type', 'application/json');
@@ -5833,24 +1648,24 @@ public with sharing class CommunityCalendarController {
         Integer callCount = 0;
         Boolean hasMoreDates = true;
         
-        while (callCount < 14 ) { // Ensuring we only loop if hasMoreDates is true
+        while (callCount < 14) {
+            // Guardar la fecha que vamos a consultar
+            String fechaConsultada = fecha;
+            
+            request = new HttpRequest(); // nuevo request por iteración
             request.setEndpoint('https://redmotors.my.salesforce.com/services/apexrest/Citas/');
             request.setMethod('POST');
             request.setHeader('Authorization', 'Bearer ' + accessToken);
             request.setHeader('Content-Type', 'application/json');
             
-            // Construct the request body with formatted date in "dd/MM/yyyy"
             String requestBody = '{ "tipoPeticion": "getOpcionesCita", "parametros": { "servicio": "' + service + '","sucursal": "' + sucursal + '","fecha": "'+fecha+'"} }';
             request.setBody(requestBody);
             
-            // Send the request
             HttpResponse response = http.send(request);
             if (response.getStatusCode() == 200) {
                 Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
                 List<Object> opciones = (List<Object>) jsonResponse.get('opciones');
-                System.debug(opciones);
 
-                // Add new dates from this response to allDatesSet
                 if (opciones != null) {
                     for (Object dateS : opciones) {
                         String dateStr = (String) dateS;
@@ -5860,31 +1675,16 @@ public with sharing class CommunityCalendarController {
                     }
                 }
 
-                // Update fecha to the latest date in this response, if available
-                String latestDate = '';
-                if (opciones != null && opciones.size() > 2) {
-                    latestDate = (String) opciones[opciones.size() - 3];
-                    System.debug('Latest date received: ' + latestDate);
-                    
-                    if (latestDate != 'Otras fechas' && latestDate != 'Otra sucursal') {
-                        try {
-                            Date parsedDate = Date.valueOf(latestDate); 
-                            Date newFecha = parsedDate.addDays(1);
-                            DateTime newFechaDateTime = DateTime.newInstance(newFecha.year(), newFecha.month(), newFecha.day());
-                            fecha = newFechaDateTime.format('dd/MM/yyyy'); // Format as "dd/MM/yyyy" for next call
-                        } catch (Exception e) {
-                            System.debug('Error parsing date: ' + e.getMessage());
-                            //hasMoreDates = false;
-                        }
-                    }
-                } else {
-                    List<String> dateParts = fecha.split('/');
-                    Date currentFecha = Date.newInstance(Integer.valueOf(dateParts[2]), Integer.valueOf(dateParts[1]), Integer.valueOf(dateParts[0]));
-                    Date newFecha = currentFecha.addDays(1);
-                    DateTime newFechaDateTime = DateTime.newInstance(newFecha.year(), newFecha.month(), newFecha.day());
-                    fecha = newFechaDateTime.format('dd/MM/yyyy'); // Format as "dd/MM/yyyy" for next call
-                    //hasMoreDates = false;
-                }
+                // Siempre avanzar 7 días desde la fecha consultada
+                List<String> dateParts = fechaConsultada.split('/');
+                Date currentFecha = Date.newInstance(
+                    Integer.valueOf(dateParts[2]), 
+                    Integer.valueOf(dateParts[1]), 
+                    Integer.valueOf(dateParts[0])
+                );
+                Date newFecha = currentFecha.addDays(7);
+                DateTime newFechaDateTime = DateTime.newInstance(newFecha.year(), newFecha.month(), newFecha.day());
+                fecha = newFechaDateTime.format('dd/MM/yyyy');
                 
                 callCount++;
             } else {
@@ -5899,7 +1699,6 @@ public with sharing class CommunityCalendarController {
         finalResponse.put('opciones', allDates);
         finalResponse.put('mensaje', allDates.isEmpty() ? 'No hay opciones de cita disponibles' : 'Existen opciones de cita disponibles');
         finalResponse.put('OpcionesCita', allDates.isEmpty() ? 'false' : 'true');
-        System.debug(finalResponse);
         return JSON.serialize(finalResponse);
     }
 
@@ -5912,6 +1711,469 @@ public with sharing class CommunityCalendarController {
         public String label;
         @AuraEnabled
         public String id;
+    }
+
+
+
+    @AuraEnabled
+    public static List<Cita_trafico_online__c> buscarCitaPorCedula(String cedula) {
+        if (String.isBlank(cedula)) {
+            return new List<Cita_trafico_online__c>();
+        }
+        
+        List<Cita_trafico_online__c> citas = [
+            SELECT Id, Name,Nombre__c, Modelo__c, Inicio__c, Sucursal__c, Cedula__c, Status__c
+            FROM Cita_trafico_online__c
+            WHERE Cedula__c = :cedula
+            AND Status__c = 'Agendada'
+            ORDER BY Inicio__c DESC
+        ];
+        
+        return citas;
+    }
+
+
+    @AuraEnabled
+    public static void createOportunidad(String leadId) {
+        // 1. Obtener el Lead entrante
+        Lead trafico = [
+            SELECT Id, FirstName, LastName, Email, MobilePhone, Phone,
+                Marca__c, Familia1__c, Modelo_De_Inter_s1__c,
+                Numero_de_Identificacion_del__c, Sucursal__c,
+                FechaPosibleCompra__c, RecordTypeId, RecordType.Name,
+                LeadSource, Action__c, Campana__c, Campa_aNew__c,
+                Fuente__c, Medio__c, Ano1__c, CreatedDate,
+                Codigo_de_producto__c, CodigoProducto__c,
+                Tipo_de_Identificaci_n__c, Convertido_custom__c, OwnerId
+            FROM Lead
+            WHERE Id = :leadId
+            LIMIT 1
+        ];
+
+        if (trafico.Convertido_custom__c == true) {
+            return;
+        }
+
+        String marca = trafico.Marca__c;
+        String cedula = trafico.Numero_de_Identificacion_del__c;
+
+        // 2. Obtener RecordTypes de Opportunity según marca
+        Set<Id> oppRecordTypeIds = new Set<Id>();
+        String oppRecordTypeIdPrincipal = null;
+
+        if (marca == 'BMW') {
+            oppRecordTypeIdPrincipal = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('BMW').getRecordTypeId();
+            oppRecordTypeIds.add(oppRecordTypeIdPrincipal);
+        } else if (marca == 'MINI') {
+            oppRecordTypeIdPrincipal = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('MINI').getRecordTypeId();
+            oppRecordTypeIds.add(oppRecordTypeIdPrincipal);
+        } else if (marca == 'Motorrad' || marca == 'Kawasaki' || marca == 'Polaris' || marca == 'Indian') {
+            oppRecordTypeIdPrincipal = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get(marca).getRecordTypeId();
+            oppRecordTypeIds.add(Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Motorrad').getRecordTypeId());
+            oppRecordTypeIds.add(Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Kawasaki').getRecordTypeId());
+            oppRecordTypeIds.add(Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Polaris').getRecordTypeId());
+            oppRecordTypeIds.add(Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Indian').getRecordTypeId());
+        }
+
+        // 3. Buscar Opp existente — solo 'Oportunidad Calificada' y < 6 meses
+        Date sixMonthsBefore = Date.today().addMonths(-6);
+
+        List<Opportunity> lstOpp = new List<Opportunity>();
+        if (String.isNotBlank(cedula) && !oppRecordTypeIds.isEmpty()) {
+            lstOpp = [
+                SELECT Id, CreatedDate, Trafico__c, ModeloDeInteresOriginal__c,
+                    Trafico__r.Marca__c, Trafico__r.Modelo_De_Inter_s1__c
+                FROM Opportunity
+                WHERE Cedula_formula__c = :cedula
+                    AND StageName = 'Oportunidad Calificada'
+                    AND RecordTypeId IN :oppRecordTypeIds
+                    AND CreatedDate >= :sixMonthsBefore
+                ORDER BY CreatedDate DESC
+                LIMIT 1
+            ];
+        }
+
+        // 4. Si hay Opp candidata, verificar si tiene reserva
+        if (!lstOpp.isEmpty()) {
+            Opportunity oppExistente = lstOpp[0];
+
+            // Verificar reserva en OLI o en Product2
+            List<OpportunityLineItem> olisReservados = [
+                SELECT Id
+                FROM OpportunityLineItem
+                WHERE OpportunityId = :oppExistente.Id
+                    AND (Reservado__c = true OR Product2.Producto_Reservado__c = true)
+                LIMIT 1
+            ];
+
+            Boolean tieneReserva = !olisReservados.isEmpty();
+            if (!tieneReserva) {
+                // Opp reutilizable — verificar mismo vehículo
+                String marcaOppAnterior = oppExistente.Trafico__r.Marca__c;
+                String modeloOppAnterior = oppExistente.Trafico__r.Modelo_De_Inter_s1__c;
+
+                Boolean mismoVehiculo = (marcaOppAnterior == trafico.Marca__c)
+                    && (modeloOppAnterior == trafico.Modelo_De_Inter_s1__c);
+
+                if (mismoVehiculo) {
+                    // CASO 1: Opp reutilizable + mismo vehículo
+                    actualizarTrafico(trafico);
+
+                    // Actualizar Opp existente
+                    actualizarOppExistente(trafico, oppExistente.Id);
+
+                    // Crear Walking
+                    crearRegistroWalking(trafico, oppExistente.Id);
+
+                    // Marcar Lead como convertido
+                    trafico.Convertido_custom__c = true;
+                    trafico.Status = 'Qualified';
+                    update trafico;
+                    return;
+
+                } else {
+                    // CASO 2: Opp reutilizable + diferente vehículo
+                    crearOppCompleta(trafico, cedula, oppRecordTypeIdPrincipal);
+                    return;
+                }
+            }
+        }
+
+        // CASO 3: Sin Opp reutilizable (no existe, reservada, stage diferente o > 6 meses)
+        crearOppCompleta(trafico, cedula, oppRecordTypeIdPrincipal);
+    }
+
+
+    // ============================================================
+    // Método auxiliar: Actualizar Lead entrante + enviar correo
+    // ============================================================
+    private static void actualizarTrafico(Lead trafico) {
+        // El objeto trafico ya está en memoria, solo enviamos el correo
+        // Los datos ya vienen actualizados desde el formulario de cita
+        if (trafico.Marca__c == 'BMW' || trafico.Marca__c == 'MINI') {
+            enviarCotizacionWalking(trafico.Id, trafico.Marca__c);
+        }
+    }
+
+
+    // ============================================================
+    // Método auxiliar: Actualizar Opp existente
+    // ============================================================
+    public static void actualizarOppExistente(Lead trafico, String oppId) {
+
+        String nombreProducto = null;
+        String currencyCode = null;
+        String pricebook2Id = null;
+
+        if (String.isNotBlank(trafico.Codigo_de_producto__c)) {
+            List<PricebookEntry> lstPBE = [
+                SELECT CurrencyIsoCode, Product2.Name, Pricebook2Id
+                FROM PricebookEntry
+                WHERE Id = :trafico.Codigo_de_producto__c
+                LIMIT 1
+            ];
+            if (!lstPBE.isEmpty()) {
+                currencyCode = lstPBE[0].CurrencyIsoCode;
+                nombreProducto = lstPBE[0].Product2.Name;
+                pricebook2Id = lstPBE[0].Pricebook2Id;
+            }
+        } else if (String.isNotBlank(trafico.CodigoProducto__c)) {
+            nombreProducto = trafico.CodigoProducto__c;
+        }
+
+        // Eliminar OLIs y OPIs existentes antes de cambiar Pricebook2Id
+        List<OpportunityLineItem> olisExistentes = [
+            SELECT Id FROM OpportunityLineItem
+            WHERE OpportunityId = :oppId
+        ];
+        if (!olisExistentes.isEmpty()) {
+            List<Oportunidad_Producto_Interes__c> opisExistentes = [
+                SELECT Id FROM Oportunidad_Producto_Interes__c
+                WHERE Oportunidad__c = :oppId
+            ];
+            if (!opisExistentes.isEmpty()) {
+                delete opisExistentes;
+            }
+            delete olisExistentes;
+        }
+
+        // Actualizar Opp
+        Opportunity oppToUpdate = new Opportunity(Id = oppId);
+        oppToUpdate.Trafico__c = trafico.Id; // Reemplazar con el Lead entrante
+        oppToUpdate.Asesor_Online__c = trafico.OwnerId;
+        oppToUpdate.OwnerId = trafico.OwnerId;
+        if (nombreProducto != null) oppToUpdate.NombreProducto__c = nombreProducto;
+        if (currencyCode != null)   oppToUpdate.CurrencyIsoCode = currencyCode;
+        if (pricebook2Id != null)   oppToUpdate.Pricebook2Id = pricebook2Id;
+        update oppToUpdate;
+
+        // Insertar nuevos OLIs y OPIs desde el Lead actual
+        RM_TransferirProductoInteres.inputTransferirProductoInteres input = new RM_TransferirProductoInteres.inputTransferirProductoInteres();
+        input.leadId = trafico.Id;
+        input.oppId = oppId;
+        RM_TransferirProductoInteres.transferirProductoInteres(
+            new List<RM_TransferirProductoInteres.inputTransferirProductoInteres>{ input }
+        );
+
+    }
+
+    // ============================================================
+    // Método auxiliar: Crear registro Walking
+    // ============================================================
+    private static void crearRegistroWalking(Lead trafico, String oppId) {
+        List<Cita_trafico_online__c> lstCita = [
+            SELECT Id, Name, Status__c, OwnerId
+            FROM Cita_trafico_online__c
+            WHERE Trafico__c = :trafico.Id
+            LIMIT 1
+        ];
+        Cita_trafico_online__c citaSel = !lstCita.isEmpty() ? lstCita[0] : null;
+        Registro_WalkIn__c nuevoRegistro = new Registro_WalkIn__c();
+        nuevoRegistro.Nombre__c = trafico.FirstName + ' ' + trafico.LastName;
+        nuevoRegistro.Correo__c = trafico.Email;
+        nuevoRegistro.Descripcion__c = '';
+        if(citaSel != null){
+            nuevoRegistro.OwnerId = citaSel.OwnerId;
+        }
+        
+        nuevoRegistro.Modelo_Walking__c = trafico.Modelo_De_Inter_s1__c;
+        nuevoRegistro.Trafico__c = trafico.Id;
+        nuevoRegistro.Opportunity__c = oppId;
+        insert nuevoRegistro;
+        if (trafico.Marca__c == 'BMW' || trafico.Marca__c == 'MINI') {
+            enviarCotizacionWalking(trafico.Id, trafico.Marca__c);
+        }
+    }
+
+    // ============================================================
+    // MÉTODO: crearOppCompleta
+    // Sin cambios respecto a v1 — Pricebook2Id asignado antes del insert
+    // ============================================================
+    private static void crearOppCompleta(Lead trafico, String cedula, String oppRecordTypeId) {
+    
+        // 1. Buscar Account existente por cédula
+        Account cuentaExistente = null;
+        if (String.isNotBlank(cedula)) {
+            List<Account> lstCuenta = [
+                SELECT Id, IsPersonAccount, PersonEmail, FirstName, LastName
+                FROM Account
+                WHERE Cedula__c = :cedula OR PersonEmail = :trafico.email
+                LIMIT 1
+            ];
+            if (!lstCuenta.isEmpty()) {
+                cuentaExistente = lstCuenta[0];
+            }
+        }
+    
+        // 2. Si no existe cuenta, crear Person Account
+        if (cuentaExistente == null) {
+            RecordType rtPersonAccount = [
+                SELECT Id FROM RecordType
+                WHERE SobjectType = 'Account' AND DeveloperName = 'PersonAccount'
+                LIMIT 1
+            ];
+    
+            Account nuevaCuenta = new Account();
+            nuevaCuenta.RecordTypeId = rtPersonAccount.Id;
+            nuevaCuenta.FirstName = trafico.FirstName;
+            nuevaCuenta.LastName = trafico.LastName;
+            nuevaCuenta.PersonEmail = trafico.Email;
+            nuevaCuenta.Phone = trafico.Phone;
+            nuevaCuenta.Cedula__c = cedula;
+    
+            if (String.isNotBlank(cedula)) {
+                if (cedula.length() == 9) {
+                    nuevaCuenta.Tipo_de_Documento__c = '01';
+                } else if (cedula.length() == 12) {
+                    nuevaCuenta.Tipo_de_Documento__c = '03';
+                } else {
+                    nuevaCuenta.Tipo_de_Documento__c = '04';
+                }
+            }
+    
+            insert nuevaCuenta;
+            cuentaExistente = [SELECT Id, IsPersonAccount, PersonEmail FROM Account WHERE Id = :nuevaCuenta.Id];
+        }
+    
+        // 3. Buscar Contact
+        String contactoId = null;
+        if (cuentaExistente.IsPersonAccount) {
+            List<Contact> lstContact = [
+                SELECT Id FROM Contact
+                WHERE AccountId = :cuentaExistente.Id
+                LIMIT 1
+            ];
+            if (!lstContact.isEmpty()) {
+                contactoId = lstContact[0].Id;
+            }
+        }
+    
+        // 4. Obtener currency y Pricebook del PriceBookEntry
+        String currencyCode = null;
+        String nombreProducto = null;
+        String pricebook2Id = null;
+    
+        if (String.isNotBlank(trafico.Codigo_de_producto__c)) {
+            List<PricebookEntry> lstPBE = [
+                SELECT CurrencyIsoCode, Product2.Name, Pricebook2Id
+                FROM PricebookEntry
+                WHERE Id = :trafico.Codigo_de_producto__c
+                LIMIT 1
+            ];
+            if (!lstPBE.isEmpty()) {
+                currencyCode = lstPBE[0].CurrencyIsoCode;
+                nombreProducto = lstPBE[0].Product2.Name;
+                pricebook2Id = lstPBE[0].Pricebook2Id;
+            }
+        } else if (String.isNotBlank(trafico.CodigoProducto__c)) {
+            nombreProducto = trafico.CodigoProducto__c;
+        }
+    
+        // 5. Crear la Opportunity
+        Opportunity nuevaOpp = new Opportunity();
+        nuevaOpp.AccountId = cuentaExistente.Id;
+        nuevaOpp.StageName = 'Oportunidad Calificada';
+        nuevaOpp.CloseDate = Date.today().addDays(57);
+        nuevaOpp.Tipo_de_Cliente__c = 'Conquista';
+        nuevaOpp.LeadSource = trafico.LeadSource;
+        nuevaOpp.aniodelvehiculo__c = trafico.Ano1__c;
+        nuevaOpp.CampaignId = trafico.Campana__c;
+        nuevaOpp.Campana__c = trafico.Campana__c;
+        nuevaOpp.Familia__c = trafico.Familia1__c;
+        nuevaOpp.FechaDeIngreso__c = Date.valueOf(trafico.CreatedDate);
+        nuevaOpp.FechaDeConversion__c = Date.today();
+        nuevaOpp.ModeloDeInteresOriginal__c = trafico.Modelo_De_Inter_s1__c;
+        nuevaOpp.Sucursal__c = trafico.Sucursal__c;
+        nuevaOpp.Fecha_Posible_Compra__c = trafico.FechaPosibleCompra__c;
+        nuevaOpp.Acci_n__c = trafico.Action__c;
+        nuevaOpp.Fuente__c = trafico.Fuente__c;
+        nuevaOpp.Medio__c = trafico.Medio__c;
+        nuevaOpp.Campa_aNew__c = trafico.Campa_aNew__c;
+        nuevaOpp.Trafico__c = trafico.Id;
+        nuevaOpp.RT_Lead__c = trafico.RecordType.Name;
+    
+        if (oppRecordTypeId != null) {
+            nuevaOpp.RecordTypeId = oppRecordTypeId;
+        }
+        if (contactoId != null) {
+            nuevaOpp.contacto__c = contactoId;
+        }
+        if (currencyCode != null) {
+            nuevaOpp.CurrencyIsoCode = currencyCode;
+        }
+        if (nombreProducto != null) {
+            nuevaOpp.NombreProducto__c = nombreProducto;
+        }
+        if (pricebook2Id != null) {
+            nuevaOpp.Pricebook2Id = pricebook2Id;
+        }
+    
+        insert nuevaOpp;
+        // 6. Crear registro Walking para la nueva Opp
+        crearRegistroWalking(trafico, nuevaOpp.Id);
+    
+        // 7. Vincular WalkIns previos del tráfico
+        List<Registro_WalkIn__c> walkInsPrevios = [
+            SELECT Id, Opportunity__c
+            FROM Registro_WalkIn__c
+            WHERE Trafico__c = :trafico.Id
+                AND Opportunity__c = null
+        ];
+        if (!walkInsPrevios.isEmpty()) {
+            for (Registro_WalkIn__c w : walkInsPrevios) {
+                w.Opportunity__c = nuevaOpp.Id;
+            }
+            update walkInsPrevios;
+        }
+    
+        // 8. Transferir OLIs y OPIs
+        RM_TransferirProductoInteres.inputTransferirProductoInteres input = new RM_TransferirProductoInteres.inputTransferirProductoInteres();
+        input.leadId = trafico.Id;
+        input.oppId = nuevaOpp.Id;
+        RM_TransferirProductoInteres.transferirProductoInteres(
+            new List<RM_TransferirProductoInteres.inputTransferirProductoInteres>{ input }
+        );
+    
+        // 9. Marcar Lead como convertido
+        trafico.Convertido_custom__c = true;
+        trafico.Status = 'Qualified';
+        update trafico;
+    
+        // 10. Mover Tasks del Lead a la Opportunity
+        List<Task> tasks = [
+            SELECT Id, WhatId, WhoId
+            FROM Task
+            WHERE WhoId = :trafico.Id
+        ];
+        if (!tasks.isEmpty()) {
+            for (Task t : tasks) {
+                t.WhatId = nuevaOpp.Id;
+                t.WhoId = null;
+            }
+            update tasks;
+        }
+    
+    }
+    public static void enviarCotizacionWalking(String leadId, String marca) {
+        if (marca != 'BMW' && marca != 'MINI') return;
+
+        Lead lead = [
+            SELECT Id, Email, OwnerId
+            FROM Lead
+            WHERE Id = :leadId
+            LIMIT 1
+        ];
+
+        if (String.isBlank(lead.Email)) return;
+
+        String templateDeveloperName = marca == 'BMW' ? 'Cotizacion_BMW' : 'Cotizacion_MINI';
+
+        EmailTemplate template = [
+            SELECT Id FROM EmailTemplate
+            WHERE DeveloperName = :templateDeveloperName
+            LIMIT 1
+        ];
+
+        OrgWideEmailAddress[] owea = marca == 'BMW'
+            ? [SELECT Id FROM OrgWideEmailAddress WHERE Address = 'bmwcr@redmotorscr.com']
+            : [SELECT Id FROM OrgWideEmailAddress WHERE Address = 'minicr@redmotorscr.com'];
+
+        Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+        email.setTemplateId(template.Id);
+        email.setTargetObjectId(leadId);       // Lead es el recipient
+        email.setWhatId(leadId);              // relatedTo también es el Lead
+        email.setSaveAsActivity(false);
+        if (!owea.isEmpty()) {
+            email.setOrgWideEmailAddressId(owea[0].Id);
+        }
+
+        Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ email });
+        }
+
+    @AuraEnabled
+    public static void marcarAsistenciaCita(String citaId) {
+        Cita_trafico_online__c citaSel = [
+            SELECT Id, Name, Status__c
+            FROM Cita_trafico_online__c
+            WHERE Id = :citaId
+            LIMIT 1
+        ];
+        
+        citaSel.Status__c = 'Asistió';
+        update citaSel;
+        
+        List<Lead> lstLeadOriginal = [
+            SELECT Id
+            FROM Lead 
+            WHERE Cita_trafico_online__c = :citaSel.Id
+        ];
+
+        if (!lstLeadOriginal.isEmpty()) {
+            CommunityCalendarController.createOportunidad(
+                lstLeadOriginal[0].Id                
+            );
+        }
+        
     }
 
 }
