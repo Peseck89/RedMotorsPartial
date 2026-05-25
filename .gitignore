@@ -9,3 +9,11 @@ coverage/
 
 # OS / editor
 .DS_Store
+# Salesforce describe outputs / generated local files
+*Describe*.json
+accDescribe.json
+leadDescribe*.json
+oppDescribe.json
+
+# Salesforce CLI local files
+force.json
