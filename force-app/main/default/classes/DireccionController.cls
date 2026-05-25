@@ -5,7 +5,7 @@ public with sharing class DireccionController {
         return [
             SELECT Id, Direccion__c, Provincia__r.Name, Provincia__c, 
                    Canton__r.Name, Canton__c, Distrito__r.Name, Distrito__c,
-                   Direccion_principal__c
+                   Direccion_principal__c, Tipo_de_direcci_n__c, Tipo_de_direcci_n__r.Name
             FROM Direccion__c
             WHERE Cuenta__c = :accountId
             ORDER BY CreatedDate DESC
@@ -96,4 +96,14 @@ public with sharing class DireccionController {
             ORDER BY Name
         ];
     }
+
+    @AuraEnabled(cacheable=false)
+    public static List<Tipo_de_datos_de_comunicaci_n__c> obtenerTiposDatosComunicacion(Id accountId) {
+        return ContactDataChannelService.obtenerTiposDatosComunicacion(
+            accountId,
+            'ADDRESS',
+            true
+        );
+    }
+
 }

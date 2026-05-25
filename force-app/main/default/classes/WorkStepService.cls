@@ -378,7 +378,7 @@ public without sharing class WorkStepService {
         @AuraEnabled
         public List<String> cases;
 
-        ContactWrapperReport(){
+        public ContactWrapperReport(){
             this.cases = new List<String>();
         }
 
@@ -389,133 +389,6 @@ public without sharing class WorkStepService {
         }
                 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static void dummy(){
-        String test = '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-        test += '';
-    }    
 
     public static Set<Id> getAssignedTerritories() {
         Set<Id> territorySet = new Set<Id>(); 
