@@ -9,103 +9,10 @@ public class envioCotizacionTrafico {
 
     @AuraEnabled
 	public static String envioCotizacion(String idTrafico, String idPropietario){
-        Integer truco=0;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
 		String idTemplate;
-		String idTemplate2;
-		String idTemplate3;
-		String idTemplate4;
 		Lead l = new Lead();
 		String[] toAddresses = new String[]{};
-		List<Messaging.SingleEmailMessage> allmsg = new List<Messaging.SingleEmailMessage>();
-		List<String> listLeadMDI = new List<String>();
-		List<String> listLeadMDI2 = new List<String>();
         List<String> listLeadModelo = new List<String>();
-		List<Id> ids = new List<Id>();
-		List<Document> listDoc = new List<Document>();
 		
 		OrgWideEmailAddress[] idAddress = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName =: 'Red Motors'];
 		l = [SELECT Id, LeadSource, AsuntoWeb__c,Owner.Name, Email, Cotizacion_1__c, Cotizacion_2__c, Cotizacion_3__c, Cotizacion_4__c, Modelo_De_Inter_s1__c, Modelo_De_Inter_s2__c, 
@@ -141,48 +48,51 @@ public class envioCotizacionTrafico {
 			}
 					
 		}else if(l.Marca__c.contains('Motorrad') ){
-			if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Motorrad'].Id;
-			}
-			if(l.Modelo_De_Inter_s2__c != null && l.Cotizacion_2__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Motorrad'].Id;
-			}
-			if(l.Modelo_De_Inter_s3__c != null && l.Cotizacion_3__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Motorrad'].Id;
-			}
-			if(l.Modelo_De_Inter_s4__c != null && l.Cotizacion_4__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Motorrad'].Id;
-			}
+			return 'El envio para esta marca ha sido desactivado.';
+			// if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Motorrad'].Id;
+			// }
+			// if(l.Modelo_De_Inter_s2__c != null && l.Cotizacion_2__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Motorrad'].Id;
+			// }
+			// if(l.Modelo_De_Inter_s3__c != null && l.Cotizacion_3__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Motorrad'].Id;
+			// }
+			// if(l.Modelo_De_Inter_s4__c != null && l.Cotizacion_4__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Motorrad'].Id;
+			// }
 					
 		}else if( l.Marca__c.contains('Kawasaki')  ){
-			idAddress = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName =: 'Kawasaki CR'];
-			if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Kawa'].Id;
-			}
-			if(l.Modelo_De_Inter_s2__c != null && l.Cotizacion_2__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Kawa'].Id;
-			}
-			if(l.Modelo_De_Inter_s3__c != null && l.Cotizacion_3__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Kawa'].Id;
-			}
-			if(l.Modelo_De_Inter_s4__c != null && l.Cotizacion_4__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Kawa'].Id;
-			}
+			return 'El envio para esta marca ha sido desactivado.';
+			// idAddress = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName =: 'Kawasaki CR'];
+			// if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Kawa'].Id;
+			// }
+			// if(l.Modelo_De_Inter_s2__c != null && l.Cotizacion_2__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Kawa'].Id;
+			// }
+			// if(l.Modelo_De_Inter_s3__c != null && l.Cotizacion_3__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Kawa'].Id;
+			// }
+			// if(l.Modelo_De_Inter_s4__c != null && l.Cotizacion_4__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Kawa'].Id;
+			// }
 					
 		}else if(l.Marca__c.contains('Polaris') ){
-			idAddress = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName =: 'Polaris CR'];
-			if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Polaris'].Id;
-			}
-			if(l.Modelo_De_Inter_s2__c != null && l.Cotizacion_2__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Polaris'].Id;
-			}
-			if(l.Modelo_De_Inter_s3__c != null && l.Cotizacion_3__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Polaris'].Id;
-			}
-			if(l.Modelo_De_Inter_s4__c != null && l.Cotizacion_4__c == true){
-				idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Polaris'].Id;
-			}
+			return 'El envio para esta marca ha sido desactivado.';
+			// idAddress = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName =: 'Polaris CR'];
+			// if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Polaris'].Id;
+			// }
+			// if(l.Modelo_De_Inter_s2__c != null && l.Cotizacion_2__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Polaris'].Id;
+			// }
+			// if(l.Modelo_De_Inter_s3__c != null && l.Cotizacion_3__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Polaris'].Id;
+			// }
+			// if(l.Modelo_De_Inter_s4__c != null && l.Cotizacion_4__c == true){
+			// 	idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'Cotizacion_Polaris'].Id;
+			// }
 					
 		}else{
 			if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
@@ -222,134 +132,24 @@ public class envioCotizacionTrafico {
 		if(l.Marca__c == 'KTM' || l.Marca2__c == 'KTM' || l.Marca3__c == 'KTM' || l.Marca4__c == 'KTM'){
 			return 'Error: No tiene los suficientes privilegios para enviar una cotización para la marca KTM.';
 		}else{
-			if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
-				listLeadMDI.add(l.Modelo_De_Inter_s1__c.substringBefore(' -'));
-			}
-			if(l.Modelo_De_Inter_s2__c != null && l.Cotizacion_2__c == true){
-				listLeadMDI.add(l.Modelo_De_Inter_s2__c.substringBefore(' -'));
-			}
-			if(l.Modelo_De_Inter_s3__c != null && l.Cotizacion_3__c == true){
-				listLeadMDI.add(l.Modelo_De_Inter_s3__c.substringBefore(' -'));
-			}
-			if(l.Modelo_De_Inter_s4__c != null && l.Cotizacion_4__c == true){
-				listLeadMDI.add(l.Modelo_De_Inter_s4__c.substringBefore(' -'));
-			}
-
-
-			if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
-                listLeadModelo.add(l.Modelo_De_Inter_s1__c);
-				listLeadMDI2.add(l.Modelo_De_Inter_s1__c);
-			}
-			if(l.Modelo_De_Inter_s2__c != null && l.Cotizacion_2__c == true){
-                 listLeadModelo.add(l.Modelo_De_Inter_s2__c);
-				listLeadMDI2.add(l.Modelo_De_Inter_s2__c);
-			}
-			if(l.Modelo_De_Inter_s3__c != null && l.Cotizacion_3__c == true){
-                listLeadModelo.add(l.Modelo_De_Inter_s3__c);
-				listLeadMDI2.add(l.Modelo_De_Inter_s3__c);
-			}
-			if(l.Modelo_De_Inter_s4__c != null && l.Cotizacion_4__c == true){
-                listLeadModelo.add(l.Modelo_De_Inter_s4__c);
-				listLeadMDI2.add(l.Modelo_De_Inter_s4__c);
-			}
-			System.debug('***** nombre plantillas ***** ' + listLeadMDI);
-			if((!listLeadMDI.isEmpty() && listLeadMDI.size() > 0) || (!listLeadMDI2.isEmpty() && listLeadMDI2.size() > 0 )){
-
-				
-				// listDoc = [SELECT Name, Id FROM Document WHERE DeveloperName IN : listLeadMDI];
-				// System.debug(' ** LISTA FT ** ' + listDoc);
-				// if(!listDoc.isEmpty() && listDoc.size() > 0){
-				// 	for(Document d : listDoc){
-				// 		ids.add(d.Id);
-				// 	}
-				// }else{
-				// 	listDoc = [SELECT Name, Id FROM Document WHERE Name IN :listLeadMDI2];
-				// 	System.debug(' ** LISTA FT ** ' + listDoc);
-				// 	if(!listDoc.isEmpty() && listDoc.size() > 0){
-				// 		for(Document d : listDoc){
-				// 			ids.add(d.Id);
-				// 		}
-				// 	}
-				// }
-				listDoc = [SELECT Name, Id, DeveloperName, Type FROM Document];
-				System.debug(' ** LISTA FT ** ' + listDoc);
-
-				if (!listDoc.isEmpty()) {
-					for (String str : listLeadMDI) {
-						Boolean foundInDeveloperName = false;
-						List<Document> matchingDocsDev = new List<Document>();
-					
-						// Buscar coincidencias parciales en DeveloperName
-						for (Document d : listDoc) {
-							if (d.DeveloperName != null && d.DeveloperName.contains(str)) {
-								matchingDocsDev.add(d);
-							}
-						}
-					
-						if (!matchingDocsDev.isEmpty()) {
-							foundInDeveloperName = true;
-					
-							// Buscar coincidencia exacta
-							Document exactMatch;
-							for (Document d : matchingDocsDev) {
-								if (d.DeveloperName == str) {
-									exactMatch = d;
-									break;
-								}
-							}
-					
-							if (exactMatch != null) {
-								ids.add(exactMatch.Id);
-							} else if (matchingDocsDev.size() == 1) {
-								ids.add(matchingDocsDev[0].Id);
-							} else {
-								// Validar si hay al menos un PDF y un PNG
-								Boolean hasPDF = false;
-								Boolean hasPNG = false;
-					
-								for (Document doc : matchingDocsDev) {
-									if (doc.Type == 'pdf') hasPDF = true;
-									if (doc.Type == 'png') hasPNG = true;
-								}
-					
-								if (hasPDF && hasPNG) {
-									for (Document d : matchingDocsDev) {
-										ids.add(d.Id);
-									}
-								}
-							}
-						}
-					
-						// Si no se encontró nada en DeveloperName, buscar por Name
-						if (!foundInDeveloperName) {
-							List<Document> matchingByName = new List<Document>();
-							for (Document d : listDoc) {
-								if (d.Name != null && d.Name.contains(str)) {
-									matchingByName.add(d);
-								}
-							}
-					
-							if (matchingByName.size() == 1) {
-								ids.add(matchingByName[0].Id);
-							} else if (matchingByName.size() > 1) {
-								for (Document d : matchingByName) {
-									ids.add(d.Id);
-								}
-							}
-						}
-					}
-					
-					
+			List<String> modelosInteres = new List<String>{
+				l.Modelo_De_Inter_s1__c,
+				l.Modelo_De_Inter_s2__c,
+				l.Modelo_De_Inter_s3__c,
+				l.Modelo_De_Inter_s4__c
+			};
+			List<Boolean> cotizaciones = new List<Boolean>{
+				l.Cotizacion_1__c,
+				l.Cotizacion_2__c,
+				l.Cotizacion_3__c,
+				l.Cotizacion_4__c
+			};
+			for(Integer i = 0; i < modelosInteres.size(); i++){
+				if(modelosInteres[i] != null && cotizaciones[i] == true){
+					listLeadModelo.add(modelosInteres[i]);
 				}
-
-
-
 			}
             List<Product2> listaProductos = new List<Product2>();
-            List<String> publicUrls = new List<String>();
-            List<String> fileNames = new List<String>();
-			System.debug('====================================listLeadModelo====================================');
-            System.debug(listLeadModelo);
             if(listLeadModelo.size()>0){
                 toAddresses.add(l.Email);
                 Id AdressId = '001000000000000AAA';
@@ -370,8 +170,6 @@ public class envioCotizacionTrafico {
                                 idTrafico,
                                 AdressId
                             );
-                        } else {
-                            System.debug('🔁 Producto no tiene link de ficha técnica: ' + prod.Name);
                         }
                     }
                     return 'Cotización enviada';
@@ -452,35 +250,33 @@ public class envioCotizacionTrafico {
 		List<Messaging.EmailFileAttachment> fileAttachments = new List<Messaging.EmailFileAttachment>();
 		Set<Id> idsPlantillas = new Set<Id>();
 		
-		System.debug(' ** METODO ENVIO COTIZACION MULTIMARCA **');
 		idTemplate = [SELECT Id FROM EmailTemplate WHERE DeveloperName =: 'NewMultimarcacotizacion_1678510036978'].Id;
 		OrgWideEmailAddress[] idAddress = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName =: 'Red Motors'];
 		l = [SELECT Id, Owner.Name, Email, Cotizacion_1__c, Cotizacion_2__c, Cotizacion_3__c, Cotizacion_4__c,
 			Modelo_De_Inter_s1__c, Modelo_De_Inter_s2__c, Modelo_De_Inter_s3__c, Modelo_De_Inter_s4__c FROM Lead WHERE Id =: idTrafico];
-		System.debug('***** test 1 *******' + l);
-		if(l.Modelo_De_Inter_s1__c != null && l.Cotizacion_1__c == true){
-			System.debug('**** plantilla ***** ' + l.Modelo_De_Inter_s1__c.substring(0,4));
-			nombresPlantillas.add([SELECT Id, NombredePlantilla__c FROM Product2 WHERE ProductCode =: l.Modelo_De_Inter_s1__c.substringBefore(' ')].NombredePlantilla__c);
+		List<String> modelosInteres = new List<String>{
+			l.Modelo_De_Inter_s1__c,
+			l.Modelo_De_Inter_s2__c,
+			l.Modelo_De_Inter_s3__c,
+			l.Modelo_De_Inter_s4__c
+		};
+		List<Boolean> cotizaciones = new List<Boolean>{
+			l.Cotizacion_1__c,
+			l.Cotizacion_2__c,
+			l.Cotizacion_3__c,
+			l.Cotizacion_4__c
+		};
+		for(Integer i = 0; i < modelosInteres.size(); i++){
+			if(modelosInteres[i] != null && cotizaciones[i] == true){
+				String productCode = modelosInteres[i].substringBefore(' ');
+				nombresPlantillas.add([SELECT Id, NombredePlantilla__c FROM Product2 WHERE ProductCode =: productCode].NombredePlantilla__c);
+			}
 		}
-		if(l.Modelo_De_Inter_s2__c != null && l.Cotizacion_2__c == true){
-			System.debug('**** plantilla ***** ' + l.Modelo_De_Inter_s2__c.substring(0,4));
-			nombresPlantillas.add([SELECT Id, NombredePlantilla__c FROM Product2 WHERE ProductCode =: l.Modelo_De_Inter_s2__c.substringBefore(' ')].NombredePlantilla__c);
-		}
-		if(l.Modelo_De_Inter_s3__c != null && l.Cotizacion_3__c == true){
-			System.debug('**** plantilla ***** ' + l.Modelo_De_Inter_s3__c.substring(0,4));
-			nombresPlantillas.add([SELECT Id, NombredePlantilla__c FROM Product2 WHERE ProductCode =: l.Modelo_De_Inter_s3__c.substringBefore(' ')].NombredePlantilla__c);
-		}
-		if(l.Modelo_De_Inter_s4__c != null && l.Cotizacion_4__c == true){
-			System.debug('**** plantilla ***** ' + l.Modelo_De_Inter_s4__c.substring(0,4));
-			nombresPlantillas.add([SELECT Id, NombredePlantilla__c FROM Product2 WHERE ProductCode =: l.Modelo_De_Inter_s4__c.substringBefore(' ')].NombredePlantilla__c);
-		}
-		System.debug('***** nombre plantillas ***** ' + nombresPlantillas);
 		for(EmailTemplate eT : [SELECT Id FROM EmailTemplate WHERE DeveloperName IN : nombresPlantillas]){
 			if(!idsPlantillas.contains(eT.Id)){
 				idsPlantillas.add(eT.Id);
 			}
 		}
-		System.debug('******* ids plantillas ****** ' + idsPlantillas);
 		if(!idsPlantillas.isEmpty()){
 			for(Attachment a : [SELECT Id, Name, Body, BodyLength FROM Attachment WHERE ParentId IN : idsPlantillas]){
 				Messaging.EmailFileAttachment eFA = new Messaging.EmailFileAttachment();
@@ -489,7 +285,6 @@ public class envioCotizacionTrafico {
 				fileAttachments.add(eFA);
 			}
 		}
-		System.debug('****** file attachments ****** ' + fileAttachments);
 		toAddresses.add(l.Email);
 		try{
 			Messaging.SingleEmailMessage correo = new Messaging.SingleEmailMessage();
@@ -503,12 +298,10 @@ public class envioCotizacionTrafico {
 				correo.setFileAttachments(fileAttachments);
 			}
 			emails = Messaging.sendEmail(new Messaging.Email[]{correo});
-			System.debug('****** notificacion de email ***** ' + emails);
 			if(emails.get(0).isSuccess()){
 				envio = true;
 			}
 		}catch(Exception e){
-			System.debug(' ** ERROR AL ENVIAR EMAIL ** ' + e);
 			envio = false;
 		}
 		if(envio){
@@ -525,94 +318,6 @@ public class envioCotizacionTrafico {
 		}
 	}
     
-    public static void dummy(){
-        Integer truco=0;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-		truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-        truco++;
-    }
-
     @AuraEnabled
     public static Lead getLead(Id leadId){
         return [SELECT  Id,

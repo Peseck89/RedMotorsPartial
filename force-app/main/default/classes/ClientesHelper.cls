@@ -12,12 +12,6 @@ public with sharing class ClientesHelper {
         return jsonCliente.getJSONClientes();
     }
 
-    public static String getJSONAuthorization(String jsonStr)
-    {
-        AuthorizationJSON wrapAuthorization = AuthorizationJSON.parseAuthInfo(jsonStr);
-        return wrapAuthorization.token;
-    }
-
     public static List<Account> getClientesListFromAltica(ClienteParser clientes)
     {
         List<Account> lstClientes = new List<Account>();
@@ -102,7 +96,6 @@ public with sharing class ClientesHelper {
             } else {
                 strName = actualCliente.nombreComercial__c;
             }
-            System.debug(strName);
             if(mapClientesActuales.containsKey(actualCliente.cedula__c))
             {
                 Account updateAccount = mapClientesActuales.get(actualCliente.cedula__c);
@@ -219,14 +212,4 @@ public with sharing class ClientesHelper {
         
     }
 
-    @TestVisible
-    private class AuthorizationJSON
-    {
-        public String token;
-    }
-
-    @TestVisible
-    private static AuthorizationJSON parseAuthInfo(String json) {
-        return(AuthorizationJSON) System.JSON.deserialize(json, AuthorizationJSON.class);
-    }
 }

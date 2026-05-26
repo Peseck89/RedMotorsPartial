@@ -1,4 +1,4 @@
-public with sharing class walkingCommunityController {
+public with sharing class walkingCommunityControllerBeta {
 
     @AuraEnabled
     public static Map<String, List<String>> getModelos(){
@@ -46,7 +46,7 @@ public with sharing class walkingCommunityController {
             if(!listDoc.isEmpty() && listDoc.size() > 0){
                 for(String str : listLeadMDI){
                     for(Document d : listDoc){
-                        if(d.DeveloperName != null && (d.DeveloperName.contains(str)||d.Name.contains(str))) ids.add(d.Id);
+                        if(d.DeveloperName.contains(str)||d.Name.contains(str)) ids.add(d.Id);
                     }
                 }
             }
@@ -102,11 +102,7 @@ public with sharing class walkingCommunityController {
             cedulaInfo.add('existe');
         }else{
             cedulaCliente.add(cedula);        
-            if(Test.isRunningTest()){
-                cedulaInfo.add('MOCK_DATA_PRUEBA');
-            } else {
-                cedulaInfo = ApiCreditWS.getInfoCliente( cedulaCliente);
-            }
+            cedulaInfo = ApiCreditWS.getInfoCliente( cedulaCliente);
             cedulaInfo.add('nuevo');
         }
         
@@ -175,7 +171,7 @@ public with sharing class walkingCommunityController {
             
             for(Document d : listDoc) {
                 for(String str : listLeadMDI) {
-                    if(d.DeveloperName != null && (d.DeveloperName.contains(str) || d.Name.contains(str))) {
+                    if(d.DeveloperName.contains(str) || d.Name.contains(str)) {
                         lstIds.put(str, d.Id);
                         break; // Salir del loop interno al encontrar coincidencia
                     }                                      
@@ -193,8 +189,8 @@ public with sharing class walkingCommunityController {
         String idClienteJuridico = '';
         String idOpportunity = '';
     
-        idClienteJuridico = getSafeRecordTypeId('Lead', 'Autos Usados');    
-        idOpportunity = getSafeRecordTypeId('Opportunity', 'Autos usados');   
+        idClienteJuridico = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Autos Usados').getRecordTypeId();    
+        idOpportunity = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Autos usados').getRecordTypeId();   
     
         Date today = Date.today();
         Date sixMonthsBefore = today.addMonths(-6);
@@ -254,8 +250,6 @@ public with sharing class walkingCommunityController {
             }
         }
         List<User> lstUser = [Select Id From User Where Name like '%Login%' OR Name like '%Admin%'];
-        Id ownerIdAsignar = !lstUser.isEmpty() ? lstUser[0].Id : UserInfo.getUserId();
-
         //familia, modelo, marca
         // Crear registro walk-in
         Registro_WalkIn__c nuevoRegistro = new Registro_WalkIn__c();
@@ -275,7 +269,7 @@ public with sharing class walkingCommunityController {
         'idClienteJuridico: ' + idClienteJuridico;
 
         nuevoRegistro.Descripcion__c = '';        
-        nuevoRegistro.OwnerId = ownerIdAsignar;
+        nuevoRegistro.OwnerId = lstUser[0].id;
         nuevoRegistro.Modelo_Walking__c = tipoVehiculo;
         nuevoRegistro.Trafico__c = traficoId;
         nuevoRegistro.Opportunity__c = oppId;
@@ -290,7 +284,6 @@ public with sharing class walkingCommunityController {
         insert nuevoRegistro;
         System.debug('Registro WalkIn creado exitosamente: ' + nuevoRegistro.Id);
         System.debug('=== FINALIZANDO createTraficoUsados EXITOSAMENTE ===');
-
     }
 
     private static String crearActualizarTraficoUsados(String nombre, String apellido, String correo, String telefono, String tiempoAprox, String cedula, String sucursal, String otroMedio, String tipoVehiculo, String recordTypeId) {
@@ -321,9 +314,7 @@ public with sharing class walkingCommunityController {
             traffic.Phone = telefono;
             traffic.FechaPosibleCompra__c = tiempoAprox;
             traffic.Tipo_Vehiculo_Usados__c = tipoVehiculo;
-            if (String.isNotBlank(sucursal) && sucursal != 'undefined') {
-                traffic.Sucursal__c = sucursal;
-            }
+            traffic.Sucursal__c = 'Uruca';
             update traffic; // Actualizamos el tráfico existente
             System.debug('Tráfico actualizado exitosamente: ' + traffic.Id);
         } else {
@@ -339,15 +330,13 @@ public with sharing class walkingCommunityController {
             traffic.LeadSource = 'Walking Usados';
             traffic.MobilePhone = telefono;
             traffic.Phone = telefono;
-            traffic.Campana__c = getSafeCampaignId('7010P0000010QZCQA2');
+            traffic.Campana__c = '7010P0000010QZCQA2';
             // traffic.Campana__c = '701O800002U0ybSIAR';
             traffic.FechaPosibleCompra__c = tiempoAprox;            
             traffic.Origen_1__c = 'Walking Usados';
             traffic.Tipo_de_Identificaci_n__c = '01';
             traffic.Numero_de_Identificacion_del__c = cedula;
-            if (String.isNotBlank(sucursal) && sucursal != 'undefined') {
-                traffic.Sucursal__c = sucursal;
-            }
+            traffic.Sucursal__c = 'Uruca'; 
             traffic.Tipo_Vehiculo_Usados__c = tipoVehiculo;
 
             insert traffic; // Insertamos el nuevo tráfico
@@ -377,23 +366,23 @@ public with sharing class walkingCommunityController {
     
         // Establecer el RecordType basado en la marca ('Motorrad','Kawasaki','Polaris','Indian')
         if(marca == 'BMW'){
-            idClienteJuridico = getSafeRecordTypeId('Lead', 'BMW');    
-            idOpportunity = getSafeRecordTypeId('Opportunity', 'BMW');    
+            idClienteJuridico = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('BMW').getRecordTypeId();    
+            idOpportunity = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('BMW').getRecordTypeId();    
         } else if(marca == 'MINI'){
-            idClienteJuridico = getSafeRecordTypeId('Lead', 'MINI');
-            idOpportunity = getSafeRecordTypeId('Opportunity', 'MINI');    
-        } else if(marca == 'Motorrad'){
-            idClienteJuridico = getSafeRecordTypeId('Lead', 'Motorrad');
-            idOpportunity = getSafeRecordTypeId('Opportunity', 'Motorrad');
-        } else if(marca == 'Kawasaki'){
-            idClienteJuridico = getSafeRecordTypeId('Lead', 'Kawasaki');
-            idOpportunity = getSafeRecordTypeId('Opportunity', 'Kawasaki');
-        } else if(marca == 'Polaris'){
-            idClienteJuridico = getSafeRecordTypeId('Lead', 'Polaris');
-            idOpportunity = getSafeRecordTypeId('Opportunity', 'Polaris');
-        } else if(marca == 'Indian'){
-            idClienteJuridico = getSafeRecordTypeId('Lead', 'Indian');
-            idOpportunity = getSafeRecordTypeId('Opportunity', 'Indian');
+            idClienteJuridico = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('MINI').getRecordTypeId();
+            idOpportunity = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('MINI').getRecordTypeId();    
+        } else if(marca == 'Motorrad' || marca == 'Kawasaki' || marca == 'Polaris' || marca == 'Indian'){
+            idClienteJuridico = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Motorrad').getRecordTypeId();
+            idOpportunity = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Motorrad').getRecordTypeId();
+
+            idClienteJuridicoKa = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Kawasaki').getRecordTypeId();
+            idOpportunityKa = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Kawasaki').getRecordTypeId();
+
+            idClienteJuridicoPo = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Polaris').getRecordTypeId();   
+            idOpportunityPo = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Polaris').getRecordTypeId();
+
+            idClienteJuridicoIn = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Indian').getRecordTypeId();
+            idOpportunityIn = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Indian').getRecordTypeId(); 
         }
     
         System.debug('=== idOpportunity ===');
@@ -418,19 +407,8 @@ public with sharing class walkingCommunityController {
         List<Opportunity> lstOpp = new List<Opportunity>();
         List<Lead> lstLeads = new List<Lead> ();
         if(marca == 'Motorrad' || marca == 'Kawasaki' || marca == 'Polaris' || marca == 'Indian'){
-            lstOpp = [SELECT Id, CreatedDate FROM Opportunity 
-                WHERE Cedula_formula__c = :cedula 
-                AND StageName != 'Cerrada Ganada' 
-                AND StageName != 'Cerrada Perdida' 
-                AND recordTypeId = :idOpportunity 
-                ORDER BY CreatedDate DESC];
-
-            lstLeads = [SELECT id, CreatedDate FROM Lead 
-                WHERE FirstName = :nombre 
-                AND LastName = :apellido 
-                AND Email = :correo 
-                AND recordTypeId = :idClienteJuridico 
-                AND Convertido_custom__c = false];
+            lstOpp = [SELECT Id, CreatedDate FROM Opportunity WHERE Cedula_formula__c = :cedula AND StageName != 'Cerrada Ganada' AND StageName != 'Cerrada Perdida' AND (recordTypeId = :idOpportunity Or recordTypeId = :idOpportunityKa Or recordTypeId = :idOpportunityPo Or recordTypeId = :idOpportunityIn ) order by CreatedDate desc];
+            lstLeads = [SELECT id, CreatedDate FROM Lead WHERE FirstName = :nombre AND LastName = :apellido AND Email = :correo AND (recordTypeId = :idClienteJuridico Or recordTypeId = :idClienteJuridicoKa Or recordTypeId = :idClienteJuridicoPo Or recordTypeId = :idClienteJuridicoIn ) AND Convertido_custom__c = false ];
         }else{
             lstOpp = [SELECT Id, CreatedDate FROM Opportunity WHERE Cedula_formula__c = :cedula AND StageName != 'Cerrada Ganada' AND StageName != 'Cerrada Perdida' AND recordTypeId = :idOpportunity order by CreatedDate desc];
             lstLeads = [SELECT id, CreatedDate FROM Lead WHERE FirstName = :nombre AND LastName = :apellido AND Email = :correo AND recordTypeId = :idClienteJuridico AND Convertido_custom__c = false];
@@ -491,8 +469,6 @@ public with sharing class walkingCommunityController {
         System.debug(traficoId);
         System.debug(oppId);
         List<User> lstUser = [Select Id From User Where Name like '%Login%'];
-        Id ownerIdAsignar = !lstUser.isEmpty() ? lstUser[0].Id : UserInfo.getUserId();
-
         //familia, modelo, marca
         // Crear registro walk-in
         Registro_WalkIn__c nuevoRegistro = new Registro_WalkIn__c();
@@ -514,7 +490,7 @@ public with sharing class walkingCommunityController {
 
         nuevoRegistro.Correo__c = correo;
         nuevoRegistro.Trafico__c = traficoId;
-        nuevoRegistro.OwnerId = ownerIdAsignar;
+        nuevoRegistro.OwnerId = lstUser[0].id;
         nuevoRegistro.Modelo_Walking__c = modelo;
         nuevoRegistro.Marca_Walking__c = marca;
         nuevoRegistro.Familia_Walking__c = familia;
@@ -522,10 +498,6 @@ public with sharing class walkingCommunityController {
         nuevoRegistro.Opportunity__c = oppId;
         insert nuevoRegistro;
         System.debug(nuevoRegistro.id);
-        // Enviar cotización para BMW y MINI
-        if (traficoId != null && (marca == 'BMW' || marca == 'MINI')) {
-            enviarCotizacionWalking(traficoId, marca);
-        }
     }
     
     @AuraEnabled
@@ -543,42 +515,6 @@ public with sharing class walkingCommunityController {
         ];
         return convertedStatus.MasterLabel;
     }
-
-    private static void enviarCotizacionWalking(String leadId, String marca) {
-        if (marca != 'BMW' && marca != 'MINI') return;
-
-        Lead lead = [
-            SELECT Id, Email, OwnerId
-            FROM Lead
-            WHERE Id = :leadId
-            LIMIT 1
-        ];
-
-        if (String.isBlank(lead.Email)) return;
-
-        String templateDeveloperName = marca == 'BMW' ? 'Cotizacion_BMW' : 'Cotizacion_MINI';
-
-        EmailTemplate template = [
-            SELECT Id FROM EmailTemplate
-            WHERE DeveloperName = :templateDeveloperName
-            LIMIT 1
-        ];
-
-        OrgWideEmailAddress[] owea = marca == 'BMW'
-            ? [SELECT Id FROM OrgWideEmailAddress WHERE Address = 'bmwcr@redmotorscr.com']
-            : [SELECT Id FROM OrgWideEmailAddress WHERE Address = 'minicr@redmotorscr.com'];
-
-        Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        email.setTemplateId(template.Id);
-        email.setTargetObjectId(leadId);       // Lead es el recipient
-        email.setWhatId(leadId);              // relatedTo también es el Lead
-        email.setSaveAsActivity(false);
-        if (!owea.isEmpty()) {
-            email.setOrgWideEmailAddressId(owea[0].Id);
-        }
-
-        Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ email });
-    }
     
     // Método para crear o actualizar tráfico
     private static String createOrUpdateTraffic(String nombre, String apellido, String correo, String telefono, String tiempoAprox, String familia, String modelo, String marca, String cedula, String sucursal, String otroMedio, String recordTypeId) {
@@ -589,16 +525,16 @@ public with sharing class walkingCommunityController {
         String idClienteJuridicoPo = '';
         String idClienteJuridicoIn = '';
         if(marca == 'Motorrad'){            
-            idClienteJuridico = getSafeRecordTypeId('Lead', 'Motorrad');                                
+            idClienteJuridico = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Motorrad').getRecordTypeId();                                
             existingTraffic = [SELECT Id, CreatedDate FROM Lead WHERE (Numero_de_Identificacion_del__c = :cedula OR Email =: correo ) AND Marca__c IN ('Motorrad','Kawasaki','Polaris','Indian') ORDER BY CreatedDate DESC LIMIT 1];
         }else if(marca == 'Kawasaki'){
-            idClienteJuridicoKa = getSafeRecordTypeId('Lead', 'Kawasaki');
+            idClienteJuridicoKa = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Kawasaki').getRecordTypeId();
             existingTraffic = [SELECT Id, CreatedDate FROM Lead WHERE (Numero_de_Identificacion_del__c = :cedula OR Email =: correo ) AND Marca__c IN ('Motorrad','Kawasaki','Polaris','Indian') ORDER BY CreatedDate DESC LIMIT 1];
         }else if(marca == 'Polaris'){
-            idClienteJuridicoPo = getSafeRecordTypeId('Lead', 'Polaris');   
+            idClienteJuridicoPo = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Polaris').getRecordTypeId();   
             existingTraffic = [SELECT Id, CreatedDate FROM Lead WHERE (Numero_de_Identificacion_del__c = :cedula OR Email =: correo ) AND Marca__c IN ('Motorrad','Kawasaki','Polaris','Indian') ORDER BY CreatedDate DESC LIMIT 1];         
         }else if(marca == 'Indian'){
-            idClienteJuridicoIn = getSafeRecordTypeId('Lead', 'Indian');
+            idClienteJuridicoIn = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Indian').getRecordTypeId();
             existingTraffic = [SELECT Id, CreatedDate FROM Lead WHERE (Numero_de_Identificacion_del__c = :cedula OR Email =: correo ) AND Marca__c IN ('Motorrad','Kawasaki','Polaris','Indian') ORDER BY CreatedDate DESC LIMIT 1];                                                        
         }else{
             existingTraffic = [SELECT Id, CreatedDate FROM Lead WHERE (Numero_de_Identificacion_del__c = :cedula OR Email =: correo ) AND Marca__c = :marca ORDER BY CreatedDate DESC LIMIT 1];
@@ -623,23 +559,9 @@ public with sharing class walkingCommunityController {
             traffic.Email = correo;
             traffic.MobilePhone = telefono;
             traffic.Phone = telefono;
-            traffic.Marca__c = marca;
             traffic.FechaPosibleCompra__c = tiempoAprox;
             traffic.Familia1__c = familia;
             traffic.Modelo_De_Inter_s1__c = modelo;
-            traffic.Modelo_cotizacion__c = modelo;
-            if(marca == 'Motorrad'){            
-                traffic.RecordTypeId = idClienteJuridico;
-                
-            }else if(marca == 'Kawasaki'){
-                 traffic.RecordTypeId = idClienteJuridicoKa;
-                
-            }else if(marca == 'Polaris'){
-                traffic.RecordTypeId = idClienteJuridicoPo;
-                
-            }else if(marca == 'Indian'){
-                traffic.RecordTypeId = idClienteJuridicoIn;
-            }
             if (sucursal != null && sucursal != '' && sucursal != 'undefined') {
                 traffic.Sucursal__c = sucursal;
             }
@@ -659,7 +581,7 @@ public with sharing class walkingCommunityController {
             traffic.MobilePhone = telefono;
             traffic.Phone = telefono;
             traffic.Ano1__c = '2024';
-            traffic.Campana__c = getSafeCampaignId('7010P0000010QZCQA2');
+            traffic.Campana__c = '7010P0000010QZCQA2';
             traffic.FechaPosibleCompra__c = tiempoAprox;            
             traffic.Familia1__c = familia;            
             traffic.Modelo_De_Inter_s1__c = modelo;
@@ -701,7 +623,6 @@ public with sharing class walkingCommunityController {
         
 
         List<User> lstUser = [Select Id From User Where Name like '%Login%'];
-        Id ownerIdAsignar = !lstUser.isEmpty() ? lstUser[0].Id : UserInfo.getUserId();
 
         Task nuevaTarea = new Task();
         nuevaTarea.Subject = 'Walking';
@@ -709,7 +630,7 @@ public with sharing class walkingCommunityController {
         nuevaTarea.Priority = 'Normal';
         nuevaTarea.Status = 'Open';
         nuevaTarea.WhatId = oppId;
-        nuevaTarea.OwnerId = ownerIdAsignar;
+        nuevaTarea.OwnerId = lstUser[0].id;
         nuevaTarea.WhoId = whoId;
         insert nuevaTarea;
     }
@@ -738,7 +659,6 @@ public with sharing class walkingCommunityController {
         for(Schema.PicklistEntry currDependentValue : dependentValues){
             String jsonString = JSON.serialize(currDependentValue);
             MyPickListInfo info = (MyPickListInfo) JSON.deserialize(jsonString, MyPickListInfo.class);
-            if(info.validFor == null) continue;
             String hexString = EncodingUtil.convertToHex(EncodingUtil.base64Decode(info.validFor)).toUpperCase();
             Integer baseCount = 0;
             for(Integer curr : hexString.getChars()){
@@ -758,7 +678,6 @@ public with sharing class walkingCommunityController {
 
 
 
-
     @AuraEnabled
     public static List<Cita_trafico_online__c> buscarCitaPorCedula(String cedula) {
         return walkingCommunityControllerBase.buscarCitaPorCedula(cedula);
@@ -767,7 +686,7 @@ public with sharing class walkingCommunityController {
     @AuraEnabled
     public static void marcarAsistenciaCita(String citaId) {
         Cita_trafico_online__c citaSel = [
-            SELECT Id, Name, Status__c
+            SELECT Id, Name, Status__c,OwnerId
             FROM Cita_trafico_online__c
             WHERE Id = :citaId
             LIMIT 1
@@ -787,23 +706,8 @@ public with sharing class walkingCommunityController {
                 lstLeadOriginal[0].Id                
             );
         }
+       
     }
 
-
-    private static String getSafeRecordTypeId(String objName, String rtName) {
-        try {
-            return Schema.getGlobalDescribe().get(objName).getDescribe().getRecordTypeInfosByName().get(rtName).getRecordTypeId();
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    private static String getSafeCampaignId(String hardcodedId) {
-        if(Test.isRunningTest()) {
-            List<Campaign> camp = [SELECT Id FROM Campaign LIMIT 1];
-            return !camp.isEmpty() ? camp[0].Id : null;
-        }
-        return hardcodedId;
-    }
 
 }

@@ -575,10 +575,6 @@ public with sharing class ClientesRequest {
         return records;
     }     
 */
-    public static ClientesRequest parseToClass(String json){
-        return (ClientesRequest) System.JSON.deserialize(json, ClientesRequest.class);
-    }    
-    
     public String getJSONClientes()
     {
         String payload = JSON.serializepretty(this);

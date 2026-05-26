@@ -69,12 +69,13 @@ public without sharing class RM_SyncQuoteService {
             }                                 
             
             List<Opportunity> newOppList = new List<Opportunity>();
-            List<Opportunity> oppList = [SELECT Id, Total_Costo_Fijo__c, ConsecutivoOportunidad__c,Synced_Quote__c, (SELECT Id FROM OpportunityLineItems),(SELECT Id, IsSyncing__c FROM Quotes WHERE Id NOT IN :quoteIds) FROM Opportunity WHERE Id IN:oppIds];   
+            List<Opportunity> oppList = [SELECT Id, Total_Costo_Fijo__c, ConsecutivoOportunidad__c,Synced_Quote__c, SyncedQuoteId, (SELECT Id FROM OpportunityLineItems),(SELECT Id, IsSyncing__c FROM Quotes WHERE Id NOT IN :quoteIds) FROM Opportunity WHERE Id IN:oppIds];   
             List<OpportunityLineItem> oliToDelete = new List<OpportunityLineItem>();
             for (Opportunity opp : oppList) { 
                 //opp.NombreProducto__c = opp.ConsecutivoOportunidad__c;
                 opp.Total_Costo_Fijo__c = oppIdMontoFijoMap.get(opp.Id);
                 opp.Synced_Quote__c = oppIdQuoteIdMap.get(opp.Id);
+                opp.SyncedQuoteId = oppIdQuoteIdMap.get(opp.Id);
                 
                 for (Quote quote : opp.Quotes) {
                     quote.IsSyncing__c = false;

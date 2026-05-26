@@ -19,36 +19,15 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
 
     @AuraEnabled
     public static List<Account> validarCuenta(String cuentaId) {
-        List<Account> lstAcc = [
-            SELECT Id, FirstName, LastName, Name, Phone, PersonEmail, IsPersonAccount,
-                   CorreoElectronicoEmpresarial__c, PersonContactId, Invoice_Email__c
-            FROM Account
-            WHERE Id = :cuentaId
-        ];
-        return lstAcc;
+        return RM_CrearOportunidadBase.validarCuenta(cuentaId);
     }
 
     @AuraEnabled
     public static List<Account> crearCuenta(String cuentaId, String nombre, String apellido, String telefono, String email, String emailFact) {
 
-        List<Account> lstAcc = [
-            SELECT Id, FirstName, Invoice_Email__c, LastName, Name, Phone, PersonEmail, IsPersonAccount, CorreoElectronicoEmpresarial__c
-            FROM Account
-            WHERE Id = :cuentaId
-        ];
+        List<Account> lstAcc = RM_CrearOportunidadBase.prepararCuenta(cuentaId, nombre, apellido, telefono, email, emailFact);
 
         for (Account cuenta : lstAcc) {
-            if (cuenta.IsPersonAccount == true) {
-                cuenta.FirstName = nombre;
-                cuenta.PersonEmail = email;
-                cuenta.LastName = apellido;
-            } else {
-                cuenta.Name = nombre;
-                cuenta.CorreoElectronicoEmpresarial__c = email;
-            }
-            cuenta.Phone = telefono;
-            cuenta.Invoice_Email__c = emailFact;
-
             update cuenta;
         }
         return lstAcc;
@@ -194,7 +173,7 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
 
         String oppRTName = '%' + brand + '%';
         List<RecordType> oppRTList = [
-            SELECT Id
+            SELECT Id,DeveloperName
             FROM RecordType
             WHERE SobjectType = 'Opportunity'
               AND DeveloperName LIKE :oppRTName
@@ -204,6 +183,7 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
         if (oppRTList.isEmpty()) {
             throw new AuraHandledException('No se encontro record type en la oportunidad relacionado a la marca ingresada.');
         }
+        oppRTName = oppRTList[0].DeveloperName;
 
         if (strCuentaFacturacion == null || strCuentaFacturacion == '') {
             strCuentaFacturacion = accountId;
@@ -222,7 +202,7 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
 
         Lead trafico = null;
         if (String.isNotBlank(numeroIdentificacion)) {
-            trafico = findValidTraffic(numeroIdentificacion);
+            trafico = findValidTraffic(numeroIdentificacion,oppRTName);
         }
  System.debug('Trafico => ' + trafico);
  System.debug('Cedula => ' + numeroIdentificacion);
@@ -234,10 +214,13 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
         // Crear Opportunity
         // =========================
         
-        String traficoId='';
-        if (trafico != null)  {
-        traficoId=trafico.Id;
-        }
+       DateTime limitDate = System.now().addMonths(-6);
+Boolean traficoValido = (trafico != null && !trafico.IsConverted && trafico.CreatedDate >= limitDate);
+
+Id traficoId = traficoValido ? trafico.Id : null;
+
+
+
         Opportunity newOpp = new Opportunity(
             Name = 'Modelo de Interés - ' + brand + ' ' + year,
             AccountId = accountId,
@@ -271,10 +254,19 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
         System.debug(System.LoggingLevel.ERROR, 'MI_BEFORE_INSERT_OPP');
         insert newOpp;
 
-        // ✅ Convertir Lead a "Convertido" (real conversion) y NO crear otra Opp
-        if (trafico != null) {
-            RM_VU_CrearOportunidad_Ctrl.convertTrafficLead(trafico.Id, accountId, contactoId);
-        }
+      //  Convertir Lead SOLO si es < 6 meses y NO está convertido
+if (traficoValido) {
+    RM_VU_CrearOportunidad_Ctrl.convertTrafficLead(trafico.Id, accountId, contactoId); // VN (método local)
+} else if (trafico != null) {
+    System.debug(System.LoggingLevel.ERROR,
+        'NO_CONVIERTE_TRAFICO => lead=' + trafico.Id +
+        ' | IsConverted=' + trafico.IsConverted +
+        ' | CreatedDate=' + trafico.CreatedDate +
+        ' | LimitDate=' + limitDate
+    );
+}
+
+
 
         // Quote ORIGINAL del proceso (NO duplicamos)
         Quote newQuote = new Quote(
@@ -434,36 +426,46 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
         return sucursal;
     }
 
-    public static void dummy() {
-        String test = '';
-        test += '';
-    }
 
     // =========================
     // Helpers Tráfico
     // =========================
-    private static Lead findValidTraffic(String numeroIdentificacionRaw) {
+    public static Lead findValidTraffic(String numeroIdentificacionRaw,String oppRTName) {
         if (String.isBlank(numeroIdentificacionRaw)) return null;
 
         String raw = numeroIdentificacionRaw.trim();
         String clean = raw.replaceAll('[^0-9A-Za-z]', '');
+        if (String.isBlank(clean)) return null;
+
+        DateTime limitDate = System.now().addMonths(-6);
 
         List<Lead> lst = [
-            SELECT Id, Name, FirstName, LastName, Phone, Email, Status, IsConverted, CreatedDate, Numero_de_Identificacion_del__c
+            SELECT Id, Name, Status, IsConverted, CreatedDate, Numero_de_Identificacion_del__c, LeadSource
             FROM Lead
-            WHERE (
-                Numero_de_Identificacion_del__c = :raw
-                OR Numero_de_Identificacion_del__c = :clean
-                        OR Numero_de_Identificacion_del__c = :numeroIdentificacionRaw
-            )
+            WHERE IsConverted = false
+              AND CreatedDate >= :limitDate
+              AND RecordType.DeveloperName = : oppRTName
+              AND Numero_de_Identificacion_del__c != null
+              AND (
+                  Numero_de_Identificacion_del__c = :raw
+                  OR Numero_de_Identificacion_del__c = :clean
+                  OR Numero_de_Identificacion_del__c LIKE :('%' + clean + '%')
+              )
             ORDER BY CreatedDate DESC
             LIMIT 1
         ];
-
+        if(lst.size()>0){
+        System.debug(LoggingLevel.ERROR,
+            'VU_TRAFFIC_FIND => raw=' + raw +
+            ' clean=' + clean +
+            ' found=' + (!lst.isEmpty() ? lst[0].Id : 'NULL') +
+            ' leadNum=' + (!lst.isEmpty() ? lst[0].Numero_de_Identificacion_del__c : 'NULL')
+        );
+        }
         return lst.isEmpty() ? null : lst[0];
     }
 
-    private static void setTrafficLookup(Opportunity opp, Id leadId) {
+    @TestVisible private static void setTrafficLookup(Opportunity opp, Id leadId) {
         if (opp == null || leadId == null) return;
 
         List<String> candidates = new List<String>{
@@ -493,7 +495,7 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
         System.debug(System.LoggingLevel.ERROR, 'MI_NO_TRAFFIC_LOOKUP_FIELD_FOUND');
     }
 
-    private static void putIfFieldExists(SObject record, String fieldApiName, Object value) {
+    @TestVisible private static void putIfFieldExists(SObject record, String fieldApiName, Object value) {
         if (record == null || value == null || String.isBlank(fieldApiName)) return;
 
         Map<String, Schema.SObjectField> fields = record.getSObjectType().getDescribe().fields.getMap();
@@ -505,7 +507,7 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
     // =========================
     // Helpers Conversión Lead
     // =========================
-    private static void convertTrafficLead(Id leadId, String accountId, String contactoId) {
+    @TestVisible private static void convertTrafficLead(Id leadId, String accountId, String contactoId) {
         if (leadId == null) return;
 
         Lead l = [SELECT Id, IsConverted, Status FROM Lead WHERE Id = :leadId LIMIT 1];
@@ -553,7 +555,7 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
         }
     }
 
-    private static String getAnyConvertedLeadStatusValue() {
+    @TestVisible private static String getAnyConvertedLeadStatusValue() {
         List<LeadStatus> ls = [
             SELECT MasterLabel, SortOrder
             FROM LeadStatus
@@ -564,7 +566,7 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
         return ls.isEmpty() ? null : ls[0].MasterLabel;
     }
 
-    private static String findLeadStatusValue(List<String> candidates) {
+   @TestVisible private static String findLeadStatusValue(List<String> candidates) {
         if (candidates == null || candidates.isEmpty()) return null;
 
         List<Schema.PicklistEntry> values = Lead.Status.getDescribe().getPicklistValues();
@@ -581,4 +583,5 @@ public with sharing class RM_VN_CrearOportunidad_Ctrl {
         }
         return null;
     }
+  
 }

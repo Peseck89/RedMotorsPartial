@@ -7,17 +7,19 @@ public class BatchOppActivityUploader implements Database.Batchable<sObject>,Dat
     public BatchOppActivityUploader (DateTime dt) {
         this.dt = dt;
         this.excludeEmpty = false;
-        this.idBMW = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('BMW').getRecordTypeId();
-        this.idMini = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('MINI').getRecordTypeId();
-        this.idMotorrad = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Motorrad').getRecordTypeId();
+        BatchActivityUploaderBase.RecordTypeIds recordTypeIds = BatchActivityUploaderBase.getRecordTypeIds(Schema.SObjectType.Opportunity);
+        this.idBMW = recordTypeIds.idBMW;
+        this.idMini = recordTypeIds.idMini;
+        this.idMotorrad = recordTypeIds.idMotorrad;
         
     }
     public BatchOppActivityUploader (DateTime dt,Boolean excludeEmpty) {
         this.dt = dt;
         this.excludeEmpty = excludeEmpty;
-        this.idBMW = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('BMW').getRecordTypeId();
-        this.idMini = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('MINI').getRecordTypeId();
-        this.idMotorrad = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Motorrad').getRecordTypeId();
+        BatchActivityUploaderBase.RecordTypeIds recordTypeIds = BatchActivityUploaderBase.getRecordTypeIds(Schema.SObjectType.Opportunity);
+        this.idBMW = recordTypeIds.idBMW;
+        this.idMini = recordTypeIds.idMini;
+        this.idMotorrad = recordTypeIds.idMotorrad;
         System.debug('Id 1: '+idBMW);
         System.debug('Id 2: '+idMini);
         System.debug('Id 3: '+idMotorrad);
@@ -25,22 +27,7 @@ public class BatchOppActivityUploader implements Database.Batchable<sObject>,Dat
     public Database.QueryLocator start(Database.BatchableContext bc){
         String query = 'SELECT Id,Name FROM Opportunity WHERE CreatedDate >=:dt AND ( RecordTypeId =:idBMW OR RecordTypeId =:idMini OR RecordTypeId =:idMotorrad)';
         
-        Map<String, Object> data = new Map<String, Object>();
-        data.put('sfdataflow', 'start');
-        data.put('payloadTag', 'opportunity');
-        String oppbody = Json.serializePretty(data);
-        System.debug('oppbody :: ' + oppbody);
-        HttpRequest req = new HttpRequest();
-        req.setMethod('POST');
-        req.setHeader('content-type', 'application/json');
-        req.setEndpoint(System.Label.OppActivityUploaderURL_SE);
-        req.setBody(oppbody);
-        
-        if(!Test.isRunningTest()){
-            HttpResponse response = new Http().send(req);
-            response.getBody();
-            System.debug('Body ' + response.getBody()); 
-        }
+        BatchActivityUploaderBase.sendDataflowSignal('start', 'opportunity', System.Label.OppActivityUploaderURL_SE, 'oppbody');
         
         return Database.getQueryLocator(query);
     }
@@ -230,28 +217,12 @@ oppbody = oppbody.replace('Nuevo_Registro','Nuevo Registro');*/
     
     public String convertDate(date dt)
     {
-        if(dt != null)
-        {
-            return dt.day()+'/'+dt.month()+'/'+dt.year();
-        }
-        
-        return '';
+        return BatchActivityUploaderBase.convertDate(dt);
     }
     
     public Set<String> getSubjects(String objectName, String fieldName)
     {
-        Set<String> values = new Set<String>();
-          
-        Schema.SObjectType s = Schema.getGlobalDescribe().get(objectName) ;
-        Schema.DescribeSObjectResult r = s.getDescribe() ;
-        Map<String,Schema.SObjectField> fields = r.fields.getMap() ;
-        Schema.DescribeFieldResult fieldResult = fields.get(fieldName).getDescribe();
-        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-        for( Schema.PicklistEntry pickListVal : ple){
-            values.add(pickListVal.getValue());
-        }  
-        
-        return values;  
+        return BatchActivityUploaderBase.getSubjects(objectName, fieldName);
     }
     
     public class OppWrapperClass{
@@ -322,20 +293,6 @@ oppbody = oppbody.replace('Nuevo_Registro','Nuevo Registro');*/
     }
     
     public void finish(Database.BatchableContext bc) {
-        Map<String, Object> data = new Map<String, Object>();
-        data.put('sfdataflow', 'end');
-        String oppbody = Json.serializePretty(data);
-        System.debug('oppbody :: ' + oppbody);
-        HttpRequest req = new HttpRequest();
-        req.setMethod('POST');
-        req.setHeader('content-type', 'application/json');
-        req.setEndpoint(System.Label.OppActivityUploaderURL_SE);
-        req.setBody(oppbody);
-        
-        if(!Test.isRunningTest()){
-            HttpResponse response = new Http().send(req);
-            response.getBody();
-            System.debug('Body ' + response.getBody()); 
-        }
+        BatchActivityUploaderBase.sendDataflowSignal('end', null, System.Label.OppActivityUploaderURL_SE, 'oppbody');
     }
 }

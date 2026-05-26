@@ -158,17 +158,18 @@ public without sharing class communityManageWorks_ctrl {
         Map<Id, Decimal> caseTotalPriceMap = new Map<Id, Decimal>();
         Map<Id, String> caseWorkOrderNumberMap = new Map<Id, String>();
 
+        Map<Id, String> caseCurrencyMap = new Map<Id, String>();
+
         // Llenar los mapas con la suma de TotalPrice por CaseId y WorkOrderNumber
         for (WorkOrderLineItem woli : workOrderLineItems) {
             if (woli.WorkOrder.CaseId != null) {
-                // Actualiza el mapa para sumar los precios
                 if (caseTotalPriceMap.containsKey(woli.WorkOrder.CaseId)) {
                     caseTotalPriceMap.put(woli.WorkOrder.CaseId, caseTotalPriceMap.get(woli.WorkOrder.CaseId) + woli.TotalPrice);
                 } else {
                     caseTotalPriceMap.put(woli.WorkOrder.CaseId, woli.TotalPrice);
                 }
-                // Actualiza el mapa con el WorkOrderNumber
                 caseWorkOrderNumberMap.put(woli.WorkOrder.CaseId, woli.WorkOrder.WorkOrderNumber);
+                caseCurrencyMap.put(woli.WorkOrder.CaseId, woli.WorkOrder.CurrencyIsoCode); // ← AGREGAR
             }
         }
 
@@ -177,6 +178,7 @@ public without sharing class communityManageWorks_ctrl {
             SELECT Id, CreatedDate, N_de_placa__c, CaseNumber,Service_Territory_Name_Formula__c
             FROM Case 
             WHERE Id IN :caseTotalPriceMap.keySet()
+            ORDER BY CreatedDate DESC
         ];
 
         // Crear una lista para almacenar el resultado final con WorkOrderNumber, total de TotalPrice y CreatedDate
@@ -191,6 +193,8 @@ public without sharing class communityManageWorks_ctrl {
             caseInfo.put('Territorio', caso.Service_Territory_Name_Formula__c);
             caseInfo.put('CreatedDate', caso.CreatedDate);
             caseInfo.put('Placa', caso.N_de_placa__c);
+            caseInfo.put('CurrencyIsoCode', caseCurrencyMap.get(caso.Id)); // ← AGREGAR
+
             result.add(caseInfo);
         }
 
@@ -198,24 +202,34 @@ public without sharing class communityManageWorks_ctrl {
     }
 
     @AuraEnabled(cacheable=false)
-    public static List<Map<String, Object>> getQuotes() {
-        // Obtener el ID del usuario actual
+    public static List<Map<String, Object>> getQuotes(String marca) {
         Id currentUserId = UserInfo.getUserId();
 
-        // Consultar el AccountId relacionado al usuario actual
         User currentUser = [SELECT AccountId FROM User WHERE Id = :currentUserId LIMIT 1];
         Id accountId = currentUser.AccountId;
 
-        // Consulta para obtener las Quotes que cumplen con las condiciones
-        List<Quote> quotes = [
-            SELECT Id, Name, CreatedDate, Placa__c, GrandTotal, QuoteNumber, Opportunity.AccountId, CurrencyIsoCode
-            FROM Quote 
-            WHERE Opportunity.AccountId = :accountId 
-            AND Enviar_presupuesto_a_service__c = true
-            // AND Status IN ('Presentada', 'En revisión')
-        ];
+        List<Quote> quotes = new List<Quote>();
 
-        // Crear una lista para almacenar el resultado final
+        if (marca == 'Motorrad') {
+            quotes = [
+                SELECT Id, Name, CreatedDate, Placa__c, GrandTotal, QuoteNumber, Opportunity.AccountId, CurrencyIsoCode
+                FROM Quote 
+                WHERE Opportunity.AccountId = :accountId 
+                AND Enviar_presupuesto_a_service__c = true
+                AND Tipo_de_vehiculo__c = 'Motocicleta'
+                ORDER BY CreatedDate DESC
+            ];
+        } else {
+            quotes = [
+                SELECT Id, Name, CreatedDate, Placa__c, GrandTotal, QuoteNumber, Opportunity.AccountId, CurrencyIsoCode
+                FROM Quote 
+                WHERE Opportunity.AccountId = :accountId 
+                AND Enviar_presupuesto_a_service__c = true
+                AND Marca__c = :marca
+                ORDER BY CreatedDate DESC
+            ];
+        }
+
         List<Map<String, Object>> result = new List<Map<String, Object>>();
 
         for (Quote quote : quotes) {
@@ -226,6 +240,8 @@ public without sharing class communityManageWorks_ctrl {
             quoteInfo.put('GrandTotal', quote.GrandTotal);
             quoteInfo.put('CreatedDate', quote.CreatedDate);
             quoteInfo.put('Placa', quote.Placa__c);
+            quoteInfo.put('CurrencyIsoCode', quote.CurrencyIsoCode);
+            
             result.add(quoteInfo);
         }
 
@@ -233,7 +249,7 @@ public without sharing class communityManageWorks_ctrl {
     }
 
     @AuraEnabled(cacheable=false)
-    public static List<Map<String, Object>> getCasesHistory() {
+    public static List<Map<String, Object>> getCasesHistory(String marca) {
 
         // Obtener el ID del usuario actual
         Id currentUserId = UserInfo.getUserId();
@@ -244,32 +260,49 @@ public without sharing class communityManageWorks_ctrl {
         // Almacenar el AccountId en una variable
         Id accountId = currentUser.AccountId;
         // Consulta inicial para obtener los WorkOrderLineItems con los filtros especificados
-        List<WorkOrderLineItem> workOrderLineItems = [
-            SELECT Id, WorkOrder.CaseId, WorkOrderId, tiposDeTrabajo__c, tiposDeTrabajo__r.Name, 
-            TipoTrabajoCaso__r.Enviar_a_service__c, TipoTrabajoCaso__r.Status__c, 
-            TipoTrabajoCaso__r.Aprobador__c, TipoTrabajoCaso__r.Estado_aprobaci_n_service__c,
-            TipoTrabajoCaso__r.Tipo_de_cargo__c, TotalPrice, TipoTrabajoCaso__r.Id, 
-            TipoTrabajoCaso__r.Categor_a_de_presupuesto__c, Producto_OR_Alias__c, 
-            WorkOrder.CurrencyIsoCode, Quantity, WorkOrder.WorkOrderNumber,WorkOrder.accountId
-            FROM WorkOrderLineItem
-            WHERE WorkOrder.accountId =: accountId
-        ];
+        List<WorkOrderLineItem> workOrderLineItems = new List<WorkOrderLineItem>();
+        if(marca == 'Motorrad'){
+            workOrderLineItems = [
+                SELECT Id, WorkOrder.CaseId, WorkOrderId, tiposDeTrabajo__c, tiposDeTrabajo__r.Name, 
+                TipoTrabajoCaso__r.Enviar_a_service__c, TipoTrabajoCaso__r.Status__c, 
+                TipoTrabajoCaso__r.Aprobador__c, TipoTrabajoCaso__r.Estado_aprobaci_n_service__c,
+                TipoTrabajoCaso__r.Tipo_de_cargo__c, TotalPrice, TipoTrabajoCaso__r.Id, 
+                TipoTrabajoCaso__r.Categor_a_de_presupuesto__c, Producto_OR_Alias__c, 
+                WorkOrder.CurrencyIsoCode, Quantity, WorkOrder.WorkOrderNumber,WorkOrder.accountId
+                FROM WorkOrderLineItem
+                WHERE WorkOrder.accountId =: accountId
+                AND WorkOrder.Asset.Tipo_de_veh_culo__c = 'Motocicleta'
+            ];
+        }else{
+            workOrderLineItems = [
+                SELECT Id, WorkOrder.CaseId, WorkOrderId, tiposDeTrabajo__c, tiposDeTrabajo__r.Name, 
+                TipoTrabajoCaso__r.Enviar_a_service__c, TipoTrabajoCaso__r.Status__c, 
+                TipoTrabajoCaso__r.Aprobador__c, TipoTrabajoCaso__r.Estado_aprobaci_n_service__c,
+                TipoTrabajoCaso__r.Tipo_de_cargo__c, TotalPrice, TipoTrabajoCaso__r.Id, 
+                TipoTrabajoCaso__r.Categor_a_de_presupuesto__c, Producto_OR_Alias__c, 
+                WorkOrder.CurrencyIsoCode, Quantity, WorkOrder.WorkOrderNumber,WorkOrder.accountId
+                FROM WorkOrderLineItem
+                WHERE WorkOrder.accountId =: accountId
+                AND WorkOrder.Asset.marca__c =: marca
+            ];
+        }
+        
 
         // Mapa para almacenar la suma de TotalPrice por CaseId y también para almacenar el WorkOrderNumber
         Map<Id, Decimal> caseTotalPriceMap = new Map<Id, Decimal>();
         Map<Id, String> caseWorkOrderNumberMap = new Map<Id, String>();
+        Map<Id, String> caseCurrencyMap = new Map<Id, String>();
 
         // Llenar los mapas con la suma de TotalPrice por CaseId y WorkOrderNumber
         for (WorkOrderLineItem woli : workOrderLineItems) {
             if (woli.WorkOrder.CaseId != null) {
-                // Actualiza el mapa para sumar los precios
                 if (caseTotalPriceMap.containsKey(woli.WorkOrder.CaseId)) {
                     caseTotalPriceMap.put(woli.WorkOrder.CaseId, caseTotalPriceMap.get(woli.WorkOrder.CaseId) + woli.TotalPrice);
                 } else {
                     caseTotalPriceMap.put(woli.WorkOrder.CaseId, woli.TotalPrice);
                 }
-                // Actualiza el mapa con el WorkOrderNumber
                 caseWorkOrderNumberMap.put(woli.WorkOrder.CaseId, woli.WorkOrder.WorkOrderNumber);
+                caseCurrencyMap.put(woli.WorkOrder.CaseId, woli.WorkOrder.CurrencyIsoCode); // ← AGREGAR
             }
         }
 
@@ -278,6 +311,7 @@ public without sharing class communityManageWorks_ctrl {
             SELECT Id, CreatedDate, N_de_placa__c, CaseNumber, Service_Territory_Name_Formula__c
             FROM Case 
             WHERE Id IN :caseTotalPriceMap.keySet()
+            ORDER BY CreatedDate DESC
         ];
 
         // Crear una lista para almacenar el resultado final con WorkOrderNumber, total de TotalPrice y CreatedDate
@@ -292,6 +326,8 @@ public without sharing class communityManageWorks_ctrl {
             caseInfo.put('Territorio', caso.Service_Territory_Name_Formula__c);
             caseInfo.put('CreatedDate', caso.CreatedDate);
             caseInfo.put('Placa', caso.N_de_placa__c);
+            caseInfo.put('CurrencyIsoCode', caseCurrencyMap.get(caso.Id)); // ← AGREGAR
+
             result.add(caseInfo);
         }
 
@@ -441,434 +477,7 @@ public without sharing class communityManageWorks_ctrl {
             lstTrabajos = [Select Id, Case_Stage__c,Nombre_Mostrar__c ,Stage_Order__c FROM Stage_service__c  order by Stage_Order__c];
         }
          
-        Integer i = 0;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-         i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
+
         return lstTrabajos;
     }
 
@@ -877,7 +486,8 @@ public without sharing class communityManageWorks_ctrl {
         // Obtener el Quote con el campo Placa__c
         Quote quote = [SELECT Id, QuoteNumber, GrandTotal, Placa__c, 
                             Account.Name, Account.Cedula__c, Account.Phone,
-                            Contact.Name, Contact.Email, Contact.MobilePhone, Contact.Phone, CurrencyIsoCode
+                            Contact.Name, Contact.Email, Contact.MobilePhone, Contact.Phone, CurrencyIsoCode,
+                            CreatedById
                     FROM Quote 
                     WHERE Id = :quoteId 
                     LIMIT 1];
@@ -896,11 +506,20 @@ public without sharing class communityManageWorks_ctrl {
                 asset = assets[0];
             }
         }
-        
+
+        User user = null;
+        if (quote.CreatedById != null) {
+            List<User> users = [SELECT Id, Name, FirstName, LastName, Email, Phone FROM User WHERE Id = :quote.CreatedById LIMIT 1];
+            if (!users.isEmpty()) {
+                user = users[0];
+            }
+        }
+
         // Crear un mapa para retornar ambos objetos
         Map<String, Object> result = new Map<String, Object>();
         result.put('quote', quote);
         result.put('asset', asset);
+        result.put('user', user);
         
         return result;
     }
@@ -914,6 +533,7 @@ public without sharing class communityManageWorks_ctrl {
         return contacts.isEmpty() ? null : contacts[0];
     }
 
+    @TestVisible
     private static List<communityManageWorks_ctrl.TrabajoWrapper> getTrabajosForAura(Id quoteId) {
     try {
         List<communityManageWorks_ctrl.TrabajoWrapper> trabajos = new List<communityManageWorks_ctrl.TrabajoWrapper>();
@@ -1138,6 +758,7 @@ public without sharing class communityManageWorks_ctrl {
     }
 
     // Método auxiliar para obtener precio unitario
+    @TestVisible
     private static Decimal obtenerPrecioUnitario(String tipoTrabajoId, String quoteId) {
         try {
             if (tipoTrabajoId == null) return 0;
@@ -1163,7 +784,6 @@ public without sharing class communityManageWorks_ctrl {
             return pbes.isEmpty() ? 0 : pbes[0].UnitPrice;
             
         } catch (Exception e) {
-            System.debug('Error obteniendo precio unitario: ' + e.getMessage());
             return 0;
         }
     }
@@ -1179,9 +799,9 @@ public without sharing class communityManageWorks_ctrl {
                 };
             }
 
-            // Traer TODOS los QLIs de la quote para identificar los no seleccionados
             List<QuoteLineItem> allQuoteLineItems = [
-                SELECT Id, Estado_aprobaci_n_service__c, Aprobado_service__c, Tarea__c
+                SELECT Id, Estado_aprobaci_n_service__c, Aprobado_service__c, Tarea__c, 
+                    Enviar_presupuesto_a_service__c
                 FROM QuoteLineItem
                 WHERE QuoteId = :quoteId
                 FOR UPDATE
@@ -1190,10 +810,8 @@ public without sharing class communityManageWorks_ctrl {
             List<QuoteLineItem> itemsToUpdate = new List<QuoteLineItem>();
             Set<String> tareasActualizadas = new Set<String>();
 
-            // Primero: Actualizar los seleccionados a Aprobado
             for (QuoteLineItem qli : allQuoteLineItems) {
                 if (quoteLineItemIds.contains(qli.Id)) {
-                    // Solo actualizar si no está ya aprobado
                     if (qli.Estado_aprobaci_n_service__c != 'Aprobado' || qli.Aprobado_service__c != true) {
                         qli.Estado_aprobaci_n_service__c = 'Aprobado';
                         qli.Aprobado_service__c = true;
@@ -1203,11 +821,12 @@ public without sharing class communityManageWorks_ctrl {
                 }
             }
 
-            // Segundo: Actualizar los NO seleccionados SOLO si no están ya aprobados
             for (QuoteLineItem qli : allQuoteLineItems) {
                 if (!quoteLineItemIds.contains(qli.Id)) {
-                    // Solo rechazar si no está ya aprobado
-                    if (qli.Estado_aprobaci_n_service__c != 'Aprobado' && qli.Aprobado_service__c != true) {
+                    if (qli.Estado_aprobaci_n_service__c != 'Aprobado' 
+                        && qli.Aprobado_service__c != true
+                        && qli.Enviar_presupuesto_a_service__c == true) { 
+                        
                         qli.Estado_aprobaci_n_service__c = 'Rechazado';
                         qli.Aprobado_service__c = false;
                         itemsToUpdate.add(qli);
@@ -1220,11 +839,20 @@ public without sharing class communityManageWorks_ctrl {
                 update itemsToUpdate;
             }
 
+            Integer aprobadosCount = 0;
+            Integer rechazadosCount = 0;
+            for (QuoteLineItem qli : itemsToUpdate) {
+                if (qli.Aprobado_service__c == true) aprobadosCount++;
+                else rechazadosCount++;
+            }
+
             return new Map<String, Object>{
                 'success' => true,
-                'message' => 'Items actualizados exitosamente',
+                'message' => 'Items actualizados: ' + aprobadosCount + ' aprobados, ' + rechazadosCount + ' rechazados',
                 'count' => itemsToUpdate.size(),
-                'tareasActualizadas' => new List<String>(tareasActualizadas)
+                'tareasActualizadas' => new List<String>(tareasActualizadas),
+                'aprobados' => aprobadosCount,
+                'rechazados' => rechazadosCount
             };
         } catch (Exception e) {
             throw new AuraHandledException('Error al aprobar/rechazar items: ' + e.getMessage());
@@ -1262,6 +890,7 @@ public without sharing class communityManageWorks_ctrl {
         }
     }
 
+    @TestVisible
     private static String construirCuerpoEmail(List<Object> tareasNecesario, 
                                             List<Object> tareasRecomendado, 
                                             List<Object> tareasSugerido, 
@@ -1346,92 +975,9 @@ public without sharing class communityManageWorks_ctrl {
         return emailBody;
     }
 
-    private static String construirCuerpoEmail(List<Map<String, Object>> tareasNecesario, 
-                                            List<Map<String, Object>> tareasRecomendado, 
-                                            List<Map<String, Object>> tareasSugerido, 
-                                            String currencyIso, Quote quote) {
-        
-        String emailBody = '<html><body>';
-        emailBody += '<h2>Tareas Aprobadas - Cotización: ' + quote.QuoteNumber + '</h2>';
-        emailBody += '<p><strong>Cliente:</strong> ' + (quote.Account.Name != null ? quote.Account.Name : 'N/A') + '</p>';
-        emailBody += '<p><strong>Contacto:</strong> ' + (quote.Contact.Name != null ? quote.Contact.Name : 'N/A') + '</p>';
-        emailBody += '<hr/>';
-        
-        // Tareas Urgentes (Necesario)
-        if (tareasNecesario != null && !tareasNecesario.isEmpty()) {
-            emailBody += '<h3 style="color: #d62728;">Tareas Urgentes</h3>';
-            for (Map<String, Object> task : tareasNecesario) {
-                emailBody += '<div style="margin-top:10px; padding:6px 8px; border-radius:6px; background:#fafafa; border-left: 4px solid #d62728;">';
-                emailBody += '<strong>' + String.valueOf(task.get('tarea')) + '</strong> — Total tarea: ' + currencyIso + '&nbsp;' + String.valueOf(task.get('total'));
-                emailBody += '<ol style="margin:6px 0 0 18px;">';
-                
-                List<Object> items = (List<Object>)task.get('items');
-                if (items != null) {
-                    for (Object itemObj : items) {
-                        Map<String, Object> item = (Map<String, Object>)itemObj;
-                        emailBody += '<li>' + String.valueOf(item.get('description')) + ' — ' + currencyIso + '&nbsp;' + String.valueOf(item.get('amount')) + '</li>';
-                    }
-                }
-                
-                emailBody += '</ol>';
-                emailBody += '</div>';
-            }
-        }
-        
-        // Tareas Sugeridas (Recomendado)
-        if (tareasRecomendado != null && !tareasRecomendado.isEmpty()) {
-            emailBody += '<h3 style="color: #2ca02c;">Tareas Sugeridas</h3>';
-            for (Map<String, Object> task : tareasRecomendado) {
-                emailBody += '<div style="margin-top:10px; padding:6px 8px; border-radius:6px; background:#fafafa; border-left: 4px solid #2ca02c;">';
-                emailBody += '<strong>' + String.valueOf(task.get('tarea')) + '</strong> — Total tarea: ' + currencyIso + '&nbsp;' + String.valueOf(task.get('total'));
-                emailBody += '<ol style="margin:6px 0 0 18px;">';
-                
-                List<Object> items = (List<Object>)task.get('items');
-                if (items != null) {
-                    for (Object itemObj : items) {
-                        Map<String, Object> item = (Map<String, Object>)itemObj;
-                        emailBody += '<li>' + String.valueOf(item.get('description')) + ' — ' + currencyIso + '&nbsp;' + String.valueOf(item.get('amount')) + '</li>';
-                    }
-                }
-                
-                emailBody += '</ol>';
-                emailBody += '</div>';
-            }
-        }
-        
-        // Tareas Próximas (Sugerido)
-        if (tareasSugerido != null && !tareasSugerido.isEmpty()) {
-            emailBody += '<h3 style="color: #ff7f0e;">Tareas Próximas</h3>';
-            for (Map<String, Object> task : tareasSugerido) {
-                emailBody += '<div style="margin-top:10px; padding:6px 8px; border-radius:6px; background:#fafafa; border-left: 4px solid #ff7f0e;">';
-                emailBody += '<strong>' + String.valueOf(task.get('tarea')) + '</strong> — Total tarea: ' + currencyIso + '&nbsp;' + String.valueOf(task.get('total'));
-                emailBody += '<ol style="margin:6px 0 0 18px;">';
-                
-                List<Object> items = (List<Object>)task.get('items');
-                if (items != null) {
-                    for (Object itemObj : items) {
-                        Map<String, Object> item = (Map<String, Object>)itemObj;
-                        emailBody += '<li>' + String.valueOf(item.get('description')) + ' — ' + currencyIso + '&nbsp;' + String.valueOf(item.get('amount')) + '</li>';
-                    }
-                }
-                
-                emailBody += '</ol>';
-                emailBody += '</div>';
-            }
-        }
-        
-        emailBody += '<hr/>';
-        emailBody += '<p><em>Email generado automáticamente desde el sistema BMW Service</em></p>';
-        emailBody += '</body></html>';
-        
-        return emailBody;
-    }
-
     @AuraEnabled
     public static Map<String, Object> aprobarRechazarTareas(String quoteId, List<String> tareaNames, String estado, Boolean aprobado) {
         try {
-            System.debug('aprobarRechazarTareas called - quoteId: ' + quoteId + ', tareaNames: ' + tareaNames + ', estado: ' + estado + ', aprobado: ' + aprobado);
-            
             if (tareaNames == null || tareaNames.isEmpty()) {
                 return new Map<String, Object>{
                     'success' => true,
@@ -1450,8 +996,6 @@ public without sharing class communityManageWorks_ctrl {
                 FOR UPDATE
             ];
             
-            System.debug('Encontrados ' + itemsToUpdate.size() + ' items para actualizar');
-            
             Set<String> tareasActualizadas = new Set<String>();
             
             // Actualizar todos los items de las tareas seleccionadas
@@ -1463,7 +1007,6 @@ public without sharing class communityManageWorks_ctrl {
             
             if (!itemsToUpdate.isEmpty()) {
                 update itemsToUpdate;
-                System.debug('Successfully updated ' + itemsToUpdate.size() + ' items');
             }
             
             return new Map<String, Object>{
@@ -1474,13 +1017,12 @@ public without sharing class communityManageWorks_ctrl {
             };
             
         } catch (Exception e) {
-            System.debug('Error in aprobarRechazarTareas: ' + e.getMessage());
             throw new AuraHandledException('Error al aprobar/rechazar tareas: ' + e.getMessage());
         }
     }
 
     // Método para obtener el estado actual de las tareas
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled(cacheable=false)
     public static Map<String, String> getEstadoTareas(String quoteId) {
         try {
             Map<String, String> estadoTareas = new Map<String, String>();
@@ -1506,7 +1048,6 @@ public without sharing class communityManageWorks_ctrl {
             return estadoTareas;
             
         } catch (Exception e) {
-            System.debug('Error in getEstadoTareas: ' + e.getMessage());
             throw new AuraHandledException('Error al obtener estado de tareas: ' + e.getMessage());
         }
     }
@@ -1523,343 +1064,7 @@ public without sharing class communityManageWorks_ctrl {
         FROM Case	
         WHERE Id =: casoId	
         LIMIT 1];
-        Integer i = 0;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-         i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
+     
         return lstCasos;
     }
     
@@ -1934,11 +1139,9 @@ public without sharing class communityManageWorks_ctrl {
 
         } catch (DmlException dmlEx) {
             // Handle DML exceptions
-            System.debug('Error updating user: ' + dmlEx.getMessage());
             response.add('Error updating user: ' + dmlEx.getMessage());
         } catch (Exception ex) {
             // Handle any other exceptions
-            System.debug('Unexpected error: ' + ex.getMessage());
             response.add('Unexpected error: ' + ex.getMessage());
         }
 
@@ -2037,11 +1240,9 @@ public without sharing class communityManageWorks_ctrl {
             
                     try {
                         System.setPassword(userId, contra);
-                        System.debug('Password updated successfully');
                         
                         return true;
                     } catch (Exception e) {
-                        System.debug('Error updating password: ' + e.getMessage());
                         
                         return false;
                     }
@@ -2081,6 +1282,40 @@ public without sharing class communityManageWorks_ctrl {
         insert newCase;
 
     }
+
+    @AuraEnabled(cacheable=false)
+    public static void createCaseDeshabilitarUsuario(String motivoBaja){
+       
+        User userr = fetchUser();
+        String cocheBuscado = '';
+        List<Asset> lstAsset = [Select Id From Asset Where  AccountId = :userr.Contact?.AccountId ];
+        if(lstAsset.size()>0){
+            cocheBuscado = lstAsset[0].id;
+        }else{
+            cocheBuscado = '02i4U00000Hn9k8QAB';
+        }
+        Case newCase = new Case();
+        newCase.RecordTypeId = '012PH00000HBor9YAD';
+        newCase.Origin = 'Bmw Service Deshabilitar Usuario';
+        newCase.FechaEntrada__c = Date.today();
+        
+        newCase.Subject = 'Bmw Service Deshabilitar Usuario Solicitud BMW Service';
+        newCase.Description = 'El usuario ha solicitado deshabilitar su cuenta por los siguientes motivos: ' + motivoBaja ;
+        if(lstAsset.size()>0){
+            newCase.AssetId  = lstAsset[0].Id;
+            newCase.AccountId = userr.Contact?.AccountId;
+        }
+        newCase.Priority = 'Media';
+        newCase.Type = 'Solicitud';
+        newCase.Service_Territory1__c  = '0HhPH0000003NEb0AM';
+        newCase.suppliedLastName__c = userr.Lastname;
+        newCase.SuppliedName = userr.FirstName;
+        newCase.Creado_por_service__c = true;
+        //newCase.Service_Territory1__c  = '0HhPH0000003NEb0AM';
+        insert newCase;
+    }
+
+
     @AuraEnabled
     public static void createCaseComunidad(String mensaje){
        
@@ -2109,104 +1344,7 @@ public without sharing class communityManageWorks_ctrl {
         newCase.Type = 'Solicitud';
         newCase.Service_Territory1__c  = '0HhPH0000003NEb0AM';
         insert newCase;
-        Integer i = 0;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i ++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
-            i++;
+       
         // return capacity;
     }
     @AuraEnabled(cacheable=true)
@@ -2215,1323 +1353,11 @@ public without sharing class communityManageWorks_ctrl {
        return u;
     }
     
-     @AuraEnabled(cacheable=false)
+    @AuraEnabled(cacheable=false)
     public static String nestedJsonUrlByTipoTrabajo(String objectId) {
-        system.debug('nestedJson ID: '+objectId);
         FileContentService fileService = new FileContentService();
         String nestedJson = fileService.getNestedFileJson(objectId);
-        system.debug(nestedJson);
         return nestedJson;
     }
     
-
-    public static void dummy() {
-        Integer i = 0;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-         i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-        i= i+1;
-    }
-    
-
 }

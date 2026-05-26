@@ -8,31 +8,17 @@ public class BatchLeadActivityUploader implements Database.Batchable<sObject>,Da
     public BatchLeadActivityUploader (DateTime dt) {
         this.dt = dt;
         this.excludeEmpty = false;
-        this.idBMW = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('BMW').getRecordTypeId();
-        this.idMini = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('MINI').getRecordTypeId();
-        this.idMotorrad = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Motorrad').getRecordTypeId();
+        BatchActivityUploaderBase.RecordTypeIds recordTypeIds = BatchActivityUploaderBase.getRecordTypeIds(Schema.SObjectType.Lead);
+        this.idBMW = recordTypeIds.idBMW;
+        this.idMini = recordTypeIds.idMini;
+        this.idMotorrad = recordTypeIds.idMotorrad;
         
     }
     
     public Database.QueryLocator start(Database.BatchableContext bc){
         String query = 'SELECT Id,Name FROM Lead WHERE CreatedDate >=:dt AND ( RecordTypeId =:idBMW OR RecordTypeId =:idMini OR RecordTypeId =:idMotorrad)';
         
-        Map<String, Object> data = new Map<String, Object>();
-        data.put('sfdataflow', 'start');
-        data.put('payloadTag', 'lead');
-        String leadbody = Json.serializePretty(data);
-        System.debug('leadbody :: ' + leadbody);
-        HttpRequest req = new HttpRequest();
-        req.setMethod('POST');
-        req.setHeader('content-type', 'application/json');
-        req.setEndpoint(System.Label.LeadActivityUploaderURL_SE);
-        req.setBody(leadbody);
-        
-        if(!Test.isRunningTest()){
-            HttpResponse response = new Http().send(req);
-            response.getBody();
-            System.debug('Body ' + response.getBody()); 
-        }
+        BatchActivityUploaderBase.sendDataflowSignal('start', 'lead', System.Label.LeadActivityUploaderURL_SE, 'leadbody');
         
         return Database.getQueryLocator(query);
     }
@@ -120,28 +106,12 @@ public class BatchLeadActivityUploader implements Database.Batchable<sObject>,Da
     
     public String convertDate(date dt)
     {
-        if(dt != null)
-        {
-            return dt.day()+'/'+dt.month()+'/'+dt.year();
-        }
-        
-        return '';
+        return BatchActivityUploaderBase.convertDate(dt);
     }
     
     public Set<String> getSubjects(String objectName, String fieldName)
     {
-        Set<String> values = new Set<String>();
-          
-        Schema.SObjectType s = Schema.getGlobalDescribe().get(objectName) ;
-        Schema.DescribeSObjectResult r = s.getDescribe() ;
-        Map<String,Schema.SObjectField> fields = r.fields.getMap() ;
-        Schema.DescribeFieldResult fieldResult = fields.get(fieldName).getDescribe();
-        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-        for( Schema.PicklistEntry pickListVal : ple){
-            values.add(pickListVal.getValue());
-        }  
-        
-        return values;  
+        return BatchActivityUploaderBase.getSubjects(objectName, fieldName);
     }
     
     public class LeadWrapperClass{
@@ -170,20 +140,6 @@ public class BatchLeadActivityUploader implements Database.Batchable<sObject>,Da
     }
     
     public void finish(Database.BatchableContext bc) {
-        Map<String, Object> data = new Map<String, Object>();
-        data.put('sfdataflow', 'end');
-        String leadbody = Json.serializePretty(data);
-        System.debug('leadbody :: ' + leadbody);
-        HttpRequest req = new HttpRequest();
-        req.setMethod('POST');
-        req.setHeader('content-type', 'application/json');
-        req.setEndpoint(System.Label.LeadActivityUploaderURL_SE);
-        req.setBody(leadbody);
-        
-        if(!Test.isRunningTest()){
-            HttpResponse response = new Http().send(req);
-            response.getBody();
-            System.debug('Body ' + response.getBody()); 
-        }
+        BatchActivityUploaderBase.sendDataflowSignal('end', null, System.Label.LeadActivityUploaderURL_SE, 'leadbody');
     }
 }

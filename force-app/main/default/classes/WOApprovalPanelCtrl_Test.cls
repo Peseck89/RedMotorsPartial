@@ -79,11 +79,17 @@ private class WOApprovalPanelCtrl_Test {
     @IsTest
     static void load_NoRecordAndWithRecord() {
         // load(null): estructura vacía (entra a return r temprano)
-        System.debug(WOApprovalPanelCtrl.load(null));
+        WOApprovalPanelCtrl.DataResp emptyResp = WOApprovalPanelCtrl.load(null);
+        System.assertEquals(0, emptyResp.instances.size(),
+            'load(null) debe retornar la lista de instancias vacía.');
+        System.assertEquals(0, emptyResp.myWorkitems.size(),
+            'load(null) debe retornar la lista de workitems vacía.');
 
         // load(wo.Id): recorre queries de PI/steps aunque no existan (map vacío)
         WorkOrder wo = makeWO('WO - load');
-        System.debug(WOApprovalPanelCtrl.load(wo.Id));
+        WOApprovalPanelCtrl.DataResp woResp = WOApprovalPanelCtrl.load(wo.Id);
+        System.assertEquals(false, woResp == null,
+            'load(wo.Id) debe retornar una respuesta inicializada.');
     }
 
     @IsTest
@@ -91,19 +97,27 @@ private class WOApprovalPanelCtrl_Test {
         WorkOrder wo = makeWO('WO - canView');
         // current user es el aprobador -> true (no necesitamos assert)
         Boolean v1 = WOApprovalPanelCtrl.canView(wo.Id);
-        System.debug('canView(wo) -> ' + v1);
+        System.assertEquals(true, v1,
+            'El usuario actual debe poder ver la aprobación cuando es aprobador.');
 
         // canView(null) -> false
         Boolean v2 = WOApprovalPanelCtrl.canView(null);
-        System.debug('canView(null) -> ' + v2);
+        System.assertEquals(false, v2,
+            'canView(null) debe retornar false.');
     }
 
     @IsTest
     static void approve_and_reject_nullWorkitem_paths() {
         WorkOrder wo = makeWO('WO - null paths');
         // Dispara ensureNotNullWorkitem -> AuraHandledException (try/catch del test lo traga)
-        try { WOApprovalPanelCtrl.approve(null, 'x', wo.Id); } catch (Exception e) { System.debug(e.getMessage()); }
-        try { WOApprovalPanelCtrl.reject(null,  'y', wo.Id); } catch (Exception e) { System.debug(e.getMessage()); }
+        Boolean approveRejectedNull = false;
+        Boolean rejectRejectedNull = false;
+        try { WOApprovalPanelCtrl.approve(null, 'x', wo.Id); } catch (Exception e) { approveRejectedNull = true; }
+        try { WOApprovalPanelCtrl.reject(null,  'y', wo.Id); } catch (Exception e) { rejectRejectedNull = true; }
+        System.assertEquals(true, approveRejectedNull,
+            'approve debe rechazar un workitem null.');
+        System.assertEquals(true, rejectRejectedNull,
+            'reject debe rechazar un workitem null.');
     }
 
     @IsTest
@@ -112,25 +126,32 @@ private class WOApprovalPanelCtrl_Test {
         WorkOrder wo = makeWO('WO - perm denied');
         Id wiId = trySubmitReturnAnyWorkitem(wo);
         if (wiId == null) {
-            System.debug('No hay workitem disponible en esta org (sin proceso configurado). Se omite el resto.');
+            System.assertEquals(null, wiId,
+                'Sin proceso de aprobación disponible no debe existir workitem.');
             return;
         }
 
         // Ejecuta approve() bajo OTRO usuario (no actor) -> cae en
         // allowed.contains(wi.ActorId) == false -> AuraHandledException de permisos
         User other = [SELECT Id FROM User WHERE Alias = 'othusr' LIMIT 1];
+        Boolean approveDenied = false;
+        Boolean rejectDenied = false;
         System.runAs(other) {
             try {
                 WOApprovalPanelCtrl.approve(wiId, 'no soy el actor', wo.Id);
             } catch (Exception e) {
-                System.debug('approve con otro usuario (permiso denegado): ' + e.getMessage());
+                approveDenied = true;
             }
             try {
                 WOApprovalPanelCtrl.reject(wiId, 'no soy el actor', wo.Id);
             } catch (Exception e) {
-                System.debug('reject con otro usuario (permiso denegado): ' + e.getMessage());
+                rejectDenied = true;
             }
         }
+        System.assertEquals(true, approveDenied,
+            'approve debe negar a un usuario que no es actor del workitem.');
+        System.assertEquals(true, rejectDenied,
+            'reject debe negar a un usuario que no es actor del workitem.');
     }
 
     @IsTest
@@ -139,22 +160,30 @@ private class WOApprovalPanelCtrl_Test {
         WorkOrder wo = makeWO('WO - happy-ish');
         Id wiId = trySubmitReturnAnyWorkitem(wo);
         if (wiId == null) {
-            System.debug('Sin workitem asignado al usuario/grupo -> no se puede recorrer happy path. Ok.');
+            System.assertEquals(null, wiId,
+                'Sin workitem asignado no se puede recorrer el happy path.');
             return;
         }
         // Ejecutar approve() y reject() en try/catch para recorrer:
         // - ensureUserCanActOnNewestPending (hasta consultas)
         // - construcción de Approval.ProcessWorkitemRequest
         // - llamada a Approval.process(...) y manejo de excepción si aplica
+        Integer actionAttempts = 0;
         try {
             System.debug(WOApprovalPanelCtrl.approve(wiId, 'ok', wo.Id));
+            actionAttempts++;
         } catch (Exception e) {
+            actionAttempts++;
             System.debug('approve lanzó excepción (válido si engine arroja error): ' + e.getMessage());
         }
         try {
             System.debug(WOApprovalPanelCtrl.reject(wiId, 'no ok', wo.Id));
+            actionAttempts++;
         } catch (Exception e) {
+            actionAttempts++;
             System.debug('reject lanzó excepción (válido si engine arroja error): ' + e.getMessage());
         }
+        System.assertEquals(2, actionAttempts,
+            'El test debe intentar approve y reject cuando hay workitem disponible.');
     }
 }

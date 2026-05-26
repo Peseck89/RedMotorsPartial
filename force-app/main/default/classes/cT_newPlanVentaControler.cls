@@ -59,20 +59,10 @@ public with sharing class cT_newPlanVentaControler {
                    
         
 
-	valorTotalNegocio = 0;		
-	
-	oppDescuentoTotalMonto = 0;
-	oppDescuentoTotalPorcentaje = 0;
-	for (Opportunity opp : oppList) {
-		for (OpportunityLineItem oli : opp.OpportunityLineItems) {
-			if (oli.Product2.esVehiculo__c || oli.esExtra__c) {
-				valorTotalNegocio += oli.TotalPrice;
-			}
-
-			oppDescuentoTotalMonto += oli.VN_Descuento_Aplicado_Monto_FX__c;
-			oppDescuentoTotalPorcentaje += oli.VN_Descuento_Aplicado_Porcentaje_FX__c;
-		}
-	}									
+	cT_newPlanVentaBase.Totales tot = cT_newPlanVentaBase.calcularTotales(oppList, false);
+	valorTotalNegocio          = tot.valorTotalNegocio;
+	oppDescuentoTotalMonto     = tot.oppDescuentoTotalMonto;
+	oppDescuentoTotalPorcentaje = tot.oppDescuentoTotalPorcentaje;
 
 	if (oppList.size()>0) {
 		opp = oppList[0];
@@ -186,7 +176,7 @@ public with sharing class cT_newPlanVentaControler {
 	public void getDataQuote(String recordId) {
         System.debug('*********************** Id Dado ************************** ');
         if(recordId != null){
-			List<quote> lstQuote = [SELECT ID,Name FROM QUOTE WHERE OpportunityId =: recordId Order by Name Desc LIMIT 1];	
+			List<Quote> lstQuote = cT_newPlanVentaBase.getUltimaQuote(recordId);
 			if (lstQuote.size()>0) {
 				quote = lstQuote[0];
 			System.debug('*********************** PRIMER BUSCAR ************************** ' + quote);
@@ -266,7 +256,7 @@ public with sharing class cT_newPlanVentaControler {
 			Fecha = System.today();
 			}
 			//Sacar el usado
-			List<ReciboUsado__c> lstUsados = [SELECT Id,Marca__c,Ano__c,Placa__c,MontoSoporte__c,ValorReciboCliente__c,ReciboJefeUsados__c,Modelo__c FROM ReciboUsado__c WHERE Oportunidad__c =: recordId AND Serecibevehiculo__c = true];
+			List<ReciboUsado__c> lstUsados = cT_newPlanVentaBase.getReciboUsadoFinal(recordId);
 			if (lstUsados.size() > 0) {
 				vehiUsado usado = new vehiUsado();
 				usado.marca = lstUsados[0].Marca__c;

@@ -172,4 +172,58 @@ public class ClientesCallout_Test {
         // ClientesRequest.getClientesRelaciones(acc.Id);
         // ClientesRequest.getClientesRepresentantes(acc.Id);
     // }
+
+    private static Account crearAccountParaCR() {
+        Account acc = new Account(
+            Name                  = 'Test ClientesRequest',
+            Cedula__c             = '9876543210',
+            Tipo_de_Documento__c  = '02',
+            codigoOficina__c      = 1,
+            profesion__c          = 0,
+            actividadEconomica__c = 268,
+            cantidadAnosLaborar__c= 0,
+            usuario__c            = 1,
+            entidadSupervisora__c = 0
+        );
+        insert acc;
+        return acc;
+    }
+
+    @IsTest
+    static void test_ClientesRequest_Constructor() {
+        Account acc = crearAccountParaCR();
+
+        Test.startTest();
+        ClientesRequest req = new ClientesRequest(acc);
+        Test.stopTest();
+
+        System.assertNotEquals(null, req,
+            'El constructor de ClientesRequest no debe devolver null');
+        System.assertEquals(acc.Cedula__c, req.numeroIdentificacion,
+            'numeroIdentificacion debe mapear desde Cedula__c');
+        System.assertEquals(acc.Tipo_de_Documento__c, req.tipoIdentificacion,
+            'tipoIdentificacion debe mapear desde Tipo_de_Documento__c');
+        System.assertEquals(acc.Name, req.nombreComercial,
+            'nombreComercial debe mapear desde Account.Name');
+        System.assertEquals(1, req.codigoOficina,
+            'codigoOficina debe mapear desde codigoOficina__c');
+    }
+
+    @IsTest
+    static void test_ClientesRequest_GetJSONClientes() {
+        Account acc = crearAccountParaCR();
+
+        Test.startTest();
+        ClientesRequest req = new ClientesRequest(acc);
+        String jsonStr = req.getJSONClientes();
+        Test.stopTest();
+
+        System.assertNotEquals(null, jsonStr,
+            'getJSONClientes no debe devolver null');
+        System.assert(jsonStr.length() > 0,
+            'getJSONClientes debe devolver un JSON no vacío');
+        System.assert(jsonStr.contains('tipoIdentificacion'),
+            'El JSON debe contener el campo tipoIdentificacion');
+    }
+
 }

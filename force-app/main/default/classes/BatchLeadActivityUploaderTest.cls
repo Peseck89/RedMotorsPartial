@@ -1,52 +1,72 @@
-@istest
+@isTest
 public class BatchLeadActivityUploaderTest {
-    @istest
-    public static void testmethod1 (){
+    
+    @isTest
+    static void testBatchLeadActivityUploaderExecution() {
         Id idBMW = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('BMW').getRecordTypeId();
-        Id idMini = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('MINI').getRecordTypeId();
-        Id idMotorrad = Schema.SObjectType.Lead.getRecordTypeInfosByName().get('Motorrad').getRecordTypeId();
-        Id recordTypeId = Schema.SObjectType.Campaign.getRecordTypeInfosByDeveloperName().get('Campana_Red_Motors').getRecordTypeId();
+        Id campRT = Schema.SObjectType.Campaign.getRecordTypeInfosByDeveloperName().get('Campana_Red_Motors').getRecordTypeId();
         
-        Campaign campanna = new Campaign(Name='Campaign',RecordTypeId = recordTypeId);
-        insert campanna;
-        
+        Campaign camp = new Campaign(
+            Name = 'Campaign Test',
+            RecordTypeId = campRT
+        );
+        insert camp;
         
         Lead ld = new Lead(
-            LastName = 'TestNameXF',
-            Company = 'Test',
-            Phone = '1231231234',
-            Campana__c = campanna.Id,
-            FechaPosibleCompra__c = '1 a 3 meses'
-        );      
+            LastName = 'Lead Test',
+            Company = 'Company Test',
+            Phone = '1234567890',
+            RecordTypeId = idBMW,
+            Campana__c = camp.Id
+        );
         insert ld;
         
-        System.debug('Lead Full '+ld);
-        List<Lead> ldList = [Select Id,Name,RecordType.Name From Lead where Name = 'TestNameXF'];
-        system.debug('OPP2 : '+ldList);
+        String validTaskSubject = Task.Subject.getDescribe().getPicklistValues()[0].getValue();
+        String validEventSubject = Event.Subject.getDescribe().getPicklistValues()[0].getValue();
         
-        Task t = new Task();
-        t.WhoId = ld.id;
-        t.TaskSubtype = 'Task';
-        t.Subject = 'Seguimiento';
-        insert t;
+        Task tk = new Task(
+            WhoId = ld.Id,
+            Subject = validTaskSubject,
+            TaskSubtype = 'Task'
+        );
+        insert tk;
         
-        Event et = new Event();
-        et.WhoId = ld.Id;
-        et.Subject = 'Call';
-        et.DurationInMinutes = 1;
-        et.ActivityDateTime = Datetime.now();
-        et.tipoCargoAseguradora__c = true;
-        insert et;
-        
-        Datetime dtTime=System.now();
-        date dt= date.newinstance(dtTime.year(), dtTime.month(), dtTime.day());
-        date last6Month = dt.addMonths(-6);
-        //Test.setCreatedDate(op.Id, last6Month); 
+        Event ev = new Event(
+            WhoId = ld.Id,
+            Subject = validEventSubject,
+            StartDateTime = Datetime.now().addDays(1),
+            EndDateTime = Datetime.now().addDays(1).addMinutes(30),
+            tipoCargoAseguradora__c = true
+        );
+        insert ev;
         
         Test.startTest();
-        BatchLeadActivityUploader obj = new BatchLeadActivityUploader(system.today());
-        DataBase.executeBatch(obj);
-        
+        Test.setMock(HttpCalloutMock.class, new MockHttpResponse());
+        BatchLeadActivityUploader batch = new BatchLeadActivityUploader(Datetime.now().addDays(-1));
+        Database.executeBatch(batch, 10);
         Test.stopTest();
+        
+        List<AsyncApexJob> batchJobs = [
+            SELECT Id, Status, NumberOfErrors 
+            FROM AsyncApexJob 
+            WHERE ApexClass.Name = 'BatchLeadActivityUploader'
+            AND JobType = 'BatchApex'
+        ];
+        
+        System.assert(!batchJobs.isEmpty());
+        for(AsyncApexJob job : batchJobs) {
+            System.assertEquals('Completed', job.Status);
+            System.assertEquals(0, job.NumberOfErrors);
+        }
+    }
+    
+    public class MockHttpResponse implements HttpCalloutMock {
+        public HttpResponse respond(HttpRequest req) {
+            HttpResponse res = new HttpResponse();
+            res.setHeader('Content-Type', 'application/json');
+            res.setBody('{"status":"success"}');
+            res.setStatusCode(200);
+            return res;
+        }
     }
 }

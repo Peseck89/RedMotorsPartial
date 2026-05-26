@@ -29,10 +29,13 @@ public class BatchOppActivityUploaderTest {
         t.Subject = 'Call';
         insert t;
         
+        DateTime safeStart = DateTime.newInstance(Date.today().addDays(1), Time.newInstance(8, 0, 0, 0));
         Event et = new Event();
         et.WhatId = op.Id;
         et.DurationInMinutes = 1;
-        et.ActivityDateTime = Datetime.now();
+        et.ActivityDateTime = safeStart;
+        et.StartDateTime = safeStart;
+        et.EndDateTime = safeStart.addMinutes(1);
         insert et;
         
         Datetime dtTime=System.now();
@@ -160,11 +163,14 @@ public class BatchOppActivityUploaderTest {
         t.Subject = 'Llamada';
         insert t;
         
+        DateTime safeStart = DateTime.newInstance(Date.today().addDays(1), Time.newInstance(8, 0, 0, 0));
         Event et = new Event();
         et.WhatId = op.Id;
         et.DurationInMinutes = 1;
         et.Subject = 'Call';
-        et.ActivityDateTime = Datetime.now();
+        et.ActivityDateTime = safeStart;
+        et.StartDateTime = safeStart;
+        et.EndDateTime = safeStart.addMinutes(1);
         insert et;
         
         Test.startTest();
