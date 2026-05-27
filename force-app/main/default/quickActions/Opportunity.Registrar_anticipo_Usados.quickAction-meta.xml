@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionSubtype>ScreenAction</actionSubtype>
+    <description>Botón registrar anticipo vh usados, con el registrar varios y pantalla info</description>
+    <label>Registrar anticipo usados</label>
+    <lightningWebComponent>registrar_Anticipo_Usados</lightningWebComponent>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <type>LightningWebComponent</type>
+</QuickAction>
