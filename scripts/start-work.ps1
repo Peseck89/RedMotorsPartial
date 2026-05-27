@@ -601,4 +601,6 @@ if ($Risks.Count -gt 0) {
 Write-Host ""
 Write-Host $finalState
 Write-Host ""
-Write-Host "Pega ahora la transcripcion, WhatsApp, documento o explicacion de Luis en ChatGPT/Claude para analisis de asignacion."
+Write-Host "Siguiente paso:"
+Write-Host "Abre ChatGPT o Claude en el proyecto correcto y pega ahi la transcripcion, WhatsApp, documento o explicacion de Luis."
+Write-Host "No pegues esa informacion en PowerShell."

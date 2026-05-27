@@ -149,21 +149,257 @@ function Invoke-GitQuickReview {
     }
 }
 
-function Open-VsCodeIfRequested {
-    $answer = Read-Host "Deseas abrir VS Code ahora? (S/N)"
+function Try-StartApp {
+    param(
+        [string]$Label,
+        [string]$FilePath,
+        [string[]]$ArgumentList = @()
+    )
 
-    if ($answer -match "^[sS]$") {
-        if ($null -eq (Get-Command "code" -ErrorAction SilentlyContinue)) {
-            Write-Host "No se encontro el comando code en PATH. Abre VS Code manualmente si lo necesitas."
-            return
+    if ([string]::IsNullOrWhiteSpace($FilePath)) {
+        return $false
+    }
+
+    try {
+        if ($ArgumentList.Count -gt 0) {
+            Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -ErrorAction Stop
+        }
+        else {
+            Start-Process -FilePath $FilePath -ErrorAction Stop
         }
 
-        Write-Host "Abriendo VS Code con: code ."
-        & code .
+        Write-Host "Abriendo $Label."
+        return $true
     }
-    else {
-        Write-Host "No se abrio VS Code."
+    catch {
+        return $false
     }
+}
+
+function Start-AppShortcut {
+    param(
+        [string]$Label,
+        [string]$ShortcutPattern
+    )
+
+    $startMenuFolders = @()
+
+    if (-not [string]::IsNullOrWhiteSpace($env:APPDATA)) {
+        $startMenuFolders += (Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs")
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($env:ProgramData)) {
+        $startMenuFolders += (Join-Path $env:ProgramData "Microsoft\Windows\Start Menu\Programs")
+    }
+
+    foreach ($folder in $startMenuFolders) {
+        if (-not (Test-Folder $folder)) {
+            continue
+        }
+
+        $shortcut = @(Get-ChildItem -LiteralPath $folder -Recurse -Filter $ShortcutPattern -ErrorAction SilentlyContinue | Select-Object -First 1)
+        if ($shortcut.Count -gt 0 -and (Try-StartApp -Label $Label -FilePath $shortcut[0].FullName)) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
+function Get-ChromePath {
+    $candidates = @()
+
+    if (-not [string]::IsNullOrWhiteSpace($env:ProgramFiles)) {
+        $candidates += (Join-Path $env:ProgramFiles "Google\Chrome\Application\chrome.exe")
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace(${env:ProgramFiles(x86)})) {
+        $candidates += (Join-Path ${env:ProgramFiles(x86)} "Google\Chrome\Application\chrome.exe")
+    }
+
+    foreach ($candidate in $candidates) {
+        if (Test-File $candidate) {
+            return $candidate
+        }
+    }
+
+    $command = Get-Command "chrome.exe" -ErrorAction SilentlyContinue
+    if ($null -ne $command) {
+        return $command.Source
+    }
+
+    return $null
+}
+
+function Open-Chrome {
+    $chromePath = Get-ChromePath
+    if ($chromePath -and (Try-StartApp -Label "Google Chrome" -FilePath $chromePath)) {
+        return
+    }
+
+    if (Start-AppShortcut -Label "Google Chrome" -ShortcutPattern "*Chrome*.lnk") {
+        return
+    }
+
+    Write-Host "Advertencia: no se pudo abrir Google Chrome. Abre Chrome manualmente si lo necesitas."
+}
+
+function Open-VsCode {
+    if ($null -eq (Get-Command "code" -ErrorAction SilentlyContinue)) {
+        Write-Host "No se encontro el comando code en PATH. Abre VS Code manualmente si lo necesitas."
+        return
+    }
+
+    Write-Host "Abriendo VS Code con: code ."
+    & code .
+}
+
+function Open-WhatsApp {
+    if (Start-AppShortcut -Label "WhatsApp de escritorio" -ShortcutPattern "*WhatsApp*.lnk") {
+        return
+    }
+
+    $candidates = @()
+
+    if (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
+        $candidates += (Join-Path $env:LOCALAPPDATA "WhatsApp\WhatsApp.exe")
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($env:ProgramFiles)) {
+        $candidates += (Join-Path $env:ProgramFiles "WhatsApp\WhatsApp.exe")
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace(${env:ProgramFiles(x86)})) {
+        $candidates += (Join-Path ${env:ProgramFiles(x86)} "WhatsApp\WhatsApp.exe")
+    }
+
+    foreach ($candidate in $candidates) {
+        if ((Test-File $candidate) -and (Try-StartApp -Label "WhatsApp de escritorio" -FilePath $candidate)) {
+            return
+        }
+    }
+
+    $command = Get-Command "WhatsApp.exe" -ErrorAction SilentlyContinue
+    if ($null -ne $command -and (Try-StartApp -Label "WhatsApp de escritorio" -FilePath $command.Source)) {
+        return
+    }
+
+    if (Try-StartApp -Label "WhatsApp de escritorio" -FilePath "whatsapp:") {
+        return
+    }
+
+    Write-Host "Advertencia: no se pudo abrir WhatsApp de escritorio. No se abrira WhatsApp en Chrome."
+}
+
+function Open-ChatGptApp {
+    if (Start-AppShortcut -Label "ChatGPT app" -ShortcutPattern "*ChatGPT*.lnk") {
+        return
+    }
+
+    $candidates = @()
+
+    if (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
+        $candidates += (Join-Path $env:LOCALAPPDATA "Programs\ChatGPT\ChatGPT.exe")
+        $candidates += (Join-Path $env:LOCALAPPDATA "OpenAI\ChatGPT\ChatGPT.exe")
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($env:ProgramFiles)) {
+        $candidates += (Join-Path $env:ProgramFiles "ChatGPT\ChatGPT.exe")
+        $candidates += (Join-Path $env:ProgramFiles "OpenAI\ChatGPT\ChatGPT.exe")
+    }
+
+    foreach ($candidate in $candidates) {
+        if ((Test-File $candidate) -and (Try-StartApp -Label "ChatGPT app" -FilePath $candidate)) {
+            return
+        }
+    }
+
+    $command = Get-Command "ChatGPT.exe" -ErrorAction SilentlyContinue
+    if ($null -ne $command -and (Try-StartApp -Label "ChatGPT app" -FilePath $command.Source)) {
+        return
+    }
+
+    if (Try-StartApp -Label "ChatGPT app" -FilePath "chatgpt:") {
+        return
+    }
+
+    Write-Host "Advertencia: no se pudo abrir ChatGPT app. No se abrira ChatGPT en Chrome."
+}
+
+function Open-ClaudeApp {
+    if (Start-AppShortcut -Label "Claude app" -ShortcutPattern "*Claude*.lnk") {
+        return
+    }
+
+    $candidates = @()
+
+    if (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
+        $candidates += (Join-Path $env:LOCALAPPDATA "Programs\Claude\Claude.exe")
+        $candidates += (Join-Path $env:LOCALAPPDATA "AnthropicClaude\Claude.exe")
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($env:ProgramFiles)) {
+        $candidates += (Join-Path $env:ProgramFiles "Claude\Claude.exe")
+        $candidates += (Join-Path $env:ProgramFiles "Anthropic\Claude\Claude.exe")
+    }
+
+    foreach ($candidate in $candidates) {
+        if ((Test-File $candidate) -and (Try-StartApp -Label "Claude app" -FilePath $candidate)) {
+            return
+        }
+    }
+
+    $command = Get-Command "Claude.exe" -ErrorAction SilentlyContinue
+    if ($null -ne $command -and (Try-StartApp -Label "Claude app" -FilePath $command.Source)) {
+        return
+    }
+
+    if (Try-StartApp -Label "Claude app" -FilePath "claude:") {
+        return
+    }
+
+    Write-Host "Advertencia: no se pudo abrir Claude app. No se abrira Claude en Chrome."
+}
+
+function Open-AiToolIfRequested {
+    Write-Host ""
+    Write-Host "Que IA vas a usar para analizar la asignacion?"
+    Write-Host ""
+    Write-Host "1. ChatGPT app"
+    Write-Host "2. Claude app"
+    Write-Host "3. Ninguna por ahora"
+    Write-Host ""
+
+    $aiChoice = Read-Host "Selecciona una opcion (1-3)"
+
+    switch ($aiChoice) {
+        "1" {
+            Open-ChatGptApp
+        }
+        "2" {
+            Open-ClaudeApp
+        }
+        "3" {
+            Write-Host "No se abrio IA."
+        }
+        default {
+            Write-Host "Opcion no reconocida. No se abrio IA."
+        }
+    }
+}
+
+function Open-WorkAppsIfRequested {
+    $answer = Read-Host "Deseas abrir las apps de trabajo ahora? (S/N)"
+
+    if ($answer -notmatch "^[sS]$") {
+        Write-Host "Entorno validado. Abre manualmente las apps que necesites."
+        return
+    }
+
+    Open-VsCode
+    Open-Chrome
+    Open-WhatsApp
+    Open-AiToolIfRequested
 }
 
 function Start-RedMotorsWork {
@@ -191,9 +427,7 @@ function Start-RedMotorsWork {
         & ".\scripts\start-work.ps1"
 
         Write-Host ""
-        Write-Host "Sugerencia para abrir VS Code:"
-        Write-Host "code ."
-        Open-VsCodeIfRequested
+        Open-WorkAppsIfRequested
     }
     finally {
         Pop-Location
@@ -299,32 +533,28 @@ function Show-MainMenu {
     Write-Host "Que quieres hacer?"
     Write-Host ""
     Write-Host "1. Trabajar en una asignacion"
-    Write-Host "2. Uso casual / no laboral"
-    Write-Host "3. Revision rapida de estado"
-    Write-Host "4. Mantenimiento / limpieza mensual"
-    Write-Host "5. Salir"
+    Write-Host "2. Revision rapida de estado"
+    Write-Host "3. Mantenimiento / limpieza mensual"
+    Write-Host "4. Salir"
     Write-Host ""
 }
 
 $environment = Get-LauncherEnvironment
 
 Show-MainMenu -Environment $environment
-$choice = Read-Host "Selecciona una opcion (1-5)"
+$choice = Read-Host "Selecciona una opcion (1-4)"
 
 switch ($choice) {
     "1" {
         Show-WorkProjectMenu -Environment $environment
     }
     "2" {
-        Write-Host "Modo casual seleccionado. No se ejecuto Git, Salesforce ni VS Code."
-    }
-    "3" {
         Show-QuickReview -Environment $environment
     }
-    "4" {
+    "3" {
         Write-Host "Mantenimiento mensual pendiente de implementar. No se ejecutaron acciones."
     }
-    "5" {
+    "4" {
         Write-Host "Salida solicitada. No se ejecuto ninguna accion."
     }
     default {
