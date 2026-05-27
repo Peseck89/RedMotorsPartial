@@ -98,6 +98,20 @@ function Remove-AnsiEscape {
     return $Text -replace "$escape\[[0-?]*[ -/]*[@-~]", ""
 }
 
+function Get-JsonObjectText {
+    param([string]$Text)
+
+    $cleanText = Remove-AnsiEscape $Text
+    $firstBrace = $cleanText.IndexOf("{")
+    $lastBrace = $cleanText.LastIndexOf("}")
+
+    if ($firstBrace -lt 0 -or $lastBrace -lt 0 -or $lastBrace -lt $firstBrace) {
+        return $null
+    }
+
+    return $cleanText.Substring($firstBrace, $lastBrace - $firstBrace + 1)
+}
+
 function Invoke-JsonCommand {
     param(
         [string]$Label,
@@ -120,6 +134,7 @@ function Invoke-JsonCommand {
         $output = & $FilePath @ArgumentList 2>&1
         $lines = @($output | ForEach-Object { "$_" })
         $text = Remove-AnsiEscape (($lines -join "`n").Trim())
+        $jsonText = Get-JsonObjectText $text
 
         $exitCode = if ($null -ne $global:LASTEXITCODE) {
             [int]$global:LASTEXITCODE
@@ -136,9 +151,13 @@ function Invoke-JsonCommand {
         if ([string]::IsNullOrWhiteSpace($text)) {
             Add-Risk "$Label no devolvio salida JSON."
         }
+        elseif ([string]::IsNullOrWhiteSpace($jsonText)) {
+            Add-Risk "$Label no contiene un bloque JSON valido entre '{' y '}'."
+            Write-Host "No se encontro bloque JSON valido en la salida de $Label."
+        }
         else {
             try {
-                $json = $text | ConvertFrom-Json -ErrorAction Stop
+                $json = $jsonText | ConvertFrom-Json -ErrorAction Stop
                 Write-Host "JSON recibido y parseado."
             }
             catch {
@@ -422,8 +441,8 @@ else {
 
     $statusLine = Get-FirstStatusLine $gitStatusAfter.Output
     $statusBody = @($gitStatusAfter.Output | Where-Object { $_ -and ($_ -notlike "## *") })
-    $untrackedLines = @($statusBody | Where-Object { $_ -like "?? *" })
-    $trackedChangeLines = @($statusBody | Where-Object { $_ -notlike "?? *" })
+    $untrackedLines = @($statusBody | Where-Object { $_ -match "^\?\?\s+" })
+    $trackedChangeLines = @($statusBody | Where-Object { $_ -notmatch "^\?\?\s+" })
     $untrackedPaths = @($untrackedLines | ForEach-Object {
             ($_ -replace "^\?\?\s+", "" -replace "\\", "/").Trim()
         })
