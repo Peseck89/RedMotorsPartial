@@ -112,3 +112,78 @@ No borrar, renombrar ni reemplazar `Abierto`, `Aplicado` o `Cancelado` sin revis
 - Existen validaciones sobre cambios de `Estatus__c`, `Monto__c`, `Identificador__c`, `Producto__c` y `Oportunidad__c`.
 - Los LWC actuales `registrar_Anticipo` y `registrar_Anticipo_Usados` usan la ruta actual de consulta/aplicacion de anticipo y no representan aun el flujo VN-RQ106 completo.
 
+## 7. Conclusiones de sesion Maria/Diego - 2026-05-27
+
+Esta seccion resume conclusiones funcionales y tecnicas explicadas por Maria y Diego en la sesion del 27/05/2026. Sirve para reducir pendientes, pero no autoriza implementacion hasta que se valide cada cambio de metadata/codigo.
+
+### 7.1 Tesoreria
+
+- Maria indico que todavia no esta confirmado si Tesoreria sera:
+  - un correo fijo para todas las sucursales,
+  - un destinatario variable por marca/sucursal,
+  - un grupo,
+  - una cola,
+  - u otro criterio.
+- Esto queda marcado como BLOQUEANTE para notificaciones finales.
+
+### 7.2 Total anticipos aprobados y saldo pendiente
+
+- Confirmado funcionalmente.
+- Una `Opportunity` puede tener varios anticipos, por ejemplo reserva, abono, complemento u otros ingresos aplicables.
+- Total anticipos aprobados debe sumar los anticipos aplicables.
+- Saldo pendiente debe calcularse como precio de venta menos total anticipos aprobados.
+- Ejemplo mencionado: si el vehiculo cuesta 10,000 y se abonan 2,000, el saldo pendiente es 8,000.
+- Queda pendiente solo la implementacion tecnica: roll-up, formula, Flow o Apex segun la relacion real, filtros de estado y restricciones actuales.
+
+### 7.3 `Anticipo__c.Estatus__c`
+
+- Luis confirmo usar el mismo campo existente `Anticipo__c.Estatus__c`.
+- La transcripcion confirma que los estados del PDF se deben usar en el proceso.
+- No hay autorizacion explicita para borrar valores legacy actuales:
+  - `Abierto`
+  - `Aplicado`
+  - `Cancelado`
+- Estrategia segura documentada: agregar los nuevos estados del requerimiento sin borrar `Abierto`, `Aplicado` y `Cancelado` hasta revisar dependencias.
+- Riesgo tecnico: `Aplicado` ya se usa en logica actual de reserva/anticipo.
+
+### 7.4 PDF y Softland
+
+- Confirmado fuera del alcance del equipo esta semana.
+- Maria indico que crear anticipo en Softland, guardar datos de Softland, obtener PDF, errores/reintentos e integracion son parte de Diego.
+- Si se crea un campo o link para PDF, debe quedar como estructura o placeholder.
+- La generacion, obtencion y llenado real del PDF/link corresponde a Diego.
+
+### 7.5 Diseno visual
+
+- Confirmado como importante.
+- Maria y Diego indicaron que las pantallas deben verse lo mas parecido posible al mockup.
+- Recomendacion tecnica: usar LWC por flexibilidad visual, no solo Screen Flow basico.
+
+### 7.6 Nuevos y usados
+
+- Confirmado que aplica a nuevos y usados.
+- Nuevos:
+  - `BMW`
+  - `MINI`
+  - `Motorrad`
+  - `Kawasaki`
+  - `Indian`
+  - `Polaris`
+- Usados:
+  - `Autos_Usados`
+  - `Motos_Usados`
+- Maria indico que los campos son iguales.
+- Lo que cambia principalmente son jefes/gerentes segun marca y record type.
+
+### 7.7 Reserva de vehiculo
+
+- Confirmado que solo debe reservar vehiculo cuando Tipo de ingreso = Reserva de vehiculo.
+- Abonos y complementos no deben reservar vehiculo.
+- La reserva actualiza el producto relacionado y la `Opportunity`.
+
+### 7.8 Pendientes reales restantes
+
+- Tesoreria: destinatario exacto.
+- Implementacion tecnica de total anticipos aprobados y saldo pendiente.
+- Confirmar valores de Motivo rechazo si el PDF no los define explicitamente.
+- Cuidar compatibilidad de `Abierto`, `Aplicado` y `Cancelado` al agregar nuevos estados a `Anticipo__c.Estatus__c`.
