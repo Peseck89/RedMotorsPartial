@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Medio_Pago__c</fullName>
+    <label>Medio de pago</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Transferencia</fullName>
+                <default>false</default>
+                <label>Transferencia</label>
+            </value>
+            <value>
+                <fullName>Depósito</fullName>
+                <default>false</default>
+                <label>Depósito</label>
+            </value>
+            <value>
+                <fullName>Tarjeta</fullName>
+                <default>false</default>
+                <label>Tarjeta</label>
+            </value>
+            <value>
+                <fullName>Caja</fullName>
+                <default>false</default>
+                <label>Caja</label>
+            </value>
+            <value>
+                <fullName>SINPE</fullName>
+                <default>false</default>
+                <label>SINPE</label>
+            </value>
+            <value>
+                <fullName>Otro</fullName>
+                <default>false</default>
+                <label>Otro</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
