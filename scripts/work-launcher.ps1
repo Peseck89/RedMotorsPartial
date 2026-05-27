@@ -558,6 +558,40 @@ function Start-AlticaWork {
     Write-Host "Primero se debe validar el protocolo especifico de Altica."
 }
 
+function Start-RedMotorsClose {
+    param([string]$RepoPath)
+
+    Write-Section "Cierre RedMotors"
+
+    if (-not (Test-Folder $RepoPath)) {
+        Write-Host "RedMotors no existe en la ruta esperada:"
+        Write-Host $RepoPath
+        return
+    }
+
+    $endWorkPath = Join-Path $RepoPath "scripts\end-work.ps1"
+    if (-not (Test-File $endWorkPath)) {
+        Write-Host "No se encontro scripts/end-work.ps1 en RedMotors."
+        Write-Host "Ruta revisada: $endWorkPath"
+        return
+    }
+
+    Push-Location -LiteralPath $RepoPath
+    try {
+        Write-Host "Ejecutando cierre RedMotors:"
+        Write-Host ".\scripts\end-work.ps1"
+        & ".\scripts\end-work.ps1"
+    }
+    finally {
+        Pop-Location
+    }
+}
+
+function Start-AlticaClose {
+    Write-Section "Cierre Altica"
+    Write-Host "Altica todavia no esta configurado para cierre automatico."
+}
+
 function Show-WorkProjectMenu {
     param([pscustomobject]$Environment)
 
@@ -581,6 +615,39 @@ function Show-WorkProjectMenu {
         }
         "3" {
             Write-Host "Proyecto nuevo pendiente de configurar. Primero se debe crear ruta, aliases Salesforce y contexto IA."
+        }
+        "4" {
+            Write-Host "Operacion cancelada."
+        }
+        default {
+            Write-Host "Opcion no reconocida. No se ejecuto ninguna accion."
+        }
+    }
+}
+
+function Show-CloseProjectMenu {
+    param([pscustomobject]$Environment)
+
+    Write-Section "Cierre de proyecto"
+    Write-Host "Que proyecto vamos a cerrar?"
+    Write-Host ""
+    Write-Host "1. RedMotors"
+    Write-Host "2. Altica"
+    Write-Host "3. Otro / nueva empresa"
+    Write-Host "4. Cancelar"
+    Write-Host ""
+
+    $projectChoice = Read-Host "Selecciona una opcion (1-4)"
+
+    switch ($projectChoice) {
+        "1" {
+            Start-RedMotorsClose -RepoPath $Environment.RedMotorsPath
+        }
+        "2" {
+            Start-AlticaClose
+        }
+        "3" {
+            Write-Host "Proyecto nuevo pendiente de configurar."
         }
         "4" {
             Write-Host "Operacion cancelada."
@@ -635,28 +702,32 @@ function Show-MainMenu {
     Write-Host "Que quieres hacer?"
     Write-Host ""
     Write-Host "1. Trabajar en una asignacion"
-    Write-Host "2. Revision rapida de estado"
-    Write-Host "3. Mantenimiento / limpieza mensual"
-    Write-Host "4. Salir"
+    Write-Host "2. Cerrar trabajo / asignacion"
+    Write-Host "3. Revision rapida de estado"
+    Write-Host "4. Mantenimiento / limpieza mensual"
+    Write-Host "5. Salir"
     Write-Host ""
 }
 
 $environment = Get-LauncherEnvironment
 
 Show-MainMenu -Environment $environment
-$choice = Read-Host "Selecciona una opcion (1-4)"
+$choice = Read-Host "Selecciona una opcion (1-5)"
 
 switch ($choice) {
     "1" {
         Show-WorkProjectMenu -Environment $environment
     }
     "2" {
-        Show-QuickReview -Environment $environment
+        Show-CloseProjectMenu -Environment $environment
     }
     "3" {
-        Write-Host "Mantenimiento mensual pendiente de implementar. No se ejecutaron acciones."
+        Show-QuickReview -Environment $environment
     }
     "4" {
+        Write-Host "Mantenimiento mensual pendiente de implementar. No se ejecutaron acciones."
+    }
+    "5" {
         Write-Host "Salida solicitada. No se ejecuto ninguna accion."
     }
     default {
