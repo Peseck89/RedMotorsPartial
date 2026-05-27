@@ -149,25 +149,59 @@ function Invoke-GitQuickReview {
     }
 }
 
-function Try-StartApp {
+function Start-ShortcutTarget {
     param(
         [string]$Label,
-        [string]$FilePath,
-        [string[]]$ArgumentList = @()
+        [string]$ShortcutPath
     )
 
-    if ([string]::IsNullOrWhiteSpace($FilePath)) {
+    if ([string]::IsNullOrWhiteSpace($ShortcutPath)) {
         return $false
     }
 
     try {
-        if ($ArgumentList.Count -gt 0) {
-            Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -ErrorAction Stop
-        }
-        else {
-            Start-Process -FilePath $FilePath -ErrorAction Stop
-        }
+        Start-Process -FilePath $ShortcutPath -ErrorAction Stop
+        Write-Host "Abriendo $Label."
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
 
+function Start-ExplorerTarget {
+    param(
+        [string]$Label,
+        [string]$Target
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Target)) {
+        return $false
+    }
+
+    try {
+        Start-Process -FilePath "explorer.exe" -ArgumentList $Target -ErrorAction Stop
+        Write-Host "Abriendo $Label."
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+function Start-DetachedExecutable {
+    param(
+        [string]$Label,
+        [string]$FilePath
+    )
+
+    if ([string]::IsNullOrWhiteSpace($FilePath) -or -not (Test-File $FilePath)) {
+        return $false
+    }
+
+    try {
+        $escapedPath = $FilePath.Replace('"', '\"')
+        Start-Process -FilePath "cmd.exe" -ArgumentList "/c start """" ""$escapedPath""" -WindowStyle Hidden -ErrorAction Stop
         Write-Host "Abriendo $Label."
         return $true
     }
@@ -198,12 +232,61 @@ function Start-AppShortcut {
         }
 
         $shortcut = @(Get-ChildItem -LiteralPath $folder -Recurse -Filter $ShortcutPattern -ErrorAction SilentlyContinue | Select-Object -First 1)
-        if ($shortcut.Count -gt 0 -and (Try-StartApp -Label $Label -FilePath $shortcut[0].FullName)) {
+        if ($shortcut.Count -gt 0 -and (Start-ShortcutTarget -Label $Label -ShortcutPath $shortcut[0].FullName)) {
             return $true
         }
     }
 
     return $false
+}
+
+function Start-AppsFolderApp {
+    param(
+        [string]$Label,
+        [string[]]$NamePatterns
+    )
+
+    try {
+        $shell = New-Object -ComObject Shell.Application
+        $appsFolder = $shell.Namespace("shell:AppsFolder")
+
+        if ($null -eq $appsFolder) {
+            return $false
+        }
+
+        foreach ($item in @($appsFolder.Items())) {
+            foreach ($pattern in $NamePatterns) {
+                if ($item.Name -like $pattern) {
+                    $item.InvokeVerb("open")
+                    Write-Host "Abriendo $Label."
+                    return $true
+                }
+            }
+        }
+    }
+    catch {
+        return $false
+    }
+
+    return $false
+}
+
+function Start-AppProtocol {
+    param(
+        [string]$Label,
+        [string]$Protocol
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Protocol)) {
+        return $false
+    }
+
+    $registryPath = "Registry::HKEY_CLASSES_ROOT\$Protocol"
+    if (-not (Test-Path -LiteralPath $registryPath)) {
+        return $false
+    }
+
+    return Start-ExplorerTarget -Label $Label -Target "${Protocol}:"
 }
 
 function Get-ChromePath {
@@ -233,8 +316,15 @@ function Get-ChromePath {
 
 function Open-Chrome {
     $chromePath = Get-ChromePath
-    if ($chromePath -and (Try-StartApp -Label "Google Chrome" -FilePath $chromePath)) {
-        return
+    if ($chromePath) {
+        try {
+            Start-Process -FilePath $chromePath -ErrorAction Stop
+            Write-Host "Abriendo Google Chrome."
+            return
+        }
+        catch {
+            Write-Host "Advertencia: no se pudo abrir Chrome desde $chromePath."
+        }
     }
 
     if (Start-AppShortcut -Label "Google Chrome" -ShortcutPattern "*Chrome*.lnk") {
@@ -259,6 +349,14 @@ function Open-WhatsApp {
         return
     }
 
+    if (Start-AppsFolderApp -Label "WhatsApp de escritorio" -NamePatterns @("*WhatsApp*")) {
+        return
+    }
+
+    if (Start-AppProtocol -Label "WhatsApp de escritorio" -Protocol "whatsapp") {
+        return
+    }
+
     $candidates = @()
 
     if (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
@@ -274,17 +372,13 @@ function Open-WhatsApp {
     }
 
     foreach ($candidate in $candidates) {
-        if ((Test-File $candidate) -and (Try-StartApp -Label "WhatsApp de escritorio" -FilePath $candidate)) {
+        if (Start-DetachedExecutable -Label "WhatsApp de escritorio" -FilePath $candidate) {
             return
         }
     }
 
     $command = Get-Command "WhatsApp.exe" -ErrorAction SilentlyContinue
-    if ($null -ne $command -and (Try-StartApp -Label "WhatsApp de escritorio" -FilePath $command.Source)) {
-        return
-    }
-
-    if (Try-StartApp -Label "WhatsApp de escritorio" -FilePath "whatsapp:") {
+    if ($null -ne $command -and (Start-DetachedExecutable -Label "WhatsApp de escritorio" -FilePath $command.Source)) {
         return
     }
 
@@ -293,6 +387,14 @@ function Open-WhatsApp {
 
 function Open-ChatGptApp {
     if (Start-AppShortcut -Label "ChatGPT app" -ShortcutPattern "*ChatGPT*.lnk") {
+        return
+    }
+
+    if (Start-AppsFolderApp -Label "ChatGPT app" -NamePatterns @("*ChatGPT*", "*OpenAI*")) {
+        return
+    }
+
+    if (Start-AppProtocol -Label "ChatGPT app" -Protocol "chatgpt") {
         return
     }
 
@@ -309,17 +411,13 @@ function Open-ChatGptApp {
     }
 
     foreach ($candidate in $candidates) {
-        if ((Test-File $candidate) -and (Try-StartApp -Label "ChatGPT app" -FilePath $candidate)) {
+        if (Start-DetachedExecutable -Label "ChatGPT app" -FilePath $candidate) {
             return
         }
     }
 
     $command = Get-Command "ChatGPT.exe" -ErrorAction SilentlyContinue
-    if ($null -ne $command -and (Try-StartApp -Label "ChatGPT app" -FilePath $command.Source)) {
-        return
-    }
-
-    if (Try-StartApp -Label "ChatGPT app" -FilePath "chatgpt:") {
+    if ($null -ne $command -and (Start-DetachedExecutable -Label "ChatGPT app" -FilePath $command.Source)) {
         return
     }
 
@@ -328,6 +426,14 @@ function Open-ChatGptApp {
 
 function Open-ClaudeApp {
     if (Start-AppShortcut -Label "Claude app" -ShortcutPattern "*Claude*.lnk") {
+        return
+    }
+
+    if (Start-AppsFolderApp -Label "Claude app" -NamePatterns @("*Claude*", "*Anthropic*")) {
+        return
+    }
+
+    if (Start-AppProtocol -Label "Claude app" -Protocol "claude") {
         return
     }
 
@@ -344,17 +450,13 @@ function Open-ClaudeApp {
     }
 
     foreach ($candidate in $candidates) {
-        if ((Test-File $candidate) -and (Try-StartApp -Label "Claude app" -FilePath $candidate)) {
+        if (Start-DetachedExecutable -Label "Claude app" -FilePath $candidate) {
             return
         }
     }
 
     $command = Get-Command "Claude.exe" -ErrorAction SilentlyContinue
-    if ($null -ne $command -and (Try-StartApp -Label "Claude app" -FilePath $command.Source)) {
-        return
-    }
-
-    if (Try-StartApp -Label "Claude app" -FilePath "claude:") {
+    if ($null -ne $command -and (Start-DetachedExecutable -Label "Claude app" -FilePath $command.Source)) {
         return
     }
 
