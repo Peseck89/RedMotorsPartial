@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Estatus_No_Editable</fullName>
+    <active>true</active>
+    <errorConditionFormula>!ISNEW() &amp;&amp;
+	ISCHANGED(Estatus__c) &amp;&amp; 
+	ISPICKVAL(PRIORVALUE(Estatus__c), &apos;Cancelado&apos;) &amp;&amp; 
+	!ISPICKVAL(Estatus__c, &apos;Cancelado&apos;)</errorConditionFormula>
+    <errorDisplayField>Estatus__c</errorDisplayField>
+    <errorMessage>El estatus del anticipo no puede ser actualizado manualmente, por favor siga el flujo del proceso de agregar anticipo desde la oportunidad, o en su lugar cancele el anticipo actual y genere otro.</errorMessage>
+</ValidationRule>

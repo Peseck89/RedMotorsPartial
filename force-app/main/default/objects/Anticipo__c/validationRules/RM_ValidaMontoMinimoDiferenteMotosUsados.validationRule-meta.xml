@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RM_ValidaMontoMinimoDiferenteMotosUsados</fullName>
+    <active>false</active>
+    <errorConditionFormula>!ISNULL(Monto__c) &amp;&amp;
+IF(Monto__c &lt; 1000,TRUE,FALSE) &amp;&amp;
+IF(Oportunidad__r.RecordType.DeveloperName &lt;&gt; &apos;Autos_Usados&apos;, TRUE, FALSE)</errorConditionFormula>
+    <errorDisplayField>Monto__c</errorDisplayField>
+    <errorMessage>El monto minimo del anticipo debe ser mayor ó igual a 1000</errorMessage>
+</ValidationRule>

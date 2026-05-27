@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Producto_Requerido</fullName>
+    <active>false</active>
+    <errorConditionFormula>ISNEW() &amp;&amp;
+ISNULL(Producto__c)</errorConditionFormula>
+    <errorDisplayField>Producto__c</errorDisplayField>
+    <errorMessage>El vehiculo es requerido.</errorMessage>
+</ValidationRule>

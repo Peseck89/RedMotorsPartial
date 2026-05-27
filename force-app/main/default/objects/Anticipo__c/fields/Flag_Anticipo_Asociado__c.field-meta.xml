@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Flag_Anticipo_Asociado__c</fullName>
+    <defaultValue>false</defaultValue>
+    <inlineHelpText>Indica que el anticipo ha sido enviado a Softland</inlineHelpText>
+    <label>Flag Anticipo Asociado</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

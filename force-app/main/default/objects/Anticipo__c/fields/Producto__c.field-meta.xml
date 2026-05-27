@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Producto__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>Producto</label>
+    <lookupFilter>
+        <active>true</active>
+        <booleanFilter>1 AND 2 AND (3 OR 4)</booleanFilter>
+        <filterItems>
+            <field>Product2.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Vehiculos</value>
+        </filterItems>
+        <filterItems>
+            <field>Product2.IsActive</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <filterItems>
+            <field>Product2.esVehiculo__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <filterItems>
+            <field>Product2.es_Vehiculo_usado__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Product2</referenceTo>
+    <relationshipLabel>Anticipos</relationshipLabel>
+    <relationshipName>Anticipos</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
