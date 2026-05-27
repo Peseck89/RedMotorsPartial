@@ -94,6 +94,16 @@ function Get-StatusBody {
     return @($StatusOutput | Where-Object { $_ -and ($_ -notlike "## *") })
 }
 
+function Get-Array {
+    param([object]$Value)
+
+    if ($null -eq $Value) {
+        return @()
+    }
+
+    return @($Value)
+}
+
 function Get-StatusPaths {
     param([string[]]$StatusBody)
 
@@ -124,21 +134,23 @@ function Get-GitFacts {
     param([string[]]$StatusOutput)
 
     $statusLine = Get-FirstStatusLine -StatusOutput $StatusOutput
-    $statusBody = Get-StatusBody -StatusOutput $StatusOutput
+    $statusBody = @(Get-StatusBody -StatusOutput $StatusOutput)
     $untrackedLines = @($statusBody | Where-Object { $_ -match "^\?\?\s+" })
     $trackedChangeLines = @($statusBody | Where-Object { $_ -notmatch "^\?\?\s+" })
+    $paths = @(Get-StatusPaths -StatusBody $statusBody)
+    $forceAppChanges = @($statusBody | Where-Object { $_ -match "force-app[\\/]" })
 
     return [pscustomobject]@{
         StatusLine          = $statusLine
-        StatusBody          = $statusBody
-        Paths               = @(Get-StatusPaths -StatusBody $statusBody)
+        StatusBody          = @($statusBody)
+        Paths               = @($paths)
         HasLocalChanges     = $trackedChangeLines.Count -gt 0
         HasUntracked        = $untrackedLines.Count -gt 0
         IsAhead             = $statusLine -match "ahead\s+\d+"
         IsBehind            = $statusLine -match "behind\s+\d+"
         HasPendingCommit    = $statusBody.Count -gt 0
         HasPendingPush      = $statusLine -match "ahead\s+\d+"
-        HasForceAppChanges  = @($statusBody | Where-Object { $_ -match "force-app[\\/]" }).Count -gt 0
+        HasForceAppChanges  = $forceAppChanges.Count -gt 0
     }
 }
 
@@ -261,12 +273,12 @@ else {
     $diffNameResult = Invoke-DiagnosticCommand "git diff --name-only" "git" @("diff", "--name-only")
     $logResult = Invoke-DiagnosticCommand "git log --oneline --decorate -1" "git" @("log", "--oneline", "--decorate", "-1")
 
-    $branchLine = @($branchResult.Output | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 1)
+    $branchLine = @(Get-Array ($branchResult.Output | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 1))
     if ($branchLine.Count -gt 0) {
         $branch = $branchLine[0]
     }
 
-    $commitLine = @($logResult.Output | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 1)
+    $commitLine = @(Get-Array ($logResult.Output | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -First 1))
     if ($commitLine.Count -gt 0) {
         $lastCommit = $commitLine[0]
     }
@@ -295,8 +307,9 @@ if ($prepareLogs -match "^[sS]$") {
     $notes = Read-RequiredValue "Observaciones"
     $totalTime = Get-TimeTotalText -StartTime $startTime -EndTime $timeText
 
-    $changedFilesForLog = if ($facts.Paths.Count -gt 0) {
-        ($facts.Paths -join ", ")
+    $factPaths = @(Get-Array $facts.Paths)
+    $changedFilesForLog = if ($factPaths.Count -gt 0) {
+        ($factPaths -join ", ")
     }
     else {
         "Sin cambios detectados"
@@ -368,16 +381,17 @@ if ($logsWereWritten -and $gitAvailable -and (Test-Path -LiteralPath ".git")) {
     $facts = Get-GitFacts -StatusOutput $finalStatusResult.Output
 }
 
-$modifiedFiles = if ($facts.Paths.Count -gt 0) {
-    $facts.Paths -join ", "
+$factPaths = @(Get-Array $facts.Paths)
+$modifiedFiles = if ($factPaths.Count -gt 0) {
+    $factPaths -join ", "
 }
 else {
     "Sin archivos modificados detectados"
 }
 
-$recommendation = "Repo limpio; puedes cerrar"
+$recommendation = "Repo limpio; puedes cerrar."
 if ($facts.HasForceAppChanges) {
-    $recommendation = "Revisar cambios con Codex antes de commit"
+    $recommendation = "Hay cambios en force-app; revisar con Codex antes de commit."
 }
 elseif ($facts.HasPendingCommit -or $facts.HasPendingPush) {
     $recommendation = "Hacer commit y push antes de cerrar"
