@@ -4,7 +4,7 @@
             <lightning-spinner alternative-text="Cargando" size="medium"></lightning-spinner>
         </template>
 
-        <div class="slds-p-around_medium">
+        <div class="modal-body slds-p-around_medium">
             <template if:true={loadError}>
                 <div class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_medium" role="alert">
                     <span class="slds-assistive-text">Error</span>
@@ -14,21 +14,23 @@
 
             <template if:true={context}>
                 <section class="section">
-                    <h2 class="slds-text-heading_small slds-m-bottom_small">Oportunidad</h2>
+                    <div class="section-header">
+                        <h2 class="section-title">Datos de oportunidad</h2>
+                    </div>
                     <dl class="summary-grid">
-                        <div>
+                        <div class="summary-item">
                             <dt>Nombre</dt>
                             <dd>{context.opportunityName}</dd>
                         </div>
-                        <div>
+                        <div class="summary-item">
                             <dt>Cliente</dt>
                             <dd>{displayAccountName}</dd>
                         </div>
-                        <div>
+                        <div class="summary-item">
                             <dt>Asesor</dt>
                             <dd>{displayOwnerName}</dd>
                         </div>
-                        <div>
+                        <div class="summary-item">
                             <dt>Record type</dt>
                             <dd>{displayRecordType}</dd>
                         </div>
@@ -37,7 +39,9 @@
             </template>
 
             <section class="section">
-                <h2 class="slds-text-heading_small slds-m-bottom_small">Solicitud</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Datos de solicitud</h2>
+                </div>
                 <div class="form-grid">
                     <lightning-combobox
                         data-field="tipoIngreso"
@@ -120,57 +124,73 @@
                             </lightning-combobox>
                         </template>
                         <template if:true={hasNoVehiclesForReserva}>
-                            <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
-                                <span class="slds-assistive-text">Advertencia</span>
-                                <h2>{noVehiclesMessage}</h2>
+                            <div class="full-width">
+                                <div class="slds-notify slds-notify_alert slds-alert_warning notice" role="alert">
+                                    <span class="slds-assistive-text">Advertencia</span>
+                                    <h2>{noVehiclesMessage}</h2>
+                                </div>
                             </div>
                         </template>
                     </template>
+
+                    <lightning-textarea
+                        class="full-width"
+                        data-field="comentariosAsesor"
+                        label="Comentarios asesor"
+                        value={form.comentariosAsesor}
+                        onchange={handleFieldChange}>
+                    </lightning-textarea>
                 </div>
 
-                <lightning-textarea
-                    class="slds-m-top_medium"
-                    data-field="comentariosAsesor"
-                    label="Comentarios asesor"
-                    value={form.comentariosAsesor}
-                    onchange={handleFieldChange}>
-                </lightning-textarea>
+                <div class="section-actions">
+                    <lightning-button
+                        variant="brand"
+                        label="Guardar borrador"
+                        onclick={handleSaveDraft}
+                        disabled={isSaveDisabled}>
+                    </lightning-button>
+                </div>
             </section>
 
-            <div class="slds-m-top_medium actions">
-                <lightning-button
-                    variant="brand"
-                    label="Guardar borrador"
-                    onclick={handleSaveDraft}
-                    disabled={isSaveDisabled}>
-                </lightning-button>
-            </div>
-
             <template if:true={createdAnticipoId}>
-                <section class="section slds-m-top_large">
-                    <h2 class="slds-text-heading_small slds-m-bottom_small">Evidencia</h2>
-                    <p class="slds-m-bottom_small">
-                        Borrador creado: <strong>{createdAnticipoId}</strong>
-                    </p>
-                    <template if:true={createdAnticipoStatus}>
-                        <p class="slds-m-bottom_small">
-                            Estatus: <strong>{createdAnticipoStatus}</strong>
-                        </p>
-                    </template>
-                    <lightning-file-upload
-                        name="evidenciaUploader"
-                        label="Adjuntar evidencia"
-                        record-id={createdAnticipoId}
-                        disabled={isUploadDisabled}
-                        onuploadfinished={handleUploadFinished}
-                        multiple>
-                    </lightning-file-upload>
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Evidencia</h2>
+                    </div>
+                    <div class="evidence-panel">
+                        <lightning-file-upload
+                            name="evidenciaUploader"
+                            label="Adjuntar evidencia"
+                            record-id={createdAnticipoId}
+                            disabled={isUploadDisabled}
+                            onuploadfinished={handleUploadFinished}
+                            multiple>
+                        </lightning-file-upload>
 
-                    <template if:true={uploadedFileNames}>
-                        <p class="slds-m-top_small">Archivos cargados: {uploadedFileNames}</p>
-                    </template>
+                        <template if:true={uploadedFileNames}>
+                            <p class="file-list">Archivos cargados: {uploadedFileNames}</p>
+                        </template>
+                    </div>
+                </section>
 
-                    <div class="slds-m-top_medium actions">
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Estado / envío a Tesorería</h2>
+                    </div>
+                    <dl class="status-grid">
+                        <div class="status-item">
+                            <dt>Borrador creado</dt>
+                            <dd>{createdAnticipoId}</dd>
+                        </div>
+                        <template if:true={createdAnticipoStatus}>
+                            <div class="status-item">
+                                <dt>Estatus</dt>
+                                <dd>{createdAnticipoStatus}</dd>
+                            </div>
+                        </template>
+                    </dl>
+
+                    <div class="section-actions">
                         <lightning-button
                             variant="brand"
                             label="Enviar a Tesorería"
