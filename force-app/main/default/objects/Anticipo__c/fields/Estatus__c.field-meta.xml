@@ -24,6 +24,66 @@
                 <default>false</default>
                 <label>Cancelado</label>
             </value>
+            <value>
+                <fullName>Borrador</fullName>
+                <default>false</default>
+                <label>Borrador</label>
+            </value>
+            <value>
+                <fullName>En validación de Tesorería</fullName>
+                <default>false</default>
+                <label>En validación de Tesorería</label>
+            </value>
+            <value>
+                <fullName>Corrección requerida por Tesorería</fullName>
+                <default>false</default>
+                <label>Corrección requerida por Tesorería</label>
+            </value>
+            <value>
+                <fullName>Rechazada por Tesorería</fullName>
+                <default>false</default>
+                <label>Rechazada por Tesorería</label>
+            </value>
+            <value>
+                <fullName>Confirmada por Tesorería</fullName>
+                <default>false</default>
+                <label>Confirmada por Tesorería</label>
+            </value>
+            <value>
+                <fullName>Anticipo en creación</fullName>
+                <default>false</default>
+                <label>Anticipo en creación</label>
+            </value>
+            <value>
+                <fullName>Anticipo creado</fullName>
+                <default>false</default>
+                <label>Anticipo creado</label>
+            </value>
+            <value>
+                <fullName>PDF de anticipo pendiente</fullName>
+                <default>false</default>
+                <label>PDF de anticipo pendiente</label>
+            </value>
+            <value>
+                <fullName>Pendiente reserva de vehículo</fullName>
+                <default>false</default>
+                <label>Pendiente reserva de vehículo</label>
+            </value>
+            <value>
+                <fullName>Vehículo reservado</fullName>
+                <default>false</default>
+                <label>Vehículo reservado</label>
+            </value>
+            <value>
+                <fullName>Reserva rechazada</fullName>
+                <default>false</default>
+                <label>Reserva rechazada</label>
+            </value>
+            <value>
+                <fullName>Error de integración</fullName>
+                <default>false</default>
+                <label>Error de integración</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
