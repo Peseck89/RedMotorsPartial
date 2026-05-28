@@ -12,201 +12,284 @@
                 </div>
             </template>
 
-            <template if:true={context}>
-                <section class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">Datos de oportunidad</h2>
-                    </div>
-                    <dl class="summary-grid">
-                        <div class="summary-item">
-                            <dt>Nombre</dt>
-                            <dd>{context.opportunityName}</dd>
+            <div class="workspace-grid">
+                <div class="workspace-main">
+                    <template if:true={context}>
+                        <section class="section">
+                            <div class="section-header">
+                                <h2 class="section-title">Datos de oportunidad</h2>
+                            </div>
+                            <dl class="summary-grid">
+                                <div class="summary-item">
+                                    <dt>Nombre</dt>
+                                    <dd>{context.opportunityName}</dd>
+                                </div>
+                                <div class="summary-item">
+                                    <dt>Cliente</dt>
+                                    <dd>{displayAccountName}</dd>
+                                </div>
+                                <div class="summary-item">
+                                    <dt>Asesor</dt>
+                                    <dd>{displayOwnerName}</dd>
+                                </div>
+                                <div class="summary-item">
+                                    <dt>Record type</dt>
+                                    <dd>{displayRecordType}</dd>
+                                </div>
+                            </dl>
+                        </section>
+                    </template>
+
+                    <section class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">Datos de solicitud</h2>
                         </div>
-                        <div class="summary-item">
-                            <dt>Cliente</dt>
-                            <dd>{displayAccountName}</dd>
-                        </div>
-                        <div class="summary-item">
-                            <dt>Asesor</dt>
-                            <dd>{displayOwnerName}</dd>
-                        </div>
-                        <div class="summary-item">
-                            <dt>Record type</dt>
-                            <dd>{displayRecordType}</dd>
-                        </div>
-                    </dl>
-                </section>
-            </template>
-
-            <section class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Datos de solicitud</h2>
-                </div>
-                <div class="form-grid">
-                    <lightning-combobox
-                        data-field="tipoIngreso"
-                        data-required="true"
-                        label="Tipo de ingreso"
-                        value={form.tipoIngreso}
-                        options={tipoIngresoOptions}
-                        required
-                        onchange={handleFieldChange}>
-                    </lightning-combobox>
-
-                    <lightning-input
-                        data-field="monto"
-                        data-required="true"
-                        type="number"
-                        step="0.01"
-                        label="Monto"
-                        value={form.monto}
-                        required
-                        onchange={handleFieldChange}>
-                    </lightning-input>
-
-                    <lightning-combobox
-                        data-field="medioPago"
-                        data-required="true"
-                        label="Medio de pago"
-                        value={form.medioPago}
-                        options={medioPagoOptions}
-                        required
-                        onchange={handleFieldChange}>
-                    </lightning-combobox>
-
-                    <lightning-input
-                        data-field="fechaIngreso"
-                        data-required="true"
-                        type="date"
-                        label="Fecha de ingreso"
-                        value={form.fechaIngreso}
-                        required
-                        onchange={handleFieldChange}>
-                    </lightning-input>
-
-                    <lightning-input
-                        data-field="referenciaComprobante"
-                        data-required="true"
-                        type="text"
-                        label="Referencia / comprobante"
-                        value={form.referenciaComprobante}
-                        required
-                        onchange={handleFieldChange}>
-                    </lightning-input>
-
-                    <lightning-input
-                        type="text"
-                        label="Moneda"
-                        value={displayCurrencyIsoCode}
-                        read-only>
-                    </lightning-input>
-
-                    <lightning-input
-                        data-field="depositante"
-                        type="text"
-                        label="Depositante"
-                        value={form.depositante}
-                        onchange={handleFieldChange}>
-                    </lightning-input>
-
-                    <lightning-input
-                        data-field="identificacionDepositante"
-                        type="text"
-                        label="Identificación depositante"
-                        value={form.identificacionDepositante}
-                        onchange={handleFieldChange}>
-                    </lightning-input>
-
-                    <template if:true={isReservaVehiculo}>
-                        <template if:true={hasVehicleOptions}>
+                        <div class="form-grid">
                             <lightning-combobox
-                                data-field="productoId"
+                                data-field="tipoIngreso"
                                 data-required="true"
-                                label="Vehículo"
-                                value={form.productoId}
-                                options={productOptions}
-                                placeholder="Seleccione un vehículo"
+                                label="Tipo de ingreso"
+                                value={form.tipoIngreso}
+                                options={tipoIngresoOptions}
                                 required
                                 onchange={handleFieldChange}>
                             </lightning-combobox>
-                        </template>
-                        <template if:true={hasNoVehiclesForReserva}>
-                            <div class="full-width">
-                                <div class="slds-notify slds-notify_alert slds-alert_warning notice" role="alert">
-                                    <span class="slds-assistive-text">Advertencia</span>
-                                    <h2>{noVehiclesMessage}</h2>
-                                </div>
+
+                            <lightning-input
+                                data-field="monto"
+                                data-required="true"
+                                type="number"
+                                step="0.01"
+                                label="Monto"
+                                value={form.monto}
+                                required
+                                onchange={handleFieldChange}>
+                            </lightning-input>
+
+                            <lightning-combobox
+                                data-field="medioPago"
+                                data-required="true"
+                                label="Medio de pago"
+                                value={form.medioPago}
+                                options={medioPagoOptions}
+                                required
+                                onchange={handleFieldChange}>
+                            </lightning-combobox>
+
+                            <lightning-input
+                                data-field="fechaIngreso"
+                                data-required="true"
+                                type="date"
+                                label="Fecha de ingreso"
+                                value={form.fechaIngreso}
+                                required
+                                onchange={handleFieldChange}>
+                            </lightning-input>
+
+                            <lightning-input
+                                data-field="referenciaComprobante"
+                                data-required="true"
+                                type="text"
+                                label="Referencia / comprobante"
+                                value={form.referenciaComprobante}
+                                required
+                                onchange={handleFieldChange}>
+                            </lightning-input>
+
+                            <lightning-input
+                                type="text"
+                                label="Moneda"
+                                value={displayCurrencyIsoCode}
+                                read-only>
+                            </lightning-input>
+
+                            <lightning-input
+                                data-field="depositante"
+                                type="text"
+                                label="Depositante"
+                                value={form.depositante}
+                                onchange={handleFieldChange}>
+                            </lightning-input>
+
+                            <lightning-input
+                                data-field="identificacionDepositante"
+                                type="text"
+                                label="Identificación depositante"
+                                value={form.identificacionDepositante}
+                                onchange={handleFieldChange}>
+                            </lightning-input>
+
+                            <template if:true={isReservaVehiculo}>
+                                <template if:true={hasVehicleOptions}>
+                                    <lightning-combobox
+                                        data-field="productoId"
+                                        data-required="true"
+                                        label="Vehículo"
+                                        value={form.productoId}
+                                        options={productOptions}
+                                        placeholder="Seleccione un vehículo"
+                                        required
+                                        onchange={handleFieldChange}>
+                                    </lightning-combobox>
+                                </template>
+                                <template if:true={hasNoVehiclesForReserva}>
+                                    <div class="full-width">
+                                        <div class="slds-notify slds-notify_alert slds-alert_warning notice" role="alert">
+                                            <span class="slds-assistive-text">Advertencia</span>
+                                            <h2>{noVehiclesMessage}</h2>
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+
+                        <div class="section-actions">
+                            <lightning-button
+                                variant="brand"
+                                label="Guardar borrador"
+                                onclick={handleSaveDraft}
+                                disabled={isSaveDisabled}>
+                            </lightning-button>
+                        </div>
+                    </section>
+
+                    <template if:true={createdAnticipoId}>
+                        <section class="section">
+                            <div class="section-header">
+                                <h2 class="section-title">Evidencia</h2>
                             </div>
-                        </template>
+                            <div class="evidence-panel">
+                                <lightning-file-upload
+                                    name="evidenciaUploader"
+                                    label="Adjuntar evidencia"
+                                    record-id={createdAnticipoId}
+                                    disabled={isUploadDisabled}
+                                    onuploadfinished={handleUploadFinished}
+                                    multiple>
+                                </lightning-file-upload>
+
+                                <template if:true={uploadedFileNames}>
+                                    <p class="file-list">Archivos cargados: {uploadedFileNames}</p>
+                                </template>
+                            </div>
+                        </section>
                     </template>
 
-                    <lightning-textarea
-                        class="full-width"
-                        data-field="comentariosAsesor"
-                        label="Comentarios asesor"
-                        value={form.comentariosAsesor}
-                        onchange={handleFieldChange}>
-                    </lightning-textarea>
-                </div>
-
-                <div class="section-actions">
-                    <lightning-button
-                        variant="brand"
-                        label="Guardar borrador"
-                        onclick={handleSaveDraft}
-                        disabled={isSaveDisabled}>
-                    </lightning-button>
-                </div>
-            </section>
-
-            <template if:true={createdAnticipoId}>
-                <section class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">Evidencia</h2>
-                    </div>
-                    <div class="evidence-panel">
-                        <lightning-file-upload
-                            name="evidenciaUploader"
-                            label="Adjuntar evidencia"
-                            record-id={createdAnticipoId}
-                            disabled={isUploadDisabled}
-                            onuploadfinished={handleUploadFinished}
-                            multiple>
-                        </lightning-file-upload>
-
-                        <template if:true={uploadedFileNames}>
-                            <p class="file-list">Archivos cargados: {uploadedFileNames}</p>
-                        </template>
-                    </div>
-                </section>
-
-                <section class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">Estado / envío a Tesorería</h2>
-                    </div>
-                    <dl class="status-grid">
-                        <div class="status-item">
-                            <dt>Borrador creado</dt>
-                            <dd>{createdAnticipoId}</dd>
+                    <section class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">Comentarios</h2>
                         </div>
-                        <template if:true={createdAnticipoStatus}>
-                            <div class="status-item">
-                                <dt>Estatus</dt>
-                                <dd>{createdAnticipoStatus}</dd>
+                        <lightning-textarea
+                            data-field="comentariosAsesor"
+                            label="Comentarios asesor"
+                            value={form.comentariosAsesor}
+                            onchange={handleFieldChange}>
+                        </lightning-textarea>
+                    </section>
+                </div>
+
+                <aside class="workspace-side">
+                    <section class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">Validaciones automáticas</h2>
+                        </div>
+                        <ul class="validation-list" aria-label="Validaciones automáticas">
+                            <li class="validation-item">
+                                <template if:true={hasRequiredFieldsComplete}>
+                                    <span class="validation-dot validation-dot_success"></span>
+                                    <span class="validation-status validation-status_success">Listo</span>
+                                </template>
+                                <template if:false={hasRequiredFieldsComplete}>
+                                    <span class="validation-dot validation-dot_pending"></span>
+                                    <span class="validation-status">Pendiente</span>
+                                </template>
+                                <span class="validation-label">Campos obligatorios completos</span>
+                            </li>
+                            <li class="validation-item">
+                                <template if:true={hasUploadedEvidence}>
+                                    <span class="validation-dot validation-dot_success"></span>
+                                    <span class="validation-status validation-status_success">Listo</span>
+                                </template>
+                                <template if:false={hasUploadedEvidence}>
+                                    <span class="validation-dot validation-dot_pending"></span>
+                                    <span class="validation-status">Pendiente</span>
+                                </template>
+                                <span class="validation-label">Evidencia presente</span>
+                            </li>
+                            <li class="validation-item">
+                                <template if:true={hasOpportunityContext}>
+                                    <span class="validation-dot validation-dot_success"></span>
+                                    <span class="validation-status validation-status_success">Listo</span>
+                                </template>
+                                <template if:false={hasOpportunityContext}>
+                                    <span class="validation-dot validation-dot_pending"></span>
+                                    <span class="validation-status">Pendiente</span>
+                                </template>
+                                <span class="validation-label">Oportunidad activa</span>
+                            </li>
+                            <li class="validation-item">
+                                <template if:true={hasPositiveAmount}>
+                                    <span class="validation-dot validation-dot_success"></span>
+                                    <span class="validation-status validation-status_success">Listo</span>
+                                </template>
+                                <template if:false={hasPositiveAmount}>
+                                    <span class="validation-dot validation-dot_pending"></span>
+                                    <span class="validation-status">Pendiente</span>
+                                </template>
+                                <span class="validation-label">Monto mayor a cero</span>
+                            </li>
+                            <li class="validation-item">
+                                <template if:true={isPreparedForTreasury}>
+                                    <span class="validation-dot validation-dot_success"></span>
+                                    <span class="validation-status validation-status_success">Listo</span>
+                                </template>
+                                <template if:false={isPreparedForTreasury}>
+                                    <span class="validation-dot validation-dot_pending"></span>
+                                    <span class="validation-status">Pendiente</span>
+                                </template>
+                                <span class="validation-label">Preparado para Tesorería</span>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">Estado / envío a Tesorería</h2>
+                        </div>
+                        <dl class="status-grid">
+                            <template if:true={createdAnticipoId}>
+                                <div class="status-item">
+                                    <dt>Borrador creado</dt>
+                                    <dd>{createdAnticipoId}</dd>
+                                </div>
+                                <template if:true={createdAnticipoStatus}>
+                                    <div class="status-item">
+                                        <dt>Estatus</dt>
+                                        <dd>{createdAnticipoStatus}</dd>
+                                    </div>
+                                </template>
+                            </template>
+                            <template if:false={createdAnticipoId}>
+                                <div class="status-item">
+                                    <dt>Borrador creado</dt>
+                                    <dd>Pendiente</dd>
+                                </div>
+                            </template>
+                        </dl>
+
+                        <template if:true={createdAnticipoId}>
+                            <div class="section-actions">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Enviar a Tesorería"
+                                    onclick={handleSendToTreasury}
+                                    disabled={isSendToTreasuryDisabled}>
+                                </lightning-button>
                             </div>
                         </template>
-                    </dl>
-
-                    <div class="section-actions">
-                        <lightning-button
-                            variant="brand"
-                            label="Enviar a Tesorería"
-                            onclick={handleSendToTreasury}
-                            disabled={isSendToTreasuryDisabled}>
-                        </lightning-button>
-                    </div>
-                </section>
-            </template>
+                    </section>
+                </aside>
+            </div>
         </div>
     </lightning-card>
 </template>

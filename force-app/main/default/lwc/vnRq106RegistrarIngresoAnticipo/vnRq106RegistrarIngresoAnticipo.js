@@ -97,6 +97,29 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
         return this.productOptions.length > 0;
     }
 
+    get hasOpportunityContext() {
+        return !!this.context;
+    }
+
+    get hasPositiveAmount() {
+        return Number(this.form.monto) > 0;
+    }
+
+    get hasRequiredFieldsComplete() {
+        const baseFieldsComplete =
+            !!this.form.tipoIngreso &&
+            this.hasPositiveAmount &&
+            !!this.form.medioPago &&
+            !!this.form.fechaIngreso &&
+            !!this.form.referenciaComprobante;
+
+        return baseFieldsComplete && (!this.isReservaVehiculo || !!this.form.productoId);
+    }
+
+    get isPreparedForTreasury() {
+        return !!this.createdAnticipoId && this.hasUploadedEvidence && !this.isSentToTreasury;
+    }
+
     get noVehiclesMessage() {
         return NO_VEHICLES_MESSAGE;
     }

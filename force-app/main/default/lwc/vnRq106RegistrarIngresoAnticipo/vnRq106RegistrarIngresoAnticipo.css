@@ -6,6 +6,18 @@
     background: #f7f7f7;
 }
 
+.workspace-grid {
+    align-items: start;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1.65fr) minmax(17.5rem, 0.85fr);
+}
+
+.workspace-main,
+.workspace-side {
+    min-width: 0;
+}
+
 .section {
     background: #ffffff;
     border: 1px solid #dddbda;
@@ -52,6 +64,10 @@
     padding: 0.75rem;
 }
 
+.workspace-side .status-grid {
+    grid-template-columns: 1fr;
+}
+
 .full-width {
     grid-column: 1 / -1;
 }
@@ -71,6 +87,62 @@
     color: #3e3e3c;
     margin: 0.75rem 0 0;
     overflow-wrap: anywhere;
+}
+
+.validation-list {
+    display: grid;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.validation-item {
+    align-items: center;
+    background: #f8f8f8;
+    border: 1px solid #ecebea;
+    border-radius: 0.5rem;
+    display: flex;
+    gap: 0.625rem;
+    min-width: 0;
+    padding: 0.625rem 0.75rem;
+}
+
+.validation-dot {
+    border-radius: 50%;
+    flex: 0 0 0.625rem;
+    height: 0.625rem;
+    order: 1;
+    width: 0.625rem;
+}
+
+.validation-dot_success {
+    background: #2e844a;
+}
+
+.validation-dot_pending {
+    background: #c9c9c9;
+}
+
+.validation-label {
+    color: #181818;
+    flex: 1 1 auto;
+    font-weight: 600;
+    min-width: 0;
+    order: 2;
+    overflow-wrap: anywhere;
+}
+
+.validation-status {
+    color: #706e6b;
+    flex: 0 0 auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+    order: 3;
+}
+
+.validation-status_success {
+    color: #2e844a;
 }
 
 dt {
@@ -96,6 +168,10 @@ dd {
     .modal-body {
         padding-left: 0.75rem;
         padding-right: 0.75rem;
+    }
+
+    .workspace-grid {
+        grid-template-columns: 1fr;
     }
 
     .summary-grid,
