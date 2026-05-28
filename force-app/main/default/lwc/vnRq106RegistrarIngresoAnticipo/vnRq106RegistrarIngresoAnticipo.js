@@ -2,8 +2,10 @@ import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getOpportunityContext from '@salesforce/apex/VN_RQ106_AnticipoController.getOpportunityContext';
 import createDraftSolicitud from '@salesforce/apex/VN_RQ106_AnticipoController.createDraftSolicitud';
+import sendToTreasury from '@salesforce/apex/VN_RQ106_AnticipoController.sendToTreasury';
 
 const TIPO_RESERVA = 'Reserva de vehículo';
+const STATUS_EN_VALIDACION_TESORERIA = 'En validación de Tesorería';
 
 export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
     _recordId;
@@ -11,6 +13,7 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
     loadError;
     isLoading = false;
     createdAnticipoId;
+    createdAnticipoStatus;
     uploadedFileNames;
 
     @track form = {
@@ -87,6 +90,22 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
         return this.isLoading || !!this.createdAnticipoId;
     }
 
+    get hasUploadedEvidence() {
+        return !!this.uploadedFileNames;
+    }
+
+    get isSentToTreasury() {
+        return this.createdAnticipoStatus === STATUS_EN_VALIDACION_TESORERIA;
+    }
+
+    get isUploadDisabled() {
+        return this.isLoading || this.isSentToTreasury;
+    }
+
+    get isSendToTreasuryDisabled() {
+        return this.isLoading || !this.hasUploadedEvidence || this.isSentToTreasury;
+    }
+
     loadContext() {
         this.isLoading = true;
         this.loadError = undefined;
@@ -140,6 +159,7 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
         })
             .then((result) => {
                 this.createdAnticipoId = result.anticipoId;
+                this.createdAnticipoStatus = result.estatus;
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Borrador creado',
@@ -180,6 +200,37 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
                 variant: 'success'
             })
         );
+    }
+
+    handleSendToTreasury() {
+        if (!this.createdAnticipoId || !this.hasUploadedEvidence) {
+            return;
+        }
+
+        this.isLoading = true;
+        sendToTreasury({ anticipoId: this.createdAnticipoId })
+            .then((result) => {
+                this.createdAnticipoStatus = result.estatus;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Solicitud enviada',
+                        message: 'Solicitud enviada a validación de Tesorería.',
+                        variant: 'success'
+                    })
+                );
+            })
+            .catch((error) => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'No se pudo enviar a Tesorería',
+                        message: this.reduceError(error),
+                        variant: 'error'
+                    })
+                );
+            })
+            .finally(() => {
+                this.isLoading = false;
+            });
     }
 
     reduceError(error) {

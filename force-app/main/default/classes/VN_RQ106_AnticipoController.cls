@@ -1,5 +1,6 @@
 public with sharing class VN_RQ106_AnticipoController {
     private static final String STATUS_BORRADOR = 'Borrador';
+    private static final String STATUS_EN_VALIDACION_TESORERIA = 'En validación de Tesorería';
     private static final String TIPO_RESERVA = 'Reserva de vehículo';
 
     @AuraEnabled(cacheable=true)
@@ -60,6 +61,45 @@ public with sharing class VN_RQ106_AnticipoController {
         }
 
         insert solicitud;
+
+        DraftSolicitudResult result = new DraftSolicitudResult();
+        result.anticipoId = solicitud.Id;
+        result.estatus = solicitud.Estatus__c;
+        return result;
+    }
+
+    @AuraEnabled
+    public static DraftSolicitudResult sendToTreasury(Id anticipoId) {
+        if (anticipoId == null) {
+            throw new AuraHandledException('La solicitud es requerida.');
+        }
+
+        List<Anticipo__c> solicitudes = [
+            SELECT Id, Estatus__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+            LIMIT 1
+        ];
+        if (solicitudes.isEmpty()) {
+            throw new AuraHandledException('La solicitud no existe.');
+        }
+
+        Anticipo__c solicitud = solicitudes[0];
+        if (solicitud.Estatus__c != STATUS_BORRADOR) {
+            throw new AuraHandledException('Solo se pueden enviar solicitudes en estado Borrador.');
+        }
+
+        Integer evidenceCount = [
+            SELECT COUNT()
+            FROM ContentDocumentLink
+            WHERE LinkedEntityId = :anticipoId
+        ];
+        if (evidenceCount == 0) {
+            throw new AuraHandledException('Debe adjuntar al menos una evidencia antes de enviar a Tesorería.');
+        }
+
+        solicitud.Estatus__c = STATUS_EN_VALIDACION_TESORERIA;
+        update solicitud;
 
         DraftSolicitudResult result = new DraftSolicitudResult();
         result.anticipoId = solicitud.Id;

@@ -144,10 +144,16 @@
                     <p class="slds-m-bottom_small">
                         Borrador creado: <strong>{createdAnticipoId}</strong>
                     </p>
+                    <template if:true={createdAnticipoStatus}>
+                        <p class="slds-m-bottom_small">
+                            Estatus: <strong>{createdAnticipoStatus}</strong>
+                        </p>
+                    </template>
                     <lightning-file-upload
                         name="evidenciaUploader"
                         label="Adjuntar evidencia"
                         record-id={createdAnticipoId}
+                        disabled={isUploadDisabled}
                         onuploadfinished={handleUploadFinished}
                         multiple>
                     </lightning-file-upload>
@@ -155,6 +161,15 @@
                     <template if:true={uploadedFileNames}>
                         <p class="slds-m-top_small">Archivos cargados: {uploadedFileNames}</p>
                     </template>
+
+                    <div class="slds-m-top_medium actions">
+                        <lightning-button
+                            variant="brand"
+                            label="Enviar a Tesorería"
+                            onclick={handleSendToTreasury}
+                            disabled={isSendToTreasuryDisabled}>
+                        </lightning-button>
+                    </div>
                 </section>
             </template>
         </div>

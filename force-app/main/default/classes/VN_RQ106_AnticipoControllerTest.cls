@@ -99,6 +99,22 @@ private class VN_RQ106_AnticipoControllerTest {
         return request;
     }
 
+    private static Id createDraftAnticipo(Id oppId) {
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.createDraftSolicitud(buildRequest(oppId));
+        return result.anticipoId;
+    }
+
+    private static void attachEvidence(Id anticipoId) {
+        ContentVersion evidence = new ContentVersion(
+            Title = 'Evidencia VN RQ106',
+            PathOnClient = 'evidencia-vn-rq106.txt',
+            VersionData = Blob.valueOf('Evidencia de prueba VN-RQ106'),
+            FirstPublishLocationId = anticipoId
+        );
+        insert evidence;
+    }
+
     @IsTest
     static void getOpportunityContextReturnsBasicData() {
         Opportunity opp = createOpportunity();
@@ -194,5 +210,107 @@ private class VN_RQ106_AnticipoControllerTest {
 
         System.assertEquals(true, exceptionThrown, 'Reserva de vehículo debe requerir Producto__c.');
         System.assertEquals(0, [SELECT COUNT() FROM Anticipo__c WHERE Oportunidad__c = :opp.Id]);
+    }
+
+    @IsTest
+    static void sendToTreasuryWithEvidenceChangesStatus() {
+        Opportunity opp = createOpportunity();
+        Id anticipoId = createDraftAnticipo(opp.Id);
+        attachEvidence(anticipoId);
+
+        System.assert(
+            [SELECT COUNT() FROM ContentDocumentLink WHERE LinkedEntityId = :anticipoId] > 0,
+            'Debe existir evidencia relacionada antes de enviar a Tesorería.'
+        );
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.sendToTreasury(anticipoId);
+        Test.stopTest();
+
+        Anticipo__c updated = [
+            SELECT Id, Estatus__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+
+        System.assertEquals(anticipoId, result.anticipoId);
+        System.assertEquals('En validación de Tesorería', result.estatus);
+        System.assertEquals('En validación de Tesorería', updated.Estatus__c);
+        System.assertNotEquals('Aplicado', updated.Estatus__c);
+    }
+
+    @IsTest
+    static void sendToTreasuryWithoutEvidenceFailsAndKeepsBorrador() {
+        Opportunity opp = createOpportunity();
+        Id anticipoId = createDraftAnticipo(opp.Id);
+
+        Boolean exceptionThrown = false;
+
+        Test.startTest();
+        try {
+            VN_RQ106_AnticipoController.sendToTreasury(anticipoId);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        Anticipo__c solicitud = [
+            SELECT Id, Estatus__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+
+        System.assertEquals(true, exceptionThrown, 'No debe enviar a Tesorería sin evidencia.');
+        System.assertEquals('Borrador', solicitud.Estatus__c);
+        System.assertNotEquals('Aplicado', solicitud.Estatus__c);
+    }
+
+    @IsTest
+    static void sendToTreasuryWithNullFails() {
+        Boolean exceptionThrown = false;
+
+        Test.startTest();
+        try {
+            VN_RQ106_AnticipoController.sendToTreasury(null);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'La solicitud es obligatoria para enviar a Tesorería.');
+    }
+
+    @IsTest
+    static void sendToTreasuryWhenStatusIsNotBorradorFails() {
+        Opportunity opp = createOpportunity();
+        Id anticipoId = createDraftAnticipo(opp.Id);
+        attachEvidence(anticipoId);
+
+        Anticipo__c solicitud = new Anticipo__c(
+            Id = anticipoId,
+            Estatus__c = 'En validación de Tesorería'
+        );
+        update solicitud;
+
+        Boolean exceptionThrown = false;
+
+        Test.startTest();
+        try {
+            VN_RQ106_AnticipoController.sendToTreasury(anticipoId);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        Anticipo__c unchanged = [
+            SELECT Id, Estatus__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+
+        System.assertEquals(true, exceptionThrown, 'Solo Borrador debe poder enviarse a Tesorería.');
+        System.assertEquals('En validación de Tesorería', unchanged.Estatus__c);
+        System.assertNotEquals('Aplicado', unchanged.Estatus__c);
     }
 }
