@@ -10,7 +10,7 @@
     align-items: start;
     display: grid;
     gap: 1rem;
-    grid-template-columns: minmax(0, 1.65fr) minmax(17.5rem, 0.85fr);
+    grid-template-columns: minmax(0, 1.65fr) minmax(14rem, 0.85fr);
 }
 
 .workspace-main,
@@ -164,7 +164,7 @@ dd {
     margin-top: 1rem;
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 30rem) {
     .modal-body {
         padding-left: 0.75rem;
         padding-right: 0.75rem;
