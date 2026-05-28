@@ -56,6 +56,9 @@
                             <value>Opportunity.Registrar_anticipo_Usados</value>
                         </valueListItems>
                         <valueListItems>
+                            <value>Opportunity.VN_RQ106_Registrar_Ingreso_Anticipo</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Opportunity.Plan_de_Cliente_Usados_save_PDF</value>
                         </valueListItems>
                         <valueListItems>
@@ -171,7 +174,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>numVisibleActions</name>
-                    <value>7</value>
+                    <value>8</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
             </componentInstance>
