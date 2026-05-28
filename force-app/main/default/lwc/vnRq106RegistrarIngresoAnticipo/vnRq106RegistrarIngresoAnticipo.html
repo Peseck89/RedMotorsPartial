@@ -107,20 +107,23 @@
                     </lightning-input>
 
                     <template if:true={isReservaVehiculo}>
-                        <lightning-combobox
-                            data-field="productoId"
-                            data-required="true"
-                            label="Vehículo"
-                            value={form.productoId}
-                            options={productOptions}
-                            placeholder="Seleccione un vehículo"
-                            required
-                            onchange={handleFieldChange}>
-                        </lightning-combobox>
+                        <template if:true={hasVehicleOptions}>
+                            <lightning-combobox
+                                data-field="productoId"
+                                data-required="true"
+                                label="Vehículo"
+                                value={form.productoId}
+                                options={productOptions}
+                                placeholder="Seleccione un vehículo"
+                                required
+                                onchange={handleFieldChange}>
+                            </lightning-combobox>
+                        </template>
                         <template if:true={hasNoVehiclesForReserva}>
-                            <p class="slds-text-color_error slds-m-top_x-small">
-                                No hay vehículos disponibles para reserva en esta oportunidad.
-                            </p>
+                            <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                                <span class="slds-assistive-text">Advertencia</span>
+                                <h2>{noVehiclesMessage}</h2>
+                            </div>
                         </template>
                     </template>
                 </div>

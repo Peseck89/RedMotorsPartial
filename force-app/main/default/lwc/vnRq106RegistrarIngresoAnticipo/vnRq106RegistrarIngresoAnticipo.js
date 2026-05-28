@@ -6,6 +6,7 @@ import sendToTreasury from '@salesforce/apex/VN_RQ106_AnticipoController.sendToT
 
 const TIPO_RESERVA = 'Reserva de vehículo';
 const STATUS_EN_VALIDACION_TESORERIA = 'En validación de Tesorería';
+const NO_VEHICLES_MESSAGE = 'No hay vehículos disponibles para reserva en esta oportunidad.';
 
 export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
     _recordId;
@@ -85,11 +86,19 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
     }
 
     get hasNoVehiclesForReserva() {
-        return this.isReservaVehiculo && !this.isLoading && this.productOptions.length === 0;
+        return this.isReservaVehiculo && !this.isLoading && !!this.context && !this.hasVehicleOptions;
+    }
+
+    get hasVehicleOptions() {
+        return this.productOptions.length > 0;
+    }
+
+    get noVehiclesMessage() {
+        return NO_VEHICLES_MESSAGE;
     }
 
     get isSaveDisabled() {
-        return this.isLoading || !!this.createdAnticipoId;
+        return this.isLoading || !!this.createdAnticipoId || this.hasNoVehiclesForReserva;
     }
 
     get hasUploadedEvidence() {
@@ -140,6 +149,17 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
     }
 
     handleSaveDraft() {
+        if (this.hasNoVehiclesForReserva) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Reserva sin vehículos disponibles',
+                    message: NO_VEHICLES_MESSAGE,
+                    variant: 'error'
+                })
+            );
+            return;
+        }
+
         if (!this.validateRequiredFields()) {
             return;
         }
