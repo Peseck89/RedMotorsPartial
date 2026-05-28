@@ -13,7 +13,7 @@ public with sharing class VN_RQ106_AnticipoController {
             SELECT Id, Name, AccountId, Account.Name, OwnerId, Owner.Name,
                 RecordType.DeveloperName, JefeSucursal__c, JefeSucursal__r.Name,
                 GerenteSucursal__c, GerenteSucursal__r.Name, SucursalId__c,
-                SucursalId__r.Name, Sucursal__c, Synced_Quote__c
+                SucursalId__r.Name, Sucursal__c, Synced_Quote__c, CurrencyIsoCode
             FROM Opportunity
             WHERE Id = :opportunityId
             LIMIT 1
@@ -35,6 +35,7 @@ public with sharing class VN_RQ106_AnticipoController {
         context.sucursalName = opp.SucursalId__r == null ? null : opp.SucursalId__r.Name;
         context.sucursalValue = opp.Sucursal__c;
         context.syncedQuoteId = opp.Synced_Quote__c;
+        context.currencyIsoCode = opp.CurrencyIsoCode;
         context.products = getProducts(opportunityId);
         return context;
     }
@@ -42,9 +43,11 @@ public with sharing class VN_RQ106_AnticipoController {
     @AuraEnabled
     public static DraftSolicitudResult createDraftSolicitud(DraftSolicitudRequest payload) {
         validatePayload(payload);
+        Opportunity opp = getOpportunityForDraft(payload.opportunityId);
 
         Anticipo__c solicitud = new Anticipo__c();
         solicitud.Oportunidad__c = payload.opportunityId;
+        solicitud.CurrencyIsoCode = opp.CurrencyIsoCode;
         solicitud.Monto__c = payload.monto;
         solicitud.Tipo_Ingreso__c = payload.tipoIngreso;
         solicitud.Medio_Pago__c = payload.medioPago;
@@ -105,6 +108,19 @@ public with sharing class VN_RQ106_AnticipoController {
         result.anticipoId = solicitud.Id;
         result.estatus = solicitud.Estatus__c;
         return result;
+    }
+
+    private static Opportunity getOpportunityForDraft(Id opportunityId) {
+        List<Opportunity> opportunities = [
+            SELECT Id, CurrencyIsoCode
+            FROM Opportunity
+            WHERE Id = :opportunityId
+            LIMIT 1
+        ];
+        if (opportunities.isEmpty()) {
+            throw new AuraHandledException('La oportunidad no existe.');
+        }
+        return opportunities[0];
     }
 
     private static void validatePayload(DraftSolicitudRequest payload) {
@@ -213,6 +229,7 @@ public with sharing class VN_RQ106_AnticipoController {
         @AuraEnabled public String sucursalName { get; set; }
         @AuraEnabled public String sucursalValue { get; set; }
         @AuraEnabled public Id syncedQuoteId { get; set; }
+        @AuraEnabled public String currencyIsoCode { get; set; }
         @AuraEnabled public List<ProductOption> products { get; set; }
     }
 

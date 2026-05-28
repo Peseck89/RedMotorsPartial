@@ -70,6 +70,10 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
         return this.context?.recordTypeDeveloperName || 'Sin record type';
     }
 
+    get displayCurrencyIsoCode() {
+        return this.context?.currencyIsoCode || '';
+    }
+
     get isReservaVehiculo() {
         return this.form.tipoIngreso === TIPO_RESERVA;
     }

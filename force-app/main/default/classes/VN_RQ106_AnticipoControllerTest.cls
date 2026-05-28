@@ -1,6 +1,10 @@
 @IsTest
 private class VN_RQ106_AnticipoControllerTest {
     private static Opportunity createOpportunity() {
+        return createOpportunity('USD');
+    }
+
+    private static Opportunity createOpportunity(String currencyIsoCode) {
         Account account = new Account(Name = 'Cliente VN RQ106');
         insert account;
 
@@ -10,7 +14,8 @@ private class VN_RQ106_AnticipoControllerTest {
             AccountId = account.Id,
             StageName = 'Prospecting',
             CloseDate = Date.today().addDays(15),
-            Pricebook2Id = standardPricebookId
+            Pricebook2Id = standardPricebookId,
+            CurrencyIsoCode = currencyIsoCode
         );
         insert opp;
 
@@ -18,6 +23,7 @@ private class VN_RQ106_AnticipoControllerTest {
             Name = 'Presupuesto VN RQ106',
             OpportunityId = opp.Id,
             Pricebook2Id = standardPricebookId,
+            CurrencyIsoCode = currencyIsoCode,
             Status = 'Draft'
         );
         insert quote;
@@ -75,6 +81,7 @@ private class VN_RQ106_AnticipoControllerTest {
             FROM PricebookEntry
             WHERE Pricebook2Id = :standardPricebookId
                 AND Product2Id = :product.Id
+                AND CurrencyIsoCode = :opp.CurrencyIsoCode
             LIMIT 1
         ];
 
@@ -84,6 +91,7 @@ private class VN_RQ106_AnticipoControllerTest {
                 Pricebook2Id = standardPricebookId,
                 Product2Id = product.Id,
                 UnitPrice = 10000,
+                CurrencyIsoCode = opp.CurrencyIsoCode,
                 IsActive = true
             );
             insert entry;
@@ -150,6 +158,7 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertEquals('Oportunidad VN RQ106', context.opportunityName);
         System.assertEquals(opp.AccountId, context.accountId);
         System.assertNotEquals(null, context.ownerId);
+        System.assertEquals(opp.CurrencyIsoCode, context.currencyIsoCode);
         System.assertEquals(1, context.products.size());
         System.assertEquals(product.Id, context.products[0].productId);
     }
@@ -191,7 +200,7 @@ private class VN_RQ106_AnticipoControllerTest {
             SELECT Id, Oportunidad__c, Monto__c, Tipo_Ingreso__c, Medio_Pago__c,
                 Fecha_Ingreso__c, Referencia_Comprobante__c, Depositante__c,
                 Identificacion_Depositante__c, Comentarios_Asesor__c, Estatus__c,
-                Producto__c
+                Producto__c, CurrencyIsoCode
             FROM Anticipo__c
             WHERE Id = :result.anticipoId
         ];
@@ -204,7 +213,29 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertEquals('Borrador', inserted.Estatus__c);
         System.assertNotEquals('Aplicado', inserted.Estatus__c);
         System.assertEquals(null, inserted.Producto__c);
+        System.assertEquals(opp.CurrencyIsoCode, inserted.CurrencyIsoCode);
         System.assertEquals('Borrador', result.estatus);
+    }
+
+    @IsTest
+    static void createDraftSolicitudUsesOpportunityCurrency() {
+        Opportunity opp = createOpportunity('CRC');
+        VN_RQ106_AnticipoController.DraftSolicitudRequest request = buildRequest(opp.Id);
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.createDraftSolicitud(request);
+        Test.stopTest();
+
+        Anticipo__c inserted = [
+            SELECT Id, CurrencyIsoCode, Estatus__c
+            FROM Anticipo__c
+            WHERE Id = :result.anticipoId
+        ];
+
+        System.assertEquals('CRC', inserted.CurrencyIsoCode);
+        System.assertEquals('Borrador', inserted.Estatus__c);
+        System.assertNotEquals('Aplicado', inserted.Estatus__c);
     }
 
     @IsTest
@@ -223,7 +254,7 @@ private class VN_RQ106_AnticipoControllerTest {
         Test.stopTest();
 
         Anticipo__c inserted = [
-            SELECT Id, Estatus__c, Tipo_Ingreso__c, Producto__c
+            SELECT Id, Estatus__c, Tipo_Ingreso__c, Producto__c, CurrencyIsoCode
             FROM Anticipo__c
             WHERE Id = :result.anticipoId
         ];
@@ -232,6 +263,7 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertNotEquals('Aplicado', inserted.Estatus__c);
         System.assertEquals('Reserva de vehículo', inserted.Tipo_Ingreso__c);
         System.assertEquals(product.Id, inserted.Producto__c);
+        System.assertEquals(opp.CurrencyIsoCode, inserted.CurrencyIsoCode);
     }
 
     @IsTest
