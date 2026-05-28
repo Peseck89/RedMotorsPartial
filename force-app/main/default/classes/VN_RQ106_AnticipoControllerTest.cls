@@ -1,0 +1,198 @@
+@IsTest
+private class VN_RQ106_AnticipoControllerTest {
+    private static Opportunity createOpportunity() {
+        Account account = new Account(Name = 'Cliente VN RQ106');
+        insert account;
+
+        Id standardPricebookId = Test.getStandardPricebookId();
+        Opportunity opp = new Opportunity(
+            Name = 'Oportunidad VN RQ106',
+            AccountId = account.Id,
+            StageName = 'Prospecting',
+            CloseDate = Date.today().addDays(15),
+            Pricebook2Id = standardPricebookId
+        );
+        insert opp;
+
+        Quote quote = new Quote(
+            Name = 'Presupuesto VN RQ106',
+            OpportunityId = opp.Id,
+            Pricebook2Id = standardPricebookId,
+            Status = 'Draft'
+        );
+        insert quote;
+
+        opp.Synced_Quote__c = quote.Id;
+        update opp;
+        return opp;
+    }
+
+    private static Product2 createVehicleProduct() {
+        Product2 product = new Product2(
+            Name = 'Vehiculo VN RQ106',
+            IsActive = true,
+            Producto_Reservado__c = false,
+            esVehiculo__c = true,
+            es_Vehiculo_usado__c = true,
+            vin__c = 'VINVN106TEST',
+            Codigo_de_Producto__c = 'VN-RQ106'
+        );
+
+        Map<String, Schema.RecordTypeInfo> recordTypes =
+            Schema.SObjectType.Product2.getRecordTypeInfosByDeveloperName();
+        if (recordTypes.containsKey('Vehiculos')) {
+            product.RecordTypeId = recordTypes.get('Vehiculos').getRecordTypeId();
+        }
+
+        insert product;
+        return product;
+    }
+
+    private static void relateProductToOpportunity(Opportunity opp, Product2 product) {
+        Id standardPricebookId = Test.getStandardPricebookId();
+        List<PricebookEntry> existingEntries = [
+            SELECT Id, IsActive
+            FROM PricebookEntry
+            WHERE Pricebook2Id = :standardPricebookId
+                AND Product2Id = :product.Id
+            LIMIT 1
+        ];
+
+        PricebookEntry entry;
+        if (existingEntries.isEmpty()) {
+            entry = new PricebookEntry(
+                Pricebook2Id = standardPricebookId,
+                Product2Id = product.Id,
+                UnitPrice = 10000,
+                IsActive = true
+            );
+            insert entry;
+        } else {
+            entry = existingEntries[0];
+            if (!entry.IsActive) {
+                entry.IsActive = true;
+                update entry;
+            }
+        }
+
+        OpportunityLineItem line = new OpportunityLineItem(
+            OpportunityId = opp.Id,
+            PricebookEntryId = entry.Id,
+            Quantity = 1,
+            UnitPrice = 10000
+        );
+        insert line;
+    }
+
+    private static VN_RQ106_AnticipoController.DraftSolicitudRequest buildRequest(Id oppId) {
+        VN_RQ106_AnticipoController.DraftSolicitudRequest request =
+            new VN_RQ106_AnticipoController.DraftSolicitudRequest();
+        request.opportunityId = oppId;
+        request.monto = 2000;
+        request.tipoIngreso = 'Abono';
+        request.medioPago = 'Transferencia';
+        request.fechaIngreso = Date.today();
+        request.referenciaComprobante = 'REF-001';
+        request.depositante = 'Cliente de Prueba';
+        request.identificacionDepositante = '123456789';
+        request.comentariosAsesor = 'Solicitud de prueba VN-RQ106';
+        return request;
+    }
+
+    @IsTest
+    static void getOpportunityContextReturnsBasicData() {
+        Opportunity opp = createOpportunity();
+        Product2 product = createVehicleProduct();
+        relateProductToOpportunity(opp, product);
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.OpportunityContext context =
+            VN_RQ106_AnticipoController.getOpportunityContext(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(opp.Id, context.opportunityId);
+        System.assertEquals('Oportunidad VN RQ106', context.opportunityName);
+        System.assertEquals(opp.AccountId, context.accountId);
+        System.assertNotEquals(null, context.ownerId);
+        System.assertEquals(1, context.products.size());
+        System.assertEquals(product.Id, context.products[0].productId);
+    }
+
+    @IsTest
+    static void createDraftSolicitudCreatesBorrador() {
+        Opportunity opp = createOpportunity();
+        VN_RQ106_AnticipoController.DraftSolicitudRequest request = buildRequest(opp.Id);
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.createDraftSolicitud(request);
+        Test.stopTest();
+
+        Anticipo__c inserted = [
+            SELECT Id, Oportunidad__c, Monto__c, Tipo_Ingreso__c, Medio_Pago__c,
+                Fecha_Ingreso__c, Referencia_Comprobante__c, Depositante__c,
+                Identificacion_Depositante__c, Comentarios_Asesor__c, Estatus__c,
+                Producto__c
+            FROM Anticipo__c
+            WHERE Id = :result.anticipoId
+        ];
+
+        System.assertEquals(opp.Id, inserted.Oportunidad__c);
+        System.assertEquals(2000, inserted.Monto__c);
+        System.assertEquals('Abono', inserted.Tipo_Ingreso__c);
+        System.assertEquals('Transferencia', inserted.Medio_Pago__c);
+        System.assertEquals('REF-001', inserted.Referencia_Comprobante__c);
+        System.assertEquals('Borrador', inserted.Estatus__c);
+        System.assertNotEquals('Aplicado', inserted.Estatus__c);
+        System.assertEquals(null, inserted.Producto__c);
+        System.assertEquals('Borrador', result.estatus);
+    }
+
+    @IsTest
+    static void createDraftSolicitudWithReservaStoresProduct() {
+        Opportunity opp = createOpportunity();
+        Product2 product = createVehicleProduct();
+        relateProductToOpportunity(opp, product);
+
+        VN_RQ106_AnticipoController.DraftSolicitudRequest request = buildRequest(opp.Id);
+        request.tipoIngreso = 'Reserva de vehículo';
+        request.productoId = product.Id;
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.createDraftSolicitud(request);
+        Test.stopTest();
+
+        Anticipo__c inserted = [
+            SELECT Id, Estatus__c, Tipo_Ingreso__c, Producto__c
+            FROM Anticipo__c
+            WHERE Id = :result.anticipoId
+        ];
+
+        System.assertEquals('Borrador', inserted.Estatus__c);
+        System.assertNotEquals('Aplicado', inserted.Estatus__c);
+        System.assertEquals('Reserva de vehículo', inserted.Tipo_Ingreso__c);
+        System.assertEquals(product.Id, inserted.Producto__c);
+    }
+
+    @IsTest
+    static void createDraftSolicitudWithReservaWithoutProductFails() {
+        Opportunity opp = createOpportunity();
+
+        VN_RQ106_AnticipoController.DraftSolicitudRequest request = buildRequest(opp.Id);
+        request.tipoIngreso = 'Reserva de vehículo';
+
+        Boolean exceptionThrown = false;
+
+        Test.startTest();
+        try {
+            VN_RQ106_AnticipoController.createDraftSolicitud(request);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'Reserva de vehículo debe requerir Producto__c.');
+        System.assertEquals(0, [SELECT COUNT() FROM Anticipo__c WHERE Oportunidad__c = :opp.Id]);
+    }
+}
