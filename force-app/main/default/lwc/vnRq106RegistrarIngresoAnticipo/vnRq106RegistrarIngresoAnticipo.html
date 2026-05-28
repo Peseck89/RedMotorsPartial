@@ -249,6 +249,17 @@
                                 </template>
                                 <span class="validation-label">Preparado para Tesorería</span>
                             </li>
+                            <li class="validation-item">
+                                <template if:true={isSolicitudEnviada}>
+                                    <span class="validation-dot validation-dot_success"></span>
+                                    <span class="validation-status validation-status_success">Listo</span>
+                                </template>
+                                <template if:false={isSolicitudEnviada}>
+                                    <span class="validation-dot validation-dot_pending"></span>
+                                    <span class="validation-status">Pendiente</span>
+                                </template>
+                                <span class="validation-label">Solicitud enviada</span>
+                            </li>
                         </ul>
                     </section>
 

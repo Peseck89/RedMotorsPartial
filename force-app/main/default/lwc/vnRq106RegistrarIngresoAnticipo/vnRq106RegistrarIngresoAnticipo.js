@@ -136,6 +136,10 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
         return this.createdAnticipoStatus === STATUS_EN_VALIDACION_TESORERIA;
     }
 
+    get isSolicitudEnviada() {
+        return this.isSentToTreasury;
+    }
+
     get isUploadDisabled() {
         return this.isLoading || this.isSentToTreasury;
     }
