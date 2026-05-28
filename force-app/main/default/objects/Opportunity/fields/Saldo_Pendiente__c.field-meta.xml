@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Saldo_Pendiente__c</fullName>
+    <description>Saldo pendiente calculado como Valor Total Oportunidad menos total de anticipos aprobados.</description>
+    <formula>BLANKVALUE(Valor_Total_Oportunidad_FX__c, 0) - BLANKVALUE(Total_Anticipos_Aprobados__c, 0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Calculado con base en Valor_Total_Oportunidad_FX__c y Total_Anticipos_Aprobados__c.</inlineHelpText>
+    <label>Saldo pendiente</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

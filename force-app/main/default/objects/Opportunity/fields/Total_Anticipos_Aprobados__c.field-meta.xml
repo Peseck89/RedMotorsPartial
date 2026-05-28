@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Anticipos_Aprobados__c</fullName>
+    <description>Suma de anticipos finales/aprobados asociados a la oportunidad para VN-RQ106.</description>
+    <inlineHelpText>Suma anticipos en estados finales Aplicado y Vehículo reservado.</inlineHelpText>
+    <label>Total anticipos aprobados</label>
+    <summarizedField>Anticipo__c.Monto__c</summarizedField>
+    <summaryFilterItems>
+        <field>Anticipo__c.Estatus__c</field>
+        <operation>equals</operation>
+        <value>Aplicado,Vehículo reservado</value>
+    </summaryFilterItems>
+    <summaryForeignKey>Anticipo__c.Oportunidad__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>
