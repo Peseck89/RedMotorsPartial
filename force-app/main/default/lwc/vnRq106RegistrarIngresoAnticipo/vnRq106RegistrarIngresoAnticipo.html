@@ -117,6 +117,11 @@
                             required
                             onchange={handleFieldChange}>
                         </lightning-combobox>
+                        <template if:true={hasNoVehiclesForReserva}>
+                            <p class="slds-text-color_error slds-m-top_x-small">
+                                No hay vehículos disponibles para reserva en esta oportunidad.
+                            </p>
+                        </template>
                     </template>
                 </div>
 

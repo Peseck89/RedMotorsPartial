@@ -157,6 +157,10 @@ public with sharing class VN_RQ106_AnticipoController {
             FROM OpportunityLineItem
             WHERE OpportunityId = :opportunityId
                 AND Product2Id != null
+                AND Product2.RecordType.DeveloperName = 'Vehiculos'
+                AND Product2.IsActive = true
+                AND Product2.Producto_Reservado__c = false
+                AND (Product2.esVehiculo__c = true OR Product2.es_Vehiculo_usado__c = true)
             ORDER BY Product2.Name
             LIMIT 100
         ]) {

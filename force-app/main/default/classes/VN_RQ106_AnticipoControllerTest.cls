@@ -48,6 +48,26 @@ private class VN_RQ106_AnticipoControllerTest {
         return product;
     }
 
+    private static Product2 createInvalidVehicleCandidateProduct() {
+        Product2 product = new Product2(
+            Name = 'Producto no reservable VN RQ106',
+            IsActive = true,
+            Producto_Reservado__c = false,
+            esVehiculo__c = false,
+            es_Vehiculo_usado__c = false,
+            Codigo_de_Producto__c = 'VN-RQ106-NO-RESERVA'
+        );
+
+        Map<String, Schema.RecordTypeInfo> recordTypes =
+            Schema.SObjectType.Product2.getRecordTypeInfosByDeveloperName();
+        if (recordTypes.containsKey('Vehiculos')) {
+            product.RecordTypeId = recordTypes.get('Vehiculos').getRecordTypeId();
+        }
+
+        insert product;
+        return product;
+    }
+
     private static void relateProductToOpportunity(Opportunity opp, Product2 product) {
         Id standardPricebookId = Test.getStandardPricebookId();
         List<PricebookEntry> existingEntries = [
@@ -132,6 +152,29 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertNotEquals(null, context.ownerId);
         System.assertEquals(1, context.products.size());
         System.assertEquals(product.Id, context.products[0].productId);
+    }
+
+    @IsTest
+    static void getOpportunityContextExcludesProductsThatDoNotMatchLookupFilter() {
+        Opportunity opp = createOpportunity();
+        Product2 validProduct = createVehicleProduct();
+        Product2 invalidProduct = createInvalidVehicleCandidateProduct();
+        relateProductToOpportunity(opp, validProduct);
+        relateProductToOpportunity(opp, invalidProduct);
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.OpportunityContext context =
+            VN_RQ106_AnticipoController.getOpportunityContext(opp.Id);
+        Test.stopTest();
+
+        Set<Id> productIds = new Set<Id>();
+        for (VN_RQ106_AnticipoController.ProductOption product : context.products) {
+            productIds.add(product.productId);
+        }
+
+        System.assertEquals(1, context.products.size());
+        System.assertEquals(true, productIds.contains(validProduct.Id));
+        System.assertEquals(false, productIds.contains(invalidProduct.Id));
     }
 
     @IsTest
