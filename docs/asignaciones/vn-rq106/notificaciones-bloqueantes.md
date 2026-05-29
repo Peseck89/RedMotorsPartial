@@ -4,7 +4,7 @@ Este documento consolida el análisis de notificaciones/correos para VN-RQ106.
 Sirve como referencia operativa antes de implementar cualquier correo, Flow de notificación o EmailTemplate.
 
 Fecha de análisis inicial: 2026-05-28
-Última actualización: 2026-05-29 — Flow de notificaciones al asesor probado en Sandbox.
+Última actualización: 2026-05-29 — Respuestas de negocio recibidas; bloqueantes actualizados.
 Fuente de instrucción: Luis Sandoval / sesión PC.
 
 ---
@@ -41,6 +41,18 @@ El Flow conserva una guarda temporal de prueba:
 | 4 | ¿Plantilla de correo definida? | Pendiente — parece que sale de otro sistema. No implementar todavía. |
 | 5 | ¿Notificaciones en Flow o Apex? | Siempre en Flow para que sean más sencillas de ajustar. |
 | 6 | ¿Base para Saldo pendiente / precio de venta? | Usar `Opportunity.Valor_Total_Oportunidad_FX__c`. |
+
+---
+
+## Respuestas recibidas — 2026-05-29
+
+| # | Pregunta | Respuesta | Impacto |
+|---|---|---|---|
+| 1 | Destinatario Tesorería | Por el momento enviar a `admin@portalnetcr.com`. El correo grupal definitivo está pendiente. | **Desbloquea** la notificación de solicitud a Tesorería. Email temporal conocido; puede cambiar a futuro. |
+| 2 | Plantillas de correo | Directo en el Flow por ahora. Las plantillas oficiales ya se solicitaron pero están pendientes. | **Desbloquea** todos los correos pendientes que esperaban confirmación de template. Textos inline aprobados. |
+| 3 | Motivo/comentario obligatorio | Por validar. | Sigue bloqueado. No cambiar obligatoriedad en Flow ni Validation Rule hasta confirmación. |
+| 4 | Jefe de Producto / PEV | Usar campos de jefe de sucursal indicados en la tabla de campos; cambia por Record Type. María puede pasar ejemplos. | **Parcialmente desbloquea** el diseño de PEV. Arquitectura confirmada: campo dinámico en Opportunity, no hardcoded. Falta confirmar campo exacto y ver ejemplos de María. |
+| 5 | Cliente | Usar correo de contacto. Si no tiene correo, no se envía. | **Desbloquea** el comportamiento de cliente sin correo. Lógica de Flow: verificar email antes de enviar; si vacío, omitir rama. |
 
 ---
 
@@ -111,12 +123,12 @@ Resultado:
 
 | Destinatario | Cómo se obtiene | Estado |
 |---|---|---|
-| Tesorería | Correo fijo "admin" por el momento | **Confirmado temporal por Diego** |
+| Tesorería | `admin@portalnetcr.com` — correo fijo temporal confirmado 2026-05-29 | **Desbloqueado temporal** — correo grupal definitivo pendiente |
 | Asesor / Opportunity Owner | `Opportunity.Owner.Email` y `Opportunity.OwnerId` | Implementado y probado en `VN_RQ106_Notificaciones_Anticipo` v2 |
-| Cliente | Contacto relacionado con la oportunidad (`OpportunityContactRole` o `Contact.Email`) | **Confirmado por Diego.** Mecanismo exacto por definir |
-| Jefe de Producto / PEV por marca | Correos hardcoded en flujo existente (ver tabla abajo) | Confirmados para BMW/MINI/Motorrad/Kawasaki/Polaris. Flujo en DRAFT |
-| Jefe de Sucursal | `Opportunity.JefeSucursal__r.Email` | Campo existe. Email no consultado en VN-RQ106 aún |
-| Gerente de Sucursal | `Opportunity.GerenteSucursal__r.Email` | Campo existe. Email no consultado en VN-RQ106 aún |
+| Cliente | Contacto relacionado con la oportunidad (`OpportunityContactRole` o `Contact.Email`). Si no tiene correo, no se envía. | **Comportamiento confirmado 2026-05-29.** Lookup exacto y estado(s) disparadores por definir. |
+| Jefe de Producto / PEV por marca | Campo de jefe de sucursal en `Opportunity`; cambia por Record Type. Verificar `JefeSucursal__c` u equivalente. | **Arquitectura confirmada 2026-05-29** — dinámico por campo, no hardcoded. Campo exacto pendiente; ejemplos de María pendientes. |
+| Jefe de Sucursal | `Opportunity.JefeSucursal__r.Email` | Campo existe. Candidato para PEV/Jefe de Producto según respuesta 2026-05-29. Confirmar con ejemplos de María. |
+| Gerente de Sucursal | `Opportunity.GerenteSucursal__r.Email` | Campo existe. No consultado en VN-RQ106 aún. |
 
 ### Correos PEV por marca (flujo `Alerta_de_reserva_de_producto_de_Oportunidad`, DRAFT)
 
@@ -133,22 +145,19 @@ Resultado:
 
 ---
 
-## Pendientes bloqueados por negocio
+## Pendientes bloqueados por negocio — actualizado 2026-05-29
 
-| Bloqueante | Detalle |
-|---|---|
-| Tesorería destinatario real | Diego indicó usar "admin" temporalmente, pero falta definición final: usuario, correo fijo, cola, grupo o variable por sucursal/marca |
-| PEV | Faltan destinatarios definitivos para Indian, Autos_Usados y Motos_Usados. Confirmar si los correos del flujo existente aplican a VN-RQ106 |
-| Cliente | Falta definir lookup exacto del contacto relacionado, manejo de cliente sin correo y si aplica email, notificación o ambos |
-| Error PDF | Alcance Diego / Softland. Falta definir evento, destinatario, plantilla y fuente del link o error |
-| Error integración | Alcance Diego / Softland. Falta definir evento, destinatario técnico/operativo y contenido mínimo |
-| Motivo/comentarios obligatorios | Falta confirmar si `Comentarios_Aprobacion_Rechazo__c` u otro campo debe ser obligatorio para rechazo/corrección/reserva rechazada |
-| Plantilla de correo | Diego indicó que parece salir de otro sistema. No implementar templates definitivos hasta aclarar |
-| Correo PEV Indian | Sin correo definido en flujo ni confirmado por María/Diego |
-| Correo PEV Autos_Usados | Sin correo definido |
-| Correo PEV Motos_Usados | Sin correo definido |
-| Cliente sin correo | ¿Se bloquea, se omite o se alerta? Sin respuesta de Diego/María |
-| Tesorería a futuro | "Admin" es temporal. Aún puede cambiar a variable por sucursal/marca |
+| Bloqueante | Detalle | Estado |
+|---|---|---|
+| Tesorería correo grupal definitivo | `admin@portalnetcr.com` es temporal. El correo grupal definitivo está pendiente. | **Desbloqueado temporal** — implementable con email temporal |
+| PEV campo exacto y ejemplos | Arquitectura confirmada como campo dinámico en Opportunity por Record Type. Falta ver ejemplos de María y confirmar cuál campo usar. | **Parcialmente desbloqueado** — no implementar en Flow hasta confirmar |
+| PEV Indian / Autos_Usados / Motos_Usados | Bajo la nueva arquitectura dinámica puede estar cubierto si el campo tiene valor por Record Type. Confirmar con María. | **Parcialmente desbloqueado** — depende de ejemplos de María |
+| Cliente: lookup exacto del contacto y estado disparador | Comportamiento confirmado: si no tiene correo, no se envía. Falta definir en qué estado(s) se envía el correo al cliente y qué lookup usar. | **Parcialmente desbloqueado** |
+| Cliente sin correo | Confirmado 2026-05-29: si no tiene correo, no se envía. | **Resuelto** |
+| Plantilla de correo | Confirmado 2026-05-29: textos inline en Flow por ahora. Plantillas oficiales solicitadas pero pendientes. | **Desbloqueado temporal** |
+| Motivo/comentarios obligatorios | Por validar. No cambiar obligatoriedad hasta confirmación. | **Sigue bloqueado** |
+| Error PDF | Alcance Diego / Softland. Falta definir evento, destinatario y fuente del error. | **Sigue bloqueado** |
+| Error integración | Alcance Diego / Softland. Falta definir evento, destinatario técnico y contenido mínimo. | **Sigue bloqueado** |
 
 ---
 
@@ -190,29 +199,56 @@ Esto se mantiene como bloque separado de notificaciones.
 
 ---
 
-## Qué NO implementar todavía
+## Qué NO implementar todavía — actualizado 2026-05-29
 
 - No pasar a producción con la guarda temporal de Claudia.
-- No implementar correo a Tesorería hasta confirmar destinatario final y plantilla.
-- No implementar correo al cliente hasta definir el lookup exacto y comportamiento cuando no hay correo.
-- No implementar PEV hasta confirmar Indian, Autos_Usados y Motos_Usados.
+- No implementar PEV en el Flow hasta recibir ejemplos de María y confirmar el campo exacto de Opportunity.
+- No implementar correo al cliente hasta confirmar qué estado(s) lo disparan y qué lookup exacto del contacto usar.
+- No implementar obligatoriedad de motivo/comentario hasta confirmación ("por validar").
 - No implementar Error PDF ni Error integración sin definición de Diego/Softland.
-- No crear EmailTemplates definitivos si la plantilla seguirá viniendo de otro sistema.
+- No crear EmailTemplates definitivos — los textos inline están aprobados por ahora.
 - No crear Custom Metadata de destinatarios sin estructura aprobada.
+- No cambiar el email de Tesorería de `admin@portalnetcr.com` sin nueva confirmación del equipo.
+
+## Próximo cambio técnico seguro recomendado — 2026-05-29
+
+**Objetivo**: agregar notificación de solicitud a Tesorería en el Flow existente.
+
+**Alcance exacto**:
+- Archivo: `force-app/main/default/flows/VN_RQ106_Notificaciones_Anticipo.flow-meta.xml`
+- Cambio: agregar una nueva rama en el Flow que se dispare cuando `Estatus__c` cambia a `En validacion de Tesoreria`.
+- Destinatario: correo fijo `admin@portalnetcr.com`.
+- Canal: emailSimple con Org-Wide Sender `info@redmotorscr.com`.
+- Texto: inline, sin EmailTemplate.
+- Contenido sugerido del correo: número de anticipo, asesor, monto, fecha — tomados de los campos ya disponibles en el Flow.
+
+**Lo que NO cambia en este paso**:
+- No modificar lógica de Jefe de Producto/PEV.
+- No agregar cliente.
+- No cambiar la guarda temporal de Claudia (se mantiene para prueba controlada).
+- No tocar producción.
+
+**Antes de implementar**:
+Conviene revisar los campos reales de Opportunity/Contacto en Sandbox para confirmar:
+- Si `JefeSucursal__c` tiene valores reales por Record Type (preparación para cuando se desbloquee PEV).
+- Si el contacto relacionado tiene email en los registros de prueba (preparación para cuando se desbloquee cliente).
+- Esto no bloquea el cambio de Tesorería, pero ahorra trabajo en la siguiente iteración.
 
 ---
 
-## Preguntas pendientes para María/Diego
+## Preguntas pendientes para María/Diego — actualizado 2026-05-29
 
 | # | Pregunta | Para quién | Estado |
 |---|---|---|---|
-| 1 | ¿Tesorería es correo fijo, variable, grupo o cola? | María | **Respondido por Diego: correo fijo "admin" por ahora** |
-| 2 | ¿Correo del cliente, fuente? | María | **Respondido por Diego: contacto relacionado con la oportunidad** |
-| 3 | ¿Qué pasa si cliente no tiene correo? | María / Diego | Pendiente |
-| 4 | ¿Se necesita correo para Indian? ¿Cuál es el PEV de Indian? | María | Pendiente |
-| 5 | ¿Los correos PEV del flujo existente son los definitivos para VN-RQ106? | María / Luis | Pendiente |
-| 6 | ¿Plantilla de correo definida? ¿Tiene formato o sale de otro sistema? | Diego | **Respondido: parece que sale de otro sistema. Pendiente de aclaración** |
-| 7 | ¿Correos PEV para Autos_Usados y Motos_Usados? | María | Pendiente |
+| 1 | ¿Tesorería es correo fijo, variable, grupo o cola? | Luis/equipo | **Resuelto temporal 2026-05-29**: usar `admin@portalnetcr.com`. Correo grupal definitivo pendiente. |
+| 2 | ¿Correo del cliente, fuente? | Luis/equipo | **Resuelto**: usar correo de contacto relacionado con la oportunidad. |
+| 3 | ¿Qué pasa si cliente no tiene correo? | Luis/equipo | **Resuelto 2026-05-29**: si no tiene correo, no se envía. |
+| 4 | ¿Plantilla de correo definida? | Luis/equipo | **Resuelto temporal 2026-05-29**: textos inline en Flow por ahora. Plantillas oficiales solicitadas pero pendientes. |
+| 5 | ¿Cuál es el campo exacto para Jefe de Producto/PEV? ¿Puede María pasar ejemplos por Record Type? | María | **Pendiente** — respuesta indica usar campo de jefe de sucursal por Record Type, pero falta ejemplo concreto. |
+| 6 | ¿En qué estado(s) debe recibir correo el cliente? | Luis/equipo | **Pendiente** — comportamiento de no enviar sin correo ya confirmado, pero falta definir estado(s) disparadores. |
+| 7 | ¿Motivo/comentario es obligatorio para rechazo, corrección y reserva rechazada? | Luis/equipo | **Pendiente** — "por validar". |
+| 8 | Softland: ¿qué evento/campo confirma fondos y creación de anticipo? | Diego | **Pendiente** — alcance Diego/Softland. |
+| 9 | PDF/error integración: ¿campo/estado disparador y destinatario? | Diego | **Pendiente** — alcance Diego/Softland. |
 
 ---
 
