@@ -567,6 +567,9 @@ else {
     if ([string]::IsNullOrWhiteSpace($targetOrg)) {
         Add-Risk "No se detecto target-org en sf config list --json."
     }
+    elseif ($targetOrg -eq "RedMotorsProd") {
+        Add-Risk "El target-org detectado es RedMotorsProd; no uses Produccion para desarrollo. Se espera RedMotorsSandbox."
+    }
     elseif ($targetOrg -ne "RedMotorsSandbox") {
         Add-Risk "El target-org detectado es $targetOrg; para RedMotors se espera RedMotorsSandbox."
     }
@@ -575,9 +578,6 @@ else {
         Add-Risk "RedMotorsSandbox esta $sandboxConnectionStatus en sf org list --json."
     }
 
-    if ($prodConnectionStatus -eq "Connected") {
-        Add-Warning "RedMotorsProd esta Connected; no debe usarse para desarrollo."
-    }
 }
 
 $contextSummary = if (@($contextStatus.GetEnumerator() | Where-Object { -not $_.Value }).Count -eq 0) {
