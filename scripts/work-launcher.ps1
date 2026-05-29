@@ -3,7 +3,8 @@ General work launcher for local operating modes.
 
 Safety rules:
 - Diagnostics and navigation only.
-- No deploy, retrieve, git reset, git clean, automatic pull, push, or file edits.
+- No deploy, retrieve, git reset, git clean, or automatic pull.
+- End-of-day closure may delegate safe log add/commit/push to scripts/end-work.ps1.
 - RedMotors can delegate diagnostics to scripts/start-work.ps1 and scripts/pause-work.ps1.
 #>
 
@@ -628,9 +629,36 @@ function Start-RedMotorsClose {
 
     Push-Location -LiteralPath $RepoPath
     try {
-        Write-Host "Ejecutando cierre RedMotors:"
-        Write-Host ".\scripts\end-work.ps1"
-        & ".\scripts\end-work.ps1"
+        Write-Host "Selecciona el tipo de cierre:"
+        Write-Host ""
+        Write-Host "1. Cierre automatico seguro (recomendado)"
+        Write-Host "2. Cierre manual / corregir datos"
+        Write-Host "3. Cancelar"
+        Write-Host ""
+
+        $closeModeChoice = Read-Host "Selecciona una opcion (1-3, Enter = 1)"
+        if ([string]::IsNullOrWhiteSpace($closeModeChoice)) {
+            $closeModeChoice = "1"
+        }
+
+        switch ($closeModeChoice) {
+            "1" {
+                Write-Host "Ejecutando cierre RedMotors:"
+                Write-Host ".\scripts\end-work.ps1 -Mode AutoSafe"
+                & ".\scripts\end-work.ps1" -Mode AutoSafe
+            }
+            "2" {
+                Write-Host "Ejecutando cierre RedMotors:"
+                Write-Host ".\scripts\end-work.ps1 -Mode Manual"
+                & ".\scripts\end-work.ps1" -Mode Manual
+            }
+            "3" {
+                Write-Host "Operacion cancelada."
+            }
+            default {
+                Write-Host "Opcion no reconocida. No se ejecuto ninguna accion."
+            }
+        }
     }
     finally {
         Pop-Location

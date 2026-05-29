@@ -115,17 +115,15 @@ When the user says:
 - “continuamos mañana”
 - “dejamos aquí”
 
-Prepare:
-- daily summary
-- activity description for Luis
-- status
-- pending items
-- recommended log entry
+Do not ask the user to run manual `git add`, `git commit`, or `git push` for log closure if the automatic close is available.
 
-Then remind the user to run:
+Ask the user to run:
 
-Iniciar Trabajo
-→ 3. Cerrar día / trabajo
+DevLaunchpad
+→ Cerrar día / trabajo
 → RedMotors
+→ Cierre automático seguro
 
-So WORK_LOG.md and WEEKLY_REPORT_LOG.md can be updated safely.
+The safe automatic close reads `docs/asignaciones/ACTIVE_ASSIGNMENT.md`, uses Git diagnostics and logs as defaults, updates `WORK_LOG.md` and `WEEKLY_REPORT_LOG.md`, then commits and pushes only those log files when the repo has no non-log pending changes.
+
+If the automatic close blocks, ask the user to paste the summary in ChatGPT/Codex before closing VS Code, PowerShell or Salesforce.

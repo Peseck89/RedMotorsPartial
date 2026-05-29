@@ -7,6 +7,12 @@
 - Expected branch: feature/pc/redmotors-vn-rq106-anticipo-ui-20260527
 - Expected org: RedMotorsSandbox
 - Work mode: Continue assignment
+- Current activity: Trabajo sobre asignación activa
+- Daily summary:
+- Start time: No registrado
+- Sandbox scope/status: Alcance semanal cerrado en Sandbox.
+- Production modified: No
+- Closure notes:
 - Notes:
   - This assignment is multi-day work.
   - Continuing this assignment can be valid from the expected feature branch if Git is clean and synchronized.
