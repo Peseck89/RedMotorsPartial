@@ -86,6 +86,28 @@ When ready, provide:
    - Codex
    - Claude/Cowork
 
+## Pause / switch device
+
+When the user says:
+- “voy a salir”
+- “sigo en la laptop”
+- “cambio de equipo”
+- “pausamos y continuo luego”
+
+Do not treat it as end-of-day close. Do not ask for weekly report data, assignment/activity/description, or start time.
+
+Tell the user to run:
+
+DevLaunchpad
+→ 3. Pausar / cambiar de equipo
+→ RedMotors
+
+After the repo is ready on this machine, tell them to continue on the other machine with:
+
+DevLaunchpad
+→ 2. Continuar asignación activa
+→ RedMotors
+
 ## End-of-day reminder
 
 When the user says:
