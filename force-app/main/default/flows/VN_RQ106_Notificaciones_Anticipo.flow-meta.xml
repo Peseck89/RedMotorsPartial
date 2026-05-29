@@ -227,7 +227,29 @@
             <label>Tipo notificación disponible</label>
         </rules>
     </decisions>
-    <description>VN-RQ106: notifica al asesor cuando cambia Estatus__c a estados seguros del proceso. Pendientes no implementados: Tesorería, PEV, cliente, error PDF y error integración por falta de destinatarios o datos confirmados.</description>
+    <decisions>
+        <name>Guarda_Temporal_Asesor_Prueba</name>
+        <label>Guarda temporal asesor prueba</label>
+        <locationX>182</locationX>
+        <locationY>242</locationY>
+        <defaultConnectorLabel>Owner no autorizado para prueba</defaultConnectorLabel>
+        <rules>
+            <name>Owner_Es_Claudia_Prueba</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Asesor.Username</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>peseck89@gmail.com.redmotors.partial</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Custom_Notification_Type</targetReference>
+            </connector>
+            <label>Owner es Claudia prueba</label>
+        </rules>
+    </decisions>
+    <description>VN-RQ106: notifica al asesor cuando cambia Estatus__c a estados seguros del proceso. Guarda temporal de prueba: solo continúa si Opportunity.Owner.Username es peseck89@gmail.com.redmotors.partial; retirar o ajustar antes de la activación final. Pendientes no implementados: Tesorería, PEV, cliente, error PDF y error integración por falta de destinatarios o datos confirmados.</description>
     <formulas>
         <name>EmailSubject</name>
         <dataType>String</dataType>
@@ -271,7 +293,7 @@
         <locationY>134</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Get_Custom_Notification_Type</targetReference>
+            <targetReference>Guarda_Temporal_Asesor_Prueba</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
