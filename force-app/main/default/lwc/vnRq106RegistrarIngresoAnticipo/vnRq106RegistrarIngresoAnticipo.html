@@ -283,24 +283,24 @@
                                 <span class="validation-label">Monto mayor a cero</span>
                             </li>
                             <li class="validation-item">
-                                <template if:true={isPreparedForTreasury}>
+                                <template if:true={isPreparedForTreasuryPositive}>
                                     <span class="validation-dot validation-dot_success"></span>
-                                    <span class="validation-status validation-status_success">Listo</span>
+                                    <span class="validation-status validation-status_success">{preparedForTreasuryStatusLabel}</span>
                                 </template>
-                                <template if:false={isPreparedForTreasury}>
+                                <template if:false={isPreparedForTreasuryPositive}>
                                     <span class="validation-dot validation-dot_pending"></span>
-                                    <span class="validation-status">Pendiente</span>
+                                    <span class="validation-status">{preparedForTreasuryStatusLabel}</span>
                                 </template>
                                 <span class="validation-label">Preparado para Tesorería</span>
                             </li>
                             <li class="validation-item">
                                 <template if:true={isSolicitudEnviada}>
                                     <span class="validation-dot validation-dot_success"></span>
-                                    <span class="validation-status validation-status_success">Listo</span>
+                                    <span class="validation-status validation-status_success">{solicitudEnviadaStatusLabel}</span>
                                 </template>
                                 <template if:false={isSolicitudEnviada}>
                                     <span class="validation-dot validation-dot_pending"></span>
-                                    <span class="validation-status">Pendiente</span>
+                                    <span class="validation-status">{solicitudEnviadaStatusLabel}</span>
                                 </template>
                                 <span class="validation-label">Solicitud enviada</span>
                             </li>

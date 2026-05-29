@@ -120,6 +120,14 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
         return !!this.createdAnticipoId && this.hasUploadedEvidence && !this.isSentToTreasury;
     }
 
+    get isPreparedForTreasuryPositive() {
+        return this.isSentToTreasury || this.isPreparedForTreasury;
+    }
+
+    get preparedForTreasuryStatusLabel() {
+        return this.isPreparedForTreasuryPositive ? 'Listo' : 'Pendiente';
+    }
+
     get noVehiclesMessage() {
         return NO_VEHICLES_MESSAGE;
     }
@@ -138,6 +146,10 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
 
     get isSolicitudEnviada() {
         return this.isSentToTreasury;
+    }
+
+    get solicitudEnviadaStatusLabel() {
+        return this.isSentToTreasury ? 'Enviado' : 'Pendiente';
     }
 
     get isUploadDisabled() {

@@ -125,10 +125,29 @@ Resultado:
 |---|---|---|
 | Tesorería | `admin@portalnetcr.com` — correo fijo temporal confirmado 2026-05-29 | **Desbloqueado temporal** — correo grupal definitivo pendiente |
 | Asesor / Opportunity Owner | `Opportunity.Owner.Email` y `Opportunity.OwnerId` | Implementado y probado en `VN_RQ106_Notificaciones_Anticipo` v2 |
-| Cliente | Contacto relacionado con la oportunidad (`OpportunityContactRole` o `Contact.Email`). Si no tiene correo, no se envía. | **Comportamiento confirmado 2026-05-29.** Lookup exacto y estado(s) disparadores por definir. |
-| Jefe de Producto / PEV por marca | Campo de jefe de sucursal en `Opportunity`; cambia por Record Type. Verificar `JefeSucursal__c` u equivalente. | **Arquitectura confirmada 2026-05-29** — dinámico por campo, no hardcoded. Campo exacto pendiente; ejemplos de María pendientes. |
-| Jefe de Sucursal | `Opportunity.JefeSucursal__r.Email` | Campo existe. Candidato para PEV/Jefe de Producto según respuesta 2026-05-29. Confirmar con ejemplos de María. |
-| Gerente de Sucursal | `Opportunity.GerenteSucursal__r.Email` | Campo existe. No consultado en VN-RQ106 aún. |
+| Cliente | Candidato principal: `Opportunity.CorreoElectronicoCliente__c`. Alternativo: `Opportunity.contacto__r.Email`. Si no tiene correo, no se envía. | **Parcialmente desbloqueado por auditoría read-only 2026-05-29.** Falta confirmar prioridad cuando Opportunity, Contact y Account no coinciden. |
+| Jefe de Producto / PEV por marca | Candidato: `Opportunity.JefeSucursal__c` / `Opportunity.JefeSucursal__r.Email`. Campo poblado dinámicamente por la lógica existente de sucursal/Record Type. | **Parcialmente desbloqueado por auditoría read-only 2026-05-29** — confirmar con María que este es el destinatario PEV/Jefe Producto del proyecto. |
+| Jefe de Sucursal | `Opportunity.JefeSucursal__c` / `Opportunity.JefeSucursal__r.Email` | Campo existe y tiene datos reales en BMW, MINI, Motorrad, Polaris, Autos_Usados y Motos_Usados. Candidato PEV/Jefe Producto. |
+| Gerente de Sucursal | `Opportunity.GerenteSucursal__c` / `Opportunity.GerenteSucursal__r.Email` | Candidato para fallback/autonotificación. No usar como PEV sin confirmación de negocio. |
+
+### Auditoría read-only de campos PEV/Jefe Producto y cliente — 2026-05-29
+
+Consultas realizadas solo en `RedMotorsSandbox`. No se modificó metadata, no hubo deploy, no hubo commit y no se tocó Producción.
+
+| Tema | Resultado |
+|---|---|
+| Jefe Producto / PEV candidato | `Opportunity.JefeSucursal__c` / `Opportunity.JefeSucursal__r.Email`. |
+| Gerente candidato fallback/autonotificación | `Opportunity.GerenteSucursal__c` / `Opportunity.GerenteSucursal__r.Email`. |
+| Correo cliente candidato principal | `Opportunity.CorreoElectronicoCliente__c`. |
+| Contacto alternativo | `Opportunity.contacto__r.Email`. |
+| OpportunityContactRole | No usar como fuente primaria por baja cobertura frente a `Opportunity.CorreoElectronicoCliente__c` y `Opportunity.contacto__c`. |
+| Account como referencia | `Account.PersonEmail`, `Account.CorreoElectronicoEmpresarial__c` y `Account.Invoice_Email__c` existen, pero quedan como datos de contraste hasta confirmar prioridad de negocio. |
+
+Pendiente con María:
+- Confirmar que `Opportunity.JefeSucursal__c` es el destinatario PEV/Jefe Producto para VN-RQ106.
+- Confirmar si aplica igual para `Autos_Usados` y `Motos_Usados`.
+- Confirmar qué hacer con `Indian`, porque el Record Type existe pero no hay datos de ejemplo en Sandbox.
+- Confirmar prioridad del correo cliente cuando `Opportunity.CorreoElectronicoCliente__c`, `Opportunity.contacto__r.Email` y Account no coinciden.
 
 ### Correos PEV por marca (flujo `Alerta_de_reserva_de_producto_de_Oportunidad`, DRAFT)
 
@@ -150,9 +169,9 @@ Resultado:
 | Bloqueante | Detalle | Estado |
 |---|---|---|
 | Tesorería correo grupal definitivo | `admin@portalnetcr.com` es temporal. El correo grupal definitivo está pendiente. | **Desbloqueado temporal** — implementable con email temporal |
-| PEV campo exacto y ejemplos | Arquitectura confirmada como campo dinámico en Opportunity por Record Type. Falta ver ejemplos de María y confirmar cuál campo usar. | **Parcialmente desbloqueado** — no implementar en Flow hasta confirmar |
-| PEV Indian / Autos_Usados / Motos_Usados | Bajo la nueva arquitectura dinámica puede estar cubierto si el campo tiene valor por Record Type. Confirmar con María. | **Parcialmente desbloqueado** — depende de ejemplos de María |
-| Cliente: lookup exacto del contacto y estado disparador | Comportamiento confirmado: si no tiene correo, no se envía. Falta definir en qué estado(s) se envía el correo al cliente y qué lookup usar. | **Parcialmente desbloqueado** |
+| PEV campo exacto y ejemplos | Auditoría read-only deja como candidato `Opportunity.JefeSucursal__c` / `JefeSucursal__r.Email`. Falta confirmación final de María. | **Parcialmente desbloqueado** — no implementar en Flow hasta confirmar |
+| PEV Indian / Autos_Usados / Motos_Usados | `Autos_Usados` y `Motos_Usados` tienen datos en `JefeSucursal__c`; `Indian` no tiene datos de ejemplo en Sandbox. Confirmar con María si aplica la misma regla. | **Parcialmente desbloqueado** — depende de confirmación de María |
+| Cliente: lookup exacto del contacto y estado disparador | Candidato principal: `Opportunity.CorreoElectronicoCliente__c`; alternativo: `Opportunity.contacto__r.Email`. No usar `OpportunityContactRole` como fuente primaria por baja cobertura. Falta definir estado(s) y prioridad cuando hay discrepancias con Contact/Account. | **Parcialmente desbloqueado** |
 | Cliente sin correo | Confirmado 2026-05-29: si no tiene correo, no se envía. | **Resuelto** |
 | Plantilla de correo | Confirmado 2026-05-29: textos inline en Flow por ahora. Plantillas oficiales solicitadas pero pendientes. | **Desbloqueado temporal** |
 | Motivo/comentarios obligatorios | Por validar. No cambiar obligatoriedad hasta confirmación. | **Sigue bloqueado** |
@@ -230,8 +249,9 @@ Esto se mantiene como bloque separado de notificaciones.
 
 **Antes de implementar**:
 Conviene revisar los campos reales de Opportunity/Contacto en Sandbox para confirmar:
-- Si `JefeSucursal__c` tiene valores reales por Record Type (preparación para cuando se desbloquee PEV).
-- Si el contacto relacionado tiene email en los registros de prueba (preparación para cuando se desbloquee cliente).
+- Si María confirma `JefeSucursal__c` como destinatario PEV/Jefe Producto para VN-RQ106, incluyendo `Autos_Usados` y `Motos_Usados`.
+- Qué hacer con `Indian`, ya que no hubo datos de ejemplo en Sandbox durante la auditoría.
+- Prioridad del correo cliente cuando `Opportunity.CorreoElectronicoCliente__c`, `Opportunity.contacto__r.Email` y Account no coinciden.
 - Esto no bloquea el cambio de Tesorería, pero ahorra trabajo en la siguiente iteración.
 
 ---
@@ -241,10 +261,10 @@ Conviene revisar los campos reales de Opportunity/Contacto en Sandbox para confi
 | # | Pregunta | Para quién | Estado |
 |---|---|---|---|
 | 1 | ¿Tesorería es correo fijo, variable, grupo o cola? | Luis/equipo | **Resuelto temporal 2026-05-29**: usar `admin@portalnetcr.com`. Correo grupal definitivo pendiente. |
-| 2 | ¿Correo del cliente, fuente? | Luis/equipo | **Resuelto**: usar correo de contacto relacionado con la oportunidad. |
+| 2 | ¿Correo del cliente, fuente? | Luis/equipo/María | **Parcialmente resuelto por auditoría read-only 2026-05-29**: candidato principal `Opportunity.CorreoElectronicoCliente__c`; alternativo `Opportunity.contacto__r.Email`; no usar `OpportunityContactRole` como fuente primaria. Falta confirmar prioridad si Opportunity, Contact y Account no coinciden. |
 | 3 | ¿Qué pasa si cliente no tiene correo? | Luis/equipo | **Resuelto 2026-05-29**: si no tiene correo, no se envía. |
 | 4 | ¿Plantilla de correo definida? | Luis/equipo | **Resuelto temporal 2026-05-29**: textos inline en Flow por ahora. Plantillas oficiales solicitadas pero pendientes. |
-| 5 | ¿Cuál es el campo exacto para Jefe de Producto/PEV? ¿Puede María pasar ejemplos por Record Type? | María | **Pendiente** — respuesta indica usar campo de jefe de sucursal por Record Type, pero falta ejemplo concreto. |
+| 5 | ¿Cuál es el campo exacto para Jefe de Producto/PEV? ¿Puede María pasar ejemplos por Record Type? | María | **Pendiente** — auditoría read-only deja como candidato `Opportunity.JefeSucursal__c` / `JefeSucursal__r.Email`; confirmar si aplica para `Autos_Usados`, `Motos_Usados` y qué hacer con `Indian` sin datos de ejemplo. |
 | 6 | ¿En qué estado(s) debe recibir correo el cliente? | Luis/equipo | **Pendiente** — comportamiento de no enviar sin correo ya confirmado, pero falta definir estado(s) disparadores. |
 | 7 | ¿Motivo/comentario es obligatorio para rechazo, corrección y reserva rechazada? | Luis/equipo | **Pendiente** — "por validar". |
 | 8 | Softland: ¿qué evento/campo confirma fondos y creación de anticipo? | Diego | **Pendiente** — alcance Diego/Softland. |
