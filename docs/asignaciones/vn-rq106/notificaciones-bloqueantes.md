@@ -4,7 +4,7 @@ Este documento consolida el análisis de notificaciones/correos para VN-RQ106.
 Sirve como referencia operativa antes de implementar cualquier correo, Flow de notificación o EmailTemplate.
 
 Fecha de análisis inicial: 2026-05-28
-Última actualización: 2026-05-28 — respuestas de Diego incorporadas.
+Última actualización: 2026-05-28 — respuestas de Diego incorporadas; base financiera confirmada.
 Fuente de instrucción: Luis Sandoval / sesión PC.
 
 ---
@@ -29,7 +29,7 @@ Cuando se implemente: hacerlo en Flow Record-Triggered sobre `Anticipo__c.Estatu
 | 3 | ¿Qué pasa si cliente no tiene correo? | Sin respuesta explícita. Pendiente. |
 | 4 | ¿Plantilla de correo definida? | Pendiente — parece que sale de otro sistema. No implementar todavía. |
 | 5 | ¿Notificaciones en Flow o Apex? | Siempre en Flow para que sean más sencillas de ajustar. |
-| 6 | ¿Base para Saldo pendiente / precio de venta? | Usar Valor Total de la Oportunidad (`ValorTotal__c` o equivalente). |
+| 6 | ¿Base para Saldo pendiente / precio de venta? | Usar `Opportunity.Valor_Total_Oportunidad_FX__c`. |
 
 ---
 
@@ -111,6 +111,12 @@ Cuando se implemente: hacerlo en Flow Record-Triggered sobre `Anticipo__c.Estatu
 
 Diego confirmó: crear notificaciones siempre en Flow (no en Apex) para que sean más sencillas de ajustar.
 
+Nota técnica para diseño posterior:
+- No implementar Flows de notificación en este bloque de UI.
+- Cubrir por Flow los cambios de `Anticipo__c.Estatus__c` listados en "Eventos que deben disparar notificaciones".
+- Detectar transiciones con condición de cambio de estado para evitar reenvíos cuando se editen otros campos.
+- Mantener los valores financieros como lectura desde Opportunity; las notificaciones no deben recalcular saldo en Flow salvo confirmación futura.
+
 Mecanismo recomendado:
 - Flow de tipo **Record-Triggered** sobre `Anticipo__c`
 - Trigger: campo `Estatus__c` cambia a un valor específico
@@ -119,20 +125,20 @@ Mecanismo recomendado:
 
 Esto permite que María o Diego ajusten destinatarios y textos directamente en el Flow sin tocar Apex.
 
-No crear el Flow todavía. Esperara a que se resuelvan plantilla y correos PEV faltantes.
+No crear el Flow todavía. Esperar a que se resuelvan plantilla y correos PEV faltantes.
 
 ---
 
 ## Saldo pendiente — base confirmada
 
-Diego confirmó que la base para Saldo pendiente es el **Valor Total de la Oportunidad**.
+Diego confirmó que la base para Saldo pendiente es `Opportunity.Valor_Total_Oportunidad_FX__c`.
 
-Referencia técnica del campo a evaluar: `Opportunity.ValorTotal__c` (Roll-Up Summary existente, detectado en `requerimiento-campos.md` sección 2).
+Referencia técnica del campo fuente: `Opportunity.Valor_Total_Oportunidad_FX__c`.
 
-Fórmula conceptual: `Saldo_Pendiente__c = ValorTotal__c - Total_Anticipos_Aprobados__c`
+Fórmula implementada en Salesforce: `Saldo_Pendiente__c = BLANKVALUE(Valor_Total_Oportunidad_FX__c, 0) - BLANKVALUE(Total_Anticipos_Aprobados__c, 0)`.
 
-Implementación técnica pendiente: confirmar si Roll-Up sobre anticipos aprobados o cálculo por Apex/Flow.
-Esto es bloque separado de notificaciones y debe implementarse antes de los correos.
+La UI del modal debe leer `Valor_Total_Oportunidad_FX__c`, `Total_Anticipos_Aprobados__c`, `Saldo_Pendiente__c` y `CurrencyIsoCode` desde Opportunity sin recalcularlos en JavaScript.
+Esto se mantiene como bloque separado de notificaciones.
 
 ---
 

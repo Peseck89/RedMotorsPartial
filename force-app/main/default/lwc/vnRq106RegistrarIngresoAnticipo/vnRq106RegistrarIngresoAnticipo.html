@@ -21,7 +21,7 @@
                             </div>
                             <dl class="summary-grid">
                                 <div class="summary-item">
-                                    <dt>Nombre</dt>
+                                    <dt>Oportunidad</dt>
                                     <dd>{context.opportunityName}</dd>
                                 </div>
                                 <div class="summary-item">
@@ -33,8 +33,52 @@
                                     <dd>{displayOwnerName}</dd>
                                 </div>
                                 <div class="summary-item">
-                                    <dt>Record type</dt>
+                                    <dt>Tipo de registro</dt>
                                     <dd>{displayRecordType}</dd>
+                                </div>
+                            </dl>
+                        </section>
+                    </template>
+
+                    <template if:true={context}>
+                        <section class="section">
+                            <div class="section-header">
+                                <h2 class="section-title">Resumen financiero</h2>
+                            </div>
+                            <dl class="summary-grid">
+                                <div class="summary-item">
+                                    <dt>Valor total de la oportunidad</dt>
+                                    <dd>
+                                        <lightning-formatted-number
+                                            value={context.valorTotalOportunidad}
+                                            format-style="currency"
+                                            currency-code={displayCurrencyIsoCode}>
+                                        </lightning-formatted-number>
+                                    </dd>
+                                </div>
+                                <div class="summary-item">
+                                    <dt>Total anticipos aprobados</dt>
+                                    <dd>
+                                        <lightning-formatted-number
+                                            value={context.totalAnticiposAprobados}
+                                            format-style="currency"
+                                            currency-code={displayCurrencyIsoCode}>
+                                        </lightning-formatted-number>
+                                    </dd>
+                                </div>
+                                <div class="summary-item">
+                                    <dt>Saldo pendiente</dt>
+                                    <dd>
+                                        <lightning-formatted-number
+                                            value={context.saldoPendiente}
+                                            format-style="currency"
+                                            currency-code={displayCurrencyIsoCode}>
+                                        </lightning-formatted-number>
+                                    </dd>
+                                </div>
+                                <div class="summary-item">
+                                    <dt>Moneda heredada de la oportunidad</dt>
+                                    <dd>{displayCurrencyIsoCode}</dd>
                                 </div>
                             </dl>
                         </section>

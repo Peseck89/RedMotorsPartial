@@ -154,11 +154,27 @@ private class VN_RQ106_AnticipoControllerTest {
             VN_RQ106_AnticipoController.getOpportunityContext(opp.Id);
         Test.stopTest();
 
+        Opportunity expectedOpportunity = [
+            SELECT CurrencyIsoCode, Valor_Total_Oportunidad_FX__c,
+                Total_Anticipos_Aprobados__c, Saldo_Pendiente__c
+            FROM Opportunity
+            WHERE Id = :opp.Id
+        ];
+
         System.assertEquals(opp.Id, context.opportunityId);
         System.assertEquals('Oportunidad VN RQ106', context.opportunityName);
         System.assertEquals(opp.AccountId, context.accountId);
         System.assertNotEquals(null, context.ownerId);
         System.assertEquals(opp.CurrencyIsoCode, context.currencyIsoCode);
+        System.assertEquals(
+            expectedOpportunity.Valor_Total_Oportunidad_FX__c,
+            context.valorTotalOportunidad
+        );
+        System.assertEquals(
+            expectedOpportunity.Total_Anticipos_Aprobados__c,
+            context.totalAnticiposAprobados
+        );
+        System.assertEquals(expectedOpportunity.Saldo_Pendiente__c, context.saldoPendiente);
         System.assertEquals(1, context.products.size());
         System.assertEquals(product.Id, context.products[0].productId);
     }

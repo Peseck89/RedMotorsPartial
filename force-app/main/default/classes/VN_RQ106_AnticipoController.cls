@@ -13,7 +13,9 @@ public with sharing class VN_RQ106_AnticipoController {
             SELECT Id, Name, AccountId, Account.Name, OwnerId, Owner.Name,
                 RecordType.DeveloperName, JefeSucursal__c, JefeSucursal__r.Name,
                 GerenteSucursal__c, GerenteSucursal__r.Name, SucursalId__c,
-                SucursalId__r.Name, Sucursal__c, Synced_Quote__c, CurrencyIsoCode
+                SucursalId__r.Name, Sucursal__c, Synced_Quote__c, CurrencyIsoCode,
+                Valor_Total_Oportunidad_FX__c, Total_Anticipos_Aprobados__c,
+                Saldo_Pendiente__c
             FROM Opportunity
             WHERE Id = :opportunityId
             LIMIT 1
@@ -36,6 +38,9 @@ public with sharing class VN_RQ106_AnticipoController {
         context.sucursalValue = opp.Sucursal__c;
         context.syncedQuoteId = opp.Synced_Quote__c;
         context.currencyIsoCode = opp.CurrencyIsoCode;
+        context.valorTotalOportunidad = opp.Valor_Total_Oportunidad_FX__c;
+        context.totalAnticiposAprobados = opp.Total_Anticipos_Aprobados__c;
+        context.saldoPendiente = opp.Saldo_Pendiente__c;
         context.products = getProducts(opportunityId);
         return context;
     }
@@ -230,6 +235,9 @@ public with sharing class VN_RQ106_AnticipoController {
         @AuraEnabled public String sucursalValue { get; set; }
         @AuraEnabled public Id syncedQuoteId { get; set; }
         @AuraEnabled public String currencyIsoCode { get; set; }
+        @AuraEnabled public Decimal valorTotalOportunidad { get; set; }
+        @AuraEnabled public Decimal totalAnticiposAprobados { get; set; }
+        @AuraEnabled public Decimal saldoPendiente { get; set; }
         @AuraEnabled public List<ProductOption> products { get; set; }
     }
 
