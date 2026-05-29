@@ -4,7 +4,7 @@ General work launcher for local operating modes.
 Safety rules:
 - Diagnostics and navigation only.
 - No deploy, retrieve, git reset, git clean, automatic pull, push, or file edits.
-- RedMotors can delegate diagnostics to scripts/start-work.ps1.
+- RedMotors can delegate diagnostics to scripts/start-work.ps1 and scripts/pause-work.ps1.
 #>
 
 [CmdletBinding()]
@@ -642,6 +642,40 @@ function Start-AlticaClose {
     Write-Host "Altica todavia no esta configurado para cierre automatico."
 }
 
+function Start-RedMotorsPause {
+    param([string]$RepoPath)
+
+    Write-Section "Pausa RedMotors"
+
+    if (-not (Test-Folder $RepoPath)) {
+        Write-Host "RedMotors no existe en la ruta esperada:"
+        Write-Host $RepoPath
+        return
+    }
+
+    $pauseWorkPath = Join-Path $RepoPath "scripts\pause-work.ps1"
+    if (-not (Test-File $pauseWorkPath)) {
+        Write-Host "No se encontro scripts/pause-work.ps1 en RedMotors."
+        Write-Host "Ruta revisada: $pauseWorkPath"
+        return
+    }
+
+    Push-Location -LiteralPath $RepoPath
+    try {
+        Write-Host "Ejecutando pausa RedMotors:"
+        Write-Host ".\scripts\pause-work.ps1"
+        & ".\scripts\pause-work.ps1"
+    }
+    finally {
+        Pop-Location
+    }
+}
+
+function Start-AlticaPause {
+    Write-Section "Pausa Altica"
+    Write-Host "Altica todavia no esta configurado para pausa/cambio de equipo."
+}
+
 function Show-WorkProjectMenu {
     param(
         [pscustomobject]$Environment,
@@ -674,6 +708,39 @@ function Show-WorkProjectMenu {
         }
         "3" {
             Write-Host "Proyecto nuevo pendiente de configurar. Primero se debe crear ruta, aliases Salesforce y contexto IA."
+        }
+        "4" {
+            Write-Host "Operacion cancelada."
+        }
+        default {
+            Write-Host "Opcion no reconocida. No se ejecuto ninguna accion."
+        }
+    }
+}
+
+function Show-PauseProjectMenu {
+    param([pscustomobject]$Environment)
+
+    Write-Section "Pausar / cambiar de equipo"
+    Write-Host "Que proyecto vamos a pausar?"
+    Write-Host ""
+    Write-Host "1. RedMotors"
+    Write-Host "2. Altica"
+    Write-Host "3. Otro / nueva empresa"
+    Write-Host "4. Cancelar"
+    Write-Host ""
+
+    $projectChoice = Read-Host "Selecciona una opcion (1-4)"
+
+    switch ($projectChoice) {
+        "1" {
+            Start-RedMotorsPause -RepoPath $Environment.RedMotorsPath
+        }
+        "2" {
+            Start-AlticaPause
+        }
+        "3" {
+            Write-Host "Proyecto nuevo pendiente de configurar."
         }
         "4" {
             Write-Host "Operacion cancelada."
@@ -762,17 +829,18 @@ function Show-MainMenu {
     Write-Host ""
     Write-Host "1. Nueva asignacion"
     Write-Host "2. Continuar asignacion activa"
-    Write-Host "3. Cerrar dia / trabajo"
-    Write-Host "4. Revision rapida de estado"
-    Write-Host "5. Mantenimiento / limpieza mensual"
-    Write-Host "6. Salir"
+    Write-Host "3. Pausar / cambiar de equipo"
+    Write-Host "4. Cerrar dia / trabajo"
+    Write-Host "5. Revision rapida de estado"
+    Write-Host "6. Mantenimiento / limpieza mensual"
+    Write-Host "7. Salir"
     Write-Host ""
 }
 
 $environment = Get-LauncherEnvironment
 
 Show-MainMenu -Environment $environment
-$choice = Read-Host "Selecciona una opcion (1-6)"
+$choice = Read-Host "Selecciona una opcion (1-7)"
 
 switch ($choice) {
     "1" {
@@ -782,15 +850,18 @@ switch ($choice) {
         Show-WorkProjectMenu -Environment $environment -WorkMode Continue
     }
     "3" {
-        Show-CloseProjectMenu -Environment $environment
+        Show-PauseProjectMenu -Environment $environment
     }
     "4" {
-        Show-QuickReview -Environment $environment
+        Show-CloseProjectMenu -Environment $environment
     }
     "5" {
-        Write-Host "Mantenimiento mensual pendiente de implementar. No se ejecutaron acciones."
+        Show-QuickReview -Environment $environment
     }
     "6" {
+        Write-Host "Mantenimiento mensual pendiente de implementar. No se ejecutaron acciones."
+    }
+    "7" {
         Write-Host "Salida solicitada. No se ejecuto ninguna accion."
     }
     default {
