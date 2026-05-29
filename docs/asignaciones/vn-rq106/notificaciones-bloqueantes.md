@@ -4,19 +4,30 @@ Este documento consolida el análisis de notificaciones/correos para VN-RQ106.
 Sirve como referencia operativa antes de implementar cualquier correo, Flow de notificación o EmailTemplate.
 
 Fecha de análisis inicial: 2026-05-28
-Última actualización: 2026-05-28 — respuestas de Diego incorporadas; base financiera confirmada.
+Última actualización: 2026-05-29 — Flow de notificaciones al asesor probado en Sandbox.
 Fuente de instrucción: Luis Sandoval / sesión PC.
 
 ---
 
 ## Decisión actual
 
-No implementar correos ni Flows de notificación todavía.
-Los bloqueantes de plantilla y correos PEV (Indian, Usados) siguen sin respuesta.
-Además, las notificaciones deben separarse del bloque de campos y saldo pendiente:
-primero confirmar e implementar los campos nuevos y la lógica de saldo, luego atacar las notificaciones.
+El bloque inicial de notificaciones al asesor ya quedó implementado por Flow y probado en `RedMotorsSandbox`.
+Producción no fue modificada.
 
-Cuando se implemente: hacerlo en Flow Record-Triggered sobre `Anticipo__c.Estatus__c` (recomendación de Diego).
+Flow activo en Sandbox:
+- `VN_RQ106_Notificaciones_Anticipo`
+- Versión activa: v2
+- Objeto: `Anticipo__c`
+- Tipo: Record-Triggered Flow after update
+- Condición base: ejecutar cuando cambia `Estatus__c`
+- Destinatario implementado: asesor / `Opportunity.Owner`
+- Canales implementados: email simple y Custom Notification
+- Custom Notification Type: `Redmotors_Notification`
+- Remitente email: Org-Wide Email Address `info@redmotorscr.com`
+
+El Flow conserva una guarda temporal de prueba:
+- Solo continúa si `Opportunity.Owner.Username = 'peseck89@gmail.com.redmotors.partial'`.
+- Esta guarda debe retirarse o ajustarse antes de una activación final para producción.
 
 ---
 
@@ -54,17 +65,45 @@ Cuando se implemente: hacerlo en Flow Record-Triggered sobre `Anticipo__c.Estatu
 
 ## Eventos que deben disparar notificaciones
 
-| # | Evento / Transición de estado | Destinatarios lógicos | Estado actualizado |
+| # | Estado de `Anticipo__c.Estatus__c` | Destinatario implementado | Canal | Estado actualizado |
+|---|---|---|---|---|
+| 1 | `Confirmada por Tesorería` | Asesor / `Opportunity.Owner` | Email + Custom Notification | Implementado y probado en Sandbox |
+| 2 | `Corrección requerida por Tesorería` | Asesor / `Opportunity.Owner` | Email + Custom Notification | Implementado y probado en Sandbox |
+| 3 | `Rechazada por Tesorería` | Asesor / `Opportunity.Owner` | Email + Custom Notification | Implementado y probado en Sandbox |
+| 4 | `Anticipo creado` | Asesor / `Opportunity.Owner` | Email + Custom Notification | Implementado y probado en Sandbox |
+| 5 | `Reserva rechazada` | Asesor / `Opportunity.Owner` | Email + Custom Notification | Implementado y probado en Sandbox |
+| 6 | `Borrador → En validación de Tesorería` (asesor envía) | Tesorería | Pendiente | Bloqueado por destinatario/plantilla final |
+| 7 | `→ Vehículo reservado` | Asesor + PEV por marca | Pendiente | Bloqueado por PEV Indian/Usados y diseño final |
+| 8 | `→ Error de integración` | Diego / soporte técnico | Pendiente | Alcance Diego / Softland |
+| 9 | Error PDF / PDF disponible | Asesor o soporte | Pendiente | Alcance Diego / Softland; plantilla de otro sistema |
+
+---
+
+## Prueba controlada en Sandbox — 2026-05-28/29
+
+Data usada:
+
+| Registro | Id | Detalle |
+|---|---|---|
+| Account | `001Nq00001Qj49dIAB` | `VN-RQ106 TEST Claudia` |
+| Opportunity | `006Nq00000XbTo1IAF` | `VN-RQ106 TEST Claudia Opportunity`; owner `peseck89@gmail.com.redmotors.partial` |
+| Quote | `0Q0Nq000003tMxRKAU` | Quote de prueba para cumplir `Opportunity.Synced_Quote__c` |
+
+Anticipos de prueba:
+
+| Anticipo | Id | Escenario | Estado final probado |
 |---|---|---|---|
-| 1 | `Borrador → En validación de Tesorería` (asesor envía) | Tesorería | Desbloqueado temporalmente: correo fijo "admin". Plantilla pendiente |
-| 2 | `En validación de Tesorería → Confirmada por Tesorería` | Asesor (Owner) | Evento no implementado. Destinatario disponible |
-| 3 | `En validación de Tesorería → Corrección requerida por Tesorería` | Asesor (Owner) | Evento no implementado. Destinatario disponible |
-| 4 | `En validación de Tesorería → Rechazada por Tesorería` | Asesor (Owner) | Evento no implementado. Destinatario disponible |
-| 5 | `→ Vehículo reservado` | Asesor + PEV por marca | Parcialmente disponible (flujo en DRAFT, faltan Indian y Usados) |
-| 6 | `→ Reserva rechazada` | Asesor | No implementado |
-| 7 | `→ Error de integración` | Diego / soporte técnico | Alcance Diego / Softland |
-| 8 | `→ Anticipo creado` (Softland) | Asesor, posiblemente cliente | Alcance Diego / Softland |
-| 9 | PDF disponible | Asesor | Alcance Diego / Softland. Plantilla de otro sistema |
+| `ANT-01152` | `a4JNq000000X9J3MAK` | `TEST Confirmada por Tesorería` | `Confirmada por Tesorería` |
+| `ANT-01153` | `a4JNq000000X9J4MAK` | `TEST Corrección requerida por Tesorería` | `Corrección requerida por Tesorería` |
+| `ANT-01154` | `a4JNq000000X9J5MAK` | `TEST Rechazada por Tesorería` | `Rechazada por Tesorería` |
+| `ANT-01155` | `a4JNq000000X9J6MAK` | `TEST Anticipo creado` | `Anticipo creado` |
+| `ANT-01156` | `a4JNq000000X9J7MAK` | `TEST Reserva rechazada` | `Reserva rechazada` |
+
+Resultado:
+- Los cinco updates de `Estatus__c` fueron exitosos.
+- No hubo error de Flow devuelto en las transacciones.
+- El rebote inicial de Gmail se corrigió en v2 usando remitente Org-Wide `info@redmotorscr.com`.
+- Producción no fue modificada.
 
 ---
 
@@ -73,7 +112,7 @@ Cuando se implemente: hacerlo en Flow Record-Triggered sobre `Anticipo__c.Estatu
 | Destinatario | Cómo se obtiene | Estado |
 |---|---|---|
 | Tesorería | Correo fijo "admin" por el momento | **Confirmado temporal por Diego** |
-| Asesor / Opportunity Owner | `Opportunity.Owner.Email` | Disponible. No incluido aún en `sendToTreasury` |
+| Asesor / Opportunity Owner | `Opportunity.Owner.Email` y `Opportunity.OwnerId` | Implementado y probado en `VN_RQ106_Notificaciones_Anticipo` v2 |
 | Cliente | Contacto relacionado con la oportunidad (`OpportunityContactRole` o `Contact.Email`) | **Confirmado por Diego.** Mecanismo exacto por definir |
 | Jefe de Producto / PEV por marca | Correos hardcoded en flujo existente (ver tabla abajo) | Confirmados para BMW/MINI/Motorrad/Kawasaki/Polaris. Flujo en DRAFT |
 | Jefe de Sucursal | `Opportunity.JefeSucursal__r.Email` | Campo existe. Email no consultado en VN-RQ106 aún |
@@ -94,11 +133,17 @@ Cuando se implemente: hacerlo en Flow Record-Triggered sobre `Anticipo__c.Estatu
 
 ---
 
-## Bloqueantes que siguen activos
+## Pendientes bloqueados por negocio
 
 | Bloqueante | Detalle |
 |---|---|
-| Plantilla de correo | Diego indicó que parece salir de otro sistema. No implementar hasta aclarar |
+| Tesorería destinatario real | Diego indicó usar "admin" temporalmente, pero falta definición final: usuario, correo fijo, cola, grupo o variable por sucursal/marca |
+| PEV | Faltan destinatarios definitivos para Indian, Autos_Usados y Motos_Usados. Confirmar si los correos del flujo existente aplican a VN-RQ106 |
+| Cliente | Falta definir lookup exacto del contacto relacionado, manejo de cliente sin correo y si aplica email, notificación o ambos |
+| Error PDF | Alcance Diego / Softland. Falta definir evento, destinatario, plantilla y fuente del link o error |
+| Error integración | Alcance Diego / Softland. Falta definir evento, destinatario técnico/operativo y contenido mínimo |
+| Motivo/comentarios obligatorios | Falta confirmar si `Comentarios_Aprobacion_Rechazo__c` u otro campo debe ser obligatorio para rechazo/corrección/reserva rechazada |
+| Plantilla de correo | Diego indicó que parece salir de otro sistema. No implementar templates definitivos hasta aclarar |
 | Correo PEV Indian | Sin correo definido en flujo ni confirmado por María/Diego |
 | Correo PEV Autos_Usados | Sin correo definido |
 | Correo PEV Motos_Usados | Sin correo definido |
@@ -107,25 +152,28 @@ Cuando se implemente: hacerlo en Flow Record-Triggered sobre `Anticipo__c.Estatu
 
 ---
 
-## Recomendación técnica — notificaciones por Flow
+## Implementación técnica actual — notificaciones al asesor
 
 Diego confirmó: crear notificaciones siempre en Flow (no en Apex) para que sean más sencillas de ajustar.
 
-Nota técnica para diseño posterior:
-- No implementar Flows de notificación en este bloque de UI.
+Flow implementado:
+- `force-app/main/default/flows/VN_RQ106_Notificaciones_Anticipo.flow-meta.xml`
+- Record-Triggered Flow sobre `Anticipo__c`
+- After update
+- Start condition: `Estatus__c` cambia
+- Busca la Opportunity relacionada y su Owner
+- Guarda temporal: `Opportunity.Owner.Username = 'peseck89@gmail.com.redmotors.partial'`
+- Ramifica por los cinco estados probados del asesor
+- Envía email con `emailSimple`
+- Envía Custom Notification con `Redmotors_Notification`
+- Remitente email configurado como Org-Wide Email Address `info@redmotorscr.com`
+
+Notas para diseño posterior:
 - Cubrir por Flow los cambios de `Anticipo__c.Estatus__c` listados en "Eventos que deben disparar notificaciones".
 - Detectar transiciones con condición de cambio de estado para evitar reenvíos cuando se editen otros campos.
 - Mantener los valores financieros como lectura desde Opportunity; las notificaciones no deben recalcular saldo en Flow salvo confirmación futura.
-
-Mecanismo recomendado:
-- Flow de tipo **Record-Triggered** sobre `Anticipo__c`
-- Trigger: campo `Estatus__c` cambia a un valor específico
-- Acción: elemento `Send Email` o `emailSimple` dentro del Flow
-- Un Flow separado por grupo de transiciones o un Flow con ramificación por `Estatus__c`
-
-Esto permite que María o Diego ajusten destinatarios y textos directamente en el Flow sin tocar Apex.
-
-No crear el Flow todavía. Esperar a que se resuelvan plantilla y correos PEV faltantes.
+- Antes de producción, retirar o reemplazar la guarda temporal de Claudia.
+- Antes de producción, confirmar si los textos inline son definitivos o si deben migrarse a Email Templates.
 
 ---
 
@@ -144,13 +192,13 @@ Esto se mantiene como bloque separado de notificaciones.
 
 ## Qué NO implementar todavía
 
-- Ningún correo a Tesorería aunque el destinatario esté temporalmente definido — plantilla no aprobada.
-- Ningún correo al cliente — mecanismo exacto de lookup de contacto sin confirmar.
-- Ningún EmailTemplate — Diego indica que parece venir de otro sistema.
-- No activar el flujo de reserva `Alerta_de_reserva_de_producto_de_Oportunidad` — VN-RQ106 no ejecuta reserva real todavía, y faltan correos PEV de Indian y Usados.
-- No crear Custom Metadata de destinatarios — sin estructura aprobada.
-- Nada de Softland, PDF ni error de integración — alcance Diego.
-- No mezclar bloque de notificaciones con bloque de campos/saldo — implementar saldo primero.
+- No pasar a producción con la guarda temporal de Claudia.
+- No implementar correo a Tesorería hasta confirmar destinatario final y plantilla.
+- No implementar correo al cliente hasta definir el lookup exacto y comportamiento cuando no hay correo.
+- No implementar PEV hasta confirmar Indian, Autos_Usados y Motos_Usados.
+- No implementar Error PDF ni Error integración sin definición de Diego/Softland.
+- No crear EmailTemplates definitivos si la plantilla seguirá viniendo de otro sistema.
+- No crear Custom Metadata de destinatarios sin estructura aprobada.
 
 ---
 
@@ -168,11 +216,24 @@ Esto se mantiene como bloque separado de notificaciones.
 
 ---
 
-## Archivos que tocar cuando se desbloqueen notificaciones
+## Riesgos antes de producción
+
+| Riesgo | Mitigación requerida |
+|---|---|
+| Guarda temporal limita notificaciones a Claudia | Retirar o reemplazar por regla final de alcance antes de producción |
+| Destinatarios incompletos | Confirmar Tesorería, PEV, cliente y soporte antes de habilitar esos eventos |
+| Textos inline no aprobados | Validar si se mantienen textos del Flow o si se migran a Email Templates |
+| Sender/email domain | Mantener Org-Wide Email Address verificado; no enviar como usuarios Gmail/personales |
+| Comentarios/motivos opcionales | Confirmar si deben ser obligatorios para rechazo, corrección y reserva rechazada |
+| Producción no probada | Hacer validación/deploy controlado a producción solo con autorización formal |
+
+---
+
+## Archivos que tocar cuando se desbloqueen pendientes
 
 | Archivo | Cambio previsto |
 |---|---|
-| Nuevo Flow Record-Triggered sobre `Anticipo__c` | Trigger en cambio de `Estatus__c`. Ramificación por estado. Acción `Send Email` o `emailSimple`. Un Flow por grupo de estados o un Flow con branching. Crear solo cuando plantilla y correos PEV estén confirmados |
+| `VN_RQ106_Notificaciones_Anticipo.flow-meta.xml` | Retirar o ajustar guarda temporal. Agregar ramas/destinatarios pendientes cuando negocio confirme datos |
 | `Alerta_de_reserva_de_producto_de_Oportunidad` | Agregar Indian, Autos_Usados, Motos_Usados y activar solo cuando VN-RQ106 implemente reserva real |
 | `VN_RQ106_AnticipoController.cls` | Solo si se decide enviar alguna notificación desde Apex en lugar de Flow (no recomendado según Diego) |
 
