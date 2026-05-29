@@ -21,18 +21,21 @@ Use:
 Ask the user to run from the desktop shortcut:
 
 Iniciar Trabajo
-→ 1. Trabajar en una asignación
+→ 2. Continuar asignación activa
 → RedMotors
 
+DevLaunchpad will read `docs/asignaciones/ACTIVE_ASSIGNMENT.md` when it exists. If it can extract `Expected branch`, option 2 allows that expected feature branch when Git is clean and synchronized. If it cannot extract the branch, it runs continuation mode without `ExpectedBranch`, which allows `feature/*` or `main` only with a warning to validate the branch in ChatGPT before touching code.
+
 Then ask them to paste the launcher result only if:
-- it does not say LISTO PARA RECIBIR ASIGNACION
+- it does not say LISTO
 - it shows Git dirty
 - it shows ahead/behind
 - Salesforce target-org is wrong
 - Salesforce auth is expired
 - context files are missing
+- it shows warnings that need branch or org confirmation
 
-If launcher says LISTO PARA RECIBIR ASIGNACION, continue with the assignment.
+If launcher says LISTO, continue with the assignment after reviewing any warnings.
 
 ## Context files to review
 
@@ -100,7 +103,7 @@ Prepare:
 Then remind the user to run:
 
 Iniciar Trabajo
-→ 2. Cerrar trabajo / asignación
+→ 3. Cerrar día / trabajo
 → RedMotors
 
 So WORK_LOG.md and WEEKLY_REPORT_LOG.md can be updated safely.
