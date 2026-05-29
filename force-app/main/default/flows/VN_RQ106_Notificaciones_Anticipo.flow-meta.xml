@@ -55,6 +55,57 @@
         </inputParameters>
     </actionCalls>
     <actionCalls>
+        <name>Enviar_Correo_Tesoreria</name>
+        <label>Enviar correo Tesorería</label>
+        <locationX>530</locationX>
+        <locationY>566</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>OrgWideEmailAddress</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderAddress</name>
+            <value>
+                <stringValue>info@redmotorscr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>admin@portalnetcr.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>EmailSubjectTesoreria</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>EmailBodyTesoreria</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>relatedRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
         <name>Enviar_Notificacion_Asesor</name>
         <label>Enviar notificación asesor</label>
         <locationX>314</locationX>
@@ -191,6 +242,21 @@
             </connector>
             <label>Reserva rechazada</label>
         </rules>
+        <rules>
+            <name>En_Validacion_de_Tesoreria</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Estatus__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>En validación de Tesorería</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Enviar_Correo_Tesoreria</targetReference>
+            </connector>
+            <label>En validación de Tesorería</label>
+        </rules>
     </decisions>
     <decisions>
         <name>Tiene_Email_Asesor</name>
@@ -261,7 +327,7 @@
             <label>Owner es Claudia prueba</label>
         </rules>
     </decisions>
-    <description>VN-RQ106: notifica al asesor cuando cambia Estatus__c a estados seguros del proceso. Guarda temporal de prueba: solo continúa si Opportunity.Owner.Username es peseck89@gmail.com.redmotors.partial; retirar o ajustar antes de la activación final. Pendientes no implementados: Tesorería, PEV, cliente, error PDF y error integración por falta de destinatarios o datos confirmados.</description>
+    <description>VN-RQ106: notifica al asesor cuando cambia Estatus__c a estados del proceso; notifica a Tesorería (admin@portalnetcr.com) cuando pasa a "En validación de Tesorería". Guarda temporal de prueba: solo continúa si Opportunity.Owner.Username es peseck89@gmail.com.redmotors.partial; retirar o ajustar antes de la activación final. Pendientes no implementados: PEV, cliente, error PDF y error integración por falta de destinatarios o datos confirmados.</description>
     <formulas>
         <name>EmailSubject</name>
         <dataType>String</dataType>
@@ -276,6 +342,11 @@
         <name>NotificationTitle</name>
         <dataType>String</dataType>
         <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Confirmada por Tesorería&apos;, &apos;Anticipo confirmado&apos;, &apos;Corrección requerida por Tesorería&apos;, &apos;Corrección requerida&apos;, &apos;Rechazada por Tesorería&apos;, &apos;Anticipo rechazado&apos;, &apos;Anticipo creado&apos;, &apos;Anticipo creado&apos;, &apos;Reserva rechazada&apos;, &apos;Reserva rechazada&apos;, &apos;Actualización de anticipo&apos;)</expression>
+    </formulas>
+    <formulas>
+        <name>EmailSubjectTesoreria</name>
+        <dataType>String</dataType>
+        <expression>&apos;VN-RQ106: nueva solicitud de anticipo en validación - &apos; + {!$Record.Name}</expression>
     </formulas>
     <interviewLabel>VN-RQ106 Notificaciones Anticipo {!$Flow.CurrentDateTime}</interviewLabel>
     <label>VN-RQ106 Notificaciones Anticipo</label>
@@ -384,6 +455,11 @@
         <name>EmailBody</name>
         <isViewedAsPlainText>false</isViewedAsPlainText>
         <text>&lt;p&gt;Hola {!Get_Asesor.Name},&lt;/p&gt;&lt;p&gt;La solicitud VN-RQ106 {!$Record.Name} de la oportunidad {!Get_Oportunidad.Name} cambió a &lt;strong&gt;{!$Record.Estatus__c}&lt;/strong&gt;.&lt;/p&gt;&lt;p&gt;Monto: {!$Record.Monto__c}&lt;br/&gt;Tipo de ingreso: {!$Record.Tipo_Ingreso__c}&lt;br/&gt;Referencia: {!$Record.Referencia_Comprobante__c}&lt;/p&gt;&lt;p&gt;Comentarios: {!$Record.Comentarios_Aprobacion_Rechazo__c}&lt;/p&gt;&lt;p&gt;Revise el anticipo para continuar el proceso.&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>EmailBodyTesoreria</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Estimado equipo de Tesorería,&lt;/p&gt;&lt;p&gt;El asesor &lt;strong&gt;{!Get_Asesor.Name}&lt;/strong&gt; ha enviado una nueva solicitud de anticipo para validación.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Anticipo:&lt;/strong&gt; {!$Record.Name}&lt;br/&gt;&lt;strong&gt;Oportunidad:&lt;/strong&gt; {!Get_Oportunidad.Name}&lt;br/&gt;&lt;strong&gt;Asesor:&lt;/strong&gt; {!Get_Asesor.Name}&lt;br/&gt;&lt;strong&gt;Monto:&lt;/strong&gt; {!$Record.Monto__c}&lt;br/&gt;&lt;strong&gt;Tipo de ingreso:&lt;/strong&gt; {!$Record.Tipo_Ingreso__c}&lt;br/&gt;&lt;strong&gt;Referencia:&lt;/strong&gt; {!$Record.Referencia_Comprobante__c}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Comentarios del asesor:&lt;/strong&gt; {!$Record.Comentarios_Aprobacion_Rechazo__c}&lt;/p&gt;&lt;p&gt;Por favor revise y procese la solicitud en Salesforce.&lt;/p&gt;</text>
     </textTemplates>
     <variables>
         <name>OwnerIds</name>
