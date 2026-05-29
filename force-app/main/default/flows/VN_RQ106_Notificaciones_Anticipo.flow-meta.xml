@@ -26,7 +26,7 @@
         <inputParameters>
             <name>emailAddresses</name>
             <value>
-                <elementReference>Get_Asesor.Email</elementReference>
+                <elementReference>EmailAddressesAsesorYJefeProducto</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -158,6 +158,22 @@
             </value>
         </assignmentItems>
         <connector>
+            <targetReference>Tiene_Jefe_Producto_Notificacion</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Asigna_Destinatario_Notificacion_Jefe</name>
+        <label>Asigna destinatario notificación jefe</label>
+        <locationX>314</locationX>
+        <locationY>458</locationY>
+        <assignmentItems>
+            <assignToReference>OwnerIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Get_Jefe_Producto.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
             <targetReference>Determinar_Evento</targetReference>
         </connector>
     </assignments>
@@ -259,6 +275,38 @@
         </rules>
     </decisions>
     <decisions>
+        <name>Tiene_Jefe_Producto_Notificacion</name>
+        <label>Tiene jefe producto notificación</label>
+        <locationX>182</locationX>
+        <locationY>458</locationY>
+        <defaultConnector>
+            <targetReference>Determinar_Evento</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Sin jefe producto adicional</defaultConnectorLabel>
+        <rules>
+            <name>Jefe_Producto_Distinto_Asesor</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Jefe_Producto.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Jefe_Producto.Id</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>Get_Asesor.Id</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asigna_Destinatario_Notificacion_Jefe</targetReference>
+            </connector>
+            <label>Jefe producto distinto asesor</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Tiene_Email_Asesor</name>
         <label>Tiene email asesor</label>
         <locationX>182</locationX>
@@ -322,16 +370,21 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_Custom_Notification_Type</targetReference>
+            <targetReference>Get_Jefe_Producto</targetReference>
             </connector>
             <label>Owner es Claudia prueba</label>
         </rules>
     </decisions>
-    <description>VN-RQ106: notifica al asesor cuando cambia Estatus__c a estados del proceso; notifica a Tesorería (admin@portalnetcr.com) cuando pasa a "En validación de Tesorería". Guarda temporal de prueba: solo continúa si Opportunity.Owner.Username es peseck89@gmail.com.redmotors.partial; retirar o ajustar antes de la activación final. Pendientes no implementados: PEV, cliente, error PDF y error integración por falta de destinatarios o datos confirmados.</description>
+    <description>VN-RQ106: notifica al asesor y al Jefe de Producto/Jefe de Sucursal de la Opportunity cuando cambia Estatus__c a estados del proceso; notifica a Tesorería (admin@portalnetcr.com) cuando pasa a "En validación de Tesorería". Guarda temporal de prueba: solo continúa si Opportunity.Owner.Username es peseck89@gmail.com.redmotors.partial; retirar o ajustar antes de la activación final. Pendientes no implementados: cliente, error PDF y error integración por falta de destinatarios o datos confirmados.</description>
     <formulas>
         <name>EmailSubject</name>
         <dataType>String</dataType>
         <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Confirmada por Tesorería&apos;, &apos;VN-RQ106: anticipo confirmado por Tesorería&apos;, &apos;Corrección requerida por Tesorería&apos;, &apos;VN-RQ106: corrección requerida por Tesorería&apos;, &apos;Rechazada por Tesorería&apos;, &apos;VN-RQ106: anticipo rechazado por Tesorería&apos;, &apos;Anticipo creado&apos;, &apos;VN-RQ106: anticipo creado&apos;, &apos;Reserva rechazada&apos;, &apos;VN-RQ106: reserva rechazada&apos;, &apos;VN-RQ106: actualización de anticipo&apos;)</expression>
+    </formulas>
+    <formulas>
+        <name>EmailAddressesAsesorYJefeProducto</name>
+        <dataType>String</dataType>
+        <expression>IF(AND(NOT(ISBLANK({!Get_Jefe_Producto.Email})), {!Get_Jefe_Producto.Id} &lt;&gt; {!Get_Asesor.Id}), {!Get_Asesor.Email} + &apos;,&apos; + {!Get_Jefe_Producto.Email}, {!Get_Asesor.Email})</expression>
     </formulas>
     <formulas>
         <name>NotificationBody</name>
@@ -409,6 +462,27 @@
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>CustomNotificationType</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Jefe_Producto</name>
+        <label>Get jefe producto</label>
+        <locationX>182</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Custom_Notification_Type</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Oportunidad.JefeSucursal__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>User</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
