@@ -8,18 +8,44 @@ Safety rules:
 #>
 
 [CmdletBinding()]
-param()
+param(
+    [ValidateSet("New", "Continue")]
+    [string]$Mode = "New",
+
+    [string]$ExpectedBranch = ""
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Continue"
 
 $Risks = New-Object System.Collections.Generic.List[string]
+$Warnings = New-Object System.Collections.Generic.List[string]
+
+$normalizedExpectedBranch = "$ExpectedBranch".Trim()
+$modeLabel = if ($Mode -eq "New") { "Nueva asignacion" } else { "Continuar asignacion" }
+$expectedBranchDisplay = if ($Mode -eq "New") {
+    "main"
+}
+elseif (-not [string]::IsNullOrWhiteSpace($normalizedExpectedBranch)) {
+    $normalizedExpectedBranch
+}
+else {
+    "feature/* o main con advertencia"
+}
 
 function Add-Risk {
     param([string]$Reason)
 
     if (-not [string]::IsNullOrWhiteSpace($Reason)) {
         [void]$script:Risks.Add($Reason)
+    }
+}
+
+function Add-Warning {
+    param([string]$Reason)
+
+    if (-not [string]::IsNullOrWhiteSpace($Reason)) {
+        [void]$script:Warnings.Add($Reason)
     }
 }
 
@@ -397,6 +423,8 @@ if ($device -eq "Desconocido") {
 
 Write-Section "Inicio"
 Write-Host "Proyecto: RedMotors"
+Write-Host "Modo: $modeLabel"
+Write-Host "Rama esperada: $expectedBranchDisplay"
 Write-Host "Equipo: $device"
 Write-Host "Fecha: $dateText"
 Write-Host "Hora inicio: $timeText"
@@ -420,6 +448,7 @@ $onlyInitialScriptUntracked = $false
 $isAhead = $false
 $isBehind = $false
 $hasOrigin = $false
+$hasUpstream = $false
 
 Write-Section "Git"
 if (-not $gitInstalled) {
@@ -453,28 +482,45 @@ else {
     $isAhead = Test-StatusFlag $statusLine "ahead\s+\d+"
     $isBehind = Test-StatusFlag $statusLine "behind\s+\d+"
     $hasOrigin = @($gitRemote.Output | Where-Object { $_ -match "^origin\s+" }).Count -gt 0
+    $hasUpstream = $statusLine -match "\.\.\."
 
     if ([string]::IsNullOrWhiteSpace($gitBranch)) {
         Add-Risk "No se pudo detectar la rama actual."
     }
-    elseif ($gitBranch -ne "main") {
-        Add-Risk "La rama actual es $gitBranch; para iniciar asignacion se esperaba main."
+    elseif ($Mode -eq "New") {
+        if ($gitBranch -ne "main") {
+            Add-Risk "La rama actual es $gitBranch; para nueva asignacion se esperaba main."
+        }
+    }
+    elseif (-not [string]::IsNullOrWhiteSpace($normalizedExpectedBranch)) {
+        if ($gitBranch -ne $normalizedExpectedBranch) {
+            Add-Risk "La rama actual es $gitBranch; para continuar se esperaba $normalizedExpectedBranch."
+        }
+    }
+    elseif ($gitBranch -like "feature/*") {
+        Add-Warning "No se informo ExpectedBranch; valida en ChatGPT que $gitBranch corresponde a la asignacion activa."
+    }
+    elseif ($gitBranch -eq "main") {
+        Add-Warning "Estas en main al continuar; valida si falta cambiar a la rama de trabajo."
+    }
+    else {
+        Add-Risk "Sin ExpectedBranch, el modo Continue solo permite feature/* o main con advertencia. Rama actual: $gitBranch."
     }
 
     if (-not $hasOrigin) {
         Add-Risk "No se detecto remote origin."
     }
 
+    if (-not $hasUpstream) {
+        Add-Risk "No se detecto upstream para la rama actual; no se puede confirmar sincronizacion."
+    }
+
     if ($trackedChangeLines.Count -gt 0) {
         Add-Risk "Hay cambios locales sin cerrar."
     }
 
-    if ($hasUntracked -and -not $onlyInitialScriptUntracked) {
+    if ($hasUntracked) {
         Add-Risk "Hay archivos untracked."
-    }
-    elseif ($onlyInitialScriptUntracked) {
-        Write-Host ""
-        Write-Host "Nota: solo aparece sin versionar scripts/start-work.ps1 durante la prueba inicial; no se considera riesgo real."
     }
 
     if ($isAhead) {
@@ -529,8 +575,8 @@ else {
         Add-Risk "RedMotorsSandbox esta $sandboxConnectionStatus en sf org list --json."
     }
 
-    if ($prodConnectionStatus -ne "Connected") {
-        Add-Risk "RedMotorsProd esta $prodConnectionStatus en sf org list --json."
+    if ($prodConnectionStatus -eq "Connected") {
+        Add-Warning "RedMotorsProd esta Connected; no debe usarse para desarrollo."
     }
 }
 
@@ -541,11 +587,8 @@ else {
     "Incompleto"
 }
 
-$gitSummary = if ($gitInstalled -and $contextStatus[".git"] -and -not $hasLocalChanges -and -not $isAhead -and -not $isBehind -and $hasOrigin) {
+$gitSummary = if ($gitInstalled -and $contextStatus[".git"] -and -not $hasLocalChanges -and -not $isAhead -and -not $isBehind -and $hasOrigin -and $hasUpstream) {
     "Limpio y sincronizado"
-}
-elseif ($gitInstalled -and $contextStatus[".git"] -and $onlyInitialScriptUntracked -and -not $isAhead -and -not $isBehind -and $hasOrigin) {
-    "Sincronizado; solo scripts/start-work.ps1 sin commit inicial"
 }
 elseif ($gitInstalled -and $contextStatus[".git"]) {
     "Revisar"
@@ -555,10 +598,16 @@ else {
 }
 
 $originSummary = if ($hasOrigin) { "origin detectado" } else { "origin no detectado" }
+$upstreamSummary = if ($hasUpstream) { "upstream detectado" } else { "upstream no detectado" }
 $salesforceSummary = if ($targetOrg) { $targetOrg } else { "No detectado" }
 
 $finalState = if ($Risks.Count -eq 0) {
-    "LISTO PARA RECIBIR ASIGNACION"
+    if ($Mode -eq "New") {
+        "LISTO - NUEVA ASIGNACION"
+    }
+    else {
+        "LISTO - CONTINUAR ASIGNACION"
+    }
 }
 else {
     "NO COMENZAR TODAVIA"
@@ -567,22 +616,28 @@ else {
 if ($isBehind) {
     $pullRecommendation = "Revisar diferencias y hacer pull manual si corresponde."
 }
-elseif ($finalState -eq "LISTO PARA RECIBIR ASIGNACION" -and ($gitSummary -eq "Limpio y sincronizado" -or $gitSummary -like "Sincronizado;*")) {
-    $pullRecommendation = "No se requiere pull manual; puedes comenzar."
+elseif ($Risks.Count -eq 0 -and $Warnings.Count -gt 0) {
+    $pullRecommendation = "Entorno validado con advertencias; compartelas en ChatGPT antes de tocar codigo."
+}
+elseif ($Risks.Count -eq 0 -and $gitSummary -eq "Limpio y sincronizado") {
+    $pullRecommendation = "No se requiere pull manual; puedes continuar."
 }
 else {
-    $pullRecommendation = "No se recomienda pull manual por ahora."
+    $pullRecommendation = "No continuar todavia."
 }
 
 Write-Section "Resumen final"
 Write-Host "Proyecto: RedMotors"
+Write-Host "Modo: $modeLabel"
 Write-Host "Equipo: $device"
 Write-Host "Fecha: $dateText"
 Write-Host "Hora: $timeText"
 Write-Host "Ruta: $currentPath"
-Write-Host "Rama: $gitBranch"
+Write-Host "Rama esperada: $expectedBranchDisplay"
+Write-Host "Rama actual: $gitBranch"
 Write-Host "Git: $gitSummary"
 Write-Host "Origin: $originSummary"
+Write-Host "Upstream: $upstreamSummary"
 Write-Host "Salesforce target-org: $salesforceSummary"
 Write-Host "RedMotorsSandbox: $sandboxConnectionStatus"
 Write-Host "RedMotorsProd: $prodConnectionStatus"
@@ -598,9 +653,22 @@ if ($Risks.Count -gt 0) {
     }
 }
 
+if ($Warnings.Count -gt 0) {
+    Write-Host ""
+    Write-Host "Advertencias:"
+    foreach ($warning in $Warnings) {
+        Write-Host "- $warning"
+    }
+}
+
 Write-Host ""
 Write-Host $finalState
 Write-Host ""
 Write-Host "Siguiente paso:"
-Write-Host "Abre ChatGPT o Claude en el proyecto correcto y pega ahi la transcripcion, WhatsApp, documento o explicacion de Luis."
-Write-Host "No pegues esa informacion en PowerShell."
+if ($Risks.Count -eq 0) {
+    Write-Host "Entorno validado. Regresa a ChatGPT/Claude y continua la asignacion."
+    Write-Host "Si hubo advertencias, comparte este resumen en ChatGPT antes de tocar codigo."
+}
+else {
+    Write-Host "No continues todavia. Copia este resumen y compartelo en ChatGPT para decidir el siguiente paso."
+}

@@ -504,8 +504,41 @@ function Open-WorkAppsIfRequested {
     Open-AiToolIfRequested
 }
 
-function Start-RedMotorsWork {
+function Get-ActiveAssignmentExpectedBranch {
     param([string]$RepoPath)
+
+    $activeAssignmentPath = Join-Path $RepoPath "docs\asignaciones\ACTIVE_ASSIGNMENT.md"
+
+    if (-not (Test-File $activeAssignmentPath)) {
+        return ""
+    }
+
+    try {
+        $line = @(Get-Content -LiteralPath $activeAssignmentPath -ErrorAction Stop | Where-Object {
+                $_ -match "^\s*-\s*Expected branch\s*:\s*(.+?)\s*$"
+            } | Select-Object -First 1)
+
+        if ($line.Count -eq 0) {
+            return ""
+        }
+
+        if ($line[0] -match "^\s*-\s*Expected branch\s*:\s*(.+?)\s*$") {
+            return $Matches[1].Trim()
+        }
+    }
+    catch {
+        Write-Host "Advertencia: no se pudo leer ACTIVE_ASSIGNMENT.md."
+    }
+
+    return ""
+}
+
+function Start-RedMotorsWork {
+    param(
+        [string]$RepoPath,
+        [ValidateSet("New", "Continue")]
+        [string]$WorkMode = "New"
+    )
 
     Write-Section "RedMotors"
 
@@ -524,9 +557,26 @@ function Start-RedMotorsWork {
 
     Push-Location -LiteralPath $RepoPath
     try {
+        $expectedBranch = ""
+        if ($WorkMode -eq "Continue") {
+            $expectedBranch = Get-ActiveAssignmentExpectedBranch -RepoPath $RepoPath
+            if (-not [string]::IsNullOrWhiteSpace($expectedBranch)) {
+                Write-Host "Rama esperada detectada en ACTIVE_ASSIGNMENT.md: $expectedBranch"
+            }
+            else {
+                Write-Host "No se detecto rama esperada en ACTIVE_ASSIGNMENT.md; se validara modo Continue sin ExpectedBranch."
+            }
+        }
+
         Write-Host "Ejecutando diagnostico RedMotors:"
-        Write-Host ".\scripts\start-work.ps1"
-        & ".\scripts\start-work.ps1"
+        if ($WorkMode -eq "Continue" -and -not [string]::IsNullOrWhiteSpace($expectedBranch)) {
+            Write-Host ".\scripts\start-work.ps1 -Mode Continue -ExpectedBranch `"$expectedBranch`""
+            & ".\scripts\start-work.ps1" -Mode Continue -ExpectedBranch $expectedBranch
+        }
+        else {
+            Write-Host ".\scripts\start-work.ps1 -Mode $WorkMode"
+            & ".\scripts\start-work.ps1" -Mode $WorkMode
+        }
 
         Write-Host ""
         Open-WorkAppsIfRequested
@@ -593,10 +643,19 @@ function Start-AlticaClose {
 }
 
 function Show-WorkProjectMenu {
-    param([pscustomobject]$Environment)
+    param(
+        [pscustomobject]$Environment,
+        [ValidateSet("New", "Continue")]
+        [string]$WorkMode = "New"
+    )
 
     Write-Section "Proyecto"
-    Write-Host "En que proyecto vamos a trabajar?"
+    if ($WorkMode -eq "New") {
+        Write-Host "En que proyecto vamos a iniciar una nueva asignacion?"
+    }
+    else {
+        Write-Host "En que proyecto vamos a continuar la asignacion activa?"
+    }
     Write-Host ""
     Write-Host "1. RedMotors"
     Write-Host "2. Altica"
@@ -608,7 +667,7 @@ function Show-WorkProjectMenu {
 
     switch ($projectChoice) {
         "1" {
-            Start-RedMotorsWork -RepoPath $Environment.RedMotorsPath
+            Start-RedMotorsWork -RepoPath $Environment.RedMotorsPath -WorkMode $WorkMode
         }
         "2" {
             Start-AlticaWork -RepoPath $Environment.AlticaPath
@@ -701,33 +760,37 @@ function Show-MainMenu {
     Write-Host ""
     Write-Host "Que quieres hacer?"
     Write-Host ""
-    Write-Host "1. Trabajar en una asignacion"
-    Write-Host "2. Cerrar trabajo / asignacion"
-    Write-Host "3. Revision rapida de estado"
-    Write-Host "4. Mantenimiento / limpieza mensual"
-    Write-Host "5. Salir"
+    Write-Host "1. Nueva asignacion"
+    Write-Host "2. Continuar asignacion activa"
+    Write-Host "3. Cerrar dia / trabajo"
+    Write-Host "4. Revision rapida de estado"
+    Write-Host "5. Mantenimiento / limpieza mensual"
+    Write-Host "6. Salir"
     Write-Host ""
 }
 
 $environment = Get-LauncherEnvironment
 
 Show-MainMenu -Environment $environment
-$choice = Read-Host "Selecciona una opcion (1-5)"
+$choice = Read-Host "Selecciona una opcion (1-6)"
 
 switch ($choice) {
     "1" {
-        Show-WorkProjectMenu -Environment $environment
+        Show-WorkProjectMenu -Environment $environment -WorkMode New
     }
     "2" {
-        Show-CloseProjectMenu -Environment $environment
+        Show-WorkProjectMenu -Environment $environment -WorkMode Continue
     }
     "3" {
-        Show-QuickReview -Environment $environment
+        Show-CloseProjectMenu -Environment $environment
     }
     "4" {
-        Write-Host "Mantenimiento mensual pendiente de implementar. No se ejecutaron acciones."
+        Show-QuickReview -Environment $environment
     }
     "5" {
+        Write-Host "Mantenimiento mensual pendiente de implementar. No se ejecutaron acciones."
+    }
+    "6" {
         Write-Host "Salida solicitada. No se ejecuto ninguna accion."
     }
     default {
