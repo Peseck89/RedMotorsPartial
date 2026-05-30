@@ -341,6 +341,19 @@ function Get-AssignmentValue {
     return $DefaultValue
 }
 
+function Get-SafeCommitAssignmentName {
+    param([string]$Assignment)
+
+    if (-not [string]::IsNullOrWhiteSpace($Assignment)) {
+        $match = [regex]::Match($Assignment, "\b[A-Za-z]+-[A-Za-z]*\d+[A-Za-z0-9_-]*\b")
+        if ($match.Success) {
+            return $match.Value.ToUpperInvariant()
+        }
+    }
+
+    return "assignment"
+}
+
 function Test-ProductionWasModified {
     param([string]$Value)
 
@@ -753,7 +766,8 @@ function Invoke-AutoSafeClose {
         $scope = "equipo"
     }
 
-    $commitMessage = "docs($scope): log $assignment closure session"
+    $commitAssignment = Get-SafeCommitAssignmentName -Assignment $assignment
+    $commitMessage = "docs($scope): log $commitAssignment closure session"
 
     Write-Section "Commit y push de logs"
     $addResult = Invoke-LoggedCommand "git add logs" "git" @("add", "WORK_LOG.md", "WEEKLY_REPORT_LOG.md")
