@@ -33,6 +33,18 @@ private class VN_RQ106_AnticipoControllerTest {
         return opp;
     }
 
+    private static Opportunity createOpportunityWithoutAccount() {
+        Opportunity opp = new Opportunity(
+            Name = 'Oportunidad VN RQ106 Sin Cliente',
+            StageName = 'Prospecting',
+            CloseDate = Date.today().addDays(15),
+            Pricebook2Id = Test.getStandardPricebookId(),
+            CurrencyIsoCode = 'USD'
+        );
+        insert opp;
+        return opp;
+    }
+
     private static Product2 createVehicleProduct() {
         Product2 product = new Product2(
             Name = 'Vehiculo VN RQ106',
@@ -122,7 +134,6 @@ private class VN_RQ106_AnticipoControllerTest {
         request.fechaIngreso = Date.today();
         request.referenciaComprobante = 'REF-001';
         request.depositante = 'Cliente de Prueba';
-        request.identificacionDepositante = '123456789';
         request.comentariosAsesor = 'Solicitud de prueba VN-RQ106';
         return request;
     }
@@ -229,8 +240,28 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertEquals('Borrador', inserted.Estatus__c);
         System.assertNotEquals('Aplicado', inserted.Estatus__c);
         System.assertEquals(null, inserted.Producto__c);
+        System.assertEquals(null, inserted.Identificacion_Depositante__c);
         System.assertEquals(opp.CurrencyIsoCode, inserted.CurrencyIsoCode);
         System.assertEquals('Borrador', result.estatus);
+    }
+
+    @IsTest
+    static void createDraftSolicitudWithoutRelatedClientFails() {
+        Opportunity opp = createOpportunityWithoutAccount();
+        VN_RQ106_AnticipoController.DraftSolicitudRequest request = buildRequest(opp.Id);
+
+        Boolean exceptionThrown = false;
+
+        Test.startTest();
+        try {
+            VN_RQ106_AnticipoController.createDraftSolicitud(request);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'La oportunidad debe requerir AccountId.');
+        System.assertEquals(0, [SELECT COUNT() FROM Anticipo__c WHERE Oportunidad__c = :opp.Id]);
     }
 
     @IsTest

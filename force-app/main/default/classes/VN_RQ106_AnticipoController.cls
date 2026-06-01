@@ -59,7 +59,6 @@ public with sharing class VN_RQ106_AnticipoController {
         solicitud.Fecha_Ingreso__c = payload.fechaIngreso;
         solicitud.Referencia_Comprobante__c = payload.referenciaComprobante;
         solicitud.Depositante__c = payload.depositante;
-        solicitud.Identificacion_Depositante__c = payload.identificacionDepositante;
         solicitud.Comentarios_Asesor__c = payload.comentariosAsesor;
         solicitud.Estatus__c = STATUS_BORRADOR;
 
@@ -117,13 +116,16 @@ public with sharing class VN_RQ106_AnticipoController {
 
     private static Opportunity getOpportunityForDraft(Id opportunityId) {
         List<Opportunity> opportunities = [
-            SELECT Id, CurrencyIsoCode
+            SELECT Id, AccountId, CurrencyIsoCode
             FROM Opportunity
             WHERE Id = :opportunityId
             LIMIT 1
         ];
         if (opportunities.isEmpty()) {
             throw new AuraHandledException('La oportunidad no existe.');
+        }
+        if (opportunities[0].AccountId == null) {
+            throw new AuraHandledException('La oportunidad debe tener un cliente relacionado.');
         }
         return opportunities[0];
     }
@@ -208,7 +210,6 @@ public with sharing class VN_RQ106_AnticipoController {
         @AuraEnabled public Date fechaIngreso { get; set; }
         @AuraEnabled public String referenciaComprobante { get; set; }
         @AuraEnabled public String depositante { get; set; }
-        @AuraEnabled public String identificacionDepositante { get; set; }
         @AuraEnabled public String comentariosAsesor { get; set; }
         @AuraEnabled public Id productoId { get; set; }
     }

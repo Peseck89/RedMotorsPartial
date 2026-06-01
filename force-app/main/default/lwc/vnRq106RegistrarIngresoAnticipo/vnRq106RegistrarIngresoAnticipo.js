@@ -24,7 +24,6 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
         fechaIngreso: '',
         referenciaComprobante: '',
         depositante: '',
-        identificacionDepositante: '',
         comentariosAsesor: '',
         productoId: ''
     };
@@ -101,6 +100,10 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
         return !!this.context;
     }
 
+    get hasRelatedClient() {
+        return !!this.context?.accountId;
+    }
+
     get hasPositiveAmount() {
         return Number(this.form.monto) > 0;
     }
@@ -133,7 +136,7 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
     }
 
     get isSaveDisabled() {
-        return this.isLoading || !!this.createdAnticipoId || this.hasNoVehiclesForReserva;
+        return this.isLoading || !!this.createdAnticipoId || this.hasNoVehiclesForReserva || !this.hasRelatedClient;
     }
 
     get hasUploadedEvidence() {
@@ -203,6 +206,17 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
             return;
         }
 
+        if (!this.hasRelatedClient) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Cliente relacionado requerido',
+                    message: 'La oportunidad debe tener una cuenta relacionada para registrar la solicitud.',
+                    variant: 'error'
+                })
+            );
+            return;
+        }
+
         if (!this.validateRequiredFields()) {
             return;
         }
@@ -217,7 +231,6 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
                 fechaIngreso: this.form.fechaIngreso,
                 referenciaComprobante: this.form.referenciaComprobante,
                 depositante: this.form.depositante,
-                identificacionDepositante: this.form.identificacionDepositante,
                 comentariosAsesor: this.form.comentariosAsesor,
                 productoId: this.isReservaVehiculo && this.form.productoId ? this.form.productoId : null
             }
