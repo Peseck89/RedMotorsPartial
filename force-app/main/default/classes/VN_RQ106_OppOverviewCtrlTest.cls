@@ -119,11 +119,83 @@ private class VN_RQ106_OppOverviewCtrlTest {
         System.assertEquals(0, overview.vehicles.size());
         System.assertEquals(1, overview.solicitudes.size());
         System.assertEquals('VINPANTALLA1', overview.solicitudes[0].vin);
-        System.assertEquals(1, overview.anticiposAprobados.size());
+        System.assertEquals(0, overview.anticiposAprobados.size());
         System.assertEquals(1, overview.historial.size());
         System.assertEquals('Con evidencia', overview.solicitudes[0].evidenceStatus);
-        System.assertEquals(true, overview.solicitudes[0].isApprovedOrApplied);
+        System.assertEquals(false, overview.solicitudes[0].isApprovedOrApplied);
         System.assertEquals('Aprobado por Tesorería', overview.historial[0].comentario);
+    }
+
+    @IsTest
+    static void getOverviewOnlyShowsAppliedAndReservedAsMoneyAnticipos() {
+        Opportunity opp = createOpportunity();
+
+        insert new List<Anticipo__c>{
+            new Anticipo__c(
+                Oportunidad__c = opp.Id,
+                Tipo_Ingreso__c = 'Abono',
+                Medio_Pago__c = 'Transferencia',
+                Fecha_Ingreso__c = Date.today(),
+                Referencia_Comprobante__c = 'APL',
+                Depositante__c = 'Cliente',
+                Monto__c = 100,
+                CurrencyIsoCode = 'USD',
+                Estatus__c = 'Aplicado'
+            ),
+            new Anticipo__c(
+                Oportunidad__c = opp.Id,
+                Tipo_Ingreso__c = 'Reserva de vehículo',
+                Medio_Pago__c = 'Transferencia',
+                Fecha_Ingreso__c = Date.today(),
+                Referencia_Comprobante__c = 'RES',
+                Depositante__c = 'Cliente',
+                Monto__c = 200,
+                CurrencyIsoCode = 'USD',
+                Estatus__c = 'Vehículo reservado'
+            ),
+            new Anticipo__c(
+                Oportunidad__c = opp.Id,
+                Tipo_Ingreso__c = 'Abono',
+                Medio_Pago__c = 'Transferencia',
+                Fecha_Ingreso__c = Date.today(),
+                Referencia_Comprobante__c = 'TES',
+                Depositante__c = 'Cliente',
+                Monto__c = 300,
+                CurrencyIsoCode = 'USD',
+                Estatus__c = 'Confirmada por Tesorería'
+            ),
+            new Anticipo__c(
+                Oportunidad__c = opp.Id,
+                Tipo_Ingreso__c = 'Abono',
+                Medio_Pago__c = 'Transferencia',
+                Fecha_Ingreso__c = Date.today(),
+                Referencia_Comprobante__c = 'CRE',
+                Depositante__c = 'Cliente',
+                Monto__c = 400,
+                CurrencyIsoCode = 'USD',
+                Estatus__c = 'Anticipo creado'
+            )
+        };
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(4, overview.solicitudes.size());
+        System.assertEquals(4, overview.historial.size());
+        System.assertEquals(2, overview.anticiposAprobados.size());
+
+        Set<String> moneyAnticipoStatuses = new Set<String>();
+        for (VN_RQ106_OpportunityOverviewController.AnticipoSummary anticipo : overview.anticiposAprobados) {
+            moneyAnticipoStatuses.add(anticipo.estatus);
+            System.assertEquals(true, anticipo.isApprovedOrApplied);
+        }
+
+        System.assertEquals(true, moneyAnticipoStatuses.contains('Aplicado'));
+        System.assertEquals(true, moneyAnticipoStatuses.contains('Vehículo reservado'));
+        System.assertEquals(false, moneyAnticipoStatuses.contains('Confirmada por Tesorería'));
+        System.assertEquals(false, moneyAnticipoStatuses.contains('Anticipo creado'));
     }
 
     @IsTest

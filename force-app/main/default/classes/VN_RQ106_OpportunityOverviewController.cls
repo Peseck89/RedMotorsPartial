@@ -1,8 +1,6 @@
 public with sharing class VN_RQ106_OpportunityOverviewController {
     private static final Set<String> APPROVED_OR_APPLIED_STATUSES = new Set<String>{
         'Aplicado',
-        'Confirmada por Tesorería',
-        'Anticipo creado',
         'Vehículo reservado'
     };
 
