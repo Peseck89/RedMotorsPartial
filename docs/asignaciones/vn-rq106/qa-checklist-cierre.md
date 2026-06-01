@@ -1,131 +1,139 @@
-# VN-RQ106 - QA/checklist de cierre del avance actual
+# VN-RQ106 - QA/checklist de cierre de fase actual
 
-Fecha: 2026-05-29
+Fecha: 2026-06-01
 
 Alcance de este checklist:
-- Boton `Registrar ingreso / anticipo` desde Opportunity.
-- Modal LWC para registrar ingreso, evidencia y envio a Tesoreria.
-- Resumen financiero read-only.
-- Notificaciones al asesor ya implementadas en Sandbox.
+- Pantalla 1 Opportunity Salesforce con LWC `vnRq106OpportunityOverview`.
+- Pantalla 2 Formulario solicitud con LWC `vnRq106RegistrarIngresoAnticipo`.
+- Quick Action `Registrar ingreso / anticipo`.
+- Notificaciones del Flow `VN_RQ106_Notificaciones_Anticipo`.
+- Permission Set `VN_RQ106_Anticipo`.
 
-Fuera de metrica Claudia/equipo:
-- Integracion Salesforce -> Softland.
-- Creacion real del anticipo en Softland.
-- Obtencion real de PDF desde Softland.
-- Reintentos, payloads finales y endpoints de integracion.
+Ambiente de validacion:
+- Sandbox: `RedMotorsSandbox`.
+- Opportunity base sugerida: `006Nq00000XbTo1IAF`.
+- Produccion: fuera de alcance, no tocar.
 
-## 1. Boton Registrar ingreso / anticipo
+Fuera de alcance de esta fase:
+- PDF real Softland.
+- Integracion Diego / Softland real.
+- Error PDF real.
+- Error integracion real.
+- Deploy o prueba en Produccion.
 
-| Prueba | Pasos | Resultado esperado | Evidencia esperada |
-|---|---|---|---|
-| Boton visible en Opportunity VN | Abrir una Opportunity VN en Sandbox | Accion `Registrar ingreso / anticipo` visible | Screenshot de action bar o menu de acciones |
-| Boton visible en Opportunity VU | Abrir una Opportunity VU en Sandbox | Accion `Registrar ingreso / anticipo` visible | Screenshot de action bar o menu de acciones |
-| Apertura del modal | Click en `Registrar ingreso / anticipo` | Se abre modal LWC sin error | Screenshot del modal abierto |
-| Contexto correcto | Revisar seccion `Datos de oportunidad` | Muestra oportunidad, cliente, asesor y tipo de registro | Screenshot de seccion |
-| Sin impacto en acciones legacy | Revisar que botones legacy sigan existiendo | No se removieron acciones existentes | Screenshot o comparacion visual |
+## 1. Pantalla 1 Opportunity Salesforce
 
-## 2. Formulario, evidencia y envio a Tesoreria
-
-| Prueba | Pasos | Resultado esperado | Evidencia esperada |
-|---|---|---|---|
-| Campos obligatorios vacios | Intentar guardar sin completar datos | El modal marca campos requeridos | Screenshot de validaciones |
-| Monto invalido | Ingresar monto 0 o vacio | No permite guardar borrador | Screenshot de validacion |
-| Tipo ingreso Abono | Completar formulario con `Tipo de ingreso = Abono` | No solicita vehiculo | Screenshot de formulario |
-| Tipo ingreso Reserva de vehiculo con vehiculos | Elegir `Reserva de vehiculo` en Opportunity con vehiculos disponibles | Muestra selector de vehiculo | Screenshot del selector |
-| Tipo ingreso Reserva sin vehiculos | Elegir `Reserva de vehiculo` sin vehiculos disponibles | Muestra advertencia y bloquea guardado | Screenshot de advertencia |
-| Guardar borrador | Completar obligatorios y click `Guardar borrador` | Crea `Anticipo__c` en estado `Borrador` | Id del anticipo + screenshot de toast/estado |
-| Evidencia visible despues de borrador | Crear borrador | Se muestra carga de archivos ligada al Anticipo | Screenshot de seccion Evidencia |
-| Adjuntar evidencia | Cargar archivo en `Adjuntar evidencia` | Archivo queda asociado al Anticipo | Screenshot del archivo cargado o ContentDocumentLink |
-| Enviar sin evidencia | Intentar enviar antes de cargar archivo | Boton queda deshabilitado o no permite envio | Screenshot de boton deshabilitado |
-| Enviar a Tesoreria | Con evidencia cargada, click `Enviar a Tesoreria` | Estado cambia a `En validacion de Tesoreria` | Screenshot/toast + query del Anticipo |
-| Evitar reenvio | Luego de enviar a Tesoreria | No permite enviar de nuevo | Screenshot de estado/boton |
-
-## 3. Resumen financiero
-
-| Prueba | Pasos | Resultado esperado | Evidencia esperada |
-|---|---|---|---|
-| Seccion visible | Abrir modal en Opportunity | Se muestra `Resumen financiero` | Screenshot de seccion |
-| Valor total oportunidad | Comparar UI contra `Opportunity.Valor_Total_Oportunidad_FX__c` | Mismo valor mostrado en UI | Screenshot UI + query Salesforce |
-| Total anticipos aprobados | Comparar UI contra `Opportunity.Total_Anticipos_Aprobados__c` | Mismo valor mostrado en UI | Screenshot UI + query Salesforce |
-| Saldo pendiente | Comparar UI contra `Opportunity.Saldo_Pendiente__c` | Mismo valor mostrado en UI | Screenshot UI + query Salesforce |
-| Moneda heredada | Revisar moneda en UI contra `Opportunity.CurrencyIsoCode` | UI muestra moneda de la Opportunity | Screenshot UI + query Salesforce |
-| No recalculo en UI | Revisar comportamiento visual | Valores vienen de Salesforce; no se recalculan en JS | Referencia a Apex/SOQL o revision tecnica |
-
-## 4. Notificaciones al asesor implementadas
-
-Condicion actual en Sandbox:
-- Flow `VN_RQ106_Notificaciones_Anticipo` v2 activo.
-- Guarda temporal: solo continua si `Opportunity.Owner.Username = 'peseck89@gmail.com.redmotors.partial'`.
-- Email sender: Org-Wide Email Address `info@redmotorscr.com`.
-- Custom Notification Type: `Redmotors_Notification`.
-
-| Escenario | Anticipo TEST usado | Accion | Resultado esperado | Evidencia esperada |
+| Prueba | Pasos | Resultado esperado | Evidencia esperada | Estado |
 |---|---|---|---|---|
-| Confirmada por Tesoreria | `ANT-01152` / `a4JNq000000X9J3MAK` | Cambiar `Estatus__c` a `Confirmada por Tesoreria` | Update exitoso, email + custom notification al asesor | Query estado final + email recibido/notificacion |
-| Correccion requerida por Tesoreria | `ANT-01153` / `a4JNq000000X9J4MAK` | Cambiar `Estatus__c` a `Correccion requerida por Tesoreria` | Update exitoso, email + custom notification al asesor | Query estado final + email recibido/notificacion |
-| Rechazada por Tesoreria | `ANT-01154` / `a4JNq000000X9J5MAK` | Cambiar `Estatus__c` a `Rechazada por Tesoreria` | Update exitoso, email + custom notification al asesor | Query estado final + email recibido/notificacion |
-| Anticipo creado | `ANT-01155` / `a4JNq000000X9J6MAK` | Cambiar `Estatus__c` a `Anticipo creado` | Update exitoso, email + custom notification al asesor | Query estado final + email recibido/notificacion |
-| Reserva rechazada | `ANT-01156` / `a4JNq000000X9J7MAK` | Cambiar `Estatus__c` a `Reserva rechazada` | Update exitoso, email + custom notification al asesor | Query estado final + email recibido/notificacion |
+| Componente visible en Opportunity VN | Abrir una Opportunity VN en Sandbox | `vnRq106OpportunityOverview` aparece como bloque principal superior | Screenshot primer pantallazo | Pendiente QA visual |
+| Componente visible en Opportunity VU | Abrir una Opportunity VU en Sandbox | `vnRq106OpportunityOverview` aparece como bloque principal superior | Screenshot primer pantallazo | Pendiente QA visual |
+| Encabezado | Abrir Pantalla 1 | Muestra nombre de Opportunity y boton `Registrar ingreso / anticipo` | Screenshot encabezado | Pendiente QA visual |
+| Datos principales | Revisar seccion de datos | Muestra cliente, vehiculo/VIN si existe, precio de venta, estado oportunidad/reserva y asesor | Screenshot + query de Opportunity/Product2 si aplica | Pendiente QA |
+| Solicitudes de ingreso | Revisar lista/resumen | Muestra maximo 3 solicitudes recientes y texto `Ver mas en lista relacionada` si hay mas | Screenshot + query de `Anticipo__c` | Pendiente QA |
+| Anticipos de dinero | Revisar lista/resumen | Muestra maximo 3 anticipos aprobados/aplicados con numero, monto, fecha y estado | Screenshot + query de `Anticipo__c` | Pendiente QA |
+| Resumen financiero | Revisar panel derecho | Muestra valor total, total anticipos aprobados y saldo pendiente desde Opportunity | Screenshot + query de campos financieros | Pendiente QA |
+| Estado anticipo/reserva | Revisar panel derecho | Muestra estado actual de anticipo y estado reserva/producto disponible | Screenshot + query | Pendiente QA |
+| PDF/documentos placeholder | Revisar tarjeta PDF/documentos | Muestra `Pendiente de integracion Softland`; no intenta obtener PDF real | Screenshot | Pendiente QA |
+| Historial | Revisar seccion historial | Muestra maximo 2 eventos resumidos con estado/comentario/fecha disponible | Screenshot + query de `Anticipo__c` | Pendiente QA |
+| Alertas/acciones | Revisar panel derecho | Muestra correccion solicitada, error integracion y reintento como disponible/no disponible segun datos; reintento dice `No disponible todavia` | Screenshot | Pendiente QA |
 
-Resultado ya observado:
-- Los cinco updates fueron exitosos.
-- No hubo error de Flow devuelto en las transacciones.
-- El rebote inicial por From `gmail.com` se corrigio usando Org-Wide sender `info@redmotorscr.com`.
+## 2. Pantalla 2 Formulario solicitud
 
-## 5. Riesgos abiertos
+| Prueba | Pasos | Resultado esperado | Evidencia esperada | Estado |
+|---|---|---|---|---|
+| Orden de campos | Abrir quick action | Orden: Tipo de ingreso, Medio de pago, Fecha de ingreso, Referencia/comprobante, Depositante, Monto, Moneda, Vehiculo si reserva, Evidencia, Comentarios asesor | Screenshot formulario | Pendiente QA |
+| Sin identificacion depositante | Revisar formulario completo | No aparece `Identificacion solicitante` ni `Identificacion depositante` | Screenshot formulario | Pendiente QA |
+| Cliente relacionado listo | Abrir Opportunity con `AccountId` | UI marca `Cliente relacionado` como listo | Screenshot validacion | Pendiente QA |
+| Cliente relacionado faltante | Abrir Opportunity sin `AccountId` o probar dato controlado | UI/Apex bloquean creacion con error funcional | Screenshot/toast o resultado Apex | Pendiente si hay data |
+| Campos requeridos | Intentar guardar sin obligatorios | UI bloquea o muestra validaciones requeridas | Screenshot validaciones | Pendiente QA |
+| Tipo ingreso Abono | Seleccionar tipo distinto a reserva | No solicita vehiculo | Screenshot | Pendiente QA |
+| Tipo ingreso Reserva de vehiculo | Seleccionar `Reserva de vehiculo` con vehiculos disponibles | Muestra selector de vehiculo | Screenshot selector | Pendiente QA |
+| Reserva sin vehiculo | Intentar guardar reserva sin vehiculo | Bloquea guardado con mensaje funcional | Screenshot/toast | Pendiente QA |
+| Guardar borrador | Completar obligatorios y guardar | Crea `Anticipo__c` en estado `Borrador` | Id Anticipo + screenshot toast + query | Pendiente QA |
+| Evidencia obligatoria | Intentar enviar borrador sin evidencia | No permite enviar a Tesoreria | Screenshot/toast | Pendiente QA |
+| Adjuntar evidencia | Cargar archivo despues de crear borrador | Archivo queda asociado al `Anticipo__c` | Screenshot archivo + query `ContentDocumentLink` | Pendiente QA manual |
+| Enviar a Tesoreria | Con evidencia cargada, enviar | Estado cambia a `En validacion de Tesoreria` | Screenshot/toast + query Anticipo | Pendiente QA manual |
+
+## 3. Notificaciones
+
+Condiciones actuales:
+- Flow `VN_RQ106_Notificaciones_Anticipo` actualizado en Sandbox.
+- Sender configurado: Org-Wide Email Address `info@redmotorscr.com`.
+- Custom Notification Type: `Redmotors_Notification`.
+- Guarda temporal de Claudia para pruebas: mantener fuera de Produccion hasta definicion final.
+- Jefe de Producto se toma desde `Opportunity.JefeSucursal__c`, sin hardcodear correo.
+
+| Escenario | Disparador | Destinatarios esperados | Resultado esperado | Evidencia esperada | Estado |
+|---|---|---|---|---|---|
+| Solicitud enviada a Tesoreria | `Anticipo__c.Estatus__c = En validacion de Tesoreria` | Tesoreria temporal/configurada segun Flow | Email/custom notification segun rama vigente | Query estado + email/notificacion | Pendiente QA |
+| Tesoreria aprueba | `Confirmada por Tesoreria` | Asesor/owner | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
+| Tesoreria rechaza | `Rechazada por Tesoreria` | Asesor/owner | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
+| Tesoreria solicita correccion | `Correccion requerida por Tesoreria` | Asesor/owner | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
+| Anticipo creado | `Anticipo creado` | Asesor/owner | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
+| Producto rechaza reserva | `Reserva rechazada` | Asesor/owner y Jefe Producto si aplica | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
+| Producto aprueba reserva | `Vehiculo reservado` | Asesor/owner y Jefe Producto si aplica, sin duplicar si son el mismo usuario | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
+
+## 4. Permisos
+
+Estado implementado en Sandbox:
+- Permission Set `VN_RQ106_Anticipo` ajustado.
+- Acceso Apex agregado a:
+  - `VN_RQ106_AnticipoController`.
+  - `VN_RQ106_OpportunityOverviewController`.
+- FLS de `Anticipo__c.Identificacion_Depositante__c` retirado del permission set.
+- `Anticipo__c.Comentarios_Aprobacion_Rechazo__c` queda solo lectura.
+
+| Prueba | Pasos | Resultado esperado | Evidencia esperada | Estado |
+|---|---|---|---|---|
+| Acceso Apex Pantalla 1 | Usuario con permission set abre Opportunity | No aparece error de Apex al cargar `vnRq106OpportunityOverview` | Screenshot o log sin error | Pendiente usuario final |
+| Acceso Apex Pantalla 2 | Usuario con permission set abre quick action | Modal carga contexto sin error de Apex | Screenshot modal | Pendiente usuario final |
+| FLS Opportunity | Revisar con usuario no admin | Ve resumen financiero y estados de Opportunity | Screenshot + confirmacion de usuario | Pendiente usuario final |
+| FLS Anticipo formulario | Crear borrador con usuario no admin | Puede guardar campos requeridos del formulario | Id Anticipo + screenshot | Pendiente usuario final |
+| Sin FLS identificacion depositante | Revisar permission set o UI | `Identificacion_Depositante__c` no esta en FLS del permission set y no aparece en formulario | Query/Setup screenshot + formulario | Implementado, evidencia pendiente |
+| Comentario aprobacion solo lectura | Revisar FLS | Asesor no edita `Comentarios_Aprobacion_Rechazo__c` desde este permiso | Query/Setup screenshot | Implementado, evidencia pendiente |
+| Evidencia/Files | Usuario final adjunta archivo | Archivo se carga y queda asociado al `Anticipo__c` | Screenshot + query `ContentDocumentLink` | Pendiente prueba manual |
+
+Nota tecnica:
+- `Anticipo__c.Oportunidad__c` es Master-Detail requerido; Salesforce no permite desplegar FLS para ese campo en permission set. No queda como pendiente funcional del permission set.
+
+## 5. Evidencia minima esperada
+
+| Bloque | Evidencia minima |
+|---|---|
+| Pantalla 1 | Screenshot VN, screenshot VU, screenshot panel derecho, query de Opportunity, query de `Anticipo__c` |
+| Pantalla 2 | Screenshot formulario ordenado, screenshot sin identificacion, screenshot cliente relacionado, query de borrador |
+| Evidencia | Screenshot archivo cargado, query `ContentDocumentLink` |
+| Envio Tesoreria | Screenshot/toast, query estado `En validacion de Tesoreria` |
+| Notificaciones | Query estado por escenario, captura de email o campana de notificacion |
+| Permisos | Screenshot/query de permission set, prueba con usuario no admin/usuario final |
+
+## 6. Riesgos abiertos
 
 | Riesgo | Impacto | Mitigacion |
 |---|---|---|
-| Guarda temporal de Claudia sigue activa | En produccion notificaria solo a Claudia si se despliega asi | Retirar o reemplazar antes de produccion |
-| Textos inline no aprobados | Negocio puede pedir templates/formato oficial | Confirmar con Luis/Diego antes de cierre final |
-| Destinatario Tesoreria no definitivo | No se puede cerrar notificacion a Tesoreria | Confirmar correo/usuario/cola/grupo/regla |
-| PEV/Jefe Producto incompleto | No se puede cerrar aprobacion/rechazo de reserva por marca | Confirmar destinatarios por marca |
-| Motivos/comentarios no definidos | Rechazo/correccion pueden carecer de contexto obligatorio | Confirmar campo y obligatoriedad |
-| Produccion no modificada | Aun falta deploy productivo autorizado | Ejecutar deploy controlado solo con autorizacion |
+| Guarda temporal de Claudia sigue activa | No es configuracion final para Produccion | Retirar/reemplazar antes de deploy productivo |
+| Falta prueba end-to-end con usuario no admin | Puede haber permisos de Files, record access o visibilidad de action faltantes | Ejecutar QA con usuario final asignado |
+| Files/evidencia no validado manualmente | El formulario puede crear borrador pero fallar al cargar evidencia | Probar carga real de archivo en Sandbox |
+| Textos inline de notificaciones no aprobados formalmente | Negocio puede pedir ajustes de redaccion | Validar con Maria/Luis |
+| Destinatario Tesoreria definitivo puede cambiar | Notificacion a Tesoreria podria requerir correo/grupo/cola final | Confirmar antes de cierre productivo |
+| Softland/Diego fuera de alcance | PDF real, reintentos y errores reales no pueden cerrarse ahora | Documentar como pendiente externo |
 
-## 6. Bloqueado por negocio
-
-- Destinatario final de Tesoreria.
-- Si los correos deben quedar inline en Flow o migrar a Email Templates.
-- Si `Comentarios_Aprobacion_Rechazo__c` u otro campo debe ser obligatorio.
-- Destinatarios PEV/Jefe Producto para Indian, Autos_Usados y Motos_Usados.
-- Si cliente debe recibir correo y de que contacto se toma el email.
-- Que hacer si cliente no tiene correo.
-
-## 7. Bloqueado por Diego/Softland
-
-Estos puntos no cuentan contra el avance de Claudia/equipo:
-- Creacion real del anticipo en Softland.
-- Confirmacion real de fondos desde Softland.
-- Estado/campo exacto que marca error de integracion.
-- Estado/campo exacto que marca error al obtener PDF.
-- Link o archivo PDF real de Softland.
-- Reintentos tecnicos, payloads y endpoints.
-
-## 8. Metadata involucrada para futuro deploy
+## 7. Metadata de referencia
 
 | Tipo | Metadata |
 |---|---|
+| Flexipage | `force-app/main/default/flexipages/Opportunity_Record_Page_VN.flexipage-meta.xml` |
+| Flexipage | `force-app/main/default/flexipages/Opportunity_Record_Page_VU.flexipage-meta.xml` |
+| LWC Pantalla 1 | `force-app/main/default/lwc/vnRq106OpportunityOverview/` |
+| LWC Pantalla 2 | `force-app/main/default/lwc/vnRq106RegistrarIngresoAnticipo/` |
 | Quick Action | `force-app/main/default/quickActions/Opportunity.VN_RQ106_Registrar_Ingreso_Anticipo.quickAction-meta.xml` |
-| LWC | `force-app/main/default/lwc/vnRq106RegistrarIngresoAnticipo/` |
-| Apex | `force-app/main/default/classes/VN_RQ106_AnticipoController.cls` |
-| Apex Test | `force-app/main/default/classes/VN_RQ106_AnticipoControllerTest.cls` |
+| Apex Pantalla 1 | `force-app/main/default/classes/VN_RQ106_OpportunityOverviewController.cls` |
+| Apex Pantalla 2 | `force-app/main/default/classes/VN_RQ106_AnticipoController.cls` |
+| Apex Tests | `force-app/main/default/classes/VN_RQ106_OppOverviewCtrlTest.cls` |
+| Apex Tests | `force-app/main/default/classes/VN_RQ106_AnticipoControllerTest.cls` |
 | Flow | `force-app/main/default/flows/VN_RQ106_Notificaciones_Anticipo.flow-meta.xml` |
 | Permission Set | `force-app/main/default/permissionsets/VN_RQ106_Anticipo.permissionset-meta.xml` |
-| Opportunity fields | `force-app/main/default/objects/Opportunity/fields/Total_Anticipos_Aprobados__c.field-meta.xml` |
-| Opportunity fields | `force-app/main/default/objects/Opportunity/fields/Saldo_Pendiente__c.field-meta.xml` |
-| Anticipo fields | `force-app/main/default/objects/Anticipo__c/fields/Tipo_Ingreso__c.field-meta.xml` |
-| Anticipo fields | `force-app/main/default/objects/Anticipo__c/fields/Medio_Pago__c.field-meta.xml` |
-| Anticipo fields | `force-app/main/default/objects/Anticipo__c/fields/Fecha_Ingreso__c.field-meta.xml` |
-| Anticipo fields | `force-app/main/default/objects/Anticipo__c/fields/Referencia_Comprobante__c.field-meta.xml` |
-| Anticipo fields | `force-app/main/default/objects/Anticipo__c/fields/Depositante__c.field-meta.xml` |
-| Anticipo fields | `force-app/main/default/objects/Anticipo__c/fields/Identificacion_Depositante__c.field-meta.xml` |
-| Anticipo fields | `force-app/main/default/objects/Anticipo__c/fields/Comentarios_Asesor__c.field-meta.xml` |
-| Anticipo fields | `force-app/main/default/objects/Anticipo__c/fields/Comentarios_Aprobacion_Rechazo__c.field-meta.xml` |
-| Anticipo field update | `force-app/main/default/objects/Anticipo__c/fields/Estatus__c.field-meta.xml` |
-| Flexipages | `force-app/main/default/flexipages/Opportunity_Record_Page_VN.flexipage-meta.xml` |
-| Flexipages | `force-app/main/default/flexipages/Opportunity_Record_Page_VU.flexipage-meta.xml` |
 
-Nota para produccion:
-- No desplegar el Flow con la guarda temporal de Claudia como configuracion final.
+Nota:
 - No incluir documentos `docs/` en deploy Salesforce.
+- No tocar Produccion sin autorizacion explicita.
