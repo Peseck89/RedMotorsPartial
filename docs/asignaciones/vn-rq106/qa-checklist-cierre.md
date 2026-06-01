@@ -57,11 +57,20 @@ Fuera de alcance de esta fase:
 ## 3. Notificaciones
 
 Condiciones actuales:
-- Flow `VN_RQ106_Notificaciones_Anticipo` actualizado en Sandbox.
+- Flow `VN_RQ106_Notificaciones_Anticipo` v2 activo en Sandbox — 7 eventos implementados.
 - Sender configurado: Org-Wide Email Address `info@redmotorscr.com`.
 - Custom Notification Type: `Redmotors_Notification`.
-- Guarda temporal de Claudia para pruebas: mantener fuera de Produccion hasta definicion final.
-- Jefe de Producto se toma desde `Opportunity.JefeSucursal__c`, sin hardcodear correo.
+- Guarda temporal activa: solo notifica si `Opportunity.Owner.Username = 'peseck89@gmail.com.redmotors.partial'`. Retirar antes de deploy productivo.
+- Jefe de Producto: `Opportunity.JefeSucursal__c`, confirmado por Maria 2026-06-01, sin hardcodear correo.
+
+Eventos implementados:
+- `En validacion de Tesoreria` → Tesoreria (`admin@portalnetcr.com`, temporal), email inline.
+- `Confirmada por Tesoreria` → Asesor, email + Custom Notification.
+- `Correccion requerida por Tesoreria` → Asesor, email + Custom Notification.
+- `Rechazada por Tesoreria` → Asesor, email + Custom Notification.
+- `Anticipo creado` → Asesor, email + Custom Notification.
+- `Reserva rechazada` → Asesor, email + Custom Notification.
+- `Vehiculo reservado` → Asesor + JefeSucursal__c (sin duplicar), email + Custom Notification.
 
 | Escenario | Disparador | Destinatarios esperados | Resultado esperado | Evidencia esperada | Estado |
 |---|---|---|---|---|---|

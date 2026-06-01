@@ -1,7 +1,7 @@
 # VN-RQ106 - Matriz final de notificaciones pendientes
 
 Fecha: 2026-05-29
-Ultima actualizacion de respuestas: 2026-05-29 — respuestas recibidas de Luis/equipo.
+Ultima actualizacion: 2026-06-01 — notificacion a Tesoreria y Vehiculo reservado implementadas; estado de matriz actualizado.
 
 Contexto: el documento oficial estima 10h para "Notificaciones y correos aprobaciones y rechazos".
 Produccion no fue modificada.
@@ -27,14 +27,14 @@ Estado probado en Sandbox:
 
 | Notificacion/correo solicitado | Estado actual | Que falta definir | Proxima accion | Recomendacion tecnica |
 |---|---|---|---|---|
-| Solicitud a Tesoreria cuando asesor envia anticipo | **Desbloqueado temporal** — `admin@portalnetcr.com` confirmado para ahora | Correo grupal definitivo pendiente. Texto inline aprobado por ahora. | Agregar rama en el Flow al pasar a `En validacion de Tesoreria` con email a `admin@portalnetcr.com` | Agregar rama en el Flow al pasar a `En validacion de Tesoreria`; usar emailSimple con Org-Wide Sender; texto inline |
+| Solicitud a Tesoreria cuando asesor envia anticipo | **Implementado en Sandbox** — rama activa en Flow al pasar a `En validacion de Tesoreria`; email a `admin@portalnetcr.com`, Org-Wide Sender `info@redmotorscr.com`, texto inline | Correo grupal definitivo pendiente antes de deploy productivo. | Validar QA en Sandbox; confirmar correo grupal antes de produccion | Implementado; correo definitivo pendiente |
 | Aprobacion de Tesoreria | Implementado y probado | Retirar guarda temporal antes de produccion. Texto inline aprobado para ahora. | Mantener; retirar guarda cuando se apruebe para produccion | Mantener rama `Confirmada por Tesoreria`; solo quitar guarda temporal |
 | Rechazo de Tesoreria | Implementado y probado | Motivo/comentario obligatorio: **por validar** | Esperar confirmacion de si es obligatorio | Mantener rama `Rechazada por Tesoreria`; agregar validacion solo si negocio confirma |
 | Correccion requerida por Tesoreria | Implementado y probado | Motivo/comentario obligatorio: **por validar** | Esperar confirmacion de si es obligatorio | Mantener rama `Correccion requerida por Tesoreria`; no cambiar hasta confirmar |
 | Creacion de anticipo por Softland / confirmacion de fondos | Implementado para asesor en estado `Anticipo creado`; Softland pendiente | Evento exacto que actualiza el estado; destinatarios adicionales; correo a cliente | Esperar confirmacion de Diego/Softland | Mantener rama `Anticipo creado`; agregar cliente/Tesoreria solo si Diego confirma evento |
 | Error al obtener PDF anticipo | Bloqueado | Estado/campo que representa error PDF, destinatario y fuente del error | Diego/Softland define | Crear rama separada; no implementar hasta tener fuente del error |
 | Error de integracion | Bloqueado | Evento tecnico, destinatarios, contenido minimo | Diego/Softland define | Crear rama tecnica separada; preferir notificacion a grupo/cola configurable |
-| Jefe de Producto / PEV aprueba o rechaza reserva | **Parcialmente desbloqueado** — usar campo `JefeSucursal__c` (u equivalente) en Opportunity por Record Type | Campo exacto a usar; ejemplos de Maria para confirmacion; Indian/Usados sin definicion | Revisar campos reales en Sandbox; esperar ejemplos de Maria | No implementar PEV hasta ver ejemplos de Maria y confirmar campo exacto |
+| Jefe de Producto / PEV aprueba reserva (`Vehiculo reservado`) | **Implementado en Sandbox** — `Opportunity.JefeSucursal__c` confirmado por Maria 2026-06-01; asesor + JefeSucursal__c sin duplicar | Verificar datos reales de `Indian` en Sandbox cuando esten disponibles | Validar QA en Sandbox | Implementado con logica dinamica por Record Type |
 | Reserva rechazada | Implementado y probado para asesor | Motivo obligatorio: **por validar**. Confirmar si avisa a PEV/Tesoreria. | Esperar confirmacion | Mantener rama `Reserva rechazada`; agregar destinatarios solo con definicion |
 | Correo al cliente | **Desbloqueado** — usar correo de contacto; si no tiene, no se envia | Definir en que estado(s) se envia; lookup exacto del contacto | Confirmar estado(s) disparadores y que contacto usar | Agregar rama en el Flow para el estado correspondiente; verificar campo de email del contacto relacionado |
 
@@ -46,25 +46,24 @@ Estado probado en Sandbox:
 | 2 | Plantillas: inline en Flow o Email Templates? | **Resuelto temporal**: inline en Flow por ahora. Plantillas oficiales solicitadas pero pendientes. |
 | 3 | Comentarios/motivos obligatorios para rechazo, correccion y reserva rechazada | **Sigue bloqueado**: por validar. |
 | 4 | Cliente: en que evento recibe correo y lookup exacto del contacto | **Parcialmente resuelto**: usar correo de contacto; si no tiene, no enviar. Falta confirmar estado(s) disparadores y que contacto relacionado usar. |
-| 5 | Jefe de Producto / PEV: campos y ejemplos por Record Type | **Parcialmente resuelto**: usar campos de jefe de sucursal que cambian por Record Type. Falta ver ejemplos de Maria y confirmar campo exacto. |
+| 5 | Jefe de Producto / PEV: campos y ejemplos por Record Type | **Resuelto 2026-06-01**: Maria confirmo `Opportunity.JefeSucursal__c` como destinatario. Implementado en Flow para `Vehiculo reservado`. Pendiente verificar datos de `Indian` en Sandbox. |
 | 6 | Softland: evento/campo confirma fondos y creacion de anticipo | **Sigue bloqueado**: alcance Diego/Softland. |
 | 7 | PDF/error integracion: campo/estado disparador y destinatario | **Sigue bloqueado**: alcance Diego/Softland. |
 
-## Cierre parcial de esta semana
+## Cierre de fase actual — actualizado 2026-06-01
 
-Se puede cerrar como completado:
-- Flow de notificaciones al asesor creado y activo en Sandbox.
-- Cinco escenarios al asesor probados sin error de Flow.
+Cerrado como completado:
+- Flow de notificaciones al asesor creado y activo en Sandbox (5 escenarios probados).
+- Notificacion a Tesoreria al pasar a `En validacion de Tesoreria` implementada (`admin@portalnetcr.com`, texto inline).
+- Notificacion de aprobacion de reserva (`Vehiculo reservado`) implementada: asesor + `JefeSucursal__c` sin duplicar.
 - Sender corregido con Org-Wide Email Address `info@redmotorscr.com`.
 - Produccion sin cambios.
-- Respuestas de Tesoreria, plantillas y cliente recibidas el 2026-05-29 e incorporadas.
-
-Desbloqueado para siguiente iteracion tecnica:
-- Notificacion de solicitud a Tesoreria: se puede agregar al Flow con `admin@portalnetcr.com` y texto inline.
-- Comportamiento de cliente sin correo: si no tiene, no se envia.
-- Plantillas: confirmar que todos los correos van inline sin esperar EmailTemplates.
+- Respuestas de Tesoreria, plantillas, cliente y PEV recibidas e incorporadas.
 
 Sigue bloqueado para siguiente iteracion:
-- Motivo/comentario obligatorio: por validar.
-- Campo exacto de Jefe de Producto/PEV por Record Type: esperar ejemplos de Maria.
+- Motivo/comentario obligatorio para rechazo, correccion y reserva rechazada: por validar.
+- Correo al cliente: comportamiento sin correo resuelto; falta definir estado(s) disparadores y lookup exacto.
 - PDF y error de integracion: alcance Diego/Softland.
+- Correo grupal definitivo de Tesoreria: `admin@portalnetcr.com` es temporal.
+- Datos reales de `Indian` en Sandbox para validar PEV.
+- Guarda temporal de Claudia: retirar antes de deploy productivo.
