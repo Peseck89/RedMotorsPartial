@@ -1,0 +1,276 @@
+<template>
+    <lightning-card>
+        <div slot="title" class="title">
+            <lightning-icon icon-name="standard:opportunity" size="small"></lightning-icon>
+            <span>VN-RQ106 Ingresos y anticipos</span>
+        </div>
+
+        <lightning-button
+            slot="actions"
+            label="Registrar ingreso / anticipo"
+            variant="brand"
+            onclick={handleRegisterClick}>
+        </lightning-button>
+
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Cargando"></lightning-spinner>
+        </template>
+
+        <template lwc:elseif={errorMessage}>
+            <div class="slds-p-around_medium">
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span>{errorMessage}</span>
+                </div>
+            </div>
+        </template>
+
+        <template lwc:elseif={overview}>
+            <div class="overview">
+                <section class="hero">
+                    <div>
+                        <p class="eyebrow">Oportunidad</p>
+                        <h2>{overview.opportunityName}</h2>
+                        <p class="muted">{overview.accountName}</p>
+                    </div>
+                    <div class="hero-status">
+                        <span class="status-pill">{overview.stageName}</span>
+                    </div>
+                </section>
+
+                <div class="content-grid">
+                    <main class="main-content">
+                        <section class="section details-section">
+                            <div class="section-heading">
+                                <h3>Datos principales</h3>
+                            </div>
+                            <div class="fields-grid">
+                                <div class="field">
+                                    <span>Cliente</span>
+                                    <strong>{overview.accountName}</strong>
+                                </div>
+                                <div class="field">
+                                    <span>Vehiculo / VIN</span>
+                                    <strong>{vehicleSummary}</strong>
+                                </div>
+                                <div class="field">
+                                    <span>Precio de venta</span>
+                                    <lightning-formatted-number
+                                        value={overview.valorTotalOportunidad}
+                                        format-style="currency"
+                                        currency-code={overview.currencyIsoCode}>
+                                    </lightning-formatted-number>
+                                </div>
+                                <div class="field">
+                                    <span>Estado oportunidad / reserva</span>
+                                    <strong>{opportunityReservationStatus}</strong>
+                                </div>
+                                <div class="field">
+                                    <span>Asesor</span>
+                                    <strong>{overview.ownerName}</strong>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="section requests-section">
+                            <div class="section-heading">
+                                <h3>Solicitudes de ingreso</h3>
+                                <span>{requestCountLabel}</span>
+                            </div>
+                            <template lwc:if={hasSolicitudes}>
+                                <div class="table-wrap">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered compact-table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Solicitud</th>
+                                                <th scope="col">Estado</th>
+                                                <th scope="col">Monto</th>
+                                                <th scope="col">Evidencia</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={visibleSolicitudes} for:item="item">
+                                                <tr key={item.id}>
+                                                    <td>
+                                                        <a href={item.url}>{item.name}</a>
+                                                        <span class="subtext">{item.tipoIngreso}</span>
+                                                    </td>
+                                                    <td>{item.estatus}</td>
+                                                    <td>
+                                                        <lightning-formatted-number
+                                                            value={item.monto}
+                                                            format-style="currency"
+                                                            currency-code={item.currencyIsoCode}>
+                                                        </lightning-formatted-number>
+                                                    </td>
+                                                    <td>{item.evidenceStatus}</td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <template lwc:if={hasMoreSolicitudes}>
+                                    <p class="more-link">{solicitudesMoreLabel}</p>
+                                </template>
+                            </template>
+                            <template lwc:else>
+                                <p class="empty">Sin solicitudes registradas.</p>
+                            </template>
+                        </section>
+
+                        <section class="section approved-section">
+                            <div class="section-heading">
+                                <h3>Anticipos de dinero</h3>
+                                <span>{approvedCountLabel}</span>
+                            </div>
+                            <template lwc:if={hasApprovedAnticipos}>
+                                <div class="table-wrap">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered compact-table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Numero</th>
+                                                <th scope="col">Monto</th>
+                                                <th scope="col">Fecha</th>
+                                                <th scope="col">Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={visibleAnticiposAprobados} for:item="item">
+                                                <tr key={item.id}>
+                                                    <td><a href={item.url}>{item.name}</a></td>
+                                                    <td>
+                                                        <lightning-formatted-number
+                                                            value={item.monto}
+                                                            format-style="currency"
+                                                            currency-code={item.currencyIsoCode}>
+                                                        </lightning-formatted-number>
+                                                    </td>
+                                                    <td>
+                                                        <lightning-formatted-date-time value={item.fechaIngreso}></lightning-formatted-date-time>
+                                                    </td>
+                                                    <td>{item.estatus}</td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <template lwc:if={hasMoreApprovedAnticipos}>
+                                    <p class="more-link">{approvedMoreLabel}</p>
+                                </template>
+                            </template>
+                            <template lwc:else>
+                                <p class="empty">Sin anticipos aplicados o aprobados.</p>
+                            </template>
+                        </section>
+
+                        <section class="section documents documents-section">
+                            <div class="section-heading">
+                                <h3>PDF anticipo Softland / documentos</h3>
+                            </div>
+                            <div class="placeholder">
+                                <lightning-icon icon-name="doctype:pdf" size="small"></lightning-icon>
+                                <span>{overview.pdfStatus}</span>
+                            </div>
+                        </section>
+
+                        <section class="section history-section">
+                            <div class="section-heading">
+                                <h3>Historial de aprobaciones</h3>
+                            </div>
+                            <template lwc:if={hasHistory}>
+                                <ol class="history">
+                                    <template for:each={visibleHistorial} for:item="event">
+                                        <li key={event.key}>
+                                            <span class="timeline-dot"></span>
+                                            <div>
+                                                <strong>{event.estatus}</strong>
+                                                <p>{event.comentarioDisplay}</p>
+                                                <span class="subtext">
+                                                    <lightning-formatted-date-time
+                                                        value={event.fecha}
+                                                        year="numeric"
+                                                        month="short"
+                                                        day="2-digit"
+                                                        hour="2-digit"
+                                                        minute="2-digit">
+                                                    </lightning-formatted-date-time>
+                                                    · {event.usuario}
+                                                </span>
+                                            </div>
+                                        </li>
+                                    </template>
+                                </ol>
+                                <template lwc:if={hasMoreHistory}>
+                                    <p class="more-link">{historyMoreLabel}</p>
+                                </template>
+                            </template>
+                            <template lwc:else>
+                                <p class="empty">No existe historial formal; se mostraran estados y comentarios de Anticipo__c cuando existan.</p>
+                            </template>
+                        </section>
+                    </main>
+
+                    <aside class="side-panel">
+                        <section>
+                            <h3>Resumen financiero</h3>
+                            <div class="metric">
+                                <span>Valor total / precio venta</span>
+                                <strong>
+                                    <lightning-formatted-number
+                                        value={overview.valorTotalOportunidad}
+                                        format-style="currency"
+                                        currency-code={overview.currencyIsoCode}>
+                                    </lightning-formatted-number>
+                                </strong>
+                            </div>
+                            <div class="metric">
+                                <span>Total anticipos aprobados</span>
+                                <strong>
+                                    <lightning-formatted-number
+                                        value={overview.totalAnticiposAprobados}
+                                        format-style="currency"
+                                        currency-code={overview.currencyIsoCode}>
+                                    </lightning-formatted-number>
+                                </strong>
+                            </div>
+                            <div class="metric balance">
+                                <span>Saldo pendiente</span>
+                                <strong>
+                                    <lightning-formatted-number
+                                        value={overview.saldoPendiente}
+                                        format-style="currency"
+                                        currency-code={overview.currencyIsoCode}>
+                                    </lightning-formatted-number>
+                                </strong>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3>Estado anticipo y reserva</h3>
+                            <div class="status-row">
+                                <span>Anticipo</span>
+                                <strong>{overview.estadoAnticipoActual}</strong>
+                            </div>
+                            <div class="status-row">
+                                <span>PDF</span>
+                                <strong>{overview.pdfStatus}</strong>
+                            </div>
+                            <div class="status-row">
+                                <span>Reserva VN</span>
+                                <strong>{overview.reservaStatus}</strong>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3>Alertas / acciones</h3>
+                            <ul class="alerts">
+                                <li class={correctionClass}>Correccion solicitada: {correctionLabel}</li>
+                                <li class={integrationClass}>Error integracion: {integrationLabel}</li>
+                                <li class="pending">Reintento autorizado: {retryLabel}</li>
+                            </ul>
+                        </section>
+                    </aside>
+                </div>
+            </div>
+        </template>
+    </lightning-card>
+</template>
