@@ -259,6 +259,21 @@
             <label>Reserva rechazada</label>
         </rules>
         <rules>
+            <name>Vehiculo_reservado</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Estatus__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Vehículo reservado</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Tiene_Email_Asesor</targetReference>
+            </connector>
+            <label>Vehículo reservado</label>
+        </rules>
+        <rules>
             <name>En_Validacion_de_Tesoreria</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
@@ -379,7 +394,7 @@
     <formulas>
         <name>EmailSubject</name>
         <dataType>String</dataType>
-        <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Confirmada por Tesorería&apos;, &apos;VN-RQ106: anticipo confirmado por Tesorería&apos;, &apos;Corrección requerida por Tesorería&apos;, &apos;VN-RQ106: corrección requerida por Tesorería&apos;, &apos;Rechazada por Tesorería&apos;, &apos;VN-RQ106: anticipo rechazado por Tesorería&apos;, &apos;Anticipo creado&apos;, &apos;VN-RQ106: anticipo creado&apos;, &apos;Reserva rechazada&apos;, &apos;VN-RQ106: reserva rechazada&apos;, &apos;VN-RQ106: actualización de anticipo&apos;)</expression>
+        <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Confirmada por Tesorería&apos;, &apos;VN-RQ106: anticipo confirmado por Tesorería&apos;, &apos;Corrección requerida por Tesorería&apos;, &apos;VN-RQ106: corrección requerida por Tesorería&apos;, &apos;Rechazada por Tesorería&apos;, &apos;VN-RQ106: anticipo rechazado por Tesorería&apos;, &apos;Anticipo creado&apos;, &apos;VN-RQ106: anticipo creado&apos;, &apos;Reserva rechazada&apos;, &apos;VN-RQ106: reserva rechazada&apos;, &apos;Vehículo reservado&apos;, &apos;VN-RQ106: reserva aprobada por Producto&apos;, &apos;VN-RQ106: actualización de anticipo&apos;)</expression>
     </formulas>
     <formulas>
         <name>EmailAddressesAsesorYJefeProducto</name>
@@ -394,7 +409,7 @@
     <formulas>
         <name>NotificationTitle</name>
         <dataType>String</dataType>
-        <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Confirmada por Tesorería&apos;, &apos;Anticipo confirmado&apos;, &apos;Corrección requerida por Tesorería&apos;, &apos;Corrección requerida&apos;, &apos;Rechazada por Tesorería&apos;, &apos;Anticipo rechazado&apos;, &apos;Anticipo creado&apos;, &apos;Anticipo creado&apos;, &apos;Reserva rechazada&apos;, &apos;Reserva rechazada&apos;, &apos;Actualización de anticipo&apos;)</expression>
+        <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Confirmada por Tesorería&apos;, &apos;Anticipo confirmado&apos;, &apos;Corrección requerida por Tesorería&apos;, &apos;Corrección requerida&apos;, &apos;Rechazada por Tesorería&apos;, &apos;Anticipo rechazado&apos;, &apos;Anticipo creado&apos;, &apos;Anticipo creado&apos;, &apos;Reserva rechazada&apos;, &apos;Reserva rechazada&apos;, &apos;Vehículo reservado&apos;, &apos;Reserva aprobada&apos;, &apos;Actualización de anticipo&apos;)</expression>
     </formulas>
     <formulas>
         <name>EmailSubjectTesoreria</name>
