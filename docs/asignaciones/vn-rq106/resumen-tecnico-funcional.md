@@ -5,6 +5,11 @@ Estado: Implementado en RedMotorsSandbox. Produccion sin cambios.
 
 Este documento consolida que hace cada pantalla, que notificaciones quedaron implementadas, que permisos se ajustaron y que queda fuera de alcance o pendiente de feedback. Sirve como referencia rapida para revisiones, QA y handoff.
 
+Nota obligatoria antes de Produccion:
+- Antes de produccion es obligatorio validar el flujo completo con usuario no admin y evidencia real en Sandbox/UAT.
+- La validacion parcial con Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`) confirmo Pantalla 1 visible, boton visible, modal abierto, contexto cargado, cliente relacionado y campos financieros visibles.
+- No se valido guardar borrador, cargar evidencia ni enviar a Tesoreria porque esas acciones crean/modifican datos y pueden disparar notificaciones.
+
 ---
 
 ## 1. Pantalla 1 — Opportunity Overview
@@ -93,6 +98,12 @@ Nota critica: el Flow conserva una **guarda temporal** que limita las notificaci
 
 Nota tecnica: `Anticipo__c.Oportunidad__c` es Master-Detail requerido; Salesforce no permite configurar FLS para ese campo en permission sets. No es un pendiente funcional.
 
+Validacion no admin parcial:
+- Usuario: Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`), perfil `Asesor de Ventas BMW y Nuevos V2`.
+- Opportunity usada: `006PH00000V2VFaYAN`.
+- Resultado observado: Pantalla 1 visible, boton visible, modal abre, contexto carga, cliente relacionado y campos financieros visibles.
+- Pendiente obligatorio antes de Produccion: guardar borrador, cargar evidencia real y enviar a Tesoreria con usuario no admin en Sandbox/UAT.
+
 ---
 
 ## 5. Fuera de alcance de esta fase
@@ -105,6 +116,7 @@ Nota tecnica: `Anticipo__c.Oportunidad__c` es Master-Detail requerido; Salesforc
 | Correo grupal definitivo de Tesoreria | `admin@portalnetcr.com` es temporal; correo grupal pendiente de confirmar |
 | Email Templates definitivas | Textos inline aprobados temporalmente; plantillas oficiales solicitadas pero pendientes |
 | Deploy o prueba en Produccion | Produccion fuera de alcance hasta autorizacion formal |
+| Prueba completa no admin con evidencia real | Obligatoria antes de Produccion; debe ejecutarse en Sandbox/UAT porque crea/modifica datos y puede disparar notificaciones |
 
 ---
 

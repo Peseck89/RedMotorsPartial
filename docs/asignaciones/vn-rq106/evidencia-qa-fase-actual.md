@@ -9,19 +9,25 @@ Objetivo:
 Ambiente:
 - Sandbox: `RedMotorsSandbox`.
 - Opportunity sugerida: `006Nq00000XbTo1IAF`.
+- Prueba no admin parcial: Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`) sobre Opportunity `006PH00000V2VFaYAN`.
 - Produccion: no tocar.
+
+Nota obligatoria antes de Produccion:
+- Antes de produccion es obligatorio validar el flujo completo con usuario no admin y evidencia real en Sandbox/UAT.
+- Ya se valido parcialmente con Andres: Pantalla 1 visible, boton visible, modal abre, contexto carga, cliente relacionado y campos financieros visibles.
+- No se ejecuto guardar borrador, cargar evidencia ni enviar a Tesoreria porque esas acciones crean/modifican datos y pueden disparar notificaciones.
 
 ## 1. Pantalla 1 Opportunity
 
 | ID | Evidencia | Dato/escenario | Archivo o captura esperada | Estado |
 |---|---|---|---|---|
-| P1-01 | Componente visible VN | Opportunity VN | Screenshot primer pantallazo con `vnRq106OpportunityOverview` | Pendiente |
+| P1-01 | Componente visible VN | Opportunity VN | Screenshot primer pantallazo con `vnRq106OpportunityOverview` | Validado parcial con Andres; captura formal pendiente |
 | P1-02 | Componente visible VU | Opportunity VU | Screenshot primer pantallazo con `vnRq106OpportunityOverview` | Pendiente |
-| P1-03 | Encabezado y boton | Opportunity con action disponible | Screenshot con nombre Opportunity y `Registrar ingreso / anticipo` | Pendiente |
+| P1-03 | Encabezado y boton | Opportunity con action disponible | Screenshot con nombre Opportunity y `Registrar ingreso / anticipo` | Validado parcial con Andres; captura formal pendiente |
 | P1-04 | Datos principales | Cliente, asesor, vehiculo/VIN si existe | Screenshot + query Opportunity/Product2 | Pendiente |
 | P1-05 | Solicitudes de ingreso | Anticipos relacionados | Screenshot max 3 filas + query `Anticipo__c` | Pendiente |
 | P1-06 | Anticipos de dinero | Anticipos aprobados/aplicados | Screenshot max 3 filas + query `Anticipo__c` | Pendiente |
-| P1-07 | Resumen financiero | Campos financieros Opportunity | Screenshot panel derecho + query campos financieros | Pendiente |
+| P1-07 | Resumen financiero | Campos financieros Opportunity | Screenshot panel derecho + query campos financieros | Validado parcial con Andres; captura formal pendiente |
 | P1-08 | Estado anticipo/reserva | Estado actual | Screenshot panel estado | Pendiente |
 | P1-09 | PDF/documentos | Placeholder Softland | Screenshot `Pendiente de integracion Softland` | Pendiente |
 | P1-10 | Historial | Estados/comentarios/fechas disponibles | Screenshot max 2 eventos + query | Pendiente |
@@ -33,13 +39,13 @@ Ambiente:
 |---|---|---|---|---|
 | P2-01 | Orden de campos | Abrir quick action | Screenshot con orden completo del formulario | Pendiente |
 | P2-02 | Sin identificacion depositante | Formulario completo | Screenshot donde no aparece identificacion | Pendiente |
-| P2-03 | Cliente relacionado listo | Opportunity con `AccountId` | Screenshot indicador `Cliente relacionado` listo | Pendiente |
+| P2-03 | Cliente relacionado listo | Opportunity con `AccountId` | Screenshot indicador `Cliente relacionado` listo | Validado parcial con Andres; captura formal pendiente |
 | P2-04 | Cliente relacionado faltante | Opportunity sin `AccountId` | Screenshot/toast de error funcional | Pendiente si hay data |
 | P2-05 | Validaciones requeridas | Guardar sin datos | Screenshot validaciones | Pendiente |
-| P2-06 | Guardar borrador | Datos validos | Screenshot toast + Id `Anticipo__c` + query | Pendiente |
+| P2-06 | Guardar borrador | Datos validos | Screenshot toast + Id `Anticipo__c` + query | Obligatorio antes de Produccion; no ejecutado |
 | P2-07 | Evidencia obligatoria | Enviar sin archivo | Screenshot bloqueo o error | Pendiente |
-| P2-08 | Adjuntar evidencia | Archivo real de prueba | Screenshot archivo + query `ContentDocumentLink` | Pendiente manual |
-| P2-09 | Enviar a Tesoreria | Borrador con evidencia | Screenshot/toast + query estado | Pendiente manual |
+| P2-08 | Adjuntar evidencia | Archivo real de prueba | Screenshot archivo + query `ContentDocumentLink` | Obligatorio antes de Produccion; no ejecutado |
+| P2-09 | Enviar a Tesoreria | Borrador con evidencia | Screenshot/toast + query estado | Obligatorio antes de Produccion; no ejecutado |
 
 ## 3. Notificaciones
 
@@ -60,8 +66,9 @@ Ambiente:
 | PER-01 | Acceso Apex | Permission Set contiene acceso a ambos controllers | Query `SetupEntityAccess` o screenshot Setup | Pendiente captura |
 | PER-02 | FLS requerido | Permission Set contiene FLS de Opportunity/Anticipo requerido | Query `FieldPermissions` o screenshot Setup | Pendiente captura |
 | PER-03 | Sin FLS identificacion | `Identificacion_Depositante__c` no esta en permission set | Query `FieldPermissions` | Pendiente captura |
-| PER-04 | Usuario no admin | Usuario final abre Pantalla 1 y Pantalla 2 | Screenshot usuario final | Pendiente manual |
-| PER-05 | Files/evidencia | Usuario final adjunta archivo | Screenshot archivo + query `ContentDocumentLink` | Pendiente manual |
+| PER-04 | Usuario no admin | Usuario final abre Pantalla 1 y Pantalla 2 | Screenshot usuario final | Validado parcial con Andres; captura formal pendiente |
+| PER-05 | Files/evidencia | Usuario final adjunta archivo | Screenshot archivo + query `ContentDocumentLink` | Obligatorio antes de Produccion; no ejecutado |
+| PER-06 | Flujo completo no admin | Usuario no admin guarda borrador, carga evidencia real y envia a Tesoreria | Screenshot/toast + query `Anticipo__c` + query `ContentDocumentLink` + evidencia de notificacion si dispara | Obligatorio antes de Produccion; no ejecutado |
 
 ## 5. Evidencias fuera de alcance actual
 
@@ -73,7 +80,25 @@ Ambiente:
 | OUT-04 | Reintento real autorizado | Depende de definicion tecnica Diego/Softland |
 | OUT-05 | Prueba en Produccion | Produccion esta fuera de alcance |
 
-## 6. Convencion sugerida de archivos
+## 6. Bloqueo obligatorio antes de Produccion
+
+Antes de produccion es obligatorio validar el flujo completo con usuario no admin y evidencia real en Sandbox/UAT.
+
+Validacion parcial ya observada con Andres:
+- Pantalla 1 visible.
+- Boton `Registrar ingreso / anticipo` visible.
+- Modal abre.
+- Contexto del formulario carga.
+- Cliente relacionado visible.
+- Campos financieros visibles.
+
+Pendiente obligatorio:
+- Guardar borrador.
+- Cargar evidencia real.
+- Enviar a Tesoreria.
+- Confirmar que no hay error de permisos, Files ni Flow/notificaciones.
+
+## 7. Convencion sugerida de archivos
 
 Guardar capturas y queries fuera de metadata Salesforce, por ejemplo:
 - `docs/asignaciones/vn-rq106/evidencias/2026-06-01/P1-01-pantalla1-vn.png`
