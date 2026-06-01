@@ -20,5 +20,18 @@ public class AnticipoTriggerHandler extends TriggerHandler {
     }  
     
 	public override void afterInsert(){
+        VN_RQ106_OpportunityAnticipoSyncService.syncAfterInsert(newRecordList);
 	}
+
+    public override void afterUpdate(){
+        VN_RQ106_OpportunityAnticipoSyncService.syncAfterUpdate(newRecordList, oldRecordMap);
+    }
+
+    public override void afterDelete(){
+        VN_RQ106_OpportunityAnticipoSyncService.syncAfterDelete(oldRecordList);
+    }
+
+    public override void afterUndelete(){
+        VN_RQ106_OpportunityAnticipoSyncService.syncAfterUndelete(newRecordList);
+    }
 }
