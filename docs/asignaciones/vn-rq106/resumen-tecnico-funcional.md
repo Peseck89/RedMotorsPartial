@@ -1,6 +1,6 @@
 # VN-RQ106 - Resumen tecnico-funcional
 
-Fecha: 2026-06-01
+Fecha: 2026-06-02
 Estado: Implementado en RedMotorsSandbox. Produccion sin cambios.
 
 Este documento consolida que hace cada pantalla, que notificaciones quedaron implementadas, que permisos se ajustaron y que queda fuera de alcance o pendiente de feedback. Sirve como referencia rapida para revisiones, QA y handoff.
@@ -67,16 +67,18 @@ Que hace:
 **Condicion**: ejecuta cuando cambia `Estatus__c`
 **Sender email**: Org-Wide Email Address `info@redmotorscr.com`
 **Custom Notification Type**: `Redmotors_Notification`
+**Version activa en Sandbox**: v6
 
 | Evento (`Estatus__c`) | Destinatario | Canal |
 |---|---|---|
-| `En validacion de Tesoreria` | Tesoreria — `admin@portalnetcr.com` (temporal) | Email inline |
-| `Confirmada por Tesoreria` | Asesor / `Opportunity.Owner` | Email + Custom Notification |
-| `Correccion requerida por Tesoreria` | Asesor / `Opportunity.Owner` | Email + Custom Notification |
-| `Rechazada por Tesoreria` | Asesor / `Opportunity.Owner` | Email + Custom Notification |
-| `Anticipo creado` | Asesor / `Opportunity.Owner` | Email + Custom Notification |
-| `Reserva rechazada` | Asesor / `Opportunity.Owner` | Email + Custom Notification |
-| `Vehiculo reservado` | Asesor + `Opportunity.JefeSucursal__c` (sin duplicar si son el mismo usuario) | Email + Custom Notification |
+| `En validacion de Tesoreria` | Tesoreria — `grupo.cajas@redmotorscr.com` | Email inline |
+| `Reserva rechazada` | Asesor / `Opportunity.Owner` + `Opportunity.JefeSucursal__c` sin duplicar | Email + Custom Notification |
+| `Vehiculo reservado` | Asesor / `Opportunity.Owner` + `Opportunity.JefeSucursal__c` sin duplicar | Email + Custom Notification |
+
+Feedback oficial de Maria del 2026-06-02 y PDF `ProyectoEnvioCorreoReserva`:
+- Salesforce solo mantiene activas estas 3 notificaciones: solicitud enviada a Tesoreria, Producto aprueba reserva y Producto rechaza reserva.
+- Tesoreria aprueba/rechaza/correccion, `Anticipo creado`, Error PDF y Error integracion quedan fuera del Flow Salesforce porque las envia Helios/otro programa.
+- Error PDF, Error integracion, PDF real y logica Diego/Softland siguen fuera de alcance de esta fase.
 
 Nota critica: el Flow conserva una **guarda temporal** que limita las notificaciones a `Opportunity.Owner.Username = 'peseck89@gmail.com.redmotors.partial'`. Esta guarda debe retirarse o reemplazarse por una regla de alcance final antes de cualquier deploy a Produccion.
 
@@ -111,10 +113,11 @@ Validacion no admin parcial:
 | Item | Motivo |
 |---|---|
 | PDF real de Softland | Depende de integracion Diego/Softland — no implementar sin definicion de Diego |
-| Error de PDF real | Depende de integracion Diego/Softland |
-| Error de integracion real / reintentos | Depende de definicion tecnica Diego/Softland |
-| Correo grupal definitivo de Tesoreria | `admin@portalnetcr.com` es temporal; correo grupal pendiente de confirmar |
-| Email Templates definitivas | Textos inline aprobados temporalmente; plantillas oficiales solicitadas pero pendientes |
+| Error de PDF real | Depende de integracion Diego/Softland; no lo envia Salesforce en este Flow |
+| Error de integracion real / reintentos | Depende de definicion tecnica Diego/Softland; no lo envia Salesforce en este Flow |
+| Notificaciones Tesoreria aprueba/rechaza/correccion | Feedback Maria 2026-06-02: las envia Helios/otro programa, no Salesforce |
+| `Anticipo creado` | Feedback Maria 2026-06-02: lo envia Helios/otro programa, no Salesforce |
+| Email Templates definitivas | Textos inline en Flow para las 3 notificaciones activas; PDF/plantillas externas fuera del Flow Salesforce |
 | Deploy o prueba en Produccion | Produccion fuera de alcance hasta autorizacion formal |
 | Prueba completa no admin con evidencia real | Obligatoria antes de Produccion; debe ejecutarse en Sandbox/UAT porque crea/modifica datos y puede disparar notificaciones |
 
@@ -125,9 +128,9 @@ Validacion no admin parcial:
 | Pendiente | Detalle |
 |---|---|
 | Datos de `Indian` para PEV | `Indian` no tiene datos de ejemplo en Sandbox; confirmar si `JefeSucursal__c` aplica igual |
-| Motivo/comentario obligatorio | Para rechazo, correccion requerida y reserva rechazada — "por validar"; no cambiar hasta confirmar |
-| Correo al cliente: estado(s) disparadores | Comportamiento sin correo resuelto (no enviar). Falta definir en que estado(s) debe dispararse |
-| Textos inline de notificaciones | Aprobados provisionalmente; validar si son definitivos o si migran a Email Templates |
+| Motivo/comentario obligatorio | Para reserva rechazada — "por validar"; no cambiar hasta confirmar |
+| Correo al cliente | Fuera del Flow Salesforce actual segun feedback Maria 2026-06-02; lo cubre Helios/otro programa si aplica |
+| Textos inline de notificaciones | Solo aplican a las 3 notificaciones activas en Salesforce |
 
 ---
 

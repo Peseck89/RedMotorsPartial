@@ -1,6 +1,6 @@
 # VN-RQ106 - QA/checklist de cierre de fase actual
 
-Fecha: 2026-06-01
+Fecha: 2026-06-02
 
 Alcance de este checklist:
 - Pantalla 1 Opportunity Salesforce con LWC `vnRq106OpportunityOverview`.
@@ -63,28 +63,28 @@ Fuera de alcance de esta fase:
 ## 3. Notificaciones
 
 Condiciones actuales:
-- Flow `VN_RQ106_Notificaciones_Anticipo` v2 activo en Sandbox — 7 eventos implementados.
+- Flow `VN_RQ106_Notificaciones_Anticipo` v6 activo en Sandbox — 3 eventos implementados en Salesforce segun feedback oficial de Maria del 2026-06-02 y PDF `ProyectoEnvioCorreoReserva`.
 - Sender configurado: Org-Wide Email Address `info@redmotorscr.com`.
 - Custom Notification Type: `Redmotors_Notification`.
 - Guarda temporal activa: solo notifica si `Opportunity.Owner.Username = 'peseck89@gmail.com.redmotors.partial'`. Retirar antes de deploy productivo.
-- Jefe de Producto: `Opportunity.JefeSucursal__c`, confirmado por Maria 2026-06-01, sin hardcodear correo.
+- Jefe de Producto: `Opportunity.JefeSucursal__c`, confirmado por Maria, sin hardcodear correo.
 
 Eventos implementados:
-- `En validacion de Tesoreria` → Tesoreria (`admin@portalnetcr.com`, temporal), email inline.
-- `Confirmada por Tesoreria` → Asesor, email + Custom Notification.
-- `Correccion requerida por Tesoreria` → Asesor, email + Custom Notification.
-- `Rechazada por Tesoreria` → Asesor, email + Custom Notification.
-- `Anticipo creado` → Asesor, email + Custom Notification.
-- `Reserva rechazada` → Asesor, email + Custom Notification.
+- `En validacion de Tesoreria` → Tesoreria (`grupo.cajas@redmotorscr.com`), email inline.
+- `Reserva rechazada` → Asesor + JefeSucursal__c (sin duplicar), email + Custom Notification.
 - `Vehiculo reservado` → Asesor + JefeSucursal__c (sin duplicar), email + Custom Notification.
+
+Fuera del Flow Salesforce por feedback Maria 2026-06-02:
+- Tesoreria aprueba / `Confirmada por Tesoreria`.
+- Tesoreria rechaza / `Rechazada por Tesoreria`.
+- Tesoreria solicita correccion / `Correccion requerida por Tesoreria`.
+- `Anticipo creado`.
+- Error PDF y Error integracion.
+- Estas notificaciones las envia Helios/otro programa, no Salesforce.
 
 | Escenario | Disparador | Destinatarios esperados | Resultado esperado | Evidencia esperada | Estado |
 |---|---|---|---|---|---|
-| Solicitud enviada a Tesoreria | `Anticipo__c.Estatus__c = En validacion de Tesoreria` | Tesoreria temporal/configurada segun Flow | Email/custom notification segun rama vigente | Query estado + email/notificacion | Pendiente QA |
-| Tesoreria aprueba | `Confirmada por Tesoreria` | Asesor/owner | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
-| Tesoreria rechaza | `Rechazada por Tesoreria` | Asesor/owner | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
-| Tesoreria solicita correccion | `Correccion requerida por Tesoreria` | Asesor/owner | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
-| Anticipo creado | `Anticipo creado` | Asesor/owner | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
+| Solicitud enviada a Tesoreria | `Anticipo__c.Estatus__c = En validacion de Tesoreria` | `grupo.cajas@redmotorscr.com` | Email inline con asunto `Validacion de ingreso requerida - Cliente - Monto Moneda` | Query estado + evidencia de correo si se autoriza disparar | Pendiente QA |
 | Producto rechaza reserva | `Reserva rechazada` | Asesor/owner y Jefe Producto si aplica | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
 | Producto aprueba reserva | `Vehiculo reservado` | Asesor/owner y Jefe Producto si aplica, sin duplicar si son el mismo usuario | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
 
@@ -130,8 +130,8 @@ Nota tecnica:
 | Guarda temporal de Claudia sigue activa | No es configuracion final para Produccion | Retirar/reemplazar antes de deploy productivo |
 | Falta prueba end-to-end con usuario no admin | Puede haber permisos de Files, DML, record access o notificaciones no detectados en validacion read-only | Obligatorio antes de Produccion: guardar borrador, cargar evidencia real y enviar a Tesoreria en Sandbox/UAT |
 | Files/evidencia no validado manualmente | El formulario puede crear borrador pero fallar al cargar evidencia | Probar carga real de archivo en Sandbox/UAT antes de Produccion |
-| Textos inline de notificaciones no aprobados formalmente | Negocio puede pedir ajustes de redaccion | Validar con Maria/Luis |
-| Destinatario Tesoreria definitivo puede cambiar | Notificacion a Tesoreria podria requerir correo/grupo/cola final | Confirmar antes de cierre productivo |
+| Textos inline de las 3 notificaciones activas pueden requerir ajuste menor | Negocio puede pedir ajustes de redaccion | Validar con Maria/Luis |
+| Notificaciones retiradas del Flow Salesforce | QA podria esperar evidencias de 7 eventos anteriores | Aclarar que Helios/otro programa envia Tesoreria aprueba/rechaza/correccion, Anticipo creado, Error PDF y Error integracion |
 | Softland/Diego fuera de alcance | PDF real, reintentos y errores reales no pueden cerrarse ahora | Documentar como pendiente externo |
 
 ## 7. Metadata de referencia

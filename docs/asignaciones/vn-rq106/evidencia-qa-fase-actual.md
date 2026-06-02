@@ -1,6 +1,6 @@
 # VN-RQ106 - Matriz de evidencias QA fase actual
 
-Fecha: 2026-06-01
+Fecha: 2026-06-02
 
 Objetivo:
 - Registrar la evidencia pendiente y tomada para la fase actual de VN-RQ106 en `RedMotorsSandbox`.
@@ -49,15 +49,18 @@ Nota obligatoria antes de Produccion:
 
 ## 3. Notificaciones
 
+Alcance vigente segun feedback oficial de Maria del 2026-06-02 y PDF `ProyectoEnvioCorreoReserva`:
+- Salesforce / Flow `VN_RQ106_Notificaciones_Anticipo` v6 solo maneja 3 notificaciones.
+- Las notificaciones de Tesoreria aprueba/rechaza/correccion, `Anticipo creado`, Error PDF y Error integracion quedan fuera del Flow Salesforce porque las envia Helios/otro programa.
+
 | ID | Escenario | Estatus disparador | Evidencia esperada | Estado |
 |---|---|---|---|---|
-| N-01 | Solicitud enviada a Tesoreria | `En validacion de Tesoreria` | Query estado + email/notificacion a Tesoreria | Pendiente |
-| N-02 | Tesoreria aprueba | `Confirmada por Tesoreria` | Query estado + email/notificacion asesor | Pendiente |
-| N-03 | Tesoreria rechaza | `Rechazada por Tesoreria` | Query estado + email/notificacion asesor | Pendiente |
-| N-04 | Tesoreria solicita correccion | `Correccion requerida por Tesoreria` | Query estado + email/notificacion asesor | Pendiente |
-| N-05 | Anticipo creado | `Anticipo creado` | Query estado + email/notificacion asesor | Pendiente |
-| N-06 | Producto rechaza reserva | `Reserva rechazada` | Query estado + email/notificacion asesor/Jefe Producto | Pendiente |
-| N-07 | Producto aprueba reserva | `Vehiculo reservado` | Query estado + email/notificacion asesor/Jefe Producto | Pendiente |
+| N-01 | Solicitud enviada a Tesoreria | `En validacion de Tesoreria` | Query estado + evidencia de email a `grupo.cajas@redmotorscr.com` si se autoriza disparar | Pendiente |
+| N-02 | Producto rechaza reserva | `Reserva rechazada` | Query estado + email/notificacion asesor/Jefe Producto | Pendiente |
+| N-03 | Producto aprueba reserva | `Vehiculo reservado` | Query estado + email/notificacion asesor/Jefe Producto | Pendiente |
+| N-OUT-01 | Tesoreria aprueba/rechaza/correccion | `Confirmada por Tesoreria`, `Rechazada por Tesoreria`, `Correccion requerida por Tesoreria` | Evidencia Helios/otro programa, no Salesforce | Fuera de Flow Salesforce |
+| N-OUT-02 | Anticipo creado | `Anticipo creado` | Evidencia Helios/otro programa, no Salesforce | Fuera de Flow Salesforce |
+| N-OUT-03 | Error PDF / Error integracion | N/A Salesforce | Evidencia Diego/Softland/Helios si aplica | Fuera de alcance Salesforce |
 
 ## 4. Permisos
 
@@ -75,8 +78,8 @@ Nota obligatoria antes de Produccion:
 | ID | Evidencia | Motivo |
 |---|---|---|
 | OUT-01 | PDF real Softland | Depende de integracion Softland/Diego |
-| OUT-02 | Error PDF real | Depende de integracion Softland/Diego |
-| OUT-03 | Error integracion real | Depende de integracion Softland/Diego |
+| OUT-02 | Error PDF real | Depende de integracion Softland/Diego; no lo envia el Flow Salesforce |
+| OUT-03 | Error integracion real | Depende de integracion Softland/Diego; no lo envia el Flow Salesforce |
 | OUT-04 | Reintento real autorizado | Depende de definicion tecnica Diego/Softland |
 | OUT-05 | Prueba en Produccion | Produccion esta fuera de alcance |
 
