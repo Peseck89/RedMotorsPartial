@@ -830,6 +830,57 @@ function Show-QuickReview {
     }
 }
 
+function Show-PowerModeMenu {
+    param([pscustomobject]$Environment)
+
+    Write-Section "Modo energia"
+
+    if (-not (Test-Folder $Environment.RedMotorsPath)) {
+        Write-Host "RedMotors no existe en la ruta esperada:"
+        Write-Host $Environment.RedMotorsPath
+        return
+    }
+
+    $powerModePath = Join-Path $Environment.RedMotorsPath "scripts\power-mode.ps1"
+    if (-not (Test-File $powerModePath)) {
+        Write-Host "No se encontro scripts/power-mode.ps1 en RedMotors."
+        Write-Host "Ruta revisada: $powerModePath"
+        return
+    }
+
+    Write-Host "1. Ver estado de energia"
+    Write-Host "2. Trabajo conectado a corriente"
+    Write-Host "3. Movil / bateria"
+    Write-Host "4. Cancelar"
+    Write-Host ""
+
+    $powerChoice = Read-Host "Selecciona una opcion (1-4)"
+
+    Push-Location -LiteralPath $Environment.RedMotorsPath
+    try {
+        switch ($powerChoice) {
+            "1" {
+                & ".\scripts\power-mode.ps1" -Mode Status
+            }
+            "2" {
+                & ".\scripts\power-mode.ps1" -Mode WorkPlugged
+            }
+            "3" {
+                & ".\scripts\power-mode.ps1" -Mode MobileBattery
+            }
+            "4" {
+                Write-Host "Operacion cancelada."
+            }
+            default {
+                Write-Host "Opcion no reconocida. No se ejecuto ninguna accion."
+            }
+        }
+    }
+    finally {
+        Pop-Location
+    }
+}
+
 function Show-MainMenu {
     param([pscustomobject]$Environment)
 
@@ -862,13 +913,14 @@ function Show-MainMenu {
     Write-Host "5. Revision rapida de estado"
     Write-Host "6. Mantenimiento / limpieza mensual"
     Write-Host "7. Salir"
+    Write-Host "8. Modo energia"
     Write-Host ""
 }
 
 $environment = Get-LauncherEnvironment
 
 Show-MainMenu -Environment $environment
-$choice = Read-Host "Selecciona una opcion (1-7)"
+$choice = Read-Host "Selecciona una opcion (1-8)"
 
 switch ($choice) {
     "1" {
@@ -891,6 +943,9 @@ switch ($choice) {
     }
     "7" {
         Write-Host "Salida solicitada. No se ejecuto ninguna accion."
+    }
+    "8" {
+        Show-PowerModeMenu -Environment $environment
     }
     default {
         Write-Host "Opcion no reconocida. No se ejecuto ninguna accion."

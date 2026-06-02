@@ -72,6 +72,20 @@ Do not continue if:
 - user has not authorized code changes
 - Production deploy/retrieve/destructive action is being considered without explicit confirmation
 
+## Energy mode guidance
+
+If the user says they will work connected to power with Codex, Claude, deploys or long-running processes, recommend:
+
+DevLaunchpad
+→ Modo energia
+→ Trabajo conectado a corriente
+
+If the user says they will work without charger, go out, or use the Laptop in mobile mode, recommend:
+
+DevLaunchpad
+→ Modo energia
+→ Movil / bateria
+
 ## Standard continuation response
 
 When ready, provide:
