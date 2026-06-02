@@ -77,7 +77,7 @@
         <inputParameters>
             <name>emailAddresses</name>
             <value>
-                <stringValue>admin@portalnetcr.com</stringValue>
+                <stringValue>grupo.cajas@redmotorscr.com</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -183,66 +183,6 @@
         <locationX>182</locationX>
         <locationY>458</locationY>
         <defaultConnectorLabel>Evento no notificado</defaultConnectorLabel>
-        <rules>
-            <name>Confirmada_por_Tesoreria</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.Estatus__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Confirmada por Tesorería</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Tiene_Email_Asesor</targetReference>
-            </connector>
-            <label>Confirmada por Tesorería</label>
-        </rules>
-        <rules>
-            <name>Correccion_requerida_por_Tesoreria</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.Estatus__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Corrección requerida por Tesorería</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Tiene_Email_Asesor</targetReference>
-            </connector>
-            <label>Corrección requerida por Tesorería</label>
-        </rules>
-        <rules>
-            <name>Rechazada_por_Tesoreria</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.Estatus__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Rechazada por Tesorería</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Tiene_Email_Asesor</targetReference>
-            </connector>
-            <label>Rechazada por Tesorería</label>
-        </rules>
-        <rules>
-            <name>Anticipo_creado</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.Estatus__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Anticipo creado</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Tiene_Email_Asesor</targetReference>
-            </connector>
-            <label>Anticipo creado</label>
-        </rules>
         <rules>
             <name>Reserva_rechazada</name>
             <conditionLogic>and</conditionLogic>
@@ -390,11 +330,11 @@
             <label>Owner es Claudia prueba</label>
         </rules>
     </decisions>
-    <description>VN-RQ106: notifica al asesor y al Jefe de Producto/Jefe de Sucursal de la Opportunity cuando cambia Estatus__c a estados del proceso; notifica a Tesorería (admin@portalnetcr.com) cuando pasa a "En validación de Tesorería". Guarda temporal de prueba: solo continúa si Opportunity.Owner.Username es peseck89@gmail.com.redmotors.partial; retirar o ajustar antes de la activación final. Pendientes no implementados: cliente, error PDF y error integración por falta de destinatarios o datos confirmados.</description>
+    <description>VN-RQ106: según feedback de María del 2026-06-02, Salesforce solo notifica solicitud enviada a Tesorería, Producto aprueba reserva y Producto rechaza reserva. Las demás notificaciones del PDF ProyectoEnvioCorreoReserva quedan fuera de este Flow porque serán enviadas por Helios/otro programa. Guarda temporal de prueba: solo continúa si Opportunity.Owner.Username es peseck89@gmail.com.redmotors.partial; retirar o ajustar antes de la activación final. No implementa Error PDF ni Error integración por alcance Diego/Softland/PDF real.</description>
     <formulas>
         <name>EmailSubject</name>
         <dataType>String</dataType>
-        <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Confirmada por Tesorería&apos;, &apos;VN-RQ106: anticipo confirmado por Tesorería&apos;, &apos;Corrección requerida por Tesorería&apos;, &apos;VN-RQ106: corrección requerida por Tesorería&apos;, &apos;Rechazada por Tesorería&apos;, &apos;VN-RQ106: anticipo rechazado por Tesorería&apos;, &apos;Anticipo creado&apos;, &apos;VN-RQ106: anticipo creado&apos;, &apos;Reserva rechazada&apos;, &apos;VN-RQ106: reserva rechazada&apos;, &apos;Vehículo reservado&apos;, &apos;VN-RQ106: reserva aprobada por Producto&apos;, &apos;VN-RQ106: actualización de anticipo&apos;)</expression>
+        <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Reserva rechazada&apos;, &apos;Vehículo No Reservado- &apos; + {!Get_Oportunidad.Name}, &apos;Vehículo reservado&apos;, &apos;Vehículo reservado – &apos; + {!Get_Oportunidad.Name}, &apos;VN-RQ106: actualización de anticipo&apos;)</expression>
     </formulas>
     <formulas>
         <name>EmailAddressesAsesorYJefeProducto</name>
@@ -409,12 +349,12 @@
     <formulas>
         <name>NotificationTitle</name>
         <dataType>String</dataType>
-        <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Confirmada por Tesorería&apos;, &apos;Anticipo confirmado&apos;, &apos;Corrección requerida por Tesorería&apos;, &apos;Corrección requerida&apos;, &apos;Rechazada por Tesorería&apos;, &apos;Anticipo rechazado&apos;, &apos;Anticipo creado&apos;, &apos;Anticipo creado&apos;, &apos;Reserva rechazada&apos;, &apos;Reserva rechazada&apos;, &apos;Vehículo reservado&apos;, &apos;Reserva aprobada&apos;, &apos;Actualización de anticipo&apos;)</expression>
+        <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Reserva rechazada&apos;, &apos;Vehículo No Reservado&apos;, &apos;Vehículo reservado&apos;, &apos;Vehículo reservado&apos;, &apos;Actualización de anticipo&apos;)</expression>
     </formulas>
     <formulas>
         <name>EmailSubjectTesoreria</name>
         <dataType>String</dataType>
-        <expression>&apos;VN-RQ106: nueva solicitud de anticipo en validación - &apos; + {!$Record.Name}</expression>
+        <expression>&apos;Validación de ingreso requerida – &apos; + IF(ISBLANK({!Get_Cliente.Name}), {!Get_Oportunidad.Name}, {!Get_Cliente.Name}) + &apos; – &apos; + TEXT({!$Record.Monto__c}) + &apos; &apos; + TEXT({!$Record.CurrencyIsoCode})</expression>
     </formulas>
     <interviewLabel>VN-RQ106 Notificaciones Anticipo {!$Flow.CurrentDateTime}</interviewLabel>
     <label>VN-RQ106 Notificaciones Anticipo</label>
@@ -480,6 +420,27 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <name>Get_Cliente</name>
+        <label>Get cliente</label>
+        <locationX>182</locationX>
+        <locationY>80</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Asesor</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Oportunidad.AccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>Get_Jefe_Producto</name>
         <label>Get jefe producto</label>
         <locationX>182</locationX>
@@ -507,7 +468,7 @@
         <locationY>26</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Get_Asesor</targetReference>
+            <targetReference>Get_Cliente</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
