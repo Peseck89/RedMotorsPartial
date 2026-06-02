@@ -9,25 +9,33 @@ Objetivo:
 Ambiente:
 - Sandbox: `RedMotorsSandbox`.
 - Opportunity sugerida: `006Nq00000XbTo1IAF`.
-- Prueba no admin parcial: Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`) sobre Opportunity `006PH00000V2VFaYAN`.
+- Prueba no admin completa: Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`) sobre Opportunity `006PH00000KnrndYAB` / `Ruben Jimenez-BMW-20/10/2024`.
+- Anticipo QA creado: `a4JNq000000XQdFMAW` / `ANT-01168`, referencia `TEST-NOADMIN-ANDRES-002`.
 - Produccion: no tocar.
 
-Nota obligatoria antes de Produccion:
-- Antes de produccion es obligatorio validar el flujo completo con usuario no admin y evidencia real en Sandbox/UAT.
-- Ya se valido parcialmente con Andres: Pantalla 1 visible, boton visible, modal abre, contexto carga, cliente relacionado y campos financieros visibles.
-- No se ejecuto guardar borrador, cargar evidencia ni enviar a Tesoreria porque esas acciones crean/modifican datos y pueden disparar notificaciones.
+Resultado QA no admin:
+- Ejecutado exitosamente en `RedMotorsSandbox` con Andres.
+- Se valido: Pantalla 1 visible, boton `Registrar ingreso / anticipo` visible, modal abre, contexto carga, cliente relacionado visible, campos financieros visibles, guardar borrador, cargar evidencia y enviar a Tesoreria.
+- Anticipo final: `En validacion de Tesoreria`; tipo `Abono`; medio `Transferencia`; monto `1.00 USD`; depositante `Prueba QA Andres`.
+- Evidencia asociada: 1 `ContentDocumentLink`.
+- `Opportunity.Estado_Anticipo__c` quedo `Pendiente`.
+- Permission set temporal de Andres fue retirado; Claudia conserva `VN_RQ106_Anticipo`.
+- No se valido envio real de correo para Andres porque el Flow mantiene la guarda temporal de Claudia.
+
+Pendiente pre-Produccion:
+- Definir retiro/reemplazo de la guarda temporal de Claudia y ejecutar QA amplio de notificaciones reales cuando se autorice disparar correos.
 
 ## 1. Pantalla 1 Opportunity
 
 | ID | Evidencia | Dato/escenario | Archivo o captura esperada | Estado |
 |---|---|---|---|---|
-| P1-01 | Componente visible VN | Opportunity VN | Screenshot primer pantallazo con `vnRq106OpportunityOverview` | Validado parcial con Andres; captura formal pendiente |
+| P1-01 | Componente visible VN | Opportunity VN | Screenshot primer pantallazo con `vnRq106OpportunityOverview` | Validado con Andres; captura formal pendiente |
 | P1-02 | Componente visible VU | Opportunity VU | Screenshot primer pantallazo con `vnRq106OpportunityOverview` | Pendiente |
-| P1-03 | Encabezado y boton | Opportunity con action disponible | Screenshot con nombre Opportunity y `Registrar ingreso / anticipo` | Validado parcial con Andres; captura formal pendiente |
+| P1-03 | Encabezado y boton | Opportunity con action disponible | Screenshot con nombre Opportunity y `Registrar ingreso / anticipo` | Validado con Andres; captura formal pendiente |
 | P1-04 | Datos principales | Cliente, asesor, vehiculo/VIN si existe | Screenshot + query Opportunity/Product2 | Pendiente |
 | P1-05 | Solicitudes de ingreso | Anticipos relacionados | Screenshot max 3 filas + query `Anticipo__c` | Pendiente |
 | P1-06 | Anticipos de dinero | Anticipos aprobados/aplicados | Screenshot max 3 filas + query `Anticipo__c` | Pendiente |
-| P1-07 | Resumen financiero | Campos financieros Opportunity | Screenshot panel derecho + query campos financieros | Validado parcial con Andres; captura formal pendiente |
+| P1-07 | Resumen financiero | Campos financieros Opportunity | Screenshot panel derecho + query campos financieros | Validado con Andres; captura formal pendiente |
 | P1-08 | Estado anticipo/reserva | Estado actual | Screenshot panel estado | Pendiente |
 | P1-09 | PDF/documentos | Placeholder Softland | Screenshot `Pendiente de integracion Softland` | Pendiente |
 | P1-10 | Historial | Estados/comentarios/fechas disponibles | Screenshot max 2 eventos + query | Pendiente |
@@ -39,13 +47,13 @@ Nota obligatoria antes de Produccion:
 |---|---|---|---|---|
 | P2-01 | Orden de campos | Abrir quick action | Screenshot con orden completo del formulario | Pendiente |
 | P2-02 | Sin identificacion depositante | Formulario completo | Screenshot donde no aparece identificacion | Pendiente |
-| P2-03 | Cliente relacionado listo | Opportunity con `AccountId` | Screenshot indicador `Cliente relacionado` listo | Validado parcial con Andres; captura formal pendiente |
+| P2-03 | Cliente relacionado listo | Opportunity con `AccountId` | Screenshot indicador `Cliente relacionado` listo | Validado con Andres; captura formal pendiente |
 | P2-04 | Cliente relacionado faltante | Opportunity sin `AccountId` | Screenshot/toast de error funcional | Pendiente si hay data |
 | P2-05 | Validaciones requeridas | Guardar sin datos | Screenshot validaciones | Pendiente |
-| P2-06 | Guardar borrador | Datos validos | Screenshot toast + Id `Anticipo__c` + query | Obligatorio antes de Produccion; no ejecutado |
+| P2-06 | Guardar borrador | Datos validos | Screenshot toast + Id `Anticipo__c` + query | Validado con Andres: `ANT-01168` / `a4JNq000000XQdFMAW` |
 | P2-07 | Evidencia obligatoria | Enviar sin archivo | Screenshot bloqueo o error | Pendiente |
-| P2-08 | Adjuntar evidencia | Archivo real de prueba | Screenshot archivo + query `ContentDocumentLink` | Obligatorio antes de Produccion; no ejecutado |
-| P2-09 | Enviar a Tesoreria | Borrador con evidencia | Screenshot/toast + query estado | Obligatorio antes de Produccion; no ejecutado |
+| P2-08 | Adjuntar evidencia | Archivo real de prueba | Screenshot archivo + query `ContentDocumentLink` | Validado con Andres: 1 `ContentDocumentLink` |
+| P2-09 | Enviar a Tesoreria | Borrador con evidencia | Screenshot/toast + query estado | Validado con Andres: `En validacion de Tesoreria` |
 
 ## 3. Notificaciones
 
@@ -55,7 +63,7 @@ Alcance vigente segun feedback oficial de Maria del 2026-06-02 y PDF `ProyectoEn
 
 | ID | Escenario | Estatus disparador | Evidencia esperada | Estado |
 |---|---|---|---|---|
-| N-01 | Solicitud enviada a Tesoreria | `En validacion de Tesoreria` | Query estado + evidencia de email a `grupo.cajas@redmotorscr.com` si se autoriza disparar | Pendiente |
+| N-01 | Solicitud enviada a Tesoreria | `En validacion de Tesoreria` | Query estado + evidencia de email a `grupo.cajas@redmotorscr.com` si se autoriza disparar | Estado validado con Andres; correo real no validado por guarda temporal de Claudia |
 | N-02 | Producto rechaza reserva | `Reserva rechazada` | Query estado + email/notificacion asesor/Jefe Producto | Pendiente |
 | N-03 | Producto aprueba reserva | `Vehiculo reservado` | Query estado + email/notificacion asesor/Jefe Producto | Pendiente |
 | N-OUT-01 | Tesoreria aprueba/rechaza/correccion | `Confirmada por Tesoreria`, `Rechazada por Tesoreria`, `Correccion requerida por Tesoreria` | Evidencia Helios/otro programa, no Salesforce | Fuera de Flow Salesforce |
@@ -69,9 +77,9 @@ Alcance vigente segun feedback oficial de Maria del 2026-06-02 y PDF `ProyectoEn
 | PER-01 | Acceso Apex | Permission Set contiene acceso a ambos controllers | Query `SetupEntityAccess` o screenshot Setup | Pendiente captura |
 | PER-02 | FLS requerido | Permission Set contiene FLS de Opportunity/Anticipo requerido | Query `FieldPermissions` o screenshot Setup | Pendiente captura |
 | PER-03 | Sin FLS identificacion | `Identificacion_Depositante__c` no esta en permission set | Query `FieldPermissions` | Pendiente captura |
-| PER-04 | Usuario no admin | Usuario final abre Pantalla 1 y Pantalla 2 | Screenshot usuario final | Validado parcial con Andres; captura formal pendiente |
-| PER-05 | Files/evidencia | Usuario final adjunta archivo | Screenshot archivo + query `ContentDocumentLink` | Obligatorio antes de Produccion; no ejecutado |
-| PER-06 | Flujo completo no admin | Usuario no admin guarda borrador, carga evidencia real y envia a Tesoreria | Screenshot/toast + query `Anticipo__c` + query `ContentDocumentLink` + evidencia de notificacion si dispara | Obligatorio antes de Produccion; no ejecutado |
+| PER-04 | Usuario no admin | Usuario final abre Pantalla 1 y Pantalla 2 | Screenshot usuario final | Validado con Andres; captura formal pendiente |
+| PER-05 | Files/evidencia | Usuario final adjunta archivo | Screenshot archivo + query `ContentDocumentLink` | Validado con Andres: 1 `ContentDocumentLink` |
+| PER-06 | Flujo completo no admin | Usuario no admin guarda borrador, carga evidencia real y envia a Tesoreria | Screenshot/toast + query `Anticipo__c` + query `ContentDocumentLink` + evidencia de notificacion si dispara | Validado con Andres; notificacion real no validada por guarda temporal |
 
 ## 5. Evidencias fuera de alcance actual
 
@@ -83,23 +91,27 @@ Alcance vigente segun feedback oficial de Maria del 2026-06-02 y PDF `ProyectoEn
 | OUT-04 | Reintento real autorizado | Depende de definicion tecnica Diego/Softland |
 | OUT-05 | Prueba en Produccion | Produccion esta fuera de alcance |
 
-## 6. Bloqueo obligatorio antes de Produccion
+## 6. Resultado no admin y pendiente pre-Produccion
 
-Antes de produccion es obligatorio validar el flujo completo con usuario no admin y evidencia real en Sandbox/UAT.
+La prueba completa con usuario no admin y evidencia real ya fue ejecutada exitosamente en Sandbox con Andres Ramirez Rojas.
 
-Validacion parcial ya observada con Andres:
+Validacion observada:
 - Pantalla 1 visible.
 - Boton `Registrar ingreso / anticipo` visible.
 - Modal abre.
 - Contexto del formulario carga.
 - Cliente relacionado visible.
 - Campos financieros visibles.
-
-Pendiente obligatorio:
 - Guardar borrador.
 - Cargar evidencia real.
 - Enviar a Tesoreria.
-- Confirmar que no hay error de permisos, Files ni Flow/notificaciones.
+- Confirmacion de `Anticipo__c` `ANT-01168` en `En validacion de Tesoreria`.
+- Confirmacion de 1 `ContentDocumentLink`.
+- Confirmacion de `Opportunity.Estado_Anticipo__c = Pendiente`.
+
+Pendiente pre-Produccion:
+- Retirar/reemplazar la guarda temporal de Claudia.
+- Ejecutar QA amplio de notificaciones reales cuando se autorice disparar correos.
 
 ## 7. Convencion sugerida de archivos
 

@@ -12,13 +12,21 @@ Alcance de este checklist:
 Ambiente de validacion:
 - Sandbox: `RedMotorsSandbox`.
 - Opportunity base sugerida: `006Nq00000XbTo1IAF`.
-- Prueba no admin parcial realizada con Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`) sobre Opportunity `006PH00000V2VFaYAN`.
+- Prueba no admin completa realizada con Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`) sobre Opportunity `006PH00000KnrndYAB` / `Ruben Jimenez-BMW-20/10/2024`.
+- Anticipo QA creado: `a4JNq000000XQdFMAW` / `ANT-01168`, referencia `TEST-NOADMIN-ANDRES-002`.
 - Produccion: fuera de alcance, no tocar.
 
-Nota obligatoria antes de Produccion:
-- Antes de produccion es obligatorio validar el flujo completo con usuario no admin y evidencia real en Sandbox/UAT.
-- La validacion parcial con Andres confirmo Pantalla 1 visible, boton visible, modal abierto, contexto cargado, cliente relacionado y campos financieros visibles.
-- No se valido guardar borrador, cargar evidencia ni enviar a Tesoreria porque esas acciones crean/modifican datos y pueden disparar notificaciones.
+Resultado QA no admin:
+- Validado exitosamente en `RedMotorsSandbox` con Andres: Pantalla 1 visible, boton visible, modal abierto, contexto cargado, cliente relacionado, campos financieros visibles, guardar borrador, cargar evidencia y enviar a Tesoreria.
+- Anticipo final: `En validacion de Tesoreria`, monto `1.00 USD`, tipo `Abono`, medio `Transferencia`, depositante `Prueba QA Andres`.
+- Evidencia asociada: 1 `ContentDocumentLink`.
+- `Opportunity.Estado_Anticipo__c` quedo `Pendiente`.
+- Permission set temporal de Andres fue retirado; Claudia conserva `VN_RQ106_Anticipo`.
+- No se valido envio real de correo para Andres porque el Flow mantiene la guarda temporal de Claudia.
+
+Pendiente pre-Produccion:
+- Definir y ejecutar el retiro/reemplazo de la guarda temporal de Claudia para activar QA amplio o alcance final de notificaciones.
+- Validar notificaciones reales solo cuando se autorice disparar correos.
 
 Fuera de alcance de esta fase:
 - PDF real Softland.
@@ -31,13 +39,13 @@ Fuera de alcance de esta fase:
 
 | Prueba | Pasos | Resultado esperado | Evidencia esperada | Estado |
 |---|---|---|---|---|
-| Componente visible en Opportunity VN | Abrir una Opportunity VN en Sandbox | `vnRq106OpportunityOverview` aparece como bloque principal superior | Screenshot primer pantallazo | Validado parcial con Andres; evidencia formal pendiente |
+| Componente visible en Opportunity VN | Abrir una Opportunity VN en Sandbox | `vnRq106OpportunityOverview` aparece como bloque principal superior | Screenshot primer pantallazo | Validado con Andres; evidencia formal pendiente |
 | Componente visible en Opportunity VU | Abrir una Opportunity VU en Sandbox | `vnRq106OpportunityOverview` aparece como bloque principal superior | Screenshot primer pantallazo | Pendiente QA visual |
-| Encabezado | Abrir Pantalla 1 | Muestra nombre de Opportunity y boton `Registrar ingreso / anticipo` | Screenshot encabezado | Validado parcial con Andres; evidencia formal pendiente |
+| Encabezado | Abrir Pantalla 1 | Muestra nombre de Opportunity y boton `Registrar ingreso / anticipo` | Screenshot encabezado | Validado con Andres; evidencia formal pendiente |
 | Datos principales | Revisar seccion de datos | Muestra cliente, vehiculo/VIN si existe, precio de venta, estado oportunidad/reserva y asesor | Screenshot + query de Opportunity/Product2 si aplica | Pendiente QA |
 | Solicitudes de ingreso | Revisar lista/resumen | Muestra maximo 3 solicitudes recientes y texto `Ver mas en lista relacionada` si hay mas | Screenshot + query de `Anticipo__c` | Pendiente QA |
 | Anticipos de dinero | Revisar lista/resumen | Muestra maximo 3 anticipos aprobados/aplicados con numero, monto, fecha y estado | Screenshot + query de `Anticipo__c` | Pendiente QA |
-| Resumen financiero | Revisar panel derecho | Muestra valor total, total anticipos aprobados y saldo pendiente desde Opportunity | Screenshot + query de campos financieros | Validado parcial con Andres; evidencia formal pendiente |
+| Resumen financiero | Revisar panel derecho | Muestra valor total, total anticipos aprobados y saldo pendiente desde Opportunity | Screenshot + query de campos financieros | Validado con Andres; evidencia formal pendiente |
 | Estado anticipo/reserva | Revisar panel derecho | Muestra estado actual de anticipo y estado reserva/producto disponible | Screenshot + query | Pendiente QA |
 | PDF/documentos placeholder | Revisar tarjeta PDF/documentos | Muestra `Pendiente de integracion Softland`; no intenta obtener PDF real | Screenshot | Pendiente QA |
 | Historial | Revisar seccion historial | Muestra maximo 2 eventos resumidos con estado/comentario/fecha disponible | Screenshot + query de `Anticipo__c` | Pendiente QA |
@@ -49,16 +57,16 @@ Fuera de alcance de esta fase:
 |---|---|---|---|---|
 | Orden de campos | Abrir quick action | Orden: Tipo de ingreso, Medio de pago, Fecha de ingreso, Referencia/comprobante, Depositante, Monto, Moneda, Vehiculo si reserva, Evidencia, Comentarios asesor | Screenshot formulario | Modal abierto con Andres; evidencia formal pendiente |
 | Sin identificacion depositante | Revisar formulario completo | No aparece `Identificacion solicitante` ni `Identificacion depositante` | Screenshot formulario | Pendiente QA |
-| Cliente relacionado listo | Abrir Opportunity con `AccountId` | UI marca `Cliente relacionado` como listo | Screenshot validacion | Validado parcial con Andres; evidencia formal pendiente |
+| Cliente relacionado listo | Abrir Opportunity con `AccountId` | UI marca `Cliente relacionado` como listo | Screenshot validacion | Validado con Andres; evidencia formal pendiente |
 | Cliente relacionado faltante | Abrir Opportunity sin `AccountId` o probar dato controlado | UI/Apex bloquean creacion con error funcional | Screenshot/toast o resultado Apex | Pendiente si hay data |
 | Campos requeridos | Intentar guardar sin obligatorios | UI bloquea o muestra validaciones requeridas | Screenshot validaciones | Pendiente QA |
 | Tipo ingreso Abono | Seleccionar tipo distinto a reserva | No solicita vehiculo | Screenshot | Pendiente QA |
 | Tipo ingreso Reserva de vehiculo | Seleccionar `Reserva de vehiculo` con vehiculos disponibles | Muestra selector de vehiculo | Screenshot selector | Pendiente QA |
 | Reserva sin vehiculo | Intentar guardar reserva sin vehiculo | Bloquea guardado con mensaje funcional | Screenshot/toast | Pendiente QA |
-| Guardar borrador | Completar obligatorios y guardar | Crea `Anticipo__c` en estado `Borrador` | Id Anticipo + screenshot toast + query | Obligatorio antes de Produccion; no ejecutado |
+| Guardar borrador | Completar obligatorios y guardar | Crea `Anticipo__c` en estado `Borrador` | Id Anticipo + screenshot toast + query | Validado con Andres: `ANT-01168` / `a4JNq000000XQdFMAW` |
 | Evidencia obligatoria | Intentar enviar borrador sin evidencia | No permite enviar a Tesoreria | Screenshot/toast | Pendiente QA |
-| Adjuntar evidencia | Cargar archivo despues de crear borrador | Archivo queda asociado al `Anticipo__c` | Screenshot archivo + query `ContentDocumentLink` | Obligatorio antes de Produccion; no ejecutado |
-| Enviar a Tesoreria | Con evidencia cargada, enviar | Estado cambia a `En validacion de Tesoreria` | Screenshot/toast + query Anticipo | Obligatorio antes de Produccion; no ejecutado |
+| Adjuntar evidencia | Cargar archivo despues de crear borrador | Archivo queda asociado al `Anticipo__c` | Screenshot archivo + query `ContentDocumentLink` | Validado con Andres: 1 `ContentDocumentLink` |
+| Enviar a Tesoreria | Con evidencia cargada, enviar | Estado cambia a `En validacion de Tesoreria` | Screenshot/toast + query Anticipo | Validado con Andres: `En validacion de Tesoreria` |
 
 ## 3. Notificaciones
 
@@ -100,13 +108,13 @@ Estado implementado en Sandbox:
 
 | Prueba | Pasos | Resultado esperado | Evidencia esperada | Estado |
 |---|---|---|---|---|
-| Acceso Apex Pantalla 1 | Usuario con permission set abre Opportunity | No aparece error de Apex al cargar `vnRq106OpportunityOverview` | Screenshot o log sin error | Validado parcial con Andres; evidencia formal pendiente |
-| Acceso Apex Pantalla 2 | Usuario con permission set abre quick action | Modal carga contexto sin error de Apex | Screenshot modal | Validado parcial con Andres; evidencia formal pendiente |
-| FLS Opportunity | Revisar con usuario no admin | Ve resumen financiero y estados de Opportunity | Screenshot + confirmacion de usuario | Validado parcial con Andres; evidencia formal pendiente |
-| FLS Anticipo formulario | Crear borrador con usuario no admin | Puede guardar campos requeridos del formulario | Id Anticipo + screenshot | Obligatorio antes de Produccion; no ejecutado |
+| Acceso Apex Pantalla 1 | Usuario con permission set abre Opportunity | No aparece error de Apex al cargar `vnRq106OpportunityOverview` | Screenshot o log sin error | Validado con Andres; evidencia formal pendiente |
+| Acceso Apex Pantalla 2 | Usuario con permission set abre quick action | Modal carga contexto sin error de Apex | Screenshot modal | Validado con Andres; evidencia formal pendiente |
+| FLS Opportunity | Revisar con usuario no admin | Ve resumen financiero y estados de Opportunity | Screenshot + confirmacion de usuario | Validado con Andres; evidencia formal pendiente |
+| FLS Anticipo formulario | Crear borrador con usuario no admin | Puede guardar campos requeridos del formulario | Id Anticipo + screenshot | Validado con Andres: `ANT-01168` |
 | Sin FLS identificacion depositante | Revisar permission set o UI | `Identificacion_Depositante__c` no esta en FLS del permission set y no aparece en formulario | Query/Setup screenshot + formulario | Implementado, evidencia pendiente |
 | Comentario aprobacion solo lectura | Revisar FLS | Asesor no edita `Comentarios_Aprobacion_Rechazo__c` desde este permiso | Query/Setup screenshot | Implementado, evidencia pendiente |
-| Evidencia/Files | Usuario final adjunta archivo | Archivo se carga y queda asociado al `Anticipo__c` | Screenshot + query `ContentDocumentLink` | Obligatorio antes de Produccion; no ejecutado |
+| Evidencia/Files | Usuario final adjunta archivo | Archivo se carga y queda asociado al `Anticipo__c` | Screenshot + query `ContentDocumentLink` | Validado con Andres: 1 `ContentDocumentLink` |
 
 Nota tecnica:
 - `Anticipo__c.Oportunidad__c` es Master-Detail requerido; Salesforce no permite desplegar FLS para ese campo en permission set. No queda como pendiente funcional del permission set.
@@ -121,15 +129,15 @@ Nota tecnica:
 | Envio Tesoreria | Screenshot/toast, query estado `En validacion de Tesoreria` |
 | Notificaciones | Query estado por escenario, captura de email o campana de notificacion |
 | Permisos | Screenshot/query de permission set, prueba con usuario no admin/usuario final |
-| Pre-Produccion obligatorio | Prueba completa con usuario no admin: guardar borrador, cargar evidencia real y enviar a Tesoreria en Sandbox/UAT |
+| Pre-Produccion obligatorio | Retirar/reemplazar guarda temporal de Claudia y ejecutar QA amplio de notificaciones reales cuando se autorice disparar correos |
 
 ## 6. Riesgos abiertos
 
 | Riesgo | Impacto | Mitigacion |
 |---|---|---|
-| Guarda temporal de Claudia sigue activa | No es configuracion final para Produccion | Retirar/reemplazar antes de deploy productivo |
-| Falta prueba end-to-end con usuario no admin | Puede haber permisos de Files, DML, record access o notificaciones no detectados en validacion read-only | Obligatorio antes de Produccion: guardar borrador, cargar evidencia real y enviar a Tesoreria en Sandbox/UAT |
-| Files/evidencia no validado manualmente | El formulario puede crear borrador pero fallar al cargar evidencia | Probar carga real de archivo en Sandbox/UAT antes de Produccion |
+| Guarda temporal de Claudia sigue activa | No es configuracion final para Produccion y evita validar correo real para Andres | Retirar/reemplazar antes de deploy productivo y ejecutar QA amplio autorizado |
+| Prueba end-to-end no admin ya ejecutada | Riesgo de permisos DML/Files reducido para el escenario validado | Mantener evidencia de `ANT-01168`; repetir solo si cambia metadata o permisos |
+| Correos reales no validados para Andres | La guarda temporal de Claudia bloquea notificaciones para otros owners | Validar notificaciones reales tras retirar/reemplazar la guarda y con autorizacion para disparar correos |
 | Textos inline de las 3 notificaciones activas pueden requerir ajuste menor | Negocio puede pedir ajustes de redaccion | Validar con Maria/Luis |
 | Notificaciones retiradas del Flow Salesforce | QA podria esperar evidencias de 7 eventos anteriores | Aclarar que Helios/otro programa envia Tesoreria aprueba/rechaza/correccion, Anticipo creado, Error PDF y Error integracion |
 | Softland/Diego fuera de alcance | PDF real, reintentos y errores reales no pueden cerrarse ahora | Documentar como pendiente externo |

@@ -5,10 +5,17 @@ Estado: Implementado en RedMotorsSandbox. Produccion sin cambios.
 
 Este documento consolida que hace cada pantalla, que notificaciones quedaron implementadas, que permisos se ajustaron y que queda fuera de alcance o pendiente de feedback. Sirve como referencia rapida para revisiones, QA y handoff.
 
-Nota obligatoria antes de Produccion:
-- Antes de produccion es obligatorio validar el flujo completo con usuario no admin y evidencia real en Sandbox/UAT.
-- La validacion parcial con Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`) confirmo Pantalla 1 visible, boton visible, modal abierto, contexto cargado, cliente relacionado y campos financieros visibles.
-- No se valido guardar borrador, cargar evidencia ni enviar a Tesoreria porque esas acciones crean/modifican datos y pueden disparar notificaciones.
+Resultado QA no admin:
+- Se ejecuto exitosamente la prueba completa con Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`) en `RedMotorsSandbox`.
+- Opportunity usada: `006PH00000KnrndYAB` / `Ruben Jimenez-BMW-20/10/2024`.
+- Anticipo creado: `a4JNq000000XQdFMAW` / `ANT-01168`, referencia `TEST-NOADMIN-ANDRES-002`.
+- Resultado: guardar borrador, cargar evidencia y enviar a Tesoreria funcionaron con usuario no admin.
+- Estado final del anticipo: `En validacion de Tesoreria`; evidencia asociada: 1 `ContentDocumentLink`; `Opportunity.Estado_Anticipo__c = Pendiente`.
+- Permission set temporal de Andres fue retirado; Claudia conserva `VN_RQ106_Anticipo`.
+- No se valido envio real de correo para Andres porque el Flow mantiene la guarda temporal de Claudia.
+
+Pendiente pre-Produccion:
+- Retirar/reemplazar la guarda temporal de Claudia y ejecutar QA amplio de notificaciones reales cuando se autorice disparar correos.
 
 ---
 
@@ -100,11 +107,16 @@ Nota critica: el Flow conserva una **guarda temporal** que limita las notificaci
 
 Nota tecnica: `Anticipo__c.Oportunidad__c` es Master-Detail requerido; Salesforce no permite configurar FLS para ese campo en permission sets. No es un pendiente funcional.
 
-Validacion no admin parcial:
+Validacion no admin completa:
 - Usuario: Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`), perfil `Asesor de Ventas BMW y Nuevos V2`.
-- Opportunity usada: `006PH00000V2VFaYAN`.
-- Resultado observado: Pantalla 1 visible, boton visible, modal abre, contexto carga, cliente relacionado y campos financieros visibles.
-- Pendiente obligatorio antes de Produccion: guardar borrador, cargar evidencia real y enviar a Tesoreria con usuario no admin en Sandbox/UAT.
+- Opportunity usada: `006PH00000KnrndYAB` / `Ruben Jimenez-BMW-20/10/2024`.
+- Anticipo creado: `a4JNq000000XQdFMAW` / `ANT-01168`.
+- Resultado observado: Pantalla 1 visible, boton visible, modal abre, contexto carga, cliente relacionado y campos financieros visibles; ademas se pudo guardar borrador, cargar evidencia y enviar a Tesoreria.
+- Estado final: `En validacion de Tesoreria`.
+- Evidencia: 1 `ContentDocumentLink`.
+- Sincronizacion: `Opportunity.Estado_Anticipo__c = Pendiente`.
+- Limpieza: permission set temporal retirado de Andres; Claudia conserva el permission set.
+- Pendiente pre-Produccion: retirar/reemplazar guarda temporal de Claudia y validar notificaciones reales autorizadas.
 
 ---
 
@@ -119,7 +131,7 @@ Validacion no admin parcial:
 | `Anticipo creado` | Feedback Maria 2026-06-02: lo envia Helios/otro programa, no Salesforce |
 | Email Templates definitivas | Textos inline en Flow para las 3 notificaciones activas; PDF/plantillas externas fuera del Flow Salesforce |
 | Deploy o prueba en Produccion | Produccion fuera de alcance hasta autorizacion formal |
-| Prueba completa no admin con evidencia real | Obligatoria antes de Produccion; debe ejecutarse en Sandbox/UAT porque crea/modifica datos y puede disparar notificaciones |
+| Envio real de correo para usuarios distintos de Claudia | No validado porque el Flow mantiene la guarda temporal de Claudia |
 
 ---
 
