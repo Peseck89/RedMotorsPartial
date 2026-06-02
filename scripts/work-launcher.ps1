@@ -9,7 +9,9 @@ Safety rules:
 #>
 
 [CmdletBinding()]
-param()
+param(
+    [switch]$SkipAutoPower
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Continue"
@@ -82,6 +84,34 @@ function Test-File {
     }
 
     return Test-Path -LiteralPath $Path -PathType Leaf
+}
+
+function Get-LauncherBatteryInfo {
+    $batteries = @()
+
+    try {
+        $batteries = @(Get-CimInstance -ClassName Win32_Battery -ErrorAction Stop)
+    }
+    catch {
+        return [pscustomobject]@{
+            HasBattery = $false
+            OnBattery  = $false
+            Error       = $_.Exception.Message
+        }
+    }
+
+    $onBattery = $false
+    foreach ($battery in $batteries) {
+        if ($null -ne $battery.BatteryStatus -and $battery.BatteryStatus -eq 1) {
+            $onBattery = $true
+        }
+    }
+
+    return [pscustomobject]@{
+        HasBattery = ($batteries.Count -gt 0)
+        OnBattery  = $onBattery
+        Error       = ""
+    }
 }
 
 function Write-LimitedOutput {
@@ -534,9 +564,111 @@ function Get-ActiveAssignmentExpectedBranch {
     return ""
 }
 
+function Invoke-AutoPowerMode {
+    param(
+        [string]$RepoPath,
+        [string]$Device,
+        [switch]$Skip
+    )
+
+    if ($Skip) {
+        Write-Host "Modo energia automatico omitido por parametro."
+        return
+    }
+
+    if ($Device -eq "PC") {
+        Write-Host "Modo energia automatico omitido: PC detectada."
+        return
+    }
+
+    if ($Device -ne "Laptop") {
+        Write-Host "Modo energia automatico omitido: equipo no Laptop."
+        return
+    }
+
+    Write-Section "Modo energia automatico"
+
+    $powerModePath = Join-Path $RepoPath "scripts\power-mode.ps1"
+    if (-not (Test-File $powerModePath)) {
+        Write-Host "Advertencia: no se encontro scripts/power-mode.ps1. Se continua sin bloquear inicio de trabajo."
+        return
+    }
+
+    try {
+        Write-Host ".\scripts\power-mode.ps1 -Mode Auto"
+        & ".\scripts\power-mode.ps1" -Mode Auto
+
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Advertencia: power-mode.ps1 fallo durante modo energia automatico. Se continua con el flujo normal."
+        }
+    }
+    catch {
+        Write-Host "Advertencia: no se pudo ejecutar modo energia automatico. Se continua con el flujo normal."
+        Write-Host $_.Exception.Message
+    }
+}
+
+function Get-CurrentPowerShellPath {
+    try {
+        $process = Get-Process -Id $PID -ErrorAction Stop
+        if (-not [string]::IsNullOrWhiteSpace($process.Path) -and (Test-File $process.Path)) {
+            return $process.Path
+        }
+    }
+    catch {
+    }
+
+    $pwsh = Get-Command "pwsh.exe" -ErrorAction SilentlyContinue
+    if ($null -ne $pwsh) {
+        return $pwsh.Source
+    }
+
+    $powershell = Get-Command "powershell.exe" -ErrorAction SilentlyContinue
+    if ($null -ne $powershell) {
+        return $powershell.Source
+    }
+
+    return "powershell.exe"
+}
+
+function Invoke-StartWorkDiagnostic {
+    param(
+        [string]$WorkMode,
+        [string]$ExpectedBranch
+    )
+
+    $powerShellPath = Get-CurrentPowerShellPath
+    $arguments = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".\scripts\start-work.ps1", "-Mode", $WorkMode)
+
+    if ($WorkMode -eq "Continue" -and -not [string]::IsNullOrWhiteSpace($ExpectedBranch)) {
+        $arguments += @("-ExpectedBranch", $ExpectedBranch)
+    }
+
+    $output = @(& $powerShellPath @arguments 2>&1 | ForEach-Object {
+            $line = "$_"
+            Write-Host $line
+            $line
+        })
+
+    $state = "Unknown"
+    if (@($output | Where-Object { $_ -match "NO COMENZAR TODAVIA" }).Count -gt 0) {
+        $state = "Blocked"
+    }
+    elseif (@($output | Where-Object { $_ -match "LISTO PARA RECIBIR ASIGNACION|LISTO - CONTINUAR ASIGNACION" }).Count -gt 0) {
+        $state = "Ready"
+    }
+
+    return [pscustomobject]@{
+        State    = $state
+        ExitCode = $LASTEXITCODE
+        Output   = $output
+    }
+}
+
 function Start-RedMotorsWork {
     param(
         [string]$RepoPath,
+        [string]$Device,
         [ValidateSet("New", "Continue")]
         [string]$WorkMode = "New"
     )
@@ -570,15 +702,29 @@ function Start-RedMotorsWork {
         }
 
         Write-Host "Ejecutando diagnostico RedMotors:"
+        $diagnostic = $null
         if ($WorkMode -eq "Continue" -and -not [string]::IsNullOrWhiteSpace($expectedBranch)) {
             Write-Host ".\scripts\start-work.ps1 -Mode Continue -ExpectedBranch `"$expectedBranch`""
-            & ".\scripts\start-work.ps1" -Mode Continue -ExpectedBranch $expectedBranch
+            $diagnostic = Invoke-StartWorkDiagnostic -WorkMode Continue -ExpectedBranch $expectedBranch
         }
         else {
             Write-Host ".\scripts\start-work.ps1 -Mode $WorkMode"
-            & ".\scripts\start-work.ps1" -Mode $WorkMode
+            $diagnostic = Invoke-StartWorkDiagnostic -WorkMode $WorkMode -ExpectedBranch ""
         }
 
+        if ($null -eq $diagnostic -or $diagnostic.State -ne "Ready") {
+            Write-Host ""
+            if ($null -eq $diagnostic -or $diagnostic.State -eq "Unknown") {
+                Write-Host "Advertencia: no se pudo detectar claramente si el entorno esta LISTO."
+            }
+            Write-Host "Entorno NO validado. No continues todavia."
+            Write-Host "Copia el resumen anterior y compartelo en ChatGPT para decidir el siguiente paso."
+            Write-Host "Nota: modo energia aplicado no significa entorno validado."
+            return
+        }
+
+        Write-Host ""
+        Invoke-AutoPowerMode -RepoPath $RepoPath -Device $Device -Skip:$SkipAutoPower
         Write-Host ""
         Open-WorkAppsIfRequested
     }
@@ -671,7 +817,10 @@ function Start-AlticaClose {
 }
 
 function Start-RedMotorsPause {
-    param([string]$RepoPath)
+    param(
+        [string]$RepoPath,
+        [string]$Device
+    )
 
     Write-Section "Pausa RedMotors"
 
@@ -686,6 +835,16 @@ function Start-RedMotorsPause {
         Write-Host "No se encontro scripts/pause-work.ps1 en RedMotors."
         Write-Host "Ruta revisada: $pauseWorkPath"
         return
+    }
+
+    if ($Device -eq "Laptop") {
+        $battery = Get-LauncherBatteryInfo
+        if ($battery.OnBattery) {
+            Write-Host "Modo movil/bateria recomendado para traslado."
+        }
+        else {
+            Write-Host "Si vas a desconectar y salir, puedes aplicar Movil / bateria desde Modo energia."
+        }
     }
 
     Push-Location -LiteralPath $RepoPath
@@ -729,7 +888,7 @@ function Show-WorkProjectMenu {
 
     switch ($projectChoice) {
         "1" {
-            Start-RedMotorsWork -RepoPath $Environment.RedMotorsPath -WorkMode $WorkMode
+            Start-RedMotorsWork -RepoPath $Environment.RedMotorsPath -Device $Environment.Device -WorkMode $WorkMode
         }
         "2" {
             Start-AlticaWork -RepoPath $Environment.AlticaPath
@@ -762,7 +921,7 @@ function Show-PauseProjectMenu {
 
     switch ($projectChoice) {
         "1" {
-            Start-RedMotorsPause -RepoPath $Environment.RedMotorsPath
+            Start-RedMotorsPause -RepoPath $Environment.RedMotorsPath -Device $Environment.Device
         }
         "2" {
             Start-AlticaPause

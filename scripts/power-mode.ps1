@@ -9,7 +9,7 @@ Safety rules:
 
 [CmdletBinding()]
 param(
-    [ValidateSet("Status", "WorkPlugged", "MobileBattery")]
+    [ValidateSet("Status", "WorkPlugged", "MobileBattery", "Auto")]
     [string]$Mode
 )
 
@@ -293,10 +293,14 @@ function Show-Status {
 }
 
 function Set-WorkPluggedMode {
+    param([switch]$SkipSection)
+
     $device = Get-DetectedDevice
     $battery = Get-BatteryInfo
 
-    Write-Section "Modo trabajo conectado"
+    if (-not $SkipSection) {
+        Write-Section "Modo trabajo conectado"
+    }
 
     if ($device -eq "Laptop" -and $battery.OnBattery) {
         Write-Host "Estas en bateria. Este modo esta pensado para corriente."
@@ -313,10 +317,16 @@ function Set-WorkPluggedMode {
     else {
         Write-Host "Advertencia: no se pudo aplicar completamente el modo trabajo conectado."
     }
+
+    return $ok
 }
 
 function Set-MobileBatteryMode {
-    Write-Section "Modo movil/bateria"
+    param([switch]$SkipSection)
+
+    if (-not $SkipSection) {
+        Write-Section "Modo movil/bateria"
+    }
 
     $ok = $true
     $ok = (Invoke-PowerCfgChange -SettingName "monitor-timeout-dc" -Minutes 5) -and $ok
@@ -329,6 +339,41 @@ function Set-MobileBatteryMode {
     else {
         Write-Host "Advertencia: no se pudo aplicar completamente el modo movil/bateria."
     }
+
+    return $ok
+}
+
+function Set-AutoPowerMode {
+    $battery = Get-BatteryInfo
+    $useWorkPlugged = (-not $battery.HasBattery) -or (-not $battery.OnBattery)
+
+    if ($useWorkPlugged) {
+        $ok = Set-WorkPluggedMode -SkipSection
+
+        if ($ok) {
+            Write-Host "Modo energia automatico: Trabajo conectado aplicado."
+            Write-Host "Modo energia automatico aplicado: Trabajo conectado."
+            Write-Host "AC: pantalla Nunca / suspension Nunca / hibernacion Nunca"
+        }
+        else {
+            Write-Host "Advertencia: fallo el modo energia automatico de trabajo conectado."
+        }
+
+        return $ok
+    }
+
+    $ok = Set-MobileBatteryMode -SkipSection
+
+    if ($ok) {
+        Write-Host "Modo energia automatico: Movil / bateria aplicado."
+        Write-Host "Modo energia automatico aplicado: Movil / bateria."
+        Write-Host "DC: pantalla 5 min / suspension 15 min / hibernacion 30 min"
+    }
+    else {
+        Write-Host "Advertencia: fallo el modo energia automatico movil / bateria."
+    }
+
+    return $ok
 }
 
 function Show-ModeMenu {
@@ -346,10 +391,10 @@ function Show-ModeMenu {
             Show-Status
         }
         "2" {
-            Set-WorkPluggedMode
+            Set-WorkPluggedMode | Out-Null
         }
         "3" {
-            Set-MobileBatteryMode
+            Set-MobileBatteryMode | Out-Null
         }
         "4" {
             Write-Host "Operacion cancelada."
@@ -369,10 +414,16 @@ else {
             Show-Status
         }
         "WorkPlugged" {
-            Set-WorkPluggedMode
+            Set-WorkPluggedMode | Out-Null
         }
         "MobileBattery" {
-            Set-MobileBatteryMode
+            Set-MobileBatteryMode | Out-Null
+        }
+        "Auto" {
+            $ok = Set-AutoPowerMode
+            if (-not $ok) {
+                exit 1
+            }
         }
     }
 }

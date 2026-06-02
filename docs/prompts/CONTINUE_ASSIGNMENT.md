@@ -26,6 +26,8 @@ Iniciar Trabajo
 
 DevLaunchpad will read `docs/asignaciones/ACTIVE_ASSIGNMENT.md` when it exists. If it can extract `Expected branch`, option 2 allows that expected feature branch when Git is clean and synchronized. If it cannot extract the branch, it runs continuation mode without `ExpectedBranch`, which allows `feature/*` or `main` only with a warning to validate the branch in ChatGPT before touching code.
 
+DevLaunchpad must only continue to energy/app startup after `start-work.ps1` reports `LISTO PARA RECIBIR ASIGNACION` or `LISTO - CONTINUAR ASIGNACION`. If it reports `NO COMENZAR TODAVIA`, or if the status is unclear, treat the environment as not validated. Energy mode does not mean the environment is validated.
+
 Then ask them to paste the launcher result only if:
 - it does not say LISTO
 - it shows Git dirty
@@ -74,17 +76,27 @@ Do not continue if:
 
 ## Energy mode guidance
 
-If the user says they will work connected to power with Codex, Claude, deploys or long-running processes, recommend:
+DevLaunchpad applies energy mode automatically when starting or continuing RedMotors work:
+
+- Laptop connected to power or charging: WorkPlugged.
+- Laptop on battery: MobileBattery.
+
+On PC, DevLaunchpad does not apply automatic energy changes. It leaves the manual energy menu available.
+
+If the user says they are connected to power for Codex, Claude, deploys or long-running processes, ChatGPT can remind them that DevLaunchpad will apply the connected-work energy mode automatically when they start or continue work.
+
+The manual menu remains available for review or manual changes:
 
 DevLaunchpad
 → Modo energia
-→ Trabajo conectado a corriente
 
-If the user says they will work without charger, go out, or use the Laptop in mobile mode, recommend:
+If the user wants to verify current energy settings, use:
 
 DevLaunchpad
 → Modo energia
-→ Movil / bateria
+→ Ver estado de energia
+
+If the user specifically asks to apply a mode manually, use the same menu and choose Trabajo conectado a corriente or Movil / bateria as appropriate.
 
 ## Standard continuation response
 
