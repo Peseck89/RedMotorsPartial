@@ -2,6 +2,7 @@
 
 Fecha: 2026-05-29
 Ultima actualizacion: 2026-06-02 — feedback oficial de Maria y PDF `ProyectoEnvioCorreoReserva`: Salesforce conserva 3 notificaciones; el resto lo envia Helios/otro programa.
+Nota 2026-06-03: `sendToTreasury` ahora llama `SolicitudAprobacionTesoreria.realizarLlamada()` antes de cambiar a `En validacion de Tesoreria`. La clase esta validada en Sandbox con mock 200; endpoint real pendiente de Diego.
 
 Contexto: el documento oficial estima 10h para "Notificaciones y correos aprobaciones y rechazos".
 Produccion no fue modificada.
@@ -28,7 +29,7 @@ Estado probado en Sandbox:
 
 | Notificacion/correo solicitado | Estado actual | Que falta definir | Proxima accion | Recomendacion tecnica |
 |---|---|---|---|---|
-| Solicitud a Tesoreria cuando asesor envia anticipo | **Implementado en Salesforce Sandbox** — rama activa en Flow v6 al pasar a `En validacion de Tesoreria`; email a `grupo.cajas@redmotorscr.com`, Org-Wide Sender `info@redmotorscr.com`, texto inline | Retirar guarda temporal antes de produccion | Validar QA en Sandbox | Mantener rama Salesforce |
+| Solicitud a Tesoreria cuando asesor envia anticipo | **Implementado en Salesforce Sandbox** — `sendToTreasury` llama `SolicitudAprobacionTesoreria.realizarLlamada()` antes de pasar a `En validacion de Tesoreria`; luego Flow v6 envia email a `grupo.cajas@redmotorscr.com`, Org-Wide Sender `info@redmotorscr.com`, texto inline | Retirar guarda temporal antes de produccion; validar endpoint real cuando Diego active callout | QA post-integracion validado con `ANT-01169` y mock 200 | Mantener rama Salesforce y validar callout real |
 | Aprobacion de Tesoreria | **Fuera del Flow Salesforce** por feedback Maria 2026-06-02 | Lo envia Helios/otro programa | No evidenciar en Salesforce | No reactivar rama `Confirmada por Tesoreria` salvo nueva instruccion oficial |
 | Rechazo de Tesoreria | **Fuera del Flow Salesforce** por feedback Maria 2026-06-02 | Lo envia Helios/otro programa | No evidenciar en Salesforce | No reactivar rama `Rechazada por Tesoreria` salvo nueva instruccion oficial |
 | Correccion requerida por Tesoreria | **Fuera del Flow Salesforce** por feedback Maria 2026-06-02 | Lo envia Helios/otro programa | No evidenciar en Salesforce | No reactivar rama `Correccion requerida por Tesoreria` salvo nueva instruccion oficial |
@@ -56,6 +57,7 @@ Estado probado en Sandbox:
 Cerrado como completado:
 - Flow de notificaciones Salesforce v6 activo en Sandbox con 3 escenarios.
 - Notificacion a Tesoreria al pasar a `En validacion de Tesoreria` implementada (`grupo.cajas@redmotorscr.com`, texto inline).
+- Integracion Apex con `SolicitudAprobacionTesoreria` implementada antes del cambio a `En validacion de Tesoreria`; validada en Sandbox con mock 200 (`ANT-01169`).
 - Notificacion de aprobacion de reserva (`Vehiculo reservado`) implementada: asesor + `JefeSucursal__c` sin duplicar.
 - Notificacion de rechazo de reserva (`Reserva rechazada`) implementada: asesor + `JefeSucursal__c` sin duplicar.
 - Sender corregido con Org-Wide Email Address `info@redmotorscr.com`.
@@ -65,5 +67,7 @@ Cerrado como completado:
 Sigue bloqueado para siguiente iteracion:
 - Motivo/comentario obligatorio para reserva rechazada: por validar.
 - PDF y error de integracion: alcance Diego/Softland/Helios, fuera de Salesforce.
+- Endpoint real de Tesoreria queda pendiente de Diego.
+- No se persiste `idTransaccion` porque no hay campo funcional definido.
 - Datos reales de `Indian` en Sandbox para validar PEV.
 - Guarda temporal de Claudia: retirar antes de deploy productivo.

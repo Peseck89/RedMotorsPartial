@@ -27,12 +27,27 @@ Resultado QA no admin:
 Pendiente pre-Produccion:
 - Definir y ejecutar el retiro/reemplazo de la guarda temporal de Claudia para activar QA amplio o alcance final de notificaciones.
 - Validar notificaciones reales solo cuando se autorice disparar correos.
+- Validar endpoint real de `SolicitudAprobacionTesoreria` cuando Diego active el callout; hoy la prueba fue con mock 200.
+
+Resultado QA post-integracion Tesoreria:
+- Prueba visual grabada en `RedMotorsSandbox` con usuario no admin Andres Ramirez Rojas.
+- Anticipo: `ANT-01169` / `a4JNq000000XTknMAG`.
+- Opportunity: `006PH00000N1lalYAB` / `Adrian Lobo-BMW-10/12/2024`.
+- Referencia: `TEST-INTEGRACION-TESORERIA-001`.
+- Estado final: `En validacion de Tesoreria`.
+- Datos: `Abono`, `Transferencia`, `1.00 USD`, fecha ingreso `2026-06-03`, depositante `Prueba integracion Tesoreria`.
+- Evidencia asociada: 1 `ContentDocumentLink`.
+- `Opportunity.Estado_Anticipo__c = Pendiente`.
+- `Account.codigoSoftland__c = C126213`; `ConsecutivoOportunidad__c = BMW-62416`.
+- La prueba confirma el camino actual de `sendToTreasury` con `SolicitudAprobacionTesoreria.realizarLlamada()` mock 200 antes del cambio de estado.
+- Permission set temporal de Andres fue retirado. Produccion no fue modificada.
 
 Fuera de alcance de esta fase:
 - PDF real Softland.
 - Integracion Diego / Softland real.
 - Error PDF real.
 - Error integracion real.
+- Endpoint real de `SolicitudAprobacionTesoreria` hasta que Diego active el callout.
 - Deploy o prueba en Produccion.
 
 ## 1. Pantalla 1 Opportunity Salesforce
@@ -66,7 +81,7 @@ Fuera de alcance de esta fase:
 | Guardar borrador | Completar obligatorios y guardar | Crea `Anticipo__c` en estado `Borrador` | Id Anticipo + screenshot toast + query | Validado con Andres: `ANT-01168` / `a4JNq000000XQdFMAW` |
 | Evidencia obligatoria | Intentar enviar borrador sin evidencia | No permite enviar a Tesoreria | Screenshot/toast | Pendiente QA |
 | Adjuntar evidencia | Cargar archivo despues de crear borrador | Archivo queda asociado al `Anticipo__c` | Screenshot archivo + query `ContentDocumentLink` | Validado con Andres: 1 `ContentDocumentLink` |
-| Enviar a Tesoreria | Con evidencia cargada, enviar | Estado cambia a `En validacion de Tesoreria` | Screenshot/toast + query Anticipo | Validado con Andres: `En validacion de Tesoreria` |
+| Enviar a Tesoreria | Con evidencia cargada, enviar | Llama `SolicitudAprobacionTesoreria.realizarLlamada()`; si devuelve 200, estado cambia a `En validacion de Tesoreria` | Screenshot/toast + query Anticipo | Validado con Andres: `ANT-01169`, mock 200, `En validacion de Tesoreria` |
 
 ## 3. Notificaciones
 
@@ -127,6 +142,7 @@ Nota tecnica:
 | Pantalla 2 | Screenshot formulario ordenado, screenshot sin identificacion, screenshot cliente relacionado, query de borrador |
 | Evidencia | Screenshot archivo cargado, query `ContentDocumentLink` |
 | Envio Tesoreria | Screenshot/toast, query estado `En validacion de Tesoreria` |
+| Integracion Tesoreria | Query de `ANT-01169`, evidencia de estado final, datos `codigoSoftland__c` y `ConsecutivoOportunidad__c`; no hay `idTransaccion` persistido |
 | Notificaciones | Query estado por escenario, captura de email o campana de notificacion |
 | Permisos | Screenshot/query de permission set, prueba con usuario no admin/usuario final |
 | Pre-Produccion obligatorio | Retirar/reemplazar guarda temporal de Claudia y ejecutar QA amplio de notificaciones reales cuando se autorice disparar correos |
@@ -141,6 +157,8 @@ Nota tecnica:
 | Textos inline de las 3 notificaciones activas pueden requerir ajuste menor | Negocio puede pedir ajustes de redaccion | Validar con Maria/Luis |
 | Notificaciones retiradas del Flow Salesforce | QA podria esperar evidencias de 7 eventos anteriores | Aclarar que Helios/otro programa envia Tesoreria aprueba/rechaza/correccion, Anticipo creado, Error PDF y Error integracion |
 | Softland/Diego fuera de alcance | PDF real, reintentos y errores reales no pueden cerrarse ahora | Documentar como pendiente externo |
+| Endpoint real Tesoreria pendiente | `SolicitudAprobacionTesoreria.realizarLlamada()` aun devuelve mock 200 | Validar endpoint real, Named Credential y manejo de errores cuando Diego lo active |
+| `idTransaccion` no persistido | No hay campo funcional definido para guardar respuesta tecnica | No reutilizar campos legacy; crear campo solo si negocio/Diego lo confirma |
 
 ## 7. Metadata de referencia
 
@@ -153,6 +171,7 @@ Nota tecnica:
 | Quick Action | `force-app/main/default/quickActions/Opportunity.VN_RQ106_Registrar_Ingreso_Anticipo.quickAction-meta.xml` |
 | Apex Pantalla 1 | `force-app/main/default/classes/VN_RQ106_OpportunityOverviewController.cls` |
 | Apex Pantalla 2 | `force-app/main/default/classes/VN_RQ106_AnticipoController.cls` |
+| Apex integracion Tesoreria | `force-app/main/default/classes/SolicitudAprobacionTesoreria.cls` |
 | Apex Tests | `force-app/main/default/classes/VN_RQ106_OppOverviewCtrlTest.cls` |
 | Apex Tests | `force-app/main/default/classes/VN_RQ106_AnticipoControllerTest.cls` |
 | Flow | `force-app/main/default/flows/VN_RQ106_Notificaciones_Anticipo.flow-meta.xml` |

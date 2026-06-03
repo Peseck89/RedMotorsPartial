@@ -24,6 +24,20 @@ Resultado QA no admin:
 
 Pendiente pre-Produccion:
 - Definir retiro/reemplazo de la guarda temporal de Claudia y ejecutar QA amplio de notificaciones reales cuando se autorice disparar correos.
+- Validar endpoint real de `SolicitudAprobacionTesoreria` cuando Diego active el callout; hoy la integracion esta probada con mock 200.
+
+Resultado QA post-integracion Tesoreria:
+- Prueba visual ejecutada en `RedMotorsSandbox` con Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`).
+- Opportunity: `006PH00000N1lalYAB` / `Adrian Lobo-BMW-10/12/2024`.
+- Anticipo: `a4JNq000000XTknMAG` / `ANT-01169`, referencia `TEST-INTEGRACION-TESORERIA-001`.
+- Datos: `Abono`, `Transferencia`, `1.00 USD`, fecha ingreso `2026-06-03`, depositante `Prueba integracion Tesoreria`.
+- Estado final: `En validacion de Tesoreria`.
+- Evidencia asociada: 1 `ContentDocumentLink`.
+- `Opportunity.Estado_Anticipo__c = Pendiente`.
+- `Account.codigoSoftland__c = C126213`; `ConsecutivoOportunidad__c = BMW-62416`.
+- Validacion tecnica: `sendToTreasury` solo cambia a `En validacion de Tesoreria` despues de respuesta 200 de `SolicitudAprobacionTesoreria.realizarLlamada()`; actualmente esa respuesta es mock.
+- No se persiste `idTransaccion` porque no hay campo definido.
+- Permission set temporal de Andres fue retirado. Produccion no fue modificada.
 
 ## 1. Pantalla 1 Opportunity
 
@@ -53,7 +67,8 @@ Pendiente pre-Produccion:
 | P2-06 | Guardar borrador | Datos validos | Screenshot toast + Id `Anticipo__c` + query | Validado con Andres: `ANT-01168` / `a4JNq000000XQdFMAW` |
 | P2-07 | Evidencia obligatoria | Enviar sin archivo | Screenshot bloqueo o error | Pendiente |
 | P2-08 | Adjuntar evidencia | Archivo real de prueba | Screenshot archivo + query `ContentDocumentLink` | Validado con Andres: 1 `ContentDocumentLink` |
-| P2-09 | Enviar a Tesoreria | Borrador con evidencia | Screenshot/toast + query estado | Validado con Andres: `En validacion de Tesoreria` |
+| P2-09 | Enviar a Tesoreria | Borrador con evidencia | Screenshot/toast + query estado | Validado con Andres post-integracion: `ANT-01169`, mock 200, `En validacion de Tesoreria` |
+| P2-10 | Integracion `SolicitudAprobacionTesoreria` | Enviar a Tesoreria despues de cargar evidencia | Query de Anticipo + Opportunity con `codigoSoftland__c` y `ConsecutivoOportunidad__c` | Validado con mock 200: `ANT-01169` |
 
 ## 3. Notificaciones
 
@@ -90,6 +105,8 @@ Alcance vigente segun feedback oficial de Maria del 2026-06-02 y PDF `ProyectoEn
 | OUT-03 | Error integracion real | Depende de integracion Softland/Diego; no lo envia el Flow Salesforce |
 | OUT-04 | Reintento real autorizado | Depende de definicion tecnica Diego/Softland |
 | OUT-05 | Prueba en Produccion | Produccion esta fuera de alcance |
+| OUT-06 | Endpoint real `SolicitudAprobacionTesoreria` | Pendiente Diego; hoy `realizarLlamada()` devuelve mock 200 |
+| OUT-07 | Persistencia de `idTransaccion` | No hay campo funcional definido; no se guarda en campos legacy |
 
 ## 6. Resultado no admin y pendiente pre-Produccion
 
@@ -108,10 +125,12 @@ Validacion observada:
 - Confirmacion de `Anticipo__c` `ANT-01168` en `En validacion de Tesoreria`.
 - Confirmacion de 1 `ContentDocumentLink`.
 - Confirmacion de `Opportunity.Estado_Anticipo__c = Pendiente`.
+- Confirmacion post-integracion de `ANT-01169` con `SolicitudAprobacionTesoreria.realizarLlamada()` mock 200 antes del estado `En validacion de Tesoreria`.
 
 Pendiente pre-Produccion:
 - Retirar/reemplazar la guarda temporal de Claudia.
 - Ejecutar QA amplio de notificaciones reales cuando se autorice disparar correos.
+- Validar endpoint real de Tesoreria cuando Diego active el callout.
 
 ## 7. Convencion sugerida de archivos
 
