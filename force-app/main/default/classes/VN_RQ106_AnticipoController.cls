@@ -2,6 +2,7 @@ public with sharing class VN_RQ106_AnticipoController {
     private static final String STATUS_BORRADOR = 'Borrador';
     private static final String STATUS_EN_VALIDACION_TESORERIA = 'En validación de Tesorería';
     private static final String TIPO_RESERVA = 'Reserva de vehículo';
+    @TestVisible private static Boolean simulateTreasuryFailure = false;
 
     @AuraEnabled(cacheable=true)
     public static OpportunityContext getOpportunityContext(Id opportunityId) {
@@ -82,7 +83,10 @@ public with sharing class VN_RQ106_AnticipoController {
         }
 
         List<Anticipo__c> solicitudes = [
-            SELECT Id, Estatus__c
+            SELECT Id, Estatus__c, Monto__c, CurrencyIsoCode, Fecha_Ingreso__c,
+                Medio_Pago__c, Referencia_Comprobante__c, Tipo_Ingreso__c,
+                Comentarios_Asesor__c, Oportunidad__r.ConsecutivoOportunidad__c,
+                Oportunidad__r.Account.codigoSoftland__c
             FROM Anticipo__c
             WHERE Id = :anticipoId
             LIMIT 1
@@ -105,6 +109,15 @@ public with sharing class VN_RQ106_AnticipoController {
             throw new AuraHandledException('Debe adjuntar al menos una evidencia antes de enviar a Tesorería.');
         }
 
+        SolicitudAprobacionTesoreria.RespuestaEstandar tesoreriaResponse =
+            sendTreasuryApprovalRequest(solicitud);
+        if (tesoreriaResponse == null || tesoreriaResponse.codigo != 200) {
+            String message = tesoreriaResponse == null || String.isBlank(tesoreriaResponse.mensaje)
+                ? 'No se pudo enviar la solicitud a Tesorería.'
+                : tesoreriaResponse.mensaje;
+            throw new AuraHandledException(message);
+        }
+
         solicitud.Estatus__c = STATUS_EN_VALIDACION_TESORERIA;
         update solicitud;
 
@@ -112,6 +125,34 @@ public with sharing class VN_RQ106_AnticipoController {
         result.anticipoId = solicitud.Id;
         result.estatus = solicitud.Estatus__c;
         return result;
+    }
+
+    private static SolicitudAprobacionTesoreria.RespuestaEstandar sendTreasuryApprovalRequest(
+        Anticipo__c solicitud
+    ) {
+        if (simulateTreasuryFailure) {
+            return null;
+        }
+
+        SolicitudAprobacionTesoreria treasuryRequest = new SolicitudAprobacionTesoreria();
+        treasuryRequest.salesforceRequestId = solicitud.Id;
+        treasuryRequest.codigoSoftland = solicitud.Oportunidad__r == null ||
+            solicitud.Oportunidad__r.Account == null
+            ? null
+            : solicitud.Oportunidad__r.Account.codigoSoftland__c;
+        treasuryRequest.consecutivoOpportunidad = solicitud.Oportunidad__r == null
+            ? null
+            : solicitud.Oportunidad__r.ConsecutivoOportunidad__c;
+        treasuryRequest.monto = solicitud.Monto__c;
+        treasuryRequest.moneda = solicitud.CurrencyIsoCode;
+        treasuryRequest.fechaPago = solicitud.Fecha_Ingreso__c;
+        treasuryRequest.metodoPago = solicitud.Medio_Pago__c;
+        treasuryRequest.referenciaBancaria = solicitud.Referencia_Comprobante__c;
+        treasuryRequest.diferenteCliente = false;
+        treasuryRequest.identificationDepositante = null;
+        treasuryRequest.tipoIngreso = solicitud.Tipo_Ingreso__c;
+        treasuryRequest.comentarios = solicitud.Comentarios_Asesor__c;
+        return treasuryRequest.realizarLlamada();
     }
 
     private static Opportunity getOpportunityForDraft(Id opportunityId) {

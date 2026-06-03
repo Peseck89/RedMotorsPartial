@@ -351,7 +351,7 @@ private class VN_RQ106_AnticipoControllerTest {
         Test.stopTest();
 
         Anticipo__c updated = [
-            SELECT Id, Estatus__c
+            SELECT Id, Estatus__c, Identificador__c
             FROM Anticipo__c
             WHERE Id = :anticipoId
         ];
@@ -360,6 +360,36 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertEquals('En validación de Tesorería', result.estatus);
         System.assertEquals('En validación de Tesorería', updated.Estatus__c);
         System.assertNotEquals('Aplicado', updated.Estatus__c);
+        System.assertEquals(null, updated.Identificador__c, 'No debe guardar idTransaccion en campos legacy.');
+    }
+
+    @IsTest
+    static void sendToTreasuryWhenTreasuryRequestFailsKeepsBorrador() {
+        Opportunity opp = createOpportunity();
+        Id anticipoId = createDraftAnticipo(opp.Id);
+        attachEvidence(anticipoId);
+
+        Boolean exceptionThrown = false;
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.simulateTreasuryFailure = true;
+        try {
+            VN_RQ106_AnticipoController.sendToTreasury(anticipoId);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        } finally {
+            VN_RQ106_AnticipoController.simulateTreasuryFailure = false;
+        }
+        Test.stopTest();
+
+        Anticipo__c unchanged = [
+            SELECT Id, Estatus__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+
+        System.assertEquals(true, exceptionThrown, 'Debe fallar si Tesorería no responde 200.');
+        System.assertEquals('Borrador', unchanged.Estatus__c);
     }
 
     @IsTest
