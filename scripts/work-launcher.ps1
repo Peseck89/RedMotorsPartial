@@ -521,18 +521,181 @@ function Open-AiToolIfRequested {
     }
 }
 
-function Open-WorkAppsIfRequested {
-    $answer = Read-Host "Deseas abrir las apps de trabajo ahora? (S/N)"
+function Get-WorkspaceShortcutSearchFolders {
+    $folders = @()
 
-    if ($answer -notmatch "^[sS]$") {
-        Write-Host "Entorno validado. Abre manualmente las apps que necesites."
+    if (-not [string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
+        $folders += (Join-Path $env:USERPROFILE "Desktop")
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($env:PUBLIC)) {
+        $folders += (Join-Path $env:PUBLIC "Desktop")
+    }
+
+    return @($folders | Where-Object {
+            -not [string]::IsNullOrWhiteSpace($_)
+        } | Select-Object -Unique)
+}
+
+function Get-WorkspaceShortcutFileName {
+    param([string]$ShortcutName)
+
+    if ([string]::IsNullOrWhiteSpace($ShortcutName)) {
+        return ""
+    }
+
+    if ($ShortcutName.EndsWith(".lnk", [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $ShortcutName
+    }
+
+    return "$ShortcutName.lnk"
+}
+
+function Get-WorkspaceShortcutPath {
+    param([string]$ShortcutName)
+
+    $shortcutFileName = Get-WorkspaceShortcutFileName -ShortcutName $ShortcutName
+    if ([string]::IsNullOrWhiteSpace($shortcutFileName)) {
+        return $null
+    }
+
+    if ($shortcutFileName -ieq "Dev Launchpad.lnk") {
+        return $null
+    }
+
+    foreach ($folder in @(Get-WorkspaceShortcutSearchFolders)) {
+        if (-not (Test-Folder $folder)) {
+            continue
+        }
+
+        $candidate = Join-Path $folder $shortcutFileName
+        if (Test-File $candidate) {
+            return $candidate
+        }
+    }
+
+    return $null
+}
+
+function Write-MissingWorkspaceShortcutWarning {
+    param(
+        [string]$Label,
+        [string]$ShortcutName
+    )
+
+    $shortcutFileName = Get-WorkspaceShortcutFileName -ShortcutName $ShortcutName
+
+    Write-Host "Advertencia: no se encontro el acceso directo del area de trabajo '$Label'."
+    Write-Host "Nombre esperado: $shortcutFileName"
+    Write-Host "Rutas revisadas:"
+
+    foreach ($folder in @(Get-WorkspaceShortcutSearchFolders)) {
+        Write-Host "- $folder"
+    }
+
+    Write-Host "El flujo no se bloquea; abre el area manualmente si la necesitas."
+}
+
+function Open-WorkspaceShortcut {
+    param(
+        [string]$Label,
+        [string]$ShortcutName
+    )
+
+    $shortcutFileName = Get-WorkspaceShortcutFileName -ShortcutName $ShortcutName
+    if ($shortcutFileName -ieq "Dev Launchpad.lnk") {
+        Write-Host "Advertencia: Dev Launchpad.lnk es el acceso directo del launcher y no se abrira desde DevLaunchpad."
         return
     }
 
-    Open-VsCode
-    Open-Chrome
-    Open-WhatsApp
-    Open-AiToolIfRequested
+    $shortcutPath = Get-WorkspaceShortcutPath -ShortcutName $ShortcutName
+    if ([string]::IsNullOrWhiteSpace($shortcutPath)) {
+        Write-MissingWorkspaceShortcutWarning -Label $Label -ShortcutName $ShortcutName
+        return
+    }
+
+    if (-not (Start-ShortcutTarget -Label "area de trabajo $Label" -ShortcutPath $shortcutPath)) {
+        Write-Host "Advertencia: no se pudo abrir el area de trabajo '$Label'."
+        Write-Host "Ruta: $shortcutPath"
+    }
+}
+
+function Write-NoWorkspaceOpened {
+    Write-Host "No se abrio area de trabajo."
+}
+
+function Write-ManualWorkspaceMessage {
+    Write-Host "No se abrieron apps automaticamente. Abre manualmente lo que necesites."
+}
+
+function Open-WorkspaceIfRequested {
+    param([string]$Device)
+
+    $areaText = "$([char]0x00E1)rea"
+    $question = "$([char]0x00BF)Deseas abrir $([char]0x00E1)rea de trabajo?"
+
+    Write-Host ""
+    Write-Host $question
+    Write-Host ""
+
+    if ($Device -eq "PC") {
+        Write-Host "1. Salesforce Dev PC"
+        Write-Host "2. No abrir $areaText de trabajo"
+        Write-Host "3. Abrir apps manualmente / no hacer nada"
+        Write-Host ""
+
+        $workspaceChoice = Read-Host "Selecciona una opcion (1-3)"
+
+        switch ($workspaceChoice) {
+            "1" {
+                Open-WorkspaceShortcut -Label "Salesforce Dev PC" -ShortcutName "Salesforce Dev PC"
+            }
+            "2" {
+                Write-NoWorkspaceOpened
+            }
+            "3" {
+                Write-ManualWorkspaceMessage
+            }
+            default {
+                Write-Host "Opcion no reconocida. No se abrio area de trabajo."
+            }
+        }
+
+        return
+    }
+
+    if ($Device -eq "Laptop") {
+        Write-Host "1. Laptop con monitores"
+        Write-Host "2. Solo Laptop"
+        Write-Host "3. No abrir $areaText de trabajo"
+        Write-Host "4. Abrir apps manualmente / no hacer nada"
+        Write-Host ""
+
+        $workspaceChoice = Read-Host "Selecciona una opcion (1-4)"
+
+        switch ($workspaceChoice) {
+            "1" {
+                Open-WorkspaceShortcut -Label "Laptop con monitores" -ShortcutName "Laptop con monitores"
+            }
+            "2" {
+                Open-WorkspaceShortcut -Label "Solo Laptop" -ShortcutName "Solo Laptop"
+            }
+            "3" {
+                Write-NoWorkspaceOpened
+            }
+            "4" {
+                Write-ManualWorkspaceMessage
+            }
+            default {
+                Write-Host "Opcion no reconocida. No se abrio area de trabajo."
+            }
+        }
+
+        return
+    }
+
+    Write-Host "No hay areas de trabajo configuradas para este equipo."
+    Write-NoWorkspaceOpened
 }
 
 function Get-ActiveAssignmentExpectedBranch {
@@ -726,7 +889,7 @@ function Start-RedMotorsWork {
         Write-Host ""
         Invoke-AutoPowerMode -RepoPath $RepoPath -Device $Device -Skip:$SkipAutoPower
         Write-Host ""
-        Open-WorkAppsIfRequested
+        Open-WorkspaceIfRequested -Device $Device
     }
     finally {
         Pop-Location
