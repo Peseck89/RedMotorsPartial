@@ -44,14 +44,16 @@ If launcher says LISTO, continue with the assignment after reviewing any warning
 After RedMotors is validated as LISTO, DevLaunchpad can open a Windows workspace from a `.lnk` desktop shortcut instead of opening individual apps one by one.
 
 On PC, use the `Salesforce Dev PC` workspace. DevLaunchpad must look for `Salesforce Dev PC.lnk` in:
-- `$env:USERPROFILE\Desktop`
+- `[Environment]::GetFolderPath("Desktop")`
+- `$env:USERPROFILE\OneDrive\Escritorio`
 - `$env:PUBLIC\Desktop`
 
-On Laptop, DevLaunchpad is prepared for future workspace shortcuts:
-- `Laptop con monitores.lnk`
-- `Solo Laptop.lnk`
+On Laptop, use only the `Salesforce Dev Laptop con Monitores` workspace. DevLaunchpad must look for `Salesforce Dev Laptop con Monitores.lnk` in:
+- `[Environment]::GetFolderPath("Desktop")`
+- `$env:USERPROFILE\OneDrive\Escritorio`
+- `$env:PUBLIC\Desktop`
 
-DevLaunchpad must not open `Dev Launchpad.lnk` from inside DevLaunchpad, because that shortcut belongs to the launcher itself.
+DevLaunchpad must not open `Dev Launchpad.lnk` or `Iniciar Trabajo.lnk` from inside DevLaunchpad, because those shortcuts belong to the launcher itself.
 
 If the selected workspace shortcut does not exist, DevLaunchpad should show a clear warning and continue without blocking the flow.
 

@@ -524,8 +524,14 @@ function Open-AiToolIfRequested {
 function Get-WorkspaceShortcutSearchFolders {
     $folders = @()
 
+    $desktopPath = [Environment]::GetFolderPath("Desktop")
+    if (-not [string]::IsNullOrWhiteSpace($desktopPath)) {
+        $folders += $desktopPath
+    }
+
     if (-not [string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
         $folders += (Join-Path $env:USERPROFILE "Desktop")
+        $folders += (Join-Path $env:USERPROFILE "OneDrive\Escritorio")
     }
 
     if (-not [string]::IsNullOrWhiteSpace($env:PUBLIC)) {
@@ -551,6 +557,12 @@ function Get-WorkspaceShortcutFileName {
     return "$ShortcutName.lnk"
 }
 
+function Test-BlockedWorkspaceShortcut {
+    param([string]$ShortcutFileName)
+
+    return @("Dev Launchpad.lnk", "Iniciar Trabajo.lnk") -icontains $ShortcutFileName
+}
+
 function Get-WorkspaceShortcutPath {
     param([string]$ShortcutName)
 
@@ -559,7 +571,7 @@ function Get-WorkspaceShortcutPath {
         return $null
     }
 
-    if ($shortcutFileName -ieq "Dev Launchpad.lnk") {
+    if (Test-BlockedWorkspaceShortcut -ShortcutFileName $shortcutFileName) {
         return $null
     }
 
@@ -603,8 +615,8 @@ function Open-WorkspaceShortcut {
     )
 
     $shortcutFileName = Get-WorkspaceShortcutFileName -ShortcutName $ShortcutName
-    if ($shortcutFileName -ieq "Dev Launchpad.lnk") {
-        Write-Host "Advertencia: Dev Launchpad.lnk es el acceso directo del launcher y no se abrira desde DevLaunchpad."
+    if (Test-BlockedWorkspaceShortcut -ShortcutFileName $shortcutFileName) {
+        Write-Host "Advertencia: $shortcutFileName es un acceso directo del launcher y no se abrira desde DevLaunchpad."
         return
     }
 
@@ -665,25 +677,21 @@ function Open-WorkspaceIfRequested {
     }
 
     if ($Device -eq "Laptop") {
-        Write-Host "1. Laptop con monitores"
-        Write-Host "2. Solo Laptop"
-        Write-Host "3. No abrir $areaText de trabajo"
-        Write-Host "4. Abrir apps manualmente / no hacer nada"
+        Write-Host "1. Salesforce Dev Laptop con Monitores"
+        Write-Host "2. No abrir $areaText de trabajo"
+        Write-Host "3. Abrir apps manualmente / no hacer nada"
         Write-Host ""
 
-        $workspaceChoice = Read-Host "Selecciona una opcion (1-4)"
+        $workspaceChoice = Read-Host "Selecciona una opcion (1-3)"
 
         switch ($workspaceChoice) {
             "1" {
-                Open-WorkspaceShortcut -Label "Laptop con monitores" -ShortcutName "Laptop con monitores"
+                Open-WorkspaceShortcut -Label "Salesforce Dev Laptop con Monitores" -ShortcutName "Salesforce Dev Laptop con Monitores"
             }
             "2" {
-                Open-WorkspaceShortcut -Label "Solo Laptop" -ShortcutName "Solo Laptop"
-            }
-            "3" {
                 Write-NoWorkspaceOpened
             }
-            "4" {
+            "3" {
                 Write-ManualWorkspaceMessage
             }
             default {
