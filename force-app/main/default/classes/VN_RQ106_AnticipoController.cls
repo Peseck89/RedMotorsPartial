@@ -2,6 +2,10 @@ public with sharing class VN_RQ106_AnticipoController {
     private static final String STATUS_BORRADOR = 'Borrador';
     private static final String STATUS_EN_VALIDACION_TESORERIA = 'En validación de Tesorería';
     private static final String TIPO_RESERVA = 'Reserva de vehículo';
+    @TestVisible private static final String MISSING_CLIENT_EMAIL_TASK_SUBJECT =
+        'VN-RQ106: cliente sin correo';
+    private static final String CUSTOM_NOTIFICATION_TYPE_DEVELOPER_NAME =
+        'Redmotors_Notification';
     @TestVisible private static Boolean simulateTreasuryFailure = false;
 
     @AuraEnabled(cacheable=true)
@@ -83,10 +87,13 @@ public with sharing class VN_RQ106_AnticipoController {
         }
 
         List<Anticipo__c> solicitudes = [
-            SELECT Id, Estatus__c, Monto__c, CurrencyIsoCode, Fecha_Ingreso__c,
+            SELECT Id, Name, Estatus__c, Monto__c, CurrencyIsoCode, Fecha_Ingreso__c,
                 Medio_Pago__c, Referencia_Comprobante__c, Tipo_Ingreso__c,
-                Comentarios_Asesor__c, Oportunidad__r.ConsecutivoOportunidad__c,
-                Oportunidad__r.Account.codigoSoftland__c
+                Comentarios_Asesor__c, Oportunidad__c, Oportunidad__r.Name,
+                Oportunidad__r.OwnerId, Oportunidad__r.CorreoElectronicoCliente__c,
+                Oportunidad__r.contacto__r.Email,
+                Oportunidad__r.ConsecutivoOportunidad__c,
+                Oportunidad__r.Account.Name, Oportunidad__r.Account.codigoSoftland__c
             FROM Anticipo__c
             WHERE Id = :anticipoId
             LIMIT 1
@@ -111,6 +118,8 @@ public with sharing class VN_RQ106_AnticipoController {
 
         SolicitudAprobacionTesoreria.RespuestaEstandar tesoreriaResponse =
             sendTreasuryApprovalRequest(solicitud);
+        registerMissingClientEmailIncidentIfNeeded(solicitud);
+
         if (tesoreriaResponse == null || tesoreriaResponse.codigo != 200) {
             String message = tesoreriaResponse == null || String.isBlank(tesoreriaResponse.mensaje)
                 ? 'No se pudo enviar la solicitud a Tesorería.'
@@ -153,6 +162,150 @@ public with sharing class VN_RQ106_AnticipoController {
         treasuryRequest.tipoIngreso = solicitud.Tipo_Ingreso__c;
         treasuryRequest.comentarios = solicitud.Comentarios_Asesor__c;
         return treasuryRequest.realizarLlamada();
+    }
+
+    private static void registerMissingClientEmailIncidentIfNeeded(Anticipo__c solicitud) {
+        if (!String.isBlank(resolveClientEmail(solicitud))) {
+            return;
+        }
+
+        Boolean incidentAlreadyExists = false;
+        try {
+            incidentAlreadyExists = missingClientEmailIncidentExists(solicitud);
+        } catch (Exception e) {
+            System.debug(
+                LoggingLevel.WARN,
+                'VN-RQ106 no pudo validar si ya existe incidente de correo: ' + e.getMessage()
+            );
+        }
+
+        if (!incidentAlreadyExists) {
+            try {
+                insert buildMissingClientEmailTask(solicitud);
+            } catch (Exception e) {
+                System.debug(
+                    LoggingLevel.WARN,
+                    'VN-RQ106 no pudo crear Task por cliente sin correo: ' + e.getMessage()
+                );
+            }
+
+            sendMissingClientEmailNotification(solicitud);
+        }
+    }
+
+    private static String resolveClientEmail(Anticipo__c solicitud) {
+        if (solicitud == null || solicitud.Oportunidad__r == null) {
+            return null;
+        }
+        if (!String.isBlank(solicitud.Oportunidad__r.CorreoElectronicoCliente__c)) {
+            return solicitud.Oportunidad__r.CorreoElectronicoCliente__c;
+        }
+        if (
+            solicitud.Oportunidad__r.contacto__r != null &&
+            !String.isBlank(solicitud.Oportunidad__r.contacto__r.Email)
+        ) {
+            return solicitud.Oportunidad__r.contacto__r.Email;
+        }
+        return null;
+    }
+
+    private static Boolean missingClientEmailIncidentExists(Anticipo__c solicitud) {
+        if (solicitud == null || solicitud.Oportunidad__c == null || solicitud.Id == null) {
+            return false;
+        }
+
+        String anticipoIdText = String.valueOf(solicitud.Id);
+        for (Task existingTask : [
+            SELECT Id, Description
+            FROM Task
+            WHERE WhatId = :solicitud.Oportunidad__c
+                AND Subject = :MISSING_CLIENT_EMAIL_TASK_SUBJECT
+            ORDER BY CreatedDate DESC
+            LIMIT 200
+        ]) {
+            if (
+                existingTask.Description != null &&
+                existingTask.Description.contains(anticipoIdText)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Task buildMissingClientEmailTask(Anticipo__c solicitud) {
+        return new Task(
+            WhatId = solicitud.Oportunidad__c,
+            OwnerId = solicitud.Oportunidad__r == null ? UserInfo.getUserId() : solicitud.Oportunidad__r.OwnerId,
+            Subject = MISSING_CLIENT_EMAIL_TASK_SUBJECT,
+            Description = buildMissingClientEmailDescription(solicitud),
+            Status = 'Open',
+            Priority = 'Normal'
+        );
+    }
+
+    private static String buildMissingClientEmailDescription(Anticipo__c solicitud) {
+        String opportunityName = solicitud.Oportunidad__r == null
+            ? null
+            : solicitud.Oportunidad__r.Name;
+        String clientName = solicitud.Oportunidad__r == null ||
+            solicitud.Oportunidad__r.Account == null
+            ? null
+            : solicitud.Oportunidad__r.Account.Name;
+
+        return String.join(new List<String>{
+            'Opportunity: ' + valueOrSinDato(opportunityName) + ' (' +
+                String.valueOf(solicitud.Oportunidad__c) + ')',
+            'Anticipo: ' + valueOrSinDato(solicitud.Name) + ' (' +
+                String.valueOf(solicitud.Id) + ')',
+            'Cliente: ' + valueOrSinDato(clientName),
+            'No se encontro correo del cliente en Opportunity.CorreoElectronicoCliente__c ' +
+                'ni en Opportunity.contacto__r.Email.',
+            'Por favor corregir correo del cliente antes de continuar con comunicaciones posteriores.'
+        }, '\n');
+    }
+
+    private static String valueOrSinDato(String value) {
+        return String.isBlank(value) ? 'Sin dato' : value;
+    }
+
+    private static void sendMissingClientEmailNotification(Anticipo__c solicitud) {
+        if (
+            Test.isRunningTest() ||
+            solicitud == null ||
+            solicitud.Oportunidad__c == null ||
+            solicitud.Oportunidad__r == null ||
+            solicitud.Oportunidad__r.OwnerId == null
+        ) {
+            return;
+        }
+
+        try {
+            List<CustomNotificationType> notificationTypes = [
+                SELECT Id
+                FROM CustomNotificationType
+                WHERE DeveloperName = :CUSTOM_NOTIFICATION_TYPE_DEVELOPER_NAME
+                LIMIT 1
+            ];
+            if (notificationTypes.isEmpty()) {
+                return;
+            }
+
+            Messaging.CustomNotification notification = new Messaging.CustomNotification();
+            notification.setNotificationTypeId(notificationTypes[0].Id);
+            notification.setTitle(MISSING_CLIENT_EMAIL_TASK_SUBJECT);
+            notification.setBody(
+                'La oportunidad no tiene correo de cliente. Corrija el dato para VN-RQ106.'
+            );
+            notification.setTargetId(solicitud.Oportunidad__c);
+            notification.send(new Set<String>{ String.valueOf(solicitud.Oportunidad__r.OwnerId) });
+        } catch (Exception e) {
+            System.debug(
+                LoggingLevel.WARN,
+                'VN-RQ106 no pudo enviar Custom Notification por cliente sin correo: ' +
+                    e.getMessage()
+            );
+        }
     }
 
     private static Opportunity getOpportunityForDraft(Id opportunityId) {

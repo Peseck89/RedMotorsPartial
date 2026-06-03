@@ -364,6 +364,163 @@ private class VN_RQ106_AnticipoControllerTest {
     }
 
     @IsTest
+    static void sendToTreasuryWithClientEmailDoesNotCreateMissingEmailTask() {
+        Opportunity opp = createOpportunity();
+        opp.CorreoElectronicoCliente__c = 'cliente.vn.rq106@example.com';
+        update opp;
+
+        Id anticipoId = createDraftAnticipo(opp.Id);
+        attachEvidence(anticipoId);
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.sendToTreasury(anticipoId);
+        Test.stopTest();
+
+        System.assertEquals('En validación de Tesorería', result.estatus);
+        System.assertEquals(
+            0,
+            [
+                SELECT COUNT()
+                FROM Task
+                WHERE WhatId = :opp.Id
+                    AND Subject = :VN_RQ106_AnticipoController.MISSING_CLIENT_EMAIL_TASK_SUBJECT
+            ],
+            'No debe crear incidente si Opportunity.CorreoElectronicoCliente__c tiene valor.'
+        );
+    }
+
+    @IsTest
+    static void sendToTreasuryUsesContactEmailWhenOpportunityEmailIsBlank() {
+        Opportunity opp = createOpportunity();
+        Contact contact = new Contact(
+            AccountId = opp.AccountId,
+            LastName = 'Contacto VN RQ106',
+            Email = 'contacto.vn.rq106@example.com'
+        );
+        insert contact;
+
+        opp.CorreoElectronicoCliente__c = null;
+        opp.contacto__c = contact.Id;
+        update opp;
+
+        Id anticipoId = createDraftAnticipo(opp.Id);
+        attachEvidence(anticipoId);
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.sendToTreasury(anticipoId);
+        Test.stopTest();
+
+        System.assertEquals('En validación de Tesorería', result.estatus);
+        System.assertEquals(
+            0,
+            [
+                SELECT COUNT()
+                FROM Task
+                WHERE WhatId = :opp.Id
+                    AND Subject = :VN_RQ106_AnticipoController.MISSING_CLIENT_EMAIL_TASK_SUBJECT
+            ],
+            'No debe crear incidente si el contacto de la oportunidad tiene Email.'
+        );
+    }
+
+    @IsTest
+    static void sendToTreasuryWithoutClientEmailCreatesTaskAndContinues() {
+        Opportunity opp = createOpportunity();
+        opp.CorreoElectronicoCliente__c = null;
+        opp.contacto__c = null;
+        update opp;
+
+        Id anticipoId = createDraftAnticipo(opp.Id);
+        attachEvidence(anticipoId);
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.sendToTreasury(anticipoId);
+        Test.stopTest();
+
+        Opportunity updatedOpp = [
+            SELECT OwnerId
+            FROM Opportunity
+            WHERE Id = :opp.Id
+        ];
+        Anticipo__c updatedAnticipo = [
+            SELECT Estatus__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+        Task incident = [
+            SELECT OwnerId, WhatId, Subject, Description, Status, Priority
+            FROM Task
+            WHERE WhatId = :opp.Id
+                AND Subject = :VN_RQ106_AnticipoController.MISSING_CLIENT_EMAIL_TASK_SUBJECT
+            LIMIT 1
+        ];
+
+        System.assertEquals('En validación de Tesorería', result.estatus);
+        System.assertEquals('En validación de Tesorería', updatedAnticipo.Estatus__c);
+        System.assertEquals(updatedOpp.OwnerId, incident.OwnerId);
+        System.assertEquals(opp.Id, incident.WhatId);
+        System.assertEquals('Open', incident.Status);
+        System.assertEquals('Normal', incident.Priority);
+        System.assert(
+            incident.Description.contains(String.valueOf(opp.Id)),
+            'La descripcion debe referenciar la Opportunity.'
+        );
+        System.assert(
+            incident.Description.contains(String.valueOf(anticipoId)),
+            'La descripcion debe referenciar el Anticipo.'
+        );
+        System.assert(
+            incident.Description.contains('corregir correo'),
+            'La descripcion debe pedir corregir correo.'
+        );
+    }
+
+    @IsTest
+    static void sendToTreasuryWithoutClientEmailDoesNotDuplicateExistingTask() {
+        Opportunity opp = createOpportunity();
+        opp.CorreoElectronicoCliente__c = null;
+        opp.contacto__c = null;
+        update opp;
+
+        Id anticipoId = createDraftAnticipo(opp.Id);
+        attachEvidence(anticipoId);
+
+        Opportunity currentOpp = [
+            SELECT OwnerId
+            FROM Opportunity
+            WHERE Id = :opp.Id
+        ];
+        insert new Task(
+            WhatId = opp.Id,
+            OwnerId = currentOpp.OwnerId,
+            Subject = VN_RQ106_AnticipoController.MISSING_CLIENT_EMAIL_TASK_SUBJECT,
+            Description = 'Anticipo existente: ' + String.valueOf(anticipoId),
+            Status = 'Open',
+            Priority = 'Normal'
+        );
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.sendToTreasury(anticipoId);
+        Test.stopTest();
+
+        System.assertEquals('En validación de Tesorería', result.estatus);
+        System.assertEquals(
+            1,
+            [
+                SELECT COUNT()
+                FROM Task
+                WHERE WhatId = :opp.Id
+                    AND Subject = :VN_RQ106_AnticipoController.MISSING_CLIENT_EMAIL_TASK_SUBJECT
+            ],
+            'No debe duplicar la Task si ya referencia el mismo Anticipo.'
+        );
+    }
+
+    @IsTest
     static void sendToTreasuryWhenTreasuryRequestFailsKeepsBorrador() {
         Opportunity opp = createOpportunity();
         Id anticipoId = createDraftAnticipo(opp.Id);
