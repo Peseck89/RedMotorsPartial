@@ -55,6 +55,16 @@ Resultado QA cliente sin correo:
 - Permission set temporal de Andres fue retirado; Claudia conserva `VN_RQ106_Anticipo`.
 - Produccion no fue modificada.
 
+Resultado QA validacion de totales:
+- Data controlada creada en `RedMotorsSandbox` para validar que `Total_Anticipos_Aprobados__c` solo suma anticipos aceptados.
+- Opportunity: `006Nq00000Xn0v9IAB` / `VN-RQ106 TEST Totales Account 2026-06-04-BMW-03/06/2026`.
+- Valor total: `1000.00 USD`.
+- Anticipos que suman: `ANT-01172` (`Aplicado`, `100.00 USD`) y `ANT-01173` (`Vehiculo reservado`, `50.00 USD`).
+- Anticipos que no suman: `ANT-01174` (`Borrador`, `900.00 USD`), `ANT-01175` (`En validacion de Tesoreria`, `800.00 USD`), `ANT-01178` (`Correccion requerida por Tesoreria`, `750.00 USD`), `ANT-01176` (`Rechazada por Tesoreria`, `700.00 USD`) y `ANT-01177` (`Reserva rechazada`, `600.00 USD`).
+- Resultado final: `Total_Anticipos_Aprobados__c = 150.00`, `Saldo_Pendiente__c = 850.00`, `Estado_Anticipo__c = Recibido`.
+- Pantalla 1 / `Anticipos de dinero` muestra solo `Aplicado` y `Vehiculo reservado`.
+- Video/evidencia compartido con Maria y Diego. Produccion no fue modificada.
+
 Fuera de alcance de esta fase:
 - PDF real Softland.
 - Integracion Diego / Softland real.
@@ -72,8 +82,8 @@ Fuera de alcance de esta fase:
 | Encabezado | Abrir Pantalla 1 | Muestra nombre de Opportunity y boton `Registrar ingreso / anticipo` | Screenshot encabezado | Validado con Andres; evidencia formal pendiente |
 | Datos principales | Revisar seccion de datos | Muestra cliente, vehiculo/VIN si existe, precio de venta, estado oportunidad/reserva y asesor | Screenshot + query de Opportunity/Product2 si aplica | Pendiente QA |
 | Solicitudes de ingreso | Revisar lista/resumen | Muestra maximo 3 solicitudes recientes y texto `Ver mas en lista relacionada` si hay mas | Screenshot + query de `Anticipo__c` | Pendiente QA |
-| Anticipos de dinero | Revisar lista/resumen | Muestra maximo 3 anticipos aprobados/aplicados con numero, monto, fecha y estado | Screenshot + query de `Anticipo__c` | Pendiente QA |
-| Resumen financiero | Revisar panel derecho | Muestra valor total, total anticipos aprobados y saldo pendiente desde Opportunity | Screenshot + query de campos financieros | Validado con Andres; evidencia formal pendiente |
+| Anticipos de dinero | Revisar lista/resumen | Muestra maximo 3 anticipos aceptados con numero, monto, fecha y estado. Solo incluye `Aplicado` y `Vehiculo reservado` | Screenshot + query de `Anticipo__c` | Validado con data controlada: `ANT-01172` y `ANT-01173`; no muestra estados no aceptados |
+| Resumen financiero | Revisar panel derecho | Muestra valor total, total anticipos aprobados y saldo pendiente desde Opportunity. El total aprobado solo suma `Aplicado` y `Vehiculo reservado` | Screenshot + query de campos financieros | Validado: Opportunity `006Nq00000Xn0v9IAB`, total `150.00`, saldo `850.00` |
 | Estado anticipo/reserva | Revisar panel derecho | Muestra estado actual de anticipo y estado reserva/producto disponible | Screenshot + query | Pendiente QA |
 | PDF/documentos placeholder | Revisar tarjeta PDF/documentos | Muestra `Pendiente de integracion Softland`; no intenta obtener PDF real | Screenshot | Pendiente QA |
 | Historial | Revisar seccion historial | Muestra maximo 2 eventos resumidos con estado/comentario/fecha disponible | Screenshot + query de `Anticipo__c` | Pendiente QA |
@@ -166,6 +176,7 @@ Nota tecnica:
 | Envio Tesoreria | Screenshot/toast, query estado `En validacion de Tesoreria` |
 | Integracion Tesoreria | Query de `ANT-01169`, evidencia de estado final, datos `codigoSoftland__c` y `ConsecutivoOportunidad__c`; no hay `idTransaccion` persistido |
 | Cliente sin correo | Query de `ANT-01170`, Task `00TNq00000SpX1rMAF`, evidencia asociada y estado `En validacion de Tesoreria` |
+| Totales de anticipos | Query de Opportunity `006Nq00000Xn0v9IAB`, lista de anticipos `ANT-01172` a `ANT-01178`, video de Pantalla 1 mostrando solo `Aplicado` y `Vehiculo reservado` |
 | Notificaciones | Query estado por escenario, captura de email o campana de notificacion |
 | Permisos | Screenshot/query de permission set, prueba con usuario no admin/usuario final |
 | Pre-Produccion obligatorio | Retirar/reemplazar guarda temporal de Claudia y ejecutar QA amplio de notificaciones reales cuando se autorice disparar correos |

@@ -40,6 +40,16 @@ Resultado QA cliente sin correo:
 - Permission set temporal de Andres fue retirado; Claudia conserva `VN_RQ106_Anticipo`.
 - Produccion no fue modificada.
 
+Resultado QA validacion de totales:
+- Se creo data controlada en `RedMotorsSandbox` para validar que `Total_Anticipos_Aprobados__c` solo suma anticipos aceptados.
+- Opportunity usada: `006Nq00000Xn0v9IAB` / `VN-RQ106 TEST Totales Account 2026-06-04-BMW-03/06/2026`.
+- Valor total de Opportunity: `1000.00 USD`.
+- Anticipos aceptados que suman: `ANT-01172` (`Aplicado`, `100.00 USD`) y `ANT-01173` (`Vehiculo reservado`, `50.00 USD`).
+- Anticipos que no suman: `ANT-01174` (`Borrador`, `900.00 USD`), `ANT-01175` (`En validacion de Tesoreria`, `800.00 USD`), `ANT-01178` (`Correccion requerida por Tesoreria`, `750.00 USD`), `ANT-01176` (`Rechazada por Tesoreria`, `700.00 USD`) y `ANT-01177` (`Reserva rechazada`, `600.00 USD`).
+- Resultado: `Total_Anticipos_Aprobados__c = 150.00`, `Saldo_Pendiente__c = 850.00`, `Estado_Anticipo__c = Recibido`.
+- Pantalla 1 / `Anticipos de dinero` muestra solo `Aplicado` y `Vehiculo reservado`.
+- Video/evidencia compartido con Maria y Diego. Produccion no fue modificada.
+
 ---
 
 ## 1. Pantalla 1 — Opportunity Overview
@@ -58,8 +68,8 @@ Que muestra:
 | Encabezado | Nombre de Opportunity y boton `Registrar ingreso / anticipo` (Quick Action) |
 | Datos principales | Cliente, asesor, vehiculo/VIN si existe, precio de venta, estado oportunidad y estado de reserva |
 | Solicitudes de ingreso | Hasta 3 registros `Anticipo__c` recientes; enlace a lista relacionada si hay mas |
-| Anticipos de dinero | Hasta 3 anticipos aprobados/aplicados con numero, monto, fecha y estado |
-| Resumen financiero | `Valor_Total_Oportunidad_FX__c`, `Total_Anticipos_Aprobados__c`, `Saldo_Pendiente__c` desde Opportunity — sin recalcular en JS |
+| Anticipos de dinero | Hasta 3 anticipos aceptados con numero, monto, fecha y estado. Solo incluye `Aplicado` y `Vehiculo reservado` |
+| Resumen financiero | `Valor_Total_Oportunidad_FX__c`, `Total_Anticipos_Aprobados__c`, `Saldo_Pendiente__c` desde Opportunity — sin recalcular en JS. `Total_Anticipos_Aprobados__c` suma solo `Aplicado` y `Vehiculo reservado` |
 | Estado anticipo/reserva | Estado actual de `Anticipo__c.Estatus__c` y estado de reserva/producto |
 | PDF/documentos | Placeholder: texto `Pendiente de integracion Softland`; no intenta obtener PDF real |
 | Historial | Hasta 2 eventos resumidos con estado/comentario/fecha |

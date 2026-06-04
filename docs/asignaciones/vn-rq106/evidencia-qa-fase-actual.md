@@ -51,6 +51,16 @@ Resultado QA cliente sin correo:
 - Permission set temporal de Andres fue retirado; Claudia conserva `VN_RQ106_Anticipo`.
 - Produccion no fue modificada.
 
+Resultado QA validacion de totales:
+- Data controlada creada en `RedMotorsSandbox` para validar que `Total_Anticipos_Aprobados__c` solo suma anticipos aceptados.
+- Opportunity: `006Nq00000Xn0v9IAB` / `VN-RQ106 TEST Totales Account 2026-06-04-BMW-03/06/2026`.
+- Valor total: `1000.00 USD`.
+- Anticipos que suman: `ANT-01172` (`Aplicado`, `100.00 USD`) y `ANT-01173` (`Vehiculo reservado`, `50.00 USD`).
+- Anticipos que no suman: `ANT-01174` (`Borrador`, `900.00 USD`), `ANT-01175` (`En validacion de Tesoreria`, `800.00 USD`), `ANT-01178` (`Correccion requerida por Tesoreria`, `750.00 USD`), `ANT-01176` (`Rechazada por Tesoreria`, `700.00 USD`) y `ANT-01177` (`Reserva rechazada`, `600.00 USD`).
+- Resultado final: `Total_Anticipos_Aprobados__c = 150.00`, `Saldo_Pendiente__c = 850.00`, `Estado_Anticipo__c = Recibido`.
+- Pantalla 1 / `Anticipos de dinero` muestra solo `Aplicado` y `Vehiculo reservado`.
+- Video/evidencia compartido con Maria y Diego. Produccion no fue modificada.
+
 ## 1. Pantalla 1 Opportunity
 
 | ID | Evidencia | Dato/escenario | Archivo o captura esperada | Estado |
@@ -60,8 +70,8 @@ Resultado QA cliente sin correo:
 | P1-03 | Encabezado y boton | Opportunity con action disponible | Screenshot con nombre Opportunity y `Registrar ingreso / anticipo` | Validado con Andres; captura formal pendiente |
 | P1-04 | Datos principales | Cliente, asesor, vehiculo/VIN si existe | Screenshot + query Opportunity/Product2 | Pendiente |
 | P1-05 | Solicitudes de ingreso | Anticipos relacionados | Screenshot max 3 filas + query `Anticipo__c` | Pendiente |
-| P1-06 | Anticipos de dinero | Anticipos aprobados/aplicados | Screenshot max 3 filas + query `Anticipo__c` | Pendiente |
-| P1-07 | Resumen financiero | Campos financieros Opportunity | Screenshot panel derecho + query campos financieros | Validado con Andres; captura formal pendiente |
+| P1-06 | Anticipos de dinero | Anticipos aceptados (`Aplicado`, `Vehiculo reservado`) | Screenshot/video Pantalla 1 + query `Anticipo__c` | Validado con Opportunity `006Nq00000Xn0v9IAB`: muestra solo `ANT-01172` y `ANT-01173` |
+| P1-07 | Resumen financiero | Campos financieros Opportunity | Screenshot/video panel derecho + query campos financieros | Validado con Opportunity `006Nq00000Xn0v9IAB`: valor total `1000.00`, total aprobado `150.00`, saldo `850.00` |
 | P1-08 | Estado anticipo/reserva | Estado actual | Screenshot panel estado | Pendiente |
 | P1-09 | PDF/documentos | Placeholder Softland | Screenshot `Pendiente de integracion Softland` | Pendiente |
 | P1-10 | Historial | Estados/comentarios/fechas disponibles | Screenshot max 2 eventos + query | Pendiente |
@@ -144,6 +154,7 @@ Validacion observada:
 - Confirmacion de `Opportunity.Estado_Anticipo__c = Pendiente`.
 - Confirmacion post-integracion de `ANT-01169` con `SolicitudAprobacionTesoreria.realizarLlamada()` mock 200 antes del estado `En validacion de Tesoreria`.
 - Confirmacion cliente sin correo de `ANT-01170`: Task/incidente al vendedor, evidencia asociada y estado final `En validacion de Tesoreria`.
+- Confirmacion totales: Opportunity `006Nq00000Xn0v9IAB` con `Total_Anticipos_Aprobados__c = 150.00`, `Saldo_Pendiente__c = 850.00`; Pantalla 1 muestra solo `ANT-01172` (`Aplicado`) y `ANT-01173` (`Vehiculo reservado`) en `Anticipos de dinero`.
 
 Pendiente pre-Produccion:
 - Retirar/reemplazar la guarda temporal de Claudia.
