@@ -28,6 +28,18 @@ Resultado QA post-integracion Tesoreria:
 - Integracion validada con mock 200; `Opportunity.Estado_Anticipo__c = Pendiente`, `Account.codigoSoftland__c = C126213`, `ConsecutivoOportunidad__c = BMW-62416`.
 - Permission set temporal de Andres fue retirado. Produccion no fue modificada.
 
+Resultado QA cliente sin correo:
+- Se ejecuto prueba visual controlada en `RedMotorsSandbox` con Andres Ramirez Rojas.
+- Opportunity usada: `006Nq00000Xn5DFIAZ` / `VN-RQ106 TEST Andres Sin Correo 2026-06-03-BMW-03/06/2026`.
+- Anticipo creado y enviado: `a4JNq000000XU2XMAW` / `ANT-01170`, referencia `TEST-SIN-CORREO-ANDRES-001`.
+- Datos: `Abono`, `Transferencia`, `1.00 USD`, fecha ingreso `2026-06-03`.
+- Estado final: `En validacion de Tesoreria`; confirma que la falta de correo cliente no bloquea el envio a Tesoreria.
+- Evidencia asociada: PDF `Reserva_ VN-RQ106_Envio automatico de correo de reserva`.
+- Task/incidente creado: `00TNq00000SpX1rMAF`, subject `VN-RQ106: cliente sin correo`, owner Andres Ramirez Rojas, status `Open` / `Abierta`, relacionada a la Opportunity.
+- La descripcion de la Task incluye `ANT-01170` y `a4JNq000000XU2XMAW`.
+- Permission set temporal de Andres fue retirado; Claudia conserva `VN_RQ106_Anticipo`.
+- Produccion no fue modificada.
+
 ---
 
 ## 1. Pantalla 1 — Opportunity Overview
@@ -73,7 +85,8 @@ Que hace:
 | Logica de vehiculo | Si `Tipo_Ingreso__c = Reserva de vehiculo`: muestra selector de vehiculo disponible. Si no aplica: oculta el campo |
 | Guardar borrador | Crea `Anticipo__c` en estado `Borrador`. Valida campos requeridos antes de guardar |
 | Adjuntar evidencia | El asesor carga archivo despues de crear el borrador; queda asociado al `Anticipo__c` via `ContentDocumentLink` |
-| Enviar a Tesoreria | Requiere evidencia cargada. Antes de cambiar estado llama `SolicitudAprobacionTesoreria.realizarLlamada()`. Si responde codigo 200, cambia `Anticipo__c` a `En validacion de Tesoreria`; si falla, deja el registro en `Borrador` |
+| Cliente sin correo | Al enviar a Tesoreria, Apex resuelve correo en este orden: `Opportunity.CorreoElectronicoCliente__c`, luego `Opportunity.contacto__r.Email`. Si ambos estan vacios, crea Task/incidente `VN-RQ106: cliente sin correo` para el vendedor y envia Custom Notification best-effort usando la infraestructura existente |
+| Enviar a Tesoreria | Requiere evidencia cargada. Antes de cambiar estado llama `SolicitudAprobacionTesoreria.realizarLlamada()`. Si responde codigo 200, cambia `Anticipo__c` a `En validacion de Tesoreria`; si falla, deja el registro en `Borrador`. La falta de correo cliente no bloquea este envio |
 
 ### Integracion Tesoreria
 
@@ -125,6 +138,15 @@ Feedback oficial de Maria del 2026-06-02 y PDF `ProyectoEnvioCorreoReserva`:
 - Salesforce solo mantiene activas estas 3 notificaciones: solicitud enviada a Tesoreria, Producto aprueba reserva y Producto rechaza reserva.
 - Tesoreria aprueba/rechaza/correccion, `Anticipo creado`, Error PDF y Error integracion quedan fuera del Flow Salesforce porque las envia Helios/otro programa.
 - Error PDF, Error integracion, PDF real y logica Diego/Softland siguen fuera de alcance de esta fase.
+- El correo/notificacion al cliente sigue fuera del Flow Salesforce; depende de Helios/otro programa cuando aplique.
+
+Incidente preventivo cliente sin correo:
+- No modifica el Flow `VN_RQ106_Notificaciones_Anticipo`.
+- Vive en `VN_RQ106_AnticipoController.sendToTreasury`.
+- Si no existe correo en `Opportunity.CorreoElectronicoCliente__c` ni en `Opportunity.contacto__r.Email`, Salesforce crea una Task para el vendedor con subject `VN-RQ106: cliente sin correo`.
+- Si existe `CustomNotificationType` `Redmotors_Notification`, se intenta notificar al vendedor por Custom Notification en modo best-effort.
+- La creacion de Task/notificacion no bloquea el cambio del Anticipo a `En validacion de Tesoreria` cuando Tesoreria responde 200.
+- Validado con `ANT-01170` / `a4JNq000000XU2XMAW` en `RedMotorsSandbox`.
 
 Nota critica: el Flow conserva una **guarda temporal** que limita las notificaciones a `Opportunity.Owner.Username = 'peseck89@gmail.com.redmotors.partial'`. Esta guarda debe retirarse o reemplazarse por una regla de alcance final antes de cualquier deploy a Produccion.
 
@@ -169,6 +191,7 @@ Validacion no admin completa:
 | Endpoint real `SolicitudAprobacionTesoreria` | Pendiente Diego; hoy `realizarLlamada()` usa mock 200 |
 | Notificaciones Tesoreria aprueba/rechaza/correccion | Feedback Maria 2026-06-02: las envia Helios/otro programa, no Salesforce |
 | `Anticipo creado` | Feedback Maria 2026-06-02: lo envia Helios/otro programa, no Salesforce |
+| Correo/notificacion al cliente | Fuera del Flow Salesforce actual; depende de Helios/otro programa cuando aplique |
 | Email Templates definitivas | Textos inline en Flow para las 3 notificaciones activas; PDF/plantillas externas fuera del Flow Salesforce |
 | Deploy o prueba en Produccion | Produccion fuera de alcance hasta autorizacion formal |
 | Envio real de correo para usuarios distintos de Claudia | No validado porque el Flow mantiene la guarda temporal de Claudia |

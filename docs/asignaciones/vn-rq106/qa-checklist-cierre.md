@@ -42,6 +42,19 @@ Resultado QA post-integracion Tesoreria:
 - La prueba confirma el camino actual de `sendToTreasury` con `SolicitudAprobacionTesoreria.realizarLlamada()` mock 200 antes del cambio de estado.
 - Permission set temporal de Andres fue retirado. Produccion no fue modificada.
 
+Resultado QA cliente sin correo:
+- Prueba visual ejecutada en `RedMotorsSandbox` con Andres Ramirez Rojas.
+- Opportunity: `006Nq00000Xn5DFIAZ` / `VN-RQ106 TEST Andres Sin Correo 2026-06-03-BMW-03/06/2026`.
+- Anticipo: `ANT-01170` / `a4JNq000000XU2XMAW`.
+- Referencia: `TEST-SIN-CORREO-ANDRES-001`.
+- Estado final: `En validacion de Tesoreria`; confirma que no se bloqueo el envio a Tesoreria por falta de correo cliente.
+- Datos: `Abono`, `Transferencia`, `1.00 USD`, fecha ingreso `2026-06-03`.
+- Evidencia asociada: PDF `Reserva_ VN-RQ106_Envio automatico de correo de reserva`.
+- Task/incidente: `00TNq00000SpX1rMAF`, subject `VN-RQ106: cliente sin correo`, owner Andres Ramirez Rojas, status `Open` / `Abierta`, relacionada a la Opportunity.
+- Description incluye `ANT-01170` y `a4JNq000000XU2XMAW`.
+- Permission set temporal de Andres fue retirado; Claudia conserva `VN_RQ106_Anticipo`.
+- Produccion no fue modificada.
+
 Fuera de alcance de esta fase:
 - PDF real Softland.
 - Integracion Diego / Softland real.
@@ -82,6 +95,7 @@ Fuera de alcance de esta fase:
 | Evidencia obligatoria | Intentar enviar borrador sin evidencia | No permite enviar a Tesoreria | Screenshot/toast | Pendiente QA |
 | Adjuntar evidencia | Cargar archivo despues de crear borrador | Archivo queda asociado al `Anticipo__c` | Screenshot archivo + query `ContentDocumentLink` | Validado con Andres: 1 `ContentDocumentLink` |
 | Enviar a Tesoreria | Con evidencia cargada, enviar | Llama `SolicitudAprobacionTesoreria.realizarLlamada()`; si devuelve 200, estado cambia a `En validacion de Tesoreria` | Screenshot/toast + query Anticipo | Validado con Andres: `ANT-01169`, mock 200, `En validacion de Tesoreria` |
+| Cliente sin correo | Enviar a Tesoreria una Opportunity sin `CorreoElectronicoCliente__c` y sin `contacto__r.Email` | Crea Task/incidente para el vendedor y no bloquea el envio a Tesoreria | Query Anticipo + Task + evidencia | Validado con `ANT-01170` / Task `00TNq00000SpX1rMAF`; estado final `En validacion de Tesoreria` |
 
 ## 3. Notificaciones
 
@@ -104,12 +118,20 @@ Fuera del Flow Salesforce por feedback Maria 2026-06-02:
 - `Anticipo creado`.
 - Error PDF y Error integracion.
 - Estas notificaciones las envia Helios/otro programa, no Salesforce.
+- Correo/notificacion al cliente: fuera del Flow Salesforce actual; depende de Helios/otro programa cuando aplique.
+
+Incidente preventivo cliente sin correo:
+- No cambia el Flow de notificaciones.
+- `VN_RQ106_AnticipoController.sendToTreasury` crea Task `VN-RQ106: cliente sin correo` para el vendedor cuando no hay correo en `Opportunity.CorreoElectronicoCliente__c` ni en `Opportunity.contacto__r.Email`.
+- Intenta Custom Notification al vendedor en modo best-effort con `Redmotors_Notification`.
+- La falta de correo cliente no bloquea el estado `En validacion de Tesoreria` si Tesoreria responde 200.
 
 | Escenario | Disparador | Destinatarios esperados | Resultado esperado | Evidencia esperada | Estado |
 |---|---|---|---|---|---|
 | Solicitud enviada a Tesoreria | `Anticipo__c.Estatus__c = En validacion de Tesoreria` | `grupo.cajas@redmotorscr.com` | Email inline con asunto `Validacion de ingreso requerida - Cliente - Monto Moneda` | Query estado + evidencia de correo si se autoriza disparar | Pendiente QA |
 | Producto rechaza reserva | `Reserva rechazada` | Asesor/owner y Jefe Producto si aplica | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
 | Producto aprueba reserva | `Vehiculo reservado` | Asesor/owner y Jefe Producto si aplica, sin duplicar si son el mismo usuario | Email + custom notification | Query + evidencia de correo/notificacion | Pendiente QA |
+| Cliente sin correo | `sendToTreasury` con ambos correos cliente vacios | Vendedor / `Opportunity.Owner` | Task/incidente y Custom Notification best-effort; no bloquea Tesoreria | Query Task + Anticipo | Validado con `ANT-01170` y Task `00TNq00000SpX1rMAF` |
 
 ## 4. Permisos
 
@@ -143,6 +165,7 @@ Nota tecnica:
 | Evidencia | Screenshot archivo cargado, query `ContentDocumentLink` |
 | Envio Tesoreria | Screenshot/toast, query estado `En validacion de Tesoreria` |
 | Integracion Tesoreria | Query de `ANT-01169`, evidencia de estado final, datos `codigoSoftland__c` y `ConsecutivoOportunidad__c`; no hay `idTransaccion` persistido |
+| Cliente sin correo | Query de `ANT-01170`, Task `00TNq00000SpX1rMAF`, evidencia asociada y estado `En validacion de Tesoreria` |
 | Notificaciones | Query estado por escenario, captura de email o campana de notificacion |
 | Permisos | Screenshot/query de permission set, prueba con usuario no admin/usuario final |
 | Pre-Produccion obligatorio | Retirar/reemplazar guarda temporal de Claudia y ejecutar QA amplio de notificaciones reales cuando se autorice disparar correos |
@@ -159,6 +182,7 @@ Nota tecnica:
 | Softland/Diego fuera de alcance | PDF real, reintentos y errores reales no pueden cerrarse ahora | Documentar como pendiente externo |
 | Endpoint real Tesoreria pendiente | `SolicitudAprobacionTesoreria.realizarLlamada()` aun devuelve mock 200 | Validar endpoint real, Named Credential y manejo de errores cuando Diego lo active |
 | `idTransaccion` no persistido | No hay campo funcional definido para guardar respuesta tecnica | No reutilizar campos legacy; crear campo solo si negocio/Diego lo confirma |
+| Correo del cliente ausente | Podria impedir comunicaciones posteriores al cliente | Validado incidente preventivo: Task al vendedor + Custom Notification best-effort sin bloquear Tesoreria |
 
 ## 7. Metadata de referencia
 

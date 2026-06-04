@@ -39,6 +39,18 @@ Resultado QA post-integracion Tesoreria:
 - No se persiste `idTransaccion` porque no hay campo definido.
 - Permission set temporal de Andres fue retirado. Produccion no fue modificada.
 
+Resultado QA cliente sin correo:
+- Prueba visual ejecutada en `RedMotorsSandbox` con Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`).
+- Opportunity: `006Nq00000Xn5DFIAZ` / `VN-RQ106 TEST Andres Sin Correo 2026-06-03-BMW-03/06/2026`.
+- Anticipo: `a4JNq000000XU2XMAW` / `ANT-01170`, referencia `TEST-SIN-CORREO-ANDRES-001`.
+- Datos: `Abono`, `Transferencia`, `1.00 USD`, fecha ingreso `2026-06-03`.
+- Estado final: `En validacion de Tesoreria`; confirma que no se bloqueo Tesoreria por falta de correo cliente.
+- Evidencia asociada: PDF `Reserva_ VN-RQ106_Envio automatico de correo de reserva`.
+- Task/incidente: `00TNq00000SpX1rMAF`, subject `VN-RQ106: cliente sin correo`, owner Andres Ramirez Rojas, status `Open` / `Abierta`, relacionada a la Opportunity.
+- La descripcion incluye `ANT-01170` y `a4JNq000000XU2XMAW`.
+- Permission set temporal de Andres fue retirado; Claudia conserva `VN_RQ106_Anticipo`.
+- Produccion no fue modificada.
+
 ## 1. Pantalla 1 Opportunity
 
 | ID | Evidencia | Dato/escenario | Archivo o captura esperada | Estado |
@@ -69,21 +81,26 @@ Resultado QA post-integracion Tesoreria:
 | P2-08 | Adjuntar evidencia | Archivo real de prueba | Screenshot archivo + query `ContentDocumentLink` | Validado con Andres: 1 `ContentDocumentLink` |
 | P2-09 | Enviar a Tesoreria | Borrador con evidencia | Screenshot/toast + query estado | Validado con Andres post-integracion: `ANT-01169`, mock 200, `En validacion de Tesoreria` |
 | P2-10 | Integracion `SolicitudAprobacionTesoreria` | Enviar a Tesoreria despues de cargar evidencia | Query de Anticipo + Opportunity con `codigoSoftland__c` y `ConsecutivoOportunidad__c` | Validado con mock 200: `ANT-01169` |
+| P2-11 | Cliente sin correo | Opportunity sin `CorreoElectronicoCliente__c` y sin `contacto__r.Email` | Query Anticipo + Task/incidente + evidencia | Validado: `ANT-01170` / Task `00TNq00000SpX1rMAF`; estado `En validacion de Tesoreria` |
 
 ## 3. Notificaciones
 
 Alcance vigente segun feedback oficial de Maria del 2026-06-02 y PDF `ProyectoEnvioCorreoReserva`:
 - Salesforce / Flow `VN_RQ106_Notificaciones_Anticipo` v6 solo maneja 3 notificaciones.
 - Las notificaciones de Tesoreria aprueba/rechaza/correccion, `Anticipo creado`, Error PDF y Error integracion quedan fuera del Flow Salesforce porque las envia Helios/otro programa.
+- El correo/notificacion al cliente sigue fuera del Flow Salesforce actual y depende de Helios/otro programa cuando aplique.
+- El incidente de cliente sin correo no cambia el Flow; se genera desde Apex en `sendToTreasury` como Task al vendedor y Custom Notification best-effort.
 
 | ID | Escenario | Estatus disparador | Evidencia esperada | Estado |
 |---|---|---|---|---|
 | N-01 | Solicitud enviada a Tesoreria | `En validacion de Tesoreria` | Query estado + evidencia de email a `grupo.cajas@redmotorscr.com` si se autoriza disparar | Estado validado con Andres; correo real no validado por guarda temporal de Claudia |
 | N-02 | Producto rechaza reserva | `Reserva rechazada` | Query estado + email/notificacion asesor/Jefe Producto | Pendiente |
 | N-03 | Producto aprueba reserva | `Vehiculo reservado` | Query estado + email/notificacion asesor/Jefe Producto | Pendiente |
+| N-04 | Cliente sin correo | `sendToTreasury` con correo cliente ausente | Query Task/incidente + query Anticipo en `En validacion de Tesoreria` | Validado con `ANT-01170`; Task `00TNq00000SpX1rMAF` owner Andres |
 | N-OUT-01 | Tesoreria aprueba/rechaza/correccion | `Confirmada por Tesoreria`, `Rechazada por Tesoreria`, `Correccion requerida por Tesoreria` | Evidencia Helios/otro programa, no Salesforce | Fuera de Flow Salesforce |
 | N-OUT-02 | Anticipo creado | `Anticipo creado` | Evidencia Helios/otro programa, no Salesforce | Fuera de Flow Salesforce |
 | N-OUT-03 | Error PDF / Error integracion | N/A Salesforce | Evidencia Diego/Softland/Helios si aplica | Fuera de alcance Salesforce |
+| N-OUT-04 | Correo/notificacion al cliente | N/A Salesforce | Evidencia Helios/otro programa si aplica | Fuera de Flow Salesforce |
 
 ## 4. Permisos
 
@@ -126,6 +143,7 @@ Validacion observada:
 - Confirmacion de 1 `ContentDocumentLink`.
 - Confirmacion de `Opportunity.Estado_Anticipo__c = Pendiente`.
 - Confirmacion post-integracion de `ANT-01169` con `SolicitudAprobacionTesoreria.realizarLlamada()` mock 200 antes del estado `En validacion de Tesoreria`.
+- Confirmacion cliente sin correo de `ANT-01170`: Task/incidente al vendedor, evidencia asociada y estado final `En validacion de Tesoreria`.
 
 Pendiente pre-Produccion:
 - Retirar/reemplazar la guarda temporal de Claudia.
