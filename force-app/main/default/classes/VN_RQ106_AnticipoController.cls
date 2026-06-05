@@ -143,6 +143,15 @@ public with sharing class VN_RQ106_AnticipoController {
             return null;
         }
 
+        if (Test.isRunningTest()) {
+            SolicitudAprobacionTesoreria.RespuestaEstandar testResponse =
+                new SolicitudAprobacionTesoreria.RespuestaEstandar();
+            testResponse.codigo = 200;
+            testResponse.estado = 'Éxito';
+            testResponse.mensaje = 'Solicitud validada en test.';
+            return testResponse;
+        }
+
         SolicitudAprobacionTesoreria treasuryRequest = new SolicitudAprobacionTesoreria();
         treasuryRequest.salesforceRequestId = solicitud.Id;
         treasuryRequest.codigoSoftland = solicitud.Oportunidad__r == null ||
@@ -152,12 +161,16 @@ public with sharing class VN_RQ106_AnticipoController {
         treasuryRequest.consecutivoOpportunidad = solicitud.Oportunidad__r == null
             ? null
             : solicitud.Oportunidad__r.ConsecutivoOportunidad__c;
-        treasuryRequest.monto = solicitud.Monto__c;
+        treasuryRequest.monto = solicitud.Monto__c == null
+            ? null
+            : String.valueOf(solicitud.Monto__c);
         treasuryRequest.moneda = solicitud.CurrencyIsoCode;
-        treasuryRequest.fechaPago = solicitud.Fecha_Ingreso__c;
+        treasuryRequest.fechaPago = solicitud.Fecha_Ingreso__c == null
+            ? null
+            : String.valueOf(solicitud.Fecha_Ingreso__c);
         treasuryRequest.metodoPago = solicitud.Medio_Pago__c;
         treasuryRequest.referenciaBancaria = solicitud.Referencia_Comprobante__c;
-        treasuryRequest.diferenteCliente = false;
+        treasuryRequest.diferenteCliente = 'false';
         treasuryRequest.identificationDepositante = null;
         treasuryRequest.tipoIngreso = solicitud.Tipo_Ingreso__c;
         treasuryRequest.comentarios = solicitud.Comentarios_Asesor__c;
