@@ -20,6 +20,31 @@ The goal is to let any AI tool understand the repo workflow without requiring th
 - Branch names should identify the device when relevant: laptop or pc.
 - Do not assume GitHub, Sandbox and Production are synchronized without checking.
 
+## SEGURIDAD BLOQUEANTE - AUTENTICACION HELIOS/SOFTLAND
+
+RedMotorsSandbox contiene temporalmente autenticacion sensible en codigo para Helios/Softland.
+
+Antes de hacer retrieve, modificar, agregar a staging, commit o push de cualquiera de estos componentes, detenerse y revisar/sanitizar el codigo:
+
+- `ExternalAuthService`
+- `SoftlandEndpointService`
+- `SolicitudAprobacionTesoreria`
+
+Reglas obligatorias:
+
+- Nunca versionar `clientId`, `clientSecret`, `password`, `access_token` ni valores equivalentes.
+- Nunca imprimir tokens en `System.debug` o logs.
+- La implementacion sensible completa solo debe consultarse directamente en RedMotorsSandbox por usuarios autorizados.
+- No recuperar estas clases desde Sandbox y agregarlas automaticamente a Git.
+- Si un retrieve modifica estas clases, detenerse y revisar antes de continuar.
+
+Pendiente recomendado:
+
+- Habilitar endpoint HTTPS.
+- Migrar a Named Credential/External Credential.
+- Rotar la credencial actual.
+- Despues versionar una implementacion segura.
+
 ## Startup checklist
 
 Before starting work, run or ask the user to run:

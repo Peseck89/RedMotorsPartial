@@ -5,6 +5,35 @@ Estado: Implementado en RedMotorsSandbox. Produccion sin cambios.
 
 Este documento consolida que hace cada pantalla, que notificaciones quedaron implementadas, que permisos se ajustaron y que queda fuera de alcance o pendiente de feedback. Sirve como referencia rapida para revisiones, QA y handoff.
 
+## SEGURIDAD BLOQUEANTE - AUTENTICACION HELIOS/SOFTLAND
+
+Decision temporal autorizada por Luis: RedMotorsSandbox mantiene por ahora autenticacion sensible en codigo para Helios/Softland porque el endpoint disponible actualmente usa HTTP y no soporta la migracion a Named Credential mediante HTTPS.
+
+La autenticacion real fue validada correctamente en RedMotorsSandbox con la implementacion temporal. Tambien se validaron los tests relacionados con resultado 31/31 exitoso. Produccion no fue modificada.
+
+Antes de hacer retrieve, modificar, agregar a staging, commit o push de cualquiera de estos componentes, detenerse y revisar/sanitizar el codigo:
+
+- `ExternalAuthService`
+- `SoftlandEndpointService`
+- `SolicitudAprobacionTesoreria`
+
+Reglas obligatorias:
+
+- Nunca versionar `clientId`, `clientSecret`, `password`, `access_token` ni valores equivalentes.
+- Nunca imprimir tokens en `System.debug` o logs.
+- La implementacion sensible completa solo debe consultarse directamente en RedMotorsSandbox por usuarios autorizados.
+- No recuperar estas clases desde Sandbox y agregarlas automaticamente a Git.
+- Si un retrieve modifica estas clases, detenerse y revisar antes de continuar.
+
+Motivo para no subir la implementacion sensible a GitHub: contiene valores de autenticacion temporal que deben permanecer solo en RedMotorsSandbox hasta que exista una alternativa segura.
+
+Pendiente recomendado:
+
+- Habilitar endpoint HTTPS.
+- Migrar a Named Credential/External Credential.
+- Rotar la credencial actual.
+- Despues versionar una implementacion segura.
+
 Resultado QA no admin:
 - Se ejecuto exitosamente la prueba completa con Andres Ramirez Rojas (`aramirez@redmotorscr.com.partial`) en `RedMotorsSandbox`.
 - Opportunity usada: `006PH00000KnrndYAB` / `Ruben Jimenez-BMW-20/10/2024`.
