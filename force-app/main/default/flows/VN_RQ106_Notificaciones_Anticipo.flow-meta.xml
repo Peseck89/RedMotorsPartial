@@ -230,6 +230,31 @@
         </rules>
     </decisions>
     <decisions>
+        <name>Tiene_Email_Asesor</name>
+        <label>Tiene email asesor</label>
+        <locationX>182</locationX>
+        <locationY>566</locationY>
+        <defaultConnector>
+            <targetReference>Tiene_Tipo_Notificacion</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Sin email</defaultConnectorLabel>
+        <rules>
+            <name>Email_Asesor_Disponible</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Asesor.Email</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Enviar_Correo_Asesor</targetReference>
+            </connector>
+            <label>Email asesor disponible</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Tiene_Jefe_Producto_Notificacion</name>
         <label>Tiene jefe producto notificación</label>
         <locationX>182</locationX>
@@ -262,31 +287,6 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Tiene_Email_Asesor</name>
-        <label>Tiene email asesor</label>
-        <locationX>182</locationX>
-        <locationY>566</locationY>
-        <defaultConnector>
-            <targetReference>Tiene_Tipo_Notificacion</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Sin email</defaultConnectorLabel>
-        <rules>
-            <name>Email_Asesor_Disponible</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Asesor.Email</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Enviar_Correo_Asesor</targetReference>
-            </connector>
-            <label>Email asesor disponible</label>
-        </rules>
-    </decisions>
-    <decisions>
         <name>Tiene_Tipo_Notificacion</name>
         <label>Tiene tipo notificación</label>
         <locationX>182</locationX>
@@ -308,38 +308,21 @@
             <label>Tipo notificación disponible</label>
         </rules>
     </decisions>
-    <decisions>
-        <name>Guarda_Temporal_Asesor_Prueba</name>
-        <label>Guarda temporal asesor prueba</label>
-        <locationX>182</locationX>
-        <locationY>242</locationY>
-        <defaultConnectorLabel>Owner no autorizado para prueba</defaultConnectorLabel>
-        <rules>
-            <name>Owner_Es_Claudia_Prueba</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Asesor.Username</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>peseck89@gmail.com.redmotors.partial</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-            <targetReference>Get_Jefe_Producto</targetReference>
-            </connector>
-            <label>Owner es Claudia prueba</label>
-        </rules>
-    </decisions>
-    <description>VN-RQ106: según feedback de María del 2026-06-02, Salesforce solo notifica solicitud enviada a Tesorería, Producto aprueba reserva y Producto rechaza reserva. Las demás notificaciones del PDF ProyectoEnvioCorreoReserva quedan fuera de este Flow porque serán enviadas por Helios/otro programa. Guarda temporal de prueba: solo continúa si Opportunity.Owner.Username es peseck89@gmail.com.redmotors.partial; retirar o ajustar antes de la activación final. No implementa Error PDF ni Error integración por alcance Diego/Softland/PDF real.</description>
+    <description>VN-RQ106: según feedback de María del 2026-06-02, Salesforce solo notifica solicitud enviada a Tesorería, Producto aprueba reserva y Producto rechaza reserva. Las demás notificaciones del PDF ProyectoEnvioCorreoReserva quedan fuera de este Flow porque serán enviadas por Helios/otro programa. No implementa Error PDF ni Error integración por alcance Diego/Softland/PDF real.</description>
+    <formulas>
+        <name>EmailAddressesAsesorYJefeProducto</name>
+        <dataType>String</dataType>
+        <expression>IF(AND(NOT(ISBLANK({!Get_Jefe_Producto.Email})), {!Get_Jefe_Producto.Id} &lt;&gt; {!Get_Asesor.Id}), {!Get_Asesor.Email} + &apos;,&apos; + {!Get_Jefe_Producto.Email}, {!Get_Asesor.Email})</expression>
+    </formulas>
     <formulas>
         <name>EmailSubject</name>
         <dataType>String</dataType>
         <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Reserva rechazada&apos;, &apos;Vehículo No Reservado- &apos; + {!Get_Oportunidad.Name}, &apos;Vehículo reservado&apos;, &apos;Vehículo reservado – &apos; + {!Get_Oportunidad.Name}, &apos;VN-RQ106: actualización de anticipo&apos;)</expression>
     </formulas>
     <formulas>
-        <name>EmailAddressesAsesorYJefeProducto</name>
+        <name>EmailSubjectTesoreria</name>
         <dataType>String</dataType>
-        <expression>IF(AND(NOT(ISBLANK({!Get_Jefe_Producto.Email})), {!Get_Jefe_Producto.Id} &lt;&gt; {!Get_Asesor.Id}), {!Get_Asesor.Email} + &apos;,&apos; + {!Get_Jefe_Producto.Email}, {!Get_Asesor.Email})</expression>
+        <expression>&apos;Validación de ingreso requerida – &apos; + IF(ISBLANK({!Get_Cliente.Name}), {!Get_Oportunidad.Name}, {!Get_Cliente.Name}) + &apos; – &apos; + TEXT({!$Record.Monto__c}) + &apos; &apos; + TEXT({!$Record.CurrencyIsoCode})</expression>
     </formulas>
     <formulas>
         <name>NotificationBody</name>
@@ -350,11 +333,6 @@
         <name>NotificationTitle</name>
         <dataType>String</dataType>
         <expression>CASE(TEXT({!$Record.Estatus__c}), &apos;Reserva rechazada&apos;, &apos;Vehículo No Reservado&apos;, &apos;Vehículo reservado&apos;, &apos;Vehículo reservado&apos;, &apos;Actualización de anticipo&apos;)</expression>
-    </formulas>
-    <formulas>
-        <name>EmailSubjectTesoreria</name>
-        <dataType>String</dataType>
-        <expression>&apos;Validación de ingreso requerida – &apos; + IF(ISBLANK({!Get_Cliente.Name}), {!Get_Oportunidad.Name}, {!Get_Cliente.Name}) + &apos; – &apos; + TEXT({!$Record.Monto__c}) + &apos; &apos; + TEXT({!$Record.CurrencyIsoCode})</expression>
     </formulas>
     <interviewLabel>VN-RQ106 Notificaciones Anticipo {!$Flow.CurrentDateTime}</interviewLabel>
     <label>VN-RQ106 Notificaciones Anticipo</label>
@@ -384,7 +362,7 @@
         <locationY>134</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Guarda_Temporal_Asesor_Prueba</targetReference>
+            <targetReference>Get_Jefe_Producto</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -396,27 +374,6 @@
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>User</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <name>Get_Custom_Notification_Type</name>
-        <label>Get custom notification type</label>
-        <locationX>182</locationX>
-        <locationY>242</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Asigna_Destinatario_Notificacion</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>DeveloperName</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Redmotors_Notification</stringValue>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>CustomNotificationType</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
@@ -438,6 +395,27 @@
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Custom_Notification_Type</name>
+        <label>Get custom notification type</label>
+        <locationX>182</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Asigna_Destinatario_Notificacion</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Redmotors_Notification</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>CustomNotificationType</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
