@@ -14,9 +14,9 @@ Documento interno de control. No usar como documento oficial sin revisión.
   - Id: Anticipo QA Sandbox.
   - Nombre: `Anticipo QA Sandbox`.
 - Estado actual del anticipo:
-  - `Estatus__c = Borrador`.
+  - `Estatus__c = En validación de Tesorería`.
   - `Estado_Aprobacion_Producto__c = Pendiente`.
-  - `Identificador_Helios__c = vacío`.
+  - `Identificador_Helios__c` generado por Helios/Softland.
 - Datos confirmados en Opportunity/cuentas:
   - `empresaQueFactura__c = Bavarian`.
   - `Account.codigoSoftland__c` contiene el código Softland del cliente.
@@ -38,21 +38,38 @@ Documento interno de control. No usar como documento oficial sin revisión.
 - Se corrigió el payload Salesforce para incluir:
   - `codigoSoftland = código Softland del cliente`.
   - `cliente = código Softland del cliente`.
+- Envío inicial a Helios/Softland validado:
+  - La solicitud ya no presenta error por parámetro `cliente`.
+  - Helios genera identificador externo.
+  - El anticipo queda en estado `En validación de Tesorería`.
+  - La aprobación o rechazo posterior queda pendiente del proceso externo en Helios.
+  - PDF Softland continúa pendiente hasta que el proceso externo avance.
 - Deploy Sandbox del fix `cliente`:
   - Deploy Id: `0AfNq00000XqkyDKAR`.
   - Tests: `VN_RQ106_AnticipoControllerTest`.
   - Resultado: `35/35` exitosos.
   - Componentes: `SolicitudAprobacionTesoreria`, `VN_RQ106_AnticipoController`, `VN_RQ106_AnticipoControllerTest`.
 
-## 3. Bloqueo actual
+## 3. Estado de integración Helios/Softland
 
-- Al enviar a Tesorería, Salesforce sí manda `cliente`.
-- Helios/Softland sigue respondiendo:
-  - `SP_SF_CREAR_SOLICITUD_ANTICIPO expects parameter '@cliente', which was not supplied.`
-- Conclusión operativa:
-  - El bloqueo actual ya no es dato Salesforce ni Apex básico.
-  - El bloqueo parece estar en Helios/Softland/API o mapeo backend.
-  - El anticipo permanece en `Borrador` porque Helios/Softland no confirma la integración.
+- El envío inicial desde Salesforce hacia Helios/Softland ya fue validado correctamente.
+- Salesforce envía `cliente` con el código Softland del cliente.
+- Helios/Softland genera identificador externo.
+- El anticipo queda en `En validación de Tesorería`.
+- La aprobación o rechazo posterior queda pendiente del proceso externo en Helios.
+- PDF Softland continúa pendiente hasta que el proceso externo avance.
+
+## 3.1 Bloque B.2 — Notificaciones de reserva
+
+- Se creó el documento `docs/VN-RQ106/BLOQUE_B2_NOTIFICACIONES_RESERVA.md`.
+- Contenido documentado:
+  - Correo de reenvío de solicitud de reserva.
+  - Correo de producto/reserva rechazada.
+  - Variables Salesforce sugeridas.
+  - Pendientes funcionales.
+  - Pendientes técnicos.
+  - Criterios de aceptación.
+- Estado: pendiente de implementación y QA.
 
 ## 4. Usuario QA puede comenzar solo evidencia básica/no destructiva
 
@@ -70,7 +87,7 @@ Condiciones:
 - Usar solo Sandbox.
 - No modificar registros.
 - No crear nuevos anticipos.
-- No enviar a Tesorería.
+- No ejecutar acciones de avance externo de Tesorería fuera del procedimiento autorizado.
 - Registrar evidencia visual y observaciones.
 
 ## 5. Usuario QA no debe hacer todavía
@@ -78,7 +95,7 @@ Condiciones:
 Casos bloqueados:
 
 1. Crear nuevo anticipo real.
-2. Enviar a Tesorería.
+2. Forzar avance del proceso externo de Tesorería.
 3. Aprobar reserva.
 4. Rechazar reserva.
 5. Reenviar solicitud.
@@ -87,19 +104,18 @@ Casos bloqueados:
 
 Motivo del bloqueo:
 
-- El envío a Tesorería depende de confirmación Helios/Softland.
-- Actualmente la integración responde error funcional aunque Salesforce ya envía `cliente`.
+- El envío inicial a Helios/Softland ya genera identificador externo.
+- El avance posterior de Tesorería, confirmación/rechazo y PDF Softland depende del proceso externo.
 
 ## 6. Pendientes para liberar QA completa a Usuario QA
 
-1. Respuesta del equipo de integración sobre error Helios/Softland.
-2. Confirmar si backend corrige mapeo `cliente`.
-3. Reintentar envío de `Anticipo QA Sandbox`.
-4. Confirmar cambio de estatus e `Identificador_Helios__c`.
-5. Llevar anticipo a estado `Confirmada por Tesorería`.
-6. Probar aprobar/rechazar/reenvío como `JefeSucursal`.
-7. Preparar instrucciones finales para Usuario QA.
-8. Actualizar Excel QA y documentación oficial Drive.
+1. Confirmar resultado posterior del proceso externo en Helios/Softland.
+2. Confirmar cambio posterior a `Confirmada por Tesorería` o rechazo.
+3. Confirmar generación de PDF Softland.
+4. Probar aprobar/rechazar/reenvío como `JefeSucursal`.
+5. Validar notificaciones Bloque B.2.
+6. Preparar instrucciones finales para Usuario QA.
+7. Actualizar Excel QA y documentación oficial Drive.
 
 ## 7. Estado de cierre
 

@@ -7,8 +7,9 @@ Este índice organiza la documentación local del proyecto VN-RQ106 y define qu�
 | `ENTREGA_TECNICA_OFICIAL.md` | Documentación oficial local | Fuente principal para entrega técnica | Borrador actualizado, pendiente cierre Helios/QA | Sí | Sí | Usar como base técnica oficial local. Mantener QA y Producción con estado real. |
 | `PENDIENTES_Y_ESTADO_ACTUAL.md` | Control interno | Seguimiento de pendientes, bloqueos y estado actual | Actualizado | Sí para seguimiento interno | Sí | Documento operativo de continuidad y control. |
 | `ESTADO_QA_Y_EVIDENCIAS_20260611.md` | QA/evidencias | Estado de evidencias y bloqueo actual | Actualizado | Sí para QA | Sí | Resume qué puede avanzar y qué sigue bloqueado. |
-| `QA_PEDRO_BMW_CASOS_C-L.md` | Guía QA Pedro | Instrucciones para evidencia básica/no destructiva y casos bloqueados | Actualizado | Sí para Pedro cuando aplique | Sí | No liberar flujo completo hasta resolver bloqueo Helios/Softland. |
+| Archivo de guía QA BMW C-L | Guía QA Usuario QA | Instrucciones para evidencia básica/no destructiva y casos bloqueados | Actualizado | Sí para Usuario QA cuando aplique | Sí | No liberar flujo completo hasta resolver pendientes de proceso externo Helios/Softland. |
 | `PLAN_QA_EXCEL_20260611.md` | Plan QA Excel | Guía para actualizar Excel cuando Helios se desbloquee | Actualizado | Sí para Excel | Sí | No modifica Excel; sirve como plan de carga futura. |
+| `BLOQUE_B2_NOTIFICACIONES_RESERVA.md` | Documentación funcional/técnica | Textos y mapeo de variables para notificaciones de reserva | Pendiente de implementación y QA | Sí para Bloque B.2 | Sí | Documenta correo de reenvío, correo de rechazo, variables y criterios de aceptación. |
 | `IMPLEMENTATION_LOG.md` | Bitácora técnica | Trazabilidad de implementación | Histórico/soporte | No | Revisar/sí si no contiene datos sensibles | Revisar antes de versionar. |
 | `CONTEXTO_CODEX_VN_RQ106.md` | Contexto operativo interno | Continuidad técnica | Interno | No | Revisar; si menciona herramientas internas, decidir si se excluye | No usar como documentación oficial externa. |
 | `CONTINUAR_MANANA_20260611.md` | Continuidad operativa | Retomar trabajo | Interno | No | Revisar | Puede quedar obsoleto después del cierre. |
@@ -22,6 +23,7 @@ Este índice organiza la documentación local del proyecto VN-RQ106 y define qu�
 - Estado actual: `PENDIENTES_Y_ESTADO_ACTUAL.md`.
 - QA/evidencia: `ESTADO_QA_Y_EVIDENCIAS_20260611.md`.
 - Plan Excel: `PLAN_QA_EXCEL_20260611.md`.
+- Notificaciones Bloque B.2: `BLOQUE_B2_NOTIFICACIONES_RESERVA.md`.
 
 ## Archivos que no deberían incluirse en commit por ahora
 
@@ -32,8 +34,9 @@ Este índice organiza la documentación local del proyecto VN-RQ106 y define qu�
 
 ## Pendiente antes de cierre final
 
-- Confirmar respuesta Luis/Diego.
-- Reintentar Helios/Softland.
+- Confirmar avance posterior del proceso externo en Helios/Softland.
+- Confirmar generación de PDF Softland.
+- Implementar y validar notificaciones Bloque B.2.
 - Completar QA funcional.
 - Actualizar Excel.
 - Subir evidencia oficial.

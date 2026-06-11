@@ -20,9 +20,9 @@ Producción: sin cambios
 - Opportunity QA técnica actual: `Opportunity QA Sandbox`.
 - Anticipo QA técnica actual: `Anticipo QA Sandbox`.
 - Estado actual del anticipo QA:
-  - `Estatus__c = Borrador`.
+  - `Estatus__c = En validación de Tesorería`.
   - `Estado_Aprobacion_Producto__c = Pendiente`.
-  - `Identificador_Helios__c = vacío`.
+  - `Identificador_Helios__c` generado por Helios/Softland.
 - La Opportunity QA ya tiene `empresaQueFactura__c = Bavarian`.
 - La cuenta relacionada tiene `Account.codigoSoftland__c` informado con el código Softland del cliente.
 - La cuenta de facturación tiene `Cuenta_de_Facturaci_n__r.codigoSoftland__c` informado con el código Softland del cliente.
@@ -70,6 +70,14 @@ Producción: sin cambios
   - Evidencia se puede adjuntar.
   - Validaciones del formulario muestran `Listo` para campos obligatorios, evidencia, oportunidad activa, cliente relacionado, monto mayor a cero y preparado para Tesorería.
 - Después del fix, Salesforce ya manda `cliente`, pero Helios/Softland mantiene el error funcional sobre `@cliente`.
+- Validación posterior de integración:
+  - La solicitud ya no presenta error por parámetro `cliente`.
+  - Helios/Softland genera identificador externo.
+  - El anticipo queda en estado `En validación de Tesorería`.
+  - La aprobación o rechazo posterior queda pendiente del proceso externo en Helios.
+  - PDF Softland continúa pendiente hasta que el proceso externo avance.
+- Se creó documentación funcional/técnica para Bloque B.2 Notificaciones de reserva:
+  - `docs/VN-RQ106/BLOQUE_B2_NOTIFICACIONES_RESERVA.md`.
 
 ## 3. Pendientes de implementación Bloque B
 
@@ -93,12 +101,11 @@ Pendiente antes de considerar Bloque B cerrado:
 - Validar Flow en Sandbox antes de cualquier pase.
 - Validar UI del LWC con usuario autorizado y no autorizado.
 - Confirmar que no se notifique al usuario ejecutor cuando también sea destinatario.
-- Obtener respuesta del equipo de integración sobre el error Helios/Softland posterior al fix de Salesforce.
-- Confirmar si backend Helios/Softland corrige el mapeo esperado para `cliente`.
-- Reintentar envío a Tesorería de `Anticipo QA Sandbox` cuando el backend esté corregido o confirmado.
-- Confirmar cambio de estatus e `Identificador_Helios__c`.
+- Confirmar resultado posterior del proceso externo en Helios.
+- Confirmar aprobación o rechazo posterior del anticipo desde el proceso externo.
 - Llevar el anticipo QA a `Confirmada por Tesorería`.
 - Probar aprobar/rechazar/reenvío como `JefeSucursal__c`.
+- Validar notificaciones Bloque B.2.
 
 ## 4. Decisiones funcionales ya tomadas
 
@@ -112,8 +119,9 @@ Pendiente antes de considerar Bloque B cerrado:
 
 ## 5. Pendientes por confirmar
 
-- Textos finales de correo para rechazo de reserva.
-- Textos finales de correo para reenvío de solicitud de reserva.
+- Destinatarios exactos de correo para rechazo de reserva.
+- Destinatarios exactos de correo para reenvío de solicitud de reserva.
+- Texto para reserva aprobada, si aplica.
 - Enlace Helios.
 - Confirmar si el reenvío debe dejar `Estado_Aprobacion_Producto__c` en blanco o en `Pendiente`.
 - Confirmar si la aprobación debe ejecutar una reserva física adicional o solo actualizar el estado funcional en Salesforce.
@@ -123,7 +131,7 @@ Pendiente antes de considerar Bloque B cerrado:
 
 ## 6. Pendientes de documentación
 
-- Revisar el documento generado por Claude y descartar si está corrupto o desalineado.
+- Revisar el borrador documental alterno y descartar si está corrupto o desalineado.
 - Usar la versión local v2 revisada como fuente confiable.
 - Completar Google Doc oficial pegando tablas desde el contenido local preparado.
 - No marcar QA como aprobado.
@@ -133,6 +141,7 @@ Pendiente antes de considerar Bloque B cerrado:
 - Actualizar documentación oficial final después de resolver bloqueo Helios/Softland, validar flujo completo y cerrar Bloque B.
 - Actualizar `IMPLEMENTATION_LOG.md` con el resultado final de Bloque B.
 - Actualizar `ENTREGA_TECNICA_OFICIAL.md` cuando Bloque B esté validado.
+- Incorporar `BLOQUE_B2_NOTIFICACIONES_RESERVA.md` como referencia para implementación futura de notificaciones.
 
 ## 7. Pendientes QA / Usuario QA
 
@@ -154,7 +163,7 @@ Pendiente antes de considerar Bloque B cerrado:
   - Reenviar solicitud.
   - Evidencia final de flujo completo.
   - Pruebas destructivas sobre la Opportunity reservada para evidencia funcional.
-- Motivo del bloqueo: el envío a Tesorería depende de confirmación Helios/Softland y actualmente la integración responde error funcional aunque Salesforce ya envía `cliente`.
+- Motivo del bloqueo: el envío inicial a Helios/Softland ya fue validado, pero el avance posterior de Tesorería, confirmación/rechazo y PDF Softland dependen del proceso externo.
 - No probar aprobación de reserva hasta que Bloque B esté implementado, validado y habilitado para QA.
 - No probar rechazo de reserva hasta que Bloque B esté implementado, validado y habilitado para QA.
 - No probar reenvío de solicitud de reserva hasta que Bloque B esté implementado, validado y habilitado para QA.
@@ -206,21 +215,19 @@ Resumen del estado observado:
 - El comportamiento real con usuarios no administradores depende de FLS, permisos, layouts y acceso a registros.
 - La evidencia formal todavía no está completa.
 - Producción no debe tocarse hasta tener QA, evidencia y aprobación funcional.
-- El envío a Tesorería sigue bloqueado aunque Salesforce ya envía `cliente`; la causa actual apunta a Helios/Softland/API o mapeo backend.
-- El anticipo permanece en `Borrador` porque Helios/Softland no confirma la integración.
-- No liberar QA completa a Usuario QA hasta que `Anticipo QA Sandbox` pueda pasar a Tesorería correctamente y quede validado el estado posterior.
+- El envío inicial a Tesorería ya genera identificador externo, pero la aprobación o rechazo posterior sigue dependiendo del proceso externo.
+- PDF Softland continúa pendiente hasta que el proceso externo avance.
+- No liberar QA completa a Usuario QA hasta que `Anticipo QA Sandbox` complete validación de Tesorería y quede validado el estado posterior.
 
 ## 11. Próximo orden recomendado
 
-1. Enviar al equipo de integración el bloqueo actual de Helios/Softland indicando que Salesforce ya envía `cliente` con el código Softland del cliente.
-2. Confirmar si backend corrige mapeo `cliente`.
-3. Reintentar envío de `Anticipo QA Sandbox` a Tesorería.
-4. Confirmar cambio de estatus e `Identificador_Helios__c`.
-5. Llevar el anticipo a `Confirmada por Tesorería`.
-6. Continuar validación UI con usuario `JefeSucursal__c` y usuario no autorizado.
-7. Probar aprobación, rechazo y reenvío.
-8. Validar notificaciones con Owner, Gerente y usuario ejecutor cuando se incluya Bloque B.2.
-9. Preparar instrucciones finales para Usuario QA.
-10. Actualizar Excel QA y documentación oficial Drive.
-11. Completar links de Drive en Excel.
-12. Preparar cierre para aprobación de pase.
+1. Confirmar resultado posterior del proceso externo en Helios/Softland.
+2. Confirmar cambio posterior a `Confirmada por Tesorería` o rechazo.
+3. Confirmar generación de PDF Softland.
+4. Continuar validación UI con usuario `JefeSucursal__c` y usuario no autorizado.
+5. Probar aprobación, rechazo y reenvío.
+6. Implementar y validar notificaciones con Owner, Gerente y usuario ejecutor cuando se incluya Bloque B.2.
+7. Preparar instrucciones finales para Usuario QA.
+8. Actualizar Excel QA y documentación oficial Drive.
+9. Completar links de Drive en Excel.
+10. Preparar cierre para aprobación de pase.

@@ -5,8 +5,8 @@
 - Rama: `feature/pc/redmotors-vn-rq106-anticipo-ui-20260527`
 - Sandbox: cambios desplegados parcialmente y validados.
 - Produccion: sin cambios.
-- QA completa: bloqueada por Helios/Softland.
-- Commit final: pendiente hasta decision sobre integracion y bloqueo Helios.
+- QA completa: pendiente de proceso externo Helios/Softland, PDF Softland y validación de Bloque B.2.
+- Commit final: pendiente hasta decisión sobre integración sensible y cierre de QA.
 
 ## Commit 1 sugerido: funcional VN-RQ106 desplegado en Sandbox
 
@@ -53,7 +53,7 @@ Notas:
   - propiedad `cliente`
   - asignacion `cliente = codigoSoftland`
 - Requiere decision de equipo porque versiona implementacion real de integracion.
-- Revisar manejo de endpoint y `System.debug` en tarea separada.
+- Revisar manejo de configuración de integración y `System.debug` en tarea separada.
 
 ## Commit 3 sugerido: documentacion interna
 
@@ -65,6 +65,7 @@ Incluir:
 - `docs/VN-RQ106/ESTADO_QA_Y_EVIDENCIAS_20260611.md`
 - `docs/VN-RQ106/QA_PEDRO_BMW_CASOS_C-L.md`
 - `docs/VN-RQ106/PLAN_QA_EXCEL_20260611.md`
+- `docs/VN-RQ106/BLOQUE_B2_NOTIFICACIONES_RESERVA.md`
 - `docs/VN-RQ106/PLAN_STAGING_COMMIT_20260611.md`
 - otros `.md` revisados que no contengan datos sensibles
 
@@ -82,6 +83,8 @@ No incluir:
 - `tmp/`
 - `docs/VN-RQ106/*.docx`
 - `docs/VN-RQ106/*.patch`
+- `docs/VN-RQ106/CONTEXTO_CODEX_VN_RQ106.md`
+- `docs/VN-RQ106/CONTINUAR_MANANA_20260611.md`
 
 ## Motivo de exclusiones
 
@@ -93,9 +96,11 @@ No incluir:
 
 ## Pendientes antes de commit final
 
-- Respuesta Luis/Diego sobre Helios/Softland.
+- Confirmar avance posterior del proceso externo Helios/Softland.
+- Confirmar generación de PDF Softland.
 - Definir si `SolicitudAprobacionTesoreria.cls` se versiona ahora o separado.
 - Decidir si se limpian textos/tildes UI.
 - Decidir si se ajusta descripcion del Permission Set.
 - Validar si `cliente` debe usar `Account.codigoSoftland__c` o `Cuenta_de_Facturaci_n__r.codigoSoftland__c`.
 - Confirmar si `canResendReservation` debe validar tambien `Estatus__c = Confirmada por Tesoreria`.
+- Implementar y validar Bloque B.2 Notificaciones de reserva.
