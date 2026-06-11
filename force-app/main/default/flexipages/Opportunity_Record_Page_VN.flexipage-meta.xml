@@ -203,6 +203,9 @@
                             </visibilityRule>
                         </valueListItems>
                         <valueListItems>
+                            <value>Opportunity.VN_RQ106_Solicitudes_Anticipos</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Opportunity.Enviar_link_de_pago</value>
                             <visibilityRule>
                                 <booleanFilter>(1 OR 2 OR 4 OR 5) AND 3</booleanFilter>
@@ -658,11 +661,6 @@
                     <value>linear</value>
                 </componentInstanceProperties>
                 <componentName>runtime_sales_pathassistant:pathAssistant</componentName>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>vnRq106OpportunityOverview</componentName>
             </componentInstance>
         </itemInstances>
         <name>header</name>

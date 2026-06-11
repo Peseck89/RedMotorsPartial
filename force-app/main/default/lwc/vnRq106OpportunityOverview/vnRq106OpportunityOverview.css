@@ -4,6 +4,16 @@
     gap: 0.35rem;
 }
 
+:host([modal-mode]) {
+    display: block;
+    margin: -1rem;
+}
+
+:host([modal-mode]) .overview {
+    max-height: 72vh;
+    overflow: auto;
+}
+
 .overview {
     background: #f7f9fb;
 }
@@ -141,6 +151,15 @@
     display: block;
     font-size: 0.64rem;
     margin-top: 0.1rem;
+}
+
+.row-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.action-modal {
+    max-width: 32rem;
 }
 
 .empty,

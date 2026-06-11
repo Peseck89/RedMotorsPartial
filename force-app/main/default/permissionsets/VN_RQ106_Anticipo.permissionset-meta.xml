@@ -10,7 +10,7 @@
     </classAccesses>
     <description>Permisos de prueba para campos VN-RQ106 en Anticipo__c.</description>
     <fieldPermissions>
-        <editable>false</editable>
+        <editable>true</editable>
         <field>Anticipo__c.Comentarios_Aprobacion_Rechazo__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -27,6 +27,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Anticipo__c.Fecha_Ingreso__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Anticipo__c.Estado_Aprobacion_Producto__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -62,6 +67,16 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Opportunity.Estado_Anticipo__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.GerenteSucursal__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.JefeSucursal__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

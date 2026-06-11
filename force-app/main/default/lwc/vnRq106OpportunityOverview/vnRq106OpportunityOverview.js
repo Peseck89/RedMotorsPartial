@@ -1,5 +1,10 @@
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { refreshApex } from '@salesforce/apex';
+import approveReservation from '@salesforce/apex/VN_RQ106_AnticipoController.approveReservation';
+import rejectReservation from '@salesforce/apex/VN_RQ106_AnticipoController.rejectReservation';
+import resendReservationRequest from '@salesforce/apex/VN_RQ106_AnticipoController.resendReservationRequest';
 import getOverview from '@salesforce/apex/VN_RQ106_OpportunityOverviewController.getOverview';
 
 const MAX_TABLE_ROWS = 3;
@@ -7,12 +12,19 @@ const MAX_HISTORY_ROWS = 2;
 
 export default class VnRq106OpportunityOverview extends NavigationMixin(LightningElement) {
     @api recordId;
+    @api modalMode = false;
     overview;
     errorMessage;
     isLoading = true;
+    wiredOverviewResult;
+    actionDialog;
+    actionComment = '';
+    isSavingAction = false;
 
     @wire(getOverview, { opportunityId: '$recordId' })
-    wiredOverview({ data, error }) {
+    wiredOverview(result) {
+        this.wiredOverviewResult = result;
+        const { data, error } = result;
         this.isLoading = false;
         if (data) {
             this.errorMessage = undefined;
@@ -59,6 +71,39 @@ export default class VnRq106OpportunityOverview extends NavigationMixin(Lightnin
 
     get hasHistory() {
         return this.historial.length > 0;
+    }
+
+    get showRegisterAction() {
+        return !this.modalMode;
+    }
+
+    get cardClass() {
+        return this.modalMode ? 'modal-card' : 'record-card';
+    }
+
+    get showActionDialog() {
+        return Boolean(this.actionDialog);
+    }
+
+    get actionDialogTitle() {
+        return this.actionDialog?.title || '';
+    }
+
+    get actionDialogMessage() {
+        return this.actionDialog?.message || '';
+    }
+
+    get actionDialogCommentRequired() {
+        return this.actionDialog?.commentRequired || false;
+    }
+
+    get actionDialogConfirmLabel() {
+        return this.actionDialog?.confirmLabel || 'Confirmar';
+    }
+
+    get isConfirmActionDisabled() {
+        return this.isSavingAction ||
+            (this.actionDialogCommentRequired && !this.actionComment.trim());
     }
 
     get requestCountLabel() {
@@ -142,11 +187,105 @@ export default class VnRq106OpportunityOverview extends NavigationMixin(Lightnin
         });
     }
 
+    handleApproveReservation(event) {
+        this.openActionDialog({
+            anticipoId: event.currentTarget.dataset.id,
+            action: 'approve',
+            title: 'Aprobar reserva',
+            message: 'La reserva pasara a Vehiculo reservado.',
+            confirmLabel: 'Aprobar',
+            commentRequired: false
+        });
+    }
+
+    handleRejectReservation(event) {
+        this.openActionDialog({
+            anticipoId: event.currentTarget.dataset.id,
+            action: 'reject',
+            title: 'Rechazar reserva',
+            message: 'El anticipo permanecera Confirmada por Tesoreria.',
+            confirmLabel: 'Rechazar',
+            commentRequired: true
+        });
+    }
+
+    handleResendReservation(event) {
+        this.openActionDialog({
+            anticipoId: event.currentTarget.dataset.id,
+            action: 'resend',
+            title: 'Reenviar solicitud',
+            message: 'La aprobacion de producto volvera a Pendiente.',
+            confirmLabel: 'Reenviar',
+            commentRequired: false
+        });
+    }
+
+    openActionDialog(config) {
+        this.actionDialog = config;
+        this.actionComment = '';
+    }
+
+    handleActionCommentChange(event) {
+        this.actionComment = event.target.value || '';
+    }
+
+    closeActionDialog() {
+        if (this.isSavingAction) {
+            return;
+        }
+        this.actionDialog = undefined;
+        this.actionComment = '';
+    }
+
+    async confirmActionDialog() {
+        if (!this.actionDialog || this.isConfirmActionDisabled) {
+            return;
+        }
+
+        const { action, anticipoId } = this.actionDialog;
+        const comentario = this.actionComment.trim();
+        this.isSavingAction = true;
+
+        try {
+            if (action === 'approve') {
+                await approveReservation({ anticipoId, comentario });
+            } else if (action === 'reject') {
+                await rejectReservation({ anticipoId, comentario });
+            } else {
+                await resendReservationRequest({ anticipoId, comentario });
+            }
+
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Reserva actualizada',
+                message: 'La accion se completo correctamente.',
+                variant: 'success'
+            }));
+            this.actionDialog = undefined;
+            this.actionComment = '';
+            await refreshApex(this.wiredOverviewResult);
+        } catch (error) {
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'No fue posible actualizar la reserva',
+                message: this.reduceError(error),
+                variant: 'error'
+            }));
+        } finally {
+            this.isSavingAction = false;
+        }
+    }
+
     normalizeOverview(data) {
         const normalizeAnticipo = (item) => ({
             ...item,
             url: `/${item.id}`,
-            approverDisplay: item.approverName || 'No disponible todavía'
+            approverDisplay: item.approverName || 'No disponible todavía',
+            comentariosDisplay: item.comentariosDisplay ||
+                item.comentariosAprobacionRechazo ||
+                item.comentariosAsesor,
+            estadoAprobacionProducto: item.estadoAprobacionProducto || 'Pendiente',
+            hasReservationActions: item.canApproveReservation ||
+                item.canRejectReservation ||
+                item.canResendReservation
         });
 
         return {

@@ -59,6 +59,9 @@
                             <value>Opportunity.VN_RQ106_Registrar_Ingreso_Anticipo</value>
                         </valueListItems>
                         <valueListItems>
+                            <value>Opportunity.VN_RQ106_Solicitudes_Anticipos</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Opportunity.Plan_de_Cliente_Usados_save_PDF</value>
                         </valueListItems>
                         <valueListItems>
@@ -190,11 +193,6 @@
                     <value>linear</value>
                 </componentInstanceProperties>
                 <componentName>runtime_sales_pathassistant:pathAssistant</componentName>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>vnRq106OpportunityOverview</componentName>
             </componentInstance>
         </itemInstances>
         <name>header</name>

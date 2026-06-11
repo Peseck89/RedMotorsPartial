@@ -1,12 +1,20 @@
 public with sharing class VN_RQ106_AnticipoController {
     private static final String STATUS_BORRADOR = 'Borrador';
     private static final String STATUS_EN_VALIDACION_TESORERIA = 'En validación de Tesorería';
+    private static final String STATUS_CONFIRMADA_TESORERIA = 'Confirmada por Tesorería';
+    private static final String STATUS_VEHICULO_RESERVADO = 'Vehículo reservado';
+    private static final String ESTADO_PRODUCTO_PENDIENTE = 'Pendiente';
+    private static final String ESTADO_PRODUCTO_APROBADA = 'Aprobada';
+    private static final String ESTADO_PRODUCTO_RECHAZADA = 'Rechazada';
     private static final String TIPO_RESERVA = 'Reserva de vehículo';
     @TestVisible private static final String MISSING_CLIENT_EMAIL_TASK_SUBJECT =
         'VN-RQ106: cliente sin correo';
     private static final String CUSTOM_NOTIFICATION_TYPE_DEVELOPER_NAME =
         'Redmotors_Notification';
     @TestVisible private static Boolean simulateTreasuryFailure = false;
+    @TestVisible private static Integer simulatedTreasuryStatusCode = 200;
+    @TestVisible private static String simulatedTreasuryMessage = 'Solicitud validada en test.';
+    @TestVisible private static String simulatedHeliosIdentifier = 'HELIOS-TEST-001';
 
     @AuraEnabled(cacheable=true)
     public static OpportunityContext getOpportunityContext(Id opportunityId) {
@@ -47,6 +55,7 @@ public with sharing class VN_RQ106_AnticipoController {
         context.totalAnticiposAprobados = opp.Total_Anticipos_Aprobados__c;
         context.saldoPendiente = opp.Saldo_Pendiente__c;
         context.products = getProducts(opportunityId);
+        context.existingDraft = getLatestDraft(opportunityId);
         return context;
     }
 
@@ -72,7 +81,64 @@ public with sharing class VN_RQ106_AnticipoController {
             solicitud.Producto__c = payload.productoId;
         }
 
-        insert solicitud;
+        try {
+            insert solicitud;
+        } catch (DmlException e) {
+            throw new AuraHandledException(getDmlErrorMessage(e));
+        }
+
+        DraftSolicitudResult result = new DraftSolicitudResult();
+        result.anticipoId = solicitud.Id;
+        result.estatus = solicitud.Estatus__c;
+        return result;
+    }
+
+    @AuraEnabled
+    public static DraftSolicitudResult updateDraftSolicitud(DraftSolicitudRequest payload) {
+        validatePayload(payload);
+        if (payload.anticipoId == null) {
+            throw new AuraHandledException('La solicitud en borrador es requerida.');
+        }
+
+        Opportunity opp = getOpportunityForDraft(payload.opportunityId);
+        List<Anticipo__c> solicitudes = [
+            SELECT Id, Estatus__c, Oportunidad__c
+            FROM Anticipo__c
+            WHERE Id = :payload.anticipoId
+            LIMIT 1
+        ];
+        if (solicitudes.isEmpty()) {
+            throw new AuraHandledException('La solicitud en borrador no existe.');
+        }
+
+        Anticipo__c solicitud = solicitudes[0];
+        if (solicitud.Oportunidad__c != payload.opportunityId) {
+            throw new AuraHandledException('La solicitud no pertenece a esta oportunidad.');
+        }
+        if (solicitud.Estatus__c != STATUS_BORRADOR) {
+            throw new AuraHandledException('Solo se pueden actualizar solicitudes en estado Borrador.');
+        }
+
+        solicitud.CurrencyIsoCode = opp.CurrencyIsoCode;
+        solicitud.Monto__c = payload.monto;
+        solicitud.Tipo_Ingreso__c = payload.tipoIngreso;
+        solicitud.Medio_Pago__c = payload.medioPago;
+        solicitud.Fecha_Ingreso__c = payload.fechaIngreso;
+        solicitud.Referencia_Comprobante__c = payload.referenciaComprobante;
+        solicitud.Depositante__c = payload.depositante;
+        solicitud.Comentarios_Asesor__c = payload.comentariosAsesor;
+        solicitud.Producto__c = null;
+
+        if (payload.tipoIngreso == TIPO_RESERVA) {
+            validateProductBelongsToOpportunity(payload.opportunityId, payload.productoId);
+            solicitud.Producto__c = payload.productoId;
+        }
+
+        try {
+            update solicitud;
+        } catch (DmlException e) {
+            throw new AuraHandledException(getDmlErrorMessage(e));
+        }
 
         DraftSolicitudResult result = new DraftSolicitudResult();
         result.anticipoId = solicitud.Id;
@@ -93,6 +159,7 @@ public with sharing class VN_RQ106_AnticipoController {
                 Oportunidad__r.OwnerId, Oportunidad__r.CorreoElectronicoCliente__c,
                 Oportunidad__r.contacto__r.Email,
                 Oportunidad__r.ConsecutivoOportunidad__c,
+                Oportunidad__r.Id_Oportunidad__c, Oportunidad__r.empresaQueFactura__c,
                 Oportunidad__r.Account.Name, Oportunidad__r.Account.codigoSoftland__c
             FROM Anticipo__c
             WHERE Id = :anticipoId
@@ -115,24 +182,135 @@ public with sharing class VN_RQ106_AnticipoController {
         if (evidenceCount == 0) {
             throw new AuraHandledException('Debe adjuntar al menos una evidencia antes de enviar a Tesorería.');
         }
+        if (String.isBlank(solicitud.Comentarios_Asesor__c)) {
+            throw new AuraHandledException('Los comentarios del asesor son requeridos antes de enviar a Tesorería.');
+        }
 
         SolicitudAprobacionTesoreria.RespuestaEstandar tesoreriaResponse =
             sendTreasuryApprovalRequest(solicitud);
-        registerMissingClientEmailIncidentIfNeeded(solicitud);
+        Anticipo__c integrationResult = [
+            SELECT Id, Estatus__c, Identificador_Helios__c
+            FROM Anticipo__c
+            WHERE Id = :solicitud.Id
+            LIMIT 1
+        ];
 
-        if (tesoreriaResponse == null || tesoreriaResponse.codigo != 200) {
-            String message = tesoreriaResponse == null || String.isBlank(tesoreriaResponse.mensaje)
-                ? 'No se pudo enviar la solicitud a Tesorería.'
-                : tesoreriaResponse.mensaje;
+        if (!hasSuccessfulTreasuryIntegration(tesoreriaResponse, integrationResult)) {
+            String message = buildTreasuryFailureMessage(tesoreriaResponse, integrationResult);
             throw new AuraHandledException(message);
         }
 
+        update new Anticipo__c(
+            Id = solicitud.Id,
+            Estatus__c = STATUS_EN_VALIDACION_TESORERIA
+        );
         solicitud.Estatus__c = STATUS_EN_VALIDACION_TESORERIA;
-        update solicitud;
+        registerMissingClientEmailIncidentIfNeeded(solicitud);
 
         DraftSolicitudResult result = new DraftSolicitudResult();
         result.anticipoId = solicitud.Id;
         result.estatus = solicitud.Estatus__c;
+        return result;
+    }
+
+    @AuraEnabled
+    public static DraftSolicitudResult approveReservation(Id anticipoId, String comentario) {
+        Anticipo__c solicitud = getReservationForProductApproval(anticipoId);
+        validatePendingProductApproval(solicitud);
+
+        solicitud.Estado_Aprobacion_Producto__c = ESTADO_PRODUCTO_APROBADA;
+        solicitud.Estatus__c = STATUS_VEHICULO_RESERVADO;
+        if (!String.isBlank(comentario)) {
+            solicitud.Comentarios_Aprobacion_Rechazo__c = comentario;
+        }
+        update solicitud;
+
+        return buildResult(solicitud);
+    }
+
+    @AuraEnabled
+    public static DraftSolicitudResult rejectReservation(Id anticipoId, String comentario) {
+        if (String.isBlank(comentario)) {
+            throw new AuraHandledException('El comentario es requerido para rechazar la reserva.');
+        }
+
+        Anticipo__c solicitud = getReservationForProductApproval(anticipoId);
+        validatePendingProductApproval(solicitud);
+
+        solicitud.Estado_Aprobacion_Producto__c = ESTADO_PRODUCTO_RECHAZADA;
+        solicitud.Comentarios_Aprobacion_Rechazo__c = comentario;
+        update solicitud;
+
+        return buildResult(solicitud);
+    }
+
+    @AuraEnabled
+    public static DraftSolicitudResult resendReservationRequest(Id anticipoId, String comentario) {
+        Anticipo__c solicitud = getReservationForProductApproval(anticipoId);
+        if (solicitud.Estado_Aprobacion_Producto__c != ESTADO_PRODUCTO_RECHAZADA) {
+            throw new AuraHandledException('Solo se puede reenviar una reserva rechazada.');
+        }
+
+        solicitud.Estado_Aprobacion_Producto__c = ESTADO_PRODUCTO_PENDIENTE;
+        if (!String.isBlank(comentario)) {
+            solicitud.Comentarios_Aprobacion_Rechazo__c = comentario;
+        }
+        update solicitud;
+
+        return buildResult(solicitud);
+    }
+
+    private static Anticipo__c getReservationForProductApproval(Id anticipoId) {
+        if (anticipoId == null) {
+            throw new AuraHandledException('La solicitud es requerida.');
+        }
+
+        List<Anticipo__c> solicitudes = [
+            SELECT Id, Estatus__c, Tipo_Ingreso__c, Comentarios_Aprobacion_Rechazo__c,
+                Estado_Aprobacion_Producto__c, Oportunidad__c,
+                Oportunidad__r.JefeSucursal__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+            LIMIT 1
+        ];
+        if (solicitudes.isEmpty()) {
+            throw new AuraHandledException('La solicitud no existe.');
+        }
+
+        Anticipo__c solicitud = solicitudes[0];
+        if (solicitud.Oportunidad__c == null) {
+            throw new AuraHandledException('La solicitud no tiene oportunidad relacionada.');
+        }
+        if (solicitud.Tipo_Ingreso__c != TIPO_RESERVA) {
+            throw new AuraHandledException('La solicitud no corresponde a una reserva de vehículo.');
+        }
+        if (
+            solicitud.Oportunidad__r == null ||
+            solicitud.Oportunidad__r.JefeSucursal__c == null ||
+            String.valueOf(solicitud.Oportunidad__r.JefeSucursal__c) != UserInfo.getUserId()
+        ) {
+            throw new AuraHandledException('El usuario actual no está autorizado para decidir esta reserva.');
+        }
+        return solicitud;
+    }
+
+    private static void validatePendingProductApproval(Anticipo__c solicitud) {
+        if (solicitud.Estatus__c != STATUS_CONFIRMADA_TESORERIA) {
+            throw new AuraHandledException('La reserva debe estar confirmada por Tesorería.');
+        }
+        if (
+            !String.isBlank(solicitud.Estado_Aprobacion_Producto__c) &&
+            solicitud.Estado_Aprobacion_Producto__c != ESTADO_PRODUCTO_PENDIENTE
+        ) {
+            throw new AuraHandledException('La reserva ya tiene una decisión de aprobación producto.');
+        }
+    }
+
+    private static DraftSolicitudResult buildResult(Anticipo__c solicitud) {
+        DraftSolicitudResult result = new DraftSolicitudResult();
+        result.anticipoId = solicitud.Id;
+        result.estatus = solicitud.Estatus__c;
+        result.estadoAprobacionProducto = solicitud.Estado_Aprobacion_Producto__c;
         return result;
     }
 
@@ -146,21 +324,62 @@ public with sharing class VN_RQ106_AnticipoController {
         if (Test.isRunningTest()) {
             SolicitudAprobacionTesoreria.RespuestaEstandar testResponse =
                 new SolicitudAprobacionTesoreria.RespuestaEstandar();
-            testResponse.codigo = 200;
-            testResponse.estado = 'Éxito';
-            testResponse.mensaje = 'Solicitud validada en test.';
+            testResponse.codigo = simulatedTreasuryStatusCode;
+            testResponse.estado = simulatedTreasuryStatusCode == 200 ? 'Éxito' : 'Error';
+            testResponse.mensaje = simulatedTreasuryMessage;
+            if (simulatedTreasuryStatusCode == 200 && !String.isBlank(simulatedHeliosIdentifier)) {
+                update new Anticipo__c(
+                    Id = solicitud.Id,
+                    Identificador_Helios__c = simulatedHeliosIdentifier
+                );
+            }
             return testResponse;
         }
 
+        SolicitudAprobacionTesoreria treasuryRequest = buildTreasuryRequest(solicitud);
+        return treasuryRequest.realizarLlamada();
+    }
+
+    private static Boolean hasSuccessfulTreasuryIntegration(
+        SolicitudAprobacionTesoreria.RespuestaEstandar tesoreriaResponse,
+        Anticipo__c integrationResult
+    ) {
+        return tesoreriaResponse != null &&
+            tesoreriaResponse.codigo == 200 &&
+            integrationResult != null &&
+            !String.isBlank(integrationResult.Identificador_Helios__c);
+    }
+
+    private static String buildTreasuryFailureMessage(
+        SolicitudAprobacionTesoreria.RespuestaEstandar tesoreriaResponse,
+        Anticipo__c integrationResult
+    ) {
+        if (tesoreriaResponse == null) {
+            return 'No se pudo enviar la solicitud a Tesorería.';
+        }
+        if (tesoreriaResponse.codigo != 200) {
+            return String.isBlank(tesoreriaResponse.mensaje)
+                ? 'No se pudo enviar la solicitud a Tesorería.'
+                : tesoreriaResponse.mensaje;
+        }
+        if (integrationResult == null || String.isBlank(integrationResult.Identificador_Helios__c)) {
+            return 'Helios no confirmó la integración del anticipo. La solicitud se mantiene en Borrador.';
+        }
+        return 'No se pudo confirmar la integración con Helios.';
+    }
+
+    @TestVisible
+    private static SolicitudAprobacionTesoreria buildTreasuryRequest(Anticipo__c solicitud) {
         SolicitudAprobacionTesoreria treasuryRequest = new SolicitudAprobacionTesoreria();
         treasuryRequest.salesforceRequestId = solicitud.Id;
         treasuryRequest.codigoSoftland = solicitud.Oportunidad__r == null ||
             solicitud.Oportunidad__r.Account == null
             ? null
             : solicitud.Oportunidad__r.Account.codigoSoftland__c;
+        treasuryRequest.cliente = treasuryRequest.codigoSoftland;
         treasuryRequest.consecutivoOpportunidad = solicitud.Oportunidad__r == null
             ? null
-            : solicitud.Oportunidad__r.ConsecutivoOportunidad__c;
+            : solicitud.Oportunidad__r.Id_Oportunidad__c;
         treasuryRequest.monto = solicitud.Monto__c == null
             ? null
             : String.valueOf(solicitud.Monto__c);
@@ -174,7 +393,23 @@ public with sharing class VN_RQ106_AnticipoController {
         treasuryRequest.identificationDepositante = null;
         treasuryRequest.tipoIngreso = solicitud.Tipo_Ingreso__c;
         treasuryRequest.comentarios = solicitud.Comentarios_Asesor__c;
-        return treasuryRequest.realizarLlamada();
+        treasuryRequest.compania = resolveTreasuryCompany(solicitud.Oportunidad__r == null
+            ? null
+            : solicitud.Oportunidad__r.empresaQueFactura__c);
+        return treasuryRequest;
+    }
+
+    private static String resolveTreasuryCompany(String empresaQueFactura) {
+        if (empresaQueFactura == 'Bavarian') {
+            return 'RMBAVARIAN';
+        }
+        if (empresaQueFactura == 'Otobay') {
+            return 'RMOTOBAI';
+        }
+        if (String.isBlank(empresaQueFactura)) {
+            throw new AuraHandledException('La oportunidad debe tener Empresa que Factura para enviar a Tesorería.');
+        }
+        throw new AuraHandledException('Empresa que Factura no soportada para Tesorería: ' + empresaQueFactura);
     }
 
     private static void registerMissingClientEmailIncidentIfNeeded(Anticipo__c solicitud) {
@@ -337,6 +572,19 @@ public with sharing class VN_RQ106_AnticipoController {
         return opportunities[0];
     }
 
+    private static String getDmlErrorMessage(DmlException e) {
+        if (e == null) {
+            return 'No se pudo guardar la solicitud.';
+        }
+        if (e.getNumDml() > 0 && !String.isBlank(e.getDmlMessage(0))) {
+            return e.getDmlMessage(0);
+        }
+        if (!String.isBlank(e.getMessage())) {
+            return e.getMessage();
+        }
+        return 'No se pudo guardar la solicitud.';
+    }
+
     private static void validatePayload(DraftSolicitudRequest payload) {
         if (payload == null) {
             throw new AuraHandledException('La solicitud es requerida.');
@@ -359,9 +607,47 @@ public with sharing class VN_RQ106_AnticipoController {
         if (String.isBlank(payload.referenciaComprobante)) {
             throw new AuraHandledException('La referencia o comprobante es requerido.');
         }
+        if (String.isBlank(payload.comentariosAsesor)) {
+            throw new AuraHandledException('Los comentarios del asesor son requeridos.');
+        }
         if (payload.tipoIngreso == TIPO_RESERVA && payload.productoId == null) {
             throw new AuraHandledException('El vehículo es requerido para reservas.');
         }
+    }
+
+    private static DraftSolicitudSummary getLatestDraft(Id opportunityId) {
+        List<Anticipo__c> drafts = [
+            SELECT Id, Estatus__c, Monto__c, Tipo_Ingreso__c, Medio_Pago__c,
+                Fecha_Ingreso__c, Referencia_Comprobante__c, Depositante__c,
+                Comentarios_Asesor__c, Producto__c
+            FROM Anticipo__c
+            WHERE Oportunidad__c = :opportunityId
+                AND Estatus__c = :STATUS_BORRADOR
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+        if (drafts.isEmpty()) {
+            return null;
+        }
+
+        Anticipo__c draft = drafts[0];
+        DraftSolicitudSummary summary = new DraftSolicitudSummary();
+        summary.anticipoId = draft.Id;
+        summary.estatus = draft.Estatus__c;
+        summary.monto = draft.Monto__c;
+        summary.tipoIngreso = draft.Tipo_Ingreso__c;
+        summary.medioPago = draft.Medio_Pago__c;
+        summary.fechaIngreso = draft.Fecha_Ingreso__c;
+        summary.referenciaComprobante = draft.Referencia_Comprobante__c;
+        summary.depositante = draft.Depositante__c;
+        summary.comentariosAsesor = draft.Comentarios_Asesor__c;
+        summary.productoId = draft.Producto__c;
+        summary.evidenceCount = [
+            SELECT COUNT()
+            FROM ContentDocumentLink
+            WHERE LinkedEntityId = :draft.Id
+        ];
+        return summary;
     }
 
     private static void validateProductBelongsToOpportunity(Id opportunityId, Id productId) {
@@ -410,6 +696,7 @@ public with sharing class VN_RQ106_AnticipoController {
     }
 
     public class DraftSolicitudRequest {
+        @AuraEnabled public Id anticipoId { get; set; }
         @AuraEnabled public Id opportunityId { get; set; }
         @AuraEnabled public Decimal monto { get; set; }
         @AuraEnabled public String tipoIngreso { get; set; }
@@ -424,6 +711,21 @@ public with sharing class VN_RQ106_AnticipoController {
     public class DraftSolicitudResult {
         @AuraEnabled public Id anticipoId { get; set; }
         @AuraEnabled public String estatus { get; set; }
+        @AuraEnabled public String estadoAprobacionProducto { get; set; }
+    }
+
+    public class DraftSolicitudSummary {
+        @AuraEnabled public Id anticipoId { get; set; }
+        @AuraEnabled public String estatus { get; set; }
+        @AuraEnabled public Decimal monto { get; set; }
+        @AuraEnabled public String tipoIngreso { get; set; }
+        @AuraEnabled public String medioPago { get; set; }
+        @AuraEnabled public Date fechaIngreso { get; set; }
+        @AuraEnabled public String referenciaComprobante { get; set; }
+        @AuraEnabled public String depositante { get; set; }
+        @AuraEnabled public String comentariosAsesor { get; set; }
+        @AuraEnabled public Id productoId { get; set; }
+        @AuraEnabled public Integer evidenceCount { get; set; }
     }
 
     public class OpportunityContext {
@@ -447,6 +749,7 @@ public with sharing class VN_RQ106_AnticipoController {
         @AuraEnabled public Decimal totalAnticiposAprobados { get; set; }
         @AuraEnabled public Decimal saldoPendiente { get; set; }
         @AuraEnabled public List<ProductOption> products { get; set; }
+        @AuraEnabled public DraftSolicitudSummary existingDraft { get; set; }
     }
 
     public class ProductOption {

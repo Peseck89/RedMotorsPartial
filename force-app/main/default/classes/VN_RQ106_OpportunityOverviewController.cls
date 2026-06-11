@@ -3,6 +3,10 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         'Aplicado',
         'Vehículo reservado'
     };
+    private static final String STATUS_CONFIRMADA_TESORERIA = 'Confirmada por Tesorería';
+    private static final String ESTADO_PRODUCTO_PENDIENTE = 'Pendiente';
+    private static final String ESTADO_PRODUCTO_RECHAZADA = 'Rechazada';
+    private static final String TIPO_RESERVA = 'Reserva de vehículo';
 
     @AuraEnabled(cacheable=true)
     public static Overview getOverview(Id opportunityId) {
@@ -12,6 +16,7 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
 
         Opportunity opp = [
             SELECT Id, Name, AccountId, Account.Name, StageName, OwnerId, Owner.Name,
+                JefeSucursal__c, GerenteSucursal__c,
                 CurrencyIsoCode, Valor_Total_Oportunidad_FX__c,
                 Total_Anticipos_Aprobados__c, Saldo_Pendiente__c, Estado_Anticipo__c,
                 Tiene_Vehiculos_Reservados__c, Vehiculos_Reservados__c
@@ -28,6 +33,8 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         overview.stageName = opp.StageName;
         overview.ownerId = opp.OwnerId;
         overview.ownerName = opp.Owner == null ? null : opp.Owner.Name;
+        overview.jefeSucursalId = opp.JefeSucursal__c;
+        overview.gerenteSucursalId = opp.GerenteSucursal__c;
         overview.currencyIsoCode = opp.CurrencyIsoCode;
         overview.valorTotalOportunidad = opp.Valor_Total_Oportunidad_FX__c;
         overview.totalAnticiposAprobados = opp.Total_Anticipos_Aprobados__c;
@@ -35,10 +42,10 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         overview.estadoAnticipo = opp.Estado_Anticipo__c;
         overview.tieneVehiculosReservados = opp.Tiene_Vehiculos_Reservados__c;
         overview.vehiculosReservados = opp.Vehiculos_Reservados__c;
-        overview.pdfStatus = 'Pendiente de integración Softland';
+        overview.pdfStatus = 'PDF Softland pendiente (evidencia: columna Evidencia)';
         overview.retryStatus = 'No disponible todavía';
         overview.vehicles = getVehicles(opportunityId);
-        overview.anticipos = getAnticipos(opportunityId);
+        overview.anticipos = getAnticipos(opportunityId, opp);
         overview.solicitudes = new List<AnticipoSummary>();
         overview.anticiposAprobados = new List<AnticipoSummary>();
         overview.historial = new List<HistorySummary>();
@@ -105,11 +112,12 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         return vehicles;
     }
 
-    private static List<AnticipoSummary> getAnticipos(Id opportunityId) {
+    private static List<AnticipoSummary> getAnticipos(Id opportunityId, Opportunity opp) {
         List<Anticipo__c> records = [
             SELECT Id, Name, Estatus__c, Monto__c, CurrencyIsoCode, Fecha_Ingreso__c,
                 Tipo_Ingreso__c, Referencia_Comprobante__c, Depositante__c,
                 Comentarios_Asesor__c, Comentarios_Aprobacion_Rechazo__c,
+                Estado_Aprobacion_Producto__c, Identificador_Helios__c,
                 Producto__c, Producto__r.Name, Producto__r.vin__c,
                 CreatedDate, LastModifiedDate, CreatedBy.Name, LastModifiedBy.Name
             FROM Anticipo__c
@@ -118,6 +126,9 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
             LIMIT 50
         ];
 
+        Boolean isJefeSucursal = opp != null &&
+            opp.JefeSucursal__c != null &&
+            String.valueOf(opp.JefeSucursal__c) == UserInfo.getUserId();
         Set<Id> anticipoIds = new Set<Id>();
         for (Anticipo__c record : records) {
             anticipoIds.add(record.Id);
@@ -149,6 +160,10 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
             summary.depositante = record.Depositante__c;
             summary.comentariosAsesor = record.Comentarios_Asesor__c;
             summary.comentariosAprobacionRechazo = record.Comentarios_Aprobacion_Rechazo__c;
+            summary.estadoAprobacionProducto = record.Estado_Aprobacion_Producto__c;
+            summary.comentariosDisplay = String.isBlank(summary.comentariosAprobacionRechazo)
+                ? summary.comentariosAsesor
+                : summary.comentariosAprobacionRechazo;
             summary.productoId = record.Producto__c;
             summary.productoName = record.Producto__r == null ? null : record.Producto__r.Name;
             summary.vin = record.Producto__r == null ? null : record.Producto__r.vin__c;
@@ -156,12 +171,26 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
             summary.lastModifiedDate = record.LastModifiedDate;
             summary.createdByName = record.CreatedBy == null ? null : record.CreatedBy.Name;
             summary.lastModifiedByName = record.LastModifiedBy == null ? null : record.LastModifiedBy.Name;
+            summary.identificadorHelios = record.Identificador_Helios__c;
             summary.evidenceCount = evidenceCounts.containsKey(record.Id) ? evidenceCounts.get(record.Id) : 0;
             summary.evidenceStatus = summary.evidenceCount > 0 ? 'Con evidencia' : 'Sin evidencia';
             summary.approverName = APPROVED_OR_APPLIED_STATUSES.contains(record.Estatus__c)
                 ? summary.lastModifiedByName
                 : null;
             summary.isApprovedOrApplied = APPROVED_OR_APPLIED_STATUSES.contains(record.Estatus__c);
+            Boolean isPendingProductApproval =
+                String.isBlank(record.Estado_Aprobacion_Producto__c) ||
+                record.Estado_Aprobacion_Producto__c == ESTADO_PRODUCTO_PENDIENTE;
+            summary.canApproveReservation =
+                isJefeSucursal &&
+                record.Tipo_Ingreso__c == TIPO_RESERVA &&
+                record.Estatus__c == STATUS_CONFIRMADA_TESORERIA &&
+                isPendingProductApproval;
+            summary.canRejectReservation = summary.canApproveReservation;
+            summary.canResendReservation =
+                isJefeSucursal &&
+                record.Tipo_Ingreso__c == TIPO_RESERVA &&
+                record.Estado_Aprobacion_Producto__c == ESTADO_PRODUCTO_RECHAZADA;
             anticipos.add(summary);
         }
         return anticipos;
@@ -189,6 +218,8 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         @AuraEnabled public String stageName { get; set; }
         @AuraEnabled public Id ownerId { get; set; }
         @AuraEnabled public String ownerName { get; set; }
+        @AuraEnabled public Id jefeSucursalId { get; set; }
+        @AuraEnabled public Id gerenteSucursalId { get; set; }
         @AuraEnabled public String currencyIsoCode { get; set; }
         @AuraEnabled public Decimal valorTotalOportunidad { get; set; }
         @AuraEnabled public Decimal totalAnticiposAprobados { get; set; }
@@ -230,6 +261,8 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         @AuraEnabled public String depositante { get; set; }
         @AuraEnabled public String comentariosAsesor { get; set; }
         @AuraEnabled public String comentariosAprobacionRechazo { get; set; }
+        @AuraEnabled public String comentariosDisplay { get; set; }
+        @AuraEnabled public String estadoAprobacionProducto { get; set; }
         @AuraEnabled public Id productoId { get; set; }
         @AuraEnabled public String productoName { get; set; }
         @AuraEnabled public String vin { get; set; }
@@ -241,6 +274,10 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         @AuraEnabled public String evidenceStatus { get; set; }
         @AuraEnabled public String approverName { get; set; }
         @AuraEnabled public Boolean isApprovedOrApplied { get; set; }
+        @AuraEnabled public String identificadorHelios { get; set; }
+        @AuraEnabled public Boolean canApproveReservation { get; set; }
+        @AuraEnabled public Boolean canRejectReservation { get; set; }
+        @AuraEnabled public Boolean canResendReservation { get; set; }
     }
 
     public class HistorySummary {

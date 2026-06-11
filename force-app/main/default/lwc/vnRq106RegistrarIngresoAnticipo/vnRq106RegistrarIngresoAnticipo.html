@@ -182,7 +182,7 @@
                         <div class="section-actions">
                             <lightning-button
                                 variant="brand"
-                                label="Guardar borrador"
+                                label={saveDraftLabel}
                                 onclick={handleSaveDraft}
                                 disabled={isSaveDisabled}>
                             </lightning-button>
@@ -317,8 +317,8 @@
                         <dl class="status-grid">
                             <template if:true={createdAnticipoId}>
                                 <div class="status-item">
-                                    <dt>Borrador creado</dt>
-                                    <dd>{createdAnticipoId}</dd>
+                                    <dt>{draftStatusTitle}</dt>
+                                    <dd>{draftStatusValue}</dd>
                                 </div>
                                 <template if:true={createdAnticipoStatus}>
                                     <div class="status-item">
@@ -330,7 +330,7 @@
                             <template if:false={createdAnticipoId}>
                                 <div class="status-item">
                                     <dt>Borrador creado</dt>
-                                    <dd>Pendiente</dd>
+                                    <dd>{draftStatusValue}</dd>
                                 </div>
                             </template>
                         </dl>

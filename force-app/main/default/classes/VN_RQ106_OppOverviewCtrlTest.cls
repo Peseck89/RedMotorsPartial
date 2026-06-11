@@ -113,7 +113,7 @@ private class VN_RQ106_OppOverviewCtrlTest {
         System.assertEquals(opp.Id, overview.opportunityId);
         System.assertEquals('Cliente Pantalla 1 VN-RQ106', overview.accountName);
         System.assertEquals('Prospecting', overview.stageName);
-        System.assertEquals('Pendiente de integración Softland', overview.pdfStatus);
+        System.assertEquals('PDF Softland pendiente (evidencia: columna Evidencia)', overview.pdfStatus);
         System.assertEquals('No disponible todavía', overview.retryStatus);
         System.assertEquals('Vehiculo reservado de prueba', overview.reservaStatus);
         System.assertEquals(0, overview.vehicles.size());
@@ -122,8 +122,36 @@ private class VN_RQ106_OppOverviewCtrlTest {
         System.assertEquals(0, overview.anticiposAprobados.size());
         System.assertEquals(1, overview.historial.size());
         System.assertEquals('Con evidencia', overview.solicitudes[0].evidenceStatus);
+        System.assertEquals('Aprobado por Tesorería', overview.solicitudes[0].comentariosDisplay);
         System.assertEquals(false, overview.solicitudes[0].isApprovedOrApplied);
         System.assertEquals('Aprobado por Tesorería', overview.historial[0].comentario);
+    }
+
+    @IsTest
+    static void getOverviewUsesAdvisorCommentWhenApprovalCommentIsBlank() {
+        Opportunity opp = createOpportunity();
+
+        insert new Anticipo__c(
+            Oportunidad__c = opp.Id,
+            Tipo_Ingreso__c = 'Abono',
+            Medio_Pago__c = 'Transferencia',
+            Fecha_Ingreso__c = Date.today(),
+            Referencia_Comprobante__c = 'REF-ASESOR',
+            Depositante__c = 'Cliente Pantalla 1',
+            Monto__c = 1500,
+            CurrencyIsoCode = 'USD',
+            Estatus__c = 'En validación de Tesorería',
+            Comentarios_Asesor__c = 'Comentario asesor visible'
+        );
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(1, overview.solicitudes.size());
+        System.assertEquals('Comentario asesor visible', overview.solicitudes[0].comentariosDisplay);
+        System.assertEquals('Comentario asesor visible', overview.historial[0].comentario);
     }
 
     @IsTest
@@ -251,5 +279,109 @@ private class VN_RQ106_OppOverviewCtrlTest {
         Test.stopTest();
 
         System.assertEquals(true, exceptionThrown);
+    }
+
+    @IsTest
+    static void getOverviewShowsReservationActionsOnlyForJefeSucursal() {
+        Opportunity opp = createOpportunity();
+        opp.JefeSucursal__c = UserInfo.getUserId();
+        update opp;
+
+        insert new Anticipo__c(
+            Oportunidad__c = opp.Id,
+            Tipo_Ingreso__c = 'Reserva de vehículo',
+            Medio_Pago__c = 'Transferencia',
+            Fecha_Ingreso__c = Date.today(),
+            Referencia_Comprobante__c = 'RES-ACT',
+            Depositante__c = 'Cliente',
+            Monto__c = 100,
+            CurrencyIsoCode = 'USD',
+            Estatus__c = 'Confirmada por Tesorería',
+            Estado_Aprobacion_Producto__c = 'Pendiente'
+        );
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(UserInfo.getUserId(), String.valueOf(overview.jefeSucursalId));
+        System.assertEquals(1, overview.solicitudes.size());
+        System.assertEquals(true, overview.solicitudes[0].canApproveReservation);
+        System.assertEquals(true, overview.solicitudes[0].canRejectReservation);
+        System.assertEquals(false, overview.solicitudes[0].canResendReservation);
+        System.assertEquals('Pendiente', overview.solicitudes[0].estadoAprobacionProducto);
+    }
+
+    @IsTest
+    static void getOverviewShowsResendOnlyForRejectedReservation() {
+        Opportunity opp = createOpportunity();
+        opp.JefeSucursal__c = UserInfo.getUserId();
+        update opp;
+
+        insert new Anticipo__c(
+            Oportunidad__c = opp.Id,
+            Tipo_Ingreso__c = 'Reserva de vehículo',
+            Medio_Pago__c = 'Transferencia',
+            Fecha_Ingreso__c = Date.today(),
+            Referencia_Comprobante__c = 'RES-RECH',
+            Depositante__c = 'Cliente',
+            Monto__c = 100,
+            CurrencyIsoCode = 'USD',
+            Estatus__c = 'Confirmada por Tesorería',
+            Estado_Aprobacion_Producto__c = 'Rechazada'
+        );
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(false, overview.solicitudes[0].canApproveReservation);
+        System.assertEquals(false, overview.solicitudes[0].canRejectReservation);
+        System.assertEquals(true, overview.solicitudes[0].canResendReservation);
+    }
+
+    @IsTest
+    static void getOverviewHidesReservationActionsForNonJefeAndNonReservation() {
+        Opportunity opp = createOpportunity();
+
+        insert new List<Anticipo__c>{
+            new Anticipo__c(
+                Oportunidad__c = opp.Id,
+                Tipo_Ingreso__c = 'Reserva de vehículo',
+                Medio_Pago__c = 'Transferencia',
+                Fecha_Ingreso__c = Date.today(),
+                Referencia_Comprobante__c = 'RES-NO-JEFE',
+                Depositante__c = 'Cliente',
+                Monto__c = 100,
+                CurrencyIsoCode = 'USD',
+                Estatus__c = 'Confirmada por Tesorería',
+                Estado_Aprobacion_Producto__c = 'Pendiente'
+            ),
+            new Anticipo__c(
+                Oportunidad__c = opp.Id,
+                Tipo_Ingreso__c = 'Abono',
+                Medio_Pago__c = 'Transferencia',
+                Fecha_Ingreso__c = Date.today(),
+                Referencia_Comprobante__c = 'ABO-NO-ACT',
+                Depositante__c = 'Cliente',
+                Monto__c = 200,
+                CurrencyIsoCode = 'USD',
+                Estatus__c = 'Confirmada por Tesorería',
+                Estado_Aprobacion_Producto__c = 'Pendiente'
+            )
+        };
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        for (VN_RQ106_OpportunityOverviewController.AnticipoSummary solicitud : overview.solicitudes) {
+            System.assertEquals(false, solicitud.canApproveReservation);
+            System.assertEquals(false, solicitud.canRejectReservation);
+            System.assertEquals(false, solicitud.canResendReservation);
+        }
     }
 }

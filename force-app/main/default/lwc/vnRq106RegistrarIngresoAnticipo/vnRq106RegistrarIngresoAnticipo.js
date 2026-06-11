@@ -2,6 +2,7 @@ import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getOpportunityContext from '@salesforce/apex/VN_RQ106_AnticipoController.getOpportunityContext';
 import createDraftSolicitud from '@salesforce/apex/VN_RQ106_AnticipoController.createDraftSolicitud';
+import updateDraftSolicitud from '@salesforce/apex/VN_RQ106_AnticipoController.updateDraftSolicitud';
 import sendToTreasury from '@salesforce/apex/VN_RQ106_AnticipoController.sendToTreasury';
 
 const TIPO_RESERVA = 'Reserva de vehículo';
@@ -15,6 +16,7 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
     isLoading = false;
     createdAnticipoId;
     createdAnticipoStatus;
+    hasExistingDraft = false;
     uploadedFileNames;
 
     @track form = {
@@ -136,7 +138,19 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
     }
 
     get isSaveDisabled() {
-        return this.isLoading || !!this.createdAnticipoId || this.hasNoVehiclesForReserva || !this.hasRelatedClient;
+        return this.isLoading || this.hasNoVehiclesForReserva || !this.hasRelatedClient || this.isSentToTreasury;
+    }
+
+    get saveDraftLabel() {
+        return this.createdAnticipoId ? 'Actualizar borrador' : 'Guardar borrador';
+    }
+
+    get draftStatusTitle() {
+        return this.hasExistingDraft ? 'Borrador existente' : 'Borrador creado';
+    }
+
+    get draftStatusValue() {
+        return this.createdAnticipoId || 'Pendiente';
     }
 
     get hasUploadedEvidence() {
@@ -170,6 +184,7 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
         getOpportunityContext({ opportunityId: this.recordId })
             .then((result) => {
                 this.context = result;
+                this.applyExistingDraft(result?.existingDraft);
             })
             .catch((error) => {
                 this.loadError = this.reduceError(error);
@@ -177,6 +192,30 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
             });
+    }
+
+    applyExistingDraft(draft) {
+        if (!draft?.anticipoId) {
+            return;
+        }
+
+        this.hasExistingDraft = true;
+        this.createdAnticipoId = draft.anticipoId;
+        this.createdAnticipoStatus = draft.estatus;
+        this.uploadedFileNames = draft.evidenceCount > 0
+            ? `${draft.evidenceCount} archivo(s) existente(s)`
+            : undefined;
+        this.form = {
+            ...this.form,
+            tipoIngreso: draft.tipoIngreso || '',
+            monto: draft.monto,
+            medioPago: draft.medioPago || '',
+            fechaIngreso: draft.fechaIngreso || '',
+            referenciaComprobante: draft.referenciaComprobante || '',
+            depositante: draft.depositante || '',
+            comentariosAsesor: draft.comentariosAsesor || '',
+            productoId: draft.productoId || ''
+        };
     }
 
     handleFieldChange(event) {
@@ -221,27 +260,34 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
             return;
         }
 
+        const payload = {
+            anticipoId: this.createdAnticipoId,
+            opportunityId: this.recordId,
+            monto: Number(this.form.monto),
+            tipoIngreso: this.form.tipoIngreso,
+            medioPago: this.form.medioPago,
+            fechaIngreso: this.form.fechaIngreso,
+            referenciaComprobante: this.form.referenciaComprobante,
+            depositante: this.form.depositante,
+            comentariosAsesor: this.form.comentariosAsesor,
+            productoId: this.isReservaVehiculo && this.form.productoId ? this.form.productoId : null
+        };
+        const saveAction = this.createdAnticipoId
+            ? updateDraftSolicitud({ payload })
+            : createDraftSolicitud({ payload });
+
         this.isLoading = true;
-        createDraftSolicitud({
-            payload: {
-                opportunityId: this.recordId,
-                monto: Number(this.form.monto),
-                tipoIngreso: this.form.tipoIngreso,
-                medioPago: this.form.medioPago,
-                fechaIngreso: this.form.fechaIngreso,
-                referenciaComprobante: this.form.referenciaComprobante,
-                depositante: this.form.depositante,
-                comentariosAsesor: this.form.comentariosAsesor,
-                productoId: this.isReservaVehiculo && this.form.productoId ? this.form.productoId : null
-            }
-        })
+        saveAction
             .then((result) => {
                 this.createdAnticipoId = result.anticipoId;
                 this.createdAnticipoStatus = result.estatus;
+                const wasUpdate = !!payload.anticipoId;
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Borrador creado',
-                        message: 'La solicitud de ingreso fue creada en estado Borrador.',
+                        title: wasUpdate ? 'Borrador actualizado' : 'Borrador creado',
+                        message: wasUpdate
+                            ? 'La solicitud de ingreso fue actualizada.'
+                            : 'La solicitud de ingreso fue creada en estado Borrador.',
                         variant: 'success'
                     })
                 );
@@ -312,9 +358,49 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
     }
 
     reduceError(error) {
-        if (Array.isArray(error?.body)) {
-            return error.body.map((item) => item.message).join(', ');
-        }
-        return error?.body?.message || error?.message || 'Error inesperado.';
+        const messages = [];
+        const addMessage = (message) => {
+            if (typeof message === 'string' && message.trim()) {
+                messages.push(message.trim());
+            }
+        };
+        const collectFieldErrors = (fieldErrors) => {
+            if (!fieldErrors || typeof fieldErrors !== 'object') {
+                return;
+            }
+            Object.values(fieldErrors).forEach((errors) => {
+                if (Array.isArray(errors)) {
+                    errors.forEach((item) => addMessage(item?.message));
+                } else {
+                    addMessage(errors?.message);
+                }
+            });
+        };
+        const collectErrors = (value) => {
+            if (!value) {
+                return;
+            }
+            if (Array.isArray(value)) {
+                value.forEach((item) => collectErrors(item));
+                return;
+            }
+            if (typeof value === 'string') {
+                addMessage(value);
+                return;
+            }
+            addMessage(value.message);
+            collectErrors(value.pageErrors);
+            collectFieldErrors(value.fieldErrors);
+            collectErrors(value.errors);
+            collectFieldErrors(value.output?.fieldErrors);
+            collectErrors(value.output?.errors);
+            addMessage(value.output?.message);
+        };
+
+        collectErrors(error?.body);
+        addMessage(error?.message);
+
+        const uniqueMessages = [...new Set(messages)];
+        return uniqueMessages.length ? uniqueMessages.join(', ') : 'Error inesperado.';
     }
 }
