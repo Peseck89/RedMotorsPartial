@@ -166,6 +166,20 @@ private class VN_RQ106_AnticipoControllerTest {
     }
 
     private static Id createReservationAnticipo(Id oppId, String estadoAprobacionProducto) {
+        return createReservationAnticipo(
+            oppId,
+            estadoAprobacionProducto,
+            'Confirmada por Tesorería',
+            null
+        );
+    }
+
+    private static Id createReservationAnticipo(
+        Id oppId,
+        String estadoAprobacionProducto,
+        String estatus,
+        String identificadorHelios
+    ) {
         Product2 product = createVehicleProduct();
         relateProductToOpportunity(new Opportunity(Id = oppId, CurrencyIsoCode = 'USD'), product);
 
@@ -179,7 +193,8 @@ private class VN_RQ106_AnticipoControllerTest {
             Depositante__c = 'Cliente Reserva',
             Monto__c = 2000,
             CurrencyIsoCode = 'USD',
-            Estatus__c = 'Confirmada por Tesorería',
+            Estatus__c = estatus,
+            Identificador_Helios__c = identificadorHelios,
             Estado_Aprobacion_Producto__c = estadoAprobacionProducto,
             Comentarios_Asesor__c = 'Reserva confirmada por Tesorería'
         );
@@ -1061,6 +1076,99 @@ private class VN_RQ106_AnticipoControllerTest {
     }
 
     @IsTest
+    static void approveReservationWithAnticipoCreadoAndHeliosIdSucceeds() {
+        Opportunity opp = createOpportunity();
+        opp.JefeSucursal__c = UserInfo.getUserId();
+        update opp;
+        Id anticipoId = createReservationAnticipo(
+            opp.Id,
+            'Pendiente',
+            'Anticipo creado',
+            '176316'
+        );
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.approveReservation(anticipoId, 'Aprobado producto');
+        Test.stopTest();
+
+        Anticipo__c updated = [
+            SELECT Estatus__c, Estado_Aprobacion_Producto__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+
+        System.assertEquals('Vehículo reservado', result.estatus);
+        System.assertEquals('Aprobada', result.estadoAprobacionProducto);
+        System.assertEquals('Vehículo reservado', updated.Estatus__c);
+        System.assertEquals('Aprobada', updated.Estado_Aprobacion_Producto__c);
+    }
+
+    @IsTest
+    static void rejectReservationWithAnticipoCreadoAndHeliosIdSucceeds() {
+        Opportunity opp = createOpportunity();
+        opp.JefeSucursal__c = UserInfo.getUserId();
+        update opp;
+        Id anticipoId = createReservationAnticipo(
+            opp.Id,
+            'Pendiente',
+            'Anticipo creado',
+            '176316'
+        );
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.rejectReservation(anticipoId, 'Rechazo producto');
+        Test.stopTest();
+
+        Anticipo__c updated = [
+            SELECT Estatus__c, Estado_Aprobacion_Producto__c, Comentarios_Aprobacion_Rechazo__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+
+        System.assertEquals('Anticipo creado', result.estatus);
+        System.assertEquals('Rechazada', result.estadoAprobacionProducto);
+        System.assertEquals('Anticipo creado', updated.Estatus__c);
+        System.assertEquals('Rechazada', updated.Estado_Aprobacion_Producto__c);
+        System.assertEquals('Rechazo producto', updated.Comentarios_Aprobacion_Rechazo__c);
+    }
+
+    @IsTest
+    static void approveReservationWithAnticipoCreadoWithoutHeliosIdFails() {
+        Opportunity opp = createOpportunity();
+        opp.JefeSucursal__c = UserInfo.getUserId();
+        update opp;
+        Id anticipoId = createReservationAnticipo(
+            opp.Id,
+            'Pendiente',
+            'Anticipo creado',
+            null
+        );
+
+        Boolean exceptionThrown = false;
+
+        Test.startTest();
+        try {
+            VN_RQ106_AnticipoController.approveReservation(anticipoId, null);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        Anticipo__c unchanged = [
+            SELECT Estatus__c, Estado_Aprobacion_Producto__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+
+        System.assertEquals(true, exceptionThrown,
+            'Anticipo creado sin Id Helios no debe permitir aprobación producto.');
+        System.assertEquals('Anticipo creado', unchanged.Estatus__c);
+        System.assertEquals('Pendiente', unchanged.Estado_Aprobacion_Producto__c);
+    }
+
+    @IsTest
     static void rejectReservationWithoutCommentFails() {
         Opportunity opp = createOpportunity();
         opp.JefeSucursal__c = UserInfo.getUserId();
@@ -1116,6 +1224,7 @@ private class VN_RQ106_AnticipoControllerTest {
     @IsTest
     static void reservationDecisionByNonJefeFails() {
         Opportunity opp = createOpportunity();
+        // JefeSucursal__c NOT set to current user
         Id anticipoId = createReservationAnticipo(opp.Id, 'Pendiente');
 
         Boolean exceptionThrown = false;
@@ -1134,7 +1243,38 @@ private class VN_RQ106_AnticipoControllerTest {
             WHERE Id = :anticipoId
         ];
 
-        System.assertEquals(true, exceptionThrown, 'Solo JefeSucursal__c debe decidir reservas.');
+        System.assertEquals(true, exceptionThrown,
+            'Usuario que no es JefeSucursal no debe poder decidir reservas.');
+        System.assertEquals('Confirmada por Tesorería', unchanged.Estatus__c);
+        System.assertEquals('Pendiente', unchanged.Estado_Aprobacion_Producto__c);
+    }
+
+    @IsTest
+    static void reservationDecisionByPermissionSetHolderNonJefeFails() {
+        // Regla de negocio: tener el Permission Set VN_RQ106_Anticipo
+        // NO autoriza aprobar/rechazar/reenviar si el usuario no es JefeSucursal__c.
+        Opportunity opp = createOpportunity();
+        // JefeSucursal__c NOT set to current user
+        Id anticipoId = createReservationAnticipo(opp.Id, 'Pendiente');
+
+        Boolean exceptionThrown = false;
+
+        Test.startTest();
+        try {
+            VN_RQ106_AnticipoController.approveReservation(anticipoId, null);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        Anticipo__c unchanged = [
+            SELECT Estatus__c, Estado_Aprobacion_Producto__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+
+        System.assertEquals(true, exceptionThrown,
+            'Titular del PS VN_RQ106_Anticipo sin JefeSucursal no debe poder decidir reservas.');
         System.assertEquals('Confirmada por Tesorería', unchanged.Estatus__c);
         System.assertEquals('Pendiente', unchanged.Estado_Aprobacion_Producto__c);
     }

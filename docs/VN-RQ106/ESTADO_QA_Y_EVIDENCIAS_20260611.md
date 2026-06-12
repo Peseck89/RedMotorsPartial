@@ -69,7 +69,142 @@ Documento interno de control. No usar como documento oficial sin revisión.
   - Pendientes funcionales.
   - Pendientes técnicos.
   - Criterios de aceptación.
-- Estado: pendiente de implementación y QA.
+- Estado: implementado y validado funcionalmente en Sandbox; pendiente confirmar configuración productiva final de destinatarios.
+
+## 3.1.1 Cierre de correos VN-RQ106 — Sandbox 2026-06-12
+
+Se desplegó y activó una nueva versión del Flow `VN_RQ106_Notificaciones_Anticipo` con textos corregidos según plantillas de negocio.
+
+Deploy:
+
+- Flow: `VN_RQ106_Notificaciones_Anticipo`.
+- Deploy ID: `0AfNq00000Xt7U5KAJ`.
+
+Correos validados funcionalmente:
+
+1. `Solicitud enviada a Tesorería`
+   - Incluye resumen de solicitud.
+   - Incluye cliente, asesor, tipo de ingreso, monto, medio de pago, fecha de ingreso, referencia/comprobante, depositante, vehículo/VIN, Ticket Helios y enlace Helios.
+2. `Vehículo reservado`
+   - Incluye vendedor, oportunidad, cliente, vehículo, VIN, reservado por, fecha/hora de reserva y estado `Vehículo reservado`.
+3. `Reserva rechazada`
+   - Mantiene texto aprobado.
+   - Se ajustaron negritas y formato.
+4. Reenvío de solicitud de reserva
+   - No tuvo plantilla adicional nueva.
+   - Se mantiene sin cambio de texto.
+
+Estado:
+
+- Flow actualizado y validado en Sandbox.
+- Correos corregidos según plantillas de negocio.
+- Pendiente para Producción: confirmar destinatarios/configuración productiva final antes del pase.
+
+## 3.2 Validación funcional posterior a deploy 2026-06-12
+
+Se validó en video el flujo funcional completo en Sandbox sobre la Opportunity usada para evidencia funcional.
+
+Datos observados:
+
+- Opportunity: `Opportunity QA Sandbox`.
+- Anticipo principal: `Anticipo QA Sandbox`.
+- Tipo: `Reserva de vehículo`.
+- Estado inicial validado: `Anticipo creado`.
+- Identificador Helios: `176316`.
+- Aprobación producto inicial: `Pendiente`.
+- Monto: `USD 500,00`.
+
+Validaciones confirmadas:
+
+- La tabla muestra la columna `Código de anticipo`.
+- La tabla ya no muestra la columna `Evidencia`.
+- El texto visible quedó corregido a `PDF Softland pendiente de generación`.
+- Los botones `Aprobar reserva` y `Rechazar reserva` aparecen para el anticipo principal.
+- El rechazo de reserva se ejecutó correctamente y cambió la aprobación producto a `Rechazada`.
+- El reenvío se ejecutó correctamente y devolvió la aprobación producto a `Pendiente`.
+- La aprobación de reserva se ejecutó correctamente y dejó la aprobación producto en `Aprobada`.
+- El anticipo quedó aplicado como `Vehículo reservado`.
+- El historial de aprobaciones quedó actualizado.
+- El resumen financiero quedó actualizado:
+  - Total anticipos aprobados: `USD 500,00`.
+  - Saldo pendiente: `USD 124 500,00`.
+
+Conclusión:
+
+- Se confirmó que el flujo funcional opera correctamente en Sandbox.
+- La evidencia final formal queda pendiente de consolidación.
+- No se debe subir documentación oficial todavía.
+
+Pendientes:
+
+- Confirmar destinatarios/configuración productiva final de correos.
+- Queda registrada una incidencia separada de integración Helios/Softland para un anticipo que no devuelve `Identificador_Helios__c`.
+- No subir documentación oficial todavía.
+
+## 3.3 Cierre funcional Sandbox 2026-06-12
+
+Validación funcional completa realizada el 2026-06-12 con usuarios reales en Sandbox.
+
+### Registros usados
+
+- Opportunity: `Opportunity QA Sandbox`.
+- Asesor / Owner: `Usuario QA Asesor`.
+- `JefeSucursal__c`: `Usuario QA JefeSucursal`.
+- Cliente: `Cliente QA Sandbox`.
+- Anticipo QA principal — código Helios generado — aprobado — `Vehículo reservado`.
+- Anticipo QA secundario — código Helios generado — `Confirmada por Tesorería`, aprobación pendiente.
+
+### Validaciones confirmadas
+
+UI y tabla:
+
+- Columna `Código de anticipo` muestra valor de `Identificador_Helios__c`.
+- Columna `Id Helios` eliminada (era duplicado).
+- Columna `Evidencia` ya no aparece.
+- Texto PDF muestra `PDF Softland pendiente de generación`.
+
+Flujo completo:
+
+- El equipo de integración corrigió el parámetro `@adjunto`.
+- Creación desde cero con usuario asesor: exitosa.
+- Envío a Tesorería: exitoso, Helios generó identificador externo.
+- Modal se cerró automáticamente tras envío exitoso.
+
+Autorización:
+
+- El usuario asesor, al no ser `JefeSucursal__c`, NO puede aprobar, rechazar ni reenviar.
+- El usuario configurado como `JefeSucursal__c` SÍ puede aprobar, rechazar y reenviar.
+
+Ciclo completo del anticipo QA principal:
+
+- Rechazo ejecutado correctamente → aprobación producto = `Rechazada`.
+- Reenvío ejecutado correctamente → aprobación producto = `Pendiente`.
+- Aprobación ejecutada correctamente → aprobación producto = `Aprobada`, estado = `Vehículo reservado`.
+- Historial de aprobaciones actualizado.
+- Resumen financiero actualizado correctamente.
+
+### Deploys que respaldan esta validación
+
+| Descripción | Deploy Id |
+|---|---|
+| UI + Flow B.2 | 0AfNq00000Xscq5KAB |
+| Apex: permitir `Anticipo creado` + Id Helios | 0AfNq00000Xsg5hKAB |
+| Texto PDF Softland | 0AfNq00000XshD3KAJ |
+| Corrección autorización JefeSucursal__c | 0AfNq00000XswX3KAJ |
+| Código de anticipo usando Identificador_Helios__c | 0AfNq00000XsxePKAR |
+
+### Evidencia
+
+La evidencia final del flujo completo queda pendiente de consolidación formal.
+No subir documentación oficial ni marcar QA como aprobado hasta completar revisión final.
+
+### Pendientes registrados
+
+1. Confirmar destinatarios/configuración productiva final de correos.
+2. Confirmar alcance final de PDF Softland, si aplica.
+3. No subir documentación oficial hasta completar revisión final.
+
+---
 
 ## 4. Usuario QA puede comenzar solo evidencia básica/no destructiva
 
@@ -96,30 +231,76 @@ Casos bloqueados:
 
 1. Crear nuevo anticipo real.
 2. Forzar avance del proceso externo de Tesorería.
-3. Aprobar reserva.
-4. Rechazar reserva.
-5. Reenviar solicitud.
-6. Evidencia final de flujo completo.
+3. Cambiar destinatarios/configuración final de correos sin aprobación del equipo funcional.
+4. Publicar evidencia final oficial sin revisión previa.
 7. Pruebas destructivas sobre Opportunity reservada para evidencia funcional.
 
 Motivo del bloqueo:
 
 - El envío inicial a Helios/Softland ya genera identificador externo.
-- El avance posterior de Tesorería, confirmación/rechazo y PDF Softland depende del proceso externo.
+- El flujo funcional de reserva fue validado localmente en Sandbox.
+- Las notificaciones y correos de Bloque B.2 quedaron validados en Sandbox.
+- La evidencia final formal queda pendiente de consolidación.
 
 ## 6. Pendientes para liberar QA completa a Usuario QA
 
-1. Confirmar resultado posterior del proceso externo en Helios/Softland.
-2. Confirmar cambio posterior a `Confirmada por Tesorería` o rechazo.
-3. Confirmar generación de PDF Softland.
-4. Probar aprobar/rechazar/reenvío como `JefeSucursal`.
-5. Validar notificaciones Bloque B.2.
+1. Confirmar destinatarios/configuración productiva final de correos.
+2. Consolidar evidencia final de QA.
+3. Confirmar generación de PDF Softland cuando el proceso externo avance.
+4. Documentar incidencia separada de integración Helios/Softland para anticipo que no devuelve `Identificador_Helios__c`.
+5. Ordenar evidencia final aprobada.
 6. Preparar instrucciones finales para Usuario QA.
-7. Actualizar Excel QA y documentación oficial Drive.
+7. Actualizar Excel QA y documentación oficial Drive cuando corresponda.
 
 ## 7. Estado de cierre
 
 - Producción permanece sin cambios.
-- No se debe marcar QA como aprobado.
-- No se debe marcar flujo completo como validado.
-- Evidencia básica puede avanzar solo si se mantiene dentro del alcance no destructivo.
+- No se debe marcar QA oficial como aprobado hasta contar con evidencia final y validación de correos si aplica.
+- El flujo funcional de reserva quedó validado en Sandbox.
+- No subir documentación oficial todavía.
+
+---
+
+## 8. Estado oficial del proyecto VN-RQ106 al 2026-06-12
+
+### Avances completados en Sandbox
+
+1. Registro de solicitudes de ingreso/anticipo desde la oportunidad.
+2. Adjuntar evidencia en la solicitud.
+3. Envío exitoso de solicitud a Tesorería.
+4. Generación y recepción del identificador externo de Helios/Softland.
+5. Visualización de `Código de anticipo` usando `Identificador_Helios__c`.
+6. Eliminación de columnas duplicadas/no requeridas en la tabla.
+7. Mensaje correcto para PDF Softland pendiente de generación.
+8. Cierre automático del modal posterior al envío exitoso.
+9. Control funcional de aprobación/rechazo/reenvío por usuario autorizado.
+10. Validación de que el asesor no ejecuta aprobación/rechazo/reenvío.
+11. Validación de que el usuario autorizado por producto sí ejecuta aprobación/rechazo/reenvío.
+12. Flujo de rechazo de reserva.
+13. Flujo de reenvío de solicitud de reserva.
+14. Flujo de aprobación de reserva.
+15. Actualización del estado a `Vehículo reservado`.
+16. Actualización del historial de aprobaciones.
+17. Actualización del resumen financiero.
+18. Validación de correos/notificaciones del proceso:
+    - Validación de ingreso requerida.
+    - Solicitud de aprobación de reserva.
+    - Reserva rechazada.
+    - Vehículo reservado.
+19. Flow `VN_RQ106_Notificaciones_Anticipo` actualizado y validado en Sandbox con plantillas de negocio.
+
+### Pendientes oficiales
+
+1. Consolidar evidencia final de QA.
+2. Confirmar aprobación funcional de negocio.
+3. Definir configuración final de destinatarios para Producción.
+4. Sustituir configuración de destinatarios de Sandbox por configuración final productiva antes del pase.
+5. Confirmar comportamiento final del PDF Softland generado, si aplica dentro del alcance.
+6. Preparar paquete final de documentación de entrega.
+7. Preparar plan de pase a Producción.
+8. Ejecutar validación post-deploy en Producción cuando se autorice el pase.
+
+### Estado de ambientes
+
+- Sandbox: funcionalidad completa validada.
+- Producción: sin cambios. Requiere aprobación funcional, evidencia y plan de pase antes de cualquier despliegue.

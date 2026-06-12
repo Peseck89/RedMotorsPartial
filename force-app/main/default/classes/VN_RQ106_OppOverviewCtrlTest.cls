@@ -113,7 +113,7 @@ private class VN_RQ106_OppOverviewCtrlTest {
         System.assertEquals(opp.Id, overview.opportunityId);
         System.assertEquals('Cliente Pantalla 1 VN-RQ106', overview.accountName);
         System.assertEquals('Prospecting', overview.stageName);
-        System.assertEquals('PDF Softland pendiente (evidencia: columna Evidencia)', overview.pdfStatus);
+        System.assertEquals('PDF Softland pendiente de generación', overview.pdfStatus);
         System.assertEquals('No disponible todavía', overview.retryStatus);
         System.assertEquals('Vehiculo reservado de prueba', overview.reservaStatus);
         System.assertEquals(0, overview.vehicles.size());
@@ -345,6 +345,7 @@ private class VN_RQ106_OppOverviewCtrlTest {
     @IsTest
     static void getOverviewHidesReservationActionsForNonJefeAndNonReservation() {
         Opportunity opp = createOpportunity();
+        // JefeSucursal__c not set to current user; PS override explicitly false
 
         insert new List<Anticipo__c>{
             new Anticipo__c(
@@ -383,5 +384,101 @@ private class VN_RQ106_OppOverviewCtrlTest {
             System.assertEquals(false, solicitud.canRejectReservation);
             System.assertEquals(false, solicitud.canResendReservation);
         }
+    }
+
+    @IsTest
+    static void getOverviewHidesReservationActionsForPermissionSetUserNonJefe() {
+        // Regla de negocio: PS VN_RQ106_Anticipo NO otorga acceso funcional a aprobar/rechazar.
+        // Solo JefeSucursal__c puede ver y usar esas acciones.
+        Opportunity opp = createOpportunity();
+        // JefeSucursal__c NOT set to current user
+        insert new Anticipo__c(
+            Oportunidad__c = opp.Id,
+            Tipo_Ingreso__c = 'Reserva de vehículo',
+            Medio_Pago__c = 'Transferencia',
+            Fecha_Ingreso__c = Date.today(),
+            Referencia_Comprobante__c = 'RES-PS-NO-JEFE',
+            Depositante__c = 'Cliente PS',
+            Monto__c = 100,
+            CurrencyIsoCode = 'USD',
+            Estatus__c = 'Confirmada por Tesorería',
+            Estado_Aprobacion_Producto__c = 'Pendiente'
+        );
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(1, overview.solicitudes.size());
+        System.assertEquals(false, overview.solicitudes[0].canApproveReservation,
+            'Usuario con PS pero sin JefeSucursal NO debe poder aprobar reserva.');
+        System.assertEquals(false, overview.solicitudes[0].canRejectReservation,
+            'Usuario con PS pero sin JefeSucursal NO debe poder rechazar reserva.');
+        System.assertEquals(false, overview.solicitudes[0].canResendReservation);
+    }
+
+    @IsTest
+    static void getOverviewShowsReservationActionsForAnticipoCreadoWithHeliosId() {
+        Opportunity opp = createOpportunity();
+        opp.JefeSucursal__c = UserInfo.getUserId();
+        update opp;
+        insert new Anticipo__c(
+            Oportunidad__c = opp.Id,
+            Tipo_Ingreso__c = 'Reserva de vehículo',
+            Medio_Pago__c = 'Transferencia',
+            Fecha_Ingreso__c = Date.today(),
+            Referencia_Comprobante__c = 'RES-HELIOS',
+            Depositante__c = 'Cliente Helios',
+            Monto__c = 100,
+            CurrencyIsoCode = 'USD',
+            Estatus__c = 'Anticipo creado',
+            Identificador_Helios__c = '176316',
+            Estado_Aprobacion_Producto__c = 'Pendiente'
+        );
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(1, overview.solicitudes.size());
+        System.assertEquals(true, overview.solicitudes[0].canApproveReservation,
+            'Anticipo creado con Id Helios debe permitir aprobar reserva.');
+        System.assertEquals(true, overview.solicitudes[0].canRejectReservation,
+            'Anticipo creado con Id Helios debe permitir rechazar reserva.');
+        System.assertEquals(false, overview.solicitudes[0].canResendReservation);
+    }
+
+    @IsTest
+    static void getOverviewHidesReservationActionsForAnticipoCreadoWithoutHeliosId() {
+        Opportunity opp = createOpportunity();
+        opp.JefeSucursal__c = UserInfo.getUserId();
+        update opp;
+        insert new Anticipo__c(
+            Oportunidad__c = opp.Id,
+            Tipo_Ingreso__c = 'Reserva de vehículo',
+            Medio_Pago__c = 'Transferencia',
+            Fecha_Ingreso__c = Date.today(),
+            Referencia_Comprobante__c = 'RES-HELIOS-NO-ID',
+            Depositante__c = 'Cliente Helios',
+            Monto__c = 100,
+            CurrencyIsoCode = 'USD',
+            Estatus__c = 'Anticipo creado',
+            Identificador_Helios__c = null,
+            Estado_Aprobacion_Producto__c = 'Pendiente'
+        );
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(1, overview.solicitudes.size());
+        System.assertEquals(false, overview.solicitudes[0].canApproveReservation,
+            'Anticipo creado sin Id Helios NO debe permitir aprobar reserva.');
+        System.assertEquals(false, overview.solicitudes[0].canRejectReservation,
+            'Anticipo creado sin Id Helios NO debe permitir rechazar reserva.');
+        System.assertEquals(false, overview.solicitudes[0].canResendReservation);
     }
 }

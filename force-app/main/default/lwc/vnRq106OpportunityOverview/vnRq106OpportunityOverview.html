@@ -84,11 +84,10 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">Solicitud</th>
+                                                <th scope="col">Código de anticipo</th>
                                                 <th scope="col">Estado</th>
                                                 <th scope="col">Monto</th>
                                                 <th scope="col">Aprobacion producto</th>
-                                                <th scope="col">Evidencia</th>
-                                                <th scope="col">Id Helios</th>
                                                 <th scope="col">Comentarios</th>
                                                 <th scope="col">Acciones</th>
                                             </tr>
@@ -100,6 +99,7 @@
                                                         <a href={item.url}>{item.name}</a>
                                                         <span class="subtext">{item.tipoIngreso}</span>
                                                     </td>
+                                                    <td>{item.identificadorHelios}</td>
                                                     <td>{item.estatus}</td>
                                                     <td>
                                                         <lightning-formatted-number
@@ -109,8 +109,6 @@
                                                         </lightning-formatted-number>
                                                     </td>
                                                     <td>{item.estadoAprobacionProducto}</td>
-                                                    <td>{item.evidenceStatus}</td>
-                                                    <td>{item.identificadorHelios}</td>
                                                     <td>{item.comentariosDisplay}</td>
                                                     <td>
                                                         <template lwc:if={item.hasReservationActions}>

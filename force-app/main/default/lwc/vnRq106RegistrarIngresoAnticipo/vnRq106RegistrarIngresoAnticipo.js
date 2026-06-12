@@ -1,5 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { CloseActionScreenEvent } from 'lightning/actions';
 import getOpportunityContext from '@salesforce/apex/VN_RQ106_AnticipoController.getOpportunityContext';
 import createDraftSolicitud from '@salesforce/apex/VN_RQ106_AnticipoController.createDraftSolicitud';
 import updateDraftSolicitud from '@salesforce/apex/VN_RQ106_AnticipoController.updateDraftSolicitud';
@@ -342,6 +343,7 @@ export default class VnRq106RegistrarIngresoAnticipo extends LightningElement {
                         variant: 'success'
                     })
                 );
+                this.dispatchEvent(new CloseActionScreenEvent());
             })
             .catch((error) => {
                 this.dispatchEvent(

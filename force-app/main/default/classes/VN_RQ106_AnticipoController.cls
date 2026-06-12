@@ -2,6 +2,7 @@ public with sharing class VN_RQ106_AnticipoController {
     private static final String STATUS_BORRADOR = 'Borrador';
     private static final String STATUS_EN_VALIDACION_TESORERIA = 'En validación de Tesorería';
     private static final String STATUS_CONFIRMADA_TESORERIA = 'Confirmada por Tesorería';
+    private static final String STATUS_ANTICIPO_CREADO = 'Anticipo creado';
     private static final String STATUS_VEHICULO_RESERVADO = 'Vehículo reservado';
     private static final String ESTADO_PRODUCTO_PENDIENTE = 'Pendiente';
     private static final String ESTADO_PRODUCTO_APROBADA = 'Aprobada';
@@ -260,13 +261,21 @@ public with sharing class VN_RQ106_AnticipoController {
         return buildResult(solicitud);
     }
 
+    @TestVisible
+    private static Boolean canManageReservationApproval(Id jefeSucursalId) {
+        if (jefeSucursalId == null) {
+            return false;
+        }
+        return String.valueOf(jefeSucursalId) == UserInfo.getUserId();
+    }
+
     private static Anticipo__c getReservationForProductApproval(Id anticipoId) {
         if (anticipoId == null) {
             throw new AuraHandledException('La solicitud es requerida.');
         }
 
         List<Anticipo__c> solicitudes = [
-            SELECT Id, Estatus__c, Tipo_Ingreso__c, Comentarios_Aprobacion_Rechazo__c,
+            SELECT Id, Estatus__c, Identificador_Helios__c, Tipo_Ingreso__c, Comentarios_Aprobacion_Rechazo__c,
                 Estado_Aprobacion_Producto__c, Oportunidad__c,
                 Oportunidad__r.JefeSucursal__c
             FROM Anticipo__c
@@ -284,19 +293,20 @@ public with sharing class VN_RQ106_AnticipoController {
         if (solicitud.Tipo_Ingreso__c != TIPO_RESERVA) {
             throw new AuraHandledException('La solicitud no corresponde a una reserva de vehículo.');
         }
-        if (
-            solicitud.Oportunidad__r == null ||
-            solicitud.Oportunidad__r.JefeSucursal__c == null ||
-            String.valueOf(solicitud.Oportunidad__r.JefeSucursal__c) != UserInfo.getUserId()
-        ) {
+        Id jefeSucursalId = solicitud.Oportunidad__r == null
+            ? null
+            : solicitud.Oportunidad__r.JefeSucursal__c;
+        if (!canManageReservationApproval(jefeSucursalId)) {
             throw new AuraHandledException('El usuario actual no está autorizado para decidir esta reserva.');
         }
         return solicitud;
     }
 
     private static void validatePendingProductApproval(Anticipo__c solicitud) {
-        if (solicitud.Estatus__c != STATUS_CONFIRMADA_TESORERIA) {
-            throw new AuraHandledException('La reserva debe estar confirmada por Tesorería.');
+        if (!isReadyForProductApproval(solicitud)) {
+            throw new AuraHandledException(
+                'La reserva debe estar confirmada por Tesorería o tener anticipo creado con integración Helios.'
+            );
         }
         if (
             !String.isBlank(solicitud.Estado_Aprobacion_Producto__c) &&
@@ -304,6 +314,18 @@ public with sharing class VN_RQ106_AnticipoController {
         ) {
             throw new AuraHandledException('La reserva ya tiene una decisión de aprobación producto.');
         }
+    }
+
+    @TestVisible
+    private static Boolean isReadyForProductApproval(Anticipo__c solicitud) {
+        if (solicitud == null) {
+            return false;
+        }
+        if (solicitud.Estatus__c == STATUS_CONFIRMADA_TESORERIA) {
+            return true;
+        }
+        return solicitud.Estatus__c == STATUS_ANTICIPO_CREADO &&
+            !String.isBlank(solicitud.Identificador_Helios__c);
     }
 
     private static DraftSolicitudResult buildResult(Anticipo__c solicitud) {

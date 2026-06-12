@@ -1,235 +1,178 @@
-# RedMotors VN-RQ106 - Entrega Técnica Salesforce
+# Entrega Tecnica Oficial - VN-RQ106 Ingresos y Anticipos
 
-Documento local de preparación para entrega técnica. La información marcada como pendiente no debe considerarse aprobada hasta completar validación funcional y QA.
+Documento oficial local de entrega tecnica y funcional para el requerimiento VN-RQ106. La informacion corresponde a validaciones realizadas en RedMotors Sandbox Partial. Produccion no ha sido modificada.
 
-## 1. Información general
+## 1. Objetivo
 
-- Proyecto: RedMotors VN-RQ106.
-- Ambiente trabajado: RedMotors Sandbox Partial.
-- Alias de trabajo: `RedMotorsSandbox`.
-- Producción: sin cambios.
-- Estado QA: parcial, no aprobado.
-- Estado de integración Tesorería/Helios/Softland: bloqueado por respuesta backend pendiente de revisión.
+VN-RQ106 tiene como objetivo habilitar la gestion de solicitudes de ingreso y anticipo desde Opportunity, incorporando captura de datos de pago, evidencia, envio a Tesoreria, integracion con Helios/Softland, control de reserva de vehiculo y notificaciones del proceso.
 
-## 2. Resumen funcional
+El desarrollo permite centralizar desde la oportunidad el registro, seguimiento y decision funcional de reservas asociadas a anticipos, manteniendo trazabilidad del identificador externo generado por Helios/Softland y del estado de aprobacion de producto.
 
-VN-RQ106 permite gestionar ingresos, anticipos y reservas de vehículo desde Opportunity.
+## 2. Alcance implementado
 
-El alcance funcional incluye:
+El alcance implementado en Sandbox incluye:
 
-- Creación y consulta de solicitudes de ingreso/anticipo.
-- Registro de reserva de vehículo.
+- Registro de solicitud de ingreso/anticipo desde Opportunity.
+- Captura de datos de pago.
 - Adjuntar evidencia de pago.
-- Validaciones previas al envío a Tesorería.
-- Envío de solicitud a Tesorería/Helios/Softland.
-- Aprobación y rechazo de reserva por usuario responsable.
-- Reenvío de solicitud de reserva.
-- Consulta de estado y evidencia desde Opportunity.
+- Guardado y actualizacion de borradores.
+- Retoma de borradores existentes desde el formulario.
+- Envio de solicitud a Tesoreria.
+- Recepcion de identificador Helios/Softland.
+- Visualizacion de Codigo de anticipo.
+- Visualizacion de estado PDF Softland como pendiente de generacion cuando no existe PDF disponible.
+- Control de aprobacion, rechazo y reenvio de reserva.
+- Actualizacion de estado del anticipo a `Vehiculo reservado` al aprobar la reserva.
+- Historial de aprobaciones.
+- Resumen financiero asociado a anticipos.
+- Correos y notificaciones del proceso.
 
-## 3. Componentes modificados o creados
+## 3. Componentes Salesforce involucrados
 
-| Tipo | Nombre API / Técnico | Acción | Descripción del cambio | Estado |
-|---|---|---|---|---|
-| Apex | `VN_RQ106_AnticipoController` | Modificado | Controla creación/actualización de borradores, envío a Tesorería, validaciones, aprobación/rechazo/reenvío de reserva y armado del payload de integración. | Desplegado parcialmente en Sandbox. |
-| Apex | `VN_RQ106_OpportunityOverviewController` | Modificado | Expone datos del overview y flags de visibilidad para acciones de reserva según usuario responsable y estado. | Desplegado parcialmente en Sandbox. |
-| Apex | `SolicitudAprobacionTesoreria` | Modificado | Clase de integración con Tesorería/Helios/Softland. Se agregó `cliente` al payload conservando `codigoSoftland`. | Desplegado en Sandbox. |
-| Apex Test | `VN_RQ106_AnticipoControllerTest` | Modificado | Cubre creación, actualización, envío a Tesorería, payload `cliente`, aprobación, rechazo, reenvío y casos negativos. | Ejecutado en Sandbox. |
-| Apex Test | `VN_RQ106_OppOverviewCtrlTest` | Modificado | Cubre flags y consulta de overview para Opportunity. | Pendiente de validación final con Bloque B completo. |
-| Lightning Web Component | `vnRq106OpportunityOverview` | Modificado | Overview reutilizable en modal, tabla de solicitudes, acciones de aprobación/rechazo/reenvío y visibilidad según flags. | Desplegado parcialmente en Sandbox. |
-| Lightning Web Component | `vnRq106RegistrarIngresoAnticipo` | Modificado | Permite retomar borradores existentes, actualizar borrador, adjuntar evidencia y enviar a Tesorería cuando cumple validaciones. | Desplegado en Sandbox. |
-| Lightning Web Component | `vnRq106SolicitudesAnticipos` | Nuevo | Contenedor modal para acceder a solicitudes de anticipos desde Opportunity. | Desplegado en Sandbox. |
-| Quick Action | `Opportunity.VN_RQ106_Solicitudes_Anticipos` | Nuevo | Botón `Solicitudes anticipos` en Opportunity. | Desplegado en Sandbox. |
-| Flexipage | `Opportunity_Record_Page_VN` | Modificada | Agrega acción `Solicitudes anticipos` y retira overview embebido de la vista principal. | Desplegado en Sandbox. |
-| Flexipage | `Opportunity_Record_Page_VU` | Modificada | Agrega acción `Solicitudes anticipos` y retira overview embebido de la vista principal. | Desplegado en Sandbox. |
-| Permission Set | `VN_RQ106_Anticipo` | Modificado | Permisos y FLS requeridos para VN-RQ106, incluyendo campo de aprobación de producto. | Configurado y validado parcialmente en Sandbox. |
-| Campo | `Anticipo__c.Estado_Aprobacion_Producto__c` | Nuevo | Picklist para controlar aprobación funcional de producto/reserva. | Desplegado parcialmente en Sandbox. |
-| Flow | `VN_RQ106_Notificaciones_Anticipo` | Pendiente | Notificaciones relacionadas con aprobación/rechazo/reenvío. | Pendiente de validación y cierre. |
+### Apex classes
 
-## 4. Objetos y campos involucrados
+| Componente | Uso |
+|---|---|
+| `VN_RQ106_AnticipoController` | Controla creacion, actualizacion, envio a Tesoreria, validaciones, aprobacion, rechazo y reenvio de reservas. |
+| `VN_RQ106_OpportunityOverviewController` | Entrega datos del resumen de Opportunity y flags de visibilidad para acciones de reserva. |
+| `VN_RQ106_AnticipoControllerTest` | Pruebas unitarias del controlador de solicitudes/anticipos. |
+| `VN_RQ106_OppOverviewCtrlTest` | Pruebas unitarias del controlador de overview. |
 
-| Objeto | Campo | Uso | Estado |
-|---|---|---|---|
-| `Opportunity` | `OwnerId` | Propietario de la oportunidad; destinatario funcional de notificaciones. | Existente. |
-| `Opportunity` | `JefeSucursal__c` | Usuario responsable de aprobar/rechazar reserva. | Existente y confirmado. |
-| `Opportunity` | `GerenteSucursal__c` | Destinatario funcional de notificaciones. | Existente y confirmado. |
-| `Opportunity` | `DirectorVentas__c` | Campo de responsable disponible en Opportunity. | Existente y confirmado. |
-| `Opportunity` | `empresaQueFactura__c` | Empresa requerida para preparar envío a Tesorería. | Existente; validado en QA con valor `Bavarian`. |
-| `Opportunity` | `Cuenta_de_Facturaci_n__c` | Cuenta de facturación asociada a la oportunidad. | Existente; valor Softland validado en QA. |
-| `Account` | `codigoSoftland__c` | Código de cliente usado para `codigoSoftland` y `cliente` en payload. | Existente; validado en QA con el código Softland del cliente. |
-| `Anticipo__c` | `Tipo_Ingreso__c` | Distingue reserva de vehículo y otros ingresos. | Existente. |
-| `Anticipo__c` | `Estatus__c` | Estado operativo del anticipo. | Existente. |
-| `Anticipo__c` | `Estado_Aprobacion_Producto__c` | Estado funcional de aprobación de reserva/producto. | Nuevo. |
-| `Anticipo__c` | `Comentarios_Aprobacion_Rechazo__c` | Comentario obligatorio en rechazo. | Existente. |
-| `Anticipo__c` | `Comentarios_Asesor__c` | Comentarios del asesor en la solicitud. | Existente. |
-| `Anticipo__c` | `Producto__c` | Vehículo/producto asociado a la reserva. | Existente. |
-| `Anticipo__c` | `Identificador_Helios__c` | Identificador devuelto por Helios/Softland. | Existente; pendiente de confirmación en QA final. |
-| `Product2` | Campos de vehículo/VIN/reserva | Determinan vehículos disponibles para reserva. | Existente. |
+### Lightning Web Components
 
-## 5. Cambios funcionales implementados
+| Componente | Uso |
+|---|---|
+| `vnRq106OpportunityOverview` | Muestra resumen de ingresos/anticipos, tabla de solicitudes, Codigo de anticipo, estado de aprobacion producto y acciones de reserva. |
+| `vnRq106RegistrarIngresoAnticipo` | Formulario para registrar, actualizar, adjuntar evidencia y enviar solicitudes a Tesoreria. |
+| `vnRq106SolicitudesAnticipos` | Contenedor modal asociado a la accion de Opportunity. |
 
-- Botón/modal `Solicitudes anticipos` en Opportunity.
-- Reutilización de overview dentro del modal.
-- Retiro del overview embebido de la vista principal.
-- Consulta de solicitudes/anticipos desde Opportunity.
-- Creación de borrador de anticipo/reserva.
-- Retomar borradores existentes desde el formulario.
-- Botón dinámico `Actualizar borrador` cuando ya existe borrador.
-- Adjuntar evidencia al anticipo.
-- Validaciones previas al envío a Tesorería:
-  - Campos obligatorios completos.
-  - Evidencia presente.
-  - Oportunidad activa.
-  - Cliente relacionado.
-  - Monto mayor a cero.
-  - Preparado para Tesorería.
-- Campo de aprobación producto para separar decisión funcional de reserva del `Estatus__c`.
-- Acciones de aprobar, rechazar y reenviar reserva.
-- Rechazo de reserva sin cambiar `Anticipo__c.Estatus__c`.
-- Reenvío de reserva reinicia estado de aprobación producto.
-- Payload de Tesorería ahora incluye `cliente` y conserva `codigoSoftland`.
+### Flow
 
-## 6. Permisos y accesos
+| Componente | Uso |
+|---|---|
+| `VN_RQ106_Notificaciones_Anticipo` | Gestiona correos/notificaciones del proceso de ingreso, Tesoreria y reserva. |
 
-- Permission Set involucrado: `VN_RQ106_Anticipo`.
-- Se validaron 28 asignaciones activas en Sandbox.
-- Perfiles QA cubiertos:
-  - Asesor de Ventas BMW y Nuevos V2.
-  - Asesor de Ventas Kawa - Polaris y Nuevos V2.
-  - Asesor de Ventas Motorrad-Kawa-Polaris y Nuevos V2.
-  - Asesor Ventas Autos Usados.
-  - Asesor Ventas Motos Usados v2.
-- FLS relevante:
-  - Lectura/edición de campos requeridos en `Anticipo__c`.
-  - Acceso al nuevo campo `Estado_Aprobacion_Producto__c`.
-  - Lectura de responsables de Opportunity requeridos para visibilidad y validaciones.
+### Objeto y campos principales
 
-Pendiente de validación final:
+| Objeto / Campo | Uso |
+|---|---|
+| `Anticipo__c` | Objeto principal de solicitudes de ingreso, anticipo y reserva. |
+| `Anticipo__c.Estado_Aprobacion_Producto__c` | Estado funcional de aprobacion de producto/reserva: pendiente, aprobada o rechazada. |
+| `Anticipo__c.Identificador_Helios__c` | Identificador externo devuelto por Helios/Softland. |
+| `Anticipo__c.Estatus__c` | Estado operativo del anticipo dentro del proceso. |
+| `Anticipo__c.Comentarios_Aprobacion_Rechazo__c` | Comentario asociado al rechazo de reserva. |
+| `Opportunity.JefeSucursal__c` | Usuario autorizado para aprobar, rechazar o reenviar reserva. |
+| `Opportunity.GerenteSucursal__c` | Responsable usado en logica de notificaciones. |
+| `Opportunity.OwnerId` | Asesor/propietario de la oportunidad. |
 
-- Validación no-admin completa con evidencia.
-- Confirmación de comportamiento por usuario autorizado y no autorizado en UI.
+### Quick Action
 
-## 7. Integración Tesorería / Helios / Softland
+| Componente | Uso |
+|---|---|
+| `Opportunity.VN_RQ106_Solicitudes_Anticipos` | Accion `Solicitudes anticipos` disponible desde Opportunity. |
 
-La integración de envío a Tesorería usa `SolicitudAprobacionTesoreria` para preparar y enviar la solicitud a Helios/Softland.
+## 4. Reglas funcionales implementadas
 
-Campos relevantes confirmados en QA:
+- El asesor puede crear solicitud, guardar borrador, adjuntar evidencia y enviar a Tesoreria.
+- El asesor no puede aprobar, rechazar ni reenviar reserva si no corresponde al usuario configurado como responsable funcional.
+- La aprobacion, rechazo y reenvio de reserva quedan restringidos al usuario configurado en `Opportunity.JefeSucursal__c`.
+- Una solicitud de tipo `Reserva de vehiculo` con estado `Confirmada por Tesoreria` puede pasar a decision de producto.
+- Una solicitud de tipo `Reserva de vehiculo` con estado `Anticipo creado` tambien puede pasar a decision de producto si tiene `Identificador_Helios__c` informado.
+- Para aprobacion/rechazo se requiere que `Estado_Aprobacion_Producto__c` este pendiente.
+- Al aprobar la reserva:
+  - `Estado_Aprobacion_Producto__c` queda en `Aprobada`.
+  - `Estatus__c` queda en `Vehiculo reservado`.
+- Al rechazar la reserva:
+  - `Estado_Aprobacion_Producto__c` queda en `Rechazada`.
+  - Se registra comentario de rechazo.
+- Al reenviar la solicitud:
+  - `Estado_Aprobacion_Producto__c` vuelve a `Pendiente`.
+- El Codigo de anticipo mostrado corresponde al identificador Helios/Softland almacenado en `Identificador_Helios__c`.
 
-- `codigoSoftland = código Softland del cliente`.
-- `cliente = código Softland del cliente`.
-- Empresa que factura: `Bavarian`.
-- Anticipo QA: `Anticipo QA Sandbox`.
+## 5. Integracion Helios/Softland
 
-Estado actual:
+El proceso de envio a Tesoreria integra Salesforce con Helios/Softland para registrar la solicitud de anticipo y recibir un identificador externo.
 
-- Salesforce ya arma y envía el payload con `cliente`.
-- Helios/Softland sigue respondiendo:
-  - `SP_SF_CREAR_SOLICITUD_ANTICIPO expects parameter '@cliente', which was not supplied.`
-- El anticipo permanece en `Borrador` porque Helios/Softland no confirma la integración.
+Comportamiento validado:
 
-Conclusión:
+- Salesforce envia la solicitud a Tesoreria/Helios/Softland.
+- Helios/Softland responde con un identificador externo cuando confirma la integracion.
+- Salesforce almacena el identificador externo en `Anticipo__c.Identificador_Helios__c`.
+- El identificador se muestra en pantalla como Codigo de anticipo.
+- El enlace de consulta Helios se construye a partir del identificador externo.
+- Cuando no existe PDF Softland generado, la pantalla muestra el estado como `PDF Softland pendiente de generacion`.
 
-- El bloqueo actual no corresponde a dato faltante confirmado en Salesforce ni a mapeo básico Apex.
-- Queda pendiente revisión de integración Helios/Softland/API/backend por el equipo de integración o responsable técnico correspondiente.
+El alcance actual no modifica la generacion externa del PDF Softland. La visualizacion del PDF queda sujeta a que el proceso externo lo genere y disponibilice.
 
-## 8. Deploys Sandbox relevantes
+## 6. Correos/notificaciones
 
-| Fecha | Ambiente | Alcance | Resultado | Id | Tests |
-|---|---|---|---|---|---|
-| 2026-06-10 | RedMotors Sandbox Partial | Bloque A: validación técnica de modal, Quick Action, LWC overview y Flexipages VN/VU | Exitoso | `0AfNq00000Xp6pxKAB` | No aplica por cambio UI/metadata declarativa. |
-| 2026-06-10 | RedMotors Sandbox Partial | Bloque A: despliegue botón/modal `Solicitudes anticipos` | Exitoso | `0AfNq00000Xp7UHKAZ` | No aplica por cambio UI/metadata declarativa. |
-| 2026-06-10 | RedMotors Sandbox Partial | Bloque B parcial: campo nuevo, permission set, Apex, LWC overview y tests relacionados, excluyendo Flow | Exitoso | `0AfNq00000XpoJ7KAJ` | `VN_RQ106_AnticipoControllerTest`, `VN_RQ106_OppOverviewCtrlTest`. |
-| 2026-06-10 | RedMotors Sandbox Partial | Mejora diagnóstico de errores en guardado de borrador | Exitoso | Pendiente de referencia en cierre documental | `VN_RQ106_AnticipoControllerTest`. |
-| 2026-06-10 | RedMotors Sandbox Partial | LWC retomar borrador existente `vnRq106RegistrarIngresoAnticipo` | Exitoso | `0AfNq00000Xpu8SKAR` | `NoTestRun`. |
-| 2026-06-11 | RedMotors Sandbox Partial | Fix `cliente` para Tesorería: `SolicitudAprobacionTesoreria`, `VN_RQ106_AnticipoController`, `VN_RQ106_AnticipoControllerTest` | Exitoso | `0AfNq00000XqkyDKAR` | `35/35` exitosos. |
+El Flow `VN_RQ106_Notificaciones_Anticipo` fue actualizado para homologar los textos con las plantillas de negocio.
 
-Producción no fue modificada en ninguno de los despliegues indicados.
+Correos validados:
 
-## 9. Estado QA actual
+- Validacion de ingreso requerida / solicitud enviada a Tesoreria.
+- Solicitud de aprobacion de reserva.
+- Reserva rechazada.
+- Vehiculo reservado.
 
-Opportunity QA:
+Las plantillas incluyen informacion funcional del proceso, como datos de solicitud, cliente, asesor, tipo de ingreso, monto, medio de pago, fecha, referencia, depositante, vehiculo/VIN, Ticket Helios y enlaces correspondientes cuando aplican.
 
-- Id: Opportunity QA Sandbox.
-- Nombre: `Opportunity QA Sandbox`.
+Los destinatarios y configuracion productiva final deben confirmarse antes del pase a Produccion.
 
-Anticipo QA:
+## 7. Validaciones realizadas en Sandbox
 
-- Id: Anticipo QA Sandbox.
-- Nombre: `Anticipo QA Sandbox`.
-- `Estatus__c = Borrador`.
-- `Estado_Aprobacion_Producto__c = Pendiente`.
-- `Identificador_Helios__c = vacío`.
+Validaciones funcionales realizadas en RedMotors Sandbox Partial:
 
-Validaciones realizadas:
+| Validacion | Resultado |
+|---|---|
+| Creacion de solicitud desde Opportunity | Validado |
+| Guardado de borrador | Validado |
+| Retoma y actualizacion de borrador existente | Validado |
+| Adjuntar evidencia | Validado |
+| Envio a Tesoreria | Validado |
+| Recepcion de identificador Helios/Softland | Validado |
+| Visualizacion de Codigo de anticipo | Validado |
+| Ocultamiento de columna Evidencia en tabla principal | Validado |
+| Texto `PDF Softland pendiente de generacion` | Validado |
+| Visualizacion de acciones Aprobar/Rechazar para usuario autorizado | Validado |
+| Rechazo de reserva | Validado |
+| Reenvio de reserva | Validado |
+| Aprobacion de reserva | Validado |
+| Cambio de estado a `Vehiculo reservado` | Validado |
+| Historial de aprobaciones | Validado |
+| Resumen financiero | Validado |
+| Correos/notificaciones | Validado en Sandbox |
 
-| Validación | Resultado | Observación |
+## 8. Deploys relevantes en Sandbox
+
+Los siguientes despliegues corresponden a validaciones realizadas en Sandbox y no representan un plan de pase a Produccion:
+
+| Deploy Id | Alcance | Observacion |
 |---|---|---|
-| Borrador creado | OK | Creado desde UI. |
-| Retomar borrador | OK | El formulario carga el borrador existente. |
-| Botón `Actualizar borrador` | OK | Se muestra cuando existe borrador. |
-| Adjuntar evidencia | OK | Evidencia cargada correctamente. |
-| Empresa que Factura | OK | `empresaQueFactura__c = Bavarian`. |
-| Código Softland | OK | Código Softland del cliente validado en Sandbox. |
-| JSON con `cliente` | OK | Salesforce envía `cliente` con el código Softland del cliente. |
-| Envío Helios/Softland | Bloqueado | Backend responde error sobre `@cliente`. |
-| QA completa | Pendiente | No marcar como aprobado. |
+| `0AfNq00000Xscq5KAB` | UI + Flow B.2 | Ajustes de interfaz y notificaciones para validacion Sandbox. |
+| `0AfNq00000Xsg5hKAB` | Regla `Anticipo creado` + Id Helios | Permite decision de producto cuando existe anticipo creado con identificador Helios. |
+| `0AfNq00000XshD3KAJ` | Texto PDF Softland | Actualiza texto visible a `PDF Softland pendiente de generacion`. |
+| `0AfNq00000XswX3KAJ` | Autorizacion JefeSucursal | Restringe aprobacion/rechazo/reenvio al usuario configurado como `JefeSucursal__c`. |
+| `0AfNq00000XsxePKAR` | Codigo de anticipo | Muestra Codigo de anticipo usando `Identificador_Helios__c`. |
+| `0AfNq00000XsoT4KAJ` | Flow correos QA Sandbox | Validacion inicial de correos en Sandbox. |
+| `0AfNq00000Xt7U5KAJ` | Homologacion final de plantillas de correo | Plantillas de correo ajustadas y validadas en Sandbox. |
 
-## 10. Riesgos y limitaciones
+Produccion permanece sin cambios.
 
-- QA formal no está completa.
-- Producción permanece sin cambios y no debe tocarse hasta cierre QA y aprobación funcional.
-- Helios/Softland bloquea el avance del flujo completo.
-- Mientras Tesorería no confirme el envío, no se puede validar transición a `Confirmada por Tesorería`.
-- Aprobación, rechazo y reenvío requieren que el anticipo llegue al estado previo esperado.
-- Flow de notificaciones sigue pendiente de validación final.
-- Textos finales de correos de rechazo y reenvío siguen pendientes de confirmación.
-- Evidencias oficiales y Excel QA siguen pendientes.
+## 9. Pendientes antes de Produccion
 
-## 11. Usuario QA / evidencias
+Antes de preparar el pase productivo deben completarse o confirmarse los siguientes puntos:
 
-Usuario QA puede comenzar solo evidencia básica/no destructiva:
+1. Confirmar destinatarios y configuracion final productiva de correos.
+2. Sustituir configuracion temporal de Sandbox por configuracion final productiva, si aplica.
+3. Consolidar evidencia final de QA.
+4. Confirmar visto bueno funcional de negocio.
+5. Confirmar alcance final de PDF Softland, si aplica.
+6. Preparar plan de pase a Produccion.
+7. Ejecutar validacion post-deploy en Produccion.
 
-1. Abrir la Opportunity de prueba indicada por el equipo funcional.
-2. Mostrar botón `Solicitudes anticipos`.
-3. Abrir modal.
-4. Validar que carga overview.
-5. Validar que la tabla de solicitudes se muestra.
-6. Validar que no hay error visual en el modal.
+## 10. Conclusion
 
-Usuario QA no debe ejecutar todavía:
+El desarrollo principal de VN-RQ106 quedo implementado y validado en RedMotors Sandbox Partial para el flujo de ingresos, anticipos, envio a Tesoreria, integracion con identificador Helios/Softland, control de reserva, resumen financiero y correos/notificaciones.
 
-1. Crear nuevo anticipo real.
-2. Enviar a Tesorería.
-3. Aprobar reserva.
-4. Rechazar reserva.
-5. Reenviar solicitud.
-6. Evidencia final de flujo completo.
-7. Pruebas destructivas sobre Opportunity reservada para evidencia funcional.
-
-Motivo:
-
-- El envío a Tesorería depende de confirmación Helios/Softland y actualmente la integración responde error funcional aunque Salesforce ya envía `cliente`.
-
-## 12. Pendientes
-
-1. Obtener respuesta del equipo de integración sobre error Helios/Softland.
-2. Confirmar si backend corrige mapeo `cliente`.
-3. Reintentar envío a Tesorería de `Anticipo QA Sandbox`.
-4. Confirmar `Identificador_Helios__c`.
-5. Confirmar cambio de estatus posterior al envío.
-6. Llevar anticipo a `Confirmada por Tesorería`.
-7. Probar aprobar reserva.
-8. Probar rechazar reserva.
-9. Probar reenvío de solicitud.
-10. Validar notificaciones.
-11. Completar QA Excel.
-12. Subir evidencias oficiales a Drive.
-13. Preparar instrucciones finales para Usuario QA.
-14. Ordenar cambios locales y preparar commit cuando sea autorizado.
-
-## 13. Estado actual
-
-- Sandbox contiene avances desplegados y validados parcialmente.
-- Producción permanece sin cambios.
-- QA completa está pendiente.
-- Integración Tesorería/Helios/Softland está bloqueada por revisión backend.
-- Este documento debe actualizarse después de resolver el bloqueo de integración y completar evidencia QA.
+El pase a Produccion queda pendiente de aprobacion funcional, consolidacion de evidencia final, confirmacion de configuracion productiva y preparacion del plan de despliegue correspondiente.

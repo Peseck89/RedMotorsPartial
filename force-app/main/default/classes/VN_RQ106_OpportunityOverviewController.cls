@@ -4,6 +4,7 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         'Vehículo reservado'
     };
     private static final String STATUS_CONFIRMADA_TESORERIA = 'Confirmada por Tesorería';
+    private static final String STATUS_ANTICIPO_CREADO = 'Anticipo creado';
     private static final String ESTADO_PRODUCTO_PENDIENTE = 'Pendiente';
     private static final String ESTADO_PRODUCTO_RECHAZADA = 'Rechazada';
     private static final String TIPO_RESERVA = 'Reserva de vehículo';
@@ -42,7 +43,7 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         overview.estadoAnticipo = opp.Estado_Anticipo__c;
         overview.tieneVehiculosReservados = opp.Tiene_Vehiculos_Reservados__c;
         overview.vehiculosReservados = opp.Vehiculos_Reservados__c;
-        overview.pdfStatus = 'PDF Softland pendiente (evidencia: columna Evidencia)';
+        overview.pdfStatus = 'PDF Softland pendiente de generación';
         overview.retryStatus = 'No disponible todavía';
         overview.vehicles = getVehicles(opportunityId);
         overview.anticipos = getAnticipos(opportunityId, opp);
@@ -126,9 +127,7 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
             LIMIT 50
         ];
 
-        Boolean isJefeSucursal = opp != null &&
-            opp.JefeSucursal__c != null &&
-            String.valueOf(opp.JefeSucursal__c) == UserInfo.getUserId();
+        Boolean isAuthorizedManager = canManageReservationApproval(opp != null ? opp.JefeSucursal__c : null);
         Set<Id> anticipoIds = new Set<Id>();
         for (Anticipo__c record : records) {
             anticipoIds.add(record.Id);
@@ -182,18 +181,37 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
                 String.isBlank(record.Estado_Aprobacion_Producto__c) ||
                 record.Estado_Aprobacion_Producto__c == ESTADO_PRODUCTO_PENDIENTE;
             summary.canApproveReservation =
-                isJefeSucursal &&
+                isAuthorizedManager &&
                 record.Tipo_Ingreso__c == TIPO_RESERVA &&
-                record.Estatus__c == STATUS_CONFIRMADA_TESORERIA &&
+                isReadyForProductApproval(record) &&
                 isPendingProductApproval;
             summary.canRejectReservation = summary.canApproveReservation;
             summary.canResendReservation =
-                isJefeSucursal &&
+                isAuthorizedManager &&
                 record.Tipo_Ingreso__c == TIPO_RESERVA &&
                 record.Estado_Aprobacion_Producto__c == ESTADO_PRODUCTO_RECHAZADA;
             anticipos.add(summary);
         }
         return anticipos;
+    }
+
+    private static Boolean canManageReservationApproval(Id jefeSucursalId) {
+        if (jefeSucursalId == null) {
+            return false;
+        }
+        return String.valueOf(jefeSucursalId) == UserInfo.getUserId();
+    }
+
+    @TestVisible
+    private static Boolean isReadyForProductApproval(Anticipo__c solicitud) {
+        if (solicitud == null) {
+            return false;
+        }
+        if (solicitud.Estatus__c == STATUS_CONFIRMADA_TESORERIA) {
+            return true;
+        }
+        return solicitud.Estatus__c == STATUS_ANTICIPO_CREADO &&
+            !String.isBlank(solicitud.Identificador_Helios__c);
     }
 
     private static String buildReservaStatus(Opportunity opp, List<VehicleSummary> vehicles) {
