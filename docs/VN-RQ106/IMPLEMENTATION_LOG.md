@@ -131,6 +131,42 @@
 - No se modifico Apex adicional durante la creacion de este documento.
 - No se modifico configuracion funcional adicional durante la creacion de este documento.
 
+## Hotfixes post-checkpoint 2026-06-12
+
+> Estos cambios ocurrieron DESPUÉS del checkpoint `f994472` y están documentados aquí para trazabilidad.
+
+### Hotfix 1 — error `sObject type 'Organization' is not supported` (Tesorería)
+
+- Problema: `SELECT IsSandbox FROM Organization LIMIT 1` falla para perfiles sin acceso al objeto Organization.
+- Afectó: flujo de envío de anticipo a Tesorería (Paola/Jorge Agüero, ANT-01228).
+- Clases: `SoftlandEndpointService` (untracked local), `SolicitudAprobacionTesoreria` (modificada).
+- Solución: try/catch sobre la consulta Organization + fallback `System.Url.getOrgDomainUrl()`.
+- Deploys Sandbox:
+  - `SoftlandEndpointService`: `0AfNq00000XtJmzKAF`
+  - `SolicitudAprobacionTesoreria`: `0AfNq00000XtBr5KAF`
+- Validación: Paola/Jorge reintentaron — error no volvió a aparecer.
+- Estado: validado en Sandbox.
+- Nota de seguridad: `SoftlandEndpointService.cls` está presente localmente como untracked. No tiene credenciales hardcodeadas. Pendiente decidir si versionar (requiere sanitización previa y aprobación de equipo).
+
+### Hotfix 2 — error Flow `rellenarDatosContacto` (DotsContacto / Jefe de Sucursal)
+
+- Problema: Perfil Jefe de Sucursal abría Opportunity y veía `Se ha producido un fallo no gestionado en este flujo`.
+- Causa: Flow `rellenarDatosContacto` se mostraba a todos los perfiles cuando campos de contacto estaban vacíos. Flow tiene cero faultConnectors.
+- Páginas: `Opportunity_Record_Page_VN`, `Opportunity_Record_Page_VU`.
+- Solución: Se agregaron criterios `NE` a la visibilityRule del componente flowruntime:interview:
+  - `Jefe de Sucursal BMW Escazú`
+  - `Jefe de Sucursal BMW Uruca`
+  - booleanFilter: `(1 OR 2 OR 3 OR 4) AND 5 AND 6`
+- Deploy Sandbox: `0AfNq00000XtKntKAF`.
+- Estado: desplegado en Sandbox. Pendiente validación con Pedro.
+
+## Pendiente Luis — correos temporales Flow notificaciones
+
+- Flow: `VN_RQ106_Notificaciones_Anticipo`.
+- Correos a agregar temporalmente: `oaparicio@redmotorscr.com`, `cmora@redmotorscr.com`.
+- Estado: **NO aplicado todavía**. Pendiente de esta tarea por separado.
+- Nota: temporal Sandbox. Remover o reemplazar antes de Producción.
+
 ## Cierre funcional Sandbox 2026-06-12
 
 ### Deploys realizados en Sandbox

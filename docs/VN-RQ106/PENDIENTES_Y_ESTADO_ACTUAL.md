@@ -79,6 +79,39 @@ Producción: sin cambios
 - Se creó documentación funcional/técnica para Bloque B.2 Notificaciones de reserva:
   - `docs/VN-RQ106/BLOQUE_B2_NOTIFICACIONES_RESERVA.md`.
 
+## 2.1 Hotfixes post-checkpoint 2026-06-12
+
+### Hotfix Tesorería — error `sObject type 'Organization' is not supported`
+
+- Problema: Al enviar anticipo a Tesorería aparecía `sObject type 'Organization' is not supported`. Ocurría al ejecutar `SELECT IsSandbox FROM Organization LIMIT 1` en un perfil sin acceso al objeto Organization.
+- Causa: Consulta directa a Organization sin manejo de excepciones en `SoftlandEndpointService` y `SolicitudAprobacionTesoreria`.
+- Clases ajustadas: `SoftlandEndpointService`, `SolicitudAprobacionTesoreria`.
+- Solución: Se envolvió la consulta en try/catch con fallback por dominio: `System.Url.getOrgDomainUrl().toExternalForm().toLowerCase()` — detecta Sandbox si contiene `--` o `.sandbox.`.
+- Deploy `SoftlandEndpointService`: `0AfNq00000XtJmzKAF`.
+- Deploy `SolicitudAprobacionTesoreria`: `0AfNq00000XtBr5KAF`.
+- Validación: Paola/Jorge reintentaron el envío con ANT-01228 — el error no volvió a aparecer.
+- Estado: **Validado en Sandbox**.
+
+### Fix visual DotsContacto — `rellenarDatosContacto` Jefe de Sucursal
+
+- Problema: Al entrar como Jefe de Sucursal a una Opportunity aparecía `Se ha producido un fallo no gestionado en este flujo`.
+- Diagnóstico: El componente `flowruntime:interview` con el Flow `rellenarDatosContacto` se mostraba a todos los perfiles cuando algún campo del contacto estaba vacío — sin filtro de perfil.
+- Flow detectado: `rellenarDatosContacto` (Screen Flow, sin faultConnectors).
+- Páginas afectadas: `Opportunity_Record_Page_VN`, `Opportunity_Record_Page_VU`.
+- Solución: Se ajustó la `visibilityRule` del componente en ambas FlexiPages agregando criterios `NE` para perfiles Jefe de Sucursal:
+  - `booleanFilter`: `(1 OR 2 OR 3 OR 4) AND 5 AND 6`
+  - Criterio 5: `{!$User.Profile.Name} NE "Jefe de Sucursal BMW Escazú"`
+  - Criterio 6: `{!$User.Profile.Name} NE "Jefe de Sucursal BMW Uruca"`
+- Deploy Sandbox: `0AfNq00000XtKntKAF`.
+- Pendiente: Validar con Pedro que el error ya no aparece al abrir Opportunity con perfil Jefe de Sucursal.
+- Estado: **Desplegado en Sandbox — pendiente validación funcional final con Pedro**.
+
+### Pendiente Luis — correos temporales Flow notificaciones
+
+- Solicitud: Luis pidió agregar temporalmente `oaparicio@redmotorscr.com` y `cmora@redmotorscr.com` al Flow `VN_RQ106_Notificaciones_Anticipo`.
+- Estado: **Pendiente — NO aplicado todavía**.
+- Nota: Temporal para Sandbox. Estos correos deben removerse o reemplazarse por destinatarios funcionales confirmados antes de cualquier pase a Producción.
+
 ## 3. Pendientes de implementación Bloque B
 
 Estado operativo: los siguientes puntos ya tienen implementación local inicial en el worktree, pero siguen pendientes de validación técnica, pruebas Apex/UI y despliegue controlado a Sandbox. No están en Producción.

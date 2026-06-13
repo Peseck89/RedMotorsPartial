@@ -1870,7 +1870,7 @@
                 </componentInstanceProperties>
                 <componentName>flowruntime:interview</componentName>
                 <visibilityRule>
-                    <booleanFilter>1 OR 2 OR 3 OR 4</booleanFilter>
+                    <booleanFilter>(1 OR 2 OR 3 OR 4) AND 5 AND 6</booleanFilter>
                     <criteria>
                         <leftValue>{!Record.contacto__r.FirstName}</leftValue>
                         <operator>EQUAL</operator>
@@ -1886,6 +1886,16 @@
                     <criteria>
                         <leftValue>{!Record.contacto__r.Email}</leftValue>
                         <operator>EQUAL</operator>
+                    </criteria>
+                    <criteria>
+                        <leftValue>{!$User.Profile.Name}</leftValue>
+                        <operator>NE</operator>
+                        <rightValue>Jefe de Sucursal BMW Escazú</rightValue>
+                    </criteria>
+                    <criteria>
+                        <leftValue>{!$User.Profile.Name}</leftValue>
+                        <operator>NE</operator>
+                        <rightValue>Jefe de Sucursal BMW Uruca</rightValue>
                     </criteria>
                 </visibilityRule>
             </componentInstance>

@@ -100,6 +100,32 @@ Estado:
 - Correos corregidos según plantillas de negocio.
 - Pendiente para Producción: confirmar destinatarios/configuración productiva final antes del pase.
 
+## 3.1.2 Hotfixes post-checkpoint 2026-06-12
+
+### Hotfix Tesorería — `sObject type 'Organization' is not supported`
+
+- Problema: Error al enviar anticipo a Tesorería por perfiles sin acceso al objeto Organization.
+- Clases: `SoftlandEndpointService`, `SolicitudAprobacionTesoreria`.
+- Deploy `SoftlandEndpointService`: `0AfNq00000XtJmzKAF`.
+- Deploy `SolicitudAprobacionTesoreria`: `0AfNq00000XtBr5KAF`.
+- Validación: Paola/Jorge reintentaron con ANT-01228 — sin error.
+- Estado: **validado en Sandbox**.
+
+### Fix DotsContacto — `rellenarDatosContacto` Jefe de Sucursal
+
+- Problema: Perfil Jefe de Sucursal veía error de Flow no gestionado en Opportunity.
+- Flow: `rellenarDatosContacto`. Páginas: `Opportunity_Record_Page_VN`, `Opportunity_Record_Page_VU`.
+- Perfiles excluidos: `Jefe de Sucursal BMW Escazú`, `Jefe de Sucursal BMW Uruca`.
+- Deploy Sandbox: `0AfNq00000XtKntKAF`.
+- Estado: **desplegado en Sandbox — pendiente validación con Pedro**.
+
+### Pendiente Luis — correos temporales
+
+- Flow: `VN_RQ106_Notificaciones_Anticipo`.
+- Correos: `oaparicio@redmotorscr.com`, `cmora@redmotorscr.com`.
+- Estado: **pendiente — NO aplicado todavía**.
+- Nota: temporal Sandbox, remover antes de Producción.
+
 ## 3.2 Validación funcional posterior a deploy 2026-06-12
 
 Se validó en video el flujo funcional completo en Sandbox sobre la Opportunity usada para evidencia funcional.
