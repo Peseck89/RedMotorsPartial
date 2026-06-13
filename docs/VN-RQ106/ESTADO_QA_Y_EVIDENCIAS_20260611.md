@@ -119,12 +119,22 @@ Estado:
 - Deploy Sandbox: `0AfNq00000XtKntKAF`.
 - Estado: **desplegado en Sandbox — pendiente validación con Pedro**.
 
-### Pendiente Luis — correos temporales
+### Correos QA adicionales Luis — `VN_RQ106_Notificaciones_Anticipo`
 
+- Solicitud: Luis pidió agregar temporalmente `oaparicio@redmotorscr.com` y `cmora@redmotorscr.com`.
 - Flow: `VN_RQ106_Notificaciones_Anticipo`.
-- Correos: `oaparicio@redmotorscr.com`, `cmora@redmotorscr.com`.
-- Estado: **pendiente — NO aplicado todavía**.
-- Nota: temporal Sandbox, remover antes de Producción.
+- Correos QA activos en Sandbox:
+  - `pago15924@gmail.com`
+  - `paola.lobo@portalnetcr.com`
+  - `sandra.lopez@portalnetcr.com`
+  - `admin@portalnetcr.com`
+  - `salesforcedevslp@gmail.com`
+  - `oaparicio@redmotorscr.com`
+  - `cmora@redmotorscr.com`
+- Deploy Sandbox: `0AfNq00000XtO57KAF`.
+- Pendiente: Confirmar recepción de correos por Luis/Oscar/Carlos.
+- Estado: **aplicado en Sandbox**.
+- **NOTA OBLIGATORIA:** Estos correos son temporales de Sandbox. Antes de cualquier pase a Producción se deben remover o reemplazar TODOS los correos QA temporales por los destinatarios funcionales reales confirmados por el equipo.
 
 ## 3.2 Validación funcional posterior a deploy 2026-06-12
 

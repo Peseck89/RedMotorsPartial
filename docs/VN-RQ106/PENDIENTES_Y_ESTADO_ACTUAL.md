@@ -106,11 +106,21 @@ Producción: sin cambios
 - Pendiente: Validar con Pedro que el error ya no aparece al abrir Opportunity con perfil Jefe de Sucursal.
 - Estado: **Desplegado en Sandbox — pendiente validación funcional final con Pedro**.
 
-### Pendiente Luis — correos temporales Flow notificaciones
+### Correos QA adicionales Luis — `VN_RQ106_Notificaciones_Anticipo`
 
 - Solicitud: Luis pidió agregar temporalmente `oaparicio@redmotorscr.com` y `cmora@redmotorscr.com` al Flow `VN_RQ106_Notificaciones_Anticipo`.
-- Estado: **Pendiente — NO aplicado todavía**.
-- Nota: Temporal para Sandbox. Estos correos deben removerse o reemplazarse por destinatarios funcionales confirmados antes de cualquier pase a Producción.
+- Deploy Sandbox: `0AfNq00000XtO57KAF`.
+- Correos QA completos activos en Sandbox:
+  - `pago15924@gmail.com`
+  - `paola.lobo@portalnetcr.com`
+  - `sandra.lopez@portalnetcr.com`
+  - `admin@portalnetcr.com`
+  - `salesforcedevslp@gmail.com`
+  - `oaparicio@redmotorscr.com`
+  - `cmora@redmotorscr.com`
+- Pendiente: Confirmar recepción de correos por Luis/Oscar/Carlos.
+- Estado: **Aplicado en Sandbox**.
+- **NOTA OBLIGATORIA:** Estos correos son temporales de Sandbox. Antes de cualquier pase a Producción se deben remover o reemplazar TODOS los correos QA temporales por los destinatarios funcionales reales confirmados por el equipo.
 
 ## 3. Pendientes de implementación Bloque B
 

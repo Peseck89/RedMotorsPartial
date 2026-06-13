@@ -156,6 +156,10 @@ Los siguientes despliegues corresponden a validaciones realizadas en Sandbox y n
 | `0AfNq00000XsxePKAR` | Codigo de anticipo | Muestra Codigo de anticipo usando `Identificador_Helios__c`. |
 | `0AfNq00000XsoT4KAJ` | Flow correos QA Sandbox | Validacion inicial de correos en Sandbox. |
 | `0AfNq00000Xt7U5KAJ` | Homologacion final de plantillas de correo | Plantillas de correo ajustadas y validadas en Sandbox. |
+| `0AfNq00000XtJmzKAF` | Hotfix `SoftlandEndpointService` — Organization | try/catch sobre consulta Organization con fallback por dominio. Validado por Paola/Jorge (ANT-01228). |
+| `0AfNq00000XtBr5KAF` | Hotfix `SolicitudAprobacionTesoreria` — Organization | Mismo patron de fallback. Validado sin error en reintento. |
+| `0AfNq00000XtKntKAF` | Fix DotsContacto — FlexiPages VN/VU | Oculta Flow `rellenarDatosContacto` a perfiles Jefe de Sucursal BMW Escazu y BMW Uruca. Pendiente validacion con Pedro. |
+| `0AfNq00000XtO57KAF` | Correos QA adicionales Luis | Agrega `oaparicio@redmotorscr.com` y `cmora@redmotorscr.com` al Flow `VN_RQ106_Notificaciones_Anticipo`. **Temporal Sandbox — remover antes de Produccion.** |
 
 Produccion permanece sin cambios.
 
@@ -163,13 +167,15 @@ Produccion permanece sin cambios.
 
 Antes de preparar el pase productivo deben completarse o confirmarse los siguientes puntos:
 
-1. Confirmar destinatarios y configuracion final productiva de correos.
-2. Sustituir configuracion temporal de Sandbox por configuracion final productiva, si aplica.
-3. Consolidar evidencia final de QA.
-4. Confirmar visto bueno funcional de negocio.
-5. Confirmar alcance final de PDF Softland, si aplica.
-6. Preparar plan de pase a Produccion.
-7. Ejecutar validacion post-deploy en Produccion.
+1. **[BLOQUEANTE]** Remover o reemplazar TODOS los correos QA temporales del Flow `VN_RQ106_Notificaciones_Anticipo` por los destinatarios funcionales reales confirmados. Los correos QA actuales (`pago15924@gmail.com`, `paola.lobo@portalnetcr.com`, `sandra.lopez@portalnetcr.com`, `admin@portalnetcr.com`, `salesforcedevslp@gmail.com`, `oaparicio@redmotorscr.com`, `cmora@redmotorscr.com`) son temporales de Sandbox y no deben llegar a Produccion.
+2. Confirmar recepcion de correos QA por Luis/Oscar/Carlos (deploy `0AfNq00000XtO57KAF`).
+3. Confirmar validacion funcional final con Pedro para Fix DotsContacto (deploy `0AfNq00000XtKntKAF`).
+4. Confirmar destinatarios productivos finales del Flow y demas configuracion de correos.
+5. Consolidar evidencia final de QA.
+6. Confirmar visto bueno funcional de negocio.
+7. Confirmar alcance final de PDF Softland, si aplica.
+8. Preparar paquete de despliegue a Produccion.
+9. Ejecutar validacion post-deploy en Produccion cuando se autorice el pase.
 
 ## 10. Conclusion
 

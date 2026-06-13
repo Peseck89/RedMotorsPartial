@@ -6,11 +6,11 @@ Usuario QA apoyará ejecutando pruebas, grabando videos, tomando capturas y subi
 
 ## 2. Alcance de Usuario QA
 
-Estado al 2026-06-11: Usuario QA puede iniciar solo evidencia básica/no destructiva. La QA completa sigue bloqueada hasta resolver el envío a Tesorería con Helios/Softland y validar el flujo completo en Sandbox.
+Estado al 2026-06-12: Flujo funcional completo validado en Sandbox. El bloqueo Helios/Softland fue resuelto. El ciclo completo de ingreso, envío a Tesorería, aprobación, rechazo, reenvío y notificaciones fue validado.
 
 Usuario QA puede:
 
-- ejecutar pruebas manuales;
+- ejecutar pruebas manuales del flujo completo;
 - grabar videos;
 - tomar capturas;
 - subir evidencias a Drive;
@@ -27,19 +27,31 @@ Usuario QA no debe:
 - cambiar permisos;
 - tocar Producción;
 - cambiar Flow/correos;
-- corregir errores por cuenta propia.
-- crear un nuevo anticipo real para evidencia final;
-- enviar solicitudes a Tesorería;
-- aprobar reserva;
-- rechazar reserva;
-- reenviar solicitud;
+- corregir errores por cuenta propia;
 - ejecutar pruebas destructivas sobre la Opportunity reservada para evidencia funcional.
 
-Motivo del bloqueo:
+### Estado de validación Sandbox al 2026-06-12
 
-- El envío a Tesorería depende de confirmación Helios/Softland.
-- Salesforce ya envía `cliente` con el código Softland del cliente, pero Helios/Softland continúa respondiendo que el parámetro `@cliente` no fue suministrado.
-- El anticipo QA permanece en `Borrador` porque la integración no confirma el envío.
+Validaciones completadas internamente por el equipo técnico:
+
+- Creación de borrador desde UI: validado.
+- Retoma de borrador existente: validado.
+- Adjuntar evidencia: validado.
+- Envío a Tesorería: validado — Helios genera identificador externo.
+- Visualización de Código de anticipo (`Identificador_Helios__c`): validado.
+- Aprobación de reserva: validado — estado cambia a `Vehículo reservado`.
+- Rechazo de reserva: validado — `Estado_Aprobacion_Producto__c = Rechazada`.
+- Reenvío de solicitud: validado — `Estado_Aprobacion_Producto__c` vuelve a `Pendiente`.
+- Historial de aprobaciones: validado.
+- Resumen financiero: validado.
+- Notificaciones/correos del proceso: validados en Sandbox.
+- Control de acceso por `JefeSucursal__c`: validado.
+
+### Hotfixes validados en Sandbox
+
+- **Hotfix Tesorería** (`0AfNq00000XtJmzKAF`, `0AfNq00000XtBr5KAF`): Error `sObject type 'Organization' is not supported` corregido con try/catch + fallback por dominio. Validado por Paola/Jorge con ANT-01228.
+- **Fix DotsContacto** (`0AfNq00000XtKntKAF`): Error de Flow no gestionado al entrar como Jefe de Sucursal corregido ocultando `rellenarDatosContacto` en FlexiPages VN/VU para perfiles `Jefe de Sucursal BMW Escazú` y `Jefe de Sucursal BMW Uruca`. Pendiente validación final con Pedro.
+- **Correos QA Luis** (`0AfNq00000XtO57KAF`): `oaparicio@redmotorscr.com` y `cmora@redmotorscr.com` agregados temporalmente al Flow de notificaciones. **Temporal Sandbox — remover antes de Producción.**
 
 ## 3. Ambiente
 
@@ -167,18 +179,19 @@ Reglas para esta evidencia:
 - Pruebas en Producción.
 - Pruebas sin Opportunity creada desde Ver inventario.
 
-## 10. Pendientes para liberar QA completa
+## 10. Pendientes antes de Producción
 
-Antes de pedir a Usuario QA la evidencia final:
+El flujo funcional está validado en Sandbox. Los pendientes restantes son de configuración y aprobación para el pase productivo:
 
-1. Recibir respuesta del equipo de integración sobre el error Helios/Softland.
-2. Confirmar si backend corrige el mapeo de `cliente`.
-3. Reintentar envío del anticipo QA `Anticipo QA Sandbox`.
-4. Confirmar cambio de estatus e `Identificador_Helios__c`.
-5. Llevar anticipo a estado `Confirmada por Tesorería`.
-6. Probar aprobar/rechazar/reenvío con usuario `JefeSucursal__c`.
-7. Preparar instrucciones finales para Usuario QA.
-8. Actualizar Excel QA y documentación oficial Drive.
+1. **[BLOQUEANTE]** Remover o reemplazar TODOS los correos QA temporales del Flow `VN_RQ106_Notificaciones_Anticipo` antes de cualquier pase a Producción. Correos temporales actuales: `pago15924@gmail.com`, `paola.lobo@portalnetcr.com`, `sandra.lopez@portalnetcr.com`, `admin@portalnetcr.com`, `salesforcedevslp@gmail.com`, `oaparicio@redmotorscr.com`, `cmora@redmotorscr.com`.
+2. Confirmar recepción de correos QA adicionales por Luis/Oscar/Carlos (deploy `0AfNq00000XtO57KAF`).
+3. Confirmar validación funcional final con Pedro para Fix DotsContacto (deploy `0AfNq00000XtKntKAF`).
+4. Confirmar destinatarios productivos finales del Flow.
+5. Consolidar evidencia final de QA formal.
+6. Confirmar visto bueno funcional de negocio.
+7. Preparar paquete de despliegue a Producción.
+8. Ejecutar validación post-deploy en Producción cuando se autorice el pase.
+9. Actualizar Excel QA y documentación oficial Drive con evidencia final.
 
 ## 11. Qué hacer si falla algo
 

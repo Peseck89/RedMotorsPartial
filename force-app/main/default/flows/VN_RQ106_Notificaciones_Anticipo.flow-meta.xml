@@ -77,7 +77,7 @@
         <inputParameters>
             <name>emailAddresses</name>
             <value>
-                <stringValue>pago15924@gmail.com, paola.lobo@portalnetcr.com, sandra.lopez@portalnetcr.com, admin@portalnetcr.com, salesforcedevslp@gmail.com</stringValue>
+                <stringValue>pago15924@gmail.com, paola.lobo@portalnetcr.com, sandra.lopez@portalnetcr.com, admin@portalnetcr.com, salesforcedevslp@gmail.com, oaparicio@redmotorscr.com, cmora@redmotorscr.com</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -376,11 +376,11 @@
             <label>Tipo notificación disponible</label>
         </rules>
     </decisions>
-    <description>VN-RQ106: Flow de notificaciones para solicitud enviada a Tesorería, aprobación/rechazo de reserva y reenvío de solicitud de reserva. Bloque B.2 pendiente de validación completa en Sandbox antes de cualquier pase. CORREOS QA TEMPORALES: pago15924@gmail.com, paola.lobo@portalnetcr.com, sandra.lopez@portalnetcr.com, admin@portalnetcr.com, salesforcedevslp@gmail.com. Estos correos son temporales para validación en Sandbox. Deben removerse o sustituirse por los destinatarios funcionales reales antes de cualquier pase a Producción. No forman parte de la entrega oficial final.</description>
+    <description>VN-RQ106: Flow de notificaciones para solicitud enviada a Tesorería, aprobación/rechazo de reserva y reenvío de solicitud de reserva. Bloque B.2 pendiente de validación completa en Sandbox antes de cualquier pase. CORREOS QA TEMPORALES: pago15924@gmail.com, paola.lobo@portalnetcr.com, sandra.lopez@portalnetcr.com, admin@portalnetcr.com, salesforcedevslp@gmail.com, oaparicio@redmotorscr.com, cmora@redmotorscr.com. Estos correos son temporales para validación en Sandbox. Deben removerse o sustituirse por los destinatarios funcionales reales antes de cualquier pase a Producción. No forman parte de la entrega oficial final.</description>
     <formulas>
         <name>EmailAddressesAsesorYJefeProducto</name>
         <dataType>String</dataType>
-        <expression>&apos;pago15924@gmail.com, paola.lobo@portalnetcr.com, sandra.lopez@portalnetcr.com, admin@portalnetcr.com, salesforcedevslp@gmail.com&apos;</expression>
+        <expression>&apos;pago15924@gmail.com, paola.lobo@portalnetcr.com, sandra.lopez@portalnetcr.com, admin@portalnetcr.com, salesforcedevslp@gmail.com, oaparicio@redmotorscr.com, cmora@redmotorscr.com&apos;</expression>
     </formulas>
     <formulas>
         <name>EmailSubject</name>

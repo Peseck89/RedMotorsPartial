@@ -4,48 +4,59 @@ Documento borrador interno para actualizar el Excel QA cuando se libere el bloqu
 
 ## 1. Estado general QA
 
-- QA funcional completa: bloqueada por Helios/Softland.
-- QA parcial Sandbox: avances validados.
-- Usuario QA puede hacer solo evidencia básica/no destructiva si se requiere.
-- Usuario QA no debe hacer flujo completo todavía.
+- QA funcional completa: **validada en Sandbox al 2026-06-12**.
+- Bloqueo Helios/Softland: **resuelto**. Integración confirmada — identificador externo generado.
+- Flujo completo (ingreso → Tesorería → reserva → aprobación/rechazo/reenvío): validado.
+- Notificaciones del proceso: validadas en Sandbox.
+- Hotfix Tesorería (Organization): validado por Paola/Jorge.
+- Fix DotsContacto (Jefe de Sucursal): desplegado en Sandbox, pendiente confirmación final con Pedro.
+- Correos QA adicionales Luis: aplicados en Sandbox (`0AfNq00000XtO57KAF`), pendiente confirmación recepción.
 - Producción permanece sin cambios.
-- El Excel QA no debe marcarse como aprobado mientras el flujo Tesorería/reserva no esté validado completo.
+- **Pendiente bloqueante antes de Producción:** remover/reemplazar correos QA temporales del Flow.
 
-## 2. Casos validados internamente
+## 2. Casos validados en Sandbox
 
 - Botón `Solicitudes anticipos` visible.
 - Modal abre correctamente.
 - Overview carga.
 - Borrador `Anticipo QA Sandbox` creado.
-- Borrador existente se retoma.
-- Botón cambia a `Actualizar borrador`.
+- Borrador existente se retoma y botón cambia a `Actualizar borrador`.
 - Evidencia se adjunta.
-- Validaciones previas a Tesorería quedan en `Listo`.
-- `empresaQueFactura__c = Bavarian`.
-- Payload Salesforce incluye:
-  - `codigoSoftland = código Softland del cliente`.
-  - `cliente = código Softland del cliente`.
+- Validaciones previas a Tesorería en `Listo`.
+- Payload Salesforce incluye `codigoSoftland` y `cliente` con el código Softland del cliente.
+- Envío a Tesorería: exitoso — Helios genera identificador externo.
+- `Identificador_Helios__c` recibido y almacenado.
+- Código de anticipo visible en tabla desde `Identificador_Helios__c`.
+- Texto `PDF Softland pendiente de generación` visible cuando no hay PDF.
+- Modal se cierra automáticamente tras envío exitoso.
+- Aprobación de reserva: estado → `Vehículo reservado`.
+- Rechazo de reserva: `Estado_Aprobacion_Producto__c = Rechazada`.
+- Reenvío: `Estado_Aprobacion_Producto__c` vuelve a `Pendiente`.
+- Historial de aprobaciones: actualizado.
+- Resumen financiero: actualizado.
+- Correos/notificaciones del proceso: validados en Sandbox.
+- Control de acciones por `JefeSucursal__c`: validado.
+- Fix DotsContacto: desplegado — Flow `rellenarDatosContacto` oculto para Jefe de Sucursal.
+- Correos QA adicionales Luis: aplicados en Sandbox.
 
-## 3. Casos bloqueados
+## 3. Casos pendientes de confirmar
 
-- Enviar a Tesorería.
-- Confirmar `Identificador_Helios__c`.
-- Confirmar cambio de estatus posterior a Tesorería.
-- Aprobar reserva.
-- Rechazar reserva.
-- Reenviar solicitud.
-- Validar notificaciones.
-- Evidencia final de flujo completo.
+- Validación final con Pedro para Fix DotsContacto (deploy `0AfNq00000XtKntKAF`).
+- Confirmación de recepción de correos QA adicionales por Luis/Oscar/Carlos.
+- Configuración productiva final de destinatarios del Flow.
+- PDF Softland generado por proceso externo (fuera del alcance técnico directo de Salesforce).
 
-## 4. Cómo marcar temporalmente en Excel cuando se actualice
+## 4. Cómo marcar en Excel cuando se actualice
 
 | Tipo de caso | Estado sugerido | Observación sugerida |
 |---|---|---|
-| Casos visuales/no destructivos | `Pasó` si Usuario QA evidencia botón/modal/overview | Evidencia básica en Sandbox. No valida flujo completo. |
-| Casos de integración Tesorería | `Bloqueado` | `Bloqueado por respuesta Helios/Softland: Salesforce envía cliente con el código Softland del cliente, pero backend responde que SP_SF_CREAR_SOLICITUD_ANTICIPO no recibe @cliente.` |
-| Casos aprobar/rechazar/reenvío | `Bloqueado` | Bloqueado hasta tener anticipo confirmado por Tesorería. |
-| Casos Flow/notificaciones | `Pendiente Bloque B.2` | Flow de notificaciones pendiente de validación/cierre. |
-| Evidencia final de flujo completo | `Bloqueado` | Depende de completar Tesorería y acciones de reserva. |
+| Casos visuales/no destructivos (botón, modal, overview) | `Pasó` con evidencia de Usuario QA | Evidencia validada en Sandbox. |
+| Envío a Tesorería / integración Helios | `Pasó` | Validado internamente. Helios genera identificador externo. |
+| Aprobar/rechazar/reenvío reserva | `Pasó` | Validado internamente por equipo técnico con usuario `JefeSucursal__c`. |
+| Notificaciones/correos | `Pasó` en Sandbox | Validados con correos QA temporales. Destinatarios productivos pendientes de confirmar. |
+| Evidencia final de flujo completo | `Pendiente evidencia formal` | Flujo validado; pendiente consolidar evidencia formal de Usuario QA. |
+| Fix DotsContacto | `Pasó` en Sandbox | Pendiente confirmación final con Pedro. |
+| PDF Softland | `Pendiente proceso externo` | Fuera del alcance técnico Salesforce. |
 
 Reglas para evitar confusión:
 
@@ -76,18 +87,13 @@ Nombres sugeridos:
 
 ## 6. Pendientes para actualizar Excel final
 
-1. Recibir respuesta del equipo de integración.
-2. Confirmar si Helios/Softland corrige el mapeo de `cliente`.
-3. Reintentar envío de `Anticipo QA Sandbox`.
-4. Completar flujo Tesorería.
-5. Confirmar `Identificador_Helios__c`.
-6. Confirmar cambio de estatus posterior a Tesorería.
-7. Ejecutar aprobación de reserva.
-8. Ejecutar rechazo de reserva.
-9. Ejecutar reenvío de solicitud.
-10. Validar notificaciones.
-11. Grabar evidencias finales.
-12. Asociar evidencia a cada caso del Excel.
+1. **[BLOQUEANTE]** Confirmar que correos QA temporales serán removidos o reemplazados antes de Producción. No actualizar Excel con resultado de correos hasta resolver destinatarios productivos.
+2. Confirmar validación final con Pedro para Fix DotsContacto.
+3. Confirmar recepción de correos QA adicionales por Luis/Oscar/Carlos.
+4. Grabar evidencias formales del flujo completo con Usuario QA.
+5. Asociar evidencia a cada caso del Excel (videos + capturas en Drive).
+6. Confirmar configuración final productiva de correos/destinatarios.
+7. Obtener visto bueno funcional de negocio antes de actualizar Excel con resultado final aprobado.
 
 ## 7. Nota de uso
 
