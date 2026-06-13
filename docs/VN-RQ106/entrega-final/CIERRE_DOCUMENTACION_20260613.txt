@@ -1,0 +1,23 @@
+VN-RQ106 - Cierre documentación técnica
+
+Fecha: 2026-06-13
+Estado documento oficial: completo para entrega técnica.
+
+Coverage:
+- VN_RQ106_AnticipoControllerTest: 85% sobre VN_RQ106_AnticipoController
+- VN_RQ106_OppOverviewCtrlTest: 91% sobre VN_RQ106_OpportunityOverviewController
+
+Documento final:
+- docs/VN-RQ106/entrega-final/VN-RQ106_Entrega_Tecnica_Oficial_FINAL_20260613.docx
+- docs/VN-RQ106/entrega-final/VN-RQ106_Entrega_Tecnica_Oficial_FINAL_20260613.pdf
+
+Pendientes fuera de documentación:
+1. Remover/reemplazar correos QA temporales del Flow antes de Producción.
+2. Confirmar destinatarios productivos.
+3. Validar permisos de acceso a carpeta Drive de evidencias.
+4. Obtener visto bueno funcional/QA de negocio.
+5. Preparar package final en Copado.
+6. Autorizar pase a Producción.
+
+Producción: sin cambios.
+Push: no realizado.
