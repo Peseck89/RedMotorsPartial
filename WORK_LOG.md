@@ -309,3 +309,38 @@ Plantilla de bitacora tecnica diaria.
 - Pendientes: Revisar bloqueos de negocio o seguimiento indicado en observaciones.
 - Estado final: En progreso
 - Observaciones: This assignment is multi-day work.; Continuing this assignment can be valid from the expected feature branch if Git is clean and synchronized.; Starting a brand new assignment should still happen from main.
+
+## 2026-06-15 - RedMotors - Cierre de jornada VN-RQ106
+
+- Fecha: 2026-06-15
+- Equipo: PC
+- Repo: RedMotorsPartial-Sandbox
+- Rama: feature/pc/redmotors-vn-rq106-anticipo-ui-20260527
+- Asignacion: VN-RQ106 - Ingresos y anticipos
+- Objetivo: Cierre seguro de jornada. Ajuste visual mínimo + registro de estado QA validado.
+- Fuente de instruccion: Instrucciones operativas del usuario durante la sesion (Cowork/Claude).
+- Actividades realizadas:
+  - fix(vn-rq106): simplify softland pdf section title (commit c26f1bb) — título "PDF Softland generado" → "PDF Softland" para evitar confusión en QA cuando PDF_Anticipo_Softland__c está null.
+  - Validaciones QA cerradas en Sandbox: Reserva/Product2, correos aprobación/rechazo/reenvío, modal solicitudes, link Helios (Identificador_Helios__c), PDF Softland pendiente cuando campo null.
+  - Diego aceptó ajuste Helios (OK recibido).
+  - Pedro confirmó links de evidencia faltantes para BMW.
+  - Luis notificado por WhatsApp.
+- Commits relevantes:
+  - 46360b6 — feat(vn-rq106): show helios ticket and softland pdf link
+  - c26f1bb — fix(vn-rq106): simplify softland pdf section title
+- Deploys relevantes:
+  - 0AfNq00000XwT6fKAF — Helios/PDF Apex+LWC con tests VN_RQ106_OppOverviewCtrlTest (13/13 passing)
+  - 0AfNq00000XwRpeKAF — Ajuste visual LWC título PDF Softland
+- Archivos modificados hoy:
+  - force-app/main/default/lwc/vnRq106OpportunityOverview/vnRq106OpportunityOverview.html (línea 220: título sección PDF)
+- Validaciones:
+  - Branch sincronizado con origin (sin commits adelante ni atrás).
+  - 0 cambios funcionales (Apex, JS, Flow, CSS, tests intactos).
+  - Producción no modificada.
+- Pendientes para siguiente sesión / Producción:
+  - Preparar pase por Copado cuando Luis autorice.
+  - Retirar o reemplazar correos QA temporales del Flow VN_RQ106_Notificaciones_Anticipo antes de pasar a Producción.
+  - Validar paquete final: Apex, LWC, Flow, Quick Action, FlexiPages, campos y Permission Set.
+  - Ejecutar validación post-deploy en Producción.
+  - Hojas Kawa/Usados de QA corresponden a Paola/Sandra, no a este cierre.
+- Estado final: Validado en Sandbox — pendiente autorización de Luis para pase a Producción vía Copado.
