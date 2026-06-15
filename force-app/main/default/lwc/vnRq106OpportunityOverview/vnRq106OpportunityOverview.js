@@ -20,6 +20,7 @@ export default class VnRq106OpportunityOverview extends NavigationMixin(Lightnin
     actionDialog;
     actionComment = '';
     isSavingAction = false;
+    showAllSolicitudes = false;
 
     @wire(getOverview, { opportunityId: '$recordId' })
     wiredOverview(result) {
@@ -42,7 +43,9 @@ export default class VnRq106OpportunityOverview extends NavigationMixin(Lightnin
     }
 
     get visibleSolicitudes() {
-        return this.solicitudes.slice(0, MAX_TABLE_ROWS);
+        return this.showAllSolicitudes
+            ? this.solicitudes
+            : this.solicitudes.slice(0, MAX_TABLE_ROWS);
     }
 
     get anticiposAprobados() {
@@ -116,6 +119,16 @@ export default class VnRq106OpportunityOverview extends NavigationMixin(Lightnin
 
     get solicitudesMoreLabel() {
         return `Ver mas en lista relacionada (${this.solicitudes.length - MAX_TABLE_ROWS} adicionales).`;
+    }
+
+    get solicitudesToggleLabel() {
+        return this.showAllSolicitudes
+            ? 'Ver menos'
+            : `Ver todos en el modal (${this.solicitudes.length - MAX_TABLE_ROWS} adicionales)`;
+    }
+
+    handleToggleAllSolicitudes() {
+        this.showAllSolicitudes = !this.showAllSolicitudes;
     }
 
     get approvedCountLabel() {
@@ -262,6 +275,7 @@ export default class VnRq106OpportunityOverview extends NavigationMixin(Lightnin
             }));
             this.actionDialog = undefined;
             this.actionComment = '';
+            this.showAllSolicitudes = false;
             await refreshApex(this.wiredOverviewResult);
         } catch (error) {
             this.dispatchEvent(new ShowToastEvent({
@@ -298,7 +312,16 @@ export default class VnRq106OpportunityOverview extends NavigationMixin(Lightnin
             saldoPendiente: data.saldoPendiente || 0,
             currencyIsoCode: data.currencyIsoCode || 'USD',
             vehicles: data.vehicles || [],
-            solicitudes: (data.solicitudes || []).map(normalizeAnticipo),
+            solicitudes: (data.solicitudes || [])
+                .map(normalizeAnticipo)
+                .sort((a, b) => {
+                    const priority = (item) => {
+                        if (item.canApproveReservation || item.canRejectReservation) return 0;
+                        if (item.canResendReservation) return 1;
+                        return 2;
+                    };
+                    return priority(a) - priority(b);
+                }),
             anticiposAprobados: (data.anticiposAprobados || []).map(normalizeAnticipo),
             historial: (data.historial || []).map((event, index) => ({
                 ...event,

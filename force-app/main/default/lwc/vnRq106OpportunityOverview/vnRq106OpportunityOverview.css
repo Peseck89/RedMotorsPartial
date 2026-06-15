@@ -249,7 +249,35 @@
     color: #0b5cab;
     font-size: 0.68rem;
     font-weight: 700;
+    margin: 0;
+}
+
+.more-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
     margin: 0.3rem 0 0;
+}
+
+.more-link-btn {
+    background: none;
+    border: 1px solid #0b5cab;
+    border-radius: 0.2rem;
+    color: #0b5cab;
+    cursor: pointer;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+}
+
+.more-link-btn:hover {
+    background: #eaf1fb;
+}
+
+.more-link-sep {
+    color: #5f6a7d;
+    font-size: 0.68rem;
 }
 
 .alerts .active {

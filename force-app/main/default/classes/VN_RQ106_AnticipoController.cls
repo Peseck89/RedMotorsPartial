@@ -226,6 +226,14 @@ public with sharing class VN_RQ106_AnticipoController {
         }
         update solicitud;
 
+        if (solicitud.Producto__c != null) {
+            update new Product2(
+                Id = solicitud.Producto__c,
+                Producto_Reservado__c = true,
+                OportunidadReserva__c = solicitud.Oportunidad__c
+            );
+        }
+
         return buildResult(solicitud);
     }
 
@@ -276,7 +284,7 @@ public with sharing class VN_RQ106_AnticipoController {
 
         List<Anticipo__c> solicitudes = [
             SELECT Id, Estatus__c, Identificador_Helios__c, Tipo_Ingreso__c, Comentarios_Aprobacion_Rechazo__c,
-                Estado_Aprobacion_Producto__c, Oportunidad__c,
+                Estado_Aprobacion_Producto__c, Oportunidad__c, Producto__c,
                 Oportunidad__r.JefeSucursal__c
             FROM Anticipo__c
             WHERE Id = :anticipoId

@@ -149,7 +149,13 @@
                                     </table>
                                 </div>
                                 <template lwc:if={hasMoreSolicitudes}>
-                                    <p class="more-link">{solicitudesMoreLabel}</p>
+                                    <div class="more-actions">
+                                        <button class="more-link-btn" type="button" onclick={handleToggleAllSolicitudes}>
+                                            {solicitudesToggleLabel}
+                                        </button>
+                                        <span class="more-link-sep">·</span>
+                                        <p class="more-link">{solicitudesMoreLabel}</p>
+                                    </div>
                                 </template>
                             </template>
                             <template lwc:else>

@@ -1038,7 +1038,8 @@ private class VN_RQ106_AnticipoControllerTest {
         Test.stopTest();
 
         Anticipo__c updated = [
-            SELECT Estatus__c, Estado_Aprobacion_Producto__c, Comentarios_Aprobacion_Rechazo__c
+            SELECT Estatus__c, Estado_Aprobacion_Producto__c, Comentarios_Aprobacion_Rechazo__c,
+                Producto__c, Oportunidad__c
             FROM Anticipo__c
             WHERE Id = :anticipoId
         ];
@@ -1048,6 +1049,19 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertEquals('Vehículo reservado', updated.Estatus__c);
         System.assertEquals('Aprobada', updated.Estado_Aprobacion_Producto__c);
         System.assertEquals('Aprobado producto', updated.Comentarios_Aprobacion_Rechazo__c);
+
+        // Verificar que el producto quedó marcado como reservado
+        if (updated.Producto__c != null) {
+            Product2 updatedProduct = [
+                SELECT Producto_Reservado__c, OportunidadReserva__c
+                FROM Product2
+                WHERE Id = :updated.Producto__c
+            ];
+            System.assertEquals(true, updatedProduct.Producto_Reservado__c,
+                'El producto debe quedar marcado como reservado');
+            System.assertEquals(updated.Oportunidad__c, updatedProduct.OportunidadReserva__c,
+                'OportunidadReserva__c debe apuntar a la oportunidad del anticipo');
+        }
     }
 
     @IsTest
@@ -1093,7 +1107,7 @@ private class VN_RQ106_AnticipoControllerTest {
         Test.stopTest();
 
         Anticipo__c updated = [
-            SELECT Estatus__c, Estado_Aprobacion_Producto__c
+            SELECT Estatus__c, Estado_Aprobacion_Producto__c, Producto__c, Oportunidad__c
             FROM Anticipo__c
             WHERE Id = :anticipoId
         ];
@@ -1102,6 +1116,19 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertEquals('Aprobada', result.estadoAprobacionProducto);
         System.assertEquals('Vehículo reservado', updated.Estatus__c);
         System.assertEquals('Aprobada', updated.Estado_Aprobacion_Producto__c);
+
+        // Verificar que el producto quedó marcado como reservado
+        if (updated.Producto__c != null) {
+            Product2 updatedProduct = [
+                SELECT Producto_Reservado__c, OportunidadReserva__c
+                FROM Product2
+                WHERE Id = :updated.Producto__c
+            ];
+            System.assertEquals(true, updatedProduct.Producto_Reservado__c,
+                'El producto debe quedar marcado como reservado');
+            System.assertEquals(updated.Oportunidad__c, updatedProduct.OportunidadReserva__c,
+                'OportunidadReserva__c debe apuntar a la oportunidad del anticipo');
+        }
     }
 
     @IsTest
