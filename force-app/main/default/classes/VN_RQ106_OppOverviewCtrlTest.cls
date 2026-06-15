@@ -419,6 +419,81 @@ private class VN_RQ106_OppOverviewCtrlTest {
     }
 
     @IsTest
+    static void getOverviewExposesHeliosUrlAndPdfUrlWhenPresent() {
+        Opportunity opp = createOpportunity();
+
+        insert new Anticipo__c(
+            Oportunidad__c = opp.Id,
+            Tipo_Ingreso__c = 'Abono',
+            Medio_Pago__c = 'Transferencia',
+            Fecha_Ingreso__c = Date.today(),
+            Referencia_Comprobante__c = 'REF-HELIOS-PDF',
+            Depositante__c = 'Cliente Helios PDF',
+            Monto__c = 500,
+            CurrencyIsoCode = 'USD',
+            Estatus__c = 'Anticipo creado',
+            Identificador_Helios__c = '176316',
+            PDF_Anticipo_Softland__c = 'https://example.com/pdf/176316.pdf'
+        );
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(1, overview.solicitudes.size());
+        System.assertEquals('176316', overview.solicitudes[0].identificadorHelios);
+        System.assertEquals(
+            'http://172.16.69.8/Reporte/Index?solicitud=176316',
+            overview.solicitudes[0].ticketHeliosUrl,
+            'ticketHeliosUrl debe construirse con el identificador Helios'
+        );
+        System.assertEquals(
+            'https://example.com/pdf/176316.pdf',
+            overview.solicitudes[0].pdfAnticipoSoftlandUrl,
+            'pdfAnticipoSoftlandUrl debe exponerse desde PDF_Anticipo_Softland__c'
+        );
+        System.assertEquals('PDF Softland generado', overview.solicitudes[0].pdfStatus);
+        System.assertEquals('https://example.com/pdf/176316.pdf', overview.pdfAnticipoSoftlandUrl,
+            'overview.pdfAnticipoSoftlandUrl debe tomar el primer anticipo con PDF');
+        System.assertEquals('PDF Softland generado', overview.pdfStatus);
+    }
+
+    @IsTest
+    static void getOverviewReturnsNullHeliosUrlAndPendingPdfWhenFieldsEmpty() {
+        Opportunity opp = createOpportunity();
+
+        insert new Anticipo__c(
+            Oportunidad__c = opp.Id,
+            Tipo_Ingreso__c = 'Abono',
+            Medio_Pago__c = 'Transferencia',
+            Fecha_Ingreso__c = Date.today(),
+            Referencia_Comprobante__c = 'REF-NO-HELIOS',
+            Depositante__c = 'Cliente Sin Helios',
+            Monto__c = 100,
+            CurrencyIsoCode = 'USD',
+            Estatus__c = 'En validación de Tesorería',
+            Identificador_Helios__c = null,
+            PDF_Anticipo_Softland__c = null
+        );
+
+        Test.startTest();
+        VN_RQ106_OpportunityOverviewController.Overview overview =
+            VN_RQ106_OpportunityOverviewController.getOverview(opp.Id);
+        Test.stopTest();
+
+        System.assertEquals(1, overview.solicitudes.size());
+        System.assertEquals(null, overview.solicitudes[0].identificadorHelios);
+        System.assertEquals(null, overview.solicitudes[0].ticketHeliosUrl,
+            'Sin Identificador_Helios__c, ticketHeliosUrl debe ser null');
+        System.assertEquals(null, overview.solicitudes[0].pdfAnticipoSoftlandUrl,
+            'Sin PDF_Anticipo_Softland__c, pdfAnticipoSoftlandUrl debe ser null');
+        System.assertEquals('PDF Softland pendiente de generación', overview.solicitudes[0].pdfStatus);
+        System.assertEquals(null, overview.pdfAnticipoSoftlandUrl);
+        System.assertEquals('PDF Softland pendiente de generación', overview.pdfStatus);
+    }
+
+    @IsTest
     static void getOverviewShowsReservationActionsForAnticipoCreadoWithHeliosId() {
         Opportunity opp = createOpportunity();
         opp.JefeSucursal__c = UserInfo.getUserId();

@@ -47,6 +47,14 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         overview.retryStatus = 'No disponible todavía';
         overview.vehicles = getVehicles(opportunityId);
         overview.anticipos = getAnticipos(opportunityId, opp);
+        overview.pdfAnticipoSoftlandUrl = null;
+        for (AnticipoSummary anticipo : overview.anticipos) {
+            if (!String.isBlank(anticipo.pdfAnticipoSoftlandUrl)) {
+                overview.pdfAnticipoSoftlandUrl = anticipo.pdfAnticipoSoftlandUrl;
+                overview.pdfStatus = 'PDF Softland generado';
+                break;
+            }
+        }
         overview.solicitudes = new List<AnticipoSummary>();
         overview.anticiposAprobados = new List<AnticipoSummary>();
         overview.historial = new List<HistorySummary>();
@@ -119,6 +127,7 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
                 Tipo_Ingreso__c, Referencia_Comprobante__c, Depositante__c,
                 Comentarios_Asesor__c, Comentarios_Aprobacion_Rechazo__c,
                 Estado_Aprobacion_Producto__c, Identificador_Helios__c,
+                PDF_Anticipo_Softland__c,
                 Producto__c, Producto__r.Name, Producto__r.vin__c,
                 CreatedDate, LastModifiedDate, CreatedBy.Name, LastModifiedBy.Name
             FROM Anticipo__c
@@ -171,6 +180,15 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
             summary.createdByName = record.CreatedBy == null ? null : record.CreatedBy.Name;
             summary.lastModifiedByName = record.LastModifiedBy == null ? null : record.LastModifiedBy.Name;
             summary.identificadorHelios = record.Identificador_Helios__c;
+            summary.ticketHeliosUrl = String.isBlank(record.Identificador_Helios__c)
+                ? null
+                : 'http://172.16.69.8/Reporte/Index?solicitud=' + record.Identificador_Helios__c;
+            summary.pdfAnticipoSoftlandUrl = String.isBlank(record.PDF_Anticipo_Softland__c)
+                ? null
+                : record.PDF_Anticipo_Softland__c;
+            summary.pdfStatus = String.isBlank(record.PDF_Anticipo_Softland__c)
+                ? 'PDF Softland pendiente de generación'
+                : 'PDF Softland generado';
             summary.evidenceCount = evidenceCounts.containsKey(record.Id) ? evidenceCounts.get(record.Id) : 0;
             summary.evidenceStatus = summary.evidenceCount > 0 ? 'Con evidencia' : 'Sin evidencia';
             summary.approverName = APPROVED_OR_APPLIED_STATUSES.contains(record.Estatus__c)
@@ -248,6 +266,7 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         @AuraEnabled public String vehiculosReservados { get; set; }
         @AuraEnabled public String reservaStatus { get; set; }
         @AuraEnabled public String pdfStatus { get; set; }
+        @AuraEnabled public String pdfAnticipoSoftlandUrl { get; set; }
         @AuraEnabled public String retryStatus { get; set; }
         @AuraEnabled public Boolean correccionSolicitada { get; set; }
         @AuraEnabled public Boolean errorIntegracion { get; set; }
@@ -293,6 +312,9 @@ public with sharing class VN_RQ106_OpportunityOverviewController {
         @AuraEnabled public String approverName { get; set; }
         @AuraEnabled public Boolean isApprovedOrApplied { get; set; }
         @AuraEnabled public String identificadorHelios { get; set; }
+        @AuraEnabled public String ticketHeliosUrl { get; set; }
+        @AuraEnabled public String pdfAnticipoSoftlandUrl { get; set; }
+        @AuraEnabled public String pdfStatus { get; set; }
         @AuraEnabled public Boolean canApproveReservation { get; set; }
         @AuraEnabled public Boolean canRejectReservation { get; set; }
         @AuraEnabled public Boolean canResendReservation { get; set; }

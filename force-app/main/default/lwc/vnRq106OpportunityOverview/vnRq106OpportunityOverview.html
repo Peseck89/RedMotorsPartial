@@ -99,7 +99,14 @@
                                                         <a href={item.url}>{item.name}</a>
                                                         <span class="subtext">{item.tipoIngreso}</span>
                                                     </td>
-                                                    <td>{item.identificadorHelios}</td>
+                                                    <td>
+                                                        <template lwc:if={item.ticketHeliosUrl}>
+                                                            <a href={item.ticketHeliosUrl} target="_blank" rel="noopener noreferrer">{item.identificadorHelios}</a>
+                                                        </template>
+                                                        <template lwc:else>
+                                                            <span>{item.identificadorHelios}</span>
+                                                        </template>
+                                                    </td>
                                                     <td>{item.estatus}</td>
                                                     <td>
                                                         <lightning-formatted-number
@@ -214,7 +221,12 @@
                             </div>
                             <div class="placeholder">
                                 <lightning-icon icon-name="doctype:pdf" size="small"></lightning-icon>
-                                <span>{overview.pdfStatus}</span>
+                                <template lwc:if={overview.pdfAnticipoSoftlandUrl}>
+                                    <a href={overview.pdfAnticipoSoftlandUrl} target="_blank" rel="noopener noreferrer" class="pdf-link">Ver PDF Softland</a>
+                                </template>
+                                <template lwc:else>
+                                    <span>{overview.pdfStatus}</span>
+                                </template>
                             </div>
                         </section>
 
