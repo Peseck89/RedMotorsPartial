@@ -344,3 +344,41 @@ Plantilla de bitacora tecnica diaria.
   - Ejecutar validación post-deploy en Producción.
   - Hojas Kawa/Usados de QA corresponden a Paola/Sandra, no a este cierre.
 - Estado final: Validado en Sandbox — pendiente autorización de Luis para pase a Producción vía Copado.
+
+## 2026-06-16 - RedMotors - Cierre Fase 3B VN-RQ106 Template Visual Notificaciones
+
+- Fecha: 2026-06-16
+- Equipo: PC
+- Repo: RedMotorsPartial-Sandbox
+- Rama: feature/pc/redmotors-vn-rq106-anticipo-ui-20260527
+- Asignacion: VN-RQ106 - Ingresos y anticipos
+- Objetivo: Aplicar template visual redm-mail-template.html a las 4 notificaciones de reserva del Flow VN_RQ106_Notificaciones_Anticipo y validar funcionalmente en Sandbox.
+- Fuente de instruccion: Instrucciones operativas del usuario durante la sesion (Cowork/Claude).
+- Actividades realizadas:
+  - Lectura y analisis de redm-mail-template.html (header Red Motors, cuadro blanco, footer BMW/MINI, bloque azul QR, cintillo).
+  - Construccion de los 4 cuerpos HTML completos con template visual aplicado, conservando todos los merge fields del Flow.
+  - Escritura de cambios en Flow XML (VN_RQ106_Notificaciones_Anticipo.flow-meta.xml) via Python byte-replacement.
+  - Emails afectados: Solicitud de reserva (Pendiente), Reserva rechazada, Vehiculo reservado (Aprobada), Reenvio solicitud (EmailBody template).
+  - Validacion de diff: solo cambios en cuerpos de correo dentro del Flow; logica, destinatarios, Apex y LWC intactos.
+  - Commit y push a origin.
+  - Deploy a RedMotorsSandbox exitoso.
+  - Validacion funcional de los 3 correos de reserva: llegaron con logo/header, cuadro blanco, footer, QR, cintillo y datos dinamicos conservados.
+- Commits relevantes:
+  - e4cac93 feat(vn-rq106): apply email template to treasury notification
+  - 0cc7645 feat(vn-rq106): apply email template to reservation notifications
+- Deploys relevantes:
+  - 0AfNq00000XyX2vKAF - Flow VN_RQ106_Notificaciones_Anticipo (Fase 3B template visual) - Succeeded
+- Archivos modificados:
+  - force-app/main/default/flows/VN_RQ106_Notificaciones_Anticipo.flow-meta.xml
+- Validaciones:
+  - Branch sincronizado con origin (sin commits adelante ni atras).
+  - CRLF noise presente en archivos no editados (git diff +N/-N iguales) - no representa cambios reales.
+  - redm-mail-template.html permanece untracked; NO se agrega al repo.
+  - Produccion no modificada.
+- Pendientes para siguiente sesion / Produccion:
+  - Retirar o reemplazar correos QA temporales del Flow antes de pase a Produccion.
+  - Preparar pase por Copado cuando Luis autorice.
+  - Validar paquete final: Apex, LWC, Flow, Quick Action, FlexiPages, campos y Permission Set.
+  - Ejecutar validacion post-deploy en Produccion.
+- Estado final: Fase 3B completada y validada en Sandbox. Branch limpio y sincronizado con origin. Pendiente autorizacion de Luis para pase a Produccion via Copado.
+Pendiente autorización de Luis para pase a Producción vía Copado.
