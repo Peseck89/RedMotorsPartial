@@ -1070,8 +1070,15 @@ private class VN_RQ106_AnticipoControllerTest {
                 AND Product2Id = :updated.Producto__c
             LIMIT 1
         ];
+        Opportunity updatedOpportunity = [
+            SELECT Tiene_Vehiculos_Reservados__c
+            FROM Opportunity
+            WHERE Id = :updated.Oportunidad__c
+        ];
         System.assertEquals(true, updatedLine.Reservado__c,
             'El Opportunity Product debe quedar marcado como reservado');
+        System.assertEquals(true, updatedOpportunity.Tiene_Vehiculos_Reservados__c,
+            'La oportunidad debe quedar marcada con vehículos reservados');
     }
 
     @IsTest
@@ -1178,6 +1185,11 @@ private class VN_RQ106_AnticipoControllerTest {
             FROM Product2
             WHERE Id = :product.Id
         ];
+        Opportunity updatedOpportunity = [
+            SELECT Tiene_Vehiculos_Reservados__c
+            FROM Opportunity
+            WHERE Id = :opp.Id
+        ];
         Integer matchingLines = [
             SELECT COUNT()
             FROM OpportunityLineItem
@@ -1192,6 +1204,8 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertEquals(true, updatedProduct.Producto_Reservado__c,
             'El producto debe reservarse aunque no exista Opportunity Product coincidente');
         System.assertEquals(opp.Id, updatedProduct.OportunidadReserva__c);
+        System.assertEquals(true, updatedOpportunity.Tiene_Vehiculos_Reservados__c,
+            'La oportunidad debe quedar marcada aunque no exista Opportunity Product coincidente');
         System.assertEquals(0, matchingLines,
             'La aprobación no debe crear Opportunity Products ni fallar si no hay línea coincidente');
     }

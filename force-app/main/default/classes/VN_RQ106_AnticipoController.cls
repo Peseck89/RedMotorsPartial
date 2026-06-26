@@ -233,6 +233,7 @@ public with sharing class VN_RQ106_AnticipoController {
                 OportunidadReserva__c = solicitud.Oportunidad__c
             );
             markOpportunityProductsReserved(solicitud.Oportunidad__c, solicitud.Producto__c);
+            markOpportunityReserved(solicitud.Oportunidad__c);
         }
 
         return buildResult(solicitud);
@@ -357,6 +358,25 @@ public with sharing class VN_RQ106_AnticipoController {
 
         if (!linesToUpdate.isEmpty()) {
             update linesToUpdate;
+        }
+    }
+
+    private static void markOpportunityReserved(Id opportunityId) {
+        if (opportunityId == null) {
+            return;
+        }
+
+        List<Opportunity> opportunities = [
+            SELECT Id, Tiene_Vehiculos_Reservados__c
+            FROM Opportunity
+            WHERE Id = :opportunityId
+            LIMIT 1
+        ];
+        if (!opportunities.isEmpty() && opportunities[0].Tiene_Vehiculos_Reservados__c != true) {
+            update new Opportunity(
+                Id = opportunityId,
+                Tiene_Vehiculos_Reservados__c = true
+            );
         }
     }
 
