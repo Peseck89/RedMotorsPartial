@@ -232,6 +232,7 @@ public with sharing class VN_RQ106_AnticipoController {
                 Producto_Reservado__c = true,
                 OportunidadReserva__c = solicitud.Oportunidad__c
             );
+            markOpportunityProductsReserved(solicitud.Oportunidad__c, solicitud.Producto__c);
         }
 
         return buildResult(solicitud);
@@ -334,6 +335,29 @@ public with sharing class VN_RQ106_AnticipoController {
         }
         return solicitud.Estatus__c == STATUS_ANTICIPO_CREADO &&
             !String.isBlank(solicitud.Identificador_Helios__c);
+    }
+
+    private static void markOpportunityProductsReserved(Id opportunityId, Id productId) {
+        if (opportunityId == null || productId == null) {
+            return;
+        }
+
+        List<OpportunityLineItem> linesToUpdate = new List<OpportunityLineItem>();
+        for (OpportunityLineItem line : [
+            SELECT Id, Reservado__c
+            FROM OpportunityLineItem
+            WHERE OpportunityId = :opportunityId
+                AND Product2Id = :productId
+        ]) {
+            if (line.Reservado__c != true) {
+                line.Reservado__c = true;
+                linesToUpdate.add(line);
+            }
+        }
+
+        if (!linesToUpdate.isEmpty()) {
+            update linesToUpdate;
+        }
     }
 
     private static DraftSolicitudResult buildResult(Anticipo__c solicitud) {

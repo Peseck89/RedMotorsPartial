@@ -1062,6 +1062,16 @@ private class VN_RQ106_AnticipoControllerTest {
             System.assertEquals(updated.Oportunidad__c, updatedProduct.OportunidadReserva__c,
                 'OportunidadReserva__c debe apuntar a la oportunidad del anticipo');
         }
+
+        OpportunityLineItem updatedLine = [
+            SELECT Reservado__c
+            FROM OpportunityLineItem
+            WHERE OpportunityId = :updated.Oportunidad__c
+                AND Product2Id = :updated.Producto__c
+            LIMIT 1
+        ];
+        System.assertEquals(true, updatedLine.Reservado__c,
+            'El Opportunity Product debe quedar marcado como reservado');
     }
 
     @IsTest
@@ -1129,6 +1139,61 @@ private class VN_RQ106_AnticipoControllerTest {
             System.assertEquals(updated.Oportunidad__c, updatedProduct.OportunidadReserva__c,
                 'OportunidadReserva__c debe apuntar a la oportunidad del anticipo');
         }
+    }
+
+    @IsTest
+    static void approveReservationWithoutMatchingOpportunityLineItemDoesNotFail() {
+        Opportunity opp = createOpportunity();
+        opp.JefeSucursal__c = UserInfo.getUserId();
+        update opp;
+        Product2 product = createVehicleProduct();
+        Anticipo__c solicitud = new Anticipo__c(
+            Oportunidad__c = opp.Id,
+            Producto__c = product.Id,
+            Tipo_Ingreso__c = 'Reserva de vehículo',
+            Medio_Pago__c = 'Transferencia',
+            Fecha_Ingreso__c = Date.today(),
+            Referencia_Comprobante__c = 'RES-SIN-LINEA',
+            Depositante__c = 'Cliente Reserva',
+            Monto__c = 2000,
+            CurrencyIsoCode = 'USD',
+            Estatus__c = 'Confirmada por Tesorería',
+            Estado_Aprobacion_Producto__c = 'Pendiente',
+            Comentarios_Asesor__c = 'Reserva sin Opportunity Product relacionado'
+        );
+        insert solicitud;
+
+        Test.startTest();
+        VN_RQ106_AnticipoController.DraftSolicitudResult result =
+            VN_RQ106_AnticipoController.approveReservation(solicitud.Id, 'Aprobado sin linea');
+        Test.stopTest();
+
+        Anticipo__c updated = [
+            SELECT Estatus__c, Estado_Aprobacion_Producto__c
+            FROM Anticipo__c
+            WHERE Id = :solicitud.Id
+        ];
+        Product2 updatedProduct = [
+            SELECT Producto_Reservado__c, OportunidadReserva__c
+            FROM Product2
+            WHERE Id = :product.Id
+        ];
+        Integer matchingLines = [
+            SELECT COUNT()
+            FROM OpportunityLineItem
+            WHERE OpportunityId = :opp.Id
+                AND Product2Id = :product.Id
+        ];
+
+        System.assertEquals('Vehículo reservado', result.estatus);
+        System.assertEquals('Aprobada', result.estadoAprobacionProducto);
+        System.assertEquals('Vehículo reservado', updated.Estatus__c);
+        System.assertEquals('Aprobada', updated.Estado_Aprobacion_Producto__c);
+        System.assertEquals(true, updatedProduct.Producto_Reservado__c,
+            'El producto debe reservarse aunque no exista Opportunity Product coincidente');
+        System.assertEquals(opp.Id, updatedProduct.OportunidadReserva__c);
+        System.assertEquals(0, matchingLines,
+            'La aprobación no debe crear Opportunity Products ni fallar si no hay línea coincidente');
     }
 
     @IsTest
