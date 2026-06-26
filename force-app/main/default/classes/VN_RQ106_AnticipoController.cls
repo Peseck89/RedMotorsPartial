@@ -233,7 +233,7 @@ public with sharing class VN_RQ106_AnticipoController {
                 OportunidadReserva__c = solicitud.Oportunidad__c
             );
             markOpportunityProductsReserved(solicitud.Oportunidad__c, solicitud.Producto__c);
-            markOpportunityReserved(solicitud.Oportunidad__c);
+            markOpportunityReserved(solicitud.Oportunidad__c, solicitud.Producto__c);
         }
 
         return buildResult(solicitud);
@@ -345,13 +345,20 @@ public with sharing class VN_RQ106_AnticipoController {
 
         List<OpportunityLineItem> linesToUpdate = new List<OpportunityLineItem>();
         for (OpportunityLineItem line : [
-            SELECT Id, Reservado__c
+            SELECT Id, OpportunityId, Reservado__c, ReservadoDesdeAqui__c
             FROM OpportunityLineItem
-            WHERE OpportunityId = :opportunityId
-                AND Product2Id = :productId
+            WHERE Product2Id = :productId
         ]) {
+            Boolean shouldUpdate = false;
             if (line.Reservado__c != true) {
                 line.Reservado__c = true;
+                shouldUpdate = true;
+            }
+            if (line.OpportunityId == opportunityId && line.ReservadoDesdeAqui__c != true) {
+                line.ReservadoDesdeAqui__c = true;
+                shouldUpdate = true;
+            }
+            if (shouldUpdate) {
                 linesToUpdate.add(line);
             }
         }
@@ -361,23 +368,61 @@ public with sharing class VN_RQ106_AnticipoController {
         }
     }
 
-    private static void markOpportunityReserved(Id opportunityId) {
-        if (opportunityId == null) {
+    private static void markOpportunityReserved(Id opportunityId, Id productId) {
+        if (opportunityId == null || productId == null) {
             return;
         }
 
         List<Opportunity> opportunities = [
-            SELECT Id, Tiene_Vehiculos_Reservados__c
+            SELECT Id, Tiene_Vehiculos_Reservados__c, Vehiculos_Reservados__c
             FROM Opportunity
             WHERE Id = :opportunityId
             LIMIT 1
         ];
-        if (!opportunities.isEmpty() && opportunities[0].Tiene_Vehiculos_Reservados__c != true) {
-            update new Opportunity(
-                Id = opportunityId,
-                Tiene_Vehiculos_Reservados__c = true
-            );
+        if (opportunities.isEmpty()) {
+            return;
         }
+
+        List<Product2> products = [
+            SELECT Id, Name
+            FROM Product2
+            WHERE Id = :productId
+            LIMIT 1
+        ];
+
+        Opportunity opportunityToUpdate = opportunities[0];
+        Boolean shouldUpdate = false;
+        if (opportunityToUpdate.Tiene_Vehiculos_Reservados__c != true) {
+            opportunityToUpdate.Tiene_Vehiculos_Reservados__c = true;
+            shouldUpdate = true;
+        }
+        if (!products.isEmpty()) {
+            String reservedVehicles = appendReservedVehicleName(
+                opportunityToUpdate.Vehiculos_Reservados__c,
+                products[0].Name
+            );
+            if (reservedVehicles != opportunityToUpdate.Vehiculos_Reservados__c) {
+                opportunityToUpdate.Vehiculos_Reservados__c = reservedVehicles;
+                shouldUpdate = true;
+            }
+        }
+
+        if (shouldUpdate) {
+            update opportunityToUpdate;
+        }
+    }
+
+    private static String appendReservedVehicleName(String currentValue, String productName) {
+        if (String.isBlank(productName)) {
+            return currentValue;
+        }
+        if (String.isBlank(currentValue)) {
+            return productName;
+        }
+        if (currentValue.length() + productName.length() + 2 <= 255) {
+            return currentValue + ', ' + productName;
+        }
+        return currentValue;
     }
 
     private static DraftSolicitudResult buildResult(Anticipo__c solicitud) {

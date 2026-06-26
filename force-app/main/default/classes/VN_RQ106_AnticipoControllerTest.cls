@@ -1064,21 +1064,25 @@ private class VN_RQ106_AnticipoControllerTest {
         }
 
         OpportunityLineItem updatedLine = [
-            SELECT Reservado__c
+            SELECT Reservado__c, ReservadoDesdeAqui__c
             FROM OpportunityLineItem
             WHERE OpportunityId = :updated.Oportunidad__c
                 AND Product2Id = :updated.Producto__c
             LIMIT 1
         ];
         Opportunity updatedOpportunity = [
-            SELECT Tiene_Vehiculos_Reservados__c
+            SELECT Tiene_Vehiculos_Reservados__c, Vehiculos_Reservados__c
             FROM Opportunity
             WHERE Id = :updated.Oportunidad__c
         ];
         System.assertEquals(true, updatedLine.Reservado__c,
             'El Opportunity Product debe quedar marcado como reservado');
+        System.assertEquals(true, updatedLine.ReservadoDesdeAqui__c,
+            'La linea de la oportunidad debe identificar que la reserva salió desde aquí');
         System.assertEquals(true, updatedOpportunity.Tiene_Vehiculos_Reservados__c,
             'La oportunidad debe quedar marcada con vehículos reservados');
+        System.assertEquals(true, updatedOpportunity.Vehiculos_Reservados__c.contains('Vehiculo VN RQ106'),
+            'La oportunidad debe conservar el nombre del vehículo reservado');
     }
 
     @IsTest
@@ -1186,7 +1190,7 @@ private class VN_RQ106_AnticipoControllerTest {
             WHERE Id = :product.Id
         ];
         Opportunity updatedOpportunity = [
-            SELECT Tiene_Vehiculos_Reservados__c
+            SELECT Tiene_Vehiculos_Reservados__c, Vehiculos_Reservados__c
             FROM Opportunity
             WHERE Id = :opp.Id
         ];
@@ -1206,6 +1210,8 @@ private class VN_RQ106_AnticipoControllerTest {
         System.assertEquals(opp.Id, updatedProduct.OportunidadReserva__c);
         System.assertEquals(true, updatedOpportunity.Tiene_Vehiculos_Reservados__c,
             'La oportunidad debe quedar marcada aunque no exista Opportunity Product coincidente');
+        System.assertEquals(true, updatedOpportunity.Vehiculos_Reservados__c.contains('Vehiculo VN RQ106'),
+            'La oportunidad debe conservar el nombre del vehículo reservado aunque no exista línea coincidente');
         System.assertEquals(0, matchingLines,
             'La aprobación no debe crear Opportunity Products ni fallar si no hay línea coincidente');
     }
