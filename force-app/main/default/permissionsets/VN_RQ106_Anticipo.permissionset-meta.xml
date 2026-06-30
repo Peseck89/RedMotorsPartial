@@ -31,6 +31,21 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Anticipo__c.Identificacion_Depositante__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Anticipo__c.Identificador__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Anticipo__c.Identificador_Helios__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Anticipo__c.Estado_Aprobacion_Producto__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -47,6 +62,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Anticipo__c.Monto__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Anticipo__c.PDF_Anticipo_Softland__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
