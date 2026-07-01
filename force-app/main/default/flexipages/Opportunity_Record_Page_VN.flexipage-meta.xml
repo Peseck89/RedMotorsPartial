@@ -174,7 +174,7 @@
                         <valueListItems>
                             <value>Opportunity.VN_RQ106_Registrar_Ingreso_Anticipo</value>
                             <visibilityRule>
-                                <booleanFilter>1 OR 2 OR 3 OR 4 OR 5</booleanFilter>
+                                <booleanFilter>1 AND (2 OR 3 OR 4 OR 5)</booleanFilter>
                                 <criteria>
                                     <leftValue>{!$Permission.CustomPermission.System_Admin_CP}</leftValue>
                                     <operator>EQUAL</operator>
@@ -204,6 +204,13 @@
                         </valueListItems>
                         <valueListItems>
                             <value>Opportunity.VN_RQ106_Solicitudes_Anticipos</value>
+                            <visibilityRule>
+                                <criteria>
+                                    <leftValue>{!$Permission.CustomPermission.System_Admin_CP}</leftValue>
+                                    <operator>EQUAL</operator>
+                                    <rightValue>true</rightValue>
+                                </criteria>
+                            </visibilityRule>
                         </valueListItems>
                         <valueListItems>
                             <value>Opportunity.Enviar_link_de_pago</value>

@@ -57,9 +57,23 @@
                         </valueListItems>
                         <valueListItems>
                             <value>Opportunity.VN_RQ106_Registrar_Ingreso_Anticipo</value>
+                            <visibilityRule>
+                                <criteria>
+                                    <leftValue>{!$Permission.CustomPermission.System_Admin_CP}</leftValue>
+                                    <operator>EQUAL</operator>
+                                    <rightValue>true</rightValue>
+                                </criteria>
+                            </visibilityRule>
                         </valueListItems>
                         <valueListItems>
                             <value>Opportunity.VN_RQ106_Solicitudes_Anticipos</value>
+                            <visibilityRule>
+                                <criteria>
+                                    <leftValue>{!$Permission.CustomPermission.System_Admin_CP}</leftValue>
+                                    <operator>EQUAL</operator>
+                                    <rightValue>true</rightValue>
+                                </criteria>
+                            </visibilityRule>
                         </valueListItems>
                         <valueListItems>
                             <value>Opportunity.Plan_de_Cliente_Usados_save_PDF</value>
