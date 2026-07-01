@@ -409,3 +409,54 @@ Pendiente autorización de Luis para pase a Producción vía Copado.
 - Pendientes: Revisar bloqueos de negocio o seguimiento indicado en observaciones.
 - Estado final: En progreso
 - Observaciones: This assignment is multi-day work.; Continuing this assignment can be valid from the expected feature branch if Git is clean and synchronized.; Starting a brand new assignment should still happen from main.
+## 2026-07-01 - RedMotors - Cierre tecnico final VN-RQ106 Produccion
+
+**Equipo:** Laptop
+**Repo:** `RedMotorsPartial-Sandbox`
+**Branch:** `feature/pc/redmotors-vn-rq106-anticipo-ui-20260527`
+**Tipo de tarea:** Documentacion / cierre tecnico
+
+### Objetivo
+
+Registrar el cierre tecnico final del requerimiento VN-RQ106 despues del pase exitoso a Produccion por Copado.
+
+### Estado inicial validado
+
+- Branch limpio y sincronizado con `origin`.
+- No habia archivos tracked modificados antes de actualizar bitacoras.
+- No se modifico metadata funcional.
+- No se hizo deploy desde local.
+
+### Cierre productivo registrado
+
+- Deployment Copado a Produccion: `SUCCEEDED`.
+- Componentes desplegados: `53/53`.
+- Apex tests ejecutados: `102/102`.
+- Errores: `0`.
+- Commit final registrado: `fb46139 feat(vn-rq106): apply final email template and admin visibility`.
+- Commit tests registrado: `73ba220 fix(vn-rq106): make copado validation tests permission independent`.
+- Commit permisos registrado: `4a60767 fix(vn-rq106): add anticipo field permissions for copado validation`.
+
+### Cambios finales validados en Produccion
+
+- HTML azul aplicado a los 4 correos del Flow `VN_RQ106_Notificaciones_Anticipo`:
+  - Solicitud enviada a Tesoreria.
+  - Reenvio de reserva pendiente.
+  - Reserva rechazada.
+  - Reserva aprobada / vehiculo reservado.
+- Destinatarios confirmados:
+  - `cmora@redmotorscr.com`
+  - `oaparicio@redmotorscr.com`
+  - `admin@portalnetcr.com`
+- Correos de reserva mantienen destinatarios dinamicos de asesor/jefe de producto cuando aplica.
+- Visibilidad admin-only validada para los botones nuevos VN-RQ106.
+- Usuario no admin no ve los botones nuevos VN-RQ106.
+- Boton legacy sigue visible como esperado.
+- Maria recibio evidencia y mensaje de cierre.
+
+### Estado final
+
+- VN-RQ106 queda cerrado tecnicamente en Produccion.
+- Pendiente solamente monitoreo post-produccion y atencion de incidentes si negocio reporta hallazgos.
+
+---

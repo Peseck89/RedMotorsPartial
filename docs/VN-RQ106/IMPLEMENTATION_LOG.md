@@ -315,3 +315,44 @@ Pendiente para Producción:
 
 - Sandbox: funcionalidad completa validada.
 - Producción: sin cambios. Requiere aprobación funcional, evidencia y plan de pase antes de cualquier despliegue.
+## 2026-07-01 - Cierre Produccion Copado
+
+Se registra el cierre tecnico final del requerimiento VN-RQ106 despues del pase exitoso a Produccion por Copado.
+
+### Resultado del deployment productivo
+
+- Estado Copado: `SUCCEEDED`.
+- Componentes: `53/53`.
+- Apex tests: `102/102`.
+- Errores: `0`.
+
+### Commits finales asociados
+
+- `fb46139 feat(vn-rq106): apply final email template and admin visibility`.
+- `73ba220 fix(vn-rq106): make copado validation tests permission independent`.
+- `4a60767 fix(vn-rq106): add anticipo field permissions for copado validation`.
+
+### Alcance final validado
+
+- HTML azul aplicado a los 4 correos de VN-RQ106:
+  - Solicitud enviada a Tesoreria.
+  - Reenvio de reserva pendiente.
+  - Reserva rechazada.
+  - Reserva aprobada / vehiculo reservado.
+- Destinatarios fijos confirmados:
+  - `cmora@redmotorscr.com`
+  - `oaparicio@redmotorscr.com`
+  - `admin@portalnetcr.com`
+- Correos de reserva conservan destinatarios dinamicos de asesor/jefe de producto cuando aplica.
+- Visibilidad admin-only validada para botones nuevos VN-RQ106.
+- Usuario no admin no ve botones nuevos VN-RQ106.
+- Boton legacy permanece visible como esperado.
+- Maria recibio evidencia y mensaje de cierre.
+
+### Estado final
+
+- Produccion: pase completado por Copado.
+- Proyecto: cerrado tecnicamente.
+- Pendiente: monitoreo post-produccion y atencion de incidencias si negocio reporta hallazgos.
+
+---
