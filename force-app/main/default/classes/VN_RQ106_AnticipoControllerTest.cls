@@ -17,6 +17,37 @@ private class VN_RQ106_AnticipoControllerTest {
         }
     }
 
+    private static User createUserWithAnticipoPermissions() {
+        User currentUser = [
+            SELECT ProfileId, LocaleSidKey, LanguageLocaleKey, TimeZoneSidKey, EmailEncodingKey
+            FROM User
+            WHERE Id = :UserInfo.getUserId()
+        ];
+        String uniqueValue = String.valueOf(DateTime.now().getTime()) + String.valueOf(Math.abs(Crypto.getRandomInteger()));
+        User testUser = new User(
+            Username = 'vn106.anticipo.' + uniqueValue + '@example.com',
+            Email = 'vn106.anticipo.' + uniqueValue + '@example.com',
+            LastName = 'VN106 Anticipo',
+            Alias = 'vn106a',
+            CommunityNickname = 'vn106a' + uniqueValue.right(8),
+            ProfileId = currentUser.ProfileId,
+            LocaleSidKey = currentUser.LocaleSidKey,
+            LanguageLocaleKey = currentUser.LanguageLocaleKey,
+            TimeZoneSidKey = currentUser.TimeZoneSidKey,
+            EmailEncodingKey = String.isBlank(currentUser.EmailEncodingKey) ? 'UTF-8' : currentUser.EmailEncodingKey
+        );
+        insert testUser;
+
+        PermissionSet permissionSet = [
+            SELECT Id
+            FROM PermissionSet
+            WHERE Name = 'VN_RQ106_Anticipo'
+            LIMIT 1
+        ];
+        insert new PermissionSetAssignment(AssigneeId = testUser.Id, PermissionSetId = permissionSet.Id);
+        return testUser;
+    }
+
     private static Opportunity createOpportunity() {
         return createOpportunity('USD');
     }
@@ -588,62 +619,68 @@ private class VN_RQ106_AnticipoControllerTest {
 
     @IsTest
     static void solicitudAprobacionTesoreriaCalloutLoadsEvidenceAndStoresHeliosId() {
-        Opportunity opp = createOpportunity();
-        Id anticipoId = createDraftAnticipo(opp.Id);
-        attachEvidence(anticipoId);
+        User userWithPermissions = createUserWithAnticipoPermissions();
+        System.runAs(userWithPermissions) {
+            Opportunity opp = createOpportunity();
+            Id anticipoId = createDraftAnticipo(opp.Id);
+            attachEvidence(anticipoId);
 
-        SolicitudAprobacionTesoreria request = new SolicitudAprobacionTesoreria();
-        request.salesforceRequestId = String.valueOf(anticipoId);
-        request.codigoSoftland = 'C126750';
-        request.cliente = 'C126750';
-        request.consecutivoOpportunidad = 'OPP-001';
-        request.monto = '1.00';
-        request.moneda = 'USD';
-        request.fechaPago = '2026-06-10';
-        request.metodoPago = 'Depósito';
-        request.referenciaBancaria = 'REF-001';
-        request.diferenteCliente = 'false';
-        request.tipoIngreso = 'Reserva de vehículo';
-        request.comentarios = 'Comentario';
-        request.compania = 'RMBAVARIAN';
+            SolicitudAprobacionTesoreria request = new SolicitudAprobacionTesoreria();
+            request.salesforceRequestId = String.valueOf(anticipoId);
+            request.codigoSoftland = 'C126750';
+            request.cliente = 'C126750';
+            request.consecutivoOpportunidad = 'OPP-001';
+            request.monto = '1.00';
+            request.moneda = 'USD';
+            request.fechaPago = '2026-06-10';
+            request.metodoPago = 'Depósito';
+            request.referenciaBancaria = 'REF-001';
+            request.diferenteCliente = 'false';
+            request.tipoIngreso = 'Reserva de vehículo';
+            request.comentarios = 'Comentario';
+            request.compania = 'RMBAVARIAN';
 
-        Test.setMock(HttpCalloutMock.class, new TreasuryHttpMock());
+            Test.setMock(HttpCalloutMock.class, new TreasuryHttpMock());
 
-        Test.startTest();
-        SolicitudAprobacionTesoreria.RespuestaEstandar response = request.realizarLlamada();
-        Test.stopTest();
+            Test.startTest();
+            SolicitudAprobacionTesoreria.RespuestaEstandar response = request.realizarLlamada();
+            Test.stopTest();
 
-        Anticipo__c updated = [
-            SELECT Identificador_Helios__c
-            FROM Anticipo__c
-            WHERE Id = :anticipoId
-        ];
+            Anticipo__c updated = [
+                SELECT Identificador_Helios__c
+                FROM Anticipo__c
+                WHERE Id = :anticipoId
+            ];
 
-        System.assertEquals(200, response.codigo);
-        System.assertEquals('HELIOS-TEST-001', updated.Identificador_Helios__c);
-        System.assertNotEquals(null, request.nombreArchivo);
-        System.assertNotEquals(null, request.archivo);
+            System.assertEquals(200, response.codigo);
+            System.assertEquals('HELIOS-TEST-001', updated.Identificador_Helios__c);
+            System.assertNotEquals(null, request.nombreArchivo);
+            System.assertNotEquals(null, request.archivo);
+        }
     }
 
     @IsTest
     static void solicitudAprobacionTesoreriaLegacyEnviarReturnsIdentifier() {
-        Opportunity opp = createOpportunity();
-        Id anticipoId = createDraftAnticipo(opp.Id);
+        User userWithPermissions = createUserWithAnticipoPermissions();
+        System.runAs(userWithPermissions) {
+            Opportunity opp = createOpportunity();
+            Id anticipoId = createDraftAnticipo(opp.Id);
 
-        Test.setMock(HttpCalloutMock.class, new TreasuryHttpMock());
+            Test.setMock(HttpCalloutMock.class, new TreasuryHttpMock());
 
-        Test.startTest();
-        String heliosId = SolicitudAprobacionTesoreria.enviar(anticipoId);
-        Test.stopTest();
+            Test.startTest();
+            String heliosId = SolicitudAprobacionTesoreria.enviar(anticipoId);
+            Test.stopTest();
 
-        Anticipo__c updated = [
-            SELECT Identificador_Helios__c
-            FROM Anticipo__c
-            WHERE Id = :anticipoId
-        ];
+            Anticipo__c updated = [
+                SELECT Identificador_Helios__c
+                FROM Anticipo__c
+                WHERE Id = :anticipoId
+            ];
 
-        System.assertEquals('HELIOS-TEST-001', heliosId);
-        System.assertEquals('HELIOS-TEST-001', updated.Identificador_Helios__c);
+            System.assertEquals('HELIOS-TEST-001', heliosId);
+            System.assertEquals('HELIOS-TEST-001', updated.Identificador_Helios__c);
+        }
     }
 
     @IsTest
