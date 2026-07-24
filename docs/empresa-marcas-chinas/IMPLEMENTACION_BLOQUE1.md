@@ -12,6 +12,9 @@ disponibles en el Sandbox. Ningún consumidor ni trigger utiliza todavía
 No se crearon registros de Empresa. La nueva empresa todavía no está activa
 operativamente.
 
+El Permission Set `Empresa_Admin` también está disponible en el Sandbox. Con
+esto, el Bloque 1 queda técnicamente desplegado y probado.
+
 ## Archivos creados
 
 ### Metadata
@@ -21,6 +24,7 @@ operativamente.
 - `objects/Empresa__c/fields/Codigo_ERP__c.field-meta.xml`
 - `objects/Empresa__c/fields/Nombre_Legal__c.field-meta.xml`
 - `objects/Empresa__c/fields/Activa__c.field-meta.xml`
+- `permissionsets/Empresa_Admin.permissionset-meta.xml`
 
 ### Apex
 
@@ -168,25 +172,71 @@ El deploy confirmó la disponibilidad del objeto `Empresa__c`, sus campos y las
 clases de soporte. Este resultado no habilita funcionalmente una empresa nueva:
 todavía no existen registros de Empresa ni consumidores conectados al resolver.
 
-## Recomendación de permisos
+## Permission Set de administración
 
-El repositorio no contiene metadata de Permission Sets ni perfiles que permita
-identificar un patrón existente reutilizable para este maestro. Por trazabilidad
-y mínimo privilegio, se recomienda crear un Permission Set específico para la
-administración de Empresas en una tarea posterior.
+El Permission Set `Empresa_Admin`, con etiqueta “Administración de Empresas”,
+está disponible en `RedMotorsSandbox`.
 
-El permiso propuesto debe contemplar:
+Incluye:
 
-- acceso de lectura, creación y edición a `Empresa__c`;
-- acceso de lectura y edición a `Codigo__c`, `Codigo_ERP__c`,
-  `Nombre_Legal__c` y `Activa__c`;
-- acceso a las clases Apex `EmpresaResolver` y `EmpresaContext`;
-- eliminación de registros únicamente si negocio confirma que forma parte de
-  las responsabilidades del administrador de Empresas.
+- lectura, creación y edición de `Empresa__c`;
+- lectura y edición explícitas de `Codigo_ERP__c`, `Nombre_Legal__c` y
+  `Activa__c`;
+- acceso a `EmpresaResolver` y `EmpresaContext`.
 
-Los permisos para usuarios consumidores deben evaluarse separadamente cuando se
-integren las clases funcionales. No se creó ni modificó ningún Permission Set en
-este bloque.
+El permiso de campo para `Codigo__c` se omite intencionalmente. Salesforce no
+admite una entrada `fieldPermissions` para este campo porque es obligatorio; su
+acceso queda determinado por los permisos del objeto y por el carácter
+obligatorio del campo. La metadata de `Codigo__c` conserva las propiedades
+Required, Unique y External ID.
+
+Excluye:
+
+- eliminación de registros;
+- View All Records;
+- Modify All Records;
+- acceso a clases de test;
+- asignaciones a usuarios;
+- permisos sobre consumidores o triggers.
+
+No está asignado a ningún usuario y no se creó una Custom Tab.
+
+### Intento de deploy del Permission Set
+
+| Dato | Resultado |
+|---|---|
+| Estado | Fallido |
+| Deploy ID | `0AfAK000000vi9B0AQ` |
+| Componentes | 0/1 desplegados |
+| Modificación de la org | Ninguna |
+| Causa | Salesforce no admite `fieldPermissions` para el campo obligatorio `Empresa__c.Codigo__c` |
+
+La corrección local elimina únicamente esa entrada. No se modificó el objeto ni
+la metadata de `Codigo__c`.
+
+### Validación y deploy exitosos del Permission Set
+
+| Ejecución | Deploy ID | Componentes | Estado |
+|---|---|---:|---|
+| Dry-run | `0AfAK000000viCP0AY` | 1/1 | Succeeded |
+| Deploy real | `0AfAK000000viHF0AY` | 1/1 | Succeeded |
+
+El deploy real dejó disponible `Empresa_Admin` sin habilitar eliminación, View
+All Records ni Modify All Records. `Codigo__c` se omitió intencionalmente de
+`fieldPermissions` por ser un campo obligatorio.
+
+## Estado final del Bloque 1
+
+El modelo `Empresa__c`, las clases de soporte, sus pruebas y el Permission Set
+de administración están técnicamente desplegados y probados en
+`RedMotorsSandbox`.
+
+Permanecen pendientes:
+
+- definición de los códigos operativos;
+- creación controlada de registros de Empresa;
+- asignación de `Empresa_Admin` a usuarios autorizados;
+- adopción de `EmpresaResolver` por los consumidores.
 
 ## Supuestos
 
@@ -195,18 +245,19 @@ este bloque.
   constructor público de `EmpresaContext`, como defensa ante construcción directa.
 - Los códigos se comparan sin distinguir mayúsculas/minúsculas.
 - La nueva empresa utilizará Softland; si existen empresas activas sin ERP, deberá incorporarse un indicador explícito en un sprint posterior.
-- No se crean todavía registros semilla, permisos ni relaciones con objetos transaccionales.
+- No se crean todavía registros semilla, asignaciones de permisos ni relaciones
+  con objetos transaccionales.
 
 ## Riesgos y decisiones pendientes
 
 1. Confirmar si `ReadWrite` es el sharing definitivo.
-2. Aprobar la creación del Permission Set específico y definir responsables de
-   mantenimiento.
+2. Definir responsables y usuarios destinatarios de `Empresa_Admin`.
 3. Confirmar si todas las empresas activas requieren integración ERP.
 4. Confirmar códigos finales de Bavarian, Otobai y la nueva empresa.
 5. Definir estrategia de carga inicial sin guardar Ids en código.
 6. Evaluar Field History para cambios en códigos y estado.
 7. Los consumidores existentes todavía no usan el resolver; la nueva empresa no debe activarse operativamente.
+8. Confirmar si se requiere una Custom Tab y para cuáles aplicaciones.
 
 ## Cómo validar el bloque
 
@@ -231,9 +282,11 @@ Estimación técnica equivalente del trabajo local realizado:
 | Pruebas unitarias y casos negativos | 2.0 |
 | Pruebas específicas y corrección de cobertura de `EmpresaContext` | 1.0 |
 | Validación estática, revisión de permisos y documentación | 1.0 |
-| **Consumido estimado** | **8.5** |
-| **Reserva del bloque de 14 horas** | **5.5** |
+| Creación y validación local del Permission Set y su manifest | 0.5 |
+| **Consumido estimado** | **9.0** |
+| **Reserva del bloque de 14 horas** | **5.0** |
 
-La reserva debe cubrir definición e implementación posterior de permisos,
-configuración inicial controlada, evidencia y ajustes derivados de la adopción
-por los primeros consumidores. No se contabiliza como trabajo ya ejecutado.
+La reserva debe cubrir validación y despliegue posterior del Permission Set,
+asignación autorizada, configuración inicial controlada, evidencia y ajustes
+derivados de la adopción por los primeros consumidores. No se contabiliza como
+trabajo ya ejecutado.
