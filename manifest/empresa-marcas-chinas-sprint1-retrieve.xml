@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>BMWServiceQuoteApprovalEmailInvocable</members>
+        <members>BMWVinScanTrabajoGenerator</members>
+        <members>CrearPlandeVenta</members>
+        <members>HttpCalloutGetProductFreshRefPrices</members>
+        <members>ServicioCitasFieldService</members>
+        <members>BMWVinScanTrabajoGeneratorTest</members>
+        <members>cT_assetChangeData_ctrl_test</members>
+        <members>cT_quoteChangeData_ctrl_tst</members>
+        <members>facturadaQuoteTest</members>
+        <members>MargenSustitutoCoverageTest</members>
+        <members>RM_TraerTrabajosEmailServiceTest</members>
+        <members>ServicioCrearSCQuoteTest</members>
+        <members>ServicioCrearSCWorkOrderTest</members>
+        <members>ServicioEliminarReservaArticuloQuoteTest</members>
+        <members>VehicleReservationHistoryServiceTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>ChanceAccountBavarian</members>
+        <members>ChanceAccountContado</members>
+        <members>ChanceAccountOtobai</members>
+        <members>WorkOrderTrigger</members>
+        <name>ApexTrigger</name>
+    </types>
+    <version>67.0</version>
+</Package>
