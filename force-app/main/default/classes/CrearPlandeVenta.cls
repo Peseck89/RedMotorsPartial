@@ -35,7 +35,8 @@ public with sharing class CrearPlandeVenta {
 
         // Obtener Oportunidad Original y su RecordType
         Opportunity oppOriginal = [SELECT Id, Name, AccountId, contacto__c, Sucursal__c, 
-                                   SucursalId__c, Departamento__c, BMW_Compania__c, 
+                                   SucursalId__c, Departamento__c, BMW_Compania__c,
+                                   Empresa_Operadora__c,
                                    BMW_TallerDeServicio__c, BMW_TipoDeVehiculo__c, ConsecutivoOportunidad__c,
                                    CurrencyIsoCode, RecordType.Name
                                    FROM Opportunity WHERE Id = :qOriginal.OpportunityId LIMIT 1];
@@ -135,6 +136,7 @@ public with sharing class CrearPlandeVenta {
         newOpp.Pricebook2Id = idPricebook;
         newOpp.BMW_TallerDeServicio__c = idTallerDeServicio;
         newOpp.BMW_Compania__c = nombreCompania;
+        newOpp.Empresa_Operadora__c = oppOriginal.Empresa_Operadora__c;
         // ------------------------------------------
 
         newOpp.Sucursal__c = oppOriginal.Sucursal__c;

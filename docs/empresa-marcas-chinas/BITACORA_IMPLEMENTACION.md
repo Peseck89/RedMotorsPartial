@@ -634,7 +634,35 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje corresponde al alcance técnico y no representa horas
 oficiales, trabajadas, registradas ni facturables.
 
-## 19. Plantilla reutilizable de actualización
+## 19. Inicio local del Bloque 7 — Crear Plan de Venta
+
+| Dato | Registro |
+|---|---|
+| Fecha | 25/07/2026 |
+| Checkpoint protegido | `ae6e0e6` |
+| Backup | `backup/pc/redmotors-before-plan-venta-20260725` |
+| Estado | Implementación local; pendiente de dry-run |
+
+`CrearPlandeVenta` consulta y copia ahora directamente
+`Opportunity.Empresa_Operadora__c` hacia la nueva Opportunity. El lookup no
+se transforma y no se utiliza `EmpresaResolver`.
+
+Se conserva completamente el cálculo actual de `BMW_Compania__c` y
+`Quote.Compania__c`, incluida la lógica por Record Type. No se sincronizan ni
+se corrigen posibles contradicciones entre lookup y picklist.
+
+Se agregó una prueba directa con escenarios de lookup `RMPEKING` y lookup
+nulo. Los datos fuente son autocontenidos y no se usa `SeeAllData`.
+
+Los IDs hardcodeados y las automatizaciones activadas por la inserción de
+Opportunity y Quote continúan como riesgos heredados. Su comportamiento queda
+pendiente del dry-run; no se introdujeron bypasses ni cambios adicionales.
+
+No se modificaron flows, metadata, permisos, integraciones, reservas,
+Product2 ni plantillas. El avance técnico posterior queda pendiente de
+validación.
+
+## 20. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
