@@ -2,7 +2,7 @@ public class UpdateCurrencyScheduler implements Schedulable {
     
     public void execute(SchedulableContext SC) 
     {
-        List<PricebookEntry> pds = [SELECT Costo_Fijo__c,CurrencyIsoCode,Familia__c,Gerente__c,Id,IsActive,IsArchived,IsDeleted,Jefe__c,LastModifiedById,LastModifiedDate,Name,Pricebook2Id,Pricebook2.name, pricebookEntryId__c,Product2Id,ProductCode,SystemModstamp,UnitPrice,UseStandardPrice,Vendedor__c FROM PricebookEntry where ( (CurrencyIsoCode = 'CRC' and Pricebook2.name = 'Bavarian Dólar') OR (CurrencyIsoCode = 'USD' and Pricebook2.name = 'Bavarian Local') OR (CurrencyIsoCode = 'CRC' and Pricebook2.name = 'Otobai Dólares') OR (CurrencyIsoCode = 'USD' and Pricebook2.name = 'Otobai Local') ) and SystemModStamp >:Datetime.now().addMinutes(-7)];
+        List<PricebookEntry> pds = [SELECT Costo_Fijo__c,CurrencyIsoCode,Familia__c,Gerente__c,Id,IsActive,IsArchived,IsDeleted,Jefe__c,LastModifiedById,LastModifiedDate,Name,Pricebook2Id,Pricebook2.name, pricebookEntryId__c,Product2Id,ProductCode,SystemModstamp,UnitPrice,UseStandardPrice,Vendedor__c FROM PricebookEntry where ( (CurrencyIsoCode = 'CRC' and Pricebook2.name = 'Bavarian Dólar') OR (CurrencyIsoCode = 'USD' and Pricebook2.name = 'Bavarian Local') OR (CurrencyIsoCode = 'CRC' and Pricebook2.name = 'Otobai Dólares') OR (CurrencyIsoCode = 'USD' and Pricebook2.name = 'Otobai Local') OR (CurrencyIsoCode = 'CRC' and Pricebook2.name = 'PEKING Dólares') OR (CurrencyIsoCode = 'USD' and Pricebook2.name = 'PEKING Local') ) and SystemModStamp >:Datetime.now().addMinutes(-7)];
         
         List<PricebookEntry> ToBeinserted = new List<PricebookEntry>();
         for(PricebookEntry pd : pds)
@@ -22,6 +22,14 @@ public class UpdateCurrencyScheduler implements Schedulable {
                 pd1.CurrencyIsoCode = 'CRC';
             }
             else if(pd.Pricebook2.name == 'Bavarian Dólar')
+            {
+                pd1.CurrencyIsoCode = 'USD';
+            }
+            else if(pd.Pricebook2.name == 'PEKING Local')
+            {
+                pd1.CurrencyIsoCode = 'CRC';
+            }
+            else if(pd.Pricebook2.name == 'PEKING Dólares')
             {
                 pd1.CurrencyIsoCode = 'USD';
             }
