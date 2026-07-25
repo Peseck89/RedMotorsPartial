@@ -841,7 +841,78 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje se basa en el alcance técnico completado y no representa
 horas oficiales, trabajadas, registradas ni facturables.
 
-## 21. Plantilla reutilizable de actualización
+## 21. Bloque 9 — Empresa configurable en líneas de plantilla
+
+Se preparó `Plantilla_de_Presupuesto__c.Empresa_Operadora__c` como lookup
+opcional hacia `Empresa__c`.
+
+`BMW_LineaPlantillaEmpresa.getEmpresa()` utiliza el lookup como fuente
+principal y retorna el código validado por `EmpresaResolver`. Cuando el lookup
+está vacío conserva temporalmente el respaldo explícito Bavarian →
+`RMBAVARIAN` y Otobai → `RMOTOBAI`.
+
+Se eliminó el fallback por descarte a Otobai. El método rechaza Id nulo,
+plantilla inexistente, falta de configuración, valor heredado desconocido,
+Empresa inactiva o configuración incompleta.
+
+La prueba quedó con nueve métodos dirigidos para las tres empresas,
+precedencia, compatibilidad heredada y errores controlados. Los casos
+heredados nulo y desconocido no pueden persistirse porque
+`BMW_Compania__c` es un picklist restringido y obligatorio; no se utilizaron
+bypasses.
+
+El inventario de solo lectura no encontró permisos explícitos del campo
+heredado en perfiles ni Permission Sets. Para replicar exactamente ese estado
+no se modificaron perfiles ni Permission Sets.
+
+No se modificaron layouts, Lightning Pages, integraciones, otras clases ni
+datos. Dry-run, regresión y deploy permanecen pendientes.
+
+### Primer dry-run del Bloque 9
+
+El dry-run `0AfAK000000vpLx0AI` compiló 3/3 componentes y aprobó 2/9
+pruebas. Las siete fallas restantes ocurrieron en `createPlantilla` por el
+campo obligatorio `BMW_TipoDeVehiculo__c`. La org no fue modificada.
+
+El campo es un picklist restringido y obligatorio. Sus valores activos son
+Automóvil, Motocicleta, Mula y Cuadraciclo. No se encontró otra prueba local
+que creara una plantilla asignando este campo.
+
+Se agregó `Automóvil`, valor activo confirmado por Schema Describe, a los
+datos autocontenidos del helper. Se mantienen los nueve métodos y sus
+aserciones.
+
+### Cierre técnico del Bloque 9
+
+| Validación | Deploy ID | Componentes | Pruebas | Fallas |
+|---|---|---:|---:|---:|
+| Dry-run funcional | `0AfAK000000vpPB0AY` | 3/3 | 9/9 | 0 |
+| Dry-run de regresión | `0AfAK000000vpSP0AY` | 3/3 | 18/18 | 0 |
+| Deploy real | `0AfAK000000vpU10AI` | 3/3 | 18/18 | 0 |
+
+El deploy real terminó correctamente en RedMotorsSandbox / Partial. La
+cobertura confirmada de `BMW_LineaPlantillaEmpresa` fue 16/21 líneas,
+equivalente a 76.19%.
+
+Se creó `Plantilla_de_Presupuesto__c.Empresa_Operadora__c`. El lookup tiene
+prioridad sobre `BMW_Compania__c`; Bavarian y Otobai permanecen como respaldo
+explícito, mientras que PEKING se resuelve mediante `EmpresaResolver` y
+`Codigo__c`.
+
+Se eliminó el fallback automático a Otobai y se validaron nueve escenarios
+funcionales. No se modificaron layouts, migraciones ni permisos.
+
+El Bloque 9 queda completado, validado y desplegado.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 74%;
+- pendiente: 26%.
+
+Este porcentaje corresponde al alcance técnico y no representa horas
+oficiales, trabajadas, registradas ni facturables.
+
+## 22. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
