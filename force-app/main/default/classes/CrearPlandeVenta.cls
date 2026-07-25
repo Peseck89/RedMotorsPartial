@@ -35,7 +35,8 @@ public with sharing class CrearPlandeVenta {
 
         // Obtener Oportunidad Original y su RecordType
         Opportunity oppOriginal = [SELECT Id, Name, AccountId, contacto__c, Sucursal__c, 
-                                   SucursalId__c, Departamento__c, BMW_Compania__c, 
+                                   SucursalId__c, Departamento__c, BMW_Compania__c,
+                                   Empresa_Operadora__c, Cuenta_de_Facturaci_n__c,
                                    BMW_TallerDeServicio__c, BMW_TipoDeVehiculo__c, ConsecutivoOportunidad__c,
                                    CurrencyIsoCode, RecordType.Name
                                    FROM Opportunity WHERE Id = :qOriginal.OpportunityId LIMIT 1];
@@ -45,7 +46,7 @@ public with sharing class CrearPlandeVenta {
         String idTallerDeServicio = oppOriginal.BMW_TallerDeServicio__c;
         String nombreCompania = oppOriginal.BMW_Compania__c;
         String idPricebook = qOriginal.Pricebook2Id;
-        String accountIdFacturacion;
+        String accountIdFacturacion = oppOriginal.Cuenta_de_Facturaci_n__c;
         
         if (oppOriginal.RecordType != null) {
             String rtName = oppOriginal.RecordType.Name;
@@ -64,11 +65,15 @@ public with sharing class CrearPlandeVenta {
             if (rtName == 'BMW' || rtName == 'Motorrad' || rtName == 'MINI' || rtName == 'Autos usados') {
                 nombreCompania = 'Bavarian';
                 idPricebook = '01s4U0000026MgfQAE';
-                accountIdFacturacion = '001PH00000X9ZEcYAN';
+                if (String.isBlank(accountIdFacturacion)) {
+                    accountIdFacturacion = '001PH00000X9ZEcYAN';
+                }
             } else { // Aplica para Indian, Kawasaki, Polaris, Motos usados/usadas, o cualquier otro
                 nombreCompania = 'Otobai';
                 idPricebook = '01s4U0000026MguQAE';
-                accountIdFacturacion = '0014U00002IpmIxQAJ';
+                if (String.isBlank(accountIdFacturacion)) {
+                    accountIdFacturacion = '0014U00002IpmIxQAJ';
+                }
             }
 
             // C. Lógica para Centro de Costo
@@ -135,6 +140,7 @@ public with sharing class CrearPlandeVenta {
         newOpp.Pricebook2Id = idPricebook;
         newOpp.BMW_TallerDeServicio__c = idTallerDeServicio;
         newOpp.BMW_Compania__c = nombreCompania;
+        newOpp.Empresa_Operadora__c = oppOriginal.Empresa_Operadora__c;
         // ------------------------------------------
 
         newOpp.Sucursal__c = oppOriginal.Sucursal__c;

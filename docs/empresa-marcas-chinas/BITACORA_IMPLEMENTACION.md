@@ -634,7 +634,138 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje corresponde al alcance técnico y no representa horas
 oficiales, trabajadas, registradas ni facturables.
 
-## 19. Bloque 8 — permisos de Empresa Operadora en Opportunity
+## 19. Bloque 7 — Crear Plan de Venta
+
+Se retomó la propagación de `Opportunity.Empresa_Operadora__c` en
+`CrearPlandeVenta`, respaldada antes de la pausa.
+
+El dry-run anterior `0AfAK000000vomT0AQ` compiló 2/2 componentes y terminó
+con 0/2 pruebas aprobadas. Ambas fallaron al insertar la nueva Opportunity
+porque la cuenta fija `001PH00000X9ZEcYAN` produjo
+`INSUFFICIENT_ACCESS_ON_CROSS_REFERENCE_ENTITY`. La org no fue modificada.
+
+Luis autorizó que `Opportunity.Cuenta_de_Facturaci_n__c` de la Opportunity
+original tenga prioridad. Las cuentas fijas actuales por Record Type se
+conservan como respaldo cuando ese campo está vacío.
+
+La implementación local:
+
+- consulta `Cuenta_de_Facturaci_n__c`;
+- inicializa la cuenta de facturación con el valor original;
+- ejecuta la asignación fija únicamente cuando el campo está vacío;
+- propaga el mismo valor a la nueva Opportunity y al nuevo Quote;
+- conserva la copia de `Empresa_Operadora__c` y los cálculos existentes de
+  compañía, Pricebook, taller y centro de costo.
+
+Las pruebas usan Accounts autocontenidas para validar la precedencia. La ruta
+de respaldo conserva los IDs existentes y continúa expuesta al riesgo de
+acceso propio de esas referencias fijas.
+
+El Bloque 8 de permisos ya fue cerrado y respaldado en el cambio `a137b19`.
+
+### Dry-run y estabilización de cobertura del Bloque 7
+
+| Dato | Registro |
+|---|---|
+| Deploy ID | `0AfAK000000vp7R0AQ` |
+| Componentes | 2/2 |
+| Pruebas | 3/3 |
+| Fallas | 0 |
+| Cobertura | 75/127, equivalente a 59.055% |
+| Estado de la org | Sin modificaciones |
+
+El reporte identificó 52 líneas no cubiertas. Se agregaron cuatro pruebas
+dirigidas para:
+
+- retorno anticipado cuando ya existe un plan con el mismo VIN;
+- copia de una regalía con PricebookEntry compatible;
+- omisión de una regalía cuya entrada compatible está inactiva;
+- rama Otobai mediante el Record Type Indian y cuenta de facturación
+  autocontenida.
+
+La cobertura esperada mínima es 107/127, equivalente a 84.252%. Puede
+alcanzar aproximadamente 113/127, equivalente a 88.976%, si el escenario
+Indian recorre todas las líneas previstas. El resultado definitivo permanece
+pendiente del siguiente dry-run.
+
+No se modificó código productivo, metadata ni automatizaciones.
+
+### Corrección de compilación de las regalías
+
+El dry-run `0AfAK000000vp930AA` no ejecutó pruebas porque
+`CrearPlandeVentaTest` intentaba escribir
+`QuoteLineItem.BMW_TipoDeArticulo__c`. Ese campo es una fórmula de texto
+basada en `TEXT(Product2.tipoProducto__c)` y es de solo lectura.
+
+Se eliminó la asignación directa y el tipo se configura ahora mediante el
+picklist editable `Product2.tipoProducto__c`. La inclusión como regalía se
+mantiene mediante `QuoteLineItem.esRegalia__c = true`.
+
+La org no fue modificada. Permanecen los siete métodos de prueba y los
+escenarios de VIN, entrada compatible, entrada inactiva, Record Type Indian y
+las tres validaciones anteriores.
+
+### Corrección de Record Types de prueba
+
+El dry-run `0AfAK000000vpAf0AI` compiló 2/2 componentes, aprobó 1/7 pruebas y
+registró cobertura temporal de 61.417%. Las seis fallas ocurrieron al insertar
+la Opportunity fuente en `createSourceQuote`, línea 360, por
+`INVALID_CROSS_REFERENCE_KEY` sobre `RecordTypeId`. La org no fue modificada.
+
+El helper incluía explícitamente un `RecordTypeId` nulo en los seis escenarios
+que no requerían un tipo específico. La única ruta con Record Type expreso
+era Indian, resuelto como disponible.
+
+Se corrigieron únicamente los datos de prueba:
+
+- cuando no se requiere una rama específica, no se asigna `RecordTypeId`;
+- Indian se resuelve dinámicamente por `DeveloperName = Indian`;
+- el retorno por VIN resuelve Opportunity
+  `DeveloperName = Planes_de_Venta` y Quote
+  `DeveloperName = Taller`;
+- cada resolución confirma existencia y disponibilidad mediante Schema
+  Describe;
+- se eliminaron los IDs fijos de Record Type de la prueba.
+
+### Cierre técnico del Bloque 7
+
+| Validación | Deploy ID | Componentes | Pruebas | Fallas |
+|---|---|---:|---:|---:|
+| Dry-run funcional | `0AfAK000000vpFV0AY` | 2/2 | 7/7 | 0 |
+| Dry-run de regresión | `0AfAK000000vpH70AI` | 2/2 | 17/17 | 0 |
+| Deploy real | `0AfAK000000vpIj0AI` | 2/2 | 17/17 | 0 |
+
+El deploy real terminó correctamente en RedMotorsSandbox / Partial. La
+cobertura final de `CrearPlandeVenta` fue 115/127 líneas, equivalente a
+90.55%.
+
+El comportamiento desplegado:
+
+- copia `Opportunity.Empresa_Operadora__c` sin transformación;
+- prioriza `Opportunity.Cuenta_de_Facturaci_n__c` de la Opportunity original;
+- conserva las cuentas fijas únicamente como fallback cuando el campo
+  original está vacío;
+- utiliza la misma cuenta de facturación en la nueva Opportunity y el nuevo
+  Quote.
+
+No se modificaron Record Types, compañías, Pricebooks, talleres, centros de
+costo, VIN, líneas ni automatizaciones.
+
+`CrearPlandeVentaTest` quedó con siete métodos. Se validaron copia del lookup,
+precedencia de cuenta, fallback heredado, retorno por VIN y manejo de
+regalías.
+
+El Bloque 7 queda completado, validado y desplegado.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 72%;
+- pendiente: 28%.
+
+Este porcentaje corresponde al alcance técnico y no representa horas
+oficiales, trabajadas, registradas ni facturables.
+
+## 20. Bloque 8 — permisos de Empresa Operadora en Opportunity
 
 Se preparó localmente la réplica de acceso de
 `Opportunity.BMW_Compania__c` hacia
@@ -710,7 +841,7 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje se basa en el alcance técnico completado y no representa
 horas oficiales, trabajadas, registradas ni facturables.
 
-## 20. Plantilla reutilizable de actualización
+## 21. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
