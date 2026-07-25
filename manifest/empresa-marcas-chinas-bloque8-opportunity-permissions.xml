@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Acceso de MINI - BMW</members>
+        <members>Admin Taller</members>
+        <members>Admin Vh V2</members>
+        <members>Admin Vh V2 A1</members>
+        <members>Administrador de Sistema</members>
+        <members>SolutionManager</members>
+        <members>ContractManager</members>
+        <members>Admin</members>
+        <members>Administrador del sistema - Custom</members>
+        <members>Altica - Administrador</members>
+        <members>Altica - Coah de ventas</members>
+        <members>Altica - Coordinador de credito y cobro</members>
+        <members>Altica - Ejecutivo de credito y cobro</members>
+        <members>Altica - Ejecutivo de ventas</members>
+        <members>Altica - Gerente General</members>
+        <members>Altica - Oficial de cumplimiento</members>
+        <members>Altica Usuario  Junior</members>
+        <members>Altica Usuario Senior</members>
+        <members>Analytics Cloud Integration User</members>
+        <members>Analytics Cloud Security User</members>
+        <members>Anfitrionas copia JV</members>
+        <members>Anypoint Integration</members>
+        <members>API Only</members>
+        <members>API Only Altica</members>
+        <members>Asesor</members>
+        <members>Asesor Beta Grid</members>
+        <members>Asesor Beta Grid CL</members>
+        <members>Asesor Call Center</members>
+        <members>Asesor Call Center V2</members>
+        <members>Asesor CL</members>
+        <members>Asesor de Servicio ES  PV</members>
+        <members>Asesor de Servicio PI</members>
+        <members>Asesor de servicio PIN</members>
+        <members>Asesor de Servicio UR</members>
+        <members>Asesor de Taller</members>
+        <members>Asesor de Taller V2</members>
+        <members>Asesor de Ventas BMW</members>
+        <members>Asesor de Ventas BMW y Nuevos V2</members>
+        <members>Asesor de Ventas BMW y Nuevos V2 A1</members>
+        <members>Asesor de Ventas Harley Davidson</members>
+        <members>Asesor de Ventas Kawa - Polaris y Nuevos V2</members>
+        <members>Asesor de Ventas Kawa - Polaris y Nuevos V2 A1</members>
+        <members>Asesor de Ventas KTM</members>
+        <members>Asesor de Ventas MINI</members>
+        <members>Asesor de Ventas MINI y Nuevos V2</members>
+        <members>Asesor de Ventas MINI y Nuevos V2 A1</members>
+        <members>Asesor de Ventas Motorrad</members>
+        <members>Asesor de Ventas Motorrad y Nuevos V2</members>
+        <members>Asesor de Ventas Motorrad y Nuevos V2 A1</members>
+        <members>Asesor de Ventas Motorrad-Kawa-Polaris y Nuevos V2</members>
+        <members>Asesor de Ventas Motorrad-Kawa-Polaris y Nuevos V2 A1</members>
+        <members>Asesor de Ventas Multimarca Motos</members>
+        <members>Asesor de Ventas Multimarca Motos con Usados</members>
+        <members>Asesor de Ventas Online  MINI</members>
+        <members>Asesor de Ventas Online BMW</members>
+        <members>Asesor de Ventas Online BMW y Nuevos V2</members>
+        <members>Asesor de Ventas Online BMW y Nuevos V2 A1</members>
+        <members>Asesor de ventas online MINI Nuevos V2 y Usados</members>
+        <members>Asesor de ventas online MINI Nuevos V2 y Usados A1</members>
+        <members>Asesor de ventas online MINI Nuevos V3 y Usados</members>
+        <members>Asesor de Ventas Online MINI y Nuevos V2</members>
+        <members>Asesor de Ventas Online MINI y Nuevos V2 A1</members>
+        <members>Asesor de Ventas Online Motos</members>
+        <members>Asesor de Ventas Online Motos y Nuevos V2</members>
+        <members>Asesor de Ventas Online Motos y Nuevos V2 A1</members>
+        <members>Asesor de Ventas POLARIS</members>
+        <members>Asesor garantías UR</members>
+        <members>Asesor Ventas Autos Usados</members>
+        <members>Asesor Ventas Autos Usados A1</members>
+        <members>Asesor Ventas Motos Usados</members>
+        <members>Asesor Ventas Motos Usados v2</members>
+        <members>Asesor Ventas Motos Usados v2 A1</members>
+        <members>Asesores de repuestos</members>
+        <members>Asesores garantías</members>
+        <members>Asistente de Taller</members>
+        <members>Asistente de Usados</members>
+        <members>Asistente de usados A1</members>
+        <members>Consulta básica móvil</members>
+        <members>Creadores de citas</members>
+        <members>Creadores de citas  PIN</members>
+        <members>Customer Community Login User</members>
+        <members>Customer Community User Test</members>
+        <members>Dispatcher</members>
+        <members>Dispatcher-Asesor</members>
+        <members>Einstein Agent User</members>
+        <members>Encuestas Red Motors Perfil</members>
+        <members>External Apps Login User</members>
+        <members>External Einstein Agent User</members>
+        <members>Field Service Dispatcher</members>
+        <members>Field Service Optimization</members>
+        <members>Field Service Technician</members>
+        <members>Garantías</members>
+        <members>Gerencia</members>
+        <members>Gerente Altica</members>
+        <members>Gerente Comercial Motocicletas</members>
+        <members>Gerente de Mercadeo</members>
+        <members>Gerente de Taller</members>
+        <members>Gerente de Taller Escazú  y Nuevos V2</members>
+        <members>Gerente de ventas BMW</members>
+        <members>Gerente de ventas BMW V2</members>
+        <members>Gerente de ventas BMW V2 A1</members>
+        <members>Gerente de ventas Motos Nuevas V2</members>
+        <members>Jefatura TI</members>
+        <members>Jefe de repuestos RM A1</members>
+        <members>Jefe de Sucursal BMW Escazú</members>
+        <members>Jefe de Sucursal BMW Uruca</members>
+        <members>Jefe de ventas</members>
+        <members>Jefe de Ventas BMW</members>
+        <members>Jefe de Ventas HARLEY</members>
+        <members>Jefe de Ventas Kawasaki</members>
+        <members>Jefe de Ventas MINI</members>
+        <members>Jefe de ventas MINI V2</members>
+        <members>Jefe de ventas MINI V2 A1</members>
+        <members>Jefe de Ventas MOTORRAD</members>
+        <members>Jefe de ventas Motos Nuevas V2</members>
+        <members>Jefe de ventas Motos Nuevas V2 A1</members>
+        <members>Jefe de Ventas Multimarca</members>
+        <members>Jefe de Ventas Usados Autos</members>
+        <members>Jefe de Ventas Usados Autos A1</members>
+        <members>Jefe de Ventas Usados Motos</members>
+        <members>Jefe de Ventas Usados Motos A1</members>
+        <members>Mecánico</members>
+        <members>Mecanico Lider</members>
+        <members>Mecanico v2</members>
+        <members>Minimum Access - Salesforce</members>
+        <members>MKT</members>
+        <members>MKT Motos</members>
+        <members>Motos Vendedor Mixto</members>
+        <members>Observador de taller y ventas</members>
+        <members>Read Only</members>
+        <members>Recepcion MINI</members>
+        <members>Recepcion Mixtos</members>
+        <members>Repuestos</members>
+        <members>Sales Insights Integration User</members>
+        <members>Salesforce API Only System Integrations</members>
+        <members>SalesforceIQ Integration User</members>
+        <members>Servicio al cliente</members>
+        <members>Solo Motos</members>
+        <members>System Administrator</members>
+        <members>Torre de Control</members>
+        <members>Torre de Control UR</members>
+        <members>Trafico User</members>
+        <members>MarketingProfile</members>
+        <members>Standard</members>
+        <members>Valuador</members>
+        <members>ZZadmin FIELD SERVICE zz</members>
+        <name>Profile</name>
+    </types>
+    <types>
+        <members>Vehiculos_Nuevos_PS</members>
+        <name>PermissionSet</name>
+    </types>
+    <version>66.0</version>
+</Package>

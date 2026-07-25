@@ -634,7 +634,83 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje corresponde al alcance técnico y no representa horas
 oficiales, trabajadas, registradas ni facturables.
 
-## 19. Plantilla reutilizable de actualización
+## 19. Bloque 8 — permisos de Empresa Operadora en Opportunity
+
+Se preparó localmente la réplica de acceso de
+`Opportunity.BMW_Compania__c` hacia
+`Opportunity.Empresa_Operadora__c`, conforme a la autorización de mantener
+el modelo vigente basado en perfiles.
+
+Resultados de la preparación:
+
+- 146 perfiles recuperados y procesados;
+- 144 accesos habilitados desde estado sin acceso;
+- 2 perfiles elevados de solo lectura a lectura y edición:
+  `Asesor de Taller V2` y `Jefe de Ventas Usados Motos A1`;
+- 146 perfiles con lectura y edición como resultado final;
+- `Vehiculos_Nuevos_PS` preparado con lectura y sin edición;
+- 0 perfiles faltantes o bloqueados;
+- 0 cambios colaterales dentro de los Profile XML.
+
+`procesos_walking` y `sfdc_a360_sfcrm_data_extract` ya coincidían con el
+acceso requerido y no fueron modificados. Tampoco se modificaron los permisos
+existentes de `Opportunity.BMW_Compania__c`, layouts, páginas, objetos,
+clases, flows, usuarios ni asignaciones.
+
+La implementación local quedó validada. Dry-run y deploy permanecen
+pendientes.
+
+### Primer dry-run del Bloque 8
+
+| Dato | Registro |
+|---|---|
+| Deploy ID | `0AfAK000000vouX0AQ` |
+| Componentes válidos | 146/147 |
+| Perfiles aceptados | 146/146 |
+| Falla exclusiva | `Vehiculos_Nuevos_PS` |
+| Estado de la org | Sin modificaciones |
+
+El Permission Set falló por ubicación inválida de un bloque
+`fieldPermissions`: el permiso de `Opportunity.Empresa_Operadora__c` estaba
+después de `tabSettings`, fuera del grupo permitido por el esquema. El bloque
+aparecía una sola vez y fue reubicado junto con los demás permisos de campo.
+
+La entrada conserva `readable=true` y `editable=false`.
+`Opportunity.BMW_Compania__c` y los demás permisos permanecieron intactos.
+
+### Cierre técnico del Bloque 8
+
+Registro realizado el 25/07/2026 a las 3:44 p. m., zona horaria UTC−06:00,
+en RedMotorsSandbox / Partial.
+
+| Validación | Deploy ID | Estado | Componentes | Fallas | Pruebas Apex |
+|---|---|---|---:|---:|---|
+| Dry-run final | `0AfAK000000vow90AA` | Succeeded | 147/147 | 0 | No aplican |
+| Deploy real | `0AfAK000000voUk0AI` | Succeeded | 147/147 | 0 | No aplican |
+
+El deploy actualizó 146 perfiles y `Vehiculos_Nuevos_PS`.
+
+Los 146 perfiles replican en `Opportunity.Empresa_Operadora__c` los permisos
+de lectura y edición existentes en `Opportunity.BMW_Compania__c`. De ellos,
+144 recibieron acceso que no tenían previamente. `Asesor de Taller V2` y
+`Jefe de Ventas Usados Motos A1` pasaron de solo lectura a lectura y edición.
+`Vehiculos_Nuevos_PS` recibió lectura sin edición.
+
+No se modificaron `procesos_walking` ni
+`sfdc_a360_sfcrm_data_extract` porque ya coincidían. Tampoco se modificaron
+layouts, FlexiPages, usuarios, asignaciones, Apex ni flows.
+
+El Bloque 8 queda completado, validado y desplegado.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 71%;
+- pendiente: 29%.
+
+Este porcentaje se basa en el alcance técnico completado y no representa
+horas oficiales, trabajadas, registradas ni facturables.
+
+## 20. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
