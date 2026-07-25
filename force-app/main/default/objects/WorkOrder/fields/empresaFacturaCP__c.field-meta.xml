@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>empresaFacturaCP__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>empresa configurable utilizada para determinar el Pricebook del WorkOrder</description>
+    <label>Empresa que Factura</label>
+    <referenceTo>Empresa__c</referenceTo>
+    <relationshipLabel>Órdenes de trabajo</relationshipLabel>
+    <relationshipName>WorkOrders_Empresa_Factura</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

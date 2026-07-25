@@ -3,22 +3,51 @@ trigger WorkOrderTrigger on WorkOrder (after update, before insert, before updat
     if(trigger.isBefore && !Trigger.isDelete)
     {
         Map<String, String> pricebookMap = new Map<String, String>();
+        Set<Id> empresaIds = new Set<Id>();
 
         for(Pricebook2 rec : [SELECT id, Name from Pricebook2])
         {
             pricebookMap.put(rec.Name, rec.Id);
         }
 
+        for (WorkOrder rec : Trigger.new)
+        {
+            if (rec.empresaFacturaCP__c != null)
+            {
+                empresaIds.add(rec.empresaFacturaCP__c);
+            }
+        }
+
+        Map<Id, String> empresaCodigoById = new Map<Id, String>();
+        for (Empresa__c empresa : [
+            SELECT Id, Codigo__c
+            FROM Empresa__c
+            WHERE Id IN :empresaIds
+        ])
+        {
+            empresaCodigoById.put(empresa.Id, empresa.Codigo__c);
+        }
+
         for(WorkOrder rec : trigger.new)
         {
-            if(rec.CurrencyISOCode == 'USD' && !Test.isRunningTest() && rec.empresaFactura__c == 'RMOTOBAI')
+            // Compatibilidad temporal: el lookup tiene precedencia y el
+            // picklist heredado se utiliza únicamente cuando el lookup está vacío.
+            String codigoEmpresa = rec.empresaFacturaCP__c != null
+                ? empresaCodigoById.get(rec.empresaFacturaCP__c)
+                : rec.empresaFactura__c;
+
+            if(rec.CurrencyISOCode == 'USD' && codigoEmpresa == 'RMOTOBAI')
                 rec.Pricebook2Id = pricebookMap.get('Otobai Dólares');
-            else if(rec.CurrencyISOCode == 'CRC' && !Test.isRunningTest() && rec.empresaFactura__c == 'RMOTOBAI')
+            else if(rec.CurrencyISOCode == 'CRC' && codigoEmpresa == 'RMOTOBAI')
                 rec.Pricebook2Id = pricebookMap.get('Otobai Local');
-            else if(rec.CurrencyISOCode == 'USD'&& !Test.isRunningTest() && rec.empresaFactura__c == 'RMBAVARIAN')
+            else if(rec.CurrencyISOCode == 'USD' && codigoEmpresa == 'RMBAVARIAN')
                 rec.Pricebook2Id = pricebookMap.get('Bavarian Dólar');
-            else if(rec.CurrencyISOCode == 'CRC'&& !Test.isRunningTest() && rec.empresaFactura__c == 'RMBAVARIAN')
+            else if(rec.CurrencyISOCode == 'CRC' && codigoEmpresa == 'RMBAVARIAN')
                 rec.Pricebook2Id = pricebookMap.get('Bavarian Local');
+            else if(rec.CurrencyISOCode == 'USD' && codigoEmpresa == 'RMPEKING')
+                rec.Pricebook2Id = pricebookMap.get('PEKING Dólares');
+            else if(rec.CurrencyISOCode == 'CRC' && codigoEmpresa == 'RMPEKING')
+                rec.Pricebook2Id = pricebookMap.get('PEKING Local');
         }
     }
     if(trigger.isBefore && trigger.isUpdate && !Trigger.isDelete)

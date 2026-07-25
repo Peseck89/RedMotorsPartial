@@ -73,6 +73,17 @@ conserva el orden relativo sin inventar precisión.
 | 28 | Primer dry-run del Bloque 3 | `0AfAK000000vli90AA`: 2/2 componentes compilados, 0/7 pruebas aprobadas y cobertura 0% de `UpdateCurrencyScheduler`. Todas las pruebas fallaron antes de ejecutar el scheduler porque `createStandardPrices()` intentaba duplicar la entrada estándar USD ya generada después de insertar el producto. La org no fue modificada. Se corrigió el helper para reutilizar monedas existentes dentro de la prueba e insertar únicamente las definiciones estándar faltantes. |
 | 29 | Dry-run exitoso del Bloque 3 | `0AfAK000000vljl0AA`: 2/2 componentes, 7/7 pruebas y cero fallas. |
 | 30 | Deploy real del Bloque 3 | `0AfAK000000vllN0AQ`: 2/2 componentes, 7/7 pruebas y cero fallas. `UpdateCurrencyScheduler` quedó actualizado en `RedMotorsSandbox` con soporte para `PEKING Local` y `PEKING Dólares`, conservando las cuatro conversiones anteriores, sin fallbacks y sin procesar Pricebooks desconocidos. No se crearon `PricebookEntry` reales ni se modificaron Softland, reservas, inventario o anticipos. El riesgo heredado de eliminar antes de reinsertar permanece sin corregir por no estar autorizado. `WorkOrderTrigger` sigue pendiente de respuesta de Diego. |
+| 31 | Bloque 4 local — Pricebook de WorkOrder | Se confirmó `RMPEKING` como código de `WorkOrder.empresaFactura__c` y se agregaron las asociaciones CRC → `PEKING Local` y USD → `PEKING Dólares` en `WorkOrderTrigger`. Luis confirmó temporalmente conservar el Pricebook actual ante empresa vacía o desconocida, pendiente de confirmación final de Diego. Se retiró `Test.isRunningTest()` únicamente de la selección y se fortaleció `WorkOrderTriggerTest` con las seis asociaciones, casos de conservación, insert, update y procesamiento bulk. Implementación local pendiente de dry-run. |
+| 32 | Primer dry-run del Bloque 4 | `0AfAK000000vlzt0AA`: 2/2 componentes compilados, 5/13 pruebas aprobadas, ocho fallas y 35% de cobertura del trigger. La org no fue modificada. La validación de solo lectura confirmó que `empresaFactura__c` es restringido y solo admite `RMBAVARIAN` y `RMOTOBAI`; `RMPEKING` está pendiente de autorización de Diego. `CurrencyType` solo tiene CRC y USD activas, y WorkOrder usa USD cuando se omite la moneda. Se dejaron preparadas pero inactivas las pruebas PEKING, se retiraron los DML imposibles de empresa/moneda desconocidas, se ajustó la expectativa de moneda omitida y se corrigió la prueba histórica para usar un `PricebookEntry` del Pricebook asignado. |
+| 33 | Autorización y metadata de `RMPEKING` | Luis autorizó expresamente agregar `RMPEKING` al picklist restringido `WorkOrder.empresaFactura__c`. La metadata del campo y del objeto WorkOrder fue recuperada desde `RedMotorsSandbox`; `WorkOrder.object-meta.xml` permanece sin cambios. Se agregó únicamente `RMPEKING` activo y no predeterminado, conservando `RMBAVARIAN` como predeterminado y `RMOTOBAI` como valor existente. Se reactivaron las tres pruebas PEKING y las dos combinaciones PEKING del escenario bulk. La decisión temporal de conservar Pricebook ante empresa nula o no aplicable continúa pendiente de confirmación final de Diego. |
+| 34 | Segundo dry-run del Bloque 4 | `0AfAK000000vm1V0AQ`: 3/3 componentes compilados, 10/11 pruebas aprobadas, una falla y cobertura parcial de 38.125% para `WorkOrderTrigger`. La única falla provenía del valor legado `Enviar a facturar` en `testWorkOrderTrigger`; se reemplazó por el valor activo `Facturada`, que conserva la intención funcional de facturación. La org no fue modificada. |
+| 35 | Dry-run acumulado del Bloque 4 | `0AfAK000000vm370AA`: 3/3 componentes, 49/51 pruebas aprobadas, dos fallas y cobertura de 54.375% para `WorkOrderTrigger`. Las causas fueron el límite de 101 consultas en la prueba histórica por operaciones acumuladas sobre líneas y un `PricebookEntry` incompatible en `test_clsClasses.workOrderTriggerTest`. La org no fue modificada. |
+| 36 | Reorientación local del Bloque 4 | Luis autorizó `WorkOrder.empresaFacturaCP__c` como lookup principal a `Empresa__c`, con relación `WorkOrders_Empresa_Factura` y label `Órdenes de trabajo`. Diego confirmó mantener temporalmente `empresaFactura__c` como respaldo, dar precedencia al lookup y conservar las seis asociaciones explícitas sin selección por descarte. Se prepararon metadata, resolución bulk por `Empresa__c.Codigo__c`, pruebas autocontenidas y estabilización de las dos pruebas fallidas. Permisos, registros operativos y mapeo de datos continúan pendientes. |
+| 37 | Segundo dry-run de la arquitectura lookup | `0AfAK000000vm9Z0AQ`: 5/5 componentes, 26/30 pruebas aprobadas, cuatro fallas y cobertura de 43.931% para `WorkOrderTrigger`. La org no fue modificada. Dos fallas pertenecían a pruebas ajenas de Order/Account incluidas al ejecutar toda `test_clsClasses`; se revirtió exactamente el cambio local en esa clase y se retiró del manifest. Las otras dos fallas compartían creación duplicada de `PricebookEntry`; el helper ahora reutiliza las combinaciones existentes e inserta solo las faltantes. Se agregaron pruebas de desbloqueo, rechazo de anulación con una línea facturada y actualización de `tipoCargo__c` para BCI. `before delete` se difirió porque aislar el permiso del usuario introduciría Mixed DML o cambios de permisos. |
+| 38 | Dry-run y estabilización de cobertura del Bloque 4 | `0AfAK000000vmHd0AI`: 4/4 componentes, 44/45 pruebas aprobadas, una falla y cobertura de 60.694% para `WorkOrderTrigger`. La org no fue modificada. El reporte identificó 173 líneas ejecutables, 105 cubiertas y 68 no cubiertas. La falla BCI provenía de insertar un cargo al 100% adicional al creado automáticamente; la prueba ahora reutiliza el cargo existente, crea uno al 100% solo si falta y valida una suma máxima de 100. Se agregaron pruebas para Cliente `1`, Garantía `4`, BSI Interno `6`, Aseguradora `3`, Interno `2` y una prueba aislada del flujo de presupuesto que verifica el manejo existente del DML de User sin correo real ni registros parciales. No se modificó código productivo ni se agregó `before delete`. |
+| 39 | Dry-run con aprovisionamiento exitoso | `0AfAK000000vmRJ0AY`: 4/4 componentes y 49/51 pruebas aprobadas. La cobertura real fue 163/173 líneas, equivalente a 94.220%. La org no fue modificada. La rama de presupuesto creó correctamente un User asociado al Contact y una `Peticion_de_envio__c`; la prueba se renombró y ahora valida exactamente ese User, Username, Email, nombres, petición e indicador de WorkOrder sin depender del correo real. La segunda falla confirmó un defecto funcional: el picklist activo usa `Garantia`, pero `WorkOrderTrigger` compara `Garantía`. La prueba de esa rama se retiró porque ningún valor válido actual puede ejecutarla. Queda pendiente decidir si se corrige el literal productivo o el valor del picklist; no se modificaron código productivo, metadata ni datos. |
+| 40 | Dry-run final exitoso del Bloque 4 | `0AfAK000000vmSv0AI`: estado `Succeeded`, 4/4 componentes, 50/50 pruebas y cero fallas. La org no fue modificada porque la ejecución fue un dry-run. Quedó validada la arquitectura con `WorkOrder.empresaFacturaCP__c` como lookup principal, `empresaFactura__c` como compatibilidad temporal, precedencia del lookup, las seis combinaciones empresa/moneda y conservación del Pricebook ante código o moneda no reconocidos. |
+| 41 | Deploy real exitoso del Bloque 4 | El 25/07/2026 a las 12:49 p. m. se completó en `RedMotorsSandbox / Partial` el deploy `0AfAK000000vnon0AA`, con estado `Succeeded`, 4/4 componentes, 50/50 pruebas y cero fallas. Quedaron desplegados `WorkOrder.empresaFacturaCP__c`, `WorkOrder.empresaFactura__c`, `WorkOrderTrigger` y `WorkOrderTriggerTest`. El Bloque 4 queda completado y desplegado. |
 
 ## 4. Decisiones autorizadas
 
@@ -380,7 +391,88 @@ trigger adicional para PEKING.
 9. Alcance funcional final de Softland, reservas, inventario, anticipos,
     documentos, taller y usados.
 
-## 15. Plantilla reutilizable de actualización
+## 15. Cierre de jornada — 25/07/2026
+
+| Dato | Registro |
+|---|---|
+| Hora de cierre | 01:01 a. m. |
+| Zona horaria | Monterrey, Nuevo León |
+| Estado del Bloque 4 | Dry-run final exitoso; deploy real pendiente |
+| Avance técnico estimado | 62% completado |
+| Pendiente estimado | 38% |
+
+El porcentaje es una estimación basada en el alcance técnico identificado y
+completado. No representa horas oficiales registradas, consumidas o
+facturables.
+
+Resultado principal de la jornada:
+
+- Bloque 4 reorientado a `WorkOrder.empresaFacturaCP__c`;
+- lookup principal hacia `Empresa__c`;
+- `empresaFactura__c` conservado como compatibilidad temporal;
+- precedencia del lookup cuando ambos campos tienen valor;
+- soporte explícito para `RMBAVARIAN`, `RMOTOBAI` y `RMPEKING`;
+- conservación de las seis combinaciones empresa/moneda;
+- ausencia de selección empresarial por descarte;
+- conservación de `Pricebook2Id` ante código o moneda no reconocidos;
+- cobertura comprobada de 163/173 líneas, equivalente a 94.220%.
+
+Pendientes al cierre:
+
+1. Respuesta de Luis sobre la discrepancia `Garantia` / `Garantía`.
+2. Deploy real del Bloque 4.
+3. Permisos para `WorkOrder.empresaFacturaCP__c`.
+4. Creación y mapeo de registros operativos de `Empresa__c`.
+5. Migración de WorkOrders existentes al nuevo lookup.
+6. Decisión futura para retirar `empresaFactura__c`.
+7. Implementación de los siguientes componentes Apex del inventario.
+
+Hasta recibir respuesta sobre `Garantia` / `Garantía`, no debe modificarse el
+trigger ni el picklist.
+
+## 16. Cierre técnico del Bloque 4 — 25/07/2026
+
+| Dato | Registro |
+|---|---|
+| Inicio de jornada | 9:00 a. m. |
+| Hora de registro del deploy | 12:49 p. m. |
+| Ambiente | RedMotorsSandbox / Partial |
+| Deploy ID | `0AfAK000000vnon0AA` |
+| Estado | Succeeded |
+| Componentes | 4/4 |
+| Pruebas | 50/50 |
+| Fallas | 0 |
+| Estado del Bloque 4 | Completado y desplegado |
+
+Componentes desplegados:
+
+- `WorkOrder.empresaFacturaCP__c`;
+- `WorkOrder.empresaFactura__c`;
+- `WorkOrderTrigger`;
+- `WorkOrderTriggerTest`.
+
+Comportamiento desplegado:
+
+- `empresaFacturaCP__c` es la fuente principal de empresa;
+- `empresaFactura__c` permanece como compatibilidad temporal;
+- el lookup tiene prioridad cuando ambos campos están informados;
+- se soportan explícitamente `RMBAVARIAN`, `RMOTOBAI` y `RMPEKING`;
+- se mantienen las seis combinaciones empresa/moneda;
+- no existe selección empresarial por descarte.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 65%;
+- pendiente: 35%.
+
+Este porcentaje es una estimación basada en alcance técnico. No representa
+horas oficiales, trabajadas, registradas ni facturables.
+
+La discrepancia entre `Garantia`, valor activo del picklist, y `Garantía`,
+literal utilizado por el trigger, continúa pendiente. Luis indicó que debe
+corregirse antes de cerrar el Sprint 1.
+
+## 17. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
