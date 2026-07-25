@@ -2,8 +2,12 @@
 
 ## Autorización y alcance
 
-Se autorizó mantener la estructura actual de Pricebooks identificados por
-nombres fijos y priorizar la corrección de las decisiones binarias en Apex.
+Diego autorizó:
+
+- mantener la estructura actual de Pricebooks identificados por nombres fijos;
+- crear `PEKING Local` y `PEKING Dólares`;
+- dejar ambos Pricebooks activos desde su creación;
+- priorizar la corrección de las decisiones binarias en Apex.
 
 La nueva empresa autorizada es **PEKING**, asociada a las marcas **Omoda** y
 **Jaecoo**.
@@ -17,8 +21,9 @@ Los seis nombres exactos autorizados son:
 - `PEKING Local`
 - `PEKING Dólares`
 
-No se agregaron campos a `Pricebook2`, objetos de asociación, registros ni
-resolutores adicionales.
+No se agregaron campos a `Pricebook2`, objetos de asociación ni resolutores
+adicionales. La creación posterior de los dos Pricebooks fue una operación de
+datos autorizada, no un deploy de metadata.
 
 ## Componentes modificados
 
@@ -189,6 +194,25 @@ Otobai ni PEKING.
 No se modificaron `UpdateCurrencyScheduler` ni `WorkOrderTrigger`. Tampoco se
 tocaron los componentes de Softland, reservas, anticipos o inventario.
 
+## Creación autorizada de Pricebooks en RedMotorsSandbox
+
+La consulta previa confirmó que no existían Pricebooks con los nombres
+`PEKING Local` y `PEKING Dólares`.
+
+Después de la autorización de Diego se crearon los siguientes registros:
+
+| Name | Id | IsActive | IsStandard | CurrencyIsoCode |
+|---|---|:---:|:---:|---|
+| `PEKING Local` | `01sAK0000006DVdYAM` | true | false | USD |
+| `PEKING Dólares` | `01sAK0000006DXFYA2` | true | false | USD |
+
+Los IDs son específicos de `RedMotorsSandbox`; no deben hardcodearse en Apex,
+tests ni configuración portable.
+
+La creación fue una operación de datos autorizada y no un deploy de metadata.
+No se crearon `PricebookEntry`, no se cargaron productos y no se crearon
+registros de `Empresa__c`.
+
 ## Riesgos
 
 - Los nombres siguen siendo claves funcionales y cualquier renombre requiere
@@ -200,15 +224,16 @@ tocaron los componentes de Softland, reservas, anticipos o inventario.
 - `QuoteController` conserva su proceso existente de eliminar líneas sin
   recrearlas.
 - Las tasas y demás reglas monetarias existentes no se modificaron.
+- Aunque ambos Pricebooks PEKING están activos, todavía no contienen entradas
+  de productos y PEKING no está operativa para conversiones reales.
 
 ## Componentes pendientes
 
 - `UpdateCurrencyScheduler`
 - `WorkOrderTrigger`
-- creación de los Pricebooks `PEKING Local` y `PEKING Dólares`;
 - creación de las entradas de productos correspondientes en esos Pricebooks;
+- carga de los productos y precios autorizados;
 - consumidores de Softland, anticipos, reservas e inventario;
-- pruebas integrales posteriores a la creación de los Pricebooks y sus
-  entradas de productos.
+- pruebas integrales posteriores a la carga de los `PricebookEntry`.
 
 No se habilita todavía la operación completa de PEKING.

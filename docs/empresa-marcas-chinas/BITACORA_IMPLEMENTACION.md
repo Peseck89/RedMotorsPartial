@@ -30,8 +30,10 @@ reales facturables mientras no exista un registro oficial de tiempo.
   `PEKING Dólares`.
 - No existe fallback a Bavarian, Otobai ni PEKING en los dos consumidores
   modificados.
-- PEKING aún no está completamente operativa: faltan sus Pricebooks, sus
-  `PricebookEntry`, registros operativos de Empresa y consumidores pendientes.
+- Los Pricebooks `PEKING Local` y `PEKING Dólares` ya existen y están activos
+  en `RedMotorsSandbox`.
+- PEKING aún no está completamente operativa: faltan `PricebookEntry`,
+  productos, registros operativos de Empresa y consumidores pendientes.
 
 ## 3. Línea de tiempo
 
@@ -65,6 +67,8 @@ conserva el orden relativo sin inventar precisión.
 | 22 | Dry-run final del Bloque 2 | `0AfAK000000vlS10AI`: 4/4 componentes, 22/22 pruebas y cero fallas. |
 | 23 | Deploy real del Bloque 2 | `0AfAK000000vlTd0AI`: 4/4 componentes, 22/22 pruebas y cero fallas. |
 | 24 | Registro en Git | El Bloque 2 quedó en el commit `9669237`. Al revisar esta bitácora, la rama local y su rama remota apuntaban al mismo commit. |
+| 25 | Consulta previa de Pricebooks PEKING | Se confirmó que no existían Pricebooks con los nombres `PEKING Local` y `PEKING Dólares`. |
+| 26 | Creación autorizada de datos | Se crearon `PEKING Local` y `PEKING Dólares` activos en `RedMotorsSandbox`. Fue una operación de datos autorizada, no un deploy de metadata. No se crearon `PricebookEntry`, productos ni registros de `Empresa__c`. |
 
 ## 4. Decisiones autorizadas
 
@@ -74,13 +78,32 @@ conserva el orden relativo sin inventar precisión.
 | Nueva empresa: PEKING | Diego | Autorización registrada antes del Bloque 2 | 24 de julio de 2026 | Agrega una tercera rama explícita, sin activar todavía la operación completa |
 | Marcas: Omoda y Jaecoo | Diego | Misma autorización del Bloque 2 | 24 de julio de 2026 | Define las marcas asociadas al alcance PEKING; no crea por sí sola relaciones o registros |
 | Pricebooks `PEKING Local` y `PEKING Dólares` | Diego | Autorización registrada en la solicitud del Bloque 2 | 24 de julio de 2026 | Define los nombres exactos para CRC y USD |
+| Crear ambos Pricebooks activos desde su creación | Diego | Autorización registrada antes de la operación de datos | Fecha exacta no confirmada | Permitió crear los dos registros activos en `RedMotorsSandbox`, sin cargar productos |
 | Mantener Pricebooks por nombres fijos | Diego | Decisión expresa posterior al análisis de alternativas | 24 de julio de 2026 | Se conserva `Pricebook2.Name` como clave funcional autorizada para este bloque |
 | Priorizar la corrección de los `if` de Apex | Diego | Decisión expresa del Bloque 2 | 24 de julio de 2026 | Se corrigieron ramas binarias y fallbacks en dos consumidores |
 | No crear campos nuevos en `Pricebook2` | Diego | Decisión expresa del Bloque 2 | 24 de julio de 2026 | Se descartó para este bloque una relación configurable Empresa + moneda |
 
 No se atribuyen a Luis o Diego decisiones que no estén registradas en las
-fuentes revisadas. Las decisiones de códigos ERP, activación de Pricebooks,
-sharing definitivo y operación integral permanecen pendientes.
+fuentes revisadas. Las decisiones de códigos ERP, sharing definitivo y
+operación integral permanecen pendientes.
+
+### 4.1 Pricebooks creados en RedMotorsSandbox
+
+La consulta previa confirmó que no existían registros con esos nombres. Después
+de la autorización de Diego se crearon:
+
+| Name | Id de RedMotorsSandbox | IsActive | IsStandard | CurrencyIsoCode |
+|---|---|:---:|:---:|---|
+| `PEKING Local` | `01sAK0000006DVdYAM` | true | false | USD |
+| `PEKING Dólares` | `01sAK0000006DXFYA2` | true | false | USD |
+
+Los IDs pertenecen exclusivamente a `RedMotorsSandbox`. No son portables entre
+ambientes y no deben guardarse ni compararse en Apex, tests o configuración
+desplegable.
+
+La creación fue una operación de datos autorizada, no un deploy de metadata.
+No se crearon `PricebookEntry`, no se cargaron productos y no se crearon
+registros de `Empresa__c`.
 
 ## 5. Línea base técnica
 
@@ -292,10 +315,8 @@ registros operativos de Empresa.
 
 ### 12.1 Configuración operativa
 
-- crear `PEKING Local`;
-- crear `PEKING Dólares`;
-- confirmar si ambos Pricebooks estarán activos;
 - cargar sus `PricebookEntry`;
+- cargar los productos y precios autorizados;
 - definir códigos estables y códigos ERP;
 - crear de forma controlada los registros de Empresa;
 - asignar `Empresa_Admin` a usuarios autorizados;
@@ -332,8 +353,9 @@ trigger adicional para PEKING.
 | `Pricebook2.Name` permanece como clave funcional | Decisión autorizada para este bloque; cualquier renombre requiere coordinación y regresión |
 | Empresa desconocida cae en otra empresa | Prohibido; se exige error controlado |
 | Códigos operativos o ERP no confirmados | No inventarlos ni crear registros semilla |
-| PEKING tiene Apex pero no datos operativos | No considerar la empresa activa de punta a punta |
-| Componentes parciales pueden aplicar reglas distintas | Mantener PEKING inactiva hasta completar y probar los dominios necesarios |
+| PEKING tiene Apex y Pricebooks activos, pero no `PricebookEntry`, productos ni registro de Empresa | No considerar la empresa operativa de punta a punta |
+| Componentes parciales pueden aplicar reglas distintas | No habilitar conversiones reales de PEKING hasta completar y probar los datos y dominios necesarios |
+| IDs de Pricebook específicos del Sandbox | No hardcodearlos ni tratarlos como identificadores portables |
 | Nuevos objetos, campos o relaciones | Requieren autorización funcional previa |
 | Cambios en Softland | Requieren confirmar contrato, código y comportamiento |
 | Decisiones funcionales ambiguas | Detener implementación y solicitar confirmación |
@@ -348,11 +370,10 @@ trigger adicional para PEKING.
 3. Horas consumidas estimadas del Bloque 2.
 4. Códigos definitivos `Codigo__c` y `Codigo_ERP__c`.
 5. Nombres legales y registros operativos de Bavarian, Otobai y PEKING.
-6. Estado activo futuro de los dos Pricebooks PEKING.
-7. Productos y precios que deben cargarse en esos Pricebooks.
-8. Usuarios que recibirán `Empresa_Admin`.
-9. Sharing definitivo de `Empresa__c`.
-10. Alcance funcional final de Softland, reservas, inventario, anticipos,
+6. Productos y precios que deben cargarse en los Pricebooks PEKING.
+7. Usuarios que recibirán `Empresa_Admin`.
+8. Sharing definitivo de `Empresa__c`.
+9. Alcance funcional final de Softland, reservas, inventario, anticipos,
     documentos, taller y usados.
 
 ## 15. Plantilla reutilizable de actualización
