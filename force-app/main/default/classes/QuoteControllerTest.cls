@@ -34,10 +34,10 @@ public class QuoteControllerTest {
         //system.assertEquals(pricebookId,tmp.PriceBook2Id,'The workorder price book was modified after it was inserted');
         
         //Insert product        
-        Product2 prod= new Product2(IsActive=true, Name='Test product2', tipoProducto__c='Mano de Obra', ProductCode='00012', Codigo_de_Producto__c='0012');
+        Product2 prod= new Product2(IsActive=true, Name='Test product2', tipoProducto__c='Mano de Obra', ProductCode='QCT-HISTORY-1-A', Codigo_de_Producto__c='QCT-HISTORY-1-A');
         insert prod;
         
-        Product2 prodMO= new Product2(IsActive=true, Name='Mano de Obra',tipoProducto__c='Mano de Obra', ProductCode='00012', Codigo_de_Producto__c='0012');
+        Product2 prodMO= new Product2(IsActive=true, Name='Mano de Obra',tipoProducto__c='Mano de Obra', ProductCode='QCT-HISTORY-1-B', Codigo_de_Producto__c='QCT-HISTORY-1-B');
         insert prodMO;
         
         // Insert PricebookEntry
@@ -46,9 +46,9 @@ public class QuoteControllerTest {
         PricebookEntry standardPBE = new PricebookEntry(Pricebook2Id =pricebookId, Product2Id = prod.Id, UnitPrice = 2000, IsActive = true,CurrencyIsoCode='CRC');
         insert standardPBE;
     	
-		Product2 manoObra = new Product2(Name='MO Test', Family='Servicios',tipoProducto__c ='Mano de Obra', isActive=true, Codigo_de_Producto__c='MO29');
+		Product2 manoObra = new Product2(Name='MO Test', Family='Servicios',tipoProducto__c ='Mano de Obra', isActive=true, Codigo_de_Producto__c='QCT-HISTORY-1-C');
         insert manoObra;
- 		Product2 manoObra2 = new Product2(Name='MO Test2', Family='Servicios',tipoProducto__c ='Mano de Obra', isActive=true, Codigo_de_Producto__c='MO30');
+        Product2 manoObra2 = new Product2(Name='MO Test2', Family='Servicios',tipoProducto__c ='Mano de Obra', isActive=true, Codigo_de_Producto__c='QCT-HISTORY-1-D');
         insert manoObra2;  
         PricebookEntry pbe = new PricebookEntry(
             Product2Id = manoObra.Id,
@@ -88,7 +88,7 @@ public class QuoteControllerTest {
         tiposDeTrabajo__c tipotraba = new tiposDeTrabajo__c(Name='Mantenimiento');
         insert tipotraba;
         
-        wo.Etapa_de_flujo_de_trabajo__c='Aprobación de presupuesto';
+        wo.Etapa_de_flujo_de_trabajo__c='Aprobación';
         wo.AccountId=acc.Id;
         wo.ActividadComercial__c = actividad.Id;
         wo.Tipo_de_Cargo__c = 'x';
@@ -188,7 +188,7 @@ public class QuoteControllerTest {
         INSERT caso;
         
         wo.CaseId = caso.Id;
-        wo.Etapa_de_flujo_de_trabajo__c = 'Nuevo';
+        wo.Etapa_de_flujo_de_trabajo__c = 'Cita';
         update wo;
 
         //ProductConsumed pc = new ProductConsumed(WorkorderId = wo.Id,PriceBookEntryId = standardPBE.Id,QuantityConsumed = 1);
@@ -300,10 +300,10 @@ public class QuoteControllerTest {
         //system.assertEquals(pricebookId,tmp.PriceBook2Id,'The workorder price book was modified after it was inserted');
         
         //Insert product        
-        Product2 prod= new Product2(IsActive=true, Name='Test product2', tipoProducto__c='Mano de Obra', ProductCode='00012', Codigo_de_Producto__c='0012');
+        Product2 prod= new Product2(IsActive=true, Name='Test product2', tipoProducto__c='Mano de Obra', ProductCode='QCT-HISTORY-2-A', Codigo_de_Producto__c='QCT-HISTORY-2-A');
         insert prod;
         
-        Product2 prodMO= new Product2(IsActive=true, Name='Mano de Obra',tipoProducto__c='Mano de Obra', ProductCode='00012', Codigo_de_Producto__c='0012');
+        Product2 prodMO= new Product2(IsActive=true, Name='Mano de Obra',tipoProducto__c='Mano de Obra', ProductCode='QCT-HISTORY-2-B', Codigo_de_Producto__c='QCT-HISTORY-2-B');
         insert prodMO;
         
         // Insert PricebookEntry
@@ -312,9 +312,9 @@ public class QuoteControllerTest {
         PricebookEntry standardPBE = new PricebookEntry(Pricebook2Id =pricebookId, Product2Id = prod.Id, UnitPrice = 2000, IsActive = true,CurrencyIsoCode='CRC');
         insert standardPBE;
     	
-		Product2 manoObra = new Product2(Name='MO Test', Family='Servicios',tipoProducto__c ='Mano de Obra', isActive=true, Codigo_de_Producto__c='MO29');
+		Product2 manoObra = new Product2(Name='MO Test', Family='Servicios',tipoProducto__c ='Mano de Obra', isActive=true, Codigo_de_Producto__c='QCT-HISTORY-2-C');
         insert manoObra;
- 		Product2 manoObra2 = new Product2(Name='MO Test2', Family='Servicios',tipoProducto__c ='Mano de Obra', isActive=true, Codigo_de_Producto__c='MO30');
+        Product2 manoObra2 = new Product2(Name='MO Test2', Family='Servicios',tipoProducto__c ='Mano de Obra', isActive=true, Codigo_de_Producto__c='QCT-HISTORY-2-D');
         insert manoObra2;  
         PricebookEntry pbe = new PricebookEntry(
             Product2Id = manoObra.Id,
@@ -354,7 +354,7 @@ public class QuoteControllerTest {
         tiposDeTrabajo__c tipotraba = new tiposDeTrabajo__c(Name='Mantenimiento');
         insert tipotraba;
         
-        wo.Etapa_de_flujo_de_trabajo__c='Aprobación de presupuesto';
+        wo.Etapa_de_flujo_de_trabajo__c='Aprobación';
         wo.AccountId=acc.Id;
         wo.ActividadComercial__c = actividad.Id;
         wo.Tipo_de_Cargo__c = 'x';
@@ -454,7 +454,7 @@ public class QuoteControllerTest {
         INSERT caso;
         
         wo.CaseId = caso.Id;
-        wo.Etapa_de_flujo_de_trabajo__c = 'Nuevo';
+        wo.Etapa_de_flujo_de_trabajo__c = 'Cita';
         update wo;
 
         //ProductConsumed pc = new ProductConsumed(WorkorderId = wo.Id,PriceBookEntryId = standardPBE.Id,QuantityConsumed = 1);
@@ -545,7 +545,346 @@ public class QuoteControllerTest {
         QuoteController.getSubtrabajoName('','p');
 		QuoteController.getCargo('1');
         Test.stopTest();
-        
+
+    }
+
+    @IsTest
+    static void convertsBavarianLocalToBavarianDolar() {
+        CurrencyScenario scenario = prepareQuoteConversion(
+            'Bavarian Local',
+            'Bavarian Dólar',
+            'CRC'
+        );
+
+        Test.startTest();
+        QuoteController.changeCurrencygtQLIs(scenario.workOrderId, scenario.quoteId);
+        Test.stopTest();
+
+        assertQuoteConversionResult(scenario, 'Bavarian Dólar', 'USD');
+    }
+
+    @IsTest
+    static void convertsBavarianDolarToBavarianLocal() {
+        CurrencyScenario scenario = prepareQuoteConversion(
+            'Bavarian Dólar',
+            'Bavarian Local',
+            'USD'
+        );
+
+        Test.startTest();
+        QuoteController.changeCurrencygtQLIs(scenario.workOrderId, scenario.quoteId);
+        Test.stopTest();
+
+        assertQuoteConversionResult(scenario, 'Bavarian Local', 'CRC');
+    }
+
+    @IsTest
+    static void convertsOtobaiLocalToOtobaiDolares() {
+        CurrencyScenario scenario = prepareQuoteConversion(
+            'Otobai Local',
+            'Otobai Dólares',
+            'CRC'
+        );
+
+        Test.startTest();
+        QuoteController.changeCurrencygtQLIs(scenario.workOrderId, scenario.quoteId);
+        Test.stopTest();
+
+        assertQuoteConversionResult(scenario, 'Otobai Dólares', 'USD');
+    }
+
+    @IsTest
+    static void convertsOtobaiDolaresToOtobaiLocal() {
+        CurrencyScenario scenario = prepareQuoteConversion(
+            'Otobai Dólares',
+            'Otobai Local',
+            'USD'
+        );
+
+        Test.startTest();
+        QuoteController.changeCurrencygtQLIs(scenario.workOrderId, scenario.quoteId);
+        Test.stopTest();
+
+        assertQuoteConversionResult(scenario, 'Otobai Local', 'CRC');
+    }
+
+    @IsTest
+    static void convertsPekingLocalToPekingDolares() {
+        CurrencyScenario scenario = prepareQuoteConversion(
+            'PEKING Local',
+            'PEKING Dólares',
+            'CRC'
+        );
+
+        Test.startTest();
+        QuoteController.changeCurrencygtQLIs(scenario.workOrderId, scenario.quoteId);
+        Test.stopTest();
+
+        assertQuoteConversionResult(scenario, 'PEKING Dólares', 'USD');
+    }
+
+    @IsTest
+    static void convertsPekingDolaresToPekingLocal() {
+        CurrencyScenario scenario = prepareQuoteConversion(
+            'PEKING Dólares',
+            'PEKING Local',
+            'USD'
+        );
+
+        Test.startTest();
+        QuoteController.changeCurrencygtQLIs(scenario.workOrderId, scenario.quoteId);
+        Test.stopTest();
+
+        assertQuoteConversionResult(scenario, 'PEKING Local', 'CRC');
+    }
+
+    @IsTest
+    static void rejectsUnknownPricebookBeforeDeletingLines() {
+        Pricebook2 unknownPricebook = ensurePricebook('Pricebook Desconocido');
+        CurrencyScenario scenario = createCurrencyScenario(
+            unknownPricebook.Id,
+            'CRC'
+        );
+        addWorkOrderLine(scenario);
+
+        AuraHandledException caughtException;
+        Test.startTest();
+        try {
+            QuoteController.changeCurrencygtQLIs(
+                scenario.workOrderId,
+                scenario.quoteId
+            );
+        } catch (AuraHandledException exceptionValue) {
+            caughtException = exceptionValue;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, caughtException);
+        System.assert(caughtException.getMessage().contains('no está autorizado'));
+        System.assertEquals(
+            1,
+            [SELECT COUNT() FROM WorkOrderLineItem WHERE WorkOrderId = :scenario.workOrderId],
+            'La validación debe ocurrir antes de eliminar líneas.'
+        );
+        assertWorkOrderUnchanged(scenario, 'CRC');
+    }
+
+    @IsTest
+    static void rejectsNullPricebookBeforeUpdatingWorkOrder() {
+        Pricebook2 sourcePricebook = ensurePricebook('Bavarian Local');
+        ensurePricebook('Bavarian Dólar');
+        CurrencyScenario scenario = createCurrencyScenario(sourcePricebook.Id, 'CRC');
+        WorkOrder workOrder = new WorkOrder(
+            Id = scenario.workOrderId,
+            Pricebook2Id = null
+        );
+        update workOrder;
+
+        AuraHandledException caughtException;
+        Test.startTest();
+        try {
+            QuoteController.changeCurrencygtQLIs(
+                scenario.workOrderId,
+                scenario.quoteId
+            );
+        } catch (AuraHandledException exceptionValue) {
+            caughtException = exceptionValue;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, caughtException);
+        System.assert(caughtException.getMessage().contains('no tiene un Pricebook'));
+        System.assertEquals(
+            null,
+            [SELECT Pricebook2Id FROM WorkOrder WHERE Id = :scenario.workOrderId].Pricebook2Id
+        );
+    }
+
+    @IsTest
+    static void rejectsMissingAndAmbiguousTargetPricebooks() {
+        Pricebook2 otobaiLocal = ensurePricebook('Otobai Local');
+        CurrencyScenario missingScenario = createCurrencyScenario(
+            otobaiLocal.Id,
+            'CRC'
+        );
+
+        AuraHandledException missingException;
+        try {
+            QuoteController.changeCurrencygtQLIs(
+                missingScenario.workOrderId,
+                missingScenario.quoteId
+            );
+        } catch (AuraHandledException exceptionValue) {
+            missingException = exceptionValue;
+        }
+        System.assertNotEquals(null, missingException);
+        System.assert(missingException.getMessage().contains('No existe un Pricebook'));
+        assertWorkOrderUnchanged(missingScenario, 'CRC');
+
+        Pricebook2 pekingLocal = ensurePricebook('PEKING Local');
+        insert new List<Pricebook2>{
+            new Pricebook2(Name = 'PEKING Dólares', IsActive = true),
+            new Pricebook2(Name = 'PEKING Dólares', IsActive = true)
+        };
+        CurrencyScenario ambiguousScenario = createCurrencyScenario(
+            pekingLocal.Id,
+            'CRC'
+        );
+
+        AuraHandledException ambiguousException;
+        try {
+            QuoteController.changeCurrencygtQLIs(
+                ambiguousScenario.workOrderId,
+                ambiguousScenario.quoteId
+            );
+        } catch (AuraHandledException exceptionValue) {
+            ambiguousException = exceptionValue;
+        }
+        System.assertNotEquals(null, ambiguousException);
+        System.assert(ambiguousException.getMessage().contains('más de un Pricebook'));
+        assertWorkOrderUnchanged(ambiguousScenario, 'CRC');
+    }
+
+    private static CurrencyScenario prepareQuoteConversion(
+        String sourceName,
+        String targetName,
+        String sourceCurrency
+    ) {
+        Pricebook2 sourcePricebook = ensurePricebook(sourceName);
+        ensurePricebook(targetName);
+        return createCurrencyScenario(
+            sourcePricebook.Id,
+            sourceCurrency
+        );
+    }
+
+    private static void assertQuoteConversionResult(
+        CurrencyScenario scenario,
+        String targetName,
+        String targetCurrency
+    ) {
+        WorkOrder convertedWorkOrder = [
+            SELECT Pricebook2.Name, CurrencyIsoCode
+            FROM WorkOrder
+            WHERE Id = :scenario.workOrderId
+        ];
+        System.assertEquals(targetName, convertedWorkOrder.Pricebook2.Name);
+        System.assertEquals(targetCurrency, convertedWorkOrder.CurrencyIsoCode);
+        Quote unchangedQuote = [
+            SELECT Pricebook2Id
+            FROM Quote
+            WHERE Id = :scenario.quoteId
+        ];
+        System.assertEquals(scenario.sourcePricebookId, unchangedQuote.Pricebook2Id);
+        System.assertEquals(
+            scenario.quoteLineCountBefore,
+            [SELECT COUNT() FROM QuoteLineItem WHERE QuoteId = :scenario.quoteId],
+            'El cambio de moneda no debe alterar las líneas de la cotización.'
+        );
+    }
+
+    private static CurrencyScenario createCurrencyScenario(
+        Id sourcePricebookId,
+        String currencyIsoCode
+    ) {
+        WorkOrder workOrder = new WorkOrder(
+            Subject = 'Conversión de moneda',
+            CurrencyIsoCode = currencyIsoCode,
+            Pricebook2Id = sourcePricebookId,
+            tipoDeGasto__c = 'Cliente'
+        );
+        insert workOrder;
+
+        Opportunity opportunity = new Opportunity(
+            Name = 'Oportunidad de conversión',
+            CloseDate = Date.today(),
+            StageName = 'Oferta',
+            CurrencyIsoCode = currencyIsoCode,
+            Pricebook2Id = sourcePricebookId,
+            WorkOrder__c = workOrder.Id
+        );
+        insert opportunity;
+
+        Quote quote = new Quote(
+            Name = 'Cotización de conversión',
+            OpportunityId = opportunity.Id,
+            Pricebook2Id = sourcePricebookId,
+            CurrencyIsoCode = currencyIsoCode
+        );
+        insert quote;
+
+        CurrencyScenario scenario = new CurrencyScenario();
+        scenario.workOrderId = workOrder.Id;
+        scenario.quoteId = quote.Id;
+        scenario.sourcePricebookId = sourcePricebookId;
+        scenario.quoteLineCountBefore = [
+            SELECT COUNT()
+            FROM QuoteLineItem
+            WHERE QuoteId = :quote.Id
+        ];
+        return scenario;
+    }
+
+    private static void addWorkOrderLine(CurrencyScenario scenario) {
+        Product2 product = new Product2(
+            Name = 'Producto para validar líneas',
+            IsActive = true,
+            ProductCode = 'QCT-UNKNOWN',
+            Codigo_de_Producto__c = 'QCT-UNKNOWN'
+        );
+        insert product;
+        PricebookEntry entry = new PricebookEntry(
+            Pricebook2Id = scenario.sourcePricebookId,
+            Product2Id = product.Id,
+            UnitPrice = 100,
+            IsActive = true,
+            CurrencyIsoCode = 'CRC'
+        );
+        insert entry;
+        insert new WorkOrderLineItem(
+            WorkOrderId = scenario.workOrderId,
+            PricebookEntryId = entry.Id,
+            Description = 'Línea que no debe eliminarse',
+            Quantity = 1
+        );
+    }
+
+    private static void assertWorkOrderUnchanged(
+        CurrencyScenario scenario,
+        String expectedCurrency
+    ) {
+        WorkOrder unchangedWorkOrder = [
+            SELECT Pricebook2Id, CurrencyIsoCode
+            FROM WorkOrder
+            WHERE Id = :scenario.workOrderId
+        ];
+        System.assertEquals(
+            scenario.sourcePricebookId,
+            unchangedWorkOrder.Pricebook2Id
+        );
+        System.assertEquals(expectedCurrency, unchangedWorkOrder.CurrencyIsoCode);
+    }
+
+    private static Pricebook2 ensurePricebook(String name) {
+        List<Pricebook2> existingPricebooks = [
+            SELECT Id, Name
+            FROM Pricebook2
+            WHERE Name = :name
+            LIMIT 1
+        ];
+        if (!existingPricebooks.isEmpty()) {
+            return existingPricebooks[0];
+        }
+        Pricebook2 pricebook = new Pricebook2(Name = name, IsActive = true);
+        insert pricebook;
+        return pricebook;
+    }
+
+    private class CurrencyScenario {
+        Id workOrderId;
+        Id quoteId;
+        Id sourcePricebookId;
+        Integer quoteLineCountBefore;
     }
     
 }

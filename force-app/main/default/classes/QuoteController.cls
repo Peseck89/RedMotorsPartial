@@ -1,4 +1,22 @@
 public with sharing class QuoteController {
+    private static final Map<String, String> TARGET_PRICEBOOK_BY_SOURCE = new Map<String, String>{
+        'Bavarian Local' => 'Bavarian Dólar',
+        'Bavarian Dólar' => 'Bavarian Local',
+        'Otobai Local' => 'Otobai Dólares',
+        'Otobai Dólares' => 'Otobai Local',
+        'PEKING Local' => 'PEKING Dólares',
+        'PEKING Dólares' => 'PEKING Local'
+    };
+
+    private static final Map<String, String> TARGET_CURRENCY_BY_SOURCE = new Map<String, String>{
+        'Bavarian Local' => 'USD',
+        'Bavarian Dólar' => 'CRC',
+        'Otobai Local' => 'USD',
+        'Otobai Dólares' => 'CRC',
+        'PEKING Local' => 'USD',
+        'PEKING Dólares' => 'CRC'
+    };
+
     public QuoteController() {}
 
     @AuraEnabled(cacheable=true)
@@ -145,34 +163,22 @@ public with sharing class QuoteController {
 
         List<WorkOrder> workOrderItem = [SELECT Id,CurrencyIsoCode,Pricebook2Id FROM WorkOrder WHERE Id =:workOrderId];
         if(workOrderItem.size()>0){
+            Pricebook2 pb2 = resolveTargetPricebook(workOrderItem[0].Pricebook2Id);
+
             List<WorkOrderLineItem> woliList = [Select Id,Estado_reserva__c From WorkOrderLineItem Where WorkOrderId =: workOrderId];
             if(woliList.size()>0){
                 delete woliList;
             }
             pricebook = workOrderItem[0].Pricebook2Id;
-            PriceBook2 pb1 = [Select Id, Name From PriceBook2 Where Id =:pricebook limit 1];
-            String pricebookBusqueda = 'Bavarian Local';
-            if(pb1.Name == 'Otobai Local'){
-                pricebookBusqueda = 'Otobai Dólares	';
-            }
-            if(pb1.Name == 'Otobai Dólares'){
-                pricebookBusqueda = 'Otobai Local';
-            }
-            if(pb1.Name == 'Bavarian Local'){
-                pricebookBusqueda = 'Bavarian Dólar';
-            }
-            if(pb1.Name == 'Bavarian Dólar'){
-                pricebookBusqueda = 'Bavarian Local';
-            }
-            System.debug('pricebookBusqueda '+pricebookBusqueda);
-            Pricebook2 pb2 = [Select Id, Name From Pricebook2 Where Name =:pricebookBusqueda];
+            PriceBook2 pb1 = [
+                SELECT Id, Name
+                FROM PriceBook2
+                WHERE Id = :pricebook
+                LIMIT 1
+            ];
+            System.debug('pricebookBusqueda '+pb2.Name);
             workOrderItem[0].Pricebook2Id=pb2.Id;
-            if(workOrderItem[0].CurrencyIsoCode == 'CRC'){
-                workOrderItem[0].CurrencyIsoCode = 'USD';
-            }
-            else{
-                workOrderItem[0].CurrencyIsoCode = 'CRC';
-            }
+            workOrderItem[0].CurrencyIsoCode = TARGET_CURRENCY_BY_SOURCE.get(pb1.Name);
             update workOrderItem;
             priceCurrency = workOrderItem[0].CurrencyIsoCode;
             pricebook = workOrderItem[0].Pricebook2Id;
@@ -256,6 +262,50 @@ public with sharing class QuoteController {
         System.debug('quoteLineItemsWrapper: ' + quoteLineItemsWrapper);
         responseMap.put('items',quoteLineItemsWrapper);
         return responseMap;
+    }
+
+    private static Pricebook2 resolveTargetPricebook(Id sourcePricebookId) {
+        if (sourcePricebookId == null) {
+            throw pricebookError('La orden de trabajo no tiene un Pricebook configurado.');
+        }
+
+        List<Pricebook2> sourcePricebooks = [
+            SELECT Id, Name
+            FROM Pricebook2
+            WHERE Id = :sourcePricebookId
+            LIMIT 1
+        ];
+        if (sourcePricebooks.isEmpty()) {
+            throw pricebookError('No existe el Pricebook de origen configurado en la orden de trabajo.');
+        }
+
+        String targetName = TARGET_PRICEBOOK_BY_SOURCE.get(sourcePricebooks[0].Name);
+        if (targetName == null) {
+            throw pricebookError(
+                'El Pricebook ' + sourcePricebooks[0].Name + ' no está autorizado para cambio de moneda.'
+            );
+        }
+
+        List<Pricebook2> targetPricebooks = [
+            SELECT Id, Name
+            FROM Pricebook2
+            WHERE Name = :targetName
+        ];
+        if (targetPricebooks.isEmpty()) {
+            throw pricebookError('No existe un Pricebook con el nombre ' + targetName + '.');
+        }
+        if (targetPricebooks.size() > 1) {
+            throw pricebookError(
+                'Existe más de un Pricebook con el nombre ' + targetName + '.'
+            );
+        }
+        return targetPricebooks[0];
+    }
+
+    private static AuraHandledException pricebookError(String message) {
+        AuraHandledException exceptionValue = new AuraHandledException(message);
+        exceptionValue.setMessage(message);
+        return exceptionValue;
     }
 
     @AuraEnabled(cacheable=true)

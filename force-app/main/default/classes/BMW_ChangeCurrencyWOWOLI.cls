@@ -1,4 +1,22 @@
 public with sharing class BMW_ChangeCurrencyWOWOLI {
+    private static final Map<String, String> TARGET_PRICEBOOK_BY_SOURCE = new Map<String, String>{
+        'Bavarian Local' => 'Bavarian Dólar',
+        'Bavarian Dólar' => 'Bavarian Local',
+        'Otobai Local' => 'Otobai Dólares',
+        'Otobai Dólares' => 'Otobai Local',
+        'PEKING Local' => 'PEKING Dólares',
+        'PEKING Dólares' => 'PEKING Local'
+    };
+
+    private static final Map<String, String> TARGET_CURRENCY_BY_SOURCE = new Map<String, String>{
+        'Bavarian Local' => 'USD',
+        'Bavarian Dólar' => 'CRC',
+        'Otobai Local' => 'USD',
+        'Otobai Dólares' => 'CRC',
+        'PEKING Local' => 'USD',
+        'PEKING Dólares' => 'CRC'
+    };
+
   public WorkOrder ot {get;set;}
      public Boolean cambiado { get; set; }
     public Boolean comienzo { get; set; }
@@ -20,37 +38,26 @@ public with sharing class BMW_ChangeCurrencyWOWOLI {
         System.debug('ot moneda1: '+ot.CurrencyIsoCode);
         System.debug('ot pricebook1: '+ot.Pricebook2Id);
         System.debug('ot: '+ot);
-        Pricebook2 pbOTinicial = [Select Id, Name From Pricebook2 Where Id =: ot.Pricebook2Id];
+        Pricebook2 pbOTFinal = resolveTargetPricebook(ot.Pricebook2Id);
+        Pricebook2 pbOTinicial = [
+            SELECT Id, Name
+            FROM Pricebook2
+            WHERE Id = :ot.Pricebook2Id
+            LIMIT 1
+        ];
         System.debug('pbOTinicial '+pbOTinicial.Name);
-        String PriceBookName;
         Decimal dolarColon = 598.13;
-        Decimal tipoCambio = 1; 
-        if(ot.CurrencyIsoCode == 'CRC'){
-            if(pbOTinicial.Name == 'Otobai Local'){
-                PriceBookName = 'Otobai Dólares';
-            }
-            else{
-                PriceBookName = 'Bavarian Dólar';
-            }
+        Decimal tipoCambio = 1;
+        if(TARGET_CURRENCY_BY_SOURCE.get(pbOTinicial.Name) == 'USD'){
             tipoCambio = 1/dolarColon;
             ot.CurrencyIsoCode = 'USD';
-        }
-        else{
-            if(pbOTinicial.Name == 'Otobai Dólares'){
-                PriceBookName = 'Otobai Local';
-            }
-            else{
-                PriceBookName = 'Bavarian Local';
-            }
+        } else {
             tipoCambio = dolarColon;
             ot.CurrencyIsoCode = 'CRC';
         }
-                System.debug('PriceBookName '+PriceBookName);
+        System.debug('PriceBookName '+pbOTFinal.Name);
 
-        if(!Test.isRunningTest()){
-            Pricebook2 pbOTFinal = [Select Id, Name From Pricebook2 Where Name =: PriceBookName];
-          ot.Pricebook2Id = pbOTFinal.Id;
-        }
+        ot.Pricebook2Id = pbOTFinal.Id;
         System.debug('ot moneda2: '+ot.CurrencyIsoCode);
         System.debug('ot pricebook2: '+ot.Pricebook2Id);
         //List<WorkOrderLineItem> woliRelated = new List<WorkOrderLineItem>();
@@ -208,15 +215,57 @@ public with sharing class BMW_ChangeCurrencyWOWOLI {
             //update ot;
             //System.debug('ot: '+ot);
                         System.debug('newWoliRelated: '+newWoliRelated);
-      if(!Test.isRunningTest()){
-              insert newWoliRelated;
-            }
+            insert newWoliRelated;
             cargando = false;
             comienzo = false;
           cambiado = true;
             System.debug('newWoliRelated: '+newWoliRelated);
       }
         return null;
+    }
+
+    private static Pricebook2 resolveTargetPricebook(Id sourcePricebookId) {
+        if (sourcePricebookId == null) {
+            throw pricebookError('La orden de trabajo no tiene un Pricebook configurado.');
+        }
+
+        List<Pricebook2> sourcePricebooks = [
+            SELECT Id, Name
+            FROM Pricebook2
+            WHERE Id = :sourcePricebookId
+            LIMIT 1
+        ];
+        if (sourcePricebooks.isEmpty()) {
+            throw pricebookError('No existe el Pricebook de origen configurado en la orden de trabajo.');
+        }
+
+        String targetName = TARGET_PRICEBOOK_BY_SOURCE.get(sourcePricebooks[0].Name);
+        if (targetName == null) {
+            throw pricebookError(
+                'El Pricebook ' + sourcePricebooks[0].Name + ' no está autorizado para cambio de moneda.'
+            );
+        }
+
+        List<Pricebook2> targetPricebooks = [
+            SELECT Id, Name
+            FROM Pricebook2
+            WHERE Name = :targetName
+        ];
+        if (targetPricebooks.isEmpty()) {
+            throw pricebookError('No existe un Pricebook con el nombre ' + targetName + '.');
+        }
+        if (targetPricebooks.size() > 1) {
+            throw pricebookError(
+                'Existe más de un Pricebook con el nombre ' + targetName + '.'
+            );
+        }
+        return targetPricebooks[0];
+    }
+
+    private static AuraHandledException pricebookError(String message) {
+        AuraHandledException exceptionValue = new AuraHandledException(message);
+        exceptionValue.setMessage(message);
+        return exceptionValue;
     }
     
     

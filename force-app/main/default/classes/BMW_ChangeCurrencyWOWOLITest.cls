@@ -27,8 +27,9 @@ public class BMW_ChangeCurrencyWOWOLITest {
         List<tiposDeTrabajo__c> tipoTrabajoList = createTipoTrabajo(1, true);
         
         List<Product2> productList = createProducts(1, true);
-        List<Pricebook2> priceBookList = createPricebook2(1, true);
+        List<Pricebook2> priceBookList = createPricebook2(2, true);
         List<PricebookEntry> priceBookEntryList = createPricebookEntries(1, true,priceBookList[0],productList[0]);        
+        createPricebookEntries(1, true,priceBookList[1],productList[0]);
         
         // New
         List<Case> caseList = createCase(1, true, assetList[0]);
@@ -61,6 +62,265 @@ public class BMW_ChangeCurrencyWOWOLITest {
         	workOrderController.ot.CurrencyIsoCode = workOrder.CurrencyIsoCode;
             workOrderController.changeCurrency();        
         test.stopTest();
+
+        WorkOrder convertedWorkOrder = [
+            SELECT Pricebook2.Name, CurrencyIsoCode
+            FROM WorkOrder
+            WHERE Id = :workOrder.Id
+        ];
+        System.assertEquals('Bavarian Dólar', convertedWorkOrder.Pricebook2.Name);
+        System.assertEquals('USD', convertedWorkOrder.CurrencyIsoCode);
+        System.assertEquals(
+            1,
+            [SELECT COUNT() FROM WorkOrderLineItem WHERE WorkOrderId = :workOrder.Id],
+            'La conversión debe conservar la cantidad actual de líneas.'
+        );
+    }
+
+    @IsTest
+    static void convertsBavarianLocalToBavarianDolar() {
+        BMW_ChangeCurrencyWOWOLI controller = prepareConversion(
+            'Bavarian Local',
+            'Bavarian Dólar',
+            'CRC'
+        );
+
+        Test.startTest();
+        controller.changeCurrency();
+        Test.stopTest();
+
+        assertConversionResult(controller, 'Bavarian Dólar', 'USD');
+    }
+
+    @IsTest
+    static void convertsBavarianDolarToBavarianLocal() {
+        BMW_ChangeCurrencyWOWOLI controller = prepareConversion(
+            'Bavarian Dólar',
+            'Bavarian Local',
+            'USD'
+        );
+
+        Test.startTest();
+        controller.changeCurrency();
+        Test.stopTest();
+
+        assertConversionResult(controller, 'Bavarian Local', 'CRC');
+    }
+
+    @IsTest
+    static void convertsOtobaiLocalToOtobaiDolares() {
+        BMW_ChangeCurrencyWOWOLI controller = prepareConversion(
+            'Otobai Local',
+            'Otobai Dólares',
+            'CRC'
+        );
+
+        Test.startTest();
+        controller.changeCurrency();
+        Test.stopTest();
+
+        assertConversionResult(controller, 'Otobai Dólares', 'USD');
+    }
+
+    @IsTest
+    static void convertsOtobaiDolaresToOtobaiLocal() {
+        BMW_ChangeCurrencyWOWOLI controller = prepareConversion(
+            'Otobai Dólares',
+            'Otobai Local',
+            'USD'
+        );
+
+        Test.startTest();
+        controller.changeCurrency();
+        Test.stopTest();
+
+        assertConversionResult(controller, 'Otobai Local', 'CRC');
+    }
+
+    @IsTest
+    static void convertsPekingLocalToPekingDolares() {
+        BMW_ChangeCurrencyWOWOLI controller = prepareConversion(
+            'PEKING Local',
+            'PEKING Dólares',
+            'CRC'
+        );
+
+        Test.startTest();
+        controller.changeCurrency();
+        Test.stopTest();
+
+        assertConversionResult(controller, 'PEKING Dólares', 'USD');
+    }
+
+    @IsTest
+    static void convertsPekingDolaresToPekingLocal() {
+        BMW_ChangeCurrencyWOWOLI controller = prepareConversion(
+            'PEKING Dólares',
+            'PEKING Local',
+            'USD'
+        );
+
+        Test.startTest();
+        controller.changeCurrency();
+        Test.stopTest();
+
+        assertConversionResult(controller, 'PEKING Local', 'CRC');
+    }
+
+    @IsTest
+    static void rejectsUnknownPricebookWithoutFallback() {
+        Pricebook2 unknownPricebook = ensurePricebook('Pricebook Desconocido');
+        WorkOrder workOrder = createWorkOrderForConversion(unknownPricebook.Id, 'CRC');
+
+        AuraHandledException caughtException;
+        Test.startTest();
+        try {
+            createController(workOrder).changeCurrency();
+        } catch (AuraHandledException exceptionValue) {
+            caughtException = exceptionValue;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, caughtException);
+        System.assert(
+            caughtException.getMessage().contains('no está autorizado'),
+            caughtException.getMessage()
+        );
+        WorkOrder unchangedWorkOrder = [
+            SELECT Pricebook2Id, CurrencyIsoCode
+            FROM WorkOrder
+            WHERE Id = :workOrder.Id
+        ];
+        System.assertEquals(unknownPricebook.Id, unchangedWorkOrder.Pricebook2Id);
+        System.assertEquals('CRC', unchangedWorkOrder.CurrencyIsoCode);
+    }
+
+    @IsTest
+    static void rejectsNullPricebookBeforeChangingWorkOrder() {
+        Pricebook2 sourcePricebook = [
+            SELECT Id
+            FROM Pricebook2
+            WHERE Name = 'Bavarian Local'
+            LIMIT 1
+        ];
+        WorkOrder workOrder = createWorkOrderForConversion(sourcePricebook.Id, 'CRC');
+        BMW_ChangeCurrencyWOWOLI controller = createController(workOrder);
+        controller.ot.Pricebook2Id = null;
+
+        AuraHandledException caughtException;
+        Test.startTest();
+        try {
+            controller.changeCurrency();
+        } catch (AuraHandledException exceptionValue) {
+            caughtException = exceptionValue;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, caughtException);
+        System.assert(
+            caughtException.getMessage().contains('no tiene un Pricebook'),
+            caughtException.getMessage()
+        );
+    }
+
+    @IsTest
+    static void rejectsMissingOrAmbiguousTargetPricebook() {
+        Pricebook2 otobaiLocal = ensurePricebook('Otobai Local');
+        WorkOrder missingTargetWorkOrder = createWorkOrderForConversion(otobaiLocal.Id, 'CRC');
+
+        AuraHandledException missingException;
+        try {
+            createController(missingTargetWorkOrder).changeCurrency();
+        } catch (AuraHandledException exceptionValue) {
+            missingException = exceptionValue;
+        }
+        System.assertNotEquals(null, missingException);
+        System.assert(missingException.getMessage().contains('No existe un Pricebook'));
+
+        insert new Pricebook2(Name = 'Bavarian Dólar', IsActive = true);
+        Pricebook2 bavarianLocal = [
+            SELECT Id
+            FROM Pricebook2
+            WHERE Name = 'Bavarian Local'
+            LIMIT 1
+        ];
+        WorkOrder ambiguousTargetWorkOrder = createWorkOrderForConversion(
+            bavarianLocal.Id,
+            'CRC'
+        );
+
+        AuraHandledException ambiguousException;
+        try {
+            createController(ambiguousTargetWorkOrder).changeCurrency();
+        } catch (AuraHandledException exceptionValue) {
+            ambiguousException = exceptionValue;
+        }
+        System.assertNotEquals(null, ambiguousException);
+        System.assert(ambiguousException.getMessage().contains('más de un Pricebook'));
+    }
+
+    private static BMW_ChangeCurrencyWOWOLI prepareConversion(
+        String sourceName,
+        String targetName,
+        String sourceCurrency
+    ) {
+        Pricebook2 sourcePricebook = ensurePricebook(sourceName);
+        ensurePricebook(targetName);
+        WorkOrder workOrder = createWorkOrderForConversion(
+            sourcePricebook.Id,
+            sourceCurrency
+        );
+        return createController(workOrder);
+    }
+
+    private static void assertConversionResult(
+        BMW_ChangeCurrencyWOWOLI controller,
+        String targetName,
+        String targetCurrency
+    ) {
+        System.assertEquals(
+            targetName,
+            [SELECT Name FROM Pricebook2 WHERE Id = :controller.ot.Pricebook2Id].Name
+        );
+        System.assertEquals(targetCurrency, controller.ot.CurrencyIsoCode);
+    }
+
+    private static BMW_ChangeCurrencyWOWOLI createController(WorkOrder workOrder) {
+        ApexPages.StandardController standardController =
+            new ApexPages.StandardController(workOrder);
+        BMW_ChangeCurrencyWOWOLI controller =
+            new BMW_ChangeCurrencyWOWOLI(standardController);
+        controller.ot.Pricebook2Id = workOrder.Pricebook2Id;
+        controller.ot.CurrencyIsoCode = workOrder.CurrencyIsoCode;
+        return controller;
+    }
+
+    private static WorkOrder createWorkOrderForConversion(
+        Id pricebookId,
+        String currencyIsoCode
+    ) {
+        WorkOrder workOrder = new WorkOrder(
+            Subject = 'Conversión de Pricebook',
+            Pricebook2Id = pricebookId,
+            CurrencyIsoCode = currencyIsoCode
+        );
+        insert workOrder;
+        return workOrder;
+    }
+
+    private static Pricebook2 ensurePricebook(String name) {
+        List<Pricebook2> existingPricebooks = [
+            SELECT Id, Name
+            FROM Pricebook2
+            WHERE Name = :name
+            LIMIT 1
+        ];
+        if (!existingPricebooks.isEmpty()) {
+            return existingPricebooks[0];
+        }
+        Pricebook2 pricebook = new Pricebook2(Name = name, IsActive = true);
+        insert pricebook;
+        return pricebook;
     }
 
     public static List<Account> createAccounts(Integer numberRecords, Boolean insertDML) {
@@ -110,6 +370,7 @@ public class BMW_ChangeCurrencyWOWOLITest {
             newRecordList.add(new WorkOrder(
                 AssetId = vehiculo.Id,
                 Pricebook2Id = priceBook.Id,
+                CurrencyIsoCode = 'CRC',
                 CaseId = caso.Id,
                 AccountId = account.Id
             ));
@@ -180,9 +441,13 @@ public class BMW_ChangeCurrencyWOWOLITest {
 
     public static List<Pricebook2> createPricebook2(Integer numberRecords, Boolean insertDML) {
         List<Pricebook2> newRecordList = new List<Pricebook2>();
+        List<String> pricebookNames = new List<String>{
+            'Bavarian Local',
+            'Bavarian Dólar'
+        };
         for (Integer i = 1; i<=numberRecords; i++ ) {
             newRecordList.add(new Pricebook2(
-                Name = 'Dolar '+i,
+                Name = pricebookNames[i - 1],
                 IsActive = true
             ));
         }        
@@ -199,7 +464,8 @@ public class BMW_ChangeCurrencyWOWOLITest {
                 Pricebook2Id = pricebook.Id,
                 Product2Id = product.Id,
                 UnitPrice =2000,
-                IsActive = true
+                IsActive = true,
+                CurrencyIsoCode = pricebook.Name.contains('Local') ? 'CRC' : 'USD'
             ));
         }        
         if(insertDML) {
