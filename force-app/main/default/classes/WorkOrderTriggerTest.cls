@@ -354,6 +354,18 @@ public class WorkOrderTriggerTest {
     }
 
     @isTest
+    static void updatesTipoCargoForWarrantyExpense() {
+        assertTipoCargoMapping(
+            'Cliente',
+            'Garantia',
+            '4',
+            null,
+            null,
+            'WO-CARGO-WARRANTY'
+        );
+    }
+
+    @isTest
     static void updatesTipoCargoForBsiInternalExpense() {
         assertTipoCargoMapping(
             'Cliente',
@@ -536,16 +548,24 @@ public class WorkOrderTriggerTest {
         Id expectedCostCenterId
     ) {
         List<tipoCargo__c> cargos = [
-            SELECT tipoCargo__c, Cliente__c, centroCosto__c
+            SELECT tipoCargo__c, Cliente__c, centroCosto__c, porcentaje__c
             FROM tipoCargo__c
             WHERE Work_Order_Line_Item__c = :lineId
         ];
         System.assert(!cargos.isEmpty(), 'Debe existir al menos un cargo');
+        Decimal totalPercentage = 0;
         for (tipoCargo__c cargo : cargos) {
             System.assertEquals(expectedCargoCode, cargo.tipoCargo__c);
             System.assertEquals(expectedClientId, cargo.Cliente__c);
             System.assertEquals(expectedCostCenterId, cargo.centroCosto__c);
+            totalPercentage += cargo.porcentaje__c == null
+                ? 0
+                : cargo.porcentaje__c;
         }
+        System.assert(
+            totalPercentage <= 100,
+            'La suma de porcentajes debe ser menor o igual a 100'
+        );
     }
 
     private static void assertLookupSelection(

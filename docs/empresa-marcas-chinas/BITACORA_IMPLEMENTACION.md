@@ -84,6 +84,7 @@ conserva el orden relativo sin inventar precisión.
 | 39 | Dry-run con aprovisionamiento exitoso | `0AfAK000000vmRJ0AY`: 4/4 componentes y 49/51 pruebas aprobadas. La cobertura real fue 163/173 líneas, equivalente a 94.220%. La org no fue modificada. La rama de presupuesto creó correctamente un User asociado al Contact y una `Peticion_de_envio__c`; la prueba se renombró y ahora valida exactamente ese User, Username, Email, nombres, petición e indicador de WorkOrder sin depender del correo real. La segunda falla confirmó un defecto funcional: el picklist activo usa `Garantia`, pero `WorkOrderTrigger` compara `Garantía`. La prueba de esa rama se retiró porque ningún valor válido actual puede ejecutarla. Queda pendiente decidir si se corrige el literal productivo o el valor del picklist; no se modificaron código productivo, metadata ni datos. |
 | 40 | Dry-run final exitoso del Bloque 4 | `0AfAK000000vmSv0AI`: estado `Succeeded`, 4/4 componentes, 50/50 pruebas y cero fallas. La org no fue modificada porque la ejecución fue un dry-run. Quedó validada la arquitectura con `WorkOrder.empresaFacturaCP__c` como lookup principal, `empresaFactura__c` como compatibilidad temporal, precedencia del lookup, las seis combinaciones empresa/moneda y conservación del Pricebook ante código o moneda no reconocidos. |
 | 41 | Deploy real exitoso del Bloque 4 | El 25/07/2026 a las 12:49 p. m. se completó en `RedMotorsSandbox / Partial` el deploy `0AfAK000000vnon0AA`, con estado `Succeeded`, 4/4 componentes, 50/50 pruebas y cero fallas. Quedaron desplegados `WorkOrder.empresaFacturaCP__c`, `WorkOrder.empresaFactura__c`, `WorkOrderTrigger` y `WorkOrderTriggerTest`. El Bloque 4 queda completado y desplegado. |
+| 42 | Bloque 5 local — Garantia en WorkOrder | Luis autorizó corregir antes del cierre del Sprint 1 la discrepancia entre el valor activo `Garantia` y el literal productivo `Garantía`. Se cambió únicamente el literal del switch en `WorkOrderTrigger`, se restauró `updatesTipoCargoForWarrantyExpense` y se mantuvo la validación de porcentajes menor o igual a 100. No se modificaron metadata, lógica de Empresa, Pricebooks ni otros componentes. Implementación local pendiente de dry-run. |
 
 ## 4. Decisiones autorizadas
 
@@ -491,10 +492,56 @@ El avance técnico estimado del Sprint 1 se mantiene en 65% completado y 35%
 pendiente. Esta estimación no representa horas oficiales, trabajadas,
 registradas ni facturables.
 
-El pendiente obligatorio antes de cerrar el Sprint 1 continúa siendo la
-discrepancia `Garantia` / `Garantía`.
+La discrepancia `Garantia` / `Garantía` era el pendiente obligatorio antes
+del cierre del Sprint 1 y fue resuelta posteriormente en el Bloque 5.
 
-## 17. Plantilla reutilizable de actualización
+## 17. Cierre técnico del Bloque 5 — 25/07/2026
+
+Registro realizado a la 1:19 p. m., zona horaria UTC−06:00, en
+RedMotorsSandbox / Partial.
+
+### Dry-run exitoso
+
+| Dato | Registro |
+|---|---|
+| Deploy ID | `0AfAK000000vnqP0AQ` |
+| Componentes | 2/2 |
+| Pruebas | 51/51 |
+| Fallas | 0 |
+
+### Deploy real exitoso
+
+| Dato | Registro |
+|---|---|
+| Deploy ID | `0AfAK000000vo4v0AA` |
+| Estado | Succeeded |
+| Componentes | 2/2 |
+| Pruebas | 51/51 |
+| Fallas | 0 |
+
+Componentes desplegados:
+
+- `WorkOrderTrigger`;
+- `WorkOrderTriggerTest`.
+
+Se corrigió exclusivamente la comparación productiva `Garantía` →
+`Garantia`. El literal ahora coincide con el valor activo del picklist y la
+rama asigna `tipoCargo__c = '4'`. La prueba dirigida de garantía fue
+restaurada y aprobada.
+
+No se modificaron campos, permisos, `Empresa__c`, Pricebooks ni
+integraciones. El defecto obligatorio quedó resuelto y el Bloque 5 quedó
+completado, validado y desplegado.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 66%;
+- pendiente: 34%.
+
+Este porcentaje corresponde al alcance técnico. No representa horas
+oficiales, trabajadas, registradas ni facturables.
+
+## 18. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:

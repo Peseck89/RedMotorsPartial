@@ -235,7 +235,7 @@ trigger WorkOrderTrigger on WorkOrder (after update, before insert, before updat
                                 codTipoCargo = '1';tc.Cliente__c = null;tc.centroCosto__c = null;
 
                             }
-                            when 'Garantía' {
+                            when 'Garantia' {
                                 codTipoCargo = '4';tc.Cliente__c = null;tc.centroCosto__c = null;
                             }
                             when 'BCI'{
