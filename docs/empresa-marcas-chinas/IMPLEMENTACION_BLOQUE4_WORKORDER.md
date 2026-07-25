@@ -576,6 +576,25 @@ oficiales, trabajadas, registradas ni facturables.
 La discrepancia `Garantia` / `Garantía` continúa pendiente. Luis indicó que
 debe corregirse antes de cerrar el Sprint 1.
 
+### Respaldo del cierre técnico
+
+El 25/07/2026 a la 01:00:25 p. m., hora local UTC−06:00, se verificó:
+
+- commit `67410e3`;
+- mensaje `feat(workorder): add configurable company lookup`;
+- push exitoso a
+  `feature/pc/redmotors-empresa-marcas-chinas-sprint1-20260724`;
+- rama sincronizada con origin, sin diferencias pendientes;
+- working tree limpio al momento de la verificación.
+
+El Bloque 4 queda desplegado, validado, documentado y respaldado en GitHub.
+El avance técnico estimado del Sprint 1 se mantiene en 65% completado y 35%
+pendiente. El porcentaje se basa en alcance técnico y no representa horas
+oficiales, trabajadas, registradas ni facturables.
+
+La discrepancia `Garantia` / `Garantía` es un pendiente obligatorio antes de
+cerrar el Sprint 1.
+
 ## Riesgos heredados no corregidos
 
 - El trigger consulta todos los Pricebooks sin filtrar por estado.

@@ -472,6 +472,28 @@ La discrepancia entre `Garantia`, valor activo del picklist, y `Garantía`,
 literal utilizado por el trigger, continúa pendiente. Luis indicó que debe
 corregirse antes de cerrar el Sprint 1.
 
+### Respaldo del cierre técnico
+
+Verificación realizada el 25/07/2026 a la 01:00:25 p. m., hora local
+UTC−06:00:
+
+| Dato | Registro |
+|---|---|
+| Commit | `67410e3` |
+| Mensaje | `feat(workorder): add configurable company lookup` |
+| Push | Exitoso |
+| Rama | `feature/pc/redmotors-empresa-marcas-chinas-sprint1-20260724` |
+| Sincronización | Rama sincronizada con origin, diferencia 0/0 |
+| Working tree al verificar el cierre | Limpio |
+
+El Bloque 4 quedó desplegado, validado, documentado y respaldado en GitHub.
+El avance técnico estimado del Sprint 1 se mantiene en 65% completado y 35%
+pendiente. Esta estimación no representa horas oficiales, trabajadas,
+registradas ni facturables.
+
+El pendiente obligatorio antes de cerrar el Sprint 1 continúa siendo la
+discrepancia `Garantia` / `Garantía`.
+
 ## 17. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
