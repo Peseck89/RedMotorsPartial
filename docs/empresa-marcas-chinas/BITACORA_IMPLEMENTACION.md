@@ -541,7 +541,100 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje corresponde al alcance técnico. No representa horas
 oficiales, trabajadas, registradas ni facturables.
 
-## 18. Plantilla reutilizable de actualización
+## 18. Bloque 6 — Empresa en Opportunity
+
+| Dato | Registro |
+|---|---|
+| Fecha | 25/07/2026 |
+| Bloque | 6 — Empresa en Opportunity |
+| Checkpoint protegido | `b427ab6` |
+| Backup | `backup/pc/redmotors-sprint1-before-opportunity-20260725` |
+| Estado | Completado, validado y desplegado |
+
+La decisión se basa en la sesión con Diego y fue informada a Luis. Se creó
+localmente el lookup opcional `Opportunity.Empresa_Operadora__c` hacia
+`Empresa__c`.
+
+`ProductControllerTwo.getAvailabilityByQuote()` utiliza el lookup como fuente
+principal. Cuando está vacío conserva temporalmente
+`Opportunity.BMW_Compania__c`, con los mapeos explícitos Bavarian →
+`RMBAVARIAN` y Otobai → `RMOTOBAI`. El lookup tiene prioridad ante una
+contradicción y no existe selección por descarte.
+
+No se modificaron flows, integraciones, reservas, Quote, Product2,
+`Plantilla_de_Presupuesto__c` ni Permission Sets. Permanecen pendientes los
+permisos, los registros operativos de Empresa y la migración de datos
+históricos.
+
+El avance técnico posterior queda pendiente de validación mediante dry-run.
+
+### Primer dry-run del Bloque 6
+
+| Dato | Registro |
+|---|---|
+| Deploy ID | `0AfAK000000vog10AA` |
+| Componentes compilados | 3/3 |
+| Pruebas aprobadas | 8/9 |
+| Falla | `ProductControllerTwoTest.ProductControllerTwoTest` |
+| Cobertura temporal | 2.874% |
+| Estado de la org | Sin modificaciones |
+
+La prueba histórica terminó anticipadamente al intentar insertar dos
+productos con `Codigo_de_Producto__c = '0012'` dentro del mismo método. No
+intervinieron `@testSetup`, factories ni productos automáticos.
+
+Se corrigieron únicamente los datos de prueba:
+
+- materiales: `PCT2-MAT-0012`;
+- mano de obra: `PCT2-MO-0012`.
+
+La cobertura registrada no es definitiva porque la prueba no alcanzó a
+ejecutar los métodos históricos de `ProductControllerTwo`. El porcentaje
+exacto queda pendiente del siguiente dry-run.
+
+### Cierre técnico del Bloque 6
+
+Registro realizado el 25/07/2026 a las 2:19 p. m., zona horaria UTC−06:00,
+en RedMotorsSandbox / Partial.
+
+| Validación | Deploy ID | Estado | Componentes | Pruebas | Fallas |
+|---|---|---|---:|---:|---:|
+| Dry-run final | `0AfAK000000vojF0AQ` | Succeeded | 3/3 | 9/9 | 0 |
+| Deploy real | `0AfAK000000vokr0AA` | Succeeded | 3/3 | 9/9 | 0 |
+
+Cobertura confirmada de `ProductControllerTwo`: 766/870 líneas, equivalente
+a 88.046%.
+
+Componentes desplegados:
+
+- `Opportunity.Empresa_Operadora__c`;
+- `ProductControllerTwo`;
+- `ProductControllerTwoTest`.
+
+`Empresa_Operadora__c` es un lookup opcional hacia `Empresa__c` y queda como
+fuente principal. `BMW_Compania__c` permanece como compatibilidad temporal.
+Cuando ambos campos tienen valor, el lookup tiene prioridad.
+
+Se conserva Bavarian como `RMBAVARIAN` y Otobai como `RMOTOBAI`.
+`RMPEKING` funciona mediante el lookup. Los valores nulos o desconocidos
+conservan el comportamiento anterior.
+
+No se modificaron flows, reservas, servicios Softland, Quote, Product2 ni
+plantillas. Continúan pendientes los permisos, los registros operativos de
+Empresa y la migración histórica.
+
+El Bloque 6 queda completado, validado y desplegado. Se mantiene registrado
+el checkpoint remoto `b427ab6`.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 69%;
+- pendiente: 31%.
+
+Este porcentaje corresponde al alcance técnico y no representa horas
+oficiales, trabajadas, registradas ni facturables.
+
+## 19. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:

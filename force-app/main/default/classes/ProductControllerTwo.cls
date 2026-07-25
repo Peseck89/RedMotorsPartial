@@ -407,9 +407,15 @@ public with sharing class ProductControllerTwo {
     @AuraEnabled(cacheable=true)
     public static  List<wrapper> getAvailabilityByQuote (string listTosave, Id quoteId) {
         system.debug('quoteId:' + quoteId);
-        String company = [SELECT Opportunity.BMW_Compania__c FROM Quote WHERE id =: quoteId].Opportunity.BMW_Compania__c;
-        if(company == 'Bavarian') company = 'RMBAVARIAN';
-        if(company == 'Otobai') company = 'RMOTOBAI';
+        Quote quoteRecord = [
+            SELECT Opportunity.Empresa_Operadora__c, Opportunity.BMW_Compania__c
+            FROM Quote
+            WHERE Id = :quoteId
+        ];
+        String company = resolveCompanyCode(
+            quoteRecord.Opportunity.Empresa_Operadora__c,
+            quoteRecord.Opportunity.BMW_Compania__c
+        );
         List<QuoteLineItem> QuoteLineItems = new List<QuoteLineItem>();
        	List<wrapper> wrappers = (List<wrapper>)JSON.deserialize(listTosave, List<wrapper>.class);
         Map<String,wrapper> mwrap = new Map<String,wrapper>();
@@ -424,6 +430,20 @@ public with sharing class ProductControllerTwo {
         Map<String,ProductController.productResponse> res = request.deserialize();
         //return comparison(res,mwrap,request.productXlocation);
         return comparison(res, wrappers, request.productXlocation); 
+    }
+
+    @TestVisible
+    private static String resolveCompanyCode(Id empresaOperadoraId, String legacyCompany) {
+        if (empresaOperadoraId != null) {
+            return EmpresaResolver.resolve(empresaOperadoraId).codigo;
+        }
+        if (legacyCompany == 'Bavarian') {
+            return 'RMBAVARIAN';
+        }
+        if (legacyCompany == 'Otobai') {
+            return 'RMOTOBAI';
+        }
+        return legacyCompany;
     }
     
     @AuraEnabled(cacheable=true)

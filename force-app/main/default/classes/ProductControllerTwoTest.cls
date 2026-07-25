@@ -40,10 +40,10 @@ public class ProductControllerTwoTest {
         //system.assertEquals(pricebookId,tmp.PriceBook2Id,'The workorder price book was modified after it was inserted');
 
         //Insert product        
-        Product2 prod= new Product2(IsActive=true, Name='Test product2', ProductCode='00012', Codigo_de_Producto__c='0012');
+        Product2 prod= new Product2(IsActive=true, Name='Test product2', ProductCode='PCT2-MAT-0012', Codigo_de_Producto__c='PCT2-MAT-0012');
         insert prod;
         
-        Product2 prodMO= new Product2(IsActive=true, Name='Mano de Obra',tipoProducto__c='Mano de Obra', ProductCode='00012', Codigo_de_Producto__c='0012');
+        Product2 prodMO= new Product2(IsActive=true, Name='Mano de Obra',tipoProducto__c='Mano de Obra', ProductCode='PCT2-MO-0012', Codigo_de_Producto__c='PCT2-MO-0012');
         insert prodMO;
 
         // Insert PricebookEntry
@@ -132,7 +132,142 @@ public class ProductControllerTwoTest {
         List <String> qIds = new List<String>();
         for(QuoteLineItem q : qlis) qIds.add(q.Id);
         ProductControllerTwo.deleteQlis(qIds);
-       	ProductControllerTwo.dummy();
-       	//Test.stopTest();
+        ProductControllerTwo.dummy();
+        //Test.stopTest();
         }
+
+    @isTest
+    static void resolvesRMBavarianFromLookup() {
+        assertLookupCompany('RMBAVARIAN', null, 'RMBAVARIAN');
+    }
+
+    @isTest
+    static void resolvesRMOtobaiFromLookup() {
+        assertLookupCompany('RMOTOBAI', null, 'RMOTOBAI');
+    }
+
+    @isTest
+    static void resolvesRMPekingFromLookup() {
+        assertLookupCompany('RMPEKING', null, 'RMPEKING');
+    }
+
+    @isTest
+    static void lookupTakesPriorityOverContradictoryPicklist() {
+        assertLookupCompany('RMPEKING', 'Bavarian', 'RMPEKING');
+    }
+
+    @isTest
+    static void usesLegacyBavarianWhenLookupIsEmpty() {
+        assertLegacyCompany('Bavarian', 'RMBAVARIAN');
+    }
+
+    @isTest
+    static void usesLegacyOtobaiWhenLookupIsEmpty() {
+        assertLegacyCompany('Otobai', 'RMOTOBAI');
+    }
+
+    @isTest
+    static void unknownLegacyCompanyIsPreservedWithoutFallback() {
+        System.assertEquals(
+            'EMPRESA_DESCONOCIDA',
+            ProductControllerTwo.resolveCompanyCode(null, 'EMPRESA_DESCONOCIDA')
+        );
+    }
+
+    @isTest
+    static void emptyLegacyCompanyRemainsNull() {
+        System.assertEquals(null, ProductControllerTwo.resolveCompanyCode(null, null));
+    }
+
+    private static void assertLookupCompany(
+        String empresaCode,
+        String legacyCompany,
+        String expectedCode
+    ) {
+        Empresa__c empresa = new Empresa__c(
+            Name = 'Empresa ' + empresaCode,
+            Codigo__c = empresaCode,
+            Codigo_ERP__c = 'ERP-' + empresaCode,
+            Nombre_Legal__c = 'Empresa ' + empresaCode + ' S.A.',
+            Activa__c = true
+        );
+        insert empresa;
+
+        Quote quoteRecord = createQuote(empresa.Id, legacyCompany, empresaCode);
+        Quote storedQuote = [
+            SELECT Opportunity.Empresa_Operadora__c, Opportunity.BMW_Compania__c
+            FROM Quote
+            WHERE Id = :quoteRecord.Id
+        ];
+
+        System.assertEquals(
+            expectedCode,
+            ProductControllerTwo.resolveCompanyCode(
+                storedQuote.Opportunity.Empresa_Operadora__c,
+                storedQuote.Opportunity.BMW_Compania__c
+            )
+        );
+
+        Test.setMock(HttpCalloutMock.class, new HttpCalloutGetProductAvailabilityMock());
+        Test.startTest();
+        List<ProductControllerTwo.wrapper> result =
+            ProductControllerTwo.getAvailabilityByQuote('[]', quoteRecord.Id);
+        Test.stopTest();
+
+        System.assertEquals(0, result.size());
+    }
+
+    private static void assertLegacyCompany(String legacyCompany, String expectedCode) {
+        Quote quoteRecord = createQuote(null, legacyCompany, legacyCompany);
+        Quote storedQuote = [
+            SELECT Opportunity.Empresa_Operadora__c, Opportunity.BMW_Compania__c
+            FROM Quote
+            WHERE Id = :quoteRecord.Id
+        ];
+
+        System.assertEquals(
+            expectedCode,
+            ProductControllerTwo.resolveCompanyCode(
+                storedQuote.Opportunity.Empresa_Operadora__c,
+                storedQuote.Opportunity.BMW_Compania__c
+            )
+        );
+
+        Test.setMock(HttpCalloutMock.class, new HttpCalloutGetProductAvailabilityMock());
+        Test.startTest();
+        List<ProductControllerTwo.wrapper> result =
+            ProductControllerTwo.getAvailabilityByQuote('[]', quoteRecord.Id);
+        Test.stopTest();
+
+        System.assertEquals(0, result.size());
+    }
+
+    private static Quote createQuote(
+        Id empresaOperadoraId,
+        String legacyCompany,
+        String scenario
+    ) {
+        Pricebook2 pricebook = new Pricebook2(
+            Name = 'PCT2 ' + scenario,
+            IsActive = true
+        );
+        insert pricebook;
+
+        Opportunity opportunity = new Opportunity(
+            Name = 'Opportunity ' + scenario,
+            StageName = 'Draft',
+            CloseDate = Date.today(),
+            Empresa_Operadora__c = empresaOperadoraId,
+            BMW_Compania__c = legacyCompany
+        );
+        insert opportunity;
+
+        Quote quoteRecord = new Quote(
+            Name = 'Quote ' + scenario,
+            OpportunityId = opportunity.Id,
+            Pricebook2Id = pricebook.Id
+        );
+        insert quoteRecord;
+        return quoteRecord;
+    }
 }
