@@ -98,6 +98,34 @@ private class BusquedaDetalladaTest {
     }
 
     @IsTest
+    static void testGetActivePricebooks_UnknownSucursalHasNoFailClosedForThirdCompany() {
+        // Caracteriza el comportamiento ACTUAL (no lo cambia): hoy no existe
+        // ninguna rama fail-closed para una empresa no reconocida en
+        // getActivePricebooks(). Cualquier sucursal distinta de
+        // Uruca/Pinares/Escazú cae en la rama "Otobai%", nunca en un error
+        // controlado ni en una tercera empresa. Esta es exactamente la razón
+        // documentada en IMPLEMENTACION_BLOQUE10_BUSQUEDA_DETALLADA.md por la
+        // que no se pudo agregar soporte a RMPEKING en este bloque sin
+        // inventar una sucursal o Service Territory: no existe la relación
+        // Sucursal__c -> Empresa__c que permitiría resolver esto por código
+        // en vez de por nombre de sucursal hardcodeado.
+        setUserSucursal('SucursalNoReconocidaPorNingunaEmpresa');
+
+        Test.startTest();
+        List<Pricebook2> pbs = BusquedaDetalladaController.getActivePricebooks();
+        Test.stopTest();
+
+        Boolean hasBavarian = false;
+        Boolean hasOtobai = false;
+        for (Pricebook2 pb : pbs) {
+            if (pb.Name.startsWith('Bavarian')) hasBavarian = true;
+            if (pb.Name.startsWith('Otobai'))   hasOtobai   = true;
+        }
+        System.assert(hasBavarian, 'El comportamiento actual siempre incluye Bavarian, sin importar la sucursal.');
+        System.assert(hasOtobai, 'Una sucursal no reconocida cae hoy en la rama Otobai, nunca en un error controlado ni en una tercera empresa.');
+    }
+
+    @IsTest
     static void testGetActiveServiceTerritories() {
         Test.startTest();
         List<ServiceTerritory> sts = BusquedaDetalladaController.getActiveServiceTerritories();
