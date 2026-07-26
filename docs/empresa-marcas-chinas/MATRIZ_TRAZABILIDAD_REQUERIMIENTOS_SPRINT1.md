@@ -173,14 +173,14 @@ C).
 
 1. **Fuente:** PDF original §6 ("Layouts... Duplicar como plantilla para los 2 RT nuevos"; "List Views... crear el set equivalente"); Manual de Análisis §7.8 y Anexo A ("38 layouts, 70 list views candidatas por marca/sucursal").
 2. **Requerimiento:** Layout, Lightning Record Page, Compact Layout, List Views y Quick Actions equivalentes a BMW para Omoda/Jaecoo.
-3. **Componentes:** Layouts de Opportunity, FlexiPages, List Views, Quick Actions.
-4. **Bloque:** 21 (investigado, sin cambio).
-5. **Estado:** Pendiente técnico.
-6. **Evidencia:** `IMPLEMENTACION_BLOQUE21_OPORTUNIDAD_UI.md` — ningún Layout, FlexiPage, List View ni Quick Action de Opportunity está versionado localmente para ninguna marca (ni siquiera BMW), por lo que no hay patrón local que replicar sin consultar el org (prohibido en ese bloque).
-7. **Riesgo pendiente:** Omoda/Jaecoo pueden no tener una página de registro o vistas de lista utilizables en la práctica, aunque el Record Type ya exista.
-8. **Acción faltante:** retrieve dirigido de Layouts/FlexiPages/List Views de BMW (fuera del alcance de análisis puramente local) para poder compararlos y replicarlos con evidencia.
-9. **Responsable de decisión:** técnico (requiere acceso al org), no una decisión de negocio en sí misma.
-10. **Confirmación:** no se creó ninguna List View, Layout ni Quick Action inventada sin patrón local verificable.
+3. **Componentes:** `Opportunity_Record_Page_VN` (FlexiPage), 8 List Views de Opportunity para Omoda/Jaecoo.
+4. **Bloque:** 21.
+5. **Estado:** En progreso (actualizado en esta corrección: implementado localmente después del análisis inicial, sin dry-run/deploy todavía).
+6. **Evidencia:** commit `67c180b` (`feat(opportunity-ui): add Omoda and Jaecoo declarative experience`), rama `feature/pc/redmotors-empresa-marcas-chinas-bloque21-oportunidad-ui-20260726`; `IMPLEMENTACION_BLOQUE21_OPORTUNIDAD_UI.md` (versión actualizada) — se hizo el retrieve dirigido pendiente (Record Types, layouts, LRP, List Views, Quick Actions, PathAssistant), se confirmó que `Opportunity_Record_Page_VN` es la LRP relevante y que solo requería extender la regla de visibilidad de tres campos de `BMW OR MINI` a `BMW OR MINI OR Omoda OR Jaecoo`; se crearon 8 List Views (abiertas/ganadas/perdidas propias/perdidas de equipo × Omoda/Jaecoo) copiando exactamente el patrón de BMW. Manifest `empresa-marcas-chinas-bloque21-oportunidad-ui.xml`. Sin cambios a Flows, perfiles, permisos, seguridad, datos, sucursales, territorios, Softland, reservas ni anticipos (confirmado en el propio documento).
+7. **Riesgo pendiente:** el propio de cualquier cambio no validado — dry-run declarativo, deploy real y verificación post-deploy siguen pendientes.
+8. **Acción faltante:** dry-run declarativo, deploy real a `RedMotorsSandbox` si el dry-run pasa, verificación post-deploy, registro de evidencias finales.
+9. **Responsable de decisión:** No aplica para lo implementado; Codex valida (dry-run/deploy) por fuera de esta tarea.
+10. **Confirmación:** no se creó ninguna List View, Layout ni Quick Action inventada sin patrón local verificable — todo se copió del patrón BMW ya existente, confirmado en el propio documento del bloque.
 
 ---
 
@@ -601,74 +601,145 @@ C).
 
 ---
 
-## Corrección de conteo aplicada en esta actualización
+## Corrección aplicada en esta actualización (Fase 1)
 
-La versión anterior de esta matriz reportó **43** como total de
-requerimientos únicos. Al recontar las secciones numeradas (`A.1`...`L.3`)
-para esta actualización, el total real de filas es **38** (más la división de
-`J.1` en `J.1a`/`J.1b` hecha en esta misma actualización para separar
-correctamente lo resoluble ahora de lo bloqueado por Softland, dando **39**).
-El **43** anterior fue un error aritmético de esa entrega, no una
-recategorización real de contenido — no hubo 5 requerimientos "perdidos"; el
-conteo original de 22/1/2/10/8 nunca sumó contra las filas realmente escritas.
-Se corrige aquí de forma explícita en vez de arrastrar el error.
+La entrega anterior declaraba **Total: 39** pero sus propios estados
+(23+3+9+5+4) sumaban **44**. Causa raíz: el "Resumen A" listaba 23 puntos
+narrativos que **no correspondían 1:1** con las secciones `### ID` reales —
+algunas secciones (p. ej. `E.1`, que cubre Bloques 4 y 5 en una sola fila)
+se describían con dos bullets narrativos distintos en el resumen, inflando
+el conteo textual sin que existiera una segunda fila real. La causa no fue
+una recategorización de contenido: fue que los resúmenes se redactaban de
+forma narrativa en vez de derivarse mecánicamente de las filas.
 
-## Resumen A — Requerimientos explícitos completados
+**Corrección de método:** a partir de ahora, la única fuente de verdad es la
+**Tabla de control** de abajo, construida programáticamente leyendo el campo
+`5. **Estado:**` de cada una de las secciones `### ID` del documento. Todos
+los resúmenes narrativos siguientes se derivan de esa tabla, no al revés.
 
-1. Objeto `Empresa__c` con campos mínimos (Bloque 1).
-2. `EmpresaResolver`/`EmpresaContext`/`EmpresaConfigurationException` fail-closed (Bloque 1).
-3. Permission Set `Empresa_Admin` (Bloque 1).
-4. Código `RMPEKING` y marcas Omoda/Jaecoo confirmados por Diego.
-5. Pricebooks `PEKING Local`/`PEKING Dólares` creados y activos.
-6. `BMW_ChangeCurrencyWOWOLI` con soporte PEKING (Bloque 2).
-7. `QuoteController` sin default a Bavarian (Bloque 2).
-8. `UpdateCurrencyScheduler` con las 6 combinaciones (Bloque 3).
-9. `WorkOrder.empresaFacturaCP__c` + `WorkOrderTrigger` con 3 empresas (Bloques 4-5).
-10. Corrección `Garantía`/`Garantia` en `WorkOrderTrigger` (Bloque 5).
-11. `Opportunity.Empresa_Operadora__c` + `ProductControllerTwo` (Bloque 6).
-12. `CrearPlandeVenta` propaga `Empresa_Operadora__c` (Bloque 7).
-13. Réplica de permisos en 146 perfiles (Bloque 8).
-14. `BMW_LineaPlantillaEmpresa` sin default a Otobai (Bloque 9).
-15. `cT_QuoteUsdPDFController`/`cT_QuoteCrcPDFController` con PEKING (Bloques 11-12).
-16. `TrabajoQuoteController` (Bloque 13).
-17. `TrabajoController` (Bloque 14).
-18. `BMWVinScanTrabajoGenerator` (Bloque 15).
-19. `QuoterController` (Bloque 16).
-20. Record Types `Opportunity.Omoda`/`Opportunity.Jaecoo` + `Product2.Empresa__c=RMPEKING` (Bloque 17).
-21. `ProductSearcherController` mano de obra por empresa (Bloque 18).
-22. `RM_VN_CrearOppModeloInteres_Ctrl` Empresa Operadora desde modelo de interés (Bloque 19).
-23. **`Lead.Omoda`/`Lead.Jaecoo` + mapeos `RM_RecordTypeMapping` (Bloque 20) — nuevo en esta actualización.**
+También se incorpora en esta corrección una actualización real de `B.4`
+(Bloque 21): desde la entrega anterior, se hizo el retrieve dirigido
+pendiente y se implementó localmente la experiencia declarativa de Omoda/
+Jaecoo (FlexiPage + 8 List Views, commit `67c180b`). `B.4` pasa de
+"Pendiente técnico" a **"En progreso"** (implementado, sin dry-run/deploy
+todavía) — ver el detalle en su propia sección más arriba.
 
-**Total: 23 requerimientos explícitos completados y desplegados**, todos con
-Deploy ID confirmado en `BITACORA_IMPLEMENTACION.md`.
+## Tabla de control (fuente única de verdad — 39 filas, 1 estado exclusivo cada una)
 
-## Resumen B — Requerimientos explícitos todavía pendientes (recategorizado)
+| ID | Estado | Bloque | Evidencia (resumen) |
+|---|---|---|---|
+| A.1 | Completado | 1 | Commit `7f8b919`; Deploy `0AfAK000000vhrR0AQ` |
+| A.2 | Completado | 1 | Commit `7f8b919`; Deploy `0AfAK000000vhrR0AQ` |
+| A.3 | Completado | 1 | Commit `cc1614c`; Deploy `0AfAK000000viHF0AY` |
+| A.4 | Completado | Decisión previa a Bloque 2 | `BITACORA` §4, hito 6 (Diego) |
+| A.5 | Completado | 2 (datos) | `PEKING Local`/`PEKING Dólares` activos en Sandbox |
+| A.6 | Diferido | Ninguno | Manual §5.2/Anexo E — Opción B/C, sin asignar |
+| B.1 | Completado | 6 | Commit `ae6e0e6` |
+| B.2 | Completado | 8 | Commit `a137b19`; dry-run `0AfAK000000vouX0AQ` |
+| B.3 | Completado | 17 | Commit `2e1c733`; deploy `0AfAK000000vrNl0AI` |
+| B.4 | En progreso | 21 | Commit `67c180b`; sin dry-run/deploy |
+| C.1 | Completado | 20 | Commit `1d83228`; deploy `0AfAK000000vuQT0AY`, regresión 53/53 |
+| C.2 | Pendiente decisión | Detectado en 20, no corregido | `BITACORA` §31 — anomalía documentada, sin corregir |
+| C.3 | Pendiente decisión | Ninguno | `PENDIENTES_DECISION_BLOQUE20.md` pregunta 5 |
+| D.1 | Fuera de alcance | Ninguno | Nunca asignado; Softland real |
+| E.1 | Completado | 4 y 5 | Commits `67410e3`, `b427ab6`; deploys `...vnon0AA`, `...vo4v0AA` |
+| E.2 | Pendiente decisión | Detectado en análisis de Bloque 21 | `IMPLEMENTACION_BLOQUE21...md` Fase 5 |
+| E.3 | Completado | 13 y 14 | Commits `57d1880`, `2f8a923` |
+| E.4 | Completado | 15 | Commit `1b9e859` |
+| F.1 | Completado | 2 | Commit `9669237`; deploy `0AfAK000000vlTd0AI` |
+| F.2 | Completado | 16 | Commit `3e7232a` |
+| F.3 | Completado | 11 y 12 | Commits `4b127b3`, `86ab781` |
+| F.4 | Pendiente técnico | Ninguno | Campo no versionado localmente; falta describe/FLS |
+| G.1 | Completado | 2 y 3 | Commits `9669237`, `2d5fab4`; deploy `0AfAK000000vllN0AQ` |
+| G.2 | Pendiente decisión | Ninguno | Bloqueo externo Softland, igual que H.5 |
+| H.1 | Completado | 18 | Commit `37af27a`; deploy `0AfAK000000vuBx0AI` |
+| H.2 | Pendiente decisión | Ninguno | Manual Anexo E pregunta 9 — datos legales |
+| H.3 | Diferido | Ninguno | Plan S30/S44, sin ejecutar |
+| H.4 | Diferido | Ninguno | Plan S30/S44, sin ejecutar |
+| H.5 | Pendiente decisión | Ninguno | Manual pregunta pendiente 4 — contrato Softland |
+| I.1 | Fuera de alcance | Ninguno | Nunca asignado a Sprint 1 |
+| J.1a | Diferido | Ninguno | Técnicamente resoluble, sin asignar todavía |
+| J.1b | Pendiente decisión | Ninguno | Mismo bloqueo externo que H.5 |
+| J.2 | Pendiente decisión | Ninguno | `PLAN_IMPLEMENTACION_SPRINT1.md` §11.2 |
+| J.3 | Completado | 19 | Commits `fe432cd`, `a993eee`; deploy `0AfAK000000vtnl0AA` |
+| K.1 | Diferido | Ninguno | Sin infraestructura Jest en el repo |
+| K.2 | Fuera de alcance | Ninguno | Agenda/sucursales/territorios, excluido en 18/20/21 |
+| L.1 | Fuera de alcance | Ninguno | Manual Opción B/C — arquitectura, no Sprint 1 |
+| L.2 | Pendiente decisión | 17 tocó solo `Vehiculos_Nuevos_PS` | Decisión de tiempo, ligada a otra iniciativa |
+| L.3 | Pendiente técnico | Ninguno | `DESFASE_GIT_PARTIAL_TEST_TRAFICO.md` — 1 de 46 casos investigado |
+
+**Verificación de la tabla:** 39 filas, 39 IDs únicos, un estado exclusivo
+por fila. Conteo por estado (recuento directo de la columna Estado):
+Completado = 18, En progreso = 1, Pendiente técnico = 2, Pendiente decisión
+= 9, Diferido = 5, Fuera de alcance = 4. **18+1+2+9+5+4 = 39.**
+
+## Resumen A — Requerimientos completados (18, derivado de la tabla)
+
+1. `Empresa__c` con campos mínimos — A.1 (Bloque 1).
+2. `EmpresaResolver`/`EmpresaContext`/`EmpresaConfigurationException` — A.2 (Bloque 1).
+3. Permission Set `Empresa_Admin` — A.3 (Bloque 1).
+4. Código `RMPEKING` y marcas Omoda/Jaecoo confirmados — A.4.
+5. Pricebooks `PEKING Local`/`PEKING Dólares` — A.5 (Bloque 2).
+6. `Opportunity.Empresa_Operadora__c` + `ProductControllerTwo` — B.1 (Bloque 6).
+7. Réplica de permisos en 146 perfiles — B.2 (Bloque 8).
+8. Record Types `Opportunity.Omoda`/`Jaecoo` + `Product2.Empresa__c=RMPEKING` — B.3 (Bloque 17).
+9. `Lead.Omoda`/`Lead.Jaecoo` + mapeos `RM_RecordTypeMapping` — C.1 (Bloque 20).
+10. `WorkOrder.empresaFacturaCP__c` + `WorkOrderTrigger` (3 empresas, fix Garantía) — E.1 (Bloques 4-5).
+11. `TrabajoController`/`TrabajoQuoteController` — E.3 (Bloques 13-14).
+12. `BMWVinScanTrabajoGenerator` — E.4 (Bloque 15).
+13. `QuoteController` sin default a Bavarian — F.1 (Bloque 2).
+14. `QuoterController` — F.2 (Bloque 16).
+15. `cT_QuoteUsdPDFController`/`cT_QuoteCrcPDFController` — F.3 (Bloques 11-12).
+16. `BMW_ChangeCurrencyWOWOLI` + `UpdateCurrencyScheduler` — G.1 (Bloques 2-3).
+17. `ProductSearcherController` mano de obra por empresa — H.1 (Bloque 18).
+18. `RM_VN_CrearOppModeloInteres_Ctrl` — J.3 (Bloque 19).
+
+**Total: 18 requerimientos completados y desplegados**, todos con Deploy ID
+confirmado en `BITACORA_IMPLEMENTACION.md`.
+
+## Resumen B — Requerimientos pendientes, separados por tipo de bloqueo
+
+### Dentro del Sprint 1 comprometido, aún no cerrado (1)
+
+- **B.4** — En progreso. Implementado localmente (Bloque 21); pendiente
+  dry-run declarativo, deploy real y verificación post-deploy.
+
+### Fuera del Sprint 1 comprometido — nunca fueron parte del subconjunto de 44 horas (20)
+
+**Pendiente técnico — investigación, no decisión de negocio (2):**
+- F.4 `Quote.empresaFactura__c` — falta describe/FLS del org.
+- L.3 Reconciliación RedPartial↔redProd — 1 de 46 diferencias investigada.
 
 **Pendiente decisión — comercial, proveedor o dato externo (9):**
-- Anomalía `Lead.BMW → Opportunity.Polaris` (C.2) — sin patrón técnico que revele intención; confirmado que sigue sin corregirse tras el cierre real de Bloque 20.
-- Alcance de "usados" en Lead/tráfico (C.3).
-- Comportamiento final de `empresaFacturaCP__c` ante empresa vacía (E.2) — dos reglas ya implementadas y válidas en contextos distintos, Diego debe elegir.
-- Contrato Softland para PEKING (H.5) — dato externo (proveedor), no preferencia interna.
-- Batches/schedulers Softland de catálogo (G.2) — mismo bloqueo externo que H.5.
-- `productJSON`/`ProductoLocalizacionHelper`/`HttpCalloutGetProductRefPrices`/`Fresh` (J.1b) — mismo bloqueo externo que H.5.
-- Alcance de branding legal/PDF (H.2) — faltan datos legales aprobados (razón social, identificación fiscal, logo), no solo horas.
-- Propósito funcional de los triggers de Account (J.2).
-- Perfiles/Permission Sets dedicados de marca para Omoda/Jaecoo (L.2) — decisión de tiempo/prioridad ligada a otra iniciativa de simplificación de perfiles ya en curso.
+- C.2 anomalía `Lead.BMW→Opportunity.Polaris`.
+- C.3 alcance de "usados" en Lead/tráfico.
+- E.2 comportamiento de `empresaFacturaCP__c` ante empresa vacía.
+- G.2 batches/schedulers Softland de catálogo.
+- H.2 branding legal/PDF.
+- H.5 contrato Softland para PEKING.
+- J.1b `productJSON`/`ProductoLocalizacionHelper`/`HttpCalloutGetProductRefPrices`/`Fresh`.
+- J.2 propósito de los triggers de Account.
+- L.2 perfiles/Permission Sets dedicados de marca.
 
-**Pendiente técnico — requiere investigación adicional, no decisión de negocio (3):**
-- Experiencia declarativa de Opportunity (Layouts/LRP/List Views/Quick Actions) para Omoda/Jaecoo (B.4) — necesita retrieve dirigido de BMW para tener un patrón que replicar.
-- Semántica y FLS de `Quote.empresaFactura__c` (F.4) — reclasificado en esta actualización desde "Pendiente decisión": localmente no existe ni el campo ni ninguna referencia de código; falta un describe/FLS del org, no una respuesta de negocio.
-- Reconciliación RedPartial ↔ redProd (L.3) — 46 diferencias y 7 ausencias reportadas por el Manual; solo 1 caso investigado y corregido (el de tráfico).
+**Diferido — sin presupuesto asignado, sin pregunta abierta específica (5):**
+- A.6 modelo relacional completo.
+- H.3 reservas.
+- H.4 anticipos.
+- J.1a `BusquedaDetalladaController`/`precioProductoJSON` (con la salvedad: técnicamente resoluble ahora, ver Resumen D).
+- K.1 LWC/Aura de inventario.
 
-**Diferido / fase posterior — sin bloqueo específico, fuera del presupuesto de 44 horas (9):**
-- Modelo relacional completo: `Producto_Empresa__c`, `Bodega__c.Empresa__c`, `Usuario_Empresa__c`, `Sucursal__c`/`ServiceTerritory` (A.6) — es la "Opción B/C" estratégica del Manual, un sprint propio.
-- Seguridad completa (OWD, sharing, Experience Cloud) por empresa (L.1) — mismo motivo que A.6.
-- Reservas (H.3, ~10 clases).
-- Anticipos (H.4, 2 clases).
-- `Order.empresaQueFactura__c` y sus consumidores (D.1).
-- Flows (I.1: 14 dependientes confirmados + 33 más candidatos).
-- LWC/Aura de inventario y Community (K.1, K.2: 9+ componentes) — bloqueado además por falta de infraestructura Jest en el repo.
-- `BusquedaDetalladaController`/`precioProductoJSON` (J.1a) — **con una salvedad importante: técnicamente resoluble ahora, ver Resumen D.**
+**Fuera de alcance — pertenece a otro objeto/fase, nunca al Sprint 1 (4):**
+- D.1 `Order.empresaQueFactura__c`.
+- I.1 Flows.
+- K.2 componentes Aura de Community (agenda/territorios).
+- L.1 seguridad completa (OWD/sharing/Experience Cloud).
+
+`Diferido` y `Fuera de alcance` se mantienen como categorías separadas en
+esta corrección: `Diferido` = no hay pregunta abierta específica, solo falta
+presupuesto; `Fuera de alcance` = pertenece a otro dominio/fase por
+definición (ej. seguridad completa es la Opción B/C del Manual, un proyecto
+propio; Order/Flows/Community nunca estuvieron en los 41 componentes
+directos del `PLAN_IMPLEMENTACION_SPRINT1.md`).
 
 ## Resumen C — Trabajo técnico adicional realizado únicamente para calidad, pruebas, respaldo o documentación
 
@@ -678,90 +749,67 @@ Esto **no se cuenta como funcionalidad nueva** en los totales de A/B:
 - Corrección de la clase de test huérfana `ProductSearcherControllerOtobaiTest` (realineación de firma, Bloque 18).
 - Documentación de desfase Git↔Partial (`DESFASE_GIT_PARTIAL_TEST_TRAFICO.md`).
 - Matriz de pendientes previa (`MATRIZ_PENDIENTES_SPRINT1_20260726.md`).
-- Análisis de Bloque 21 sin cambio (`IMPLEMENTACION_BLOQUE21_OPORTUNIDAD_UI.md`).
 - Ramas de respaldo (`backup/pc/redmotors-before-bloque18...`, `backup/pc/redmotors-before-bloque19...`, `backup/pc/redmotors-sprint1-before-opportunity...`, etc.).
 - Worktrees de análisis aislados (Bloque 18 coverage lab, pendientes Sprint 1, Bloque 21, este mismo de trazabilidad).
 - Reconstrucción de `RM_Lead_Trigger_Helper_Test` con aserciones reales (Bloque 20) — parte del propio Bloque 20, no una funcionalidad adicional del alcance.
-- Este mismo documento de trazabilidad, incluida esta actualización.
+- Este mismo documento de trazabilidad, incluida esta corrección.
 
-## Resumen D — Clasificación de los 21 requerimientos no completados (punto 3 y 4 de esta actualización)
+## Resumen D — Clasificación de los 21 requerimientos no completados por tipo de resolución
 
-Se revisaron uno por uno los antiguos "10 Pendiente decisión" (y el resto de
-lo no completado) para no asumir que todos requieren preguntarle a
-Luis/Diego. Resultado, en 4 categorías:
+| Categoría | IDs | Cantidad |
+|---|---|---:|
+| (a) Técnicamente resoluble ahora, sin decisión | J.1a | 1 |
+| (b) Requiere investigación adicional (técnica, no comercial) | F.4, L.3 | 2 |
+| (c) Depende de decisión comercial, proveedor o dato externo | C.2, C.3, E.2, G.2, H.2, H.5, J.1b, J.2, L.2 | 9 |
+| (d) Pertenece a fase posterior, no al Sprint 1 | A.6, H.3, H.4, K.1, D.1, I.1, K.2, L.1 | 8 |
+| (en progreso, ya en ejecución dentro del Sprint) | B.4 | 1 |
+| **Total no completado** | | **21** |
 
-### (a) Técnicamente resoluble ahora, sin decisión — 1 de 21
+(a) **J.1a** (`BusquedaDetalladaController`, `precioProductoJSON`): mismo
+patrón de selección de Pricebook por relación/código ya aplicado y probado
+tres veces en este Sprint (`QuoteController`, `QuoterController`,
+`BMW_LineaPlantillaEmpresa`); ninguna hace callout externo.
 
-- **J.1a** (`BusquedaDetalladaController`, `precioProductoJSON`): mismo patrón
-  de selección de Pricebook por relación/código ya aplicado y probado tres
-  veces en este Sprint (`QuoteController`, `QuoterController`,
-  `BMW_LineaPlantillaEmpresa`); ninguna hace callout externo. Es el
-  candidato técnico más limpio de todo lo pendiente.
+(b) **F.4**: falta describe/FLS del org. **L.3**: falta investigar
+sistemáticamente 45 de 46 diferencias reportadas por el Manual.
 
-### (b) Requiere investigación adicional (técnica, no comercial) — 3 de 21
+(c) **C.2** intención ambigua; **C.3** alcance de negocio; **E.2** dos
+reglas de ingeniería válidas; **G.2/H.5/J.1b** mismo contrato Softland
+pendiente; **H.2** datos legales aprobados; **J.2** propósito de negocio de
+los triggers; **L.2** decisión de tiempo ligada a otra iniciativa.
 
-- **F.4** `Quote.empresaFactura__c`: falta describe/FLS del org.
-- **B.4** Experiencia declarativa de Opportunity: falta retrieve de
-  Layout/FlexiPage/List View de BMW para tener qué replicar.
-- **L.3** Reconciliación RedPartial↔redProd: falta investigar
-  sistemáticamente 45 de 46 diferencias reportadas por el Manual.
-
-### (c) Depende realmente de decisión comercial, proveedor o dato externo — 9 de 21
-
-- **C.2** anomalía `Lead.BMW→Opportunity.Polaris` (intención ambigua).
-- **C.3** alcance de "usados".
-- **E.2** comportamiento de `empresaFacturaCP__c` ante empresa vacía (dos
-  reglas de ingeniería válidas, Diego debe priorizar riesgo).
-- **G.2**, **H.5**, **J.1b**: contrato/código ERP de Softland para PEKING
-  (mismo bloqueo externo, un solo hilo de decisión).
-- **H.2** branding legal/PDF (razón social, identificación fiscal, logo).
-- **J.2** propósito de los triggers de Account.
-- **L.2** perfiles de marca dedicados (decisión de tiempo, ligada a otra
-  iniciativa).
-
-### (d) Pertenece a una fase posterior, no al Sprint 1 — 8 de 21
-
-- **A.6** modelo relacional completo (Opción B/C del Manual).
-- **L.1** seguridad completa (mismo motivo que A.6).
-- **H.3** reservas, **H.4** anticipos, **D.1** Order, **I.1** Flows,
-  **K.1**/**K.2** LWC/Aura — ninguno tiene una pregunta abierta específica
-  que los bloquee hoy; simplemente nunca estuvieron dentro del presupuesto
-  de 44 horas y requieren su propio sprint.
+(d) **A.6/L.1** Opción B/C estratégica del Manual; **H.3/H.4** reservas y
+anticipos sin presupuesto; **D.1** Order nunca asignado; **I.1** Flows nunca
+asignado; **K.1/K.2** LWC/Aura nunca asignado.
 
 ---
 
-## Cifras finales (recalculadas en esta actualización)
-
-Conteo de requerimientos únicos identificados y clasificados en esta matriz
-(no de archivos individuales — un requerimiento puede afectar varios
-componentes). **39 filas** tras la división de `J.1` en `J.1a`/`J.1b`:
+## Cifras finales (verificadas contra la tabla de control)
 
 | Estado | Cantidad |
 |---|---:|
-| Completado | 23 |
-| En progreso | 0 |
-| Pendiente técnico | 3 |
+| Completado | 18 |
+| En progreso | 1 |
+| Pendiente técnico | 2 |
 | Pendiente decisión | 9 |
 | Diferido | 5 |
 | Fuera de alcance | 4 |
-| **Total de requerimientos únicos identificados** | **39** |
+| **Total** | **39** |
 
-**Porcentaje sobre el alcance total documentado:** 23 / 39 = **58.97 %
-completado**, contando por requerimiento único, no por líneas de código ni
-por horas.
+**Porcentaje sobre el alcance total documentado:** 18 / 39 = **46.15 %
+completado** (contando por requerimiento único; `En progreso` no se cuenta
+como completado).
 
 ### Métrica 1 — Avance del Sprint 1 comprometido
 
-Son los requerimientos que efectivamente se asignaron a un bloque ejecutado
-(1 a 21), es decir, el subconjunto que Luis/Diego aprobaron trabajar en este
-Sprint: A.1, A.2, A.3, A.4, A.5, B.1, B.2, B.3, B.4, C.1, E.1, E.3, E.4, F.1,
-F.2, F.3, G.1, H.1, J.3 — **19 requerimientos**.
+Requerimientos efectivamente asignados a un bloque ejecutado (1 a 21):
+A.1, A.2, A.3, A.4, A.5, B.1, B.2, B.3, B.4, C.1, E.1, E.3, E.4, F.1, F.2,
+F.3, G.1, H.1, J.3 — **19 requerimientos**.
 
-De esos 19: **18 Completados, 1 Pendiente técnico** (B.4, experiencia
-declarativa de Opportunity, bloqueada solo por falta de un artefacto BMW
-local que replicar).
+De esos 19: **18 Completados, 1 En progreso** (B.4).
 
-**Avance del Sprint 1 comprometido: 18 / 19 = 94.74 %.**
+**Avance del Sprint 1 comprometido: 18 / 19 = 94.74 %** (con 1 en progreso,
+sin dry-run/deploy confirmado).
 
 ### Métrica 2 — Avance del alcance total documentado (PDF + Manual de Análisis)
 
@@ -771,12 +819,21 @@ real, reservas, anticipos, seguridad/sharing completo, Flows, LWC/Aura,
 PDF/branding legal, modelo relacional completo) — la mayoría de lo cual
 nunca estuvo dentro del presupuesto de 44 horas aprobado.
 
-**Avance del alcance total documentado: 23 / 39 = 58.97 %.**
+**Avance del alcance total documentado: 18 / 39 = 46.15 %.**
+
+### Trabajo pendiente dentro del Sprint vs. explícitamente fuera del Sprint
+
+- **Dentro del Sprint (1 de 19 comprometidos):** solo B.4, ya en progreso,
+  con acción concreta y acotada (dry-run + deploy).
+- **Explícitamente fuera del Sprint (20 de 39 totales):** los 20 restantes
+  nunca formaron parte de los 19 comprometidos — 2 pendiente técnico, 9
+  pendiente decisión, 5 diferido, 4 fuera de alcance, según el desglose de
+  Resumen B.
 
 ### Por qué hay dos métricas y no una
 
 El 94.74 % mide qué tan cerca está de cerrarse lo que el Sprint 1
-**efectivamente comprometió** hacer. El 58.97 % mide qué tan cerca está el
+**efectivamente comprometió** hacer. El 46.15 % mide qué tan cerca está el
 proyecto de la solución **completa** que describe el Manual de Análisis
 (Opción B/C, "Estratégica"), que el propio Manual estima en 55-85
 personas-semana — varias veces el presupuesto de 44 horas de este Sprint.
@@ -784,75 +841,57 @@ Ambas cifras son correctas para lo que miden; ninguna sustituye a la otra.
 
 ### Diferencia frente al estimado interno de 86 % / 14 %
 
-El 86 % (o 85 %, según el cierre más reciente de Bloque 18, y confirmado de
-nuevo al cierre del Bloque 20) registrado en `BITACORA_IMPLEMENTACION.md` es
-una **estimación de alcance técnico acumulado sobre los bloques
-efectivamente trabajados** — es decir, se acerca conceptualmente a la
+El 86-87 % registrado en `BITACORA_IMPLEMENTACION.md` (Bloques 18 y 20) y en
+`IMPLEMENTACION_BLOQUE21_OPORTUNIDAD_UI.md` ("87% si se valida y despliega")
+es una **estimación de alcance técnico acumulado sobre los bloques
+efectivamente trabajados** — conceptualmente el más cercano a la
 **Métrica 1** de esta matriz (94.74 %), aunque no coincide exactamente
-porque la bitácora no desglosa su 86 % en requerimientos discretos
+porque la bitácora no desglosa su porcentaje en requerimientos discretos
 verificables uno por uno; es una estimación cualitativa acumulada por
 bloque, no un cociente auditable como el de esta matriz.
 
-La **Métrica 2** (58.97 %) mide algo que la bitácora nunca pretendió medir:
+La **Métrica 2** (46.15 %) mide algo que la bitácora nunca pretendió medir:
 el avance contra **todo** el hallazgo del Manual de Análisis técnico. La
-diferencia entre 86 %/94.74 % (lo comprometido) y 58.97 % (lo documentado
-en total) no es una contradicción — el propio `PLAN_IMPLEMENTACION_SPRINT1.md`
+diferencia entre ~86-87 % (lo comprometido) y 46.15 % (lo documentado en
+total) no es una contradicción — el propio `PLAN_IMPLEMENTACION_SPRINT1.md`
 ya lo advertía: *"Las 41 clases son el alcance técnico directo confirmado.
 Los escenarios de 30 y 44 horas son subconjuntos ejecutables, no una
 redefinición del hallazgo."*
 
 ## Lista priorizada — los siguientes tres trabajos que más aumentan el cumplimiento explícito
 
-Ordenados por impacto real sobre el cumplimiento (no por facilidad), sin
-requerir una decisión de Luis/Diego para iniciarse:
-
 1. **Cerrar `J.1a` (`BusquedaDetalladaController`, `precioProductoJSON`).**
-   Es el único requerimiento pendiente clasificado como "(a) resoluble
-   ahora": mismo patrón ya probado tres veces, sin integración externa, sin
-   decisión pendiente. Convierte directamente 1 fila de Diferido a
-   Completado.
-2. **Retrieve dirigido de solo lectura de Layout, Lightning Record Page,
-   Compact Layout y List Views de `Opportunity-BMW`, para cerrar B.4.** Es
-   investigación técnica pura (no decisión), y desbloquea el único
-   requerimiento de UI de Opportunity que quedó pendiente tras el Bloque 21.
-   Requiere una sesión de consulta de solo lectura al org (Tooling API),
-   distinta y más acotada que abrir todo el frente de Flows/LWC.
+   Único requerimiento "(a) resoluble ahora": mismo patrón ya probado tres
+   veces, sin integración externa, sin decisión pendiente.
+2. **Validar y desplegar `B.4` (Bloque 21).** Ya está implementado
+   localmente; solo falta dry-run declarativo, deploy y verificación
+   post-deploy — es la conversión más rápida de "En progreso" a
+   "Completado" de toda la matriz.
 3. **Investigar `Quote.empresaFactura__c` (F.4) vía describe/FLS de solo
-   lectura.** Es la brecha técnica más barata de cerrar (un solo campo, sin
-   consumidores locales conocidos) y reduce el riesgo de que un futuro
-   bloque de Quote asuma una equivalencia incorrecta con `Compania__c`.
+   lectura.** Brecha técnica barata de cerrar (un campo, sin consumidores
+   locales conocidos); reduce el riesgo de que un futuro bloque de Quote
+   asuma una equivalencia incorrecta con `Compania__c`.
 
-Los tres comparten una característica: **no requieren que Luis o Diego
-respondan nada primero** — son investigación/ejecución técnica pura. Se
-priorizaron por encima de, por ejemplo, corregir la anomalía
-`Lead.BMW→Opportunity.Polaris`, porque esa sí depende de una respuesta de
-negocio antes de poder tocar código.
+Los tres comparten que **no requieren que Luis o Diego respondan nada
+primero**.
 
 ## Puntos que pudimos haber omitido o interpretado de forma incompleta
 
-- **Corrección propia:** el total de 43 de la entrega anterior fue un error
-  aritmético (ver sección al inicio de este bloque); el total correcto es 39
-  filas tras la división de `J.1`.
+- **Corrección propia (esta actualización):** el total anterior de 39 no
+  coincidía con la suma de sus propios estados (44); la causa fue que los
+  resúmenes narrativos no se derivaban mecánicamente de las filas reales.
+  Se corrige agregando la Tabla de control como fuente única de verdad.
 - El Manual de Análisis identifica **campos homónimos** (`Contact.Empresa__c`,
   `Account.Empresas__c`, `Maestro_de_Errores__c.Empresa__c`) como falsos
-  positivos explícitos — se excluyeron correctamente de esta matriz, pero se
-  documentan aquí para que quede constancia de que **no fueron omitidos por
-  descuido**, sino por clasificación explícita de la fuente.
+  positivos explícitos — se excluyeron correctamente de esta matriz.
 - El Anexo B del Manual (78 permission sets, 50 profiles candidatos) no se
-  trazó componente por componente — se resumió temáticamente (L.1/L.2) porque
-  hacerlo a nivel de archivo individual (128 filas adicionales) excedería el
-  propósito de una matriz de requerimientos y duplicaría el detalle ya
-  existente en el propio Manual, Anexo B.
-- La reclasificación de `Quote.empresaFactura__c` (F.4) de "Pendiente
-  decisión" a "Pendiente técnico" se apoya en que **no está versionado
-  localmente ni referenciado por ningún Apex/LWC** — pero esto no descarta
-  que el campo exista y esté en uso real en el org; solo confirma que no hay
-  evidencia local, por lo que sigue siendo necesaria una consulta de solo
-  lectura al org antes de cerrarlo.
-- No se intentó recalcular el 86 %/14 % desde cero por bloque individual
-  (habría requerido reconstruir la métrica original línea por línea de la
-  bitácora); en su lugar se explica la diferencia metodológica y se propone
-  la Métrica 1 como el número conceptualmente más cercano al 86 %.
+  trazó componente por componente — se resumió temáticamente (L.1/L.2).
+- `B.4` avanzó de "Pendiente técnico" a "En progreso" entre la entrega
+  anterior y esta corrección, por trabajo real registrado en la rama de
+  Bloque 21 (commit `67c180b`) — no es una suposición de esta actualización.
+- No se intentó recalcular el 86-87 % desde cero por bloque individual; en
+  su lugar se explica la diferencia metodológica y se propone la Métrica 1
+  como el número conceptualmente más cercano.
 
 ## Confirmación de alcance de esta tarea
 
