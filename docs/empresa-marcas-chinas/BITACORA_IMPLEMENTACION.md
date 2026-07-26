@@ -1615,6 +1615,66 @@ pruebas), excede ampliamente el tiempo práctico para completarse en una
 sesión de validación puntual — cualquier intento futuro debería
 considerarse con ese costo en mente.
 
+### 29.2 Cierre — laboratorio de cobertura, validación y deploy real
+
+Se retomó el Bloque 18 desde el worktree aislado
+`C:\Users\dokur\Documents\Repositorios\RedMotors-Bloque18-CoverageLab`, rama
+`analysis/pc/redmotors-block18-coverage-lab-20260726`, basada en la rama WIP
+del Bloque 18. El commit de laboratorio `6f63321 test(product-search): prepare
+legitimate coverage scenarios` preparó un escenario funcional de cobertura para
+la rama `vehiculo`.
+
+El cambio final posterior al laboratorio quedó limitado a
+`ProductSearcherControllerTest.cls`: se ajustó el fixture de `Product2` para
+respetar una cadena real de picklists dependientes confirmada en
+RedMotorsSandbox (`BMW`, `Sedán`, `Serie`, `Serie 2`,
+`BMW-218-GC-VR-PAQ-M`). No se modificó `ProductSearcherController.cls` durante
+este cierre, no se usaron IDs reales, no se agregó `SeeAllData`, no se agregó
+`Test.isRunningTest()` y no se modificaron Record Types, picklists, permisos,
+Flows ni metadata funcional adicional.
+
+Dry-runs del laboratorio:
+
+| Deploy ID | Resultado |
+|---|---|
+| `0AfAK000000vu5V0AQ` | 4/4 componentes, 14/15 pruebas. Falla por `Modelo_De_Inter_s__c = COOPER-S-VR-COUNT-ALL`. Cobertura temporal 141/192 = 73.438%. Org sin modificaciones. |
+| `0AfAK000000vu770AA` | 4/4 componentes, 14/15 pruebas. Falla por incompatibilidad de la cadena de picklists dependientes para `BMW-218-GC-VR-PAQ-M`. Cobertura temporal 141/192 = 73.438%. Org sin modificaciones. |
+| `0AfAK000000vu8j0AA` | 4/4 componentes, 15/15 pruebas, 0 fallas. Cobertura `ProductSearcherController`: 182/192 = 94.79%. Org sin modificaciones. |
+| `0AfAK000000vuAL0AY` | Regresión dirigida: 4/4 componentes, 33/33 pruebas, 0 fallas. Cobertura `ProductSearcherController`: 182/192 = 94.79%. Org sin modificaciones. |
+
+Deploy real:
+
+- Deploy ID: `0AfAK000000vuBx0AI`
+- Ambiente: RedMotorsSandbox / Partial
+- Estado: `Succeeded`
+- Componentes: 4/4
+- Pruebas: 33/33
+- Fallas: 0
+- Cobertura `ProductSearcherController`: 182/192 = 94.79%
+
+Verificación post-deploy:
+
+- Test Run ID: `707AK00000GwtdT`
+- Pruebas: 34/34
+- Fallas: 0
+- Resultado: `Passed`
+
+Resultado funcional final:
+
+- Omoda y Jaecoo resuelven `RMPEKING` en la rama de mano de obra de
+  `ProductSearcherController.getProducts()`.
+- BMW y MINI conservan `RMBAVARIAN`.
+- Polaris y Kawasaki conservan `RMOTOBAI`.
+- No existe selección por descarte.
+- Un Record Type no reconocido no devuelve productos de todas las empresas.
+- Se conserva fuera de alcance cualquier decisión de sucursales, visibilidad
+  comercial, Softland, reservas, anticipos, permisos o layouts.
+
+El Bloque 18 queda completado, validado y desplegado.
+
+Avance técnico estimado: 85% completado y 15% pendiente. Corresponde al
+alcance técnico y no representa horas oficiales, trabajadas ni facturables.
+
 ## 30. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia

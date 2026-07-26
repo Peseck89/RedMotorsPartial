@@ -99,3 +99,87 @@ sf project deploy validate \
 
 No se afirma que este parche compile ni que alcance la cobertura estimada hasta que
 se valide con este dry-run real.
+
+## Validación real del laboratorio
+
+La validación real se ejecutó contra RedMotorsSandbox / Partial desde el worktree
+aislado del laboratorio.
+
+### Dry-run enfocado
+
+Primer intento:
+
+- Deploy ID: `0AfAK000000vu5V0AQ`
+- Componentes: 4/4
+- Pruebas: 14/15
+- Cobertura temporal `ProductSearcherController`: 141/192 = 73.438%
+- Falla: `Product2.Modelo_De_Inter_s__c = COOPER-S-VR-COUNT-ALL` no era válido
+  para el fixture.
+- Org sin modificaciones.
+
+Segundo intento:
+
+- Deploy ID: `0AfAK000000vu770AA`
+- Componentes: 4/4
+- Pruebas: 14/15
+- Cobertura temporal `ProductSearcherController`: 141/192 = 73.438%
+- Falla: `Product2.Modelo_De_Inter_s__c = BMW-218-GC-VR-PAQ-M` seguía siendo
+  incompatible con la cadena de picklists dependientes creada por el helper.
+- Org sin modificaciones.
+
+Corrección aplicada:
+
+- Se confirmó en RedMotorsSandbox una combinación real de `Product2` para BMW:
+  `Marca__c = 'BMW'`, `Categor_a_veh_culo__c = 'Sedán'`,
+  `Grupo__c = 'Serie'`, `Familia__c = 'Serie 2'`,
+  `Modelo_De_Inter_s__c = 'BMW-218-GC-VR-PAQ-M'`.
+- El fixture quedó limitado a `ProductSearcherControllerTest.cls`.
+- No se reutilizaron IDs reales.
+- No se modificó `ProductSearcherController.cls`.
+
+Tercer intento:
+
+- Deploy ID: `0AfAK000000vu8j0AA`
+- Componentes: 4/4
+- Pruebas: 15/15
+- Fallas: 0
+- Cobertura `ProductSearcherController`: 182/192 = 94.79%
+- Líneas no cubiertas: 86, 101, 256, 272, 296, 317, 318, 332, 333, 334.
+- Org sin modificaciones.
+
+### Regresión y deploy
+
+Dry-run de regresión:
+
+- Deploy ID: `0AfAK000000vuAL0AY`
+- Componentes: 4/4
+- Pruebas: 33/33
+- Fallas: 0
+- Cobertura `ProductSearcherController`: 182/192 = 94.79%
+- Org sin modificaciones.
+
+Deploy real:
+
+- Deploy ID: `0AfAK000000vuBx0AI`
+- Componentes: 4/4
+- Pruebas: 33/33
+- Fallas: 0
+- Estado: `Succeeded`
+- Org: RedMotorsSandbox / Partial.
+
+Verificación post-deploy:
+
+- Test Run ID: `707AK00000GwtdT`
+- Pruebas: 34/34
+- Fallas: 0
+- Resultado: `Passed`
+
+## Resultado del laboratorio
+
+El laboratorio permitió cerrar el Bloque 18 sin modificar código productivo
+adicional. La cobertura final de `ProductSearcherController` quedó en 182/192 =
+94.79%, por encima del mínimo de 75% y del objetivo recomendado de 78%.
+
+El Bloque 18 queda completado, validado y desplegado. El cierre se hará en la
+rama del laboratorio con el commit `feat(product-search): deploy configurable
+company filtering`.

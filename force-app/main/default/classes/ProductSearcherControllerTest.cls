@@ -341,6 +341,25 @@ public class ProductSearcherControllerTest {
     // No se modifica metadata, Record Types, picklists ni codigo productivo: todo se construye
     // reutilizando helpers ya existentes de TestDataFactory y el vehiculo/Bodega ya creados en el
     // @TestSetup. Cobertura teorica: no confirmada por Tooling API, pendiente de dry-run real.
+    private class ModeloInteresFixture {
+        String categoria;
+        String grupo;
+        String familia;
+        String modelo;
+    }
+
+    private static ModeloInteresFixture getBmwModeloInteresFixture() {
+        // Combinacion real confirmada en RedMotorsSandbox para el Record Type
+        // Product2.Producto_Red_Motors. Se usa solo para respetar picklists
+        // dependientes del fixture; no cambia la logica productiva probada.
+        ModeloInteresFixture fixture = new ModeloInteresFixture();
+        fixture.categoria = 'Sedán';
+        fixture.grupo = 'Serie';
+        fixture.familia = 'Serie 2';
+        fixture.modelo = 'BMW-218-GC-VR-PAQ-M';
+        return fixture;
+    }
+
     private static Product2 getSetupVehicle() {
         return [
             SELECT Id, Name, ProductCode, modelo__c, marcaVehiculo__c, Anno__c, Color__c, Color_Externo__c, vin__c
@@ -355,16 +374,28 @@ public class ProductSearcherControllerTest {
         Product2 vehiculo = getSetupVehicle();
         String brand = vehiculo.marcaVehiculo__c;
         String year = vehiculo.Anno__c;
-        String modelo = vehiculo.modelo__c;
+        ModeloInteresFixture modeloFixture = getBmwModeloInteresFixture();
+        String modelo = modeloFixture.modelo;
+        vehiculo.modelo__c = modelo;
+        update vehiculo;
 
         // Dos productos de "modelo de interes" con el MISMO modelo, para que
         // getPricesGroupByModelFantasia() agrupe por modelKey y compare precios.
         Product2 fantasiaA = TestDataFactory.createProduct(
-            'CoverageLab Fantasia A ' + modelo, modelo, null, null, brand, null, modelo, year, 'Rojo', 'Negro', 'Vehiculo', false, true
+            'CoverageLab Fantasia A ' + modelo, modelo, modeloFixture.categoria, modeloFixture.grupo, brand, modeloFixture.familia, modelo, year, 'Rojo', 'Negro', 'Vehiculo', false, false
         );
         Product2 fantasiaB = TestDataFactory.createProduct(
-            'CoverageLab Fantasia B ' + modelo, modelo, null, null, brand, null, modelo, year, 'Rojo', 'Negro', 'Vehiculo', false, true
+            'CoverageLab Fantasia B ' + modelo, modelo, modeloFixture.categoria, modeloFixture.grupo, brand, modeloFixture.familia, modelo, year, 'Rojo', 'Negro', 'Vehiculo', false, false
         );
+        fantasiaA.Categor_a_veh_culo__c = modeloFixture.categoria;
+        fantasiaA.Grupo__c = modeloFixture.grupo;
+        fantasiaA.Familia__c = modeloFixture.familia;
+        fantasiaA.Modelo_De_Inter_s__c = modeloFixture.modelo;
+        fantasiaB.Categor_a_veh_culo__c = modeloFixture.categoria;
+        fantasiaB.Grupo__c = modeloFixture.grupo;
+        fantasiaB.Familia__c = modeloFixture.familia;
+        fantasiaB.Modelo_De_Inter_s__c = modeloFixture.modelo;
+        insert new List<Product2>{ fantasiaA, fantasiaB };
         Pricebook2 fantasiaPB = TestDataFactory.createPriceBook(brand + '-' + year + ' CoverageLab Fantasia', true);
         TestDataFactory.createPriceBookEntry(fantasiaPB, fantasiaA, 15000, true);
         TestDataFactory.createPriceBookEntry(fantasiaPB, fantasiaB, 9000, true);

@@ -2,15 +2,13 @@
 
 ## Estado
 
-Bloque 18 **pausado**, ahora en la rama `wip/pc/redmotors-block18-product-searcher-coverage-20260726`
-(commit `f1ce045`). Código productivo y de prueba listos y verificados
-localmente (14/14 pruebas pasan, incluyendo la clase huérfana corregida
-`ProductSearcherControllerOtobaiTest`), pero **sin deploy, sin commit
-adicional y sin push** porque la cobertura de `ProductSearcherController`
-(73.438%) queda por debajo del mínimo de 75% exigido por el org con
-`RunSpecifiedTests`, y la validación alternativa con `RunLocalTests`
-(3567 pruebas del org) fue cancelada manualmente por el usuario tras
-confirmar 287 fallas ajenas al Bloque 18, para liberar RedMotorsSandbox.
+Bloque 18 **completado, validado y desplegado** en RedMotorsSandbox / Partial.
+
+El cierre se realizó desde el laboratorio aislado
+`analysis/pc/redmotors-block18-coverage-lab-20260726`, usando como base la
+rama WIP del Bloque 18. El cambio final que permitió cerrar cobertura fue
+exclusivamente de fixture en `ProductSearcherControllerTest.cls`; no se agregó
+ningún cambio productivo adicional sobre `ProductSearcherController.cls`.
 
 ## Autorización
 
@@ -211,43 +209,103 @@ del resultado — es decir, pasaron todas antes de la cancelación. `RunLocalTes
 con la suite completa de este org (3567 pruebas) excede ampliamente el
 tiempo práctico de una sesión de validación puntual.
 
-## Archivos modificados (sin commitear más allá del commit WIP `f1ce045`)
+## Cierre desde laboratorio de cobertura
+
+Se retomó el Bloque 18 desde el worktree aislado
+`C:\Users\dokur\Documents\Repositorios\RedMotors-Bloque18-CoverageLab`.
+El commit de laboratorio `6f63321` preparó un escenario legítimo de cobertura
+para la rama `vehiculo`, sin `SeeAllData`, sin IDs reales, sin `dummy()`, sin
+`Test.isRunningTest()` nuevo, sin cambios de Record Types, picklists, permisos
+o Flows.
+
+### Dry-runs del laboratorio
+
+| Ejecución | Resultado |
+|---|---|
+| `0AfAK000000vu5V0AQ` | 4/4 componentes, 14/15 pruebas. Falla por `Product2.Modelo_De_Inter_s__c = COOPER-S-VR-COUNT-ALL`; cobertura temporal 141/192 = 73.438%. Org sin modificaciones. |
+| `0AfAK000000vu770AA` | 4/4 componentes, 14/15 pruebas. Falla por `Product2.Modelo_De_Inter_s__c = BMW-218-GC-VR-PAQ-M`; cobertura temporal 141/192 = 73.438%. Org sin modificaciones. |
+| `0AfAK000000vu8j0AA` | 4/4 componentes, 15/15 pruebas, 0 fallas. Cobertura `ProductSearcherController`: 182/192 = 94.79%. Org sin modificaciones. |
+| `0AfAK000000vuAL0AY` | Regresión con `ProductSearcherControllerTest`, `ProductSearcherControllerOtobaiTest`, `ProductControllerTwoTest` y `EmpresaResolverTest`: 4/4 componentes, 33/33 pruebas, 0 fallas. Cobertura `ProductSearcherController`: 182/192 = 94.79%. Org sin modificaciones. |
+
+La causa de los dos primeros fallos fue la cadena de picklists dependientes del
+fixture de `Product2`: `Modelo_De_Inter_s__c` debe ser compatible con
+`Marca__c`, `Categor_a_veh_culo__c`, `Grupo__c` y `Familia__c`. La corrección
+final se mantuvo en `ProductSearcherControllerTest.cls`: se creó el producto de
+modelo de interés sin insertarlo inicialmente, se asignó una combinación real
+confirmada en RedMotorsSandbox (`BMW`, `Sedán`, `Serie`, `Serie 2`,
+`BMW-218-GC-VR-PAQ-M`) y luego se insertó. No se reutilizaron IDs de productos
+reales.
+
+### Deploy real y verificación post-deploy
+
+Deploy real del Bloque 18:
+
+- Deploy ID: `0AfAK000000vuBx0AI`
+- Ambiente: RedMotorsSandbox / Partial
+- Estado: `Succeeded`
+- Componentes: 4/4
+- Pruebas: 33/33
+- Fallas: 0
+- Cobertura `ProductSearcherController`: 182/192 = 94.79%
+
+Verificación post-deploy:
+
+- Test Run ID: `707AK00000GwtdT`
+- Pruebas: 34/34
+- Fallas: 0
+- Resultado: `Passed`
+
+### Estado final
+
+Bloque 18 queda completado, validado y desplegado. Se conserva el alcance
+funcional aprobado: Omoda y Jaecoo resuelven `RMPEKING` en la rama de mano de
+obra, BMW/MINI conservan `RMBAVARIAN`, Polaris/Kawasaki conservan `RMOTOBAI`,
+no existe selección por descarte y un Record Type desconocido no devuelve
+productos de todas las empresas.
+
+Avance técnico estimado: 85% completado y 15% pendiente. Este porcentaje
+corresponde al alcance técnico y no representa horas oficiales, trabajadas ni
+facturables.
+
+## Archivos modificados
 
 - `force-app/main/default/classes/ProductSearcherController.cls` *(incluido en `f1ce045`)*
 - `force-app/main/default/classes/ProductSearcherControllerTest.cls` *(incluido en `f1ce045`)*
 - `force-app/main/default/objects/Product2/recordTypes/Producto_Red_Motors.recordType-meta.xml` *(incluido en `f1ce045`)*
-- `manifest/empresa-marcas-chinas-bloque18-product-searcher.xml` *(incluido en `f1ce045`; ampliado después con `ProductSearcherControllerOtobaiTest`, aún sin commitear)*
-- `force-app/main/default/classes/ProductSearcherControllerOtobaiTest.cls` (nuevo, corregido, aún sin commitear)
-- `force-app/main/default/classes/ProductSearcherControllerOtobaiTest.cls-meta.xml` (nuevo, aún sin commitear)
-- `docs/empresa-marcas-chinas/IMPLEMENTACION_BLOQUE18_PRODUCT_SEARCHER.md` (este archivo, aún sin commitear)
-- `docs/empresa-marcas-chinas/BITACORA_IMPLEMENTACION.md` (aún sin commitear)
+- `manifest/empresa-marcas-chinas-bloque18-product-searcher.xml` *(incluido en la rama WIP; contiene `ProductSearcherControllerOtobaiTest`)*
+- `force-app/main/default/classes/ProductSearcherControllerOtobaiTest.cls` *(incluido en la rama WIP)*
+- `force-app/main/default/classes/ProductSearcherControllerOtobaiTest.cls-meta.xml` *(incluido en la rama WIP)*
+- `docs/empresa-marcas-chinas/IMPLEMENTACION_BLOQUE18_PRODUCT_SEARCHER.md` *(actualizado en el cierre)*
+- `docs/empresa-marcas-chinas/BITACORA_IMPLEMENTACION.md` *(actualizado en el cierre)*
+- `docs/empresa-marcas-chinas/LABORATORIO_COBERTURA_BLOQUE18.md` *(actualizado en el cierre)*
 
 ## Validación y despliegue
 
-No se ejecutó ningún deploy real. Dry-runs realizados: `RunSpecifiedTests`
-con `ProductSearcherControllerTest` (0 fallas de prueba, `success: false`
-por cobertura < 75%); `RunLocalTests` inicial (`0AfAK000000vsRt0AI`,
-bloqueado por la clase huérfana); dry-run enfocado tras la corrección de la
-huérfana (14/14 pruebas, cobertura sin cambio); `RunLocalTests` final
-(`0AfAK000000vsYL0AY`, componentes y pruebas del Bloque 18 exitosas,
-cancelado por fallas ajenas antes de completar la suite).
+La validación final se realizó con `RunSpecifiedTests`, no con `RunLocalTests`,
+porque la suite completa del org mantiene deuda externa ya documentada y fuera
+del alcance de este bloque.
+
+- Dry-run enfocado exitoso: `0AfAK000000vu8j0AA`, 4/4 componentes, 15/15
+  pruebas, 0 fallas, cobertura 182/192 = 94.79%.
+- Dry-run de regresión exitoso: `0AfAK000000vuAL0AY`, 4/4 componentes, 33/33
+  pruebas, 0 fallas, cobertura 182/192 = 94.79%.
+- Deploy real exitoso: `0AfAK000000vuBx0AI`, 4/4 componentes, 33/33 pruebas,
+  0 fallas, RedMotorsSandbox / Partial.
+- Verificación post-deploy: Test Run `707AK00000GwtdT`, 34/34 pruebas, 0
+  fallas, resultado `Passed`.
 
 ## Riesgos
 
-- El código productivo (mapeo de empresa) está listo y verificado con 14
-  pruebas pasando (incluida la clase huérfana ya corregida), pero no puede
-  desplegarse hasta resolver la cobertura de clase individual o encontrar
-  una ventana viable para completar `RunLocalTests` sin cancelación.
-- La configuración de picklist por Record Type de `Modelo_De_Inter_s__c` es
-  un hallazgo que probablemente también afecta a otros flujos de la rama
-  `vehiculo` fuera de este bloque, no solo a la cobertura de pruebas.
-- El org tiene una deuda de pruebas preexistente y ajena a este bloque
-  (287 fallas observadas en una corrida parcial de `RunLocalTests`) que
-  impide usar esa ruta como validación práctica sin coordinación adicional.
+- La deuda global de pruebas del org sigue fuera del alcance del Bloque 18; por
+  eso se validó con una regresión dirigida y no con `RunLocalTests`.
+- La rama `vehiculo` depende de una cadena estricta de picklists de `Product2`.
+  El fixture final usa una combinación real confirmada en RedMotorsSandbox, sin
+  reutilizar registros reales.
+- No se modificaron sucursales, visibilidad comercial, Softland, reservas,
+  anticipos, Flows, permisos ni layouts.
 
 ## Avance técnico estimado
 
-No aplica todavía — el bloque no se ha desplegado. Si se completa y despliega
-tal como está especificado, el avance estimado pasaría de 84% (cierre del
-Bloque 17) a 85% completado / 15% pendiente. Es una estimación de alcance
-técnico, no una medición de horas oficiales, trabajadas ni facturables.
+Bloque 18 completado: avance estimado 85% completado / 15% pendiente. Es una
+estimación de alcance técnico, no una medición de horas oficiales, trabajadas
+ni facturables.
