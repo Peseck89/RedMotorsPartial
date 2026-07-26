@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Opportunity_Record_Page_VN</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>Opportunity.Oportunidades_abiertas_Omoda</members>
+        <members>Opportunity.Oportunidades_ganadas_Omoda</members>
+        <members>Opportunity.Oportunidades_Perdidas_Omoda</members>
+        <members>Opportunity.Todas_Oportunidades_Perdidas_Omoda</members>
+        <members>Opportunity.Oportunidades_abiertas_Jaecoo</members>
+        <members>Opportunity.Oportunidades_ganadas_Jaecoo</members>
+        <members>Opportunity.Oportunidades_Perdidas_Jaecoo</members>
+        <members>Opportunity.Todas_Oportunidades_Perdidas_Jaecoo</members>
+        <name>ListView</name>
+    </types>
+    <version>67.0</version>
+</Package>
