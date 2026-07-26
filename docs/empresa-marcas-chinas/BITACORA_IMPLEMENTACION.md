@@ -1405,7 +1405,105 @@ El Bloque 17 queda completado, validado y desplegado.
 Avance técnico estimado: 84% completado y 16% pendiente. Corresponde al
 alcance técnico y no representa horas oficiales, trabajadas ni facturables.
 
-## 29. Plantilla reutilizable de actualización
+## 29. Bloque 19 — Empresa Operadora en creación de Opportunity desde modelo de interés
+
+Luis autorizó implementar el Bloque 19 en un worktree aislado y asignar `Opportunity.Empresa_Operadora__c` desde `RM_VN_CrearOppModeloInteres_Ctrl.createOpportunity(...)`.
+
+La implementación agrega un mapeo explícito de marca a empresa:
+
+- BMW / MINI → `RMBAVARIAN`;
+- Polaris / Kawasaki → `RMOTOBAI`;
+- Omoda / Jaecoo → `RMPEKING`.
+
+La marca desconocida produce error controlado antes de cualquier DML. La empresa se resuelve mediante `EmpresaResolver.resolveByCodigo(...)` y se asigna a `Opportunity.Empresa_Operadora__c`.
+
+Se conservó la resolución actual de Record Type con `DeveloperName = :brand.toUpperCase()`, validada contra los Record Types activos `BMW`, `MINI`, `Polaris`, `Kawasaki`, `Omoda` y `Jaecoo`.
+
+No se modificaron `Pricebook2Id`, `OpportunityLineItem`, `Oportunidad_Producto_Interes__c`, tráfico, Account, forma de pago, datos financieros, Softland, reservas, inventario, permisos, Flows, `ProductSearcherController` ni componentes del Bloque 18.
+
+### Validación de fixtures y cobertura
+
+Se confirmó que el fixture de `Product2` debe respetar dependencias de picklist:
+
+- `Marca__c = BMW`;
+- `Categor_a_veh_culo__c = SUV`;
+- `Grupo__c = X`;
+- `Familia__c = X1`;
+- Record Type `Producto_Red_Motors`, resuelto dinámicamente.
+
+`Product2.Marca__c = BMW` se usa solo para habilitar la cadena de picklists del fixture. La marca funcional probada sigue llegando por el parámetro `brand`.
+
+Se eliminó el método histórico `dummy()` porque no tenía llamadores y distorsionaba la cobertura. También se retiraron helpers privados locales sin llamadores en esta clase; se conservó `findValidTraffic(...)` porque sí es utilizado por `createOpportunity(...)`.
+
+### Dry-run enfocado aprobado
+
+Dry-run `0AfAK000000vtML0AY`:
+
+- Componentes: 2/2.
+- Pruebas: 11/11.
+- Fallas: 0.
+- Cobertura `RM_VN_CrearOppModeloInteres_Ctrl`: 136/151 = 90.066%.
+- Estado: Succeeded.
+- La org no fue modificada.
+
+### Regresión externa corregida
+
+Regresiones inicialmente bloqueadas:
+
+- `0AfAK000000vtPZ0AY`: 47/48 pruebas, una falla.
+- `0AfAK000000vtRB0AY`: 47/48 pruebas, misma falla.
+
+Falla única:
+
+- Clase: `RM_VN_CrearOportunidad_Ctrl_Test`.
+- Método: `test_createOpportunity_conTrafico`.
+- Error: `System.AssertException: Assertion Failed: No debió lanzar excepción: Script-thrown exception`.
+
+La falla correspondía a una prueba externa al Bloque 19. El diagnóstico
+confirmó que la conversión de tráfico ejecutaba la validación activa
+`Bloquear_conversion_estandar`, que exige `Lead.Convertido_custom__c = true`
+para representar el flujo del botón personalizado de conversión.
+
+Se corrigió únicamente el fixture de
+`RM_VN_CrearOportunidad_Ctrl_Test.test_createOpportunity_conTrafico`,
+agregando `Convertido_custom__c = true` al Lead de prueba antes del insert.
+No se modificaron `RM_VN_CrearOportunidad_Ctrl`,
+`RM_VU_CrearOportunidad_Ctrl`, `RM_VN_CrearOppModeloInteres_Ctrl`, la regla
+de validación, Flows, permisos ni datos operativos.
+
+La clase de prueba externa fue desplegada de forma aislada en Partial:
+
+- Deploy test-only: `0AfAK000000vt1O0AQ`.
+- Ejecución del método corregido: Test Run `707AK00000GxB33`, 1/1 aprobado.
+- Ejecución de la clase completa: Test Run `707AK00000Gx9BH`, 29/29 aprobadas.
+
+### Cierre técnico del Bloque 19
+
+| Etapa | ID | Componentes | Pruebas | Fallas | Resultado |
+|---|---|---:|---:|---:|---|
+| Dry-run enfocado | `0AfAK000000vtML0AY` | 2/2 | 11/11 | 0 | Exitoso |
+| Dry-run de regresión | `0AfAK000000vtkX0AQ` | 2/2 | 48/48 | 0 | Exitoso |
+| Deploy real | `0AfAK000000vtnl0AA` | 2/2 | 48/48 | 0 | Exitoso |
+| Verificación post-deploy | Test Run `707AK00000GwjmT` | No aplica | 48/48 | 0 | Exitoso |
+
+El deploy real fue ejecutado únicamente contra RedMotorsSandbox / Partial.
+Quedaron desplegados:
+
+- `RM_VN_CrearOppModeloInteres_Ctrl`;
+- `RM_VN_CrearOppModeloInteres_Ctrl_Test`.
+
+La cobertura comprobada para `RM_VN_CrearOppModeloInteres_Ctrl` fue 136/151
+líneas, equivalente a 90.07%.
+
+Estado: Bloque 19 completado, validado y desplegado en RedMotorsSandbox /
+Partial. La rama del Bloque 19 permanece separada de la rama principal del
+sprint hasta que se autorice su integración.
+
+Avance técnico estimado después del deploy del Bloque 19: 86% completado y
+14% pendiente. Corresponde al alcance técnico y no representa horas oficiales,
+trabajadas ni facturables.
+
+## 30. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
