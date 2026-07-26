@@ -1011,7 +1011,100 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje corresponde al alcance técnico y no representa horas
 oficiales, trabajadas, registradas ni facturables.
 
-## 24. Plantilla reutilizable de actualización
+## 24. Bloque 13 — Empresa configurable en trabajos de Quote
+
+Luis autorizó continuar con cambios claros de bajo riesgo y documentar lo
+realizado. El Bloque 10 permanece pausado y este cambio no depende del mapeo
+de sucursales.
+
+`TrabajoQuoteController.saveTrabajo()` utiliza ahora
+`Opportunity.Empresa_Operadora__c` como fuente principal. El lookup se
+resuelve mediante `EmpresaResolver` y admite los códigos `RMBAVARIAN`,
+`RMOTOBAI` y `RMPEKING`.
+
+Cuando el lookup está vacío se conserva únicamente el respaldo explícito
+Bavarian/RMBavarian → RMBAVARIAN y Otobai → RMOTOBAI. El lookup tiene
+prioridad ante contradicción y se eliminó el fallback que enviaba valores
+nulos o desconocidos a Otobai.
+
+La prueba histórica se conserva y se agregaron ocho escenarios
+autocontenidos para las tres empresas, precedencia, compatibilidad heredada y
+errores controlados. Las líneas creadas validan producto, PricebookEntry,
+Pricebook, cantidad y precio.
+
+No se modificaron otros métodos, tipos de vehículo, tipos de cargo,
+PricebookEntry, cálculos, creación general de QuoteLineItem ni integraciones.
+La única metadata del bloque es la extensión de la picklist de empresa con
+`RMPEKING`.
+
+### Primer dry-run del Bloque 13
+
+El dry-run `0AfAK000000vpqb0AA` no ejecutó pruebas porque
+`TrabajoQuoteControllerTest` no compiló al intentar asignar directamente
+`tiposDeTrabajo__c.Cantidad__c` en la línea 252. La org no fue modificada.
+
+`Cantidad__c` es una fórmula numérica de solo lectura derivada de `UTS__c`,
+con 12 UTS por unidad de cantidad. Se eliminó únicamente la asignación a la
+fórmula y se conservó `UTS__c = 12`.
+
+Los escenarios nuevos utilizan `TrabajoWrapper.uts = 2`, que es el dato
+editable empleado por `saveTrabajo()` para establecer la cantidad de la
+QuoteLineItem. Los nueve métodos y sus aserciones funcionales permanecen
+intactos. No se modificó producción ni metadata.
+
+### Segundo dry-run del Bloque 13
+
+El dry-run `0AfAK000000vpsD0AQ` compiló 2/2 componentes, aprobó 5/9 pruebas y
+falló en cuatro escenarios. La org no fue modificada.
+
+Dos pruebas PEKING fallaron porque
+`TipoDeCargoConManoDeObra__c.Empresa__c` es una picklist local restringida
+que solo contenía `RMBAVARIAN` y `RMOTOBAI`. No utiliza Global Value Set. Se
+preparó la metadata del campo conservando ambos valores y agregando únicamente
+`RMPEKING` activo y no predeterminado. El CustomField se agregó al manifest.
+
+Las pruebas de Empresa inactiva y Empresa nula recibieron la
+`AuraHandledException` producida por el manejo público de `saveTrabajo()`,
+pero sus aserciones dependían del texto interno. Se corrigieron para validar
+el tipo de excepción controlada y confirmar que no se crea ninguna
+QuoteLineItem.
+
+No se modificó producción. Permanecen los nueve métodos, la precedencia del
+lookup, los respaldos Bavarian/Otobai, los datos autocontenidos y la ausencia
+de fallback.
+
+### Cierre técnico del Bloque 13
+
+| Validación | Deploy ID | Componentes | Pruebas | Fallas |
+|---|---|---:|---:|---:|
+| Dry-run funcional | `0AfAK000000vptp0AA` | 3/3 | 9/9 | 0 |
+| Dry-run de regresión | `0AfAK000000vpvR0AQ` | 3/3 | 18/18 | 0 |
+| Deploy real | `0AfAK000000vpx30AA` | 3/3 | 18/18 | 0 |
+
+El dry-run funcional confirmó 282/302 líneas cubiertas en
+`TrabajoQuoteController`, equivalentes a 93.38%.
+
+El deploy real terminó correctamente en RedMotorsSandbox / Partial. Se
+validaron nueve escenarios funcionales y 18 pruebas de regresión.
+
+`Opportunity.Empresa_Operadora__c` quedó como fuente principal y
+`BMW_Compania__c` permanece como respaldo explícito para Bavarian y Otobai.
+Se agregó soporte para `RMPEKING`, incluido el valor en
+`TipoDeCargoConManoDeObra__c.Empresa__c`, y se eliminó el fallback automático
+hacia `RMOTOBAI`.
+
+No se modificaron cálculos, tipos de cargo, Pricebooks ni la creación general
+de líneas. El Bloque 13 queda completado, validado y desplegado.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 78%;
+- pendiente: 22%.
+
+Este porcentaje corresponde al alcance técnico y no representa horas
+oficiales, trabajadas, registradas ni facturables.
+
+## 25. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:

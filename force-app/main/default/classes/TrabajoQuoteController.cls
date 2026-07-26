@@ -170,7 +170,7 @@ public class TrabajoQuoteController {
                 //return trabajo.Id;
             }
         }
-        Quote quo = [SELECT Opportunity.BMW_Compania__c, Id, Opportunity.BMW_TipoDeVehiculo__c  From Quote Where Id =: quoteId Limit 1];
+        Quote quo = [SELECT Opportunity.BMW_Compania__c, Opportunity.Empresa_Operadora__c, Id, Opportunity.BMW_TipoDeVehiculo__c  From Quote Where Id =: quoteId Limit 1];
         String label = (trabajo.tipoCargo == null || trabajo.tipoCargo == 'Cliente') ? '1' : trabajo.tipoCargo.trim();
         String apiValue = (label != null) ? TIPO_CARGO_LABEL_TO_VALUE.get(label) : null;
 		System.debug('trabajo '+trabajo);
@@ -193,10 +193,19 @@ public class TrabajoQuoteController {
         String empresa;
          String tipodecargo = label;
         String tipoDeVehiculo;
-        if(quo.Opportunity.BMW_Compania__c == 'Bavarian' || quo.Opportunity.BMW_Compania__c == 'RMBavarian'){
+        if(quo.Opportunity.Empresa_Operadora__c != null){
+            EmpresaContext empresaContext = EmpresaResolver.resolve(quo.Opportunity.Empresa_Operadora__c);
+            empresa = empresaContext.codigo.trim().toUpperCase();
+            Set<String> empresasSoportadas = new Set<String>{'RMBAVARIAN', 'RMOTOBAI', 'RMPEKING'};
+            if(!empresasSoportadas.contains(empresa)){
+                throw new EmpresaConfigurationException('La Empresa ' + empresa + ' no está soportada para trabajos de Quote.');
+            }
+        }else if(quo.Opportunity.BMW_Compania__c == 'Bavarian' || quo.Opportunity.BMW_Compania__c == 'RMBavarian'){
             empresa = 'RMBAVARIAN';
+        }else if(quo.Opportunity.BMW_Compania__c == 'Otobai'){
+            empresa = 'RMOTOBAI';
         }else{
-             empresa = 'RMOTOBAI';
+            throw new EmpresaConfigurationException('La empresa de la Opportunity no está configurada para trabajos de Quote.');
         }
         if(quo.Opportunity.BMW_TipoDeVehiculo__c == 'Autos'){
             tipoDeVehiculo = 'Automóvil';
