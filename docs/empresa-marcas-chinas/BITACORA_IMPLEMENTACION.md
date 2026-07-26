@@ -1773,7 +1773,7 @@ El Bloque 18 queda completado, validado y desplegado.
 Avance técnico estimado: 85% completado y 15% pendiente. Corresponde al
 alcance técnico y no representa horas oficiales, trabajadas ni facturables.
 
-## 30. Bloque 20 — Lead/Tráfico PEKING
+## 31. Bloque 20 — Lead/Tráfico PEKING
 
 Se retomó el Bloque 20 bajo el criterio de autonomía autorizado por Luis:
 “dale tú sin miedo a los ajustes, documenta y en todo caso si hay cosas que
@@ -1857,7 +1857,7 @@ Partial.
 Avance técnico estimado: 86% completado y 14% pendiente. Corresponde al alcance
 técnico y no representa horas oficiales, trabajadas ni facturables.
 
-## 31. Plantilla reutilizable de actualización
+## 32. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
