@@ -3,6 +3,7 @@
     <types>
         <members>ProductSearcherController</members>
         <members>ProductSearcherControllerTest</members>
+        <members>ProductSearcherControllerOtobaiTest</members>
         <name>ApexClass</name>
     </types>
     <types>

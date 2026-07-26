@@ -2,11 +2,15 @@
 
 ## Estado
 
-Bloque 18 **pausado**. Código productivo y de prueba listos y verificados
-localmente (13/13 pruebas pasan), pero **sin deploy, sin commit y sin push**
-porque la cobertura de `ProductSearcherController` (73.438%) queda por debajo
-del mínimo de 75% exigido por el org para cualquier deploy con
-`RunSpecifiedTests`, incluso en sandbox.
+Bloque 18 **pausado**, ahora en la rama `wip/pc/redmotors-block18-product-searcher-coverage-20260726`
+(commit `f1ce045`). Código productivo y de prueba listos y verificados
+localmente (14/14 pruebas pasan, incluyendo la clase huérfana corregida
+`ProductSearcherControllerOtobaiTest`), pero **sin deploy, sin commit
+adicional y sin push** porque la cobertura de `ProductSearcherController`
+(73.438%) queda por debajo del mínimo de 75% exigido por el org con
+`RunSpecifiedTests`, y la validación alternativa con `RunLocalTests`
+(3567 pruebas del org) fue cancelada manualmente por el usuario tras
+confirmar 287 fallas ajenas al Bloque 18, para liberar RedMotorsSandbox.
 
 ## Autorización
 
@@ -151,26 +155,95 @@ un valor de `Modelo_De_Inter_s__c` para el Record Type `Producto_Red_Motros`
 (Object Manager → Product2 → Modelo de Interés → editar valores por Record
 Type), o una decisión alternativa sobre el alcance de cobertura exigido.
 
-## Archivos modificados (sin commitear)
+## Hallazgo adicional: prueba huérfana `ProductSearcherControllerOtobaiTest`
 
-- `force-app/main/default/classes/ProductSearcherController.cls`
-- `force-app/main/default/classes/ProductSearcherControllerTest.cls`
-- `force-app/main/default/objects/Product2/recordTypes/Producto_Red_Motors.recordType-meta.xml` (nuevo)
-- `manifest/empresa-marcas-chinas-bloque18-product-searcher.xml` (nuevo, incluye `ApexClass` y `RecordType`)
-- `docs/empresa-marcas-chinas/IMPLEMENTACION_BLOQUE18_PRODUCT_SEARCHER.md` (este archivo)
-- `docs/empresa-marcas-chinas/BITACORA_IMPLEMENTACION.md`
+Al intentar validar con `RunLocalTests` (alternativa a `RunSpecifiedTests`,
+que exige 75% por clase individual) se descubrió que la suite completa del
+org no compilaba, por una causa **totalmente ajena a la cobertura**:
+`ProductSearcherControllerOtobaiTest` — una clase de prueba que existe solo
+en RedMotorsSandbox, nunca versionada en este repositorio, creada el
+2026-06-17 y nunca modificada desde entonces — llama a
+`ProductSearcherController.getProducts()` con **16 argumentos posicionales**,
+mientras el método vigente tiene **14 parámetros**. Ese único error de firma
+provocaba que otras 24 clases no relacionadas fallaran por cascada de
+dependencia de compilación de Apex (Deploy ID `0AfAK000000vsRt0AI`: 25
+pruebas, 25 fallas, 0 completadas).
+
+Con autorización explícita y de alcance estrictamente limitado se recuperó
+la clase, se realineó su única llamada de 16 a 14 argumentos (eliminando dos
+parámetros `null` obsoletos, verificado por coincidencia exacta de valores
+con los datos del propio fixture) y se le asignó a la `Opportunity` del
+fixture el `RecordTypeId` de `Kawasaki` (obtenido dinámicamente vía
+`Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName()`, sin
+IDs reales), porque la resolución de empresa vigente depende exclusivamente
+del `RecordType` real de la Opportunity/Quote y el fixture original no lo
+asignaba. Un segundo ajuste, también autorizado, reutilizó el valor ya
+existente `'MT-06'` (usado legítimamente como `vin`) también como `model`,
+documentado en el propio archivo: `model` no participa en ningún punto de la
+rama `mano obra`, solo satisface una validación de entrada preexistente
+("El modelo es requerido.") no relacionada con este bloque. No se modificó
+`ProductSearcherController.cls` en ningún momento de esta corrección.
+
+Con la clase corregida y agregada al manifest, el dry-run enfocado
+(`ProductSearcherControllerTest` + `ProductSearcherControllerOtobaiTest`)
+terminó en **14/14 pruebas aprobadas, 0 fallas**, pero la cobertura de
+`ProductSearcherController` se mantuvo exactamente igual: 73.438%
+(141/192) — la prueba Otobai ejercita la misma rama `mano obra` ya cubierta.
+
+## Validación con `RunLocalTests` (Deploy ID `0AfAK000000vsYL0AY`)
+
+Con la clase huérfana ya corregida, la suite completa del org sí compiló.
+Resultado antes de la cancelación manual del usuario (para liberar
+RedMotorsSandbox, tras confirmar que las fallas eran ajenas al bloque):
+
+| Dato | Valor |
+|---|---|
+| Componentes | 5/5 validados sin error |
+| Pruebas totales del org | 3567 |
+| Pruebas completadas | 1491 |
+| Pruebas con error | 287 (confirmadas ajenas al Bloque 18 por el usuario) |
+| Estado | `Canceled`, `success: false` |
+| Cobertura global | No calculable (corrida cancelada antes de completarse) |
+
+Las pruebas del Bloque 18 (`ProductSearcherControllerTest` y
+`ProductSearcherControllerOtobaiTest`) aparecen en la sección `successes`
+del resultado — es decir, pasaron todas antes de la cancelación. `RunLocalTests`
+con la suite completa de este org (3567 pruebas) excede ampliamente el
+tiempo práctico de una sesión de validación puntual.
+
+## Archivos modificados (sin commitear más allá del commit WIP `f1ce045`)
+
+- `force-app/main/default/classes/ProductSearcherController.cls` *(incluido en `f1ce045`)*
+- `force-app/main/default/classes/ProductSearcherControllerTest.cls` *(incluido en `f1ce045`)*
+- `force-app/main/default/objects/Product2/recordTypes/Producto_Red_Motors.recordType-meta.xml` *(incluido en `f1ce045`)*
+- `manifest/empresa-marcas-chinas-bloque18-product-searcher.xml` *(incluido en `f1ce045`; ampliado después con `ProductSearcherControllerOtobaiTest`, aún sin commitear)*
+- `force-app/main/default/classes/ProductSearcherControllerOtobaiTest.cls` (nuevo, corregido, aún sin commitear)
+- `force-app/main/default/classes/ProductSearcherControllerOtobaiTest.cls-meta.xml` (nuevo, aún sin commitear)
+- `docs/empresa-marcas-chinas/IMPLEMENTACION_BLOQUE18_PRODUCT_SEARCHER.md` (este archivo, aún sin commitear)
+- `docs/empresa-marcas-chinas/BITACORA_IMPLEMENTACION.md` (aún sin commitear)
 
 ## Validación y despliegue
 
-No se ejecutó ningún deploy real. Los dry-runs (`--dry-run --test-level RunSpecifiedTests --tests ProductSearcherControllerTest`) alcanzaron 0 fallas de prueba de forma estable, pero el resultado general del deploy permanece en `"success": false` por la cobertura de clase por debajo del 75%.
+No se ejecutó ningún deploy real. Dry-runs realizados: `RunSpecifiedTests`
+con `ProductSearcherControllerTest` (0 fallas de prueba, `success: false`
+por cobertura < 75%); `RunLocalTests` inicial (`0AfAK000000vsRt0AI`,
+bloqueado por la clase huérfana); dry-run enfocado tras la corrección de la
+huérfana (14/14 pruebas, cobertura sin cambio); `RunLocalTests` final
+(`0AfAK000000vsYL0AY`, componentes y pruebas del Bloque 18 exitosas,
+cancelado por fallas ajenas antes de completar la suite).
 
 ## Riesgos
 
-- El código productivo (mapeo de empresa) está listo y verificado con 13
-  pruebas pasando, pero no puede desplegarse hasta resolver la cobertura.
+- El código productivo (mapeo de empresa) está listo y verificado con 14
+  pruebas pasando (incluida la clase huérfana ya corregida), pero no puede
+  desplegarse hasta resolver la cobertura de clase individual o encontrar
+  una ventana viable para completar `RunLocalTests` sin cancelación.
 - La configuración de picklist por Record Type de `Modelo_De_Inter_s__c` es
   un hallazgo que probablemente también afecta a otros flujos de la rama
   `vehiculo` fuera de este bloque, no solo a la cobertura de pruebas.
+- El org tiene una deuda de pruebas preexistente y ajena a este bloque
+  (287 fallas observadas en una corrida parcial de `RunLocalTests`) que
+  impide usar esa ruta como validación práctica sin coordinación adicional.
 
 ## Avance técnico estimado
 
