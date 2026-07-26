@@ -322,4 +322,108 @@ public class ProductSearcherControllerTest {
             Map<String,Object> responseMap = ProductSearcherController.getProductByQuoteId(quoteList[0].Id);
         }
     }
+
+    // ==========================================================================================
+    // Laboratorio de cobertura (Bloque 18, analysis/pc/redmotors-block18-coverage-lab-20260726)
+    // ==========================================================================================
+    // La rama 'vehiculo' de getProducts() nunca completa su recorrido con los fixtures existentes:
+    // getPricesGroupByModelFantasia(brand,year) no encuentra ningun Pricebook2 cuyo Name contenga
+    // a la vez la marca y el anio (solo existe el Pricebook estandar en este TestSetup), por lo que
+    // getProducts() lanza la AuraHandledException de "No se encontraron precios de fantasia..."
+    // antes de construir el resto de la busqueda. Este fixture agrega, unicamente para esta prueba:
+    // - dos Producto2 "modelo de interes" (Marca__c/Modelo_De_Inter_s__c) con su Pricebook2/
+    //   PricebookEntry de fantasia (mismo modelo, distinto precio, para ejercitar tambien la
+    //   comparacion de "precio mas alto" de getPricesGroupByModelFantasia);
+    // - la Configuracion_de_ventas__c y el Pricebook2/PricebookEntry "Softland" que
+    //   RM_VN_Service.getSoftlandPriceBookId/gePBEBavarian necesitan para resolver el vehiculo
+    //   real ya insertado por TestDataFactory.createQuoteWithItems() en el @TestSetup de esta clase;
+    // - el Pricebook2 "<marca> - <anio>" (nombre exacto que getProducts() arma para el precio final).
+    // No se modifica metadata, Record Types, picklists ni codigo productivo: todo se construye
+    // reutilizando helpers ya existentes de TestDataFactory y el vehiculo/Bodega ya creados en el
+    // @TestSetup. Cobertura teorica: no confirmada por Tooling API, pendiente de dry-run real.
+    private static Product2 getSetupVehicle() {
+        return [
+            SELECT Id, Name, ProductCode, modelo__c, marcaVehiculo__c, Anno__c, Color__c, Color_Externo__c, vin__c
+            FROM Product2
+            WHERE Name = 'BM166 - X1 sDrive18d'
+            LIMIT 1
+        ];
+    }
+
+    @IsTest
+    static void testGetProducts_Vehiculo_BMW_FullSearchReturnsExpectedVehicle(){
+        Product2 vehiculo = getSetupVehicle();
+        String brand = vehiculo.marcaVehiculo__c;
+        String year = vehiculo.Anno__c;
+        String modelo = vehiculo.modelo__c;
+
+        // Dos productos de "modelo de interes" con el MISMO modelo, para que
+        // getPricesGroupByModelFantasia() agrupe por modelKey y compare precios.
+        Product2 fantasiaA = TestDataFactory.createProduct(
+            'CoverageLab Fantasia A ' + modelo, modelo, null, null, brand, null, modelo, year, 'Rojo', 'Negro', 'Vehiculo', false, true
+        );
+        Product2 fantasiaB = TestDataFactory.createProduct(
+            'CoverageLab Fantasia B ' + modelo, modelo, null, null, brand, null, modelo, year, 'Rojo', 'Negro', 'Vehiculo', false, true
+        );
+        Pricebook2 fantasiaPB = TestDataFactory.createPriceBook(brand + '-' + year + ' CoverageLab Fantasia', true);
+        TestDataFactory.createPriceBookEntry(fantasiaPB, fantasiaA, 15000, true);
+        TestDataFactory.createPriceBookEntry(fantasiaPB, fantasiaB, 9000, true);
+
+        // Pricebook "Softland" + Configuracion_de_ventas__c que resuelven el vehiculo real
+        // via RM_VN_Service.getSoftlandPriceBookId/gePBEBavarian.
+        Pricebook2 softlandPB = TestDataFactory.createPriceBook('Softland ' + brand + ' CoverageLab', true);
+        softlandPB.CurrencyIsoCode = 'USD';
+        update softlandPB;
+        TestDataFactory.createConfiVentas('ConfVentas CoverageLab ' + brand, brand + '-' + year, brand, softlandPB, true);
+        TestDataFactory.createPriceBookEntry(softlandPB, vehiculo, 42000, true);
+
+        // Pricebook "<marca> - <anio>" (nombre exacto que getProducts() usa para el precio final).
+        Pricebook2 finalPricePB = TestDataFactory.createPriceBook(brand + ' - ' + year, true);
+        TestDataFactory.createPriceBookEntry(finalPricePB, vehiculo, 45000, true);
+
+        Test.startTest();
+        Map<String,Object> responseMap = ProductSearcherController.getProducts(
+            'vehiculo',
+            vehiculo.Name.left(5),
+            vehiculo.ProductCode.left(5),
+            null,
+            year,
+            vehiculo.vin__c,
+            brand,
+            null,
+            vehiculo.Color__c,
+            vehiculo.Color_Externo__c,
+            modelo,
+            null,
+            null,
+            1
+        );
+        Test.stopTest();
+
+        System.assert(!responseMap.containsKey('message'), 'No debe haber error en la busqueda de vehiculo completa: ' + responseMap.get('message'));
+        System.assertEquals(1, responseMap.get('totalRecords'), 'Debe encontrar exactamente el vehiculo de prueba.');
+
+        System.assert(responseMap.containsKey('products'), 'Debe incluir products.');
+        List<ProductoXBodega__c> products = (List<ProductoXBodega__c>) responseMap.get('products');
+        System.assertEquals(1, products.size(), 'Debe devolver un solo registro ProductoXBodega.');
+        System.assertEquals(vehiculo.Id, products[0].Producto__c, 'Debe ser el vehiculo del TestSetup.');
+
+        System.assert(responseMap.containsKey('preciosFantasia'), 'Debe incluir preciosFantasia.');
+        List<PricebookEntry> preciosFantasia = (List<PricebookEntry>) responseMap.get('preciosFantasia');
+        System.assertEquals(1, preciosFantasia.size(), 'Debe agrupar un solo precio de fantasia por modelo.');
+        System.assertEquals(15000, preciosFantasia[0].UnitPrice, 'Debe conservar el precio de fantasia mas alto del modelo.');
+
+        System.assert(responseMap.containsKey('preciosBavarian'), 'Debe incluir preciosBavarian.');
+        List<PricebookEntry> preciosBavarian = (List<PricebookEntry>) responseMap.get('preciosBavarian');
+        System.assertEquals(1, preciosBavarian.size(), 'Debe traer un precio Softland para el vehiculo.');
+        System.assertEquals(vehiculo.Id, preciosBavarian[0].Product2Id, 'El precio Softland debe pertenecer al vehiculo.');
+
+        System.assert(responseMap.containsKey('prices'), 'Debe incluir prices.');
+        Object pricesObj = responseMap.get('prices');
+        System.assert(pricesObj instanceof List<PricebookEntry>, 'prices debe ser una lista de PricebookEntry.');
+        List<PricebookEntry> prices = (List<PricebookEntry>) pricesObj;
+        System.assertEquals(1, prices.size(), 'Debe existir un precio final para el vehiculo.');
+        System.assertEquals(vehiculo.Id, prices[0].Product2Id, 'El precio final debe pertenecer al vehiculo buscado.');
+        System.assertEquals(45000, prices[0].UnitPrice, 'Debe ser el precio del Pricebook "<marca> - <anio>".');
+    }
 }
