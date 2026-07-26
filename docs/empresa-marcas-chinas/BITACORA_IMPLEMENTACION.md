@@ -1446,9 +1446,9 @@ Dry-run `0AfAK000000vtML0AY`:
 - Estado: Succeeded.
 - La org no fue modificada.
 
-### Regresión bloqueada
+### Regresión externa corregida
 
-Regresiones ejecutadas:
+Regresiones inicialmente bloqueadas:
 
 - `0AfAK000000vtPZ0AY`: 47/48 pruebas, una falla.
 - `0AfAK000000vtRB0AY`: 47/48 pruebas, misma falla.
@@ -1459,11 +1459,49 @@ Falla única:
 - Método: `test_createOpportunity_conTrafico`.
 - Error: `System.AssertException: Assertion Failed: No debió lanzar excepción: Script-thrown exception`.
 
-La falla corresponde a una prueba externa al Bloque 19. No se ejecutó deploy real porque la regresión no quedó aprobada.
+La falla correspondía a una prueba externa al Bloque 19. El diagnóstico
+confirmó que la conversión de tráfico ejecutaba la validación activa
+`Bloquear_conversion_estandar`, que exige `Lead.Convertido_custom__c = true`
+para representar el flujo del botón personalizado de conversión.
 
-Estado: Bloque 19 implementado y validado de forma enfocada, pendiente de resolver la regresión externa antes del deploy real.
+Se corrigió únicamente el fixture de
+`RM_VN_CrearOportunidad_Ctrl_Test.test_createOpportunity_conTrafico`,
+agregando `Convertido_custom__c = true` al Lead de prueba antes del insert.
+No se modificaron `RM_VN_CrearOportunidad_Ctrl`,
+`RM_VU_CrearOportunidad_Ctrl`, `RM_VN_CrearOppModeloInteres_Ctrl`, la regla
+de validación, Flows, permisos ni datos operativos.
 
-Avance técnico estimado al desplegar el Bloque 19: 86% completado y 14% pendiente. Corresponde al alcance técnico y no representa horas oficiales, trabajadas ni facturables.
+La clase de prueba externa fue desplegada de forma aislada en Partial:
+
+- Deploy test-only: `0AfAK000000vt1O0AQ`.
+- Ejecución del método corregido: Test Run `707AK00000GxB33`, 1/1 aprobado.
+- Ejecución de la clase completa: Test Run `707AK00000Gx9BH`, 29/29 aprobadas.
+
+### Cierre técnico del Bloque 19
+
+| Etapa | ID | Componentes | Pruebas | Fallas | Resultado |
+|---|---|---:|---:|---:|---|
+| Dry-run enfocado | `0AfAK000000vtML0AY` | 2/2 | 11/11 | 0 | Exitoso |
+| Dry-run de regresión | `0AfAK000000vtkX0AQ` | 2/2 | 48/48 | 0 | Exitoso |
+| Deploy real | `0AfAK000000vtnl0AA` | 2/2 | 48/48 | 0 | Exitoso |
+| Verificación post-deploy | Test Run `707AK00000GwjmT` | No aplica | 48/48 | 0 | Exitoso |
+
+El deploy real fue ejecutado únicamente contra RedMotorsSandbox / Partial.
+Quedaron desplegados:
+
+- `RM_VN_CrearOppModeloInteres_Ctrl`;
+- `RM_VN_CrearOppModeloInteres_Ctrl_Test`.
+
+La cobertura comprobada para `RM_VN_CrearOppModeloInteres_Ctrl` fue 136/151
+líneas, equivalente a 90.07%.
+
+Estado: Bloque 19 completado, validado y desplegado en RedMotorsSandbox /
+Partial. La rama del Bloque 19 permanece separada de la rama principal del
+sprint hasta que se autorice su integración.
+
+Avance técnico estimado después del deploy del Bloque 19: 86% completado y
+14% pendiente. Corresponde al alcance técnico y no representa horas oficiales,
+trabajadas ni facturables.
 
 ## 30. Plantilla reutilizable de actualización
 

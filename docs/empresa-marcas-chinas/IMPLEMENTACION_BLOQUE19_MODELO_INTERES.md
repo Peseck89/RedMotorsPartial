@@ -185,7 +185,7 @@ Además, se retiraron helpers privados locales de tráfico que no tenían llamad
 - Estado: Succeeded.
 - La org no fue modificada.
 
-### Regresión bloqueada
+### Regresión externa corregida
 
 Se ejecutó la regresión autorizada con:
 
@@ -193,20 +193,64 @@ Se ejecutó la regresión autorizada con:
 - `RM_VN_CrearOportunidad_Ctrl_Test`;
 - `EmpresaResolverTest`.
 
-Resultados:
+Regresiones inicialmente bloqueadas:
 
 | Deploy ID | Resultado | Falla |
 |---|---|---|
 | `0AfAK000000vtPZ0AY` | 47/48 pruebas | `RM_VN_CrearOportunidad_Ctrl_Test.test_createOpportunity_conTrafico` falló con `Script-thrown exception`. |
 | `0AfAK000000vtRB0AY` | 47/48 pruebas | Misma falla en `RM_VN_CrearOportunidad_Ctrl_Test.test_createOpportunity_conTrafico`. |
 
-La falla pertenece a una prueba de `RM_VN_CrearOportunidad_Ctrl_Test`, fuera de los archivos del Bloque 19. No se ejecutó deploy real porque la regresión no quedó aprobada.
+El diagnóstico confirmó que la falla pertenecía a una prueba externa al Bloque 19.
+La ruta de conversión de tráfico ejecutaba la validación activa
+`Bloquear_conversion_estandar`, que exige `Lead.Convertido_custom__c = true`
+para simular correctamente el flujo del botón personalizado de conversión.
+
+Se corrigió únicamente el fixture de
+`RM_VN_CrearOportunidad_Ctrl_Test.test_createOpportunity_conTrafico`,
+agregando `Convertido_custom__c = true` al Lead de prueba antes del insert.
+No se modificaron `RM_VN_CrearOportunidad_Ctrl`,
+`RM_VU_CrearOportunidad_Ctrl`, `RM_VN_CrearOppModeloInteres_Ctrl`, la regla
+de validación, Flows, permisos ni datos operativos.
+
+La clase de prueba externa fue desplegada de forma aislada en Partial:
+
+- Deploy test-only: `0AfAK000000vt1O0AQ`.
+- Ejecución del método corregido: Test Run `707AK00000GxB33`, 1/1 aprobado.
+- Ejecución de la clase completa: Test Run `707AK00000Gx9BH`, 29/29 aprobadas.
+
+### Regresión aprobada y deploy real
+
+Después de corregir la prueba externa, la regresión del Bloque 19 quedó aprobada:
+
+| Etapa | ID | Componentes | Pruebas | Fallas | Resultado |
+|---|---|---:|---:|---:|---|
+| Dry-run de regresión | `0AfAK000000vtkX0AQ` | 2/2 | 48/48 | 0 | Exitoso |
+| Deploy real | `0AfAK000000vtnl0AA` | 2/2 | 48/48 | 0 | Exitoso |
+| Verificación post-deploy | Test Run `707AK00000GwjmT` | No aplica | 48/48 | 0 | Exitoso |
+
+El deploy real fue ejecutado únicamente contra `RedMotorsSandbox` / Partial.
+Quedaron desplegados:
+
+- `RM_VN_CrearOppModeloInteres_Ctrl`;
+- `RM_VN_CrearOppModeloInteres_Ctrl_Test`.
+
+La cobertura comprobada para `RM_VN_CrearOppModeloInteres_Ctrl` fue
+136/151 líneas, equivalente a 90.07%. Las líneas no cubiertas permanecen en
+ramas de validación o manejo defensivo ya cubiertas funcionalmente por los
+escenarios autorizados.
 
 ## Estado final del bloque
 
-Bloque 19 queda implementado localmente y con dry-run enfocado aprobado, pero bloqueado para deploy real por regresión externa fallida.
+Bloque 19 queda completado, validado y desplegado en RedMotorsSandbox /
+Partial.
 
-Se deja commit WIP y rama publicada para preservar el avance sin integrar todavía a la rama principal del sprint.
+La creación de Opportunity desde modelo de interés asigna
+`Opportunity.Empresa_Operadora__c` mediante el mapeo explícito de marca a
+empresa y resolución por `EmpresaResolver`. Se validaron BMW, MINI, Polaris,
+Kawasaki, Omoda y Jaecoo, además de marca desconocida y empresa inactiva sin
+registros parciales.
+
+No se integró todavía la rama del Bloque 19 a la rama principal del sprint.
 
 ## Manifest
 
@@ -219,9 +263,9 @@ Incluye únicamente:
 
 ## Pendientes
 
-- Resolver o excluir formalmente la falla externa de `RM_VN_CrearOportunidad_Ctrl_Test.test_createOpportunity_conTrafico` antes de deploy real.
-- Ejecutar nuevamente la regresión autorizada.
-- Ejecutar deploy real solo después de regresión aprobada.
-- Integrar la rama del Bloque 19 a la rama principal del sprint cuando el cierre técnico esté completo.
+- Integrar la rama del Bloque 19 a la rama principal del sprint cuando se autorice.
+- Mantener separado el avance del Bloque 18 y de los bloques posteriores.
 
-Avance técnico estimado al completar el deploy del Bloque 19: 86% completado y 14% pendiente. Corresponde al alcance técnico y no representa horas oficiales, trabajadas ni facturables.
+Avance técnico estimado después del deploy del Bloque 19: 86% completado y
+14% pendiente. Corresponde al alcance técnico y no representa horas oficiales,
+trabajadas ni facturables.
