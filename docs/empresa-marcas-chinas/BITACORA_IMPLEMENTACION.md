@@ -1355,7 +1355,57 @@ queda completado, validado y desplegado.
 Avance técnico estimado: 83% completado y 17% pendiente. Corresponde al
 alcance técnico y no representa horas oficiales, trabajadas ni facturables.
 
-## 28. Plantilla reutilizable de actualización
+## 28. Bloque 17 — Metadata base de PEKING, Omoda y Jaecoo
+
+Luis autorizó agregar `RMPEKING` a `Product2.Empresa__c` y crear los Record
+Types de Opportunity `Omoda` y `Jaecoo`. La implementación local preparó la
+metadata base sin modificar Apex, Flows, perfiles, layouts ni Lightning Record
+Pages.
+
+`Product2.Empresa__c` queda con `RMPEKING` como valor activo y no
+predeterminado, conservando `RMBAVARIAN`, `RMOTOBAI`, `restricted=true`,
+`sorted=false` y sin valor predeterminado.
+
+`Opportunity.Omoda` y `Opportunity.Jaecoo` fueron creados usando
+`Opportunity.BMW` como plantilla técnica, porque BMW y MINI corresponden a
+automóviles en la metadata recuperada. Ambos Record Types quedan activos, con
+Sales Process `Autos`, compact layout `Vehiculos_Nuevos` y los mismos
+`picklistValues` de BMW.
+
+`Vehiculos_Nuevos_PS` conserva la visibilidad existente para `Opportunity.BMW`
+y agrega visibilidad para `Opportunity.Jaecoo` y `Opportunity.Omoda`. No se
+modificaron otros permisos.
+
+El primer dry-run `0AfAK000000vrE50AI` validó 3/4 componentes y falló porque
+`Vehiculos_Nuevos_PS` contenía `viewAllFields`, elemento no compatible con
+Metadata API 61.0. El segundo dry-run `0AfAK000000vrHJ0AY` volvió a validar
+3/4 componentes y falló porque el parámetro `--api-version 67.0` no sustituyó
+la versión 61.0 declarada dentro del manifest.
+
+El ajuste aplicado fue actualizar
+`manifest/empresa-marcas-chinas-bloque17-product2-recordtypes.xml` de 61.0 a
+67.0. No se modificó ni eliminó `viewAllFields` del Permission Set.
+
+El dry-run final `0AfAK000000vquk0AA` terminó sin fallas, con 4/4
+componentes y `NoTestRun`. El deploy real `0AfAK000000vrNl0AI` terminó sin
+fallas en RedMotorsSandbox / Partial, con 4/4 componentes.
+
+La validación post-deploy confirmó que `Opportunity.Jaecoo` y
+`Opportunity.Omoda` existen y están activos; ambos usan Sales Process `Autos`
+y compact layout `Vehiculos_Nuevos`. `Product2.Empresa__c` quedó como
+picklist restringido con los valores activos `RMBAVARIAN`, `RMOTOBAI` y
+`RMPEKING`, todos con `default=false`.
+
+No se modificaron Apex, Flows, perfiles, layouts ni FlexiPages. El manifest
+quedó en Metadata API 67.0. `ProductSearcherController` queda separado para
+un Bloque 18 posterior.
+
+El Bloque 17 queda completado, validado y desplegado.
+
+Avance técnico estimado: 84% completado y 16% pendiente. Corresponde al
+alcance técnico y no representa horas oficiales, trabajadas ni facturables.
+
+## 29. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
