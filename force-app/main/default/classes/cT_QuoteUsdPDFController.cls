@@ -74,13 +74,9 @@ public with sharing class cT_QuoteUsdPDFController {
                 listaEnUsd = 'Bavarian Dólar';   
             }else if (listaEnCrc == 'Otobai Local') {
                 listaEnUsd = 'Otobai Dólares';
-            }else {
-                if(Test.isRunningTest()){
-                    // quoteLine = [select id,Quantity,Description,Discount,UnitPrice,TotalPrice,BMW_Producto_Custom__c,
-            	    // BMW_TipoDeArticulo__c,Product2.Id, Product2.Name,Product2.Codigo_de_Producto__c,BMW_Dispinible__c from QuoteLineItem WHERE QuoteId = :quoteId ];
-            	    listaEnUsd = listaEnCrc;
-                }                
-            } 
+            }else if (listaEnCrc == 'PEKING Local') {
+                listaEnUsd = 'PEKING Dólares';
+            }
         
         if (cot.CurrencyIsoCode == 'USD') {
             
@@ -114,11 +110,8 @@ public with sharing class cT_QuoteUsdPDFController {
                 for (QuoteLineItem idProducto : lstQuotesItemsCRC) {
                     listaDeProductos.add(idProducto.Product2.Id);
                 }
-                if(Test.isRunningTest()){ 
-                }else{
-                	listaPrecioDolares = [SELECT Id FROM Pricebook2 WHERE Name =:listaEnUsd ];
-                    System.debug(listaPrecioDolares.Id);
-                }
+                listaPrecioDolares = [SELECT Id FROM Pricebook2 WHERE Name =:listaEnUsd ];
+                System.debug(listaPrecioDolares.Id);
                 listaConProductos = [SELECT Id,Name,Product2.Id,Pricebook2Id,Product2Id,CurrencyIsoCode,UnitPrice FROM PriceBookEntry WHERE Pricebook2Id =:listaPrecioDolares.Id  AND Product2Id IN :listaDeProductos];
                 listaConProductosOriginal = [SELECT Id,Name,Pricebook2Id,Product2Id,CurrencyIsoCode,UnitPrice FROM PriceBookEntry WHERE Pricebook2Id =:listaPrecioOrig  AND Product2Id IN :listaDeProductos];
                                     

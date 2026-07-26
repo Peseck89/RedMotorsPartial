@@ -912,7 +912,58 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje corresponde al alcance técnico y no representa horas
 oficiales, trabajadas, registradas ni facturables.
 
-## 22. Plantilla reutilizable de actualización
+## 22. Bloque 11 — PEKING en PDF de cotización USD
+
+El Bloque 10 de visibilidad de Pricebooks permanece pausado por indicación de
+Diego hasta revisar el mapeo de sucursales. Luis autorizó continuar con
+cambios claros de bajo riesgo y documentar cada acción.
+
+Se agregó a `cT_QuoteUsdPDFController.getData(String recordId)` la asociación
+explícita `PEKING Local` → `PEKING Dólares`, conservando Bavarian Local →
+Bavarian Dólar y Otobai Local → Otobai Dólares. No se agregó fallback y un
+nombre desconocido continúa sin seleccionar un Pricebook autorizado.
+
+Se retiraron únicamente los dos guards `Test.isRunningTest()` que impedían
+recorrer en pruebas la misma resolución de Pricebook que se utiliza en
+producción. Como esos guards siempre evaluaban `false` en producción, no se
+alteró su comportamiento.
+
+La prueba directa quedó con cuatro escenarios autocontenidos: Bavarian,
+Otobai, PEKING y Pricebook desconocido. Las conversiones validan el nombre
+destino, el mismo producto, el precio USD, la cantidad y el total. No se
+utilizan datos reales, IDs fijos ni `SeeAllData`.
+
+No se modificaron cálculos, tasas, montos, productos, otras ramas del PDF,
+metadata ni integraciones.
+
+### Cierre técnico del Bloque 11
+
+| Validación | Deploy ID | Componentes | Pruebas | Fallas |
+|---|---|---:|---:|---:|
+| Dry-run | `0AfAK000000vpdh0AA` | 2/2 | 4/4 | 0 |
+| Deploy real | `0AfAK000000vpfJ0AQ` | 2/2 | 4/4 | 0 |
+
+El dry-run confirmó 97/112 líneas cubiertas en
+`cT_QuoteUsdPDFController`, equivalentes a 86.61%.
+
+El deploy real terminó correctamente en RedMotorsSandbox / Partial. Se
+validaron cuatro escenarios funcionales y quedaron desplegados
+`cT_QuoteUsdPDFController` y `cT_QuoteUsdPDFController_test`.
+
+El Bloque 11 queda completado, validado y desplegado. Se conserva el
+comportamiento de Bavarian y Otobai, se agregó PEKING Local → PEKING Dólares,
+no se agregó fallback y no se modificaron cálculos, tasas, montos, productos
+ni el PDF.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 75%;
+- pendiente: 25%.
+
+Este porcentaje corresponde al alcance técnico y no representa horas
+oficiales, trabajadas, registradas ni facturables.
+
+## 23. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:

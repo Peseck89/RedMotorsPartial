@@ -1,213 +1,260 @@
-@istest
+@IsTest
 public with sharing class cT_QuoteUsdPDFController_test {
-    static Integer iTotReg = 1;
-    static Sucursal__c sucursal;
-    static Campaign campanna;       
-    
-    static {
-
-        TestDataFactory.datosGenerales();
-        
-        TestDataFactory.crearCuentas(iTotReg);
-        
-        //Crear campaña.
-        campanna = new Campaign
-        (
-            Name='Campaign'
+    @IsTest
+    static void usesBavarianDolarForBavarianLocal() {
+        assertPricebookConversion(
+            'Bavarian Local',
+            'Bavarian Dólar',
+            101,
+            201,
+            'CTQ-USD-BAV'
         );
-        
-        insert campanna;   
-         TestDataFactory.crearOportunidades(iTotReg,'Oportunidad Calificada');
-        TestDataFactory.createProducts(iTotReg);
-        TestDataFactory.createPriceBookEntries(0,Test.getStandardPricebookId());
-        
     }
-	/*
-    static testMethod void RTAsignadoDefecto() {
-         
-         List<Product2> product = [Select Id From Product2];
-        
-        Account cuenta = new Account();
-        cuenta.FirstName = 'name';
-        cuenta.LastName = 'Lastname';
-        insert cuenta;
-         Asset coche = new Asset();
-        coche.Name = 'Testing';
-        coche.AccountId = cuenta.Id;
-        insert coche;
-		 Opportunity op = new Opportunity(
-                AccountId = cuenta.Id,
-                CloseDate = System.today().AddMonths(3),
-                StageName = 'Oportunidad Calificada',
-                //MonedaIngreso__c = 'Colones',
-                IngresoAproximado__c = 1500,
-	            BMW_PlacaDeVehiculoOElVIN__c = coche.id,
-                RT_Lead__c = 'BMW'
+
+    @IsTest
+    static void usesOtobaiDolaresForOtobaiLocal() {
+        assertPricebookConversion(
+            'Otobai Local',
+            'Otobai Dólares',
+            102,
+            202,
+            'CTQ-USD-OTO'
+        );
+    }
+
+    @IsTest
+    static void usesPekingDolaresForPekingLocal() {
+        assertPricebookConversion(
+            'PEKING Local',
+            'PEKING Dólares',
+            103,
+            203,
+            'CTQ-USD-PEK'
+        );
+    }
+
+    @IsTest
+    static void unknownPricebookDoesNotSelectAuthorizedCompany() {
+        Quote quoteRecord = createQuoteWithLine(
+            'Lista desconocida',
+            null,
+            104,
+            null,
+            'CTQ-USD-UNKNOWN'
+        );
+
+        Test.startTest();
+        cT_QuoteUsdPDFController controller =
+            new cT_QuoteUsdPDFController(new ApexPages.StandardController(quoteRecord));
+        Test.stopTest();
+
+        System.assertNotEquals(null, controller.quoteLine);
+        System.assertEquals(
+            0,
+            controller.quoteLine.size(),
+            'Un Pricebook desconocido no debe seleccionar listas Bavarian, Otobai o PEKING.'
+        );
+        System.assertEquals(
+            0,
+            [
+                SELECT COUNT()
+                FROM Pricebook2
+                WHERE Name IN (
+                    'Bavarian Dólar',
+                    'Otobai Dólares',
+                    'PEKING Dólares'
+                )
+            ],
+            'El escenario desconocido no debe depender de Pricebooks autorizados.'
+        );
+    }
+
+    private static void assertPricebookConversion(
+        String sourcePricebookName,
+        String targetPricebookName,
+        Decimal sourcePrice,
+        Decimal targetPrice,
+        String productCode
+    ) {
+        Quote quoteRecord = createQuoteWithLine(
+            sourcePricebookName,
+            targetPricebookName,
+            sourcePrice,
+            targetPrice,
+            productCode
+        );
+
+        Product2 product = [
+            SELECT Id
+            FROM Product2
+            WHERE Codigo_de_Producto__c = :productCode
+            LIMIT 1
+        ];
+        PricebookEntry targetEntry = [
+            SELECT Pricebook2.Name, Product2Id, UnitPrice
+            FROM PricebookEntry
+            WHERE Pricebook2.Name = :targetPricebookName
+              AND Product2Id = :product.Id
+              AND CurrencyIsoCode = 'USD'
+            LIMIT 1
+        ];
+
+        Test.startTest();
+        cT_QuoteUsdPDFController controller =
+            new cT_QuoteUsdPDFController(new ApexPages.StandardController(quoteRecord));
+        Test.stopTest();
+
+        System.assertEquals(targetPricebookName, targetEntry.Pricebook2.Name);
+        System.assertEquals(product.Id, targetEntry.Product2Id);
+        System.assertEquals(1, controller.quoteLine.size());
+        System.assertEquals(1, controller.quoteLine[0].Quantity);
+        System.assertEquals(
+            Double.valueOf(String.valueOf(targetPrice)),
+            controller.quoteLine[0].UnitPrice,
+            'Debe usar el precio USD del mismo producto en el Pricebook destino.'
+        );
+        System.assertEquals(
+            Double.valueOf(String.valueOf(targetPrice)),
+            controller.quoteLine[0].TotalPrice,
+            'Debe conservar el cálculo existente de cantidad por precio destino.'
+        );
+    }
+
+    private static Quote createQuoteWithLine(
+        String sourcePricebookName,
+        String targetPricebookName,
+        Decimal sourcePrice,
+        Decimal targetPrice,
+        String productCode
+    ) {
+        Account accountRecord = new Account(
+            FirstName = 'PDF',
+            LastName = productCode
+        );
+        insert accountRecord;
+
+        Asset assetRecord = new Asset(
+            Name = 'Asset ' + productCode,
+            AccountId = accountRecord.Id
+        );
+        insert assetRecord;
+
+        Opportunity opportunityRecord = new Opportunity(
+            AccountId = accountRecord.Id,
+            CloseDate = System.today().addMonths(1),
+            StageName = 'Oportunidad Calificada',
+            CurrencyIsoCode = 'CRC',
+            IngresoAproximado__c = 1500,
+            BMW_PlacaDeVehiculoOElVIN__c = assetRecord.Id,
+            RT_Lead__c = 'BMW'
+        );
+        insert opportunityRecord;
+
+        WorkOrder workOrderRecord = new WorkOrder(
+            AccountId = accountRecord.Id,
+            AssetId = assetRecord.Id,
+            Kilometros__c = 120
+        );
+        insert workOrderRecord;
+
+        Pricebook2 sourcePricebook = new Pricebook2(
+            Name = sourcePricebookName,
+            IsActive = true
+        );
+        insert sourcePricebook;
+
+        Pricebook2 targetPricebook;
+        if (targetPricebookName != null) {
+            targetPricebook = new Pricebook2(
+                Name = targetPricebookName,
+                IsActive = true
             );
-        insert op;
-        
-       	List<Opportunity> opps = [Select Id From Opportunity WHERE BMW_PlacaDeVehiculoOElVIN__c != NULL];
-        WorkOrder wo = new WorkOrder();
-        wo.AccountId = cuenta.Id;
-        wo.Kilometros__c = 120;
-        wo.AssetId = coche.id;
-        insert wo;
-        
-        Pricebook2 lista2 = new Pricebook2();
-		lista2.CurrencyIsoCode = 'CRC';
-		lista2.IsActive = true;
-        lista2.Description = 'Lista de precios empresa Bavarian, en colones.';
-        lista2.Name = 'Bavarian Local';
-        insert lista2;
-            
-        
-        List<Pricebook2> pricebook = [Select Id, CurrencyIsoCode From 	Pricebook2 Where CurrencyIsoCode='CRC'];
-        System.debug('pricebook '+pricebook);
-        Quote quo = new Quote();
-        quo.Name = 'test';
-        quo.OpportunityId = opps[0].Id;
-        quo.CurrencyIsoCode = 'CRC';
-        quo.OpportunityId = op.id;
-        quo.Pricebook2Id = pricebook[0].id;
-        insert quo;
-                        
-        Bodega__c bod = new Bodega__c();
-        bod.Name = 'test';
-        bod.bodega__c = 'test';
-        insert bod;
-        ProductoXBodega__c proXbod = new ProductoXBodega__c();
-        proXbod.Name = 'test';
-        proXbod.Bodega__c = bod.Id;
-        proXbod.Producto__c = product[0].Id;
-        insert proXbod;
-        
-        Product2 product2 = new Product2(Name = 'Test',
-                                        Codigo_de_Producto__c = 'test');
-        insert product2;
+            insert targetPricebook;
+        }
 
-        List<PricebookEntry> pricebookCRC = [Select Id, CurrencyIsoCode From PricebookEntry Where CurrencyIsoCode='CRC'];
-		
-        
-        QuoteLineItem qli = new QuoteLineItem();
-        //qli.Name = 'test';
-        qli.QuoteId = quo.Id;
-        qli.Quantity = 2;
-        qli.PricebookEntryId = pricebookCRC[0].id;
-        qli.Product2Id = product[0].Id;
-        qli.UnitPrice = 1;
-        qli.BMW_Bodega__c = bod.Id;
-        insert qli;
-        
-        QuoteLineItem qli2 = new QuoteLineItem();
-        //qli.Name = 'test';
-        qli2.QuoteId = quo.Id;
-        qli2.Quantity = 3;
-        qli2.PricebookEntryId = pricebookCRC[0].id;
-        qli2.Product2Id = product[0].Id;
-        qli2.UnitPrice = 1;
-        qli2.BMW_Bodega__c = bod.Id;
-        insert qli2;
-        cT_QuoteUsdPDFController quotePDF = new cT_QuoteUsdPDFController(new ApexPages.StandardController(quo));
-        ApexPages.currentPage().getParameters().put('Id',quo.Id);
-        test.startTest();
-        
+        Product2 product = new Product2(
+            Name = 'Producto ' + productCode,
+            ProductCode = productCode,
+            Codigo_de_Producto__c = productCode,
+            IsActive = true
+        );
+        insert product;
 
-            quotePDF.getData(quo.Id);
-        qli.UnitPrice = 100;
-        //update qli;
-        quotePDF.getData(quo.Id);
-        qli.UnitPrice = 245;
-        //update qli;
-        quotePDF.getData(quo.Id);
-        qli.UnitPrice = 24535;
-        //update qli;
-        quotePDF.getData(quo.Id);
-        //delete qli;
-        ApexPages.currentPage().getParameters().put('id',quo.Id);
+        ensureStandardPrice(product.Id, 'CRC', sourcePrice);
+        if (targetPricebook != null) {
+            ensureStandardPrice(product.Id, 'USD', targetPrice);
+        }
 
-        test.stopTest();
+        PricebookEntry sourceEntry = new PricebookEntry(
+            Pricebook2Id = sourcePricebook.Id,
+            Product2Id = product.Id,
+            CurrencyIsoCode = 'CRC',
+            UnitPrice = sourcePrice,
+            IsActive = true
+        );
+        insert sourceEntry;
 
-    }
-    */
-    static testMethod void RTAsignadoDefectoCRC() {        
-        Id idBMW = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Taller').getRecordTypeId();
-
-		Account cuenta = new Account();
-        cuenta.FirstName = 'name';
-        cuenta.LastName = 'Lastname';
-        insert cuenta;
-         Asset coche = new Asset();
-        coche.Name = 'Testing';
-        coche.AccountId = cuenta.Id;
-        insert coche;
-		 Opportunity op = new Opportunity(
-                AccountId = cuenta.Id,
-	             CurrencyIsoCode = 'USD',                
-                CloseDate = System.today().AddMonths(3),
-                StageName = 'Oportunidad Calificada',
-                //MonedaIngreso__c = 'Colones',
-                IngresoAproximado__c = 1500,
-	            BMW_PlacaDeVehiculoOElVIN__c = coche.id,
-                RT_Lead__c = 'BMW'
+        if (targetPricebook != null) {
+            insert new PricebookEntry(
+                Pricebook2Id = targetPricebook.Id,
+                Product2Id = product.Id,
+                CurrencyIsoCode = 'USD',
+                UnitPrice = targetPrice,
+                IsActive = true
             );
-        insert op;
-        
-        WorkOrder wo = new WorkOrder();
-        wo.AccountId = cuenta.Id;
-        wo.Kilometros__c = 120;
-        wo.AssetId = coche.id;
-        insert wo;
-         List<Opportunity> opps = [Select Id From Opportunity WHERE CurrencyIsoCode = 'USD' AND BMW_PlacaDeVehiculoOElVIN__c != NULL];
-		 
-         List<Product2> product = [Select Id From Product2];
-		
-        List<PricebookEntry> pricebookCRC = [Select Id, CurrencyIsoCode From PricebookEntry Where CurrencyIsoCode='USD'];
-        System.debug('pricebook '+pricebookCRC);
-                Quote quo = new Quote();
-        quo.Name = 'test';
-        quo.OpportunityId = opps[0].Id;
-        quo.CurrencyIsoCode = 'USD';
-        quo.Pricebook2Id = Test.getStandardPricebookId();
-        insert quo;
+        }
 
-        
-        Bodega__c bod = new Bodega__c();
-        bod.Name = 'test';
-        bod.bodega__c = 'test';
-        insert bod;
-        ProductoXBodega__c proXbod = new ProductoXBodega__c();
-        proXbod.Name = 'test';
-        proXbod.Bodega__c = bod.Id;
-        proXbod.Producto__c = product[0].Id;
-        insert proXbod;
-        QuoteLineItem qli = new QuoteLineItem();
-        //qli.Name = 'test';
-        qli.QuoteId = quo.Id;
-        qli.Quantity = 2;
-        qli.PricebookEntryId = pricebookCRC[0].Id;
-        qli.Product2Id = product[0].Id;
-        qli.UnitPrice = 1;
-        qli.BMW_Bodega__c = bod.Id;
-        insert qli;
-        cT_QuoteUsdPDFController quotePDF = new cT_QuoteUsdPDFController(new ApexPages.StandardController(quo));
-        ApexPages.currentPage().getParameters().put('Id',quo.Id);
-        test.startTest();
-            //
-            quotePDF.getData(quo.Id);
-        qli.UnitPrice = 100;
-        //update qli;
-        quotePDF.getData(quo.Id);
-        qli.UnitPrice = 245;
-        //update qli;
-        quotePDF.getData(quo.Id);
-        qli.UnitPrice = 24535;
-        //update qli;
-        quotePDF.getData(quo.Id);
-        //delete qli;
-        ApexPages.currentPage().getParameters().put('id',quo.Id);
+        Quote quoteRecord = new Quote(
+            Name = 'Quote ' + productCode,
+            OpportunityId = opportunityRecord.Id,
+            CurrencyIsoCode = 'CRC',
+            Pricebook2Id = sourcePricebook.Id
+        );
+        insert quoteRecord;
 
-        test.stopTest();
+        Bodega__c warehouse = new Bodega__c(
+            Name = 'Bodega ' + productCode,
+            bodega__c = productCode
+        );
+        insert warehouse;
 
+        insert new ProductoXBodega__c(
+            Producto__c = product.Id,
+            Bodega__c = warehouse.Id
+        );
+
+        insert new QuoteLineItem(
+            QuoteId = quoteRecord.Id,
+            Quantity = 1,
+            PricebookEntryId = sourceEntry.Id,
+            UnitPrice = sourcePrice,
+            BMW_Bodega__c = warehouse.Id
+        );
+
+        return quoteRecord;
     }
-        
+
+    private static void ensureStandardPrice(
+        Id productId,
+        String currencyIsoCode,
+        Decimal unitPrice
+    ) {
+        Id standardPricebookId = Test.getStandardPricebookId();
+        List<PricebookEntry> existingEntries = [
+            SELECT Id
+            FROM PricebookEntry
+            WHERE Pricebook2Id = :standardPricebookId
+              AND Product2Id = :productId
+              AND CurrencyIsoCode = :currencyIsoCode
+        ];
+        if (existingEntries.isEmpty()) {
+            insert new PricebookEntry(
+                Pricebook2Id = standardPricebookId,
+                Product2Id = productId,
+                CurrencyIsoCode = currencyIsoCode,
+                UnitPrice = unitPrice,
+                IsActive = true
+            );
+        }
+    }
 }
