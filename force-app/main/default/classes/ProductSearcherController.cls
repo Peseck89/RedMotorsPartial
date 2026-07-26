@@ -3,37 +3,37 @@ public with sharing class ProductSearcherController {
     static final Integer PAGE_SIZE = 15;
 
     //precio usado para los extras
-    static final String PRICEBOOK_NAME = 'Bavarian Dólar';    
+    static final String PRICEBOOK_NAME = 'Bavarian Dólar';
 
     @AuraEnabled(cacheable=true)
-    public static Map<String,Object> getProducts(String productType,String productName, String productCode,String bodegaId, String year ,String  vin ,String  brand ,String  family ,String  intColor,String  extColor ,String  model ,String  recordId ,String vehiculoTransito, Integer pageNumber){        
+    public static Map<String,Object> getProducts(String productType,String productName, String productCode,String bodegaId, String year ,String  vin ,String  brand ,String  family ,String  intColor,String  extColor ,String  model ,String  recordId ,String vehiculoTransito, Integer pageNumber){
         Map<String,Object> responseMap = new Map<String,Object>();
 
-        if(String.isBlank(productType)){ 
+        if(String.isBlank(productType)){
             responseMap.put('message','Se requiere indicar el tipo de producto.');
         }
 
-        if(!responseMap.containsKey('message') && String.isBlank(brand)){ 
+        if(!responseMap.containsKey('message') && String.isBlank(brand)){
             responseMap.put('message','La marca es requerida.');
         }
 
-        if(!responseMap.containsKey('message') && String.isBlank(year)){ 
+        if(!responseMap.containsKey('message') && String.isBlank(year)){
             responseMap.put('message','El año es requerido.');
         }
-        
-        if(!responseMap.containsKey('message') && String.isBlank(model) && !productType.contains('vehiculo')){ 
+
+        if(!responseMap.containsKey('message') && String.isBlank(model) && !productType.contains('vehiculo')){
             responseMap.put('message','El modelo es requerido.');
         }
-        
-        if(!responseMap.containsKey('message') && (productType.contains('mano obra')) && String.isBlank(recordId)){ 
+
+        if(!responseMap.containsKey('message') && (productType.contains('mano obra')) && String.isBlank(recordId)){
             responseMap.put('message','El id es requerido.');
-        }        
-                
+        }
+
         try {
             String soqlConditions = '';
 
             if (!responseMap.containsKey('message')) {
-                
+
                 brand = brand.trim();
                 model = model.trim();
                 soqlConditions += ' WHERE ';
@@ -42,14 +42,14 @@ public with sharing class ProductSearcherController {
                     soqlConditions += ' Producto__r.IsActive = true AND Disponible__c > 0 AND Bodega__c != null ';
                     if(String.isNotBlank(bodegaId)){
                         soqlConditions += ' AND Bodega__c = :bodegaId';
-                    }   
+                    }
                 } else if(productType.contains('mano obra')) {
-                    soqlConditions += ' IsActive = true';                
+                    soqlConditions += ' IsActive = true';
                 }
 
                 if(productType.contains('vehiculo')){
                     //agregar filtro vehiculo en transito y reservado
-                    if (String.isNotBlank(recordId)) {                        
+                    if (String.isNotBlank(recordId)) {
                         soqlConditions += ' AND ((Producto__r.Producto_Reservado__c = false AND Producto__r.OportunidadReserva__c = null) OR';
                         soqlConditions += ' (Producto__r.Producto_Reservado__c = true AND Producto__r.OportunidadReserva__c = :recordId)';
                         soqlConditions += ')';
@@ -84,13 +84,13 @@ public with sharing class ProductSearcherController {
                         for (String key : modelPBEMap.keySet()) {
                             if (dynamicModel != '') {
                                 dynamicModel += ' OR ';
-                            }                            
+                            }
                             dynamicModel += ' Producto__r.modelo__c = \''+ key +'\'';
-                        } 
-                        soqlConditions += dynamicModel; 
+                        }
+                        soqlConditions += dynamicModel;
                         soqlConditions += ' )';
                     }
-                            
+
                     Set<Id> prodIds = new Set<Id>();
                     List<PricebookEntry> pbeList = RM_VN_Service.gePBEBavarian(brand,year,model);
                     for (PricebookEntry pbe : pbeList) {
@@ -100,7 +100,7 @@ public with sharing class ProductSearcherController {
                     if (prodIds.isEmpty()) {
                         return responseMap;
                     }
-                    
+
                     soqlConditions += ' AND Producto__c IN :prodIds ';
 
                     responseMap.put('preciosBavarian',pbeList);
@@ -113,20 +113,20 @@ public with sharing class ProductSearcherController {
                     if(String.isNotBlank(vin)){
                         soqlConditions += ' AND ( Producto__r.vin__c LIKE \'%'+ vin.trim() +'%\' OR Producto__r.Codigo_de_Producto__c LIKE \'%'+ vin.trim() +'%\' )';
                     }
-                    
-                    if(String.isNotBlank(productName)){ 
+
+                    if(String.isNotBlank(productName)){
                         soqlConditions += ' AND Producto__r.Name LIKE \'%'+ productName.trim() +'%\'';
                     }
-                }                
+                }
 
-                if(productType.contains('mano obra')){  
+                if(productType.contains('mano obra')){
 
                     soqlConditions += ' AND tipoProducto__c = \'Mano de Obra\' AND RM_VN_EsActivo__c = true ';
 
-                    if(String.isNotBlank(productName)){ 
+                    if(String.isNotBlank(productName)){
                         soqlConditions += ' AND Name LIKE \'%'+ productName.trim() +'%\'';
                     }
-                    
+
                     if(String.isNotBlank(vin)){
                         soqlConditions += ' AND ( vin__c LIKE \'%'+ vin.trim() +'%\' OR Codigo_de_Producto__c LIKE \'%'+ vin.trim() +'%\' )';
                     }
@@ -134,8 +134,8 @@ public with sharing class ProductSearcherController {
                     SObjectType objectType = ((Id) recordId).getSObjectType();
                     String objectName = objectType.getDescribe().getName();
                     String recordTypeName = '';
-                    String companyName = '';
-                    
+                    String companyCode = '';
+
                     String priceBookName;
                     if (objectName == 'Opportunity') {
                         List<Opportunity> oppList = [SELECT Id,RecordType.DeveloperName,(SELECT PricebookEntryId__c FROM Oportunidad_Producto_Interes__r) FROM Opportunity WHERE Id =:recordId LIMIT 1];
@@ -146,33 +146,39 @@ public with sharing class ProductSearcherController {
                         List<Quote> quoteList = [SELECT Id,Opportunity.RecordType.DeveloperName FROM Quote WHERE Id =:recordId LIMIT 1];
                         if (quoteList.size()>0) {
                             recordTypeName = quoteList[0].Opportunity.RecordType.DeveloperName;
-                        }                        
+                        }
                     }
 
                     if (recordTypeName == 'BMW' || recordTypeName == 'MINI' ) {
-                        companyName = 'Bavarian';        
+                        companyCode = 'RMBAVARIAN';
                     }else if (recordTypeName == 'Polaris' || recordTypeName == 'Kawasaki' ){
-                        companyName = 'otobai';                                
+                        companyCode = 'RMOTOBAI';
+                    }else if (recordTypeName == 'Omoda' || recordTypeName == 'Jaecoo' ){
+                        companyCode = 'RMPEKING';
                     }
 
-                    soqlConditions += ' AND Empresa__c LIKE \'%'+ companyName +'%\' ';
+                    if (String.isBlank(companyCode)) {
+                        return responseMap;
+                    }
+
+                    soqlConditions += ' AND Empresa__c = :companyCode ';
                 }
-                
+
                 if(productType.contains('vehiculo')){
 
-                    if(String.isNotBlank(productName)){ 
+                    if(String.isNotBlank(productName)){
                         soqlConditions += ' AND Producto__r.Name LIKE \'%'+ productName.trim() +'%\'';
-                    } 
-                    
-                    if(String.isNotBlank(productCode)){                
-                        soqlConditions += ' AND ( Producto__r.ProductCode LIKE \'%'+ productCode.trim() +'%\')';
-                    } 
+                    }
 
-                    if(String.isNotBlank(year)){   
+                    if(String.isNotBlank(productCode)){
+                        soqlConditions += ' AND ( Producto__r.ProductCode LIKE \'%'+ productCode.trim() +'%\')';
+                    }
+
+                    if(String.isNotBlank(year)){
                         soqlConditions += ' AND Producto__r.Anno__c LIKE \''+ year.trim() +'\' ';
                     }
 
-                    if(String.isNotBlank(brand)){                
+                    if(String.isNotBlank(brand)){
                         soqlConditions += ' AND Producto__r.marcaVehiculo__c  LIKE \'%'+ brand.trim() +'%\' ';
                     }
 
@@ -186,11 +192,11 @@ public with sharing class ProductSearcherController {
 
                     if(String.isNotBlank(extColor)){
                         soqlConditions += ' AND Producto__r.Color_Externo__c  LIKE \'%'+ extColor.trim() +'%\'';
-                    }   
+                    }
 
                     if(String.isNotBlank(vin)){
                         soqlConditions += ' AND ( Producto__r.vin__c LIKE \''+ vin.trim() +'\' OR Producto__r.Codigo_de_Producto__c LIKE \''+ vin.trim() +'\' )';
-                    } 
+                    }
                 }
 
                 String soqlCount;
@@ -201,37 +207,37 @@ public with sharing class ProductSearcherController {
                     ' ,Disponible__c, Name,Bodega__r.Name FROM ProductoXBodega__c '+soqlConditions+' ORDER BY Producto__r.Name LIMIT :PAGE_SIZE  OFFSET :offset';
                 }else{
                     soqlCount = 'SELECT count() FROM Product2 '+soqlConditions;
-                    soqlString = 'SELECT Id,Name,ProductCode,Codigo_de_Producto__c FROM Product2 '+soqlConditions+' ORDER BY Name LIMIT :PAGE_SIZE  OFFSET :offset';                
+                    soqlString = 'SELECT Id,Name,ProductCode,Codigo_de_Producto__c FROM Product2 '+soqlConditions+' ORDER BY Name LIMIT :PAGE_SIZE  OFFSET :offset';
                 }
                 System.debug('@soqlConditions@ '+productType+' : '+soqlString);
                 Integer offset = (pageNumber - 1) * PAGE_SIZE;
-                Integer totalRecords = Database.countQuery(soqlCount);        
+                Integer totalRecords = Database.countQuery(soqlCount);
                 Integer recordEnd = PAGE_SIZE * pageNumber;
-    
+
                 responseMap.put('pageSize',PAGE_SIZE);
                 responseMap.put('pageNumber',pageNumber);
                 responseMap.put('totalRecords',totalRecords);
                 responseMap.put('recordStart',offset + 1);
-                responseMap.put('recordEnd',totalRecords >= recordEnd ? recordEnd : totalRecords);   
-                
+                responseMap.put('recordEnd',totalRecords >= recordEnd ? recordEnd : totalRecords);
+
                 Set<Id> productIds = new Set<Id>();
 
                 if(productType.contains('vehiculo') || productType.contains('extra')){
                     List<ProductoXBodega__c> prodXBodList = (List<ProductoXBodega__c>) Database.query(soqlString);
                     responseMap.put('products',prodXBodList);
-                    
+
                     for (ProductoXBodega__c prodXBod : prodXBodList) {
                         productIds.add(prodXBod.Producto__c);
-                    }        
+                    }
                 }else{
                     List<Product2> productList = (List<Product2>) Database.query(soqlString);
-                    responseMap.put('products',productList); 
+                    responseMap.put('products',productList);
                     for (Product2 product : productList) {
                         productIds.add(product.Id);
                     }
                 }
 
-                String priceSoqlString = 'SELECT Id,UnitPrice,Product2Id FROM PricebookEntry WHERE IsActive = true AND Product2Id IN: productIds';            
+                String priceSoqlString = 'SELECT Id,UnitPrice,Product2Id FROM PricebookEntry WHERE IsActive = true AND Product2Id IN: productIds';
                 if(productType.contains('vehiculo')){
                     String priceBookFantasiaName = brand+' - '+year;
                     priceSoqlString += ' AND Pricebook2.Name = :priceBookFantasiaName';
@@ -240,8 +246,8 @@ public with sharing class ProductSearcherController {
                     String pbId = pptos[0].Pricebook2Id;
                     priceSoqlString += ' AND Pricebook2Id = :pbId';
                 }
-                
-                if (productIds.size() > 0) {                    
+
+                if (productIds.size() > 0) {
                     // responseMap.put('prices',[SELECT Id,UnitPrice,Product2Id FROM PricebookEntry WHERE IsActive = true AND Pricebook2.Name = :PRICEBOOK_NAME AND Product2Id IN: productIds]);
                     List<PricebookEntry> pbeList= (List<PricebookEntry>) Database.query(priceSoqlString);
                     if ((pbeList != null && pbeList.size() > 0)) {
@@ -254,8 +260,8 @@ public with sharing class ProductSearcherController {
                     responseMap.put('prices',pbeList);
                 }else{
                     responseMap.put('prices',new PricebookEntry());
-                }                
-            }    
+                }
+            }
         } catch (Exception e) {
             responseMap.put('message',e.getMessage());
         }
@@ -268,11 +274,11 @@ public with sharing class ProductSearcherController {
         }
         return responseMap;
     }
-   
+
 
     /**
     * @description Consulta los precios de la lista de precios de fantasia
-    * @author marcohernandezhp@gmail.com | 06-18-2023 
+    * @author marcohernandezhp@gmail.com | 06-18-2023
     * @param brand Indica la marca y debe corresponder con el nombre de la lista de precios
     * @param year Indica el año del vehiculo y debe corresponder con el nombre de la lista de precios
     * @return Map<String, PricebookEntry> Precios de fantasia agrupados por modelo
@@ -290,7 +296,7 @@ public with sharing class ProductSearcherController {
                     pricesByModelMap.put(modelKey,pbe);
                 }
             }else {
-                pricesByModelMap.put(modelKey,pbe);                
+                pricesByModelMap.put(modelKey,pbe);
             }
         }
         return pricesByModelMap;
@@ -300,14 +306,14 @@ public with sharing class ProductSearcherController {
     public static Map<String,Object> getProductDataFromOLI(Id oppProdInteresId){
         Map<String,Object> responseMap = new Map<String,Object>();
         try {
-            
+
             List<Oportunidad_Producto_Interes__c> recordList = [SELECT Id,Marca__c,Modelo_Interes__c,Familia__c,Anio__c FROM Oportunidad_Producto_Interes__c WHERE Id =:oppProdInteresId LIMIT 1];
             if (recordList.size()>0) {
                 responseMap.put('brand',recordList[0].Marca__c);
                 responseMap.put('model',recordList[0].Modelo_Interes__c);
                 responseMap.put('family',recordList[0].Familia__c);
                 responseMap.put('year',recordList[0].Anio__c);
-            }             
+            }
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -318,369 +324,17 @@ public with sharing class ProductSearcherController {
     public static Map<String,Object> getProductByQuoteId(Id quoteId){
         Map<String,Object> responseMap = new Map<String,Object>();
         try {
-            List<QuoteLineItem> quoteLineItemList = [SELECT Product2.marcaVehiculo__c,Product2.modelo__c FROM QuoteLineItem WHERE QuoteId =: quoteId AND Product2.esVehiculo__c = true LIMIT 1];            
+            List<QuoteLineItem> quoteLineItemList = [SELECT Product2.marcaVehiculo__c,Product2.modelo__c FROM QuoteLineItem WHERE QuoteId =: quoteId AND Product2.esVehiculo__c = true LIMIT 1];
             if (quoteLineItemList.size()>0) {
                 responseMap.put('brand',quoteLineItemList[0].Product2.marcaVehiculo__c);
                 responseMap.put('model',quoteLineItemList[0].Product2.modelo__c);
-            }        
+            }
         } catch (Exception e) {
             if(!Test.isRunningTest()){
                 throw new AuraHandledException(e.getMessage());
             }
         }
         return responseMap;
-    }
-
-
-    public static void dummy() {
-        String test = '';
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
-        test = '';    
     }
 
 }

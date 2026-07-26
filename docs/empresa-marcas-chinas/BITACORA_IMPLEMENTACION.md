@@ -1405,7 +1405,109 @@ El Bloque 17 queda completado, validado y desplegado.
 Avance técnico estimado: 84% completado y 16% pendiente. Corresponde al
 alcance técnico y no representa horas oficiales, trabajadas ni facturables.
 
-## 29. Plantilla reutilizable de actualización
+## 29. Bloque 18 — Empresa configurable en búsqueda de mano de obra (pausado por cobertura)
+
+Luis autorizó implementar el mapeo Omoda/Jaecoo → `RMPEKING` en
+`ProductSearcherController.getProducts()`, exclusivamente en la rama
+`productType.contains('mano obra')`, con código exacto de `Empresa__c` en vez
+de `LIKE` parcial, y sin devolver productos de todas las empresas cuando el
+Record Type de la Opportunity/Quote no está mapeado.
+
+El cambio productivo quedó aplicado en
+`force-app/main/default/classes/ProductSearcherController.cls`: el bloque de
+mapeo ahora usa `companyCode` (`RMBAVARIAN`, `RMOTOBAI`, `RMPEKING`) con
+comparación exacta (`Empresa__c = :companyCode`) y un `return responseMap;`
+temprano cuando el Record Type no se reconoce, sin construir nunca un filtro
+`LIKE '%%'`. El método `dummy()` (350 líneas de asignaciones artificiales sin
+llamadores productivos, confirmado por `git grep`) fue eliminado, porque
+`ProductSearcherControllerTest` ya no lo invoca para inflar cobertura.
+
+Durante la implementación se encontró y resolvió, con autorización explícita
+para ampliar el alcance de este bloque, que el Record Type `Producto_Red_Motros`
+de `Product2` no tenía `RMPEKING` habilitado en su restricción de picklist
+para `Empresa__c` (aunque el campo sí lo soportaba a nivel global desde el
+Bloque 17). Se agregó la sección `<picklistValues><picklist>Empresa__c</picklist>...`
+con `RMBAVARIAN`, `RMOTOBAI` y `RMPEKING` en
+`force-app/main/default/objects/Product2/recordTypes/Producto_Red_Motors.recordType-meta.xml`
+(archivo recuperado desde RedMotorsSandbox porque no estaba versionado
+localmente; se eliminó el `Product2.object-meta.xml` recuperado como
+referencia, sin cambio funcional, igual que en el Bloque 17).
+
+`ProductSearcherControllerTest` fue reconstruido con 13 métodos: los 12
+escenarios solicitados (BMW/MINI/Polaris/Kawasaki/Omoda/Jaecoo devuelven solo
+su empresa; Record Type no reconocido no devuelve nada; producto inactivo y
+de otra empresa quedan excluidos; ruta por Opportunity y por Quote;
+PricebookEntry del Pricebook efectivo de la Quote) más pruebas de validación
+temprana (marca/año/modelo/recordId en blanco). Los 13 métodos pasan sin
+fallas en todos los dry-runs.
+
+Durante la corrección de fixtures se encontraron y resolvieron, todos dentro
+de `ProductSearcherControllerTest.cls`: colisión de cédula duplicada al
+reutilizar `TestDataFactory.createAccount`, rechazo de picklist restringido
+en `Categor_a_veh_culo__c` al construir productos a mano (resuelto
+reutilizando `TestDataFactory.createProduct`), un `PricebookEntry` estándar
+autogenerado por el org al insertar `Product2` activos (resuelto con
+upsert manual), y el hallazgo de que `Opportunity.Name`/`Quote.Name` no son
+confiables como clave de búsqueda en este org (una automatización los
+recalcula); se sustituyó por identificación vía `Campana__c` + `RT_Lead__c` y
+`OpportunityId`/`Product2.Name`.
+
+**Cobertura de `ProductSearcherController`: 73.438% (141/192 líneas), por
+debajo del mínimo de 75% exigido por el org incluso para deploys a sandbox
+con `RunSpecifiedTests`.** Las 51 líneas restantes pertenecen casi en su
+totalidad a la rama `vehiculo` (precios de fantasía vía
+`getPricesGroupByModelFantasia`/`RM_VN_Service.gePBEBavarian`, segundo bloque
+de filtros de vehículo, y la ruta de paginación compartida que depende de
+ellos), fuera del alcance autorizado de este bloque.
+
+Con autorización explícita para tocar fixtures de la rama vehículo (solo en
+el archivo de test, sin modificar código productivo), se intentó cerrar la
+brecha y se encontraron tres obstáculos técnicos distintos e independientes,
+todos preexistentes en el org y ajenos a este cambio:
+
+1. `Categor_a_veh_culo__c` — picklist restringido por Record Type (ya
+   resuelto para el flujo de mano de obra).
+2. `Modelo_De_Inter_s__c` — el mismo tipo de restricción en un campo
+   distinto, requerido por `getPricesGroupByModelFantasia`. Ningún valor
+   probado fue aceptado para `Producto_Red_Motros`.
+3. `Schema.RecordTypeInfo.getPicklistValuesForField(SObjectField)` no existe
+   en la `apiVersion` 55.0 declarada en `ProductSearcherController.cls`/
+   `ProductSearcherControllerTest.cls-meta.xml` (error de compilación real
+   del deploy, no una suposición).
+4. Un sondeo autocontenido (insertar cada valor candidato del picklist
+   global con `Database.insert(..., false)` hasta encontrar uno aceptado)
+   agotó el límite de 150 DML statements por transacción
+   (`Too many DML statements: 151`) sin encontrar ninguno válido.
+
+Se verificó directamente, primero en el archivo local y luego recuperando
+temporalmente `RecordType:Product2.Producto_Red_Motors` desde
+RedMotorsSandbox (con respaldo y restauración de la versión autorizada, sin
+dejar metadata temporal), que **no existe ninguna sección
+`<picklist>Modelo_De_Inter_s__c</picklist>` en el Record Type
+`Producto_Red_Motros`, ni localmente ni en el org real**. Esto confirma que
+el campo no tiene ningún valor habilitado para ese Record Type — no es un
+valor que no se encontró, es una configuración de catálogo pendiente en
+Setup, fuera del alcance de Apex/Metadata API declarativa vía CLI.
+
+Se revirtió por completo el fixture de vehículo (Pricebook de fantasía,
+`Configuracion_de_ventas__c`, productos de precio/inventario,
+`ProductoXBodega__c` y el helper de resolución de picklist), dejando
+`ProductSearcherControllerTest.cls` en el último estado limpio y verificado:
+13/13 pruebas pasan, 73.438% de cobertura.
+
+**El Bloque 18 queda pausado aquí, sin deploy, sin commit y sin push**, a la
+espera de que alguien con acceso a Setup habilite al menos un valor de
+`Modelo_De_Inter_s__c` para el Record Type `Producto_Red_Motros` (o de una
+decisión alternativa sobre cómo cerrar la cobertura de la rama vehículo).
+
+No se modificaron las ramas de vehículo/extra/RM_VN_Service ni sucursales,
+Softland, reservas o anticipos.
+
+Avance técnico estimado si se completa: 85% completado y 15% pendiente
+(sobre la base de 84%/16% del Bloque 17). No aplica todavía porque el bloque
+no se ha desplegado.
+
+## 30. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
