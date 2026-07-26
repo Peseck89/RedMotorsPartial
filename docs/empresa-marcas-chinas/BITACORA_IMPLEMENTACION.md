@@ -1919,7 +1919,55 @@ Partial.
 Avance técnico estimado: 87% completado y 13% pendiente. Corresponde al alcance
 técnico y no representa horas oficiales, trabajadas ni facturables.
 
-## 33. Plantilla reutilizable de actualización
+## 33. Bloque 10 — Búsqueda detallada y sincronización de precios
+
+Se investigó en RedMotorsSandbox / Partial si existía evidencia suficiente para
+cerrar el único bloque funcional pendiente del Sprint 1:
+
+- `BusquedaDetalladaController`;
+- `precioProductoJSON`.
+
+Resultado:
+
+- `BusquedaDetalladaController` continúa dependiendo de `User.Sucursal__c` y
+  nombres fijos de sucursal/territorio.
+- No existe una relación comprobable `Sucursal → Empresa → Pricebook /
+  ServiceTerritory` para PEKING.
+- No se encontraron usuarios activos con sucursal PEKING, Omoda o Jaecoo.
+- No se encontraron territorios activos PEKING, Omoda o Jaecoo.
+- `precioProductoJSON` usa dos convenciones distintas:
+  `Codigo_de_Producto__c` para Bavarian y `CodigoProductoInterno__c` compuesto
+  para Otobai.
+- No existen productos ni entradas de precio PEKING/Omoda/Jaecoo en Partial que
+  permitan inferir la convención correcta.
+- Los Pricebooks PEKING existen activos, pero no contienen `PricebookEntry`.
+
+Decisión:
+
+- No se implementó cambio productivo.
+- No se integraron pruebas de caracterización que congelaban comportamientos
+  defectuosos.
+- El Bloque 10 queda reclasificado como dependencia externa comprobada.
+
+Pendientes:
+
+- Definir relación operativa entre sucursal, empresa, Pricebook y territorio
+  para PEKING.
+- Definir llave de producto para PEKING/Omoda/Jaecoo.
+- Cargar productos y entradas de precio PEKING cuando corresponda.
+
+Validación:
+
+- No se ejecutó dry-run ni deploy porque no hubo cambio funcional seguro.
+- No se modificaron Apex productivo, metadata, datos, Pricebooks, territorios,
+  productos, integraciones ni permisos.
+
+Avance:
+
+- Sprint 1 permanece en 18/19 bloques funcionales comprometidos cerrados:
+  94.74%.
+
+## 34. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
