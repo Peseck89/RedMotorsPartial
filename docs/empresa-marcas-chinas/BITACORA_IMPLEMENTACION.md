@@ -1203,7 +1203,79 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje corresponde al alcance técnico y no representa horas
 oficiales, trabajadas, registradas ni facturables.
 
-## 26. Plantilla reutilizable de actualización
+## 26. Bloque 15 — Empresa configurable en trabajos de VIN Scan
+
+Estado: completado, validado y desplegado en RedMotorsSandbox / Partial.
+
+Se actualizaron los recorridos de creación de trabajos y subtrabajos de
+`BMWVinScanTrabajoGenerator` para utilizar
+`WorkOrder.empresaFacturaCP__c` como fuente principal. El lookup se resuelve
+mediante `EmpresaResolver` y se utiliza `EmpresaContext.codigo`.
+
+Cuando el lookup está vacío, `empresaFactura__c` permanece como respaldo
+temporal. El lookup tiene prioridad ante contradicción y solo se admiten
+`RMBAVARIAN`, `RMOTOBAI` y `RMPEKING`. No se utiliza el nombre de Empresa ni
+existe selección empresarial por descarte.
+
+La resolución se ejecuta antes de crear tipos de trabajo, trabajos,
+subtrabajos o WorkOrderLineItems. Una empresa nula, inactiva, incompleta o
+con código no soportado produce un error controlado.
+
+La prueba directa conserva los escenarios históricos y agrega cobertura
+autocontenida para las tres empresas, precedencia, los tres respaldos
+heredados, empresa inactiva, código no soportado y campos empresariales
+vacíos en ambos recorridos. También verifica producto, PricebookEntry,
+cantidad, UTS, relación padre/hijo y ausencia de registros parciales.
+
+El primer dry-run `0AfAK000000vqTJ0AY` compiló 2/2 componentes, aprobó 30/42
+pruebas y falló únicamente en las doce rutas empresariales exitosas. La org
+no fue modificada.
+
+La causa fue una diferencia entre la PricebookEntry creada por los fixtures
+y el Pricebook efectivo del WorkOrder. Las pruebas preparaban entradas en
+los Pricebooks locales, pero no fijaban CRC. Con USD, `WorkOrderTrigger`
+seleccionaba el Pricebook en dólares y el generador no encontraba la
+combinación Pricebook2Id + Product2Id esperada.
+
+Se corrigieron solo los fixtures: ahora fijan CRC, vuelven a consultar el
+WorkOrder después del trigger, comprueban el Pricebook local efectivo y crean
+la entrada de la misma mano de obra dentro de ese Pricebook. También validan
+moneda, estado activo y precio. Se mantienen los 42 métodos, mocks y pruebas
+históricas.
+
+Las excepciones de las líneas 368 y 796 son lanzamientos directos ante una
+entrada inexistente, no errores envueltos por un `catch`. El controlador no
+fue alterado durante el análisis ni durante la corrección de fixtures.
+
+No se modificaron metadata, procesamiento del VIN Scan, deduplicación,
+productos, PricebookEntry, jerarquías padre/hijo, correos ni automatizaciones.
+
+### Cierre técnico del Bloque 15
+
+| Etapa | Deploy ID | Componentes | Pruebas | Fallas | Resultado |
+|---|---|---:|---:|---:|---|
+| Primer dry-run | `0AfAK000000vqTJ0AY` | 2/2 | 30/42 | 12 | Fallido |
+| Dry-run funcional | `0AfAK000000vqY90AI` | 2/2 | 42/42 | 0 | Exitoso |
+| Dry-run de regresión | `0AfAK000000vqZl0AI` | 2/2 | 93/93 | 0 | Exitoso |
+| Deploy real | `0AfAK000000vqeb0AA` | 2/2 | 93/93 | 0 | Exitoso |
+
+El dry-run funcional confirmó una cobertura de 569/656 líneas en
+`BMWVinScanTrabajoGenerator`, equivalente a 86.74%.
+
+El deploy real terminó correctamente en RedMotorsSandbox / Partial.
+`empresaFacturaCP__c` quedó como fuente principal en trabajos y subtrabajos,
+y `empresaFactura__c` como respaldo temporal. Se admiten explícitamente
+`RMBAVARIAN`, `RMOTOBAI` y `RMPEKING`, sin selección empresarial por
+descarte.
+
+Se conservaron VIN Scan, deduplicación, UTS, productos, PricebookEntry,
+jerarquías y correos. Se validaron 42 pruebas funcionales y 93 pruebas de
+regresión sin fallas. El Bloque 15 queda completado, validado y desplegado.
+
+Avance técnico estimado: 82% completado y 18% pendiente. Corresponde al
+alcance técnico y no representa horas oficiales, trabajadas ni facturables.
+
+## 27. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:

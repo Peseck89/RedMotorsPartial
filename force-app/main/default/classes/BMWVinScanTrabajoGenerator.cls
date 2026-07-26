@@ -87,11 +87,31 @@ public without sharing class BMWVinScanTrabajoGenerator {
                    Case.Asset.Tipo_de_veh_culo__c,
                    Pricebook2Id,
                    Pricebook2.Name,
-                   empresaFactura__c
+                   empresaFactura__c,
+                   empresaFacturaCP__c
             FROM WorkOrder
             WHERE Id = :workOrderId
             LIMIT 1
         ];
+
+        String empresa;
+        if (wo.empresaFacturaCP__c != null) {
+            EmpresaContext empresaContext = EmpresaResolver.resolve(wo.empresaFacturaCP__c);
+            empresa = empresaContext.codigo;
+        } else {
+            empresa = wo.empresaFactura__c;
+        }
+        if (
+            empresa != 'RMBAVARIAN' &&
+            empresa != 'RMOTOBAI' &&
+            empresa != 'RMPEKING'
+        ) {
+            throw new EmpresaConfigurationException(
+                String.isBlank(empresa)
+                    ? 'La empresa del WorkOrder es requerida.'
+                    : 'La empresa del WorkOrder no está soportada: ' + empresa + '.'
+            );
+        }
 
         Impuesto__c impuesto0108 = [
             SELECT Id
@@ -267,7 +287,6 @@ public without sharing class BMWVinScanTrabajoGenerator {
             : null;
         String tipoDeVehiculo = resolveTipoVehiculoCatalogo(tipoVehiculoAsset);
 
-        String empresa = wo.empresaFactura__c;
         String tipodecargo = tipoCargo;
 
         Set<Id> idsSinMano = new Set<Id>();
@@ -528,11 +547,31 @@ public without sharing class BMWVinScanTrabajoGenerator {
                    Case.Asset.Tipo_de_veh_culo__c,
                    Pricebook2Id,
                    Pricebook2.Name,
-                   empresaFactura__c
+                   empresaFactura__c,
+                   empresaFacturaCP__c
             FROM WorkOrder
             WHERE Id = :targetWorkOrderId
             LIMIT 1
         ];
+
+        String empresa;
+        if (wo.empresaFacturaCP__c != null) {
+            EmpresaContext empresaContext = EmpresaResolver.resolve(wo.empresaFacturaCP__c);
+            empresa = empresaContext.codigo;
+        } else {
+            empresa = wo.empresaFactura__c;
+        }
+        if (
+            empresa != 'RMBAVARIAN' &&
+            empresa != 'RMOTOBAI' &&
+            empresa != 'RMPEKING'
+        ) {
+            throw new EmpresaConfigurationException(
+                String.isBlank(empresa)
+                    ? 'La empresa del WorkOrder es requerida.'
+                    : 'La empresa del WorkOrder no está soportada: ' + empresa + '.'
+            );
+        }
 
         Impuesto__c impuesto0108 = [
             SELECT Id
@@ -680,8 +719,6 @@ public without sharing class BMWVinScanTrabajoGenerator {
             ? wo.Case.Asset.Tipo_de_veh_culo__c
             : null;
         String tipoDeVehiculo = resolveTipoVehiculoCatalogo(tipoVehiculoAsset);
-
-        String empresa = wo.empresaFactura__c;
 
         Set<Id> idsSinMano = new Set<Id>();
         Set<Id> idsManoDeObra = new Set<Id>();

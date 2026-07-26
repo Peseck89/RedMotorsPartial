@@ -78,6 +78,7 @@ private class BMWVinScanTrabajoGeneratorTest {
         Id pbBavarianLocal = getOrCreatePricebook('Bavarian Local');
         Id pbOtobaiDolar   = getOrCreatePricebook('Otobai Dólares');
         Id pbOtobaiLocal   = getOrCreatePricebook('Otobai Local');
+        Id pbPekingLocal   = getOrCreatePricebook('PEKING Local');
 
         upsertPbe(stdPbId,       mano.Id, 100);
         upsertPbe(stdPbId,       sumi.Id, 50);
@@ -90,9 +91,11 @@ private class BMWVinScanTrabajoGeneratorTest {
         upsertPbe(pbOtobaiDolar,   sumi.Id, 50);
         upsertPbe(pbOtobaiLocal,   mano.Id, 100);
         upsertPbe(pbOtobaiLocal,   sumi.Id, 50);
+        upsertPbe(pbPekingLocal,   mano.Id, 100);
+        upsertPbe(pbPekingLocal,   sumi.Id, 50);
 
         Set<Id> pbsYaCubiertos = new Set<Id>{
-            stdPbId, pbBavarianDolar, pbBavarianLocal, pbOtobaiDolar, pbOtobaiLocal
+            stdPbId, pbBavarianDolar, pbBavarianLocal, pbOtobaiDolar, pbOtobaiLocal, pbPekingLocal
         };
         for (Pricebook2 pb : [SELECT Id FROM Pricebook2 WHERE IsActive = true AND Id NOT IN :pbsYaCubiertos]) {
             upsertPbe(pb.Id, mano.Id, 100);
@@ -224,6 +227,36 @@ private class BMWVinScanTrabajoGeneratorTest {
             insert new PricebookEntry(
                 Pricebook2Id = pbId, Product2Id = prodId, UnitPrice = price, IsActive = true
             );
+        }
+    }
+
+    private static void upsertPbeForCurrency(
+        Id pbId,
+        Id prodId,
+        Decimal price,
+        String currencyIsoCode
+    ) {
+        if (pbId == null || prodId == null) return;
+        List<PricebookEntry> existing = [
+            SELECT Id, IsActive, UnitPrice
+            FROM PricebookEntry
+            WHERE Pricebook2Id = :pbId
+            AND Product2Id = :prodId
+            AND CurrencyIsoCode = :currencyIsoCode
+            LIMIT 1
+        ];
+        if (existing.isEmpty()) {
+            insert new PricebookEntry(
+                Pricebook2Id = pbId,
+                Product2Id = prodId,
+                CurrencyIsoCode = currencyIsoCode,
+                UnitPrice = price,
+                IsActive = true
+            );
+        } else {
+            existing[0].UnitPrice = price;
+            existing[0].IsActive = true;
+            update existing[0];
         }
     }
 
@@ -552,6 +585,282 @@ private class BMWVinScanTrabajoGeneratorTest {
         System.assert(res.containsKey('emailSent'),           'Resultado debe contener emailSent');
         System.assert(res.containsKey('servicesReceived'),    'Resultado debe contener servicesReceived');
         System.assert(res.containsKey('createdTrabajosCaso'), 'Resultado debe contener createdTrabajosCaso');
+    }
+
+    @IsTest static void trabajosLookupRmbavarian() {
+        assertCompanySelection('RMBAVARIAN', 'RMOTOBAI', false);
+    }
+
+    @IsTest static void subtrabajosLookupRmbavarian() {
+        assertCompanySelection('RMBAVARIAN', 'RMOTOBAI', true);
+    }
+
+    @IsTest static void trabajosLookupRmotobai() {
+        assertCompanySelection('RMOTOBAI', 'RMBAVARIAN', false);
+    }
+
+    @IsTest static void subtrabajosLookupRmotobai() {
+        assertCompanySelection('RMOTOBAI', 'RMBAVARIAN', true);
+    }
+
+    @IsTest static void trabajosLookupRmpekingHasPriority() {
+        assertCompanySelection('RMPEKING', 'RMBAVARIAN', false);
+    }
+
+    @IsTest static void subtrabajosLookupRmpekingHasPriority() {
+        assertCompanySelection('RMPEKING', 'RMBAVARIAN', true);
+    }
+
+    @IsTest static void trabajosLegacyRmbavarian() {
+        assertCompanySelection(null, 'RMBAVARIAN', false);
+    }
+
+    @IsTest static void subtrabajosLegacyRmbavarian() {
+        assertCompanySelection(null, 'RMBAVARIAN', true);
+    }
+
+    @IsTest static void trabajosLegacyRmotobai() {
+        assertCompanySelection(null, 'RMOTOBAI', false);
+    }
+
+    @IsTest static void subtrabajosLegacyRmotobai() {
+        assertCompanySelection(null, 'RMOTOBAI', true);
+    }
+
+    @IsTest static void trabajosLegacyRmpeking() {
+        assertCompanySelection(null, 'RMPEKING', false);
+    }
+
+    @IsTest static void subtrabajosLegacyRmpeking() {
+        assertCompanySelection(null, 'RMPEKING', true);
+    }
+
+    @IsTest static void trabajosInactiveLookupHasNoPartialRecords() {
+        assertCompanyFailure('RMBAVARIAN', 'RMBAVARIAN', false, false);
+    }
+
+    @IsTest static void subtrabajosInactiveLookupHasNoPartialRecords() {
+        assertCompanyFailure('RMBAVARIAN', 'RMBAVARIAN', true, false);
+    }
+
+    @IsTest static void trabajosUnsupportedLookupHasNoFallback() {
+        assertCompanyFailure('RMNOAUTORIZADA', 'RMOTOBAI', false, true);
+    }
+
+    @IsTest static void subtrabajosUnsupportedLookupHasNoFallback() {
+        assertCompanyFailure('RMNOAUTORIZADA', 'RMOTOBAI', true, true);
+    }
+
+    @IsTest static void trabajosNullCompanyHasNoFallback() {
+        assertCompanyFailure(null, null, false, false);
+    }
+
+    @IsTest static void subtrabajosNullCompanyHasNoFallback() {
+        assertCompanyFailure(null, null, true, false);
+    }
+
+    private static void assertCompanySelection(
+        String lookupCode,
+        String legacyCode,
+        Boolean subtrabajo
+    ) {
+        setMocks();
+        String effectiveCode = lookupCode == null ? legacyCode : lookupCode;
+        String suffix = effectiveCode + (subtrabajo ? '-SUB' : '-TRA');
+        Id pricebookId = getOrCreatePricebook(pricebookName(effectiveCode));
+        Product2 labor = new Product2(
+            Name = 'Mano de obra ' + suffix,
+            IsActive = true,
+            tipoProducto__c = 'Mano de Obra',
+            Codigo_de_Producto__c = 'B15-' + suffix
+        );
+        insert labor;
+        upsertPbeForCurrency(Test.getStandardPricebookId(), labor.Id, 100, 'CRC');
+
+        Empresa__c company;
+        if (lookupCode != null) {
+            company = createCompany(lookupCode, true);
+        }
+
+        WorkOrder wo = [SELECT Id FROM WorkOrder LIMIT 1];
+        update new WorkOrder(
+            Id = wo.Id,
+            Pricebook2Id = pricebookId,
+            CurrencyIsoCode = 'CRC',
+            empresaFacturaCP__c = company == null ? null : company.Id,
+            empresaFactura__c = legacyCode
+        );
+        wo = [
+            SELECT Id, Pricebook2Id, CurrencyIsoCode
+            FROM WorkOrder
+            WHERE Id = :wo.Id
+        ];
+        System.assertEquals('CRC', wo.CurrencyIsoCode, 'El escenario debe conservar moneda CRC.');
+        System.assertEquals(pricebookId, wo.Pricebook2Id, 'WorkOrderTrigger debe seleccionar el Pricebook local de la empresa.');
+
+        upsertPbeForCurrency(wo.Pricebook2Id, labor.Id, 125, 'CRC');
+        PricebookEntry effectiveEntry = [
+            SELECT Id, Pricebook2Id, Product2Id, CurrencyIsoCode, IsActive, UnitPrice
+            FROM PricebookEntry
+            WHERE Pricebook2Id = :wo.Pricebook2Id
+            AND Product2Id = :labor.Id
+            AND CurrencyIsoCode = 'CRC'
+            LIMIT 1
+        ];
+        System.assertEquals(pricebookId, effectiveEntry.Pricebook2Id, 'La entrada debe pertenecer al Pricebook efectivo.');
+        System.assertEquals(labor.Id, effectiveEntry.Product2Id, 'La entrada debe corresponder a la mano de obra esperada.');
+        System.assertEquals(true, effectiveEntry.IsActive, 'La entrada debe estar activa.');
+        System.assertEquals(125, effectiveEntry.UnitPrice, 'La entrada debe conservar el precio del escenario.');
+
+        configureLabor(effectiveCode, labor.Id);
+
+        String identifier = 'B15-' + suffix;
+        insert new tiposDeTrabajo__c(
+            Name = 'VIN Scan ' + suffix,
+            Identificador__c = identifier
+        );
+        String json = jsonWrapped(new List<String>{
+            svc('VIN Scan ' + suffix, identifier, 'RED', '', 24)
+        });
+        Id parentId = subtrabajo ? createTrabajoPadreParaSubtrabajos() : null;
+
+        Test.startTest();
+        if (subtrabajo) {
+            BMWVinScanTrabajoGenerator.createSubtrabajosFromVinScan(
+                getCaseId(), wo.Id, parentId, json, 'Cliente'
+            );
+        } else {
+            BMWVinScanTrabajoGenerator.createTrabajosFromVinScan(
+                getCaseId(), wo.Id, json, 'Cliente'
+            );
+        }
+        Test.stopTest();
+
+        WorkOrderLineItem line = [
+            SELECT Id, WorkOrderId, Product__c, PricebookEntryId,
+                   PricebookEntry.Pricebook2Id, Quantity
+            FROM WorkOrderLineItem
+            WHERE WorkOrderId = :wo.Id
+            AND Product__c = :labor.Id
+            LIMIT 1
+        ];
+        System.assertEquals(wo.Id, line.WorkOrderId, 'La línea debe conservar el WorkOrder.');
+        System.assertEquals(labor.Id, line.Product__c, 'Debe seleccionar la mano de obra de la empresa efectiva.');
+        System.assertEquals(pricebookId, line.PricebookEntry.Pricebook2Id, 'Debe usar el Pricebook efectivo del WorkOrder.');
+        System.assertEquals(2, line.Quantity, '24 UTS deben convertirse en 2 horas.');
+
+        Subtipo_de_trabajo_del_caso__c child = [
+            SELECT Tipo_de_trabajo_del_caso__c, Articulo_Mano_de_Obra__c, UTS__c
+            FROM Subtipo_de_trabajo_del_caso__c
+            WHERE Articulo_Mano_de_Obra__c = :line.Id
+            LIMIT 1
+        ];
+        System.assertEquals(2, child.UTS__c, 'El subtrabajo debe conservar las UTS calculadas.');
+        if (subtrabajo) {
+            System.assertEquals(parentId, child.Tipo_de_trabajo_del_caso__c, 'Debe conservar la relación con su padre.');
+        } else {
+            System.assertNotEquals(null, child.Tipo_de_trabajo_del_caso__c, 'El trabajo debe generar su relación padre.');
+        }
+    }
+
+    private static void assertCompanyFailure(
+        String lookupCode,
+        String legacyCode,
+        Boolean subtrabajo,
+        Boolean active
+    ) {
+        setMocks();
+        Empresa__c company;
+        if (lookupCode != null) {
+            company = createCompany(lookupCode, active);
+        }
+
+        WorkOrder wo = [SELECT Id FROM WorkOrder LIMIT 1];
+        update new WorkOrder(
+            Id = wo.Id,
+            empresaFacturaCP__c = company == null ? null : company.Id,
+            empresaFactura__c = legacyCode
+        );
+
+        String identifier = 'B15-ERROR-' + (subtrabajo ? 'SUB' : 'TRA');
+        String json = jsonWrapped(new List<String>{
+            svc('VIN Scan error', identifier, 'RED', '', 12)
+        });
+        Id parentId = subtrabajo ? createTrabajoPadreParaSubtrabajos() : null;
+        Integer typeCountBefore = [SELECT COUNT() FROM tiposDeTrabajo__c WHERE Identificador__c = :identifier];
+        Integer workCountBefore = [SELECT COUNT() FROM tiposDeTrabajoCaso__c WHERE RM_WorkOrder__c = :wo.Id];
+        Integer lineCountBefore = [SELECT COUNT() FROM WorkOrderLineItem WHERE WorkOrderId = :wo.Id];
+        Integer childCountBefore = [SELECT COUNT() FROM Subtipo_de_trabajo_del_caso__c WHERE Orden_de_trabajo__c = :wo.Id];
+        Boolean controlled = false;
+
+        Test.startTest();
+        try {
+            if (subtrabajo) {
+                BMWVinScanTrabajoGenerator.createSubtrabajosFromVinScan(
+                    getCaseId(), wo.Id, parentId, json, 'Cliente'
+                );
+            } else {
+                BMWVinScanTrabajoGenerator.createTrabajosFromVinScan(
+                    getCaseId(), wo.Id, json, 'Cliente'
+                );
+            }
+            System.assert(false, 'La configuración empresarial inválida debe detener el proceso.');
+        } catch (EmpresaConfigurationException e) {
+            controlled = true;
+        }
+        Test.stopTest();
+
+        System.assert(controlled, 'Debe recibirse EmpresaConfigurationException.');
+        System.assertEquals(typeCountBefore, [SELECT COUNT() FROM tiposDeTrabajo__c WHERE Identificador__c = :identifier],
+            'No debe crear tipos de trabajo antes de validar la empresa.');
+        System.assertEquals(workCountBefore, [SELECT COUNT() FROM tiposDeTrabajoCaso__c WHERE RM_WorkOrder__c = :wo.Id],
+            'No debe crear trabajos parciales.');
+        System.assertEquals(lineCountBefore, [SELECT COUNT() FROM WorkOrderLineItem WHERE WorkOrderId = :wo.Id],
+            'No debe crear líneas parciales.');
+        System.assertEquals(childCountBefore, [SELECT COUNT() FROM Subtipo_de_trabajo_del_caso__c WHERE Orden_de_trabajo__c = :wo.Id],
+            'No debe crear subtrabajos parciales.');
+    }
+
+    private static Empresa__c createCompany(String code, Boolean active) {
+        Empresa__c company = new Empresa__c(
+            Name = 'Empresa ' + code,
+            Codigo__c = code,
+            Codigo_ERP__c = 'ERP-' + code,
+            Nombre_Legal__c = 'Empresa ' + code + ' S.A.',
+            Activa__c = active
+        );
+        insert company;
+        return company;
+    }
+
+    private static void configureLabor(String companyCode, Id laborId) {
+        List<TipoDeCargoConManoDeObra__c> existing = [
+            SELECT Id
+            FROM TipoDeCargoConManoDeObra__c
+            WHERE Empresa__c = :companyCode
+            AND TipoDeCargo__c = 'Cliente'
+            AND TipoDeVehiculo__c = 'Automóvil'
+        ];
+        if (existing.isEmpty()) {
+            insert new TipoDeCargoConManoDeObra__c(
+                Empresa__c = companyCode,
+                TipoDeCargo__c = 'Cliente',
+                TipoDeVehiculo__c = 'Automóvil',
+                ManoDeObra__c = laborId
+            );
+        } else {
+            for (TipoDeCargoConManoDeObra__c configuration : existing) {
+                configuration.ManoDeObra__c = laborId;
+            }
+            update existing;
+        }
+    }
+
+    private static String pricebookName(String code) {
+        if (code == 'RMBAVARIAN') return 'Bavarian Local';
+        if (code == 'RMOTOBAI') return 'Otobai Local';
+        if (code == 'RMPEKING') return 'PEKING Local';
+        return null;
     }
 
     private static void ensurePricebookActive(Id pbId) {
