@@ -963,7 +963,55 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje corresponde al alcance técnico y no representa horas
 oficiales, trabajadas, registradas ni facturables.
 
-## 23. Plantilla reutilizable de actualización
+## 23. Bloque 12 — PEKING en PDF de cotización CRC
+
+Luis autorizó continuar con cambios claros de bajo riesgo y documentar lo
+realizado. El Bloque 10 permanece pausado y este cambio no depende del mapeo
+de sucursales.
+
+Se agregó a `cT_QuoteCrcPDFController.getData(String recordId)` la asociación
+explícita `PEKING Dólares` → `PEKING Local`. Se conservaron Bavarian Dólar →
+Bavarian Local y Otobai Dólares → Otobai Local. No se agregó fallback.
+
+Se retiraron únicamente los dos guards `Test.isRunningTest()` que impedían
+recorrer en pruebas la resolución productiva de Pricebook. Como evaluaban
+`false` en producción, no se modificó el comportamiento productivo.
+
+La prueba directa quedó con cinco escenarios autocontenidos: Bavarian,
+Otobai, PEKING, Pricebook desconocido y cotización CRC directa. Se validan la
+relación Opportunity–WorkOrder, el Pricebook de origen, el Pricebook destino,
+el mismo producto, el precio, la cantidad y el total.
+
+No se modificaron cálculos, tasa fija, montos, productos, wrappers, estructura
+del PDF, metadata ni integraciones.
+
+### Cierre técnico del Bloque 12
+
+| Validación | Deploy ID | Componentes | Pruebas | Fallas |
+|---|---|---:|---:|---:|
+| Dry-run | `0AfAK000000vpiX0AQ` | 2/2 | 5/5 | 0 |
+| Deploy real | `0AfAK000000vpk90AA` | 2/2 | 5/5 | 0 |
+
+El dry-run confirmó 113/115 líneas cubiertas en
+`cT_QuoteCrcPDFController`, equivalentes a 98.26%.
+
+El deploy real terminó correctamente en RedMotorsSandbox / Partial. Se
+validaron cinco escenarios funcionales y quedaron desplegados
+`cT_QuoteCrcPDFController` y `cT_QuoteCrcPDFController_test`.
+
+El Bloque 12 queda completado, validado y desplegado. Se conservaron Bavarian
+y Otobai, se agregó PEKING Dólares → PEKING Local, no se agregó fallback y no
+se modificaron cálculos, tasa fija, montos, productos, wrappers ni el PDF.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 76%;
+- pendiente: 24%.
+
+Este porcentaje corresponde al alcance técnico y no representa horas
+oficiales, trabajadas, registradas ni facturables.
+
+## 24. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
