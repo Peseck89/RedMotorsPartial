@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Oportunidades_abiertas_Jaecoo</fullName>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>Valor_Total_Oportunidad_FX__c</columns>
+    <columns>OPPORTUNITY.CREATED_DATE</columns>
+    <columns>Importetotaldelnegocio__c</columns>
+    <columns>SucursalId__c</columns>
+    <columns>ConsecutivoOportunidad__c</columns>
+    <columns>Vendedor__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>OPPORTUNITY.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Opportunity.Jaecoo</value>
+    </filters>
+    <filters>
+        <field>OPPORTUNITY.STAGE_NAME</field>
+        <operation>notEqual</operation>
+        <value>Cerrada Ganada,Cerrada Perdida</value>
+    </filters>
+    <label>Oportunidades abiertas Jaecoo</label>
+    <sharedTo>
+        <group>Asesor_de_Ventas_BMW_y_Nuevos_V2</group>
+        <group>Asesor_de_Ventas_Online_BMW_y_Nuevos_V2</group>
+    </sharedTo>
+</ListView>

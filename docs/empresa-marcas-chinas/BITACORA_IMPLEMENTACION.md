@@ -1857,7 +1857,69 @@ Partial.
 Avance técnico estimado: 86% completado y 14% pendiente. Corresponde al alcance
 técnico y no representa horas oficiales, trabajadas ni facturables.
 
-## 32. Plantilla reutilizable de actualización
+## 32. Bloque 21 — Experiencia declarativa de Opportunity para Omoda y Jaecoo
+
+Se recuperó y comparó metadata declarativa de Opportunity en RedMotorsSandbox /
+Partial para replicar únicamente equivalencias directas del patrón BMW.
+
+Evidencia:
+
+- `Opportunity.Omoda` y `Opportunity.Jaecoo` ya estaban activos con el patrón de
+  vehículos nuevos definido previamente: Sales Process Autos, Compact Layout
+  Vehiculos_Nuevos y picklists equivalentes.
+- No fue necesario crear layouts ni Lightning Record Pages nuevas.
+- La Lightning Record Page relevante para vehículos nuevos es
+  `Opportunity_Record_Page_VN`.
+- Esa página tenía tres campos visibles solo para BMW/MINI:
+  `Asignado_original__c`, `Reasignado_por__c` y
+  `Fecha_de_reasignaci_n__c`.
+- Las List Views BMW tienen un patrón directo por marca para oportunidades
+  abiertas, ganadas, perdidas propias y perdidas de equipo.
+
+Cambios preparados:
+
+- `Opportunity_Record_Page_VN`: visibilidad de los tres campos anteriores
+  ampliada de BMW/MINI a BMW/MINI/Omoda/Jaecoo.
+- Ocho List Views nuevas:
+  - `Oportunidades_abiertas_Omoda`
+  - `Oportunidades_ganadas_Omoda`
+  - `Oportunidades_Perdidas_Omoda`
+  - `Todas_Oportunidades_Perdidas_Omoda`
+  - `Oportunidades_abiertas_Jaecoo`
+  - `Oportunidades_ganadas_Jaecoo`
+  - `Oportunidades_Perdidas_Jaecoo`
+  - `Todas_Oportunidades_Perdidas_Jaecoo`
+
+Fuera de alcance:
+
+- Apex;
+- Lead;
+- seguridad;
+- perfiles;
+- Flows;
+- datos;
+- Softland;
+- reservas;
+- anticipos;
+- sucursales;
+- territorios.
+
+Validación:
+
+- Dry-run declarativo: `0AfAK000000vtcU0AQ`, 9/9 componentes, NoTestRun,
+  0 fallas.
+- Deploy real: `0AfAK000000vuTh0AI`, 9/9 componentes, NoTestRun, 0 fallas,
+  estado Succeeded.
+- Verificación post-deploy: existen las ocho List Views de Opportunity para
+  Omoda/Jaecoo y `Opportunity_Record_Page_VN` quedó actualizada.
+
+Estado: Bloque 21 completado, validado y desplegado en RedMotorsSandbox /
+Partial.
+
+Avance técnico estimado: 87% completado y 13% pendiente. Corresponde al alcance
+técnico y no representa horas oficiales, trabajadas ni facturables.
+
+## 33. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
