@@ -7,7 +7,11 @@
 **/
 public without sharing class QuoterController {
 
-    static final String PRICEBOOK_NAME = 'Bavarian Dólar';
+    private static final Map<String, String> USD_PRICEBOOK_BY_COMPANY = new Map<String, String>{
+        'RMBAVARIAN' => 'Bavarian Dólar',
+        'RMOTOBAI' => 'Otobai Dólares',
+        'RMPEKING' => 'PEKING Dólares'
+    };
     
     @AuraEnabled
     public static Map<String,Object> createQuote(String oppProdInteresId,String prodXBodegaId,Boolean flagNewQuote,String quoteId){
@@ -16,26 +20,47 @@ public without sharing class QuoterController {
         
         List<ProductoXBodega__c> prodXBodList = [SELECT Id,Producto__c,Bodega__c,Disponible__c,Producto__r.Name,Producto__r.vin__c,Producto__r.Marca__c,Producto__r.Modelo_De_Inter_s__c FROM ProductoXBodega__c WHERE Id =:prodXBodegaId LIMIT 1];
         if (prodXBodList.isEmpty()) {
-            if(!Test.isRunningTest()){
-                throw new AuraHandledException('No se encontro el producto');
-            }else{
-                return null;
-            }
-        }
-            
-        List<PricebookEntry> pricebookEntryList = [SELECT Id,UnitPrice,CurrencyIsoCode,Pricebook2Id,Pricebook2.CurrencyIsoCode FROM PricebookEntry WHERE IsActive = true AND Pricebook2.IsActive = true AND Pricebook2.Name = :PRICEBOOK_NAME AND Product2Id = :prodXBodList[0].Producto__c LIMIT 1];
-        if (pricebookEntryList.isEmpty()) {
-            if(!Test.isRunningTest()){
-                throw new AuraHandledException('No se encontro el precio relacionado al producto '+PRICEBOOK_NAME);
-            }else{
-                return null;
-            }
+            throw new AuraHandledException('No se encontro el producto');
         }
 
-        try {  
-            
-            List<Oportunidad_Producto_Interes__c> opiList = [SELECT Id, Producto__c, Marca__c, Modelo_Interes__c,Familia__c,Precio_Unitario__c,Oportunidad__c,Oportunidad__r.Pricebook2Id,Costo_Fijo__c,Comision_Porcentaje_Vendedor__c,Comision_Porcentaje_Jefe__c,Comision_Porcentaje_Gerente__c FROM Oportunidad_Producto_Interes__c  WHERE Id = :oppProdInteresId LIMIT 1];
+        List<Oportunidad_Producto_Interes__c> opiList = [
+            SELECT Id, Producto__c, Marca__c, Modelo_Interes__c, Familia__c,
+                   Precio_Unitario__c, Oportunidad__c,
+                   Oportunidad__r.Pricebook2Id,
+                   Oportunidad__r.Empresa_Operadora__c,
+                   Oportunidad__r.BMW_Compania__c,
+                   Costo_Fijo__c, Comision_Porcentaje_Vendedor__c,
+                   Comision_Porcentaje_Jefe__c, Comision_Porcentaje_Gerente__c
+            FROM Oportunidad_Producto_Interes__c
+            WHERE Id = :oppProdInteresId
+            LIMIT 1
+        ];
+        if (opiList.isEmpty() || opiList[0].Oportunidad__c == null) {
+            throw new AuraHandledException('No se encontro la oportunidad relacionada.');
+        }
 
+        String companyCode = resolveCompanyCode(
+            opiList[0].Oportunidad__r.Empresa_Operadora__c,
+            opiList[0].Oportunidad__r.BMW_Compania__c
+        );
+        Pricebook2 expectedPricebook = getActivePricebook(companyCode);
+        List<PricebookEntry> pricebookEntryList = [
+            SELECT Id, UnitPrice, CurrencyIsoCode, Pricebook2Id,
+                   Pricebook2.CurrencyIsoCode
+            FROM PricebookEntry
+            WHERE IsActive = true
+            AND Pricebook2Id = :expectedPricebook.Id
+            AND Product2Id = :prodXBodList[0].Producto__c
+        ];
+        if (pricebookEntryList.size() != 1) {
+            throw new AuraHandledException(
+                pricebookEntryList.isEmpty()
+                    ? 'No se encontro el precio relacionado al producto en ' + expectedPricebook.Name + '.'
+                    : 'Se encontro mas de un precio relacionado al producto en ' + expectedPricebook.Name + '.'
+            );
+        }
+
+        try {
             //REVISAR PRICEBOOK DE LA OPORTUNIDAD
             if (opiList.size() > 0) {
                 if(opiList[0].Oportunidad__c != null && opiList[0].Oportunidad__r.Pricebook2Id != null && opiList[0].Oportunidad__r.Pricebook2Id != pricebookEntryList[0].Pricebook2Id){
@@ -79,9 +104,7 @@ public without sharing class QuoterController {
             insert newQLI;
 
         } catch (DmlException e) {
-            if (!Test.isRunningTest()){
-                throw new AuraHandledException(e.getMessage());
-            }
+            throw new AuraHandledException(e.getMessage());
         }
         return responseMap;
     }
@@ -92,15 +115,11 @@ public without sharing class QuoterController {
         Map<String,Object> responseMap = new Map<String,Object>();
 
         if (productType == 'mano obra' && (productQuantity == null || productQuantity <=0)) {
-            if(!Test.isRunningTest()){
-                throw new AuraHandledException('La cantidad tiene que ser mayor a 0.');
-            }
+            throw new AuraHandledException('La cantidad tiene que ser mayor a 0.');
         }
 
         if (productType == 'mano obra' && (productUnitPrice == null || productUnitPrice <=0)) {
-            if(!Test.isRunningTest()){
-                throw new AuraHandledException('El precio tiene que ser mayor a 0.');
-            }
+            throw new AuraHandledException('El precio tiene que ser mayor a 0.');
         } 
         
         // if (productType == 'mano obra' && String.isBlank(productAlias)) {
@@ -119,11 +138,7 @@ public without sharing class QuoterController {
         }else {
             List<ProductoXBodega__c> prodXBodList = [SELECT Id,Producto__c,Bodega__c,Disponible__c,Producto__r.vin__c,Producto__r.Marca__c,Producto__r.Modelo_De_Inter_s__c FROM ProductoXBodega__c WHERE Id =:prodXBodId LIMIT 1];
             if (prodXBodList.isEmpty()) {
-                if(!Test.isRunningTest()){
-                    throw new AuraHandledException('No se encontro el producto');
-                }else{
-                    return null;
-                }
+                throw new AuraHandledException('No se encontro el producto');
             }else{
                 productId = prodXBodList[0].Producto__c;
                 bodegaId = prodXBodList[0].Bodega__c;
@@ -131,9 +146,40 @@ public without sharing class QuoterController {
             // System.debug('@prodXBodList@'+prodXBodList);
         }
 
-        List<PricebookEntry> pricebookEntryList = [SELECT Id,UnitPrice,Product2.Name,CurrencyIsoCode,Pricebook2Id,Pricebook2.CurrencyIsoCode,Costo_Fijo__c FROM PricebookEntry WHERE IsActive = true AND Pricebook2.IsActive = true AND Pricebook2.Name = :PRICEBOOK_NAME AND Product2Id = :productId LIMIT 1];
-        if (pricebookEntryList.isEmpty()) {
-            throw new AuraHandledException('No se encontro el precio relacionado al producto.');
+        List<Quote> quoteList = [
+            SELECT Id, Pricebook2Id, Opportunity.Empresa_Operadora__c,
+                   Opportunity.BMW_Compania__c
+            FROM Quote
+            WHERE Id = :quoteId
+            LIMIT 1
+        ];
+        if (quoteList.isEmpty()) {
+            throw new AuraHandledException('No se encontro la cotizacion.');
+        }
+
+        String companyCode = resolveCompanyCode(
+            quoteList[0].Opportunity.Empresa_Operadora__c,
+            quoteList[0].Opportunity.BMW_Compania__c
+        );
+        Pricebook2 expectedPricebook = getActivePricebook(companyCode);
+        if (quoteList[0].Pricebook2Id != expectedPricebook.Id) {
+            throw new AuraHandledException('El Pricebook de la cotizacion no corresponde a la empresa configurada.');
+        }
+
+        List<PricebookEntry> pricebookEntryList = [
+            SELECT Id, UnitPrice, Product2.Name, CurrencyIsoCode, Pricebook2Id,
+                   Pricebook2.CurrencyIsoCode, Costo_Fijo__c
+            FROM PricebookEntry
+            WHERE IsActive = true
+            AND Pricebook2Id = :quoteList[0].Pricebook2Id
+            AND Product2Id = :productId
+        ];
+        if (pricebookEntryList.size() != 1) {
+            throw new AuraHandledException(
+                pricebookEntryList.isEmpty()
+                    ? 'No se encontro el precio relacionado al producto.'
+                    : 'Se encontro mas de un precio relacionado al producto.'
+            );
         }else{
             if (productType == 'extra') {
                 productUnitPrice = esRegalia ? pricebookEntryList[0].Costo_Fijo__c : pricebookEntryList[0].UnitPrice;
@@ -165,393 +211,47 @@ public without sharing class QuoterController {
             
             insert newQLI;
         } catch (DmlException e) {
-            if (!Test.isRunningTest()){
-                throw new AuraHandledException(e.getMessage());
-            }
+            throw new AuraHandledException(e.getMessage());
         }
         return responseMap;
     }
 
-    //corregir y ajustar, se agrego solo para el pase por temas de tiempo
-    public static void dummy() {
-        String dummy = ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
-        dummy += ''; 
+    private static String resolveCompanyCode(Id companyId, String legacyCompany) {
+        String companyCode;
+        if (companyId != null) {
+            companyCode = EmpresaResolver.resolve(companyId).codigo;
+        } else if (legacyCompany == 'Bavarian') {
+            companyCode = 'RMBAVARIAN';
+        } else if (legacyCompany == 'Otobai') {
+            companyCode = 'RMOTOBAI';
+        }
+
+        if (!USD_PRICEBOOK_BY_COMPANY.containsKey(companyCode)) {
+            throw new EmpresaConfigurationException(
+                String.isBlank(companyCode)
+                    ? 'La empresa de la oportunidad es requerida.'
+                    : 'La empresa de la oportunidad no esta soportada: ' + companyCode + '.'
+            );
+        }
+        return companyCode;
+    }
+
+    private static Pricebook2 getActivePricebook(String companyCode) {
+        String pricebookName = USD_PRICEBOOK_BY_COMPANY.get(companyCode);
+        List<Pricebook2> pricebooks = [
+            SELECT Id, Name, CurrencyIsoCode
+            FROM Pricebook2
+            WHERE Name = :pricebookName
+            AND IsActive = true
+        ];
+        if (pricebooks.size() != 1) {
+            throw new AuraHandledException(
+                pricebooks.isEmpty()
+                    ? 'No se encontro el Pricebook activo ' + pricebookName + '.'
+                    : 'Se encontro mas de un Pricebook activo ' + pricebookName + '.'
+            );
+        }
+        return pricebooks[0];
     }
 
 }

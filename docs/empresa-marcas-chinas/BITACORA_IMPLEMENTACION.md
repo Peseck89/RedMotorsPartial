@@ -1275,7 +1275,87 @@ regresión sin fallas. El Bloque 15 queda completado, validado y desplegado.
 Avance técnico estimado: 82% completado y 18% pendiente. Corresponde al
 alcance técnico y no representa horas oficiales, trabajadas ni facturables.
 
-## 27. Plantilla reutilizable de actualización
+## 27. Bloque 16 — Empresa configurable en QuoterController
+
+Estado: completado, validado y desplegado en RedMotorsSandbox / Partial.
+
+`QuoterController.createQuote()` y `addLineItem()` dejaron de seleccionar
+globalmente `Bavarian Dólar`. Ahora resuelven
+`Opportunity.Empresa_Operadora__c` mediante `EmpresaResolver` y
+`EmpresaContext.codigo`; `BMW_Compania__c` permanece como respaldo temporal
+para Bavarian y Otobai.
+
+Los mapeos USD son explícitos: `RMBAVARIAN` usa `Bavarian Dólar`,
+`RMOTOBAI` usa `Otobai Dólares` y `RMPEKING` usa `PEKING Dólares`. El lookup
+tiene prioridad, no se usa el nombre de Empresa y no existe selección por
+descarte.
+
+En `createQuote()` se validan producto, Opportunity, empresa, Pricebook activo
+único y PricebookEntry única antes de eliminar líneas o actualizar la
+Opportunity. En `addLineItem()` se confirma que el Pricebook de la Quote
+coincide con el de su empresa y la entrada se busca únicamente dentro de ese
+Pricebook.
+
+Se retiraron los siete bloques activos de `Test.isRunningTest` que impedían
+ejecutar errores y DML reales en pruebas. El guard comentado para alias
+permanece sin cambios. No se agregó lógica especial de pruebas.
+
+`QuoterControllerTest` fue reconstruida con once métodos funcionales para las
+tres empresas, precedencia, respaldos, configuraciones inválidas, Pricebook y
+PricebookEntry inexistentes, ausencia de DML parcial y selección correcta en
+`addLineItem`. La prueba ya no utiliza `dummy()` como sustituto de cobertura.
+
+El primer dry-run `0AfAK000000vqjR0AQ` aprobó 11/11 pruebas y reportó
+108/515 líneas cubiertas, equivalentes a 20.971%. La org no fue modificada.
+El análisis confirmó que 379 de las 515 líneas ejecutables correspondían a
+`dummy()`, un método de concatenaciones vacías agregado históricamente para
+cobertura.
+
+Luis autorizó eliminar completamente `dummy()` y el comentario asociado. No
+se modificó ninguna otra lógica productiva. Se agregaron dos regresiones:
+cambio de Pricebook con una línea existente, y creación de una regalía/extra
+con el costo fijo de la PricebookEntry empresarial. La prueba queda con 13
+métodos funcionales y una cobertura esperada superior al 75%. El Bloque 16
+quedó preparado para su validación final.
+
+No se modificaron regalos, extras, mano de obra, comisiones, cantidades,
+precios, cálculos, metadata ni automatizaciones.
+
+### Cierre técnico del Bloque 16
+
+| Etapa | Deploy ID | Componentes | Pruebas | Fallas | Resultado |
+|---|---|---:|---:|---:|---|
+| Primer dry-run | `0AfAK000000vqjR0AQ` | 2/2 | 11/11 | 0 | Exitoso; cobertura afectada por `dummy()` |
+| Dry-run funcional final | `0AfAK000000vqpt0AA` | 2/2 | 13/13 | 0 | Exitoso |
+| Dry-run de regresión | `0AfAK000000vqrV0AQ` | 2/2 | 22/22 | 0 | Exitoso |
+| Deploy real | `0AfAK000000vqt70AA` | 2/2 | 22/22 | 0 | Exitoso |
+
+El dry-run funcional final confirmó 118/136 líneas cubiertas en
+`QuoterController`, equivalentes a 86.77%. El deploy real terminó
+correctamente en RedMotorsSandbox / Partial.
+
+`Opportunity.Empresa_Operadora__c` quedó como fuente principal y
+`BMW_Compania__c` como respaldo temporal para Bavarian y Otobai. El lookup
+tiene prioridad ante contradicción. Los mapeos explícitos son `RMBAVARIAN` →
+`Bavarian Dólar`, `RMOTOBAI` → `Otobai Dólares` y `RMPEKING` →
+`PEKING Dólares`. No existe selección por descarte.
+
+`createQuote()` valida empresa, Pricebook y PricebookEntry antes de eliminar
+OpportunityLineItems o actualizar Opportunity. `addLineItem()` comprueba que
+el Pricebook efectivo de la Quote corresponda a la empresa configurada.
+
+Se eliminaron siete guards activos de `Test.isRunningTest` que alteraban la
+ruta ejecutada durante pruebas. `dummy()` y su comentario asociado fueron
+eliminados con autorización de Luis, sin modificar la lógica productiva
+restante por ese ajuste.
+
+Se validaron 13 pruebas funcionales y 22 pruebas de regresión. El Bloque 16
+queda completado, validado y desplegado.
+
+Avance técnico estimado: 83% completado y 17% pendiente. Corresponde al
+alcance técnico y no representa horas oficiales, trabajadas ni facturables.
+
+## 28. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
