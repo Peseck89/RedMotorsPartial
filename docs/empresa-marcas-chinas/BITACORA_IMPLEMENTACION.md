@@ -1916,8 +1916,10 @@ Validación:
 Estado: Bloque 21 completado, validado y desplegado en RedMotorsSandbox /
 Partial.
 
-Avance técnico estimado: 87% completado y 13% pendiente. Corresponde al alcance
-técnico y no representa horas oficiales, trabajadas ni facturables.
+Avance técnico estimado registrado al cerrar el Bloque 21: 87% completado y
+13% pendiente. Corresponde al alcance técnico estimado en ese momento y no
+representa horas oficiales, trabajadas ni facturables. El cierre consolidado
+posterior del Sprint 1 comprometido se actualiza a 19/19 = 100%.
 
 ## 33. Bloque 10 — Búsqueda detallada y sincronización de precios
 
@@ -1964,8 +1966,9 @@ Validación:
 
 Avance:
 
-- Sprint 1 permanece en 18/19 bloques funcionales comprometidos cerrados:
-  94.74%.
+- Sprint 1 comprometido queda en 19/19 bloques funcionales cerrados: 100%.
+- Bloque 10 queda como investigación adicional bloqueada por dependencias
+  externas y no forma parte del pendiente de las 44 horas.
 
 ## 34. Análisis — `Quote.empresaFactura__c`
 

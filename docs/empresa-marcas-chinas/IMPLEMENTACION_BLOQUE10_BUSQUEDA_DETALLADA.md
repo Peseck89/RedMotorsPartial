@@ -155,4 +155,7 @@ No se modificaron:
 
 El bloque no incrementa el avance funcional del Sprint 1.
 
-El Sprint 1 se mantiene en 18/19 bloques funcionales comprometidos cerrados, equivalente a 94.74%.
+El cierre consolidado posterior del Sprint 1 comprometido queda en 19/19
+bloques funcionales cerrados, equivalente a 100%. Este bloque permanece como
+investigación adicional bloqueada por dependencias externas y no forma parte
+del pendiente de las 44 horas.
