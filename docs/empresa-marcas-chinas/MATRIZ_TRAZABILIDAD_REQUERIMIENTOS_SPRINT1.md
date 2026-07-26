@@ -2,7 +2,14 @@
 
 Worktree: `C:\Users\dokur\Documents\Repositorios\RedMotors-Sprint1-Trazabilidad`
 Rama: `analysis/pc/redmotors-empresa-marcas-chinas-sprint1-trazabilidad-20260726`
-Base: `origin/feature/pc/redmotors-empresa-marcas-chinas-sprint1-20260724` @ `a623f54`
+Base de la rama: `origin/feature/pc/redmotors-empresa-marcas-chinas-sprint1-20260724` @ `a623f54`
+
+**Actualización 26/07/2026:** `sprint1` avanzó desde `a623f54` hasta `c8b89fb`
+(commits `1d83228` → `f8155f4` merge → `c8b89fb`), incorporando el cierre real
+del Bloque 20. Esta actualización se hizo leyendo esa evidencia directamente
+del historial de `git` y de `BITACORA_IMPLEMENTACION.md` en `sprint1`
+(`git show c8b89fb:docs/...`), sin adelantar la rama de esta matriz ni tocar
+la rama de Bloque 20.
 
 Análisis local. No se ejecutó `sf`, no se consultó ningún org, no se modificó
 código ni metadata, no hubo deploy. No se tocaron las ramas de Bloques 18, 19,
@@ -19,7 +26,7 @@ worktree.
 | `INVENTARIO_APEX_SPRINT1.md` | Inventario Apex confirmado (74 clases, 4 triggers) |
 | `PLAN_IMPLEMENTACION_SPRINT1.md` | Clasificación de 41 clases directas y plan por bloques |
 | `BITACORA_IMPLEMENTACION.md` | Registro de commits, Deploy IDs y Test Run IDs de los Bloques 1-19 |
-| `IMPLEMENTACION_BLOQUE20_LEAD_PEKING.md` (worktree de Codex, solo lectura) | Estado en progreso del Bloque 20 |
+| `IMPLEMENTACION_BLOQUE20_LEAD_PEKING.md` y `BITACORA_IMPLEMENTACION.md` §31 en `sprint1` @ `c8b89fb` | Cierre real del Bloque 20 (deploy, regresión, Test Run) |
 | `IMPLEMENTACION_BLOQUE21_OPORTUNIDAD_UI.md` (este mismo trabajo, Bloque 21) | Hallazgo: sin cambio declarativo seguro para implementar |
 | `PENDIENTES_DECISION_BLOQUE20.md` | Preguntas pendientes de Bloque 20 (resueltas parcialmente por autonomía autorizada) |
 | Historial de `git log` en `sprint1` hasta `a623f54` | Evidencia de commits |
@@ -184,13 +191,13 @@ C).
 1. **Fuente:** `PENDIENTES_DECISION_BLOQUE20.md` (preguntas 1-3); PDF original §2 ("Lead: Replicar 2 RT nuevos... para que el mapeo Lead→Opportunity funcione").
 2. **Requerimiento:** Record Types de Lead para Omoda/Jaecoo y su mapeo a los Record Types de Opportunity ya existentes.
 3. **Componentes:** `Lead.Omoda`, `Lead.Jaecoo`, `RM_RecordTypeMapping.Lead_Omoda_to_Opp`, `RM_RecordTypeMapping.Lead_Jaecoo_to_Opp`, `RM_Lead_Trigger_Helper_Test`.
-4. **Bloque:** 20 (Codex, en curso).
-5. **Estado:** En progreso.
-6. **Evidencia:** `IMPLEMENTACION_BLOQUE20_LEAD_PEKING.md` (worktree `RedMotors-Bloque20-LeadPeking`, rama `feature/pc/redmotors-empresa-marcas-chinas-bloque20-lead-peking-20260726`) — implementado localmente, replicando `Lead.BMW` como plantilla técnica. **Sin dry-run, sin regresión, sin deploy todavía** (pendientes explícitos del propio documento).
-7. **Riesgo pendiente:** todo lo propio de un cambio no validado: compilación, cobertura, regresión sobre `RM_Lead_Trigger_Helper`/`TraficoTriggerHandler`.
-8. **Acción faltante:** dry-run enfocado, regresión seleccionada, deploy condicionado a pruebas en verde, verificación post-deploy (las cuatro explícitamente listadas por Codex).
-9. **Responsable de decisión:** ya autorizado por Luis bajo criterio de autonomía ("dale tú sin miedo a los ajustes"); pendiente de validación técnica, no de nueva decisión de negocio.
-10. **Confirmación:** trabajo de Codex, no de esta tarea; no se duplicó ni se tocó este worktree.
+4. **Bloque:** 20 (Codex).
+5. **Estado:** Completado.
+6. **Evidencia:** commit `1d83228` (`feat(lead): add PEKING traffic mappings`); merge a `sprint1` en `f8155f4`; `BITACORA_IMPLEMENTACION.md` §31 (`sprint1` @ `c8b89fb`). Validación: dry-run enfocado `0AfAK000000vuNF0AY` (5/5, 3/3, 0 fallas); regresión seleccionada `0AfAK000000vuOr0AI` (5/5, **53/53**, 0 fallas); deploy real `0AfAK000000vuQT0AY` (5/5, 53/53, 0 fallas, Succeeded); verificación post-deploy Test Run `707AK00000GxONW` (3/3, 0 fallas). `Lead.Omoda` y `Lead.Jaecoo` confirmados activos; mappings `Lead.Omoda→Opportunity.Omoda` y `Lead.Jaecoo→Opportunity.Jaecoo` confirmados activos.
+7. **Riesgo pendiente:** ninguno propio — el único riesgo detectado (anomalía `Lead.BMW→Opportunity.Polaris`) es preexistente y se documenta aparte en C.2, no se introdujo ni se corrigió en este bloque.
+8. **Acción faltante:** ninguna para lo cerrado.
+9. **Responsable de decisión:** No aplica (ya cerrado; la autonomía para ejecutarlo ya la había dado Luis: "dale tú sin miedo a los ajustes").
+10. **Confirmación:** no se modificó `Lead.BMW→Opportunity.Polaris`, `RM_Config__mdt` ni la lógica productiva de `RM_Lead_Trigger_Helper`; no se tocaron Softland, reservas, anticipos, finanzas, branding, sucursales, Flows, LWC, layouts ni permisos — confirmado en `BITACORA_IMPLEMENTACION.md` §31.
 
 ### C.2 Anomalía `Lead.BMW` → `Opportunity.Polaris`
 
@@ -199,11 +206,11 @@ C).
 3. **Componentes:** `RM_RecordTypeMapping__mdt` (registro existente, no tocado).
 4. **Bloque:** Detectado en 20, no corregido.
 5. **Estado:** Pendiente decisión.
-6. **Evidencia:** `PENDIENTES_DECISION_BLOQUE20.md`, pregunta 4 ("¿El mapping actual BMW → Polaris es correcto?"); confirmado como anomalía real por consulta a la configuración activa.
-7. **Riesgo pendiente:** si es un error, Leads de marca BMW se están convirtiendo hoy en Opportunities de Polaris — un riesgo funcional real, ajeno a este Sprint.
-8. **Acción faltante:** confirmación de Luis/Diego sobre si corregir.
+6. **Evidencia:** `PENDIENTES_DECISION_BLOQUE20.md`, pregunta 4 ("¿El mapping actual BMW → Polaris es correcto?"); reconfirmado en el cierre real del bloque (`BITACORA_IMPLEMENTACION.md` §31, `sprint1` @ `c8b89fb`): "`Lead_BMW_to_Opp` apunta actualmente a `Opportunity.Polaris`... se documenta como anomalía existente y no se modifica en este bloque."
+7. **Riesgo pendiente:** si es un error, Leads de marca BMW se están convirtiendo hoy en Opportunities de Polaris — un riesgo funcional real, ajeno a este Sprint. No hay ningún registro local (Custom Metadata no versionado, sin comentarios ni historial) que revele si fue intencional o un error de captura.
+8. **Acción faltante:** confirmación de Luis/Diego sobre si corregir. No es resoluble por evidencia: no existe un único patrón técnico que indique intención — se mantiene como Pendiente decisión tras revisión explícita.
 9. **Responsable de decisión:** Luis/Diego.
-10. **Confirmación:** no se tocó este mapeo en ningún bloque.
+10. **Confirmación:** no se tocó este mapeo en ningún bloque, incluyendo el cierre real del Bloque 20.
 
 ### C.3 Flujo de tráfico/reservas para "usados" y decisiones de alcance de Lead
 
@@ -340,12 +347,12 @@ C).
 2. **Requerimiento:** Confirmar si este campo es equivalente a `Quote.Compania__c` antes de migrarlo.
 3. **Componentes:** `Quote.empresaFactura__c`.
 4. **Bloque:** Ninguno.
-5. **Estado:** Pendiente decisión.
-6. **Evidencia:** hallazgo textual del Manual, sin seguimiento posterior en la bitácora de ningún bloque.
-7. **Riesgo pendiente:** si se asume equivalencia sin validar, se podría migrar sobre una base incorrecta.
-8. **Acción faltante:** validar FLS y uso real de este campo (requiere consulta al org, no realizada en Sprint 1).
-9. **Responsable de decisión:** técnico primero (validación), luego Luis/Diego si hay ambigüedad de negocio.
-10. **Confirmación:** no se asumió equivalencia ni se migró nada de este campo.
+5. **Estado:** Pendiente técnico (reclasificado desde Pendiente decisión — ver revisión de esta actualización).
+6. **Evidencia:** hallazgo textual del Manual, sin seguimiento posterior en la bitácora de ningún bloque. Verificación local añadida en esta actualización: **`Quote.empresaFactura__c` no está versionado como campo** (`objects/Quote/fields/` no lo contiene) y **ningún archivo Apex/LWC local lo referencia como campo de Quote** — las únicas coincidencias textuales de `empresaFactura__c` en el repo corresponden a `WorkOrder.empresaFactura__c` dentro de datos de prueba (`BMWVinScanTrabajoGeneratorTest.cls`, `TestDataFactory.cls`), no a `Quote`.
+7. **Riesgo pendiente:** si se asume equivalencia con `Quote.Compania__c` sin validar, se podría migrar sobre una base incorrecta.
+8. **Acción faltante:** no es una decisión de negocio — es una investigación técnica (`describe`/FLS del campo en el org) que no se puede completar sin acceso de solo lectura al org, prohibido en esta tarea. No hay ambigüedad comercial: solo falta el dato técnico.
+9. **Responsable de decisión:** técnico (validación por retrieve/describe dirigido); no requiere una decisión de Luis/Diego salvo que la investigación revele una discrepancia de negocio real.
+10. **Confirmación:** no se asumió equivalencia ni se migró nada de este campo; la reclasificación se basa en evidencia local verificada en esta misma actualización, no en una suposición.
 
 ---
 
@@ -370,7 +377,7 @@ C).
 2. **Requerimiento:** Iterar por empresas activas en vez de un literal fijo `RMBAVARIAN`.
 3. **Componentes:** 6 `BatchGet*Softland`, `BatchGetBodegaSoftland`, 3 `ScheduleGet*Softland`.
 4. **Bloque:** Ninguno.
-5. **Estado:** Diferido.
+5. **Estado:** Pendiente decisión — depende del mismo dato/contrato externo que H.5 y J.1b, no de prioridad de agenda (recategorizado en esta actualización para no mezclarlo con trabajo diferido por presupuesto).
 6. **Evidencia:** `INVENTARIO_APEX_SPRINT1.md` §6.4, `PLAN_IMPLEMENTACION_SPRINT1.md` §5 (todas marcadas "No"/"No" en S30/S44).
 7. **Riesgo pendiente:** hoy estos batches **ni siquiera consultan Otobai**, mucho menos PEKING — es deuda preexistente, no introducida por este Sprint, pero tampoco cerrada por él.
 8. **Acción faltante:** todo el trabajo — requiere confirmar contrato Softland antes de tocar código (ver sección Softland).
@@ -400,7 +407,7 @@ C).
 2. **Requerimiento:** `DocumentBrandingService`/`DocumentContext`, razón social/logo/identificación fiscal correctos por empresa en todos los documentos legales.
 3. **Componentes:** `cT_QuotePDFEmail.cls`, `savePDFfile.cls`, 48 páginas Visualforce con identidad/empresa/precios.
 4. **Bloque:** Ninguno.
-5. **Estado:** Diferido / Pendiente decisión.
+5. **Estado:** Pendiente decisión (el bloqueo primario es la falta de datos legales aprobados, no solo presupuesto de horas).
 6. **Evidencia:** `PLAN_IMPLEMENTACION_SPRINT1.md` §5 (ambas clases marcadas "No"/"No" en S30/S44, "PDF diferido"); Manual de Análisis, riesgo R2 (crítico).
 7. **Riesgo pendiente:** crítico según el propio Manual — "documento con razón social/logo equivocado" está clasificado como riesgo crítico (R2) sin control implementado todavía para PEKING.
 8. **Acción faltante:** razón social, identificación tributaria, logo y términos aprobados de PEKING (decisión de negocio) antes de cualquier desarrollo.
@@ -439,7 +446,7 @@ C).
 2. **Requerimiento:** Confirmar contrato Softland para PEKING (mismo endpoint o instancia distinta) y propagar el código de empresa explícito en cada integración.
 3. **Componentes:** ~20 clases (`QuoteSoftlandPedidoService`, `HttpCalloutCreateKit`, `OrderBatch`, `RM_VN_CambiarUbicacion_Ctrl`, etc.).
 4. **Bloque:** Ninguno.
-5. **Estado:** Pendiente decisión (bloquea) → Diferido (ejecución).
+5. **Estado:** Pendiente decisión — depende de dato/proveedor externo (contrato Softland), no de una preferencia interna de Luis/Diego.
 6. **Evidencia:** Manual de Análisis, pregunta pendiente #4 ("¿Softland usa el mismo endpoint/contrato...?"); ninguna clase de esta familia aparece en ningún bloque cerrado.
 7. **Riesgo pendiente:** crítico (R4 del Manual) — "Softland mezcla códigos/inventario" sin control para PEKING.
 8. **Acción faltante:** respuesta de negocio/integración antes de cualquier desarrollo.
@@ -467,17 +474,30 @@ C).
 
 ## J. Apex — resolución transversal restante
 
-### J.1 Clases directas del `PLAN_IMPLEMENTACION_SPRINT1.md` no tocadas (`BusquedaDetalladaController`, `precioProductoJSON`, `productJSON`, `ProductoLocalizacionHelper`, `HttpCalloutGetProductRefPrices`/`Fresh`, `RM_Lead_Trigger_Helper`)
+### J.1a `BusquedaDetalladaController` y `precioProductoJSON` — selección de Pricebook por nombre, sin integración externa
 
 1. **Fuente:** `PLAN_IMPLEMENTACION_SPRINT1.md` §5 (matriz de 41 clases); Manual de Análisis, Anexo A.1.
-2. **Requerimiento:** Resolver empresa/precio/bodega/integración en cada una, sin fallback.
-3. **Componentes:** las 6 clases nombradas (representativas; hay más en la misma categoría, ver `MATRIZ_PENDIENTES_SPRINT1_20260726.md` de la rama de análisis previa).
+2. **Requerimiento:** Reemplazar el filtro `Bavarian%`/`Otobai%` por selección basada en relación/código de empresa — exactamente el mismo patrón ya aplicado en `QuoteController`, `QuoterController` y `BMW_LineaPlantillaEmpresa`.
+3. **Componentes:** `BusquedaDetalladaController.getActivePricebooks()`, `precioProductoJSON`.
 4. **Bloque:** Ninguno.
-5. **Estado:** Diferido / Fuera de alcance (según el caso — `RM_Lead_Trigger_Helper` es Pendiente decisión, propiedad de Bloque 20).
-6. **Evidencia:** ninguna de estas 6 aparece en ningún commit del Sprint 1.
-7. **Riesgo pendiente:** variable por clase; documentado individualmente en `PLAN_IMPLEMENTACION_SPRINT1.md` §5.
-8. **Acción faltante:** todo el trabajo restante.
-9. **Responsable de decisión:** Luis/Diego para priorización; `RM_Lead_Trigger_Helper` específicamente es propiedad de Codex/Bloque 20.
+5. **Estado:** Diferido — pero **técnicamente resoluble ahora**: ninguna de las dos hace callout externo ni depende de un dato/contrato pendiente; ambas seleccionan `Pricebook2` por nombre, igual que los consumidores ya cerrados en Bloques 2 y 16.
+6. **Evidencia:** ninguna aparece en ningún commit del Sprint 1; `INVENTARIO_APEX_SPRINT1.md` §7.2 confirma que ambas son de dominio "Pricebooks y moneda", no de integración.
+7. **Riesgo pendiente:** bajo — mismo patrón ya validado tres veces en este Sprint.
+8. **Acción faltante:** aplicar `EmpresaResolver`/`EmpresaContext` en ambas clases y sus tests — sin decisión bloqueante, solo prioridad de agenda.
+9. **Responsable de decisión:** Luis/Diego únicamente para priorización de agenda, no por ambigüedad de requerimiento.
+10. **Confirmación:** ninguna se tocó en este Sprint.
+
+### J.1b `productJSON`, `ProductoLocalizacionHelper`, `HttpCalloutGetProductRefPrices`/`Fresh` — integración Softland real
+
+1. **Fuente:** `PLAN_IMPLEMENTACION_SPRINT1.md` §5; Manual de Análisis, Anexo A.1 y A.3.1 (nombres con `HttpCallout`, "construcción de request" a Softland).
+2. **Requerimiento:** Resolver empresa/bodega antes de cada consulta/callout de precios o localización.
+3. **Componentes:** `productJSON.cls`, `ProductoLocalizacionHelper.cls`, `HttpCalloutGetProductRefPrices.cls`, `HttpCalloutGetProductFreshRefPrices.cls`.
+4. **Bloque:** Ninguno.
+5. **Estado:** Pendiente decisión — depende del mismo dato/contrato externo que H.5 (Softland), no de prioridad de agenda.
+6. **Evidencia:** `INVENTARIO_APEX_SPRINT1.md` §7.4 y §6.4 confirman que las cuatro hacen callout o construyen payload de integración real, a diferencia de J.1a.
+7. **Riesgo pendiente:** crítico (mismo R4 del Manual) — no resoluble sin confirmar el código/contrato ERP de PEKING.
+8. **Acción faltante:** ver H.5 — comparten el mismo bloqueo.
+9. **Responsable de decisión:** Luis/Diego, con apoyo de integración (mismo que H.5).
 10. **Confirmación:** ninguna se tocó en este Sprint.
 
 ### J.2 Triggers de Account (`ChanceAccountBavarian`, `ChanceAccountContado`, `ChanceAccountOtobai`)
@@ -581,6 +601,18 @@ C).
 
 ---
 
+## Corrección de conteo aplicada en esta actualización
+
+La versión anterior de esta matriz reportó **43** como total de
+requerimientos únicos. Al recontar las secciones numeradas (`A.1`...`L.3`)
+para esta actualización, el total real de filas es **38** (más la división de
+`J.1` en `J.1a`/`J.1b` hecha en esta misma actualización para separar
+correctamente lo resoluble ahora de lo bloqueado por Softland, dando **39**).
+El **43** anterior fue un error aritmético de esa entrega, no una
+recategorización real de contenido — no hubo 5 requerimientos "perdidos"; el
+conteo original de 22/1/2/10/8 nunca sumó contra las filas realmente escritas.
+Se corrige aquí de forma explícita en vez de arrastrar el error.
+
 ## Resumen A — Requerimientos explícitos completados
 
 1. Objeto `Empresa__c` con campos mínimos (Bloque 1).
@@ -605,39 +637,38 @@ C).
 20. Record Types `Opportunity.Omoda`/`Opportunity.Jaecoo` + `Product2.Empresa__c=RMPEKING` (Bloque 17).
 21. `ProductSearcherController` mano de obra por empresa (Bloque 18).
 22. `RM_VN_CrearOppModeloInteres_Ctrl` Empresa Operadora desde modelo de interés (Bloque 19).
+23. **`Lead.Omoda`/`Lead.Jaecoo` + mapeos `RM_RecordTypeMapping` (Bloque 20) — nuevo en esta actualización.**
 
-**Total: 22 requerimientos explícitos completados y desplegados**, todos con Deploy ID confirmado en `BITACORA_IMPLEMENTACION.md`.
+**Total: 23 requerimientos explícitos completados y desplegados**, todos con
+Deploy ID confirmado en `BITACORA_IMPLEMENTACION.md`.
 
-## Resumen B — Requerimientos explícitos todavía pendientes
+## Resumen B — Requerimientos explícitos todavía pendientes (recategorizado)
 
-**Pendiente decisión (Luis/Diego):**
-- Anomalía `Lead.BMW → Opportunity.Polaris`.
-- Alcance de "usados" en Lead/tráfico.
-- Comportamiento final de `empresaFacturaCP__c` ante empresa vacía (`WorkOrderTrigger` vs. patrón fail-closed).
-- Semántica y FLS de `Quote.empresaFactura__c`.
-- Contrato Softland para PEKING (mismo endpoint o instancia distinta).
-- Alcance de branding legal/PDF (razón social, identificación fiscal, logo).
-- Propósito funcional de los triggers de Account.
-- Perfiles/Permission Sets dedicados de marca para Omoda/Jaecoo.
-- Modelo relacional completo (Producto_Empresa, Bodega.Empresa, Usuario_Empresa, Sucursal/Territory).
-- Seguridad completa (OWD, sharing, Experience Cloud) por empresa.
+**Pendiente decisión — comercial, proveedor o dato externo (9):**
+- Anomalía `Lead.BMW → Opportunity.Polaris` (C.2) — sin patrón técnico que revele intención; confirmado que sigue sin corregirse tras el cierre real de Bloque 20.
+- Alcance de "usados" en Lead/tráfico (C.3).
+- Comportamiento final de `empresaFacturaCP__c` ante empresa vacía (E.2) — dos reglas ya implementadas y válidas en contextos distintos, Diego debe elegir.
+- Contrato Softland para PEKING (H.5) — dato externo (proveedor), no preferencia interna.
+- Batches/schedulers Softland de catálogo (G.2) — mismo bloqueo externo que H.5.
+- `productJSON`/`ProductoLocalizacionHelper`/`HttpCalloutGetProductRefPrices`/`Fresh` (J.1b) — mismo bloqueo externo que H.5.
+- Alcance de branding legal/PDF (H.2) — faltan datos legales aprobados (razón social, identificación fiscal, logo), no solo horas.
+- Propósito funcional de los triggers de Account (J.2).
+- Perfiles/Permission Sets dedicados de marca para Omoda/Jaecoo (L.2) — decisión de tiempo/prioridad ligada a otra iniciativa de simplificación de perfiles ya en curso.
 
-**Pendiente técnico (sin decisión de negocio, pero sin cerrar):**
-- Experiencia declarativa de Opportunity (Layouts/LRP/List Views/Quick Actions) para Omoda/Jaecoo — no hay artefacto local que replicar.
-- Reconciliación completa RedPartial ↔ redProd (46 diferencias, 7 ausencias, solo 1 caso investigado).
+**Pendiente técnico — requiere investigación adicional, no decisión de negocio (3):**
+- Experiencia declarativa de Opportunity (Layouts/LRP/List Views/Quick Actions) para Omoda/Jaecoo (B.4) — necesita retrieve dirigido de BMW para tener un patrón que replicar.
+- Semántica y FLS de `Quote.empresaFactura__c` (F.4) — reclasificado en esta actualización desde "Pendiente decisión": localmente no existe ni el campo ni ninguna referencia de código; falta un describe/FLS del org, no una respuesta de negocio.
+- Reconciliación RedPartial ↔ redProd (L.3) — 46 diferencias y 7 ausencias reportadas por el Manual; solo 1 caso investigado y corregido (el de tráfico).
 
-**En progreso:**
-- Lead/Tráfico PEKING (Bloque 20, Codex): implementado localmente, sin dry-run/deploy.
-
-**Diferido (fuera del presupuesto de 44 horas, sin decisión bloqueante pero sin ejecutar):**
-- Reservas (~10 clases).
-- Anticipos (2 clases).
-- Batches/schedulers Softland de catálogo (9 componentes).
-- Integración Softland general (~20 componentes).
-- Flows (14 dependientes confirmados + 33 más candidatos).
-- LWC/Aura de inventario y Community (9+ componentes).
-- `Order.empresaQueFactura__c` y sus consumidores.
-- PDF/branding legal completo.
+**Diferido / fase posterior — sin bloqueo específico, fuera del presupuesto de 44 horas (9):**
+- Modelo relacional completo: `Producto_Empresa__c`, `Bodega__c.Empresa__c`, `Usuario_Empresa__c`, `Sucursal__c`/`ServiceTerritory` (A.6) — es la "Opción B/C" estratégica del Manual, un sprint propio.
+- Seguridad completa (OWD, sharing, Experience Cloud) por empresa (L.1) — mismo motivo que A.6.
+- Reservas (H.3, ~10 clases).
+- Anticipos (H.4, 2 clases).
+- `Order.empresaQueFactura__c` y sus consumidores (D.1).
+- Flows (I.1: 14 dependientes confirmados + 33 más candidatos).
+- LWC/Aura de inventario y Community (K.1, K.2: 9+ componentes) — bloqueado además por falta de infraestructura Jest en el repo.
+- `BusquedaDetalladaController`/`precioProductoJSON` (J.1a) — **con una salvedad importante: técnicamente resoluble ahora, ver Resumen D.**
 
 ## Resumen C — Trabajo técnico adicional realizado únicamente para calidad, pruebas, respaldo o documentación
 
@@ -649,53 +680,159 @@ Esto **no se cuenta como funcionalidad nueva** en los totales de A/B:
 - Matriz de pendientes previa (`MATRIZ_PENDIENTES_SPRINT1_20260726.md`).
 - Análisis de Bloque 21 sin cambio (`IMPLEMENTACION_BLOQUE21_OPORTUNIDAD_UI.md`).
 - Ramas de respaldo (`backup/pc/redmotors-before-bloque18...`, `backup/pc/redmotors-before-bloque19...`, `backup/pc/redmotors-sprint1-before-opportunity...`, etc.).
-- Worktrees de análisis aislados (Bloque 18 coverage lab, pendientes Sprint 1, este mismo de trazabilidad).
-- Reconstrucción de `RM_Lead_Trigger_Helper_Test` con aserciones reales (Bloque 20, en progreso — parte del propio Bloque 20, no una funcionalidad adicional del alcance).
-- Este mismo documento de trazabilidad.
+- Worktrees de análisis aislados (Bloque 18 coverage lab, pendientes Sprint 1, Bloque 21, este mismo de trazabilidad).
+- Reconstrucción de `RM_Lead_Trigger_Helper_Test` con aserciones reales (Bloque 20) — parte del propio Bloque 20, no una funcionalidad adicional del alcance.
+- Este mismo documento de trazabilidad, incluida esta actualización.
+
+## Resumen D — Clasificación de los 21 requerimientos no completados (punto 3 y 4 de esta actualización)
+
+Se revisaron uno por uno los antiguos "10 Pendiente decisión" (y el resto de
+lo no completado) para no asumir que todos requieren preguntarle a
+Luis/Diego. Resultado, en 4 categorías:
+
+### (a) Técnicamente resoluble ahora, sin decisión — 1 de 21
+
+- **J.1a** (`BusquedaDetalladaController`, `precioProductoJSON`): mismo patrón
+  de selección de Pricebook por relación/código ya aplicado y probado tres
+  veces en este Sprint (`QuoteController`, `QuoterController`,
+  `BMW_LineaPlantillaEmpresa`); ninguna hace callout externo. Es el
+  candidato técnico más limpio de todo lo pendiente.
+
+### (b) Requiere investigación adicional (técnica, no comercial) — 3 de 21
+
+- **F.4** `Quote.empresaFactura__c`: falta describe/FLS del org.
+- **B.4** Experiencia declarativa de Opportunity: falta retrieve de
+  Layout/FlexiPage/List View de BMW para tener qué replicar.
+- **L.3** Reconciliación RedPartial↔redProd: falta investigar
+  sistemáticamente 45 de 46 diferencias reportadas por el Manual.
+
+### (c) Depende realmente de decisión comercial, proveedor o dato externo — 9 de 21
+
+- **C.2** anomalía `Lead.BMW→Opportunity.Polaris` (intención ambigua).
+- **C.3** alcance de "usados".
+- **E.2** comportamiento de `empresaFacturaCP__c` ante empresa vacía (dos
+  reglas de ingeniería válidas, Diego debe priorizar riesgo).
+- **G.2**, **H.5**, **J.1b**: contrato/código ERP de Softland para PEKING
+  (mismo bloqueo externo, un solo hilo de decisión).
+- **H.2** branding legal/PDF (razón social, identificación fiscal, logo).
+- **J.2** propósito de los triggers de Account.
+- **L.2** perfiles de marca dedicados (decisión de tiempo, ligada a otra
+  iniciativa).
+
+### (d) Pertenece a una fase posterior, no al Sprint 1 — 8 de 21
+
+- **A.6** modelo relacional completo (Opción B/C del Manual).
+- **L.1** seguridad completa (mismo motivo que A.6).
+- **H.3** reservas, **H.4** anticipos, **D.1** Order, **I.1** Flows,
+  **K.1**/**K.2** LWC/Aura — ninguno tiene una pregunta abierta específica
+  que los bloquee hoy; simplemente nunca estuvieron dentro del presupuesto
+  de 44 horas y requieren su propio sprint.
 
 ---
 
-## Cifras finales (calculadas desde esta matriz)
+## Cifras finales (recalculadas en esta actualización)
 
 Conteo de requerimientos únicos identificados y clasificados en esta matriz
 (no de archivos individuales — un requerimiento puede afectar varios
-componentes):
+componentes). **39 filas** tras la división de `J.1` en `J.1a`/`J.1b`:
 
 | Estado | Cantidad |
 |---|---:|
-| Completado | 22 |
-| En progreso | 1 (Lead/Tráfico PEKING, Bloque 20) |
-| Pendiente técnico | 2 (experiencia declarativa Opportunity; reconciliación RedPartial) |
-| Pendiente decisión | 10 |
-| Diferido | 8 |
-| **Total de requerimientos únicos identificados** | **43** |
+| Completado | 23 |
+| En progreso | 0 |
+| Pendiente técnico | 3 |
+| Pendiente decisión | 9 |
+| Diferido | 5 |
+| Fuera de alcance | 4 |
+| **Total de requerimientos únicos identificados** | **39** |
 
-**Porcentaje calculado desde esta matriz:** 22 / 43 = **51.16 % completado** por
-conteo de requerimientos únicos (no por líneas de código ni por horas).
+**Porcentaje sobre el alcance total documentado:** 23 / 39 = **58.97 %
+completado**, contando por requerimiento único, no por líneas de código ni
+por horas.
+
+### Métrica 1 — Avance del Sprint 1 comprometido
+
+Son los requerimientos que efectivamente se asignaron a un bloque ejecutado
+(1 a 21), es decir, el subconjunto que Luis/Diego aprobaron trabajar en este
+Sprint: A.1, A.2, A.3, A.4, A.5, B.1, B.2, B.3, B.4, C.1, E.1, E.3, E.4, F.1,
+F.2, F.3, G.1, H.1, J.3 — **19 requerimientos**.
+
+De esos 19: **18 Completados, 1 Pendiente técnico** (B.4, experiencia
+declarativa de Opportunity, bloqueada solo por falta de un artefacto BMW
+local que replicar).
+
+**Avance del Sprint 1 comprometido: 18 / 19 = 94.74 %.**
+
+### Métrica 2 — Avance del alcance total documentado (PDF + Manual de Análisis)
+
+Los 39 requerimientos de esta matriz, incluyendo todo lo que el Manual de
+Análisis identificó como necesario para una solución completa (Softland
+real, reservas, anticipos, seguridad/sharing completo, Flows, LWC/Aura,
+PDF/branding legal, modelo relacional completo) — la mayoría de lo cual
+nunca estuvo dentro del presupuesto de 44 horas aprobado.
+
+**Avance del alcance total documentado: 23 / 39 = 58.97 %.**
+
+### Por qué hay dos métricas y no una
+
+El 94.74 % mide qué tan cerca está de cerrarse lo que el Sprint 1
+**efectivamente comprometió** hacer. El 58.97 % mide qué tan cerca está el
+proyecto de la solución **completa** que describe el Manual de Análisis
+(Opción B/C, "Estratégica"), que el propio Manual estima en 55-85
+personas-semana — varias veces el presupuesto de 44 horas de este Sprint.
+Ambas cifras son correctas para lo que miden; ninguna sustituye a la otra.
 
 ### Diferencia frente al estimado interno de 86 % / 14 %
 
-El 86 % (o 85 %, según el cierre más reciente de Bloque 18) registrado en
-`BITACORA_IMPLEMENTACION.md` es una **estimación de alcance técnico
-acumulado sobre los bloques efectivamente trabajados**, no una fracción del
-inventario completo de requerimientos de los dos documentos de origen. Esta
-matriz mide algo distinto: la fracción de **todos** los requerimientos
-explícitos detectados en el PDF original y en el Manual de Análisis técnico
-(incluyendo Softland, reservas, anticipos, seguridad completa, Flows,
-LWC/Aura, PDF/branding, y el modelo relacional completo), muchos de los
-cuales nunca estuvieron dentro del presupuesto de 44 horas aprobado.
+El 86 % (o 85 %, según el cierre más reciente de Bloque 18, y confirmado de
+nuevo al cierre del Bloque 20) registrado en `BITACORA_IMPLEMENTACION.md` es
+una **estimación de alcance técnico acumulado sobre los bloques
+efectivamente trabajados** — es decir, se acerca conceptualmente a la
+**Métrica 1** de esta matriz (94.74 %), aunque no coincide exactamente
+porque la bitácora no desglosa su 86 % en requerimientos discretos
+verificables uno por uno; es una estimación cualitativa acumulada por
+bloque, no un cociente auditable como el de esta matriz.
 
-La diferencia (86 % de "lo trabajado" frente a 51 % de "todo lo pedido") no es
-una contradicción: ambas cifras son correctas para lo que miden. El propio
-`PLAN_IMPLEMENTACION_SPRINT1.md` ya advertía esto explícitamente: *"Las 41
-clases son el alcance técnico directo confirmado. Los escenarios de 30 y 44
-horas son subconjuntos ejecutables, no una redefinición del hallazgo."* El 86%
-mide el avance del subconjunto ejecutable ya iniciado; el 51% de esta matriz
-mide el avance contra el hallazgo completo del Manual de Análisis, que es
-sustancialmente más amplio que el subconjunto de 44 horas.
+La **Métrica 2** (58.97 %) mide algo que la bitácora nunca pretendió medir:
+el avance contra **todo** el hallazgo del Manual de Análisis técnico. La
+diferencia entre 86 %/94.74 % (lo comprometido) y 58.97 % (lo documentado
+en total) no es una contradicción — el propio `PLAN_IMPLEMENTACION_SPRINT1.md`
+ya lo advertía: *"Las 41 clases son el alcance técnico directo confirmado.
+Los escenarios de 30 y 44 horas son subconjuntos ejecutables, no una
+redefinición del hallazgo."*
+
+## Lista priorizada — los siguientes tres trabajos que más aumentan el cumplimiento explícito
+
+Ordenados por impacto real sobre el cumplimiento (no por facilidad), sin
+requerir una decisión de Luis/Diego para iniciarse:
+
+1. **Cerrar `J.1a` (`BusquedaDetalladaController`, `precioProductoJSON`).**
+   Es el único requerimiento pendiente clasificado como "(a) resoluble
+   ahora": mismo patrón ya probado tres veces, sin integración externa, sin
+   decisión pendiente. Convierte directamente 1 fila de Diferido a
+   Completado.
+2. **Retrieve dirigido de solo lectura de Layout, Lightning Record Page,
+   Compact Layout y List Views de `Opportunity-BMW`, para cerrar B.4.** Es
+   investigación técnica pura (no decisión), y desbloquea el único
+   requerimiento de UI de Opportunity que quedó pendiente tras el Bloque 21.
+   Requiere una sesión de consulta de solo lectura al org (Tooling API),
+   distinta y más acotada que abrir todo el frente de Flows/LWC.
+3. **Investigar `Quote.empresaFactura__c` (F.4) vía describe/FLS de solo
+   lectura.** Es la brecha técnica más barata de cerrar (un solo campo, sin
+   consumidores locales conocidos) y reduce el riesgo de que un futuro
+   bloque de Quote asuma una equivalencia incorrecta con `Compania__c`.
+
+Los tres comparten una característica: **no requieren que Luis o Diego
+respondan nada primero** — son investigación/ejecución técnica pura. Se
+priorizaron por encima de, por ejemplo, corregir la anomalía
+`Lead.BMW→Opportunity.Polaris`, porque esa sí depende de una respuesta de
+negocio antes de poder tocar código.
 
 ## Puntos que pudimos haber omitido o interpretado de forma incompleta
 
+- **Corrección propia:** el total de 43 de la entrega anterior fue un error
+  aritmético (ver sección al inicio de este bloque); el total correcto es 39
+  filas tras la división de `J.1`.
 - El Manual de Análisis identifica **campos homónimos** (`Contact.Empresa__c`,
   `Account.Empresas__c`, `Maestro_de_Errores__c.Empresa__c`) como falsos
   positivos explícitos — se excluyeron correctamente de esta matriz, pero se
@@ -706,20 +843,25 @@ sustancialmente más amplio que el subconjunto de 44 horas.
   hacerlo a nivel de archivo individual (128 filas adicionales) excedería el
   propósito de una matriz de requerimientos y duplicaría el detalle ya
   existente en el propio Manual, Anexo B.
-- No pudimos confirmar con evidencia local si la clase `Quote.empresaFactura__c`
-  fue tocada o no fuera de este Sprint — se documentó como pendiente de
-  decisión (F.4) en vez de asumir que está fuera de alcance.
-- El estado del Bloque 20 (Lead/Tráfico) puede cambiar entre el momento de
-  esta matriz y su lectura, porque es trabajo en curso de Codex en una rama
-  separada que esta tarea no debía tocar ni adelantar.
-- No se intentó recalcular el 86%/14% desde cero por bloque individual
+- La reclasificación de `Quote.empresaFactura__c` (F.4) de "Pendiente
+  decisión" a "Pendiente técnico" se apoya en que **no está versionado
+  localmente ni referenciado por ningún Apex/LWC** — pero esto no descarta
+  que el campo exista y esté en uso real en el org; solo confirma que no hay
+  evidencia local, por lo que sigue siendo necesaria una consulta de solo
+  lectura al org antes de cerrarlo.
+- No se intentó recalcular el 86 %/14 % desde cero por bloque individual
   (habría requerido reconstruir la métrica original línea por línea de la
-  bitácora); en su lugar se explica la diferencia metodológica, que es la
-  pregunta real detrás del punto solicitado.
+  bitácora); en su lugar se explica la diferencia metodológica y se propone
+  la Métrica 1 como el número conceptualmente más cercano al 86 %.
 
 ## Confirmación de alcance de esta tarea
 
 No se ejecutó Salesforce CLI, no se consultó ningún org, no se modificó
-código ni metadata, no hubo deploy. No se tocaron las ramas de Bloques 18, 19,
-20 ni 21 (solo se leyó su documentación ya publicada, sin modificarla). No se
-eliminó ningún worktree.
+código ni metadata, no hubo deploy. No se tocó ninguna rama de Bloques 18, 19,
+20 ni 21: la evidencia del cierre real del Bloque 20 se leyó con `git log`/
+`git show` contra el historial ya existente de `sprint1` (que otro proceso
+avanzó de `a623f54` a `c8b89fb` de forma independiente a esta tarea), sin
+hacer checkout, merge ni commit sobre esa rama ni sobre la rama propia de
+Bloque 20. No se eliminó ningún worktree. La rama de esta matriz
+(`analysis/pc/redmotors-empresa-marcas-chinas-sprint1-trazabilidad-20260726`)
+permanece basada en `a623f54`, sin adelantarse a `sprint1`.
