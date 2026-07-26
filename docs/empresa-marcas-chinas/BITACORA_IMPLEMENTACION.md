@@ -1773,7 +1773,91 @@ El Bloque 18 queda completado, validado y desplegado.
 Avance técnico estimado: 85% completado y 15% pendiente. Corresponde al
 alcance técnico y no representa horas oficiales, trabajadas ni facturables.
 
-## 31. Plantilla reutilizable de actualización
+## 31. Bloque 20 — Lead/Tráfico PEKING
+
+Se retomó el Bloque 20 bajo el criterio de autonomía autorizado por Luis:
+“dale tú sin miedo a los ajustes, documenta y en todo caso si hay cosas que
+cambiar, lo vemos el lunes”.
+
+Evidencia revisada:
+
+- `TraficoTriggerHandler.afterUpdate()` llama a
+  `RM_Lead_Trigger_Helper.setOpportunityRecordType()` cuando un Lead se
+  convierte.
+- `RM_Lead_Trigger_Helper` resuelve el Record Type destino por
+  `RM_RecordTypeMapping__mdt`, no por lógica fija de marca.
+- En RedMotorsSandbox existen Lead Record Types `BMW`, `MINI`, `Polaris` y
+  `Kawasaki`; no existían Lead Record Types `Omoda` ni `Jaecoo`.
+- En RedMotorsSandbox ya existen Opportunity Record Types `Omoda` y `Jaecoo`.
+- `RM_RecordTypeMapping__mdt` contiene mappings activos para MINI, Polaris y
+  Kawasaki; no contiene Omoda ni Jaecoo.
+- `Lead_BMW_to_Opp` apunta actualmente a `Opportunity.Polaris`. Se documenta
+  como anomalía existente y no se modifica en este bloque.
+
+Decisión aplicada:
+
+- Crear `Lead.Omoda` y `Lead.Jaecoo` usando `Lead.BMW` como plantilla técnica,
+  con `businessProcess=Autos`, mismos picklists y `active=true`.
+- Crear `RM_RecordTypeMapping.Lead_Omoda_to_Opp` activo para
+  `Lead.Omoda` → `Opportunity.Omoda`.
+- Crear `RM_RecordTypeMapping.Lead_Jaecoo_to_Opp` activo para
+  `Lead.Jaecoo` → `Opportunity.Jaecoo`.
+- No modificar `Lead.BMW` → `Opportunity.Polaris`.
+- No modificar lógica productiva de `RM_Lead_Trigger_Helper`.
+
+Pruebas preparadas:
+
+- `RM_Lead_Trigger_Helper_Test` deja de ser solo llamada artificial a
+  `name()` y pasa a validar mappings reales.
+- Valida Omoda → Omoda.
+- Valida Jaecoo → Jaecoo.
+- Valida conservación de mappings heredados MINI y Kawasaki.
+- Valida que `setOpportunityRecordType()` actualiza oportunidades convertidas
+  desde Lead Omoda y Lead Jaecoo.
+- Valida que un Lead sin Record Type mapeado no modifica la Opportunity.
+
+No se elimina `RM_Lead_Trigger_Helper.name()` porque `TraficoServiceTest` aún
+lo invoca; retirarlo ampliaría el alcance a pruebas ajenas.
+
+Fuera de alcance:
+
+- Softland;
+- reservas;
+- anticipos;
+- finanzas;
+- branding legal;
+- sucursales o territorios;
+- Flows, LWC, permisos, layouts;
+- corrección de `Lead_BMW_to_Opp`.
+
+Validación:
+
+- Primer dry-run enfocado: `0AfAK000000vuK10AI`, 5/5 componentes, 0/3 pruebas.
+  Falló por asignación directa a `Lead.ConvertedOpportunityId`.
+- Segundo dry-run enfocado: `0AfAK000000vuLd0AI`, 5/5 componentes, 0/3
+  pruebas. Falló porque los Record Types nuevos no estaban disponibles para el
+  perfil ejecutor durante el check-only y porque `ConvertedOpportunityId` no era
+  editable mediante `SObject.put()`.
+- Corrección aplicada solo en prueba: uso de RecordTypeId sin exigir
+  `isAvailable()` para metadata creada en la misma transacción y construcción de
+  Leads convertidos en memoria mediante deserialización JSON.
+- Dry-run enfocado aprobado: `0AfAK000000vuNF0AY`, 5/5 componentes, 3/3
+  pruebas, 0 fallas.
+- Regresión seleccionada aprobada: `0AfAK000000vuOr0AI`, 5/5 componentes,
+  53/53 pruebas, 0 fallas.
+- Deploy real: `0AfAK000000vuQT0AY`, 5/5 componentes, 53/53 pruebas, 0 fallas,
+  estado Succeeded.
+- Verificación post-deploy: `Lead.Omoda` y `Lead.Jaecoo` existen y están
+  activos; los mappings Omoda → Omoda y Jaecoo → Jaecoo existen y están activos.
+- Test post-deploy: `707AK00000GxONW`, 3/3 pruebas, 0 fallas.
+
+Estado: Bloque 20 completado, validado y desplegado en RedMotorsSandbox /
+Partial.
+
+Avance técnico estimado: 86% completado y 14% pendiente. Corresponde al alcance
+técnico y no representa horas oficiales, trabajadas ni facturables.
+
+## 32. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
