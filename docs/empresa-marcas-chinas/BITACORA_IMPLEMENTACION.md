@@ -1967,7 +1967,43 @@ Avance:
 - Sprint 1 permanece en 18/19 bloques funcionales comprometidos cerrados:
   94.74%.
 
-## 34. Plantilla reutilizable de actualización
+## 34. Análisis — `Quote.empresaFactura__c`
+
+Se revisó `Quote.empresaFactura__c` como siguiente pendiente técnico resoluble
+después de reclasificar el Bloque 10.
+
+Hallazgos:
+
+- `Quote.empresaFactura__c` existe como fórmula de texto.
+- La fórmula es `TEXT(Opportunity.empresaQueFactura__c)`.
+- No es un campo editable directamente en Quote.
+- `Quote.Compania__c` es picklist restringido con valores `Bavarian` y
+  `Otobai`.
+- `Opportunity.empresaQueFactura__c` es picklist restringido con valores
+  `Bavarian` y `Otobay`.
+- La fuente estratégica ya implementada en bloques anteriores es
+  `Opportunity.Empresa_Operadora__c`.
+
+Consumidores:
+
+- componentes de búsqueda de productos;
+- Flows de Opportunity y WorkOrder;
+- procesos de encuesta;
+- clases relacionadas con órdenes e integraciones.
+
+Decisión:
+
+- No se implementó cambio funcional.
+- No se modificó Quote, Opportunity, Apex, Flows, permisos ni datos.
+- Cualquier cambio sobre `empresaQueFactura__c` requiere definición funcional
+  por su impacto en procesos heredados y por la discrepancia `Otobay` /
+  `Otobai`.
+
+Validación:
+
+- No se ejecutó dry-run ni deploy porque no hubo cambio desplegable seguro.
+
+## 35. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
