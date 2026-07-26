@@ -1104,7 +1104,106 @@ Avance técnico estimado del Sprint 1:
 Este porcentaje corresponde al alcance técnico y no representa horas
 oficiales, trabajadas, registradas ni facturables.
 
-## 25. Plantilla reutilizable de actualización
+## 25. Bloque 14 — Empresa configurable en trabajos de WorkOrder
+
+Estado: completado, validado y desplegado en RedMotorsSandbox / Partial.
+
+Se actualizó únicamente `TrabajoController.saveSubtrabajos()` para utilizar
+`WorkOrder.empresaFacturaCP__c` como fuente principal mediante
+`EmpresaResolver` y `Empresa__c.Codigo__c`. El picklist
+`empresaFactura__c` permanece como respaldo temporal cuando el lookup está
+vacío.
+
+Se admiten explícitamente `RMBAVARIAN`, `RMOTOBAI` y `RMPEKING`. El lookup
+tiene prioridad ante contradicción y no existe selección por descarte. Una
+empresa nula, inactiva, incompleta o con código no soportado genera un error
+controlado antes de crear WorkOrderLineItems.
+
+`TrabajoControllerTest` conserva las siete pruebas históricas y agrega diez
+escenarios autocontenidos para las tres empresas, precedencia, respaldo
+heredado y configuraciones inválidas. También valida producto, PricebookEntry,
+cantidad, precio y ausencia de líneas ante error.
+
+No se modificaron metadata, impuestos, tipos de cargo, PricebookEntry,
+integraciones ni la estructura general de creación de líneas. Permanecen como
+riesgos heredados la consulta de PricebookEntry dentro del ciclo y las
+automatizaciones indirectas de WorkOrderLineItem.
+
+Avance estimado después de validar y desplegar: 80% completado y 20%
+pendiente. Corresponde al alcance técnico y no representa horas oficiales,
+trabajadas ni facturables.
+
+### Primer dry-run del Bloque 14
+
+El dry-run `0AfAK000000vq0H0AQ` compiló 2/2 componentes, aprobó 8/17 pruebas
+y falló en nueve rutas. La org no fue modificada.
+
+Las siete rutas empresariales exitosas, `testSaveTrabajo` y
+`testSaveSubtrabajos` recibieron un error técnico envuelto por los `catch` de
+`TrabajoController` como `AuraHandledException` en las líneas 144 y 329.
+
+Se agregó inicialmente el mock HTTP a cada método, pero el segundo dry-run
+`0AfAK000000vq1t0AA` volvió a compilar 2/2 componentes y obtuvo exactamente
+8/17 pruebas. Esto descartó el mock como causa raíz. La org no fue modificada.
+
+El dry-run diagnóstico `0AfAK000000vq570AA` relanzó temporalmente las
+excepciones originales y reveló una `System.QueryException: List has no rows
+for assignment to SObject` en la consulta de PricebookEntry de la línea 298.
+El controlador fue restaurado inmediatamente y conserva el contrato
+`AuraHandledException`.
+
+Las pruebas creaban la PricebookEntry en un Pricebook genérico, pero
+`WorkOrderTrigger` reasignaba el WorkOrder a `Bavarian Local`, `Otobai Local`
+o `PEKING Local`. Si el Pricebook autorizado no existía, el trigger asignaba
+`null`. Por ello no coincidían Product2Id y Pricebook2Id en una misma entrada.
+
+Se corrigieron únicamente los fixtures: ahora crean o reutilizan el
+Pricebook local autorizado, fijan CRC en WorkOrder y PricebookEntry, y
+comprueban el Pricebook efectivo después del trigger. El mock por método se
+mantiene para automatizaciones indirectas.
+
+Las tres pruebas negativas fallaron durante el diagnóstico porque recibieron
+directamente `EmpresaConfigurationException` al retirarse temporalmente el
+envoltorio. No fue una regresión y el manejo original quedó restaurado. La org
+no fue modificada.
+
+### Cierre técnico del Bloque 14
+
+| Etapa | Deploy ID | Componentes | Pruebas | Fallas | Resultado |
+|---|---|---:|---:|---:|---|
+| Primer dry-run | `0AfAK000000vq0H0AQ` | 2/2 | 8/17 | 9 | Fallido |
+| Segundo dry-run | `0AfAK000000vq1t0AA` | 2/2 | 8/17 | 9 | Fallido |
+| Dry-run diagnóstico | `0AfAK000000vq570AA` | 2/2 | Diagnóstico | No aplica | Causa identificada |
+| Dry-run funcional | `0AfAK000000vqBZ0AY` | 2/2 | 17/17 | 0 | Exitoso |
+| Dry-run de regresión | `0AfAK000000vqEn0AI` | 2/2 | 26/26 | 0 | Exitoso |
+| Deploy real | `0AfAK000000vqGP0AY` | 2/2 | 26/26 | 0 | Exitoso |
+
+El dry-run funcional confirmó una cobertura de 232/266 líneas en
+`TrabajoController`, equivalente a 87.22%.
+
+El deploy real terminó correctamente en RedMotorsSandbox / Partial.
+`WorkOrder.empresaFacturaCP__c` quedó como fuente principal y
+`empresaFactura__c` como respaldo temporal. Se admiten explícitamente
+`RMBAVARIAN`, `RMOTOBAI` y `RMPEKING`, sin selección empresarial por
+descarte.
+
+Se conservaron los impuestos, PricebookEntry, tipo de vehículo, tipo de
+cargo y la creación general de WorkOrderLineItems. Se validaron 17 pruebas
+funcionales y 26 pruebas de regresión sin fallas.
+
+El controlador fue restaurado después del diagnóstico temporal y conserva el
+manejo público mediante `AuraHandledException`. El Bloque 14 queda
+completado, validado y desplegado.
+
+Avance técnico estimado del Sprint 1:
+
+- completado: 80%;
+- pendiente: 20%.
+
+Este porcentaje corresponde al alcance técnico y no representa horas
+oficiales, trabajadas, registradas ni facturables.
+
+## 26. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:

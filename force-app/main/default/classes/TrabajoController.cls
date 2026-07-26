@@ -190,9 +190,9 @@ public with sharing class TrabajoController {
     @AuraEnabled
     public static void saveSubtrabajos(Id trabajoId, Id tipoDeTrabajoId, List<SubtrabajoWrapper> subtrabajos, Id caseId, Id workOrderId, String prioridad, String tipodecargo, String aseguradora, String centrodecosto) {
         Impuesto__c impuesto0108 =  [SELECT Id FROM Impuesto__c WHERE codigoImpuesto__c='0108' LIMIT 1];
-        WorkOrder wo = [SELECT Case.Asset.Tipo_de_veh_culo__c, Pricebook2Id, WorkOrderNumber, Pricebook2.Name, empresaFactura__c FROM WorkOrder WHERE Id = :workOrderId];
+        WorkOrder wo = [SELECT Case.Asset.Tipo_de_veh_culo__c, Pricebook2Id, WorkOrderNumber, Pricebook2.Name, empresaFacturaCP__c, empresaFactura__c FROM WorkOrder WHERE Id = :workOrderId];
         String tipoDeVehiculo = (wo.Case.Asset.Tipo_de_veh_culo__c != null && wo.Case.Asset.Tipo_de_veh_culo__c != 'Automóvil') ? 'Motocicleta' : 'Automóvil';
-        String empresa = wo.empresaFactura__c;
+        String empresa;
         Id priceBId = wo.Pricebook2Id;
         String priceBookName = wo.Pricebook2.Name;
         String workOrderName = wo.WorkOrderNumber;
@@ -205,6 +205,21 @@ public with sharing class TrabajoController {
         Decimal SumaUTS = 0;
 
         try {
+            if (wo.empresaFacturaCP__c != null) {
+                empresa = EmpresaResolver.resolve(wo.empresaFacturaCP__c).codigo;
+            } else {
+                empresa = wo.empresaFactura__c;
+            }
+            if (
+                empresa != 'RMBAVARIAN' &&
+                empresa != 'RMOTOBAI' &&
+                empresa != 'RMPEKING'
+            ) {
+                throw new EmpresaConfigurationException(
+                    'La empresa del WorkOrder no está configurada o no es soportada.'
+                );
+            }
+
             List<Subtipo_de_trabajo_del_caso__c> subtrabajosToUpsert = new List<Subtipo_de_trabajo_del_caso__c>();
             List<WorkOrderLineItem> worklineitems = new List<WorkOrderLineItem>();
             Set<Id> idsManoDeObra = new Set<Id>();
