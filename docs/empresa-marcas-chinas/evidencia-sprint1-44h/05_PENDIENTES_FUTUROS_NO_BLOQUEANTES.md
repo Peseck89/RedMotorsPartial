@@ -1,0 +1,17 @@
+# Pendientes futuros no bloqueantes
+
+Estos puntos no forman parte del pendiente de las 44 horas del Sprint 1. Se documentan para priorización futura.
+
+| Pendiente | Evidencia encontrada | Por qué no bloquea la entrega | Pregunta para Luis o Diego | Momento recomendado |
+|---|---|---|---|---|
+| Sucursal → Empresa → Pricebook / Service Territory PEKING | En Partial no se encontraron usuarios, sucursales ni territorios PEKING/Omoda/Jaecoo. `BusquedaDetalladaController` depende hoy de `User.Sucursal__c` y nombres fijos. | El Sprint 1 cerró la base técnica y componentes priorizados; esta relación requiere definición operativa. | ¿Qué sucursal y territorio debe usar PEKING para búsqueda detallada y visibilidad de Pricebooks? | Antes de habilitar búsqueda operativa PEKING en talleres o mostrador. |
+| Llave de producto RMPEKING para Softland | `precioProductoJSON` usa `Codigo_de_Producto__c` para Bavarian y `CodigoProductoInterno__c` compuesto para Otobai. No hay productos PEKING/Omoda/Jaecoo ni PricebookEntry PEKING en Partial. | No hay una convención única comprobable; implementarla por descarte puede actualizar productos incorrectos. | ¿PEKING usará `Codigo_de_Producto__c`, `CodigoProductoInterno__c` compuesto u otra llave enviada por Softland? | Antes de integrar carga de precios/productos PEKING. |
+| `Quote.empresaFactura__c` | El análisis confirmó que es fórmula `TEXT(Opportunity.empresaQueFactura__c)`. El picklist heredado tiene valores `Bavarian` y `Otobay`; `Quote.Compania__c` tiene `Bavarian` y `Otobai`. | Cambiarlo puede impactar Flows y procesos heredados; no es necesario para cerrar el alcance comprometido. | ¿Se mantiene el picklist heredado, se migra a `Empresa_Operadora__c` o se corrige la discrepancia `Otobay`/`Otobai`? | Antes de rediseñar Flows o procesos que dependan de empresa en Quote. |
+| Anomalía Lead.BMW → Opportunity.Polaris | La metadata `RM_RecordTypeMapping` conserva el mapping histórico BMW→Polaris. No se modificó en el Bloque 20. | No forma parte del soporte Omoda/Jaecoo; cambiarlo podría alterar tráfico histórico. | ¿El mapping BMW→Polaris es intencional o debe corregirse en un bloque separado? | En revisión funcional de tráfico y conversión de leads. |
+| Integraciones Softland futuras | Varios componentes Softland quedaron diferidos o pendientes de contrato/convención externa. | Sprint 1 evitó modificar endpoints, payloads o procesos financieros sin definición. | ¿Cuándo se confirma el contrato Softland para PEKING y qué payloads cambian? | Antes de habilitar pedidos, catálogos, precios o reservas reales PEKING. |
+| Reservas y anticipos | Componentes de reservas y anticipos fueron clasificados como diferidos por riesgo funcional y dependencias financieras. | No eran parte segura del alcance de bajo riesgo cerrado. | ¿Reservas y anticipos PEKING entran en la siguiente fase y con qué reglas financieras? | En planificación de Sprint 2 o fase financiera. |
+| Datos operativos PEKING | Existen Pricebooks PEKING, pero no se encontraron productos ni PricebookEntry PEKING/Omoda/Jaecoo en Partial. | La base técnica está lista; la operación real requiere carga de datos. | ¿Quién cargará productos, PricebookEntry y datos operativos PEKING? | Antes de pruebas end-to-end comerciales. |
+
+## Conclusión
+
+Estos pendientes no reducen el cierre del Sprint 1 comprometido. Son decisiones o datos necesarios para la siguiente fase operativa.
