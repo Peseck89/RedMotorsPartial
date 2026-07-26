@@ -1503,7 +1503,277 @@ Avance técnico estimado después del deploy del Bloque 19: 86% completado y
 14% pendiente. Corresponde al alcance técnico y no representa horas oficiales,
 trabajadas ni facturables.
 
-## 30. Plantilla reutilizable de actualización
+## 30. Bloque 18 — Empresa configurable en búsqueda de mano de obra (pausado por cobertura)
+
+Luis autorizó implementar el mapeo Omoda/Jaecoo → `RMPEKING` en
+`ProductSearcherController.getProducts()`, exclusivamente en la rama
+`productType.contains('mano obra')`, con código exacto de `Empresa__c` en vez
+de `LIKE` parcial, y sin devolver productos de todas las empresas cuando el
+Record Type de la Opportunity/Quote no está mapeado.
+
+El cambio productivo quedó aplicado en
+`force-app/main/default/classes/ProductSearcherController.cls`: el bloque de
+mapeo ahora usa `companyCode` (`RMBAVARIAN`, `RMOTOBAI`, `RMPEKING`) con
+comparación exacta (`Empresa__c = :companyCode`) y un `return responseMap;`
+temprano cuando el Record Type no se reconoce, sin construir nunca un filtro
+`LIKE '%%'`. El método `dummy()` (350 líneas de asignaciones artificiales sin
+llamadores productivos, confirmado por `git grep`) fue eliminado, porque
+`ProductSearcherControllerTest` ya no lo invoca para inflar cobertura.
+
+Durante la implementación se encontró y resolvió, con autorización explícita
+para ampliar el alcance de este bloque, que el Record Type `Producto_Red_Motros`
+de `Product2` no tenía `RMPEKING` habilitado en su restricción de picklist
+para `Empresa__c` (aunque el campo sí lo soportaba a nivel global desde el
+Bloque 17). Se agregó la sección `<picklistValues><picklist>Empresa__c</picklist>...`
+con `RMBAVARIAN`, `RMOTOBAI` y `RMPEKING` en
+`force-app/main/default/objects/Product2/recordTypes/Producto_Red_Motors.recordType-meta.xml`
+(archivo recuperado desde RedMotorsSandbox porque no estaba versionado
+localmente; se eliminó el `Product2.object-meta.xml` recuperado como
+referencia, sin cambio funcional, igual que en el Bloque 17).
+
+`ProductSearcherControllerTest` fue reconstruido con 13 métodos: los 12
+escenarios solicitados (BMW/MINI/Polaris/Kawasaki/Omoda/Jaecoo devuelven solo
+su empresa; Record Type no reconocido no devuelve nada; producto inactivo y
+de otra empresa quedan excluidos; ruta por Opportunity y por Quote;
+PricebookEntry del Pricebook efectivo de la Quote) más pruebas de validación
+temprana (marca/año/modelo/recordId en blanco). Los 13 métodos pasan sin
+fallas en todos los dry-runs.
+
+Durante la corrección de fixtures se encontraron y resolvieron, todos dentro
+de `ProductSearcherControllerTest.cls`: colisión de cédula duplicada al
+reutilizar `TestDataFactory.createAccount`, rechazo de picklist restringido
+en `Categor_a_veh_culo__c` al construir productos a mano (resuelto
+reutilizando `TestDataFactory.createProduct`), un `PricebookEntry` estándar
+autogenerado por el org al insertar `Product2` activos (resuelto con
+upsert manual), y el hallazgo de que `Opportunity.Name`/`Quote.Name` no son
+confiables como clave de búsqueda en este org (una automatización los
+recalcula); se sustituyó por identificación vía `Campana__c` + `RT_Lead__c` y
+`OpportunityId`/`Product2.Name`.
+
+**Cobertura de `ProductSearcherController`: 73.438% (141/192 líneas), por
+debajo del mínimo de 75% exigido por el org incluso para deploys a sandbox
+con `RunSpecifiedTests`.** Las 51 líneas restantes pertenecen casi en su
+totalidad a la rama `vehiculo` (precios de fantasía vía
+`getPricesGroupByModelFantasia`/`RM_VN_Service.gePBEBavarian`, segundo bloque
+de filtros de vehículo, y la ruta de paginación compartida que depende de
+ellos), fuera del alcance autorizado de este bloque.
+
+Con autorización explícita para tocar fixtures de la rama vehículo (solo en
+el archivo de test, sin modificar código productivo), se intentó cerrar la
+brecha y se encontraron tres obstáculos técnicos distintos e independientes,
+todos preexistentes en el org y ajenos a este cambio:
+
+1. `Categor_a_veh_culo__c` — picklist restringido por Record Type (ya
+   resuelto para el flujo de mano de obra).
+2. `Modelo_De_Inter_s__c` — el mismo tipo de restricción en un campo
+   distinto, requerido por `getPricesGroupByModelFantasia`. Ningún valor
+   probado fue aceptado para `Producto_Red_Motros`.
+3. `Schema.RecordTypeInfo.getPicklistValuesForField(SObjectField)` no existe
+   en la `apiVersion` 55.0 declarada en `ProductSearcherController.cls`/
+   `ProductSearcherControllerTest.cls-meta.xml` (error de compilación real
+   del deploy, no una suposición).
+4. Un sondeo autocontenido (insertar cada valor candidato del picklist
+   global con `Database.insert(..., false)` hasta encontrar uno aceptado)
+   agotó el límite de 150 DML statements por transacción
+   (`Too many DML statements: 151`) sin encontrar ninguno válido.
+
+Se verificó directamente, primero en el archivo local y luego recuperando
+temporalmente `RecordType:Product2.Producto_Red_Motors` desde
+RedMotorsSandbox (con respaldo y restauración de la versión autorizada, sin
+dejar metadata temporal), que **no existe ninguna sección
+`<picklist>Modelo_De_Inter_s__c</picklist>` en el Record Type
+`Producto_Red_Motros`, ni localmente ni en el org real**. Esto confirma que
+el campo no tiene ningún valor habilitado para ese Record Type — no es un
+valor que no se encontró, es una configuración de catálogo pendiente en
+Setup, fuera del alcance de Apex/Metadata API declarativa vía CLI.
+
+Se revirtió por completo el fixture de vehículo (Pricebook de fantasía,
+`Configuracion_de_ventas__c`, productos de precio/inventario,
+`ProductoXBodega__c` y el helper de resolución de picklist), dejando
+`ProductSearcherControllerTest.cls` en el último estado limpio y verificado:
+13/13 pruebas pasan, 73.438% de cobertura.
+
+**El Bloque 18 queda pausado aquí, sin deploy, sin commit y sin push**, a la
+espera de que alguien con acceso a Setup habilite al menos un valor de
+`Modelo_De_Inter_s__c` para el Record Type `Producto_Red_Motros` (o de una
+decisión alternativa sobre cómo cerrar la cobertura de la rama vehículo).
+
+No se modificaron las ramas de vehículo/extra/RM_VN_Service ni sucursales,
+Softland, reservas o anticipos.
+
+Avance técnico estimado si se completa: 85% completado y 15% pendiente
+(sobre la base de 84%/16% del Bloque 17). No aplica todavía porque el bloque
+no se ha desplegado.
+
+### 30.1 Continuación — rama WIP, prueba huérfana y validación con RunLocalTests
+
+Se creó la rama `wip/pc/redmotors-block18-product-searcher-coverage-20260726`
+desde el estado pausado del Bloque 18, con el commit `f1ce045
+wip(product-search): preserve blocked block 18` (staging exclusivo de los 6
+archivos del bloque, `git diff --cached --check` limpio, push a origin).
+
+**Análisis dirigido de cobertura (sin tocar Setup ni la rama vehículo):** se
+enumeraron y clasificaron las 51 líneas sin cubrir de
+`ProductSearcherController` por método/rama. Se probaron dos hipótesis en un
+único dry-run combinado: (1) reutilizar los productos "Rack" ya creados por
+`TestDataFactory.createQuoteWithItems()` para cubrir la rama `extra`/`ProductoXBodega__c`,
+y (2) provocar una excepción controlada en `getProductDataFromOLI()`/
+`getProductByQuoteId()` pasando un `Id` de otro objeto. Ambas fallaron: la
+hipótesis (1) reveló que esos productos quedan con RecordType
+`Producto_Red_Motros`, no `Materiales` (el que exige la consulta de la rama
+`extra`) — un mismatch estructural de los datos existentes, no corregible
+ajustando parámetros de búsqueda; la hipótesis (2) confirmó que un `Id` de
+tipo incorrecto no dispara excepción en SOQL en este org, solo retorna cero
+filas. Ambos experimentos se revirtieron (`git checkout`), dejando el árbol
+exactamente igual al commit WIP.
+
+**Validación con `RunLocalTests` (primer intento, `0AfAK000000vsRt0AI`):**
+reveló un hallazgo no relacionado con cobertura: `ProductSearcherControllerOtobaiTest`,
+una clase de prueba huérfana existente solo en RedMotorsSandbox (no
+versionada en este repositorio, creada el 2026-06-17 y nunca modificada
+desde entonces), llama a `ProductSearcherController.getProducts()` con 16
+argumentos posicionales, mientras el método vigente (cuya firma no fue
+tocada en el Bloque 18) tiene 14 parámetros. Ese único error de compilación
+provocó que otras 24 clases no relacionadas (por unidad de dependencia de
+Apex) se marcaran como "Dependent class is invalid and needs recompilation",
+bloqueando cualquier corrida de `RunLocalTests` — 25 pruebas, 25 fallas, 0
+completadas, cobertura no calculable (`codeCoverage: []`), aunque los 3
+componentes del Bloque 18 validaron sin error de forma independiente
+(`numberComponentErrors: 0`).
+
+Con autorización explícita y de alcance estrictamente limitado, se recuperó
+`ApexClass:ProductSearcherControllerOtobaiTest` (sin sobrescribir nada
+existente) y se corrigió únicamente su fixture:
+
+- Se realineó la llamada a `getProducts()` de 16 a 14 argumentos, eliminando
+  dos parámetros `null` obsoletos que ya no existen en la firma vigente y
+  conservando el resto en las mismas posiciones relativas (verificado por
+  coincidencia exacta de valores: `'MT-06'` coincide con
+  `Codigo_de_Producto__c` del producto de prueba, `'subcontratados'`
+  coincide con su `Name`).
+- Se asignó a la `Opportunity` del fixture el `RecordTypeId` de
+  `Opportunity.Kawasaki`, obtenido dinámicamente vía
+  `Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('Kawasaki').getRecordTypeId()`
+  — sin IDs reales, porque la resolución de empresa en el código vigente
+  depende exclusivamente del `RecordType.DeveloperName` real de la
+  Opportunity/Quote, y el fixture original no lo asignaba.
+- Tras el primer re-intento (14 argumentos + RecordTypeId), quedó un único
+  fallo: `"El modelo es requerido."` — el parámetro `model` (posición 11)
+  quedó en `null` al preservar fielmente el valor original, y esa
+  validación de entrada (preexistente, no introducida por el Bloque 18) lo
+  exige para cualquier `productType` que no contenga `'vehiculo'`. Con
+  autorización explícita, se reutilizó `'MT-06'` (ya usado legítimamente
+  como `vin` en la misma prueba) también como `model`, documentando en el
+  propio archivo que ese parámetro no participa en ningún punto de la rama
+  `mano obra` — solo satisface esa validación de entrada preexistente, sin
+  afectar la lógica ni el resultado de la búsqueda.
+- No se modificó `ProductSearcherController.cls` en ningún momento de esta
+  corrección; no se creó metadata adicional; no se usaron IDs reales ni
+  `SeeAllData`.
+
+`ProductSearcherControllerOtobaiTest` se agregó al manifest del Bloque 18.
+El dry-run enfocado final (`ProductSearcherControllerTest` +
+`ProductSearcherControllerOtobaiTest`) terminó con **14/14 pruebas
+aprobadas, 0 fallas**, pero la cobertura de `ProductSearcherController` se
+mantuvo exactamente igual: **73.438% (141/192)** — la prueba Otobai ejercita
+la misma rama `mano obra` ya cubierta por los escenarios existentes
+(Kawasaki → `RMOTOBAI`), sin aportar líneas nuevas.
+
+**Validación con `RunLocalTests` (segundo intento, `0AfAK000000vsYL0AY`):**
+con la clase huérfana ya corregida, la suite completa del org **sí compiló**
+esta vez. Resultado antes de la cancelación:
+
+| Dato | Valor |
+|---|---|
+| Deploy ID | `0AfAK000000vsYL0AY` |
+| Componentes | 5/5 validados sin error (`numberComponentErrors: 0`, `componentFailures: []`) |
+| Pruebas totales del org | 3567 |
+| Pruebas completadas | 1491 |
+| Pruebas con error | 287 |
+| Estado final | `Canceled` (cancelado manualmente por el usuario para liberar RedMotorsSandbox), `success: false` |
+| Cobertura global | No calculable — la corrida se canceló antes de completarse |
+
+Las 3 clases del Bloque 18 (`ProductSearcherController` vía sus 2 pruebas,
+`ProductSearcherControllerTest` y `ProductSearcherControllerOtobaiTest`)
+aparecen explícitamente en la sección `successes` del resultado — es decir,
+**todas las pruebas del Bloque 18 pasaron** dentro de esa corrida, antes de
+la cancelación. Las 287 fallas registradas corresponden a la suite general
+preexistente del org (cientos de clases no relacionadas con este bloque);
+el usuario confirmó explícitamente que son "fallas ajenas al Bloque 18" y
+canceló la corrida para liberar el sandbox, no por ningún hallazgo nuevo
+imputable a este bloque.
+
+**Estado final de este ciclo: sin deploy, sin commit adicional, sin push.**
+La rama WIP permanece con el commit `f1ce045` como único commit; los
+cambios de esta sección (`ProductSearcherControllerOtobaiTest.cls`/
+`.cls-meta.xml`, el manifest actualizado) quedan en el working tree,
+pendientes de una decisión explícita sobre si se documentan/commitean o se
+descartan. `RunLocalTests` en este org, con la suite completa (3567
+pruebas), excede ampliamente el tiempo práctico para completarse en una
+sesión de validación puntual — cualquier intento futuro debería
+considerarse con ese costo en mente.
+
+### 30.2 Cierre — laboratorio de cobertura, validación y deploy real
+
+Se retomó el Bloque 18 desde el worktree aislado
+`C:\Users\dokur\Documents\Repositorios\RedMotors-Bloque18-CoverageLab`, rama
+`analysis/pc/redmotors-block18-coverage-lab-20260726`, basada en la rama WIP
+del Bloque 18. El commit de laboratorio `6f63321 test(product-search): prepare
+legitimate coverage scenarios` preparó un escenario funcional de cobertura para
+la rama `vehiculo`.
+
+El cambio final posterior al laboratorio quedó limitado a
+`ProductSearcherControllerTest.cls`: se ajustó el fixture de `Product2` para
+respetar una cadena real de picklists dependientes confirmada en
+RedMotorsSandbox (`BMW`, `Sedán`, `Serie`, `Serie 2`,
+`BMW-218-GC-VR-PAQ-M`). No se modificó `ProductSearcherController.cls` durante
+este cierre, no se usaron IDs reales, no se agregó `SeeAllData`, no se agregó
+`Test.isRunningTest()` y no se modificaron Record Types, picklists, permisos,
+Flows ni metadata funcional adicional.
+
+Dry-runs del laboratorio:
+
+| Deploy ID | Resultado |
+|---|---|
+| `0AfAK000000vu5V0AQ` | 4/4 componentes, 14/15 pruebas. Falla por `Modelo_De_Inter_s__c = COOPER-S-VR-COUNT-ALL`. Cobertura temporal 141/192 = 73.438%. Org sin modificaciones. |
+| `0AfAK000000vu770AA` | 4/4 componentes, 14/15 pruebas. Falla por incompatibilidad de la cadena de picklists dependientes para `BMW-218-GC-VR-PAQ-M`. Cobertura temporal 141/192 = 73.438%. Org sin modificaciones. |
+| `0AfAK000000vu8j0AA` | 4/4 componentes, 15/15 pruebas, 0 fallas. Cobertura `ProductSearcherController`: 182/192 = 94.79%. Org sin modificaciones. |
+| `0AfAK000000vuAL0AY` | Regresión dirigida: 4/4 componentes, 33/33 pruebas, 0 fallas. Cobertura `ProductSearcherController`: 182/192 = 94.79%. Org sin modificaciones. |
+
+Deploy real:
+
+- Deploy ID: `0AfAK000000vuBx0AI`
+- Ambiente: RedMotorsSandbox / Partial
+- Estado: `Succeeded`
+- Componentes: 4/4
+- Pruebas: 33/33
+- Fallas: 0
+- Cobertura `ProductSearcherController`: 182/192 = 94.79%
+
+Verificación post-deploy:
+
+- Test Run ID: `707AK00000GwtdT`
+- Pruebas: 34/34
+- Fallas: 0
+- Resultado: `Passed`
+
+Resultado funcional final:
+
+- Omoda y Jaecoo resuelven `RMPEKING` en la rama de mano de obra de
+  `ProductSearcherController.getProducts()`.
+- BMW y MINI conservan `RMBAVARIAN`.
+- Polaris y Kawasaki conservan `RMOTOBAI`.
+- No existe selección por descarte.
+- Un Record Type no reconocido no devuelve productos de todas las empresas.
+- Se conserva fuera de alcance cualquier decisión de sucursales, visibilidad
+  comercial, Softland, reservas, anticipos, permisos o layouts.
+
+El Bloque 18 queda completado, validado y desplegado.
+
+Avance técnico estimado: 85% completado y 15% pendiente. Corresponde al
+alcance técnico y no representa horas oficiales, trabajadas ni facturables.
+
+## 31. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
