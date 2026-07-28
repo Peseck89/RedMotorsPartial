@@ -25,7 +25,7 @@ public class productJSONTest {
         testBodega.ID_EXTERNO_BODEGA__c = 'BOD1';
         testBodega.Bodega__c = 'B01';
         insert testBodega;
-        
+
         Test.startTest();
         Test.setMock(HttpCalloutMock.class, new ExampleCalloutMock());
         
