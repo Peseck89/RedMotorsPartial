@@ -2324,7 +2324,61 @@ Validación:
 Estado: Next8 Lote 2 completado, validado y desplegado en RedMotorsSandbox /
 Partial.
 
-## 42. Plantilla reutilizable de actualización
+## 42. Validación 33+3 — Next8 Lote 2: eliminación de reserva de vehículo
+
+Fecha: 28/07/2026.
+
+Componentes:
+
+- `servicioEliminarReserva`;
+- `servicioEliminarReservaTest`;
+- `servicioEliminarReservaMock`.
+
+Antes de modificar se confirmó que la versión local de la prueba y del mock
+difería de la versión vigente en RedMotorsSandbox / Partial. Se recuperó la
+versión desplegada y el cambio se aplicó sobre esa base.
+
+Comportamiento anterior:
+
+- `Product2.Empresa__c = Bavarian` se convertía a `RMBAVARIAN`.
+- Solo `RMBAVARIAN` continuaba hacia Softland.
+- `Otobai`, `RMOTOBAI`, `RMPEKING`, empresa nula o empresa no soportada no
+  tenían una respuesta explícita.
+- La solicitud de token ocurría antes de validar empresa.
+- Existía un bypass `Test.isRunningTest()` para simular token en pruebas.
+
+Cambio aplicado:
+
+- `Bavarian` / `RMBAVARIAN` mantienen `RMBAVARIAN`.
+- `Otobai` / `RMOTOBAI` se reconocen explícitamente y se detienen antes del
+  callout porque no existe contrato confirmado de eliminación de reserva
+  Softland para Otobai en esta clase.
+- `RMPEKING` se reconoce explícitamente y se detiene antes del callout porque
+  no existe contrato confirmado de eliminación de reserva Softland para PEKING.
+- Empresa nula o no soportada produce error controlado y no cae por descarte en
+  Bavarian u Otobai.
+- La validación de empresa ocurre antes de solicitar token.
+- Se retiró el bypass `Test.isRunningTest()` para probar la ruta real mediante
+  mock HTTP.
+
+No se modificaron endpoint, credenciales, VIN, Opportunity, Product2, reservas
+operativas, inventario, Flows ni LWC.
+
+Validación:
+
+- Dry-run enfocado `0AfAK000000x4Vp0AI`: 3/3 componentes, 4/4 pruebas,
+  0 fallas. Cobertura de `servicioEliminarReserva`: 48/51 = 94.12%.
+- Regresión relacionada `0AfAK000000x4af0AA`: 3/3 componentes, 17/17 pruebas,
+  0 fallas.
+- Deploy real `0AfAK000000x4ij0AA`: 3/3 componentes, 17/17 pruebas, 0 fallas.
+  Estado: Succeeded en RedMotorsSandbox / Partial.
+- Verificación post-deploy `707AK00000HA7uX`: `servicioEliminarReservaTest`,
+  4/4 pruebas, 0 fallas.
+
+Estado: Next8 Lote 2 completado, validado y desplegado en RedMotorsSandbox /
+Partial.
+
+## 43. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
