@@ -2217,7 +2217,61 @@ Validación:
 
 Estado: Lote 5 completado, validado y desplegado en RedMotorsSandbox / Partial.
 
-## 40. Plantilla reutilizable de actualización
+## 40. Validación 33+3 — Next8 Lote 1: pedido Softland de Quote
+
+Se completó la corrección de `QuoteSoftlandPedidoService` y
+`QuoteSoftlandQueryService`, componentes confirmados para el alcance pendiente
+ejecutable. `QuoteSoftlandPedidoService` depende de `QuoteSoftlandQueryService`
+para obtener los campos de Quote y Opportunity usados en la construcción del
+payload.
+
+Antes de modificar se confirmó que la versión local difería de la versión
+vigente en RedMotorsSandbox / Partial. Se recuperó la versión desplegada y los
+cambios se aplicaron sobre esa base para evitar reintroducir deuda local.
+
+Comportamiento anterior:
+
+- `BMW_Compania__c = Bavarian` enviaba `RMBAVARIAN`.
+- Cualquier otro valor enviaba `RMOTOBAI`.
+
+Cambio aplicado:
+
+- `Opportunity.Empresa_Operadora__c` queda como fuente principal y se resuelve
+  mediante `EmpresaResolver`.
+- `Opportunity.BMW_Compania__c` se conserva como respaldo temporal cuando el
+  lookup está vacío.
+- `Bavarian` / `RMBAVARIAN` mantienen `RMBAVARIAN`.
+- `Otobai` / `RMOTOBAI` mantienen `RMOTOBAI`.
+- `RMPEKING` se reconoce explícitamente y el valor enviado en `payload.compania`
+  proviene de `EmpresaContext.Codigo_ERP__c`.
+- Empresa nula o no soportada produce error controlado antes de consultar
+  Softland y no cae por descarte en Otobai.
+
+No se modificaron endpoint, credenciales, bodegas, sucursales, reservas,
+anticipos, inventario, Flows ni LWC.
+
+Validación:
+
+- Primer dry-run enfocado `0AfAK000000x3WY0AY`: 3/3 componentes compilados,
+  7/11 pruebas aprobadas. Fallaron las pruebas nuevas por datos de fixture
+  incompletos ante automatizaciones de Account. La org no fue modificada.
+- Segundo dry-run enfocado `0AfAK000000x3hp0AA`: 3/3 componentes compilados,
+  7/11 pruebas aprobadas. Fallaron las pruebas nuevas por duplicidad de
+  `PricebookEntry` estándar. La org no fue modificada.
+- Dry-run enfocado final `0AfAK000000x3mf0AA`: 3/3 componentes, 11/11 pruebas,
+  0 fallas. Cobertura de `QuoteSoftlandPedidoService`: 105/117 = 89.74%.
+  Cobertura de `QuoteSoftlandQueryService`: 7/7 = 100%.
+- Regresión relacionada `0AfAK000000x3zZ0AQ`: 3/3 componentes, 12/12 pruebas,
+  0 fallas.
+- Deploy real `0AfAK000000x2qd0AA`: 3/3 componentes, 12/12 pruebas, 0 fallas.
+  Estado: Succeeded en RedMotorsSandbox / Partial.
+- Verificación post-deploy `707AK00000H9tYa`: `TestServiciosQuote` y
+  `QuoteOrderSoftlandCalloutTest2`, 12/12 pruebas, 0 fallas.
+
+Estado: Next8 Lote 1 completado, validado y desplegado en RedMotorsSandbox /
+Partial.
+
+## 41. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
