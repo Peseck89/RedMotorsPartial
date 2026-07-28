@@ -1,127 +1,116 @@
-@isTest
+@IsTest
 public class RegistrarAnticipoCasillasTst {
-    
-    public static testmethod Map<String, Id> testFactoryRegistrarAnticipoCasillas(){
-         Trigger_control__c tc = new Trigger_control__c();
-        tc.Name = 'aprobacion de descuentos';
-        tc.Turned_off__c = true;
+
+    @TestSetup
+    static void setupData() {
+        Trigger_control__c tc = new Trigger_control__c(
+            Name = 'aprobacion de descuentos', Turned_off__c = true
+        );
         insert tc;
-        Map<String, Id> mapFactoryId = new Map<String, Id>();
-        
-        Product2 prod = new Product2();
-            prod.Name = 'BM101 - X2 - Sdrive 18i Premium';
-            prod.modelo__c = 'BM101 - X2 - Sdrive 18i Premium';
-            prod.Codigo_de_Producto__c = 'BM101';
-            prod.ProductCode = 'BM101';
-            prod.IsActive = true;
-            prod.Marca__c = 'BMW';
-            prod.Description = 'BM101 - X2 - Sdrive 18i Premium';
-            prod.NombredePlantilla__c = 'BMWX2AgradecimientoVisita';
-            prod.Familia__c = 'X2';
-            prod.esVehiculo__c = true;
-        	prod.Empresa__c = 'RMBAVARIAN';
+
+        Product2 prod = new Product2(
+            Name                  = 'BM101 - X2 - Sdrive 18i Premium',
+            modelo__c             = 'BM101 - X2 - Sdrive 18i Premium',
+            Codigo_de_Producto__c = 'BM101',
+            ProductCode           = 'BM101',
+            IsActive              = true,
+            Marca__c              = 'BMW',
+            Description           = 'BM101 - X2 - Sdrive 18i Premium',
+            NombredePlantilla__c  = 'BMWX2AgradecimientoVisita',
+            esVehiculo__c         = true,
+            Empresa__c            = 'RMBAVARIAN'
+        );
         insert prod;
-        mapFactoryId.put('prod', prod.Id);
-        
-        Pricebook2 pb2 = new Pricebook2();
-            pb2.Name = 'BMW - 2020';
-            pb2.IsActive = true;
+
+        Pricebook2 pb2 = new Pricebook2(Name = 'BMW - 2020', IsActive = true);
         insert pb2;
-        mapFactoryId.put('pb2', pb2.Id);
-        
-        PricebookEntry pbe = new PricebookEntry();
-            pbe.Product2Id = prod.Id;
-            pbe.Pricebook2Id = pb2.Id;
-            pbe.UnitPrice = 90000;
-            pbe.UseStandardPrice = false;
-            pbe.IsActive = true;
+
+        PricebookEntry pbe = new PricebookEntry(
+            Product2Id       = prod.Id,
+            Pricebook2Id     = pb2.Id,
+            UnitPrice        = 90000,
+            UseStandardPrice = false,
+            IsActive         = true
+        );
         insert pbe;
-        mapFactoryId.put('pbe', pbe.Id);
-        
-        Opportunity Opp = new Opportunity();
-            Opp.Name = 'Test';
-            Opp.BMW_Compania__c = 'Bavarian';
-            Opp.StageName = 'Oportunidad Calificada';
-            Opp.CloseDate = Date.today();
-            Opp.Pricebook2Id = pb2.Id;
-        insert Opp;
-        mapFactoryId.put('Opp', Opp.Id);
-        
-        OpportunityLineItem OppLI = new OpportunityLineItem();
-            OppLI.OpportunityId = Opp.Id;
-            OppLI.Modelo_De_Inter_s1__c = 'BM101 - X2 - Sdrive 18i Premium';
-            OppLI.Reservado__c = false;
-            OppLI.Product2Id = prod.Id;
-            OppLI.Quantity = 1;
-        	OppLI.TotalPrice = pbe.UnitPrice;
-        insert OppLI;
-        mapFactoryId.put('OppLI', OppLI.Id);
-        
-        Quote Quo = new Quote();
-            Quo.Name = 'Test Quote';
-            Quo.OpportunityId = Opp.Id;
-        	Quo.Pricebook2Id = pb2.Id;
-        insert Quo;
-        mapFactoryId.put('Quo', Quo.Id);
-        
-        QuoteLineItem QuoteLI = new QuoteLineItem();
-            QuoteLI.QuoteId = Quo.Id;
-            QuoteLI.Product2Id = prod.Id;
-        	QuoteLI.PricebookEntryId = pbe.Id;
-            QuoteLI.Quantity = 1; 
-            QuoteLI.UnitPrice = 2000;
-        insert QuoteLI;
-        mapFactoryId.put('QuoteLI', QuoteLI.Id);
-        OppLI.Quantity = 2;
-        update OppLI;
-        delete OppLI;
-        return mapFactoryId;
+
+        Opportunity opp = new Opportunity(
+            Name            = 'Test',
+            BMW_Compania__c = 'Bavarian',
+            StageName       = 'Oportunidad Calificada',
+            CloseDate       = Date.today(),
+            Pricebook2Id    = pb2.Id
+        );
+        insert opp;
+
+        OpportunityLineItem oppLI = new OpportunityLineItem(
+            OpportunityId         = opp.Id,
+            Modelo_De_Inter_s1__c = 'BM101 - X2 - Sdrive 18i Premium',
+            Reservado__c          = false,
+            Product2Id            = prod.Id,
+            Quantity              = 1,
+            TotalPrice            = pbe.UnitPrice
+        );
+        insert oppLI;
+
+        Quote quo = new Quote(
+            Name          = 'Test Quote',
+            OpportunityId = opp.Id,
+            Pricebook2Id  = pb2.Id
+        );
+        insert quo;
+
+        QuoteLineItem quoteLI = new QuoteLineItem(
+            QuoteId          = quo.Id,
+            Product2Id       = prod.Id,
+            PricebookEntryId = pbe.Id,
+            Quantity         = 1,
+            UnitPrice        = 2000
+        );
+        insert quoteLI;
+
+        oppLI.Quantity = 2;
+        update oppLI;
+        delete oppLI;
     }
-    
-    public static testmethod void testGetCurrentOpp(){
-		 Trigger_control__c tc = new Trigger_control__c();
-        tc.Name = 'aprobacion de descuentos';
-        tc.Turned_off__c = true;
-        insert tc;
-        Map<String, Id> mapFactoryId = testFactoryRegistrarAnticipoCasillas();
-        Opportunity newOpp = new Opportunity();
+
+    @IsTest
+    static void testGetCurrentOpp() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
 
         Test.startTest();
-        	newOpp=RegistrarAnticipoCasillas.getCurrentOpp(mapFactoryId.get('Opp'));
+        Opportunity result = RegistrarAnticipoCasillas.getCurrentOpp(opp.Id);
         Test.stopTest();
-        
-        system.debug(newOpp);      
+
+        System.assertNotEquals(null, result,
+            'getCurrentOpp no debe retornar null');
+        System.assertEquals(opp.Id, result.Id,
+            'getCurrentOpp debe retornar la Opportunity con el Id correcto');
     }
-    
-    public static testmethod void testGetModelosVehiculos(){
-        
-        Map<String, Id> mapFactoryId = testFactoryRegistrarAnticipoCasillas();
-        List<Product2> productos = new List<Product2>();
+
+    @IsTest
+    static void testGetModelosVehiculos() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
 
         Test.startTest();
-        	productos=RegistrarAnticipoCasillas.getModelosVehiculos(mapFactoryId.get('Opp'));
+        List<Product2> productos = RegistrarAnticipoCasillas.getModelosVehiculos(opp.Id);
         Test.stopTest();
-        
-        system.debug(productos);
-    }
-    
-    
-    
-        
-    public static testmethod void testMakeReserva(){
-        Trigger_control__c tc = new Trigger_control__c();
-        tc.Name = 'aprobacion de descuentos';
-        tc.Turned_off__c = true;
-        insert tc;
-        Map<String, Id> mapFactoryId = testFactoryRegistrarAnticipoCasillas();
-        Product2 producto = new Product2();
-        
-        Test.startTest();
-        	Test.setMock(HttpCalloutMock.class, new servicioReservasMock());
-        	producto = RegistrarAnticipoCasillas.makeReserva(mapFactoryId.get('Opp'), mapFactoryId.get('prod'));
-		Test.stopTest();
-        
-        system.debug(producto);
+
+        System.assertNotEquals(null, productos,
+            'getModelosVehiculos no debe retornar null');
     }
 
+    @IsTest
+    static void testMakeReserva() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+        Product2 prod   = [SELECT Id FROM Product2 LIMIT 1];
+
+        Test.setMock(HttpCalloutMock.class, new servicioReservasMock());
+        Test.startTest();
+        Product2 producto = RegistrarAnticipoCasillas.makeReserva(opp.Id, prod.Id);
+        Test.stopTest();
+
+        System.assertNotEquals(null, producto,
+            'makeReserva no debe retornar null');
+    }
 }
