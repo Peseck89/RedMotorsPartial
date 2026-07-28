@@ -38,27 +38,32 @@ public class servicioReservas {
     
     public static Map<String,Object> getReservaById(Id OppId, Id ProdId){
         Map<String,Object> responseMap = new Map<String,Object>{'success'=>false};
-        Map<String,Object> tokenResponseMap = getToken();
-        Boolean success = (Boolean)tokenResponseMap.get('success');
-        if(!success){
-            responseMap.put('error', ((String) tokenResponseMap.get('error')));
-            return responseMap;
-        }
-
-        String token = (String) tokenResponseMap.get('token');
 
         try {
             //Codigo_de_Producto__c
             System.debug('--------- Start Process ---------');
             Opportunity thisOpportunity = [SELECT Id, Name, BMW_Compania__c, ModelosProductos__c FROM Opportunity WHERE Id =: OppId];
             Product2 thisProduct = [SELECT Id, vin__c, Empresa__c FROM Product2 WHERE Id =: ProdId ];
-            if (thisProduct.Empresa__c == 'Bavarian') thisProduct.Empresa__c = 'RMBAVARIAN';
-            if (thisProduct.Empresa__c == 'Otobai') thisProduct.Empresa__c = 'RMOTOBAI';
+            String companyCode = resolveProductCompany(thisProduct.Empresa__c);
 
-            if (thisProduct.Empresa__c == 'RMBAVARIAN' || thisProduct.Empresa__c == 'RMOTOBAI'){
+            if (companyCode == 'RMPEKING') {
+                responseMap.put('error', 'No existe configuración confirmada de reserva Softland para RMPEKING.');
+                return responseMap;
+            }
+
+            Map<String,Object> tokenResponseMap = getToken();
+            Boolean success = (Boolean)tokenResponseMap.get('success');
+            if(!success){
+                responseMap.put('error', ((String) tokenResponseMap.get('error')));
+                return responseMap;
+            }
+
+            String token = (String) tokenResponseMap.get('token');
+
+            if (companyCode == 'RMBAVARIAN' || companyCode == 'RMOTOBAI'){
                 Http http = new Http();
                 HttpRequest req = new HttpRequest();
-                String json = EncodingUtil.urlEncode('{"compania":"'+ thisProduct.Empresa__c +'", "codArticulo": "' + thisProduct.vin__c + '" ,"oportunidad": "' + thisOpportunity.Name + '" }','UTF-8');
+                String json = EncodingUtil.urlEncode('{"compania":"'+ companyCode +'", "codArticulo": "' + thisProduct.vin__c + '" ,"oportunidad": "' + thisOpportunity.Name + '" }','UTF-8');
   
                 req.setEndpoint(url + '/ServiciosSoftlandProductivos/softlandAPI/catalogs/reserveVehicule?json=' + json);
                 req.setHeader('Authorization', 'Bearer ' + token);
@@ -79,10 +84,33 @@ public class servicioReservas {
                 responseMap.put('error', 'Empresa no válida');
             }
         }
+        catch(EmpresaConfigurationException e) {
+            responseMap.put('error', e.getMessage());
+        }
         catch(System.CalloutException e) {
             responseMap.put('error', e.getMessage());
         }
         return responseMap;
+    }
+
+    private static String resolveProductCompany(String productCompany) {
+        if (String.isBlank(productCompany)) {
+            throw new EmpresaConfigurationException('No existe empresa configurada para reservar el vehículo.');
+        }
+
+        String normalizedCompany = productCompany.trim().toUpperCase();
+
+        if (normalizedCompany == 'BAVARIAN' || normalizedCompany == 'RMBAVARIAN') {
+            return 'RMBAVARIAN';
+        }
+        if (normalizedCompany == 'OTOBAI' || normalizedCompany == 'RMOTOBAI') {
+            return 'RMOTOBAI';
+        }
+        if (normalizedCompany == 'RMPEKING') {
+            return 'RMPEKING';
+        }
+
+        throw new EmpresaConfigurationException('Empresa no soportada para reservar el vehículo: ' + productCompany);
     }
 
     // Respuesta del web service cuando existe algun error

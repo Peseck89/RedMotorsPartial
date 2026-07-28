@@ -2271,7 +2271,60 @@ Validación:
 Estado: Next8 Lote 1 completado, validado y desplegado en RedMotorsSandbox /
 Partial.
 
-## 41. Plantilla reutilizable de actualización
+## 41. Validación 33+3 — Next8 Lote 2: reserva de vehículo
+
+Se completó la corrección de `servicioReservas`, componente confirmado del
+alcance pendiente ejecutable. La clase solicita la reserva de un vehículo en
+Softland tomando la empresa desde `Product2.Empresa__c`.
+
+Antes de modificar se confirmó que la versión local de la prueba y del mock
+difería de la versión vigente en RedMotorsSandbox / Partial. Se recuperó la
+versión desplegada y el cambio se aplicó sobre esa base.
+
+Comportamiento anterior:
+
+- `Product2.Empresa__c = Bavarian` se convertía a `RMBAVARIAN`.
+- `Product2.Empresa__c = Otobai` se convertía a `RMOTOBAI`.
+- Solo `RMBAVARIAN` y `RMOTOBAI` continuaban hacia Softland.
+- La validación de empresa ocurría después de solicitar token.
+
+Cambio aplicado:
+
+- `Bavarian` / `RMBAVARIAN` mantienen `RMBAVARIAN`.
+- `Otobai` / `RMOTOBAI` mantienen `RMOTOBAI`.
+- `RMPEKING` se reconoce explícitamente, pero se detiene antes del callout de
+  reserva porque no existe contrato confirmado de reserva Softland para PEKING.
+- Empresa nula o no soportada produce error controlado y no cae por descarte en
+  Bavarian u Otobai.
+- La validación de empresa ocurre antes de solicitar token.
+
+No se modificaron endpoint, credenciales, VIN, Opportunity, Product2, reservas
+operativas, inventario, Flows ni LWC.
+
+Validación:
+
+- Primer dry-run enfocado `0AfAK000000x47d0AA`: 3/3 componentes compilados,
+  3/4 pruebas aprobadas. Falló el fixture PEKING porque `Product2.Marca__c =
+  Omoda` no es un valor activo del picklist. La org no fue modificada.
+- Segundo dry-run enfocado `0AfAK000000x4Ar0AI`: 3/3 componentes compilados,
+  3/4 pruebas aprobadas. Falló el fixture PEKING porque `RMPEKING` no estaba
+  habilitado para el Record Type `Product2.Vehiculos` usado por la prueba. La
+  org no fue modificada.
+- Corrección aplicada: el fixture usa el Record Type `Product2.Producto_Red_Motors`,
+  que tiene habilitados `RMBAVARIAN`, `RMOTOBAI` y `RMPEKING`.
+- Dry-run enfocado final `0AfAK000000wwlC0AQ`: 3/3 componentes, 4/4 pruebas,
+  0 fallas. Cobertura de `servicioReservas`: 58/68 = 85.29%.
+- Regresión relacionada `0AfAK000000x30I0AQ`: 3/3 componentes, 16/16 pruebas,
+  0 fallas.
+- Deploy real `0AfAK000000x3mg0AA`: 3/3 componentes, 16/16 pruebas, 0 fallas.
+  Estado: Succeeded en RedMotorsSandbox / Partial.
+- Verificación post-deploy `707AK00000H9o1s`: `servicioReservasTest`, 4/4
+  pruebas, 0 fallas.
+
+Estado: Next8 Lote 2 completado, validado y desplegado en RedMotorsSandbox /
+Partial.
+
+## 42. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
