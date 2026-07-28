@@ -2482,7 +2482,56 @@ Validación:
 Estado: Next8 Lote 4 completado, validado y desplegado en RedMotorsSandbox /
 Partial.
 
-## 45. Plantilla reutilizable de actualización
+## 45. Validación 33+3 — Next8 Lote 5: QuoteService
+
+Fecha: 28/07/2026.
+
+Componentes:
+
+- `QuoteService`;
+- `QuoteServiceTest`.
+
+Antes de modificar se confirmó que la versión local difería de la versión
+vigente en RedMotorsSandbox / Partial. Se recuperó la versión desplegada y el
+cambio se aplicó sobre esa base.
+
+Comportamiento anterior:
+
+- La bodega principal se resolvía por marca, Record Type o Pricebook.
+- Otobai conservaba `BR02`.
+- Los valores no reconocidos podían terminar en `BR01`, equivalente al
+  comportamiento heredado de Bavarian.
+- No existía tratamiento explícito para `RMPEKING`.
+
+Cambio aplicado:
+
+- Se agregó resolución explícita de empresa antes de determinar la bodega.
+- Para vehículos se usa `Product2.Empresa__c` como fuente principal.
+- Para líneas de Quote se usa `Opportunity.Empresa_Operadora__c` como fuente
+  principal.
+- Si el lookup está vacío se conserva compatibilidad temporal por
+  `BMW_Compania__c`, Record Type o Pricebook.
+- Bavarian conserva `BR01`.
+- Otobai conserva `BR02`.
+- `RMPEKING` se reconoce explícitamente y se detiene antes de crear líneas
+  porque no existe bodega principal confirmada para PEKING.
+- Empresa nula o no reconocida produce error controlado.
+
+No se modificaron Pricebooks, cálculos, comisiones, productos, configuración de
+ventas, reglas de fantasía, Flows, LWC, bodegas reales ni datos operativos.
+
+Validación:
+
+- Primer dry-run enfocado `0AfAK000000x5yA0AQ`: 2/2 componentes; fallido por orden de validación en una ruta de `addLineItem` y fixtures PEKING incompatibles con metadata de prueba.
+- Segundo dry-run enfocado `0AfAK000000x4cI0AQ`: 2/2 componentes; fallido por valor no permitido en `Configuracion_de_ventas__c.Marca__c` dentro del fixture PEKING.
+- Dry-run enfocado exitoso `0AfAK000000x6ML0AY`: 2/2 componentes; 10/10 pruebas; 0 fallas; cobertura de `QuoteService` 260/327 líneas, 79.51%.
+- Regresión relacionada `0AfAK000000x2nO0AQ`: 2/2 componentes; 19/19 pruebas; 0 fallas.
+- Deploy real `0AfAK000000x6RB0AY`: 2/2 componentes; 19/19 pruebas; 0 fallas; estado Succeeded en RedMotorsSandbox / Partial.
+- Verificación post-deploy `707AK00000HA55b`: `QuoteServiceTest`, 10/10 pruebas, 0 fallas.
+
+Estado: Next8 Lote 5 completado, validado y desplegado en RedMotorsSandbox / Partial.
+
+## 46. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
