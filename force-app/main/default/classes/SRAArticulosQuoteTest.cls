@@ -23,6 +23,8 @@ public class SRAArticulosQuoteTest {
         List<Opportunity> oppList = [SELECT Id FROM Opportunity];
         for(Opportunity opp : oppList) {
             opp.BMW_TallerDeServicio__c = st.id;
+            opp.BMW_Compania__c = 'Bavarian';
+            opp.Empresa_Operadora__c = null;
         }
         
         update oppList;
@@ -55,11 +57,6 @@ public class SRAArticulosQuoteTest {
         // Simulación de respuesta del servicio externo para el entorno de pruebas
         Test.startTest();
         
-        WoliGridQueryService service = new WoliGridQueryService(quote.id,true);
-        
-        service.getQuolis();
-        service.getFileUrlsFromQuote();
-        
         // Simulación de la respuesta HTTP
         HttpResponse res = new HttpResponse();
         String testResponse = '{'+
@@ -86,6 +83,7 @@ public class SRAArticulosQuoteTest {
 
         // Llamar al método realizarReservaApartado
         String resultado = servicio.realizarReservaApartado();
+        System.assertEquals(false, resultado == null);
         
         QuoliGridController.requestDespacho(quote.QuoteNumber,notselected, selectedIds);
         QuoliGridController.requestApartar(quote.QuoteNumber,notselected, selectedIds);
@@ -94,6 +92,123 @@ public class SRAArticulosQuoteTest {
         Test.stopTest();
 
         
+    }
+
+    @IsTest
+    static void lookupPekingDoesNotFallbackToOtobai() {
+        Empresa__c peking = createEmpresa('RMPEKING');
+        Quote quote = [SELECT Id, QuoteNumber, OpportunityId FROM Quote LIMIT 1];
+        update new Opportunity(
+            Id = quote.OpportunityId,
+            BMW_Compania__c = 'Bavarian',
+            Empresa_Operadora__c = peking.Id
+        );
+
+        List<String> selectedIds = getQuoteLineItemIds(quote.Id);
+        List<String> notAvailableIds = new List<String>();
+
+        Boolean exceptionThrown = false;
+        Test.startTest();
+        try {
+            new ServicioReservaApartadoArticulosQuote(
+                quote.QuoteNumber,
+                'Uruca - Mostrador',
+                notAvailableIds,
+                selectedIds
+            ).realizarReservaApartado();
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'RMPEKING debe detenerse con error controlado y no caer a Otobai.');
+        System.assertEquals(0, [SELECT COUNT() FROM QuoteLineItem WHERE QuoteId = :quote.Id AND Estado_reserva__c = 'Reservado'], 'No debe reservar líneas cuando la empresa no tiene contrato Softland confirmado.');
+    }
+
+    @IsTest
+    static void emptyCompanyDoesNotFallbackToOtobai() {
+        Quote quote = [SELECT Id, QuoteNumber, OpportunityId FROM Quote LIMIT 1];
+        update new Opportunity(
+            Id = quote.OpportunityId,
+            BMW_Compania__c = null,
+            Empresa_Operadora__c = null
+        );
+
+        List<String> selectedIds = getQuoteLineItemIds(quote.Id);
+        List<String> notAvailableIds = new List<String>();
+
+        Boolean exceptionThrown = false;
+        Test.startTest();
+        try {
+            new ServicioReservaApartadoArticulosQuote(
+                quote.QuoteNumber,
+                'Uruca - Mostrador',
+                notAvailableIds,
+                selectedIds
+            ).realizarReservaApartado();
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'Una empresa vacía debe detenerse con error controlado y no caer a Otobai.');
+        System.assertEquals(0, [SELECT COUNT() FROM QuoteLineItem WHERE QuoteId = :quote.Id AND Estado_reserva__c = 'Reservado'], 'No debe reservar líneas cuando la empresa está vacía.');
+    }
+
+    @IsTest
+    static void unsupportedLookupCompanyDoesNotFallbackToOtobai() {
+        Empresa__c unsupported = createEmpresa('RMUNKNOWN');
+        Quote quote = [SELECT Id, QuoteNumber, OpportunityId FROM Quote LIMIT 1];
+        update new Opportunity(
+            Id = quote.OpportunityId,
+            BMW_Compania__c = 'Bavarian',
+            Empresa_Operadora__c = unsupported.Id
+        );
+
+        List<String> selectedIds = getQuoteLineItemIds(quote.Id);
+        List<String> notAvailableIds = new List<String>();
+
+        Boolean exceptionThrown = false;
+        Test.startTest();
+        try {
+            new ServicioReservaApartadoArticulosQuote(
+                quote.QuoteNumber,
+                'Uruca - Mostrador',
+                notAvailableIds,
+                selectedIds
+            ).realizarReservaApartado();
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'Una empresa no soportada debe detenerse con error controlado y no caer a Otobai.');
+        System.assertEquals(0, [SELECT COUNT() FROM QuoteLineItem WHERE QuoteId = :quote.Id AND Estado_reserva__c = 'Reservado'], 'No debe reservar líneas cuando la empresa no está soportada.');
+    }
+
+    private static Empresa__c createEmpresa(String codigo) {
+        Empresa__c empresa = new Empresa__c(
+            Name = 'Empresa ' + codigo,
+            Codigo__c = codigo,
+            Codigo_ERP__c = codigo,
+            Nombre_Legal__c = 'Empresa ' + codigo,
+            Activa__c = true
+        );
+        insert empresa;
+        return empresa;
+    }
+
+    private static List<String> getQuoteLineItemIds(Id quoteId) {
+        List<String> selectedIds = new List<String>();
+        for (QuoteLineItem qli : [
+            SELECT Id
+            FROM QuoteLineItem
+            WHERE QuoteId = :quoteId
+            ORDER BY CreatedDate ASC
+        ]) {
+            selectedIds.add(qli.Id);
+        }
+        return selectedIds;
     }
 
     // Clase auxiliar para simular respuestas HTTP en pruebas
