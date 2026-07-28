@@ -27,12 +27,49 @@ public with sharing class RM_VN_CambiarUbicacion_Ctrl_Test {
         response.operationResult.code = '00';
         response.operationResult.description = 'El vehiculo fue transferido correctamete.';
 
-                // //setear el mockup
+    }
+
+    @IsTest
+    static void cambioBodegaOtobaiUsaCompaniaOtobaiTest(){
+        ProductoXBodega__c productoXBodega = getProductoXBodegaForCompany('RMOTOBAI');
+        Bodega__c bodegaDestino = getDestino(productoXBodega.Bodega__c);
+
+        Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator(200, 'OK', getSuccessfullJsonResponse(), 'RMOTOBAI'));
+        Test.startTest();
+        Map<String, Object> response = RM_VN_CambiarUbicacion_Ctrl.guardar(productoXBodega.Id, bodegaDestino.Id);
+        Test.stopTest();
+
+        System.assertEquals(true, response.get('success'), 'La respuesta debe conservar el flujo exitoso para Otobai.');
+    }
+
+    @IsTest
+    static void cambioBodegaPekingNoHaceFallbackBavarianTest(){
+        ProductoXBodega__c productoXBodega = getProductoXBodegaForCompany('RMPEKING');
+        Bodega__c bodegaDestino = getDestino(productoXBodega.Bodega__c);
+
+        Test.startTest();
         try {
-        Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator(500, 'ERROR', getSuccessfullJsonResponse()));
-        RM_CalloutException.dummy();
-        } catch (Exception e) {
+            RM_VN_CambiarUbicacion_Ctrl.guardar(productoXBodega.Id, bodegaDestino.Id);
+            System.assert(false, 'RMPEKING no debe enviarse a Softland por fallback.');
+        } catch (AuraHandledException e) {
+            System.assertNotEquals(null, e, 'Debe lanzarse un error controlado.');
         }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void cambioBodegaEmpresaNulaNoHaceFallbackBavarianTest(){
+        ProductoXBodega__c productoXBodega = getProductoXBodegaForCompany(null);
+        Bodega__c bodegaDestino = getDestino(productoXBodega.Bodega__c);
+
+        Test.startTest();
+        try {
+            RM_VN_CambiarUbicacion_Ctrl.guardar(productoXBodega.Id, bodegaDestino.Id);
+            System.assert(false, 'Una empresa nula no debe enviarse a Softland por fallback.');
+        } catch (AuraHandledException e) {
+            System.assertNotEquals(null, e, 'Debe lanzarse un error controlado.');
+        }
+        Test.stopTest();
     }
 
     @IsTest
@@ -58,11 +95,17 @@ public with sharing class RM_VN_CambiarUbicacion_Ctrl_Test {
         protected Integer code;
         protected String status;
         protected String body;
+        protected String expectedCompany;
 
         public MockHttpResponseGenerator(Integer code, String status, String body) {
             this.code = code;
             this.status = status;
             this.body = body;
+        }
+
+        public MockHttpResponseGenerator(Integer code, String status, String body, String expectedCompany) {
+            this(code, status, body);
+            this.expectedCompany = expectedCompany;
         }
 
         public HTTPResponse respond(HTTPRequest req) {
@@ -73,10 +116,42 @@ public with sharing class RM_VN_CambiarUbicacion_Ctrl_Test {
             if(req.getEndpoint().contains('token')){
                 res.setBody('{"access_token":"00001"}');
             }else{
+                if (String.isNotBlank(expectedCompany)) {
+                    System.assert(
+                        req.getBody().contains('"compania":"' + expectedCompany + '"'),
+                        'El callout debe usar la compañía esperada.'
+                    );
+                }
                 res.setBody(body);
             }
             return res;
         }
+    }
+
+    private static ProductoXBodega__c getProductoXBodegaForCompany(String empresa) {
+        Boolean useNonVehicleProduct = empresa == 'RMPEKING';
+        Boolean isVehicleProduct = !useNonVehicleProduct;
+        ProductoXBodega__c productoXBodega = [
+            SELECT Id, Producto__c, Bodega__c
+            FROM ProductoXBodega__c
+            WHERE Producto__r.esVehiculo__c = :isVehicleProduct
+            LIMIT 1
+        ];
+        Product2 producto = new Product2(
+            Id = productoXBodega.Producto__c,
+            Empresa__c = empresa
+        );
+        update producto;
+        return productoXBodega;
+    }
+
+    private static Bodega__c getDestino(Id bodegaOrigenId) {
+        return [
+            SELECT Id, ID_EXTERNO_BODEGA__c
+            FROM Bodega__c
+            WHERE Id != :bodegaOrigenId
+            LIMIT 1
+        ];
     }
 
     /**

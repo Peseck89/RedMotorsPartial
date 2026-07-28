@@ -2006,7 +2006,44 @@ Validación:
 
 - No se ejecutó dry-run ni deploy porque no hubo cambio desplegable seguro.
 
-## 35. Plantilla reutilizable de actualización
+## 35. Validación 33+3 — Lote 1: cambio de ubicación VN
+
+Se inició la validación solicitada sobre los componentes Apex y triggers del
+alcance informado. Como primer cambio seguro, se corrigió
+`RM_VN_CambiarUbicacion_Ctrl` para eliminar el fallback silencioso hacia
+`RMBAVARIAN` cuando `Product2.Empresa__c` viene nulo, desconocido o con
+`RMPEKING`.
+
+El comportamiento de Bavarian y Otobai se conserva mediante comparación
+explícita. `RMPEKING` queda bloqueado con error controlado antes de cualquier
+llamada a Softland, porque no existe configuración confirmada de
+bodega/contrato externo para ejecutar la transferencia. Se agregaron pruebas
+funcionales dirigidas en `RM_VN_CambiarUbicacion_Ctrl_Test`.
+
+Validación:
+
+- Primer dry-run enfocado `0AfAK000000wueY0AQ`: 1/2 componentes, sin
+  ejecución de pruebas. Falló por compilación de la prueba histórica debido a
+  la llamada artificial `RM_CalloutException.dummy()`, inexistente en Partial.
+  Se retiró solo ese bloque del test; no se modificó código productivo por
+  esta falla.
+- Segundo dry-run enfocado `0AfAK000000x07F0AQ`: 2/2 componentes, 5/6 pruebas
+  aprobadas y cobertura temporal de 53/69 líneas. Falló únicamente el escenario
+  PEKING porque el producto vehicular usado por la fábrica histórica no permite
+  el valor `RMPEKING` en la matriz de picklist del Record Type. Se ajustó el
+  fixture PEKING para usar un producto no vehicular autocontenido, sin cambiar
+  metadata funcional.
+- Tercer dry-run enfocado `0AfAK000000x0C50AI`: 2/2 componentes, 6/6 pruebas,
+  0 fallas. Cobertura de `RM_VN_CambiarUbicacion_Ctrl`: 55/69 = 79.71%.
+- Regresión seleccionada `0AfAK000000wvM60AI`: 2/2 componentes, 77/77 pruebas,
+  0 fallas. Cobertura de `RM_VN_CambiarUbicacion_Ctrl`: 55/69 = 79.71%.
+- Deploy real `0AfAK000000x0Ll0AI`: 2/2 componentes, 77/77 pruebas, 0 fallas,
+  estado Succeeded en RedMotorsSandbox / Partial.
+- Verificación post-deploy `707AK00000H9YSw`: 7/7 pruebas, 0 fallas.
+
+Estado: Lote 1 completado, validado y desplegado en RedMotorsSandbox / Partial.
+
+## 36. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:

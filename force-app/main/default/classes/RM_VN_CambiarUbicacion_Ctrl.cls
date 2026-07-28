@@ -88,10 +88,21 @@ public with sharing class RM_VN_CambiarUbicacion_Ctrl {
     }
 
     private static String getCompanyName(String empresa){
-        if(String.isNotBlank(empresa) && empresa == 'OTOBAI'){
+        if (String.isBlank(empresa)) {
+            throw new AuraHandledException('La empresa del producto es requerida para cambiar la ubicación.');
+        }
+
+        String normalizedEmpresa = empresa.trim().toUpperCase();
+        if(normalizedEmpresa == 'RMOTOBAI' || normalizedEmpresa == 'OTOBAI'){
             return 'RMOTOBAI';
         }
-        return 'RMBAVARIAN';
+        if(normalizedEmpresa == 'RMBAVARIAN' || normalizedEmpresa == 'BAVARIAN'){
+            return 'RMBAVARIAN';
+        }
+        if(normalizedEmpresa == 'RMPEKING'){
+            throw new AuraHandledException('RMPEKING no tiene configuración de Softland para cambio de ubicación.');
+        }
+        throw new AuraHandledException('Empresa no soportada para cambio de ubicación: ' + empresa);
     }
 
     /**
