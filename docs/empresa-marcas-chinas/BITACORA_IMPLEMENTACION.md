@@ -2531,7 +2531,54 @@ Validación:
 
 Estado: Next8 Lote 5 completado, validado y desplegado en RedMotorsSandbox / Partial.
 
-## 46. Plantilla reutilizable de actualización
+## 46. Validación 33+3 — Next8 Lote 6: productJSON
+
+Fecha: 28/07/2026.
+
+Componentes:
+
+- `productJSON`;
+- `productJSONTest`.
+
+Antes de modificar se confirmó que la versión local difería de la versión
+vigente en RedMotorsSandbox / Partial. Se recuperó la versión desplegada y el
+cambio se aplicó sobre esa base.
+
+Comportamiento anterior:
+
+- `RMBAVARIAN` buscaba producto por `Codigo_de_Producto__c`.
+- `RMOTOBAI` buscaba producto por `CodigoProductoInterno__c`.
+- Cualquier empresa distinta de `RMBAVARIAN` podía usar el prefijo de bodega
+  de Otobai.
+- No existía ruta explícita para `RMPEKING`.
+
+Evidencia revisada:
+
+- No se encontraron bodegas operativas PEKING o `RMPEKING` en Partial.
+- No se encontraron productos existentes con `Empresa__c = RMPEKING`, Omoda o
+  Jaecoo que confirmaran una llave operativa.
+
+Cambio aplicado:
+
+- Se normalizó la empresa recibida por el payload.
+- Se admiten explícitamente `RMBAVARIAN`, `RMOTOBAI` y `RMPEKING`.
+- `RMPEKING` se reconoce y se detiene antes de crear o actualizar productos
+  porque falta la bodega principal confirmada.
+- Empresa nula o no reconocida produce error controlado.
+- La ruta de bodegas ya no cae por descarte al prefijo de Otobai.
+
+No se modificaron endpoints, payloads externos, productos reales, bodegas
+reales, Softland, reservas, inventario, Flows, LWC ni metadata.
+
+Validación:
+
+- Dry-run enfocado `0AfAK000000x6iv0AA`: 2/2 componentes; 7/7 pruebas; 0 fallas; cobertura de `productJSON` 294/359 líneas, 81.89%.
+- Deploy real `0AfAK000000x6m90AA`: 2/2 componentes; 7/7 pruebas; 0 fallas; estado Succeeded en RedMotorsSandbox / Partial.
+- Verificación post-deploy `707AK00000HADCD`: `productJSONTest`, 7/7 pruebas, 0 fallas.
+
+Estado: Next8 Lote 6 completado, validado y desplegado en RedMotorsSandbox / Partial.
+
+## 47. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
