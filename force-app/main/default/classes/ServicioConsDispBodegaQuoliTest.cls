@@ -30,7 +30,12 @@ public class ServicioConsDispBodegaQuoliTest {
 
     @IsTest
     static void testConsultarDisponibilidad() {
-        Quote quote = [SELECT Id, QuoteNumber FROM Quote LIMIT 1];
+        Quote quote = [SELECT Id, QuoteNumber, OpportunityId FROM Quote LIMIT 1];
+        update new Opportunity(
+            Id = quote.OpportunityId,
+            BMW_Compania__c = 'Bavarian',
+            Empresa_Operadora__c = null
+        );
         List<QuoteLineItem> quolis = [SELECT Id,Product2Id,Product2.Name,ListPrice,BMW_Bodega__c,CantidadSC__c, Codigo_producto__c FROM QuoteLineItem WHERE QuoteId = :quote.Id];
 
          // Crear una lista de QuoliGridWrapper para la prueba
@@ -94,6 +99,115 @@ public class ServicioConsDispBodegaQuoliTest {
         Test.stopTest();
 
         
+    }
+
+    @IsTest
+    static void lookupPekingDoesNotFallbackToOtobai() {
+        Quote quote = [SELECT Id, QuoteNumber, OpportunityId FROM Quote LIMIT 1];
+        Empresa__c peking = createEmpresa('RMPEKING');
+        Opportunity opp = new Opportunity(
+            Id = quote.OpportunityId,
+            BMW_Compania__c = 'Bavarian',
+            Empresa_Operadora__c = peking.Id
+        );
+        update opp;
+
+        List<WoliGridWrapper> quoliWrappers = createWrappers(quote.Id);
+
+        Test.startTest();
+        try {
+            ServicioConsDispBodegaQuoli.consultarDisponibilidad(quoliWrappers, quote.QuoteNumber);
+            System.assert(false, 'RMPEKING debe detenerse antes del callout porque no hay contrato Softland confirmado.');
+        } catch (AuraHandledException e) {
+            System.assertNotEquals(null, e, 'La excepción debe ser controlada.');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void emptyCompanyDoesNotFallbackToOtobai() {
+        Quote quote = [SELECT Id, QuoteNumber, OpportunityId FROM Quote LIMIT 1];
+        Opportunity opp = new Opportunity(
+            Id = quote.OpportunityId,
+            BMW_Compania__c = null,
+            Empresa_Operadora__c = null
+        );
+        update opp;
+
+        List<WoliGridWrapper> quoliWrappers = createWrappers(quote.Id);
+
+        Test.startTest();
+        try {
+            ServicioConsDispBodegaQuoli.consultarDisponibilidad(quoliWrappers, quote.QuoteNumber);
+            System.assert(false, 'Una empresa vacía no debe caer por descarte en Otobai.');
+        } catch (AuraHandledException e) {
+            System.assertNotEquals(null, e, 'La excepción debe ser controlada.');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void legacyOtobaiRemainsSupported() {
+        Quote quote = [SELECT Id, QuoteNumber, OpportunityId FROM Quote LIMIT 1];
+        Opportunity opp = new Opportunity(
+            Id = quote.OpportunityId,
+            BMW_Compania__c = 'Otobai',
+            Empresa_Operadora__c = null
+        );
+        update opp;
+
+        List<WoliGridWrapper> quoliWrappers = createWrappers(quote.Id);
+
+        Test.startTest();
+        List<WoliGridWrapper> result = ServicioConsDispBodegaQuoli.consultarDisponibilidad(
+            quoliWrappers,
+            quote.QuoteNumber
+        );
+        Test.stopTest();
+
+        System.assertEquals(quoliWrappers.size(), result.size(), 'Otobai heredado debe conservar el flujo existente.');
+    }
+
+    private static Empresa__c createEmpresa(String codigo) {
+        Empresa__c empresa = new Empresa__c(
+            Name = 'Empresa ' + codigo,
+            Codigo__c = codigo,
+            Codigo_ERP__c = codigo,
+            Nombre_Legal__c = 'Empresa ' + codigo,
+            Activa__c = true
+        );
+        insert empresa;
+        return empresa;
+    }
+
+    private static List<WoliGridWrapper> createWrappers(Id quoteId) {
+        List<QuoteLineItem> quolis = [
+            SELECT Id, Product2Id, Product2.Name, ListPrice, BMW_Bodega__c, CantidadSC__c, Codigo_producto__c
+            FROM QuoteLineItem
+            WHERE QuoteId = :quoteId
+        ];
+
+        List<WoliGridWrapper> quoliWrappers = new List<WoliGridWrapper>();
+        for (QuoteLineItem qli : quolis) {
+            quoliWrappers.add(new WoliGridWrapper(
+                qli.Id,
+                qli.Product2Id,
+                qli.Codigo_producto__c,
+                qli.Product2.Name,
+                qli.ListPrice,
+                qli.BMW_Bodega__c,
+                qli.CantidadSC__c,
+                'Materiales',
+                'Alias1',
+                'Mantenimiento',
+                'test',
+                'USD',
+                'test',
+                'BodegaExtID1',
+                'test'
+            ));
+        }
+        return quoliWrappers;
     }
 
     // Clase auxiliar para simular respuestas HTTP en pruebas

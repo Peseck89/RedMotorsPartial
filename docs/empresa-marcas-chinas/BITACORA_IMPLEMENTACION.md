@@ -2043,7 +2043,52 @@ Validación:
 
 Estado: Lote 1 completado, validado y desplegado en RedMotorsSandbox / Partial.
 
-## 36. Plantilla reutilizable de actualización
+## 36. Validación 33+3 — Lote 2: consulta de disponibilidad de bodega en Quote
+
+Se inició la corrección de `ServicioConsDispBodegaQuoli`, componente confirmado en el
+documento original del alcance. La clase se utiliza desde `QuoliGridController` para
+consultar disponibilidad de artículos en bodega asociados a una cotización.
+
+Antes de modificarla se confirmó que la versión local difería de la versión vigente en
+RedMotorsSandbox / Partial. Se recuperó la versión desplegada y el cambio se aplicó
+sobre esa base.
+
+Comportamiento anterior:
+
+- `BMW_Compania__c = Bavarian` resolvía `RMBAVARIAN`;
+- cualquier otro valor resolvía `RMOTOBAI`.
+
+Cambio aplicado:
+
+- `Opportunity.Empresa_Operadora__c` es fuente principal cuando está informado;
+- `BMW_Compania__c` queda como respaldo temporal;
+- Bavarian/RMBAVARIAN y Otobai/RMOTOBAI conservan su comportamiento;
+- `RMPEKING` se reconoce explícitamente, pero se detiene antes del callout porque no
+  existe contrato confirmado de bodega/Softland para esta operación;
+- empresa nula o desconocida produce error controlado y no cae por descarte en Otobai.
+
+Estado: pendiente de dry-run enfocado.
+
+Validación:
+
+- Primer dry-run enfocado `0AfAK000000x1050AA`: 2/2 componentes, 3/4 pruebas.
+  Falló la prueba histórica porque el fixture no declaraba explícitamente
+  `BMW_Compania__c = Bavarian` y el nuevo control detuvo la ejecución antes de
+  caer por descarte en Otobai. La org no fue modificada.
+- Corrección aplicada: se ajustó únicamente el fixture histórico para declarar
+  `Bavarian` de forma explícita.
+- Segundo dry-run enfocado `0AfAK000000x1890AA`: 2/2 componentes, 4/4 pruebas,
+  0 fallas. Cobertura de `ServicioConsDispBodegaQuoli`: 153/195 = 78.46%.
+- Regresión relacionada `0AfAK000000x1Eb0AI`: 2/2 componentes, 31/31 pruebas,
+  0 fallas. Cobertura de `ServicioConsDispBodegaQuoli`: 153/195 = 78.46%.
+- Deploy real `0AfAK000000x1Hp0AI`: 2/2 componentes, 31/31 pruebas,
+  0 fallas. Estado: Succeeded en RedMotorsSandbox / Partial.
+- Verificación post-deploy `707AK00000H9Xcl`: `ServicioConsDispBodegaQuoliTest`,
+  5/5 pruebas, 0 fallas.
+
+Estado: Lote 2 completado, validado y desplegado en RedMotorsSandbox / Partial.
+
+## 37. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
