@@ -52,7 +52,21 @@ Al expandir esa familia, los 19 nombres reales de la sección 3 más
 La discrepancia entre las "5" del documento y las seis clases quedó resuelta por
 inspección de código; ver la sección 9.5. El número correcto es **seis**.
 
-## 2. Contradicción de triggers
+## 2. Triggers — **resuelto**
+
+> Las secciones 2.1 a 2.3 quedaron **superadas**. El Manual, sección **A.2
+> Triggers (3)**, enumera literalmente los tres del conteo:
+> `ChanceAccountBavarian`, `ChanceAccountContado` y `WorkOrderTrigger`.
+> Ya no es una pregunta abierta para Luis.
+>
+> `ChanceAccountOtobai` se documenta como **trigger relacionado**: aparece en el
+> documento inicial y existe activo en Partial, pero queda **fuera del conteo
+> explícito de 3** que usa el Manual.
+>
+> El análisis histórico se conserva abajo por trazabilidad; ver la sección 10.2
+> para la lista vigente.
+
+### Análisis histórico (superado)
 
 | Fuente | Triggers enumerados | Cantidad |
 |---|---|---:|
@@ -460,3 +474,184 @@ Verificado en esta revisión contra el estado actual de la rama:
 
 Esta corrección **no altera** el porcentaje de la sección 5, porque ninguna de las
 dos clases pertenece a las 25 del alcance documental.
+
+---
+
+## 10. Reconciliación con el Manual — fuente de mayor jerarquía
+
+Esta sección **supera** a las secciones 2, 3 y 9 en todo lo que se refiere al
+conteo. Aquellas se construyeron cuando el Manual aún no se había leído como
+tabla; se conservan por trazabilidad.
+
+### 10.1 Las 30 clases base del Manual §7.1
+
+Extraídas literalmente y en orden de la tabla "Clases de mayor prioridad"
+(Manual, sección 7.1 "Apex y triggers"). La tabla tiene 31 filas: una de
+encabezado y **30 de datos**. No contiene tests ni triggers — verificado nombre
+por nombre. La acción es idéntica en las 30 filas: *"Resolver
+empresa/precio/bodega/integración; cubrir empresa nueva y empresa desconocida"*.
+
+| # | Clase | Fuente | Acción solicitada | Estado real | Deploy | Pruebas | Pendiente |
+|---:|---|---|---|---|---|---|---|
+| 1 | `ServicioCitasFieldService` | Manual §7.1 | Resolver empresa/precio/bodega/integración | Bloqueada por definición externa | — | — | Confirmar si FSL y portal entran en Sprint 1 |
+| 2 | `QuoteController` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vlTd0AI` | 22/22 | — |
+| 3 | `UpdateCurrencyScheduler` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vllN0AQ` | 7/7 | Riesgo heredado de borrar antes de reinsertar |
+| 4 | `precioProductoJSON` | Manual §7.1 | Igual | Bloqueada por definición externa | — | — | Regla única y segura para PEKING (Bloque 10) |
+| 5 | `productJSON` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Repositorios de producto y bodega por empresa |
+| 6 | `servicioReservas` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Resolver `Product2.Empresa__c` sin normalización binaria |
+| 7 | `Registrar_Anticipo_Controller` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Resolver una vez por transacción en dos bloques |
+| 8 | `BMW_ChangeCurrencyWOWOLI` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vlTd0AI` | 22/22 | — |
+| 9 | `HttpCalloutCreateKit` | Manual §7.1 | Igual | Bloqueada por definición externa | — | — | Decisión marca–empresa |
+| 10 | `ServicioCitas` | Manual §7.1 | Igual | Bloqueada por definición externa | — | — | Confirmar si posventa/taller entra en Sprint 1 |
+| 11 | `servicioEliminarReserva` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Resolver por código configurado |
+| 12 | `ProductControllerTwo` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vokr0AA` | Sí | — |
+| 13 | `cT_QuoteCrcPDFController` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vpk90AA` | Sí | — |
+| 14 | `cT_QuoteUsdPDFController` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vpfJ0AQ` | Sí | — |
+| 15 | `RM_VN_CambiarUbicacion_Ctrl` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Tabla de códigos sin retorno por defecto |
+| 16 | `ServicioEliminarReservaArticuloQuote` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Rama `RMPEKING`; validar bodega |
+| 17 | `ServicioReservaApartadoArticulosQuote` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Rama `RMPEKING` en `realizarReservaApartado` |
+| 18 | `ProductSearcherController` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vuBx0AI` | 33/33, cobertura 94.79% | — |
+| 19 | `BMW_LineaPlantillaEmpresa` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vpU10AI` | Sí | — |
+| 20 | `ServicioConsDispBodegaQuoli` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Rama `RMPEKING`; eliminar `else` a Otobai |
+| 21 | `ServicioCrearSCQuote` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Código ERP desde contexto |
+| 22 | `QuoteSoftlandPedidoService` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Enviar `RMPEKING` en el payload |
+| 23 | `OpportunityServiceInvoker` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Eliminar default Bavarian |
+| 24 | `BatchGetBodegaSoftland` | Manual §7.1 | Igual | Bloqueada por definición externa | — | — | Modelo de Bodega y bodega PEKING |
+| 25 | `QuoteService` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Retirar constante `Bavarian Dólar` |
+| 26 | `BMWServiceQuoteApprovalEmailInvocable` | Manual §7.1 | Igual | Bloqueada por definición externa | — | — | Territorio, destinatarios y branding PEKING |
+| 27 | `savePDFfile` | Manual §7.1 | Igual | Bloqueada por definición externa | — | — | Política documental y de correo por empresa |
+| 28 | `RM_VN_CrearOportunidad_Ctrl` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Resolver empresa al crear la Opportunity |
+| 29 | `QuoteSoftlandQueryService` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Consultar el lookup de Empresa |
+| 30 | `TrabajoQuoteController` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vpx30AA` | Sí | — |
+
+Resumen de estados sobre las 30: **9 implementadas y desplegadas**, 14 pendientes
+ejecutables, 7 bloqueadas por definición externa.
+
+Corrección importante: `TrabajoQuoteController` aparece en el Manual §7.1, la
+fuente de mayor jerarquía. Deja de considerarse trabajo adicional; la clasificación
+de la sección 9.6 queda corregida para esa clase. `TrabajoController` y
+`BMWVinScanTrabajoGenerator` **no** están en las 30 y siguen fuera del conteo,
+aunque sí figuran en el Anexo A.1 del Manual como Apex de producción candidato.
+
+### 10.2 Los 3 triggers — lista fija
+
+Manual, Anexo **A.2 Triggers (3)**, literal:
+
+| # | Trigger | Estado real | Deploy | Pruebas | Pendiente |
+|---:|---|---|---|---|---|
+| 1 | `ChanceAccountBavarian` | Bloqueada por definición externa | — | — | Definir si las cuentas protegidas son empresas facturadoras, cuentas técnicas o ambas |
+| 2 | `ChanceAccountContado` | Bloqueada por definición externa | — | — | Igual; además no representa claramente una empresa |
+| 3 | `WorkOrderTrigger` | Implementada y desplegada | `0AfAK000000vnon0AA` y `0AfAK000000vo4v0AA` | 50/50 | — |
+
+`ChanceAccountOtobai`: **trigger relacionado, fuera del conteo de 3**. Aparece en
+el documento inicial y existe activo en Partial, pero el Manual no lo incluye en
+A.2. Se registra para que no se pierda de vista, sin sumarlo al alcance.
+
+### 10.3 Reconciliación de 30 a 33
+
+Comparación exacta entre las dos fuentes documentales:
+
+| Conjunto | Cantidad |
+|---|---:|
+| Manual §7.1 | 30 |
+| Documento inicial (sección 1.2 de esta matriz) | 25 |
+| Presentes en ambos | 19 |
+| Solo en el Manual §7.1 | 11 |
+| Solo en el documento inicial | 6 |
+| Unión de ambos | 36 |
+
+Las 6 que solo aparecen en el documento inicial son exactamente los seis batches
+de catálogo Softland — es decir, la expansión del nombre conceptual
+`BatchGetCatalogoSoftland`, que el Manual no lista individualmente en §7.1 aunque
+sí los incluye en su Anexo A.1.
+
+Las 11 que solo aparecen en el Manual §7.1 son:
+
+`ServicioCitasFieldService`, `precioProductoJSON`, `productJSON`,
+`HttpCalloutCreateKit`, `ServicioCitas`, `RM_VN_CambiarUbicacion_Ctrl`,
+`ProductSearcherController`, `QuoteService`, `RM_VN_CrearOportunidad_Ctrl`,
+`QuoteSoftlandQueryService`, `TrabajoQuoteController`.
+
+#### Lectura que reproduce el 33
+
+La tabla de horas describe el Apex como "incluye las 8 clases de Pricebook/Softland
+encontradas después". La aritmética que encaja es **25 + 8 = 33**: la base es el
+documento inicial y las ocho se suman después.
+
+Esas ocho deben salir de las 11 anteriores, porque son las únicas que el Manual
+agrega sobre el documento inicial. Aplicando el calificador "Pricebook/Softland"
+del propio enunciado, siete quedan determinadas:
+
+| # | Clase | Dominio que la califica como Pricebook/Softland |
+|---:|---|---|
+| 1 | `precioProductoJSON` | Precios de referencia por lista y empresa |
+| 2 | `productJSON` | Disponibilidad, precios y bodegas |
+| 3 | `HttpCalloutCreateKit` | Callout Softland de creación de kit |
+| 4 | `ProductSearcherController` | Búsqueda de producto y precios por lista |
+| 5 | `QuoteService` | Constante de Pricebook `Bavarian Dólar` |
+| 6 | `QuoteSoftlandQueryService` | Consulta Softland asociada al pedido |
+| 7 | `RM_VN_CambiarUbicacion_Ctrl` | Movimiento de inventario contra códigos de empresa |
+
+Las cuatro restantes **no** pertenecen a ese dominio: `ServicioCitasFieldService`
+y `ServicioCitas` son agenda y taller, `RM_VN_CrearOportunidad_Ctrl` es creación
+de Opportunity y `TrabajoQuoteController` es configuración de mano de obra.
+
+**Resultado: 32 de las 33 quedan determinadas** (las 25 del documento inicial más
+estas 7). La clase número 33 es **una de esas cuatro**, y ninguna fuente interna
+permite decidir cuál sin elegir por conveniencia.
+
+#### Lectura alternativa descartada
+
+Si la base fuese el Manual (30) en vez del documento inicial (25), las "8
+encontradas después" tendrían que producir sólo 3 adiciones netas, lo que exige
+que cinco de las ocho ya estuvieran dentro de las 30. Ninguna combinación de cinco
+Pricebook/Softland dentro de las 30 está sustentada por documento alguno; además,
+las únicas clases documentadas como "recuperadas posteriormente desde
+RedMotorsSandbox" (`PLAN_IMPLEMENTACION_SPRINT1.md` §4) que están dentro de las 30
+son dos, no cinco. La lectura 30 + 8 − 5 no se sostiene.
+
+### 10.4 Lista final
+
+**32 clases determinadas y 3 triggers.** La clase 33 queda como un espacio
+explícito con cuatro candidatas.
+
+| Bloque de la lista | Contenido | Cantidad |
+|---|---|---:|
+| Base del documento inicial | Las 25 de la sección 4.1 | 25 |
+| Añadidas por el Manual §7.1, dominio Pricebook/Softland | `precioProductoJSON`, `productJSON`, `HttpCalloutCreateKit`, `ProductSearcherController`, `QuoteService`, `QuoteSoftlandQueryService`, `RM_VN_CambiarUbicacion_Ctrl` | 7 |
+| **Subtotal determinado** | | **32** |
+| Espacio 33 sin determinar | una de `ServicioCitasFieldService`, `ServicioCitas`, `RM_VN_CrearOportunidad_Ctrl`, `TrabajoQuoteController` | 1 |
+| Triggers | `ChanceAccountBavarian`, `ChanceAccountContado`, `WorkOrderTrigger` | 3 |
+
+Estados sobre las 32 determinadas:
+
+| Estado | Clases |
+|---|---:|
+| Implementada y desplegada | 8 |
+| Implementada, pendiente de integrar | 0 |
+| Pendiente ejecutable | 13 |
+| Bloqueada por definición externa | 11 |
+| Revisada, sin cambio necesario | 0 |
+
+Las ocho implementadas y desplegadas son `BMW_LineaPlantillaEmpresa`,
+`ProductControllerTwo`, `QuoteController`, `cT_QuoteCrcPDFController`,
+`cT_QuoteUsdPDFController`, `UpdateCurrencyScheduler`, `BMW_ChangeCurrencyWOWOLI`
+y `ProductSearcherController`. Si la clase 33 resultara ser
+`TrabajoQuoteController`, serían nueve.
+
+No se publica porcentaje: el denominador no está cerrado mientras falte la clase 33.
+
+### 10.5 Dato exacto que falta
+
+Sólo uno: **cuál de estas cuatro clases contó Luis como la octava**
+—`ServicioCitasFieldService`, `ServicioCitas`, `RM_VN_CrearOportunidad_Ctrl` o
+`TrabajoQuoteController`.
+
+Ninguna fuente interna lo resuelve porque la frase "Apex (incluye las 8 clases de
+Pricebook/Softland encontradas después)" y la cifra "~33 clases + 3 triggers"
+**no aparecen** en el Manual ni en el documento inicial ni en ningún documento del
+repositorio. Se verificó por búsqueda de texto sobre el Manual completo
+(208 párrafos y 43 tablas) y sobre `docs/empresa-marcas-chinas`. La sección 12 del
+Manual estima en persona-semanas (30–45 y 55–85), no en el presupuesto de Sprint
+de 30 h + 14 h. Esa frase pertenece a la tabla de horas consolidada y a la
+transcripción con Luis, que no están en el repositorio.
