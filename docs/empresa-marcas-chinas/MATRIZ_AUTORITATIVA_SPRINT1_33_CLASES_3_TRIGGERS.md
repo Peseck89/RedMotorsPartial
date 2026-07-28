@@ -259,3 +259,129 @@ ajenas al bloque. No se desplegó, y esa clase no está en el alcance documental
 4. El Manual amplio no se usó para sustituir la lista; solo se citó su omisión
    verificada de `ChanceAccountOtobai`.
 5. No se afirma avance del 100% ni se actualizó ningún documento de cierre.
+
+## 9. CANDIDATAS_PARA_COMPLETAR_LAS_33_CLASES
+
+### 9.1 Método
+
+Se buscó evidencia que vincule cada candidata con la estimación de Luis. Una clase
+**no** se incorpora por haber sido modificada durante el Sprint. El criterio de
+admisión es documental: que el **documento original** la nombre, nombre el LWC o
+método que la invoca, o describa textualmente su patrón, aunque esté fuera de la
+sección 3.
+
+Universo comparado: las 25 clases documentales; las 41 clases directas del
+`PLAN_IMPLEMENTACION_SPRINT1.md` §5; las 69/74 del `INVENTARIO_APEX_SPRINT1.md`;
+`BITACORA_IMPLEMENTACION.md`; los bloques 1 a 21; y las clases modificadas en la
+rama (`git diff 2b9d850..HEAD`).
+
+De las 41 del plan, 25 ya están en la matriz. Las 16 restantes, más las clases
+tocadas en el Sprint que no pertenecen a las 41, son el universo de candidatas.
+
+### 9.2 Candidatas fuertes
+
+| # | Nombre API | Evidencia documental que la vincula con las 33 | Acción solicitada | Estado real | Bloque | Commit | Deploy ID | Pruebas | Certeza |
+|---:|---|---|---|---|---:|---|---|---|---|
+| C1 | `ProductSearcherController` | Doc. original §5, fila `productSearcher`: "Arrays hardcodeados `preciosBavarian`/`preciosFantasia` … **Crítico para inventario**: refactorizar para n compañías, no 2 fijas". Repetido en §10 punto 4. Verificación de código: los literales `preciosBavarian`/`preciosFantasia` están **en esta clase** | Refactorizar para n compañías | **ID** | 18 | rama sprint1 | `0AfAK000000vuBx0AI` | 33/33, cobertura 94.79% | **Alta** — coincidencia texto↔código |
+| C2 | `BusquedaDetalladaController` | Doc. original §5, fila `busquedaDetallada … pricebookReferenceDetails`: "Verificar que el Apex detrás … soporte la 3ra compañía". El Bloque 10 identifica esta clase como el Apex correspondiente | Verificar/soportar 3ª compañía | **BLQ** | 10 | — | — | — | **Alta** — LWC nombrado y Apex identificado |
+| C3 | `precioProductoJSON` | Misma fila §5 (`pricebookReferenceDetails`). El Bloque 10 la revisó explícitamente junto a `BusquedaDetalladaController` | Verificar/soportar 3ª compañía | **BLQ** | 10 | — | — | — | **Alta** |
+| C4 | `WoliGridController` | Doc. original §5 nombra **textualmente el método** `getSoftlandLocations`. Verificación de código: ese método está definido en esta clase | Verificar/soportar 3ª compañía | **PI** | — | — | — | — | **Media-alta** — el plan la clasificó como dependencia indirecta (§6); tensión a resolver |
+| C5 | `WoliGridController2` | Igual que C4; también define `getSoftlandLocations` | Igual | **PI** | — | — | — | — | **Media-alta** — misma tensión |
+| C6 | `cT_QuotePDFEmail` | Doc. original, *Notas reu viernes 10 de julio 2026*, punto 1: "Incluir el manejo de **PDFs dinámicos para las nuevas marcas, tanto en Ventas como en Taller**". La clase contiene la razón social fija `BAVARIAN MOTORS CR S.A.` | Identidad documental por empresa | **PI** | — | — | — | — | **Media-alta** — la nota es de alcance, no nombra la clase |
+
+### 9.3 Candidatas posibles
+
+| # | Nombre API | Evidencia y por qué no alcanza para "fuerte" | Acción solicitada | Estado real | Bloque | Certeza |
+|---:|---|---|---|---|---:|---|
+| P1 | `productJSON` | §5 nombra `qoSearchDetailProduct` y `woSearchDetailProduct`, pero no identifica el Apex; la asociación es inferida | Soportar 3ª compañía en disponibilidad/precios | **PI** | — | Media |
+| P2 | `ProductoLocalizacionHelper` | §5 nombra `localizacionDetails` y "el Apex de localización en Softland", pero `getSoftlandLocations` **no** está en esta clase, sino en C4/C5. Es adyacente funcionalmente (compañía fija `RMBAVARIAN`) | Parámetro de empresa obligatorio | **PI** | — | Media |
+| P3 | `HttpCalloutGetProductRefPrices` | §3 fila 8 dice que se hardcodea `RMBAVARIAN` en "**5** endpoints de catálogo", pero existen **6** clases `BatchGet*Softland`. Es posible que uno de los cinco contados sea este servicio y no un batch | Recibir código ERP validado | **PI** | — | Media-baja |
+| P4 | `RM_VN_Inventario_Ctrl` | §5 nombra los LWC `rm_vn_inventario` / `rm_vn_inventario_movil`; esta clase define `getSoftlandLocations`. No figura entre las 41 del plan | Soportar 3ª compañía | **PI** | — | Media-baja |
+| P5 | `RM_VN_InventarioFantasia_Ctrl` | Igual que P4; también define `getSoftlandLocations` | Igual | **PI** | — | Media-baja |
+
+### 9.4 Fuera del alcance
+
+| Nombre API | Evidencia de exclusión |
+|---|---|
+| `TrabajoQuoteController` | **Exclusión textual** del documento original, sección *Consideraciones*: "Actualmente, los trabajos a realizar no distinguen entre empresas. **Esta diferenciación no está incluida en la propuesta**; si el negocio la requiere, deberá contemplarse como un alcance adicional." Implementada y desplegada en el Bloque 13 |
+| `TrabajoController` | Misma exclusión textual. Implementada y desplegada en el Bloque 14 |
+| `BMWVinScanTrabajoGenerator` | Misma exclusión textual. Implementada y desplegada en el Bloque 15 |
+| `HttpCalloutGetProductFreshRefPrices` | `PLAN_IMPLEMENTACION_SPRINT1.md` §4 la declara "recuperada posteriormente desde RedMotorsSandbox", es decir **ausente de las fuentes iniciales** que produjeron la cifra de Luis |
+| `CrearPlandeVenta` | Igual: recuperada posteriormente. No aparece en el documento original (solo existe el Record Type transversal `Planes_de_Venta`) |
+| `ScheduleGetActividadComercialSoftland` | `PLAN` §4: las fuentes iniciales "no contaron por separado los tres schedulers" |
+| `ScheduleGetAseguradoraSoftland` | Igual |
+| `ScheduleGetBodegaSoftland` | Igual |
+| `ServicioEnvioEncuestaSoftland` | Sin mención en el documento original |
+| `HttpCalloutCreateKit` | Sin mención en el documento original |
+| `RM_VN_CambiarUbicacion_Ctrl` | Sin mención en el documento original |
+| `QuoterController` | Sin mención en el documento original. Implementada y desplegada en el Bloque 16 |
+| `RM_VN_CrearOppModeloInteres_Ctrl` | Sin mención en el documento original ni en las 41 del plan. Implementada en el Bloque 19 |
+
+### 9.5 Advertencia sobre la exclusión de "trabajos"
+
+Existe una tensión textual dentro del propio documento original que **no se
+resuelve aquí**:
+
+- sección *Postventa/Taller*: "Revisar la configuración de tipos de trabajo, UTS y
+  demás catálogos, ya que las nuevas marcas no los incluyen de fábrica";
+- sección *Consideraciones*: "los trabajos a realizar no distinguen entre empresas.
+  Esta diferenciación no está incluida en la propuesta".
+
+Los bloques 13, 14 y 15 modificaron la resolución de empresa usada para consultar
+`TipoDeCargoConManoDeObra__c`. Puede leerse como la revisión de catálogos que sí
+está incluida, o como la diferenciación que está excluida. Se documenta como
+hallazgo para Luis; no se reclasifica por conveniencia en ninguna de las dos
+direcciones.
+
+### 9.6 Corrección de precisión sobre las 25
+
+El documento original afirma que `BatchGetCatalogoSoftland` hardcodea `RMBAVARIAN`
+en **cinco** endpoints de catálogo, pero en el repositorio existen **seis** clases
+`BatchGet*Softland`. La expansión a seis usada en la sección 1.2 podría
+sobrecontar en uno. Si la cifra correcta fuese cinco, el alcance documental sería
+de **24 clases** y la diferencia con 33 pasaría de 8 a 9. No se corrige sin
+confirmación.
+
+### 9.7 Resultado
+
+| Clasificación | Cantidad |
+|---|---:|
+| Candidatas fuertes | 6 |
+| Candidatas posibles | 5 |
+| Fuera del alcance con evidencia | 13 |
+
+Las candidatas fuertes (6) **no completan por sí solas** la diferencia de 8. Con
+las posibles se supera esa cifra, pero ninguna combinación queda sustentada como
+exactamente 8. **No se recalcula el porcentaje final.** La cifra vigente sigue
+siendo la de la sección 5: 7 de 25 clases documentales desplegadas (28.0%).
+
+### 9.8 Revisión de la contradicción de triggers
+
+Se revisaron todas las fuentes disponibles, incluidos los documentos posteriores
+`CIERRE_SPRINT1_44H.md` y `MATRIZ_TRAZABILIDAD_REQUERIMIENTOS_SPRINT1.md`.
+`CIERRE_SPRINT1_44H.md` §1 reproduce la cifra como "~33 clases y 3 triggers" y
+remite a `PLAN_IMPLEMENTACION_SPRINT1.md` §4, que a su vez advierte que la
+referencia de Luis "debe tratarse como estimación inicial, no como criterio de
+aceptación numérico". **Ninguna fuente disponible enumera cuáles son los tres.**
+
+Ningún bloque del 1 al 21 modificó `ChanceAccountBavarian`, `ChanceAccountOtobai`
+ni `ChanceAccountContado`: siguen únicamente recuperados en la línea base
+`2b9d850`. La conclusión de la sección 2 se mantiene sin cambios y la pregunta
+única sigue siendo necesaria:
+
+> En tu tabla de Sprint 1, los "3 triggers" ¿son los tres `ChanceAccount*`
+> (`Bavarian`, `Otobai`, `Contado`) con `WorkOrderTrigger` como cuarto ítem
+> aparte, o son `ChanceAccountBavarian`, `ChanceAccountContado` y
+> `WorkOrderTrigger`, dejando `ChanceAccountOtobai` fuera del alcance?
+
+### 9.9 Actualización factual de la sección 4.3
+
+Verificado en esta revisión contra el estado actual de la rama:
+
+| Clase | Estado en la sección 4.3 | Estado verificado ahora | Evidencia |
+|---|---|---|---|
+| `ProductSearcherController` | **IL** | **ID** | Bloque 18 cerrado desde `analysis/pc/redmotors-block18-coverage-lab-20260726`; deploy real `0AfAK000000vuBx0AI`, 4/4 componentes, 33/33 pruebas, cobertura 94.79%; verificación post-deploy `707AK00000GwtdT`, 34/34 |
+| `RM_VN_CrearOppModeloInteres_Ctrl` | no listada | **IL** (NP documental) | Bloque 19, implementación local pendiente de dry-run |
+
+Esta corrección **no altera** el porcentaje de la sección 5, porque ninguna de las
+dos clases pertenece a las 25 del alcance documental.
