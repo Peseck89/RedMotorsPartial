@@ -91,6 +91,7 @@ trigger WorkOrderTrigger on WorkOrder (after update, before insert, before updat
 
                 // Procesar WorkOrders que no tienen usuario asociado
                 List<User> usersToCreate = new List<User>();
+                List<Contact> contactsToMarkAsCommunityUsers = new List<Contact>();
                 List<Peticion_de_envio__c> petitionsToInsert = new List<Peticion_de_envio__c>();
 
                 for (WorkOrder wo2 : workOrdersToProcess) {
@@ -114,6 +115,10 @@ trigger WorkOrderTrigger on WorkOrder (after update, before insert, before updat
                             IsActive = true
                         );
                         usersToCreate.add(newUser);
+                        contactsToMarkAsCommunityUsers.add(new Contact(
+                            Id = wo2.ContactId,
+                            Community_User__c = 'Yes'
+                        ));
                     }
                 }
 
@@ -121,14 +126,13 @@ trigger WorkOrderTrigger on WorkOrder (after update, before insert, before updat
                 if (!usersToCreate.isEmpty()) {
                     try {
                         insert usersToCreate;
+                        update contactsToMarkAsCommunityUsers;
                         System.debug('Statement after insert.');
 
                         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
 
                         //mail.setReplyTo('escsol1f@gmail.com');
                         //String correoEnviar = availableUsers[0].Asesor__r.Email;
-                        //String ccAddresses = 'antonio.dorantesperez@outlook.com';
-                        //correoEnviar = 'antonio.dorantesperez@outlook.com';
                         mail.setToAddresses(new String[]{correoCliente});
                     // mail.setCcAddresses(new String[]{ccAddresses});
                         mail.setSubject('Bienvenido a BMW Service​');
