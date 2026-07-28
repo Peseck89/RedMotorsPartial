@@ -49,6 +49,9 @@ base recuperada. Es una etiqueta de familia; el propio documento aclara que hard
 Al expandir esa familia, los 19 nombres reales de la sección 3 más
 `BatchGetBodegaSoftland` producen **25 clases productivas reales**.
 
+La discrepancia entre las "5" del documento y las seis clases quedó resuelta por
+inspección de código; ver la sección 9.5. El número correcto es **seis**.
+
 ## 2. Contradicción de triggers
 
 | Fuente | Triggers enumerados | Cantidad |
@@ -278,28 +281,33 @@ rama (`git diff 2b9d850..HEAD`).
 De las 41 del plan, 25 ya están en la matriz. Las 16 restantes, más las clases
 tocadas en el Sprint que no pertenecen a las 41, son el universo de candidatas.
 
-### 9.2 Candidatas fuertes
+### 9.2 Tabla consolidada de candidatas
 
-| # | Nombre API | Evidencia documental que la vincula con las 33 | Acción solicitada | Estado real | Bloque | Commit | Deploy ID | Pruebas | Certeza |
-|---:|---|---|---|---|---:|---|---|---|---|
-| C1 | `ProductSearcherController` | Doc. original §5, fila `productSearcher`: "Arrays hardcodeados `preciosBavarian`/`preciosFantasia` … **Crítico para inventario**: refactorizar para n compañías, no 2 fijas". Repetido en §10 punto 4. Verificación de código: los literales `preciosBavarian`/`preciosFantasia` están **en esta clase** | Refactorizar para n compañías | **ID** | 18 | rama sprint1 | `0AfAK000000vuBx0AI` | 33/33, cobertura 94.79% | **Alta** — coincidencia texto↔código |
-| C2 | `BusquedaDetalladaController` | Doc. original §5, fila `busquedaDetallada … pricebookReferenceDetails`: "Verificar que el Apex detrás … soporte la 3ra compañía". El Bloque 10 identifica esta clase como el Apex correspondiente | Verificar/soportar 3ª compañía | **BLQ** | 10 | — | — | — | **Alta** — LWC nombrado y Apex identificado |
-| C3 | `precioProductoJSON` | Misma fila §5 (`pricebookReferenceDetails`). El Bloque 10 la revisó explícitamente junto a `BusquedaDetalladaController` | Verificar/soportar 3ª compañía | **BLQ** | 10 | — | — | — | **Alta** |
-| C4 | `WoliGridController` | Doc. original §5 nombra **textualmente el método** `getSoftlandLocations`. Verificación de código: ese método está definido en esta clase | Verificar/soportar 3ª compañía | **PI** | — | — | — | — | **Media-alta** — el plan la clasificó como dependencia indirecta (§6); tensión a resolver |
-| C5 | `WoliGridController2` | Igual que C4; también define `getSoftlandLocations` | Igual | **PI** | — | — | — | — | **Media-alta** — misma tensión |
-| C6 | `cT_QuotePDFEmail` | Doc. original, *Notas reu viernes 10 de julio 2026*, punto 1: "Incluir el manejo de **PDFs dinámicos para las nuevas marcas, tanto en Ventas como en Taller**". La clase contiene la razón social fija `BAVARIAN MOTORS CR S.A.` | Identidad documental por empresa | **PI** | — | — | — | — | **Media-alta** — la nota es de alcance, no nombra la clase |
+Todas las candidatas, fuertes y posibles, en una sola tabla. La columna "texto
+exacto" reproduce literalmente el documento original.
 
-### 9.3 Candidatas posibles
+| # | Nombre API | Texto exacto del documento | Componente UI, método o proceso mencionado | Evidencia de correspondencia con la clase | Acción requerida | Estado real | Certeza | ¿Sin decisión externa? | Motivo de inclusión o exclusión |
+|---:|---|---|---|---|---|---|---|---|---|
+| **F1** | `ProductSearcherController` | §5: "Arrays hardcodeados `preciosBavarian`/`preciosFantasia` para mapear precios por compañía" → "Crítico para inventario: refactorizar para n compañías, no 2 fijas". Reiterado en §10.4 | LWC `productSearcher` (junto a `rm_vn_crear_opp_inventario`, `rm_vn_inventario`, `rm_vn_inventario_movil`) | Los literales `preciosBavarian` y `preciosFantasia` están **en esta clase** (verificado por búsqueda en código) | Refactorizar para n compañías | **ID** — Bloque 18, deploy `0AfAK000000vuBx0AI`, 33/33, cobertura 94.79% | **Alta** | Sí | **Incluir.** Coincidencia literal texto↔código; el documento la califica de "crítico para inventario" |
+| **F2** | `BusquedaDetalladaController` | §5: "Reciben `empresaFactura` vía `@api` desde el padre (dinámico) pero dependen del Apex de localización en Softland" → "**Verificar que el Apex detrás** (`getSoftlandLocations`, etc.) **soporte la 3ra compañía**" | LWC `busquedaDetallada` | El Bloque 10 identifica esta clase como el Apex de `busquedaDetallada` y documenta su lógica binaria por `User.Sucursal__c` | Verificar y soportar la 3ª compañía | **BLQ** — Bloque 10, revisado sin cambio productivo | **Alta** | No | **Incluir.** Es la única fila del documento que ordena expresamente actuar sobre Apex desde la sección LWC |
+| **F3** | `precioProductoJSON` | Misma fila §5 (incluye `pricebookReferenceDetails`) | LWC `pricebookReferenceDetails` | El Bloque 10 la revisó explícitamente junto a `BusquedaDetalladaController` como parte del mismo bloqueo | Verificar y soportar la 3ª compañía | **BLQ** — Bloque 10, revisado sin cambio productivo | **Alta** | No | **Incluir.** Mismo mandato Apex que F2, con identificación hecha por el propio equipo |
+| **F4** | `cT_QuotePDFEmail` | *Notas reu viernes 10 de julio 2026*, punto 1: "Incluir el manejo de **PDFs dinámicos para las nuevas marcas, tanto en Ventas como en Taller**" | Proceso de generación documental (no se nombra componente) | La clase contiene cuatro ocurrencias de la razón social fija `BAVARIAN MOTORS CR S.A.` (verificado) | Tomar la identidad legal desde la empresa | **PI** | **Media-alta** | No | **Incluir.** La nota amplía el alcance a PDFs; el documento ya incluye `savePDFfile` en §3 y esta es su clase hermana |
+| **P1** | `WoliGridController` | §5: "Verificar que el Apex detrás (`getSoftlandLocations`, etc.) soporte la 3ra compañía" | El método `getSoftlandLocations` se cita textualmente | El método **está definido en esta clase** (verificado). Pero los LWC listados en esa fila (`busquedaDetallada`, `qoSearchDetailProduct`, `woSearchDetailProduct`, `localizacionDetails`, `pricebookReferenceDetails`) **no** incluyen `woliGridDespacho` | Verificar y soportar la 3ª compañía | **PI** | **Media** | Sí | **Ambigua.** Coincidencia exacta de nombre de método, pero el texto la cita como ejemplo ("etc.") y la fila apunta a otros LWC. `PLAN` §6 la clasificó como dependencia indirecta |
+| **P2** | `WoliGridController2` | Igual que P1 | Igual | También define `getSoftlandLocations` | Igual | **PI** | **Media** | Sí | **Ambigua.** Misma razón que P1 |
+| **P3** | `productJSON` | §5: misma fila de "Verificar que el Apex detrás… soporte la 3ra compañía" | LWC `qoSearchDetailProduct`, `woSearchDetailProduct` | Asociación inferida por dominio (disponibilidad y precios de producto); ningún documento la nombra como el Apex de esos LWC | Repositorios de producto y bodega por empresa | **PI** | **Media** | No | **Ambigua.** Pertenece al dominio señalado pero sin identificación explícita |
+| **P4** | `ProductoLocalizacionHelper` | §5: "dependen del Apex de localización en Softland" | LWC `localizacionDetails` | Construye el request de localización con compañía fija `RMBAVARIAN`, pero **no** define `getSoftlandLocations` | Parámetro de empresa obligatorio y validado | **PI** | **Media** | Sí | **Ambigua.** Adyacencia funcional clara, correspondencia nominal no probada |
+| **P5** | `RM_VN_Inventario_Ctrl` | §5 y §10.4 nombran `rm_vn_inventario` / `rm_vn_inventario(_movil)` | LWC `rm_vn_inventario`, `rm_vn_inventario_movil` | Define `getSoftlandLocations` (verificado). No figura entre las 41 clases directas del plan | Soportar la 3ª compañía | **PI** | **Media-baja** | Sí | **Ambigua.** El documento apunta al mapeo de precios en JS, no necesariamente al Apex |
+| **P6** | `RM_VN_InventarioFantasia_Ctrl` | Igual que P5 | Igual | También define `getSoftlandLocations` | Igual | **PI** | **Media-baja** | Sí | **Ambigua.** Misma razón que P5 |
 
-| # | Nombre API | Evidencia y por qué no alcanza para "fuerte" | Acción solicitada | Estado real | Bloque | Certeza |
-|---:|---|---|---|---|---:|---|
-| P1 | `productJSON` | §5 nombra `qoSearchDetailProduct` y `woSearchDetailProduct`, pero no identifica el Apex; la asociación es inferida | Soportar 3ª compañía en disponibilidad/precios | **PI** | — | Media |
-| P2 | `ProductoLocalizacionHelper` | §5 nombra `localizacionDetails` y "el Apex de localización en Softland", pero `getSoftlandLocations` **no** está en esta clase, sino en C4/C5. Es adyacente funcionalmente (compañía fija `RMBAVARIAN`) | Parámetro de empresa obligatorio | **PI** | — | Media |
-| P3 | `HttpCalloutGetProductRefPrices` | §3 fila 8 dice que se hardcodea `RMBAVARIAN` en "**5** endpoints de catálogo", pero existen **6** clases `BatchGet*Softland`. Es posible que uno de los cinco contados sea este servicio y no un batch | Recibir código ERP validado | **PI** | — | Media-baja |
-| P4 | `RM_VN_Inventario_Ctrl` | §5 nombra los LWC `rm_vn_inventario` / `rm_vn_inventario_movil`; esta clase define `getSoftlandLocations`. No figura entre las 41 del plan | Soportar 3ª compañía | **PI** | — | Media-baja |
-| P5 | `RM_VN_InventarioFantasia_Ctrl` | Igual que P4; también define `getSoftlandLocations` | Igual | **PI** | — | Media-baja |
+Resumen: **4 candidatas fuertes** y **6 posibles**, para una diferencia de 8. No se
+propone ninguna combinación de ocho: cualquier selección dentro de este conjunto
+sería arbitraria.
 
-### 9.4 Fuera del alcance
+`HttpCalloutGetProductRefPrices` figuraba como posible en la versión anterior de
+este documento y **se retiró** al resolverse el conteo de la familia de catálogo
+(sección 9.5).
+
+### 9.3 Fuera del alcance
 
 | Nombre API | Evidencia de exclusión |
 |---|---|
@@ -317,7 +325,7 @@ tocadas en el Sprint que no pertenecen a las 41, son el universo de candidatas.
 | `QuoterController` | Sin mención en el documento original. Implementada y desplegada en el Bloque 16 |
 | `RM_VN_CrearOppModeloInteres_Ctrl` | Sin mención en el documento original ni en las 41 del plan. Implementada en el Bloque 19 |
 
-### 9.5 Advertencia sobre la exclusión de "trabajos"
+### 9.4 Advertencia sobre la exclusión de "trabajos"
 
 Existe una tensión textual dentro del propio documento original que **no se
 resuelve aquí**:
@@ -333,27 +341,94 @@ está incluida, o como la diferenciación que está excluida. Se documenta como
 hallazgo para Luis; no se reclasifica por conveniencia en ninguna de las dos
 direcciones.
 
-### 9.6 Corrección de precisión sobre las 25
+### 9.5 Resolución de la contradicción 24 vs. 25 — **base exacta de 25**
 
 El documento original afirma que `BatchGetCatalogoSoftland` hardcodea `RMBAVARIAN`
-en **cinco** endpoints de catálogo, pero en el repositorio existen **seis** clases
-`BatchGet*Softland`. La expansión a seis usada en la sección 1.2 podría
-sobrecontar en uno. Si la cifra correcta fuese cinco, el alcance documental sería
-de **24 clases** y la diferencia con 33 pasaría de 8 a 9. No se corrige sin
-confirmación.
+en **cinco** endpoints de catálogo. La inspección local resuelve la duda: la
+familia corresponde a **seis** clases, no a cinco.
 
-### 9.7 Resultado
+Evidencia de código. En `force-app/main/default/classes` existen diez clases
+`BatchGet*Softland`. Solo seis comparten simultáneamente los dos rasgos que el
+documento atribuye a la familia — ruta de catálogo y compañía fija:
+
+| Clase | Endpoint | Compañía en la URL |
+|---|---|---|
+| `BatchGetCategoriaClienteSoftland` | `softlandAPI/Catalogs/getCategorias_Cliente` | `compania=RMBAVARIAN` |
+| `BatchGetCentroCostoSoftland` | `softlandAPI/Catalogs/getCentroCostos` | `compania=RMBAVARIAN` |
+| `BatchGetCondicionPagoSoftland` | `softlandAPI/Catalogs/getCondicionPagos` | `compania=RMBAVARIAN` |
+| `BatchGetCuentaContableSoftland` | `softlandAPI/Catalogs/getCuentaContable` | `compania=RMBAVARIAN` |
+| `BatchGetImpuestoSoftland` | `softlandAPI/Catalogs/getImpuestos` | `compania=RMBAVARIAN` |
+| `BatchGetSubtipoDocumentoSoftland` | `softlandAPI/Catalogs/getSubtiposDocCC` | `compania=RMBAVARIAN` |
+
+Las otras cuatro quedan fuera de la familia por evidencia, no por criterio:
+`BatchGetActividadComercialSoftland`, `BatchGetAseguradoraSoftland` y
+`BatchGetInventorySoftland` no usan la ruta `Catalogs` ni fijan `RMBAVARIAN`;
+`BatchGetBodegaSoftland` tampoco, y el documento ya la menciona por separado en su
+sección 9 (contiene lógica de prefijo `RMOTOBAI`, no compañía fija Bavarian).
+
+Cada uno de los seis endpoints es distinto: no hay dos batches que compartan
+endpoint ni un batch que consuma dos, de modo que "cinco endpoints" no puede
+explicarse por agrupación. Además existe un scheduler dedicado por cada uno
+(`ScheduleGetCategoriaClienteSoftland`, `ScheduleGetCentroCostoSoftland`,
+`ScheduleGetCondicionPagoSoftland`, `ScheduleGetCuentaContableSoftland`,
+`ScheduleGetImpuestoSoftland`, `ScheduleGetSubtipoDocumentoSoftland`), lo que
+confirma seis unidades operativas independientes.
+
+Evidencia documental concordante: `INVENTARIO_APEX_SPRINT1.md` §5.4 enumera las
+seis clases; `PLAN_IMPLEMENTACION_SPRINT1.md` §4 las describe como "seis batches
+de catálogo fijados a `RMBAVARIAN`". Ninguna de las cinco fuentes revisadas
+identifica cuál de las seis quedaría excluida.
+
+**Conclusión: resultado A.** El "5" del documento original es un error de conteo
+verificable contra el código, del mismo tipo que la omisión de
+`ChanceAccountOtobai` en el Manual. La base documental es de **25 clases exactas**
+y la diferencia con la estimación de Luis se mantiene en **8**.
+
+Consecuencia sobre las candidatas: `HttpCalloutGetProductRefPrices` se retira de
+la lista de posibles, porque su única evidencia era la hipótesis de que fuese uno
+de los "cinco endpoints". Resuelto el conteo, esa hipótesis queda sin sustento.
+
+### 9.6 Clasificación de alcance frente a trabajo adicional
+
+Criterio: una clase **no** se considera incluida por haber sido desplegada durante
+el Sprint. La clasificación se basa sólo en el documento original.
+
+| Clase | Clasificación | Fundamento |
+|---|---|---|
+| `BusquedaDetalladaController` | **Incluida expresamente** | §5 ordena literalmente "Verificar que el Apex detrás… soporte la 3ra compañía" sobre la fila que nombra `busquedaDetallada` |
+| `ProductSearcherController` | **Incluida por correspondencia funcional fuerte** | El documento nombra el LWC y describe los literales `preciosBavarian`/`preciosFantasia`, que residen en esta clase Apex |
+| `precioProductoJSON` | **Incluida por correspondencia funcional fuerte** | Misma fila §5 vía `pricebookReferenceDetails`; identificada por el Bloque 10 |
+| `cT_QuotePDFEmail` | **Incluida por correspondencia funcional fuerte** | Nota de reunión del 10/07 sobre PDFs dinámicos; razón social Bavarian fija en la clase |
+| `WoliGridController` | **Ambigua** | Define `getSoftlandLocations`, método citado textualmente, pero la fila apunta a otros LWC |
+| `WoliGridController2` | **Ambigua** | Igual |
+| `TrabajoQuoteController` | **Trabajo adicional fuera del alcance** | Exclusión textual de *Consideraciones*. Desplegada en el Bloque 13 |
+| `TrabajoController` | **Trabajo adicional fuera del alcance** | Misma exclusión textual. Desplegada en el Bloque 14 |
+| `BMWVinScanTrabajoGenerator` | **Trabajo adicional fuera del alcance** | Misma exclusión textual. Desplegada en el Bloque 15 |
+| `CrearPlandeVenta` | **Trabajo adicional fuera del alcance** | Sin mención en el documento; `PLAN` §4 la declara recuperada posteriormente. Desplegada en el Bloque 7 |
+| `QuoterController` | **Trabajo adicional fuera del alcance** | Sin mención en el documento. Desplegada en el Bloque 16 |
+| `RM_VN_CrearOppModeloInteres_Ctrl` | **Trabajo adicional fuera del alcance** | Sin mención en el documento ni en las 41 del plan. Implementada en el Bloque 19 |
+| `RM_VN_CambiarUbicacion_Ctrl` | **Fuera del alcance documental** | Sin mención en el documento. Pertenece a las 41 de deuda técnica pero no se trabajó; no es trabajo adicional |
+
+Seis clases desplegadas durante el Sprint quedan clasificadas como trabajo
+adicional. Esto no las invalida: la bitácora registra que a partir del Bloque 11
+Luis autorizó "cambios claros de bajo riesgo, documentar el resto", y
+`CIERRE_SPRINT1_44H.md` §2.2 documenta la sustitución. Se registra la distinción
+para que el alcance y el trabajo adicional no se sumen como si fueran lo mismo.
+
+### 9.7 Resultado del conteo
 
 | Clasificación | Cantidad |
 |---|---:|
-| Candidatas fuertes | 6 |
-| Candidatas posibles | 5 |
+| Base documental confirmada | **25 clases exactas** |
+| Diferencia con la estimación de Luis | 8 |
+| Candidatas fuertes | 4 |
+| Candidatas posibles | 6 |
 | Fuera del alcance con evidencia | 13 |
 
-Las candidatas fuertes (6) **no completan por sí solas** la diferencia de 8. Con
-las posibles se supera esa cifra, pero ninguna combinación queda sustentada como
-exactamente 8. **No se recalcula el porcentaje final.** La cifra vigente sigue
-siendo la de la sección 5: 7 de 25 clases documentales desplegadas (28.0%).
+Las cuatro candidatas fuertes **no completan** la diferencia de 8; sumadas a las
+seis posibles la superan. Ninguna combinación de exactamente ocho queda sustentada.
+**No se recalcula el porcentaje final.** La cifra vigente sigue siendo la de la
+sección 5: 7 de 25 clases documentales desplegadas (28.0%).
 
 ### 9.8 Revisión de la contradicción de triggers
 
