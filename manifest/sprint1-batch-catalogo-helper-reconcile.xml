@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- Dependencia de soporte, NO cuenta como clase 33 ni altera el conteo 33x3 entregado a Luis -->
+        <members>BatchGetCatalogoSoftland</members>
+        <!-- Tests existentes en Git que cubren las 7 clases BatchGet*Softland del alcance (referencias reales confirmadas) -->
+        <members>BatchGetCategoriaClienteSoftlandTest</members>
+        <members>BatchGetCentroCostoSoftlandTest</members>
+        <members>BatchGetCondicionPagoSoftlandTest</members>
+        <members>BatchGetCuentaContableSoftlandTest</members>
+        <members>BatchGetImpuestoSoftlandTest</members>
+        <members>BatchGetSubtipoDocumentoSoftlandTest</members>
+        <members>BatchGetBodegaSoftlandTest</members>
+        <name>ApexClass</name>
+    </types>
+    <version>67.0</version>
+</Package>

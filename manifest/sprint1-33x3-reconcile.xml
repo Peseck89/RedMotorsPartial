@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- 32 ApexClass confirmadas por Luis -->
+        <members>BMW_LineaPlantillaEmpresa</members>
+        <members>QuoteSoftlandPedidoService</members>
+        <members>ProductControllerTwo</members>
+        <members>servicioReservas</members>
+        <members>ServicioReservaApartadoArticulosQuote</members>
+        <members>ServicioConsDispBodegaQuoli</members>
+        <members>servicioEliminarReserva</members>
+        <members>ServicioEliminarReservaArticuloQuote</members>
+        <members>ServicioCrearSCQuote</members>
+        <members>QuoteController</members>
+        <members>cT_QuoteCrcPDFController</members>
+        <members>cT_QuoteUsdPDFController</members>
+        <members>UpdateCurrencyScheduler</members>
+        <members>BMW_ChangeCurrencyWOWOLI</members>
+        <members>OpportunityServiceInvoker</members>
+        <members>Registrar_Anticipo_Controller</members>
+        <members>savePDFfile</members>
+        <members>BatchGetCategoriaClienteSoftland</members>
+        <members>BatchGetCentroCostoSoftland</members>
+        <members>BatchGetCondicionPagoSoftland</members>
+        <members>BatchGetCuentaContableSoftland</members>
+        <members>BatchGetImpuestoSoftland</members>
+        <members>BatchGetSubtipoDocumentoSoftland</members>
+        <members>BatchGetBodegaSoftland</members>
+        <members>BMWServiceQuoteApprovalEmailInvocable</members>
+        <members>precioProductoJSON</members>
+        <members>productJSON</members>
+        <members>HttpCalloutCreateKit</members>
+        <members>ProductSearcherController</members>
+        <members>QuoteService</members>
+        <members>QuoteSoftlandQueryService</members>
+        <members>RM_VN_CambiarUbicacion_Ctrl</members>
+        <!-- 4 candidatas para la clase 33 (NO seleccionada, no computan como confirmadas) -->
+        <members>ServicioCitasFieldService</members>
+        <members>ServicioCitas</members>
+        <members>RM_VN_CrearOportunidad_Ctrl</members>
+        <members>TrabajoQuoteController</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <!-- 3 ApexTrigger del conteo de Luis. ChanceAccountOtobai queda fuera intencionalmente: ver nota en el borrador de cierre -->
+        <members>ChanceAccountBavarian</members>
+        <members>ChanceAccountContado</members>
+        <members>WorkOrderTrigger</members>
+        <name>ApexTrigger</name>
+    </types>
+    <version>67.0</version>
+</Package>
