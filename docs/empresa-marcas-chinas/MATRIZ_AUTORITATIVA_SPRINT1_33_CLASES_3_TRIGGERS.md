@@ -130,11 +130,11 @@ Estados exclusivos: **ID** Implementado y desplegado · **IL** Implementado loca
 | 2 | `QuoteSoftlandPedidoService` | Doc. original §3 fila 4 | Código Softland de la nueva compañía | Sin cambios | — | Ninguno | — | — | — | **PI** | Resolver empresa y enviar `RMPEKING` en el payload | — |
 | 3 | `ProductControllerTwo` | Doc. original §3 fila 5 | Rama explícita | Modificada | 6 | Adopta lookup `Opportunity.Empresa_Operadora__c` | rama sprint1 | `0AfAK000000vokr0AA` | Sí, desplegadas | **ID** | — | — |
 | 4 | `servicioReservas` | Doc. original §3 fila 5 | Rama explícita | Sin cambios | — | Ninguno | — | — | — | **PI** | Resolver `Product2.Empresa__c` sin normalización binaria | — |
-| 5 | `ServicioReservaApartadoArticulosQuote` | Doc. original §3 fila 5 | Rama explícita | Sin cambios | — | Ninguno | — | — | — | **PI** | Rama `RMPEKING` en `realizarReservaApartado` | — |
-| 6 | `ServicioConsDispBodegaQuoli` | Doc. original §3 fila 5 | Rama explícita | Sin cambios | — | Ninguno | — | — | — | **PI** | Rama `RMPEKING`; eliminar `else` a Otobai | — |
+| 5 | `ServicioReservaApartadoArticulosQuote` | Doc. original §3 fila 5 | Rama explícita | Modificada | — | Rama `RMPEKING` en `realizarReservaApartado` | `69dc466` | `0AfAK000000x0gk0AA` | Post-deploy `707AK00000H9jrT` | **ID** | — | — |
+| 6 | `ServicioConsDispBodegaQuoli` | Doc. original §3 fila 5 | Rama explícita | Modificada | — | Rama `RMPEKING`; retirado el `else` a Otobai | `f9571d7` | `0AfAK000000x1Hp0AI` | Post-deploy `707AK00000H9Xcl` | **ID** | — | — |
 | 7 | `servicioEliminarReserva` | Doc. original §3 fila 5 | Rama explícita | Sin cambios | — | Ninguno | — | — | — | **PI** | Resolver por código, no por normalización | — |
-| 8 | `ServicioEliminarReservaArticuloQuote` | Doc. original §3 fila 5 | Rama explícita | Sin cambios | — | Ninguno | — | — | — | **PI** | Rama `RMPEKING`; validar bodega | — |
-| 9 | `ServicioCrearSCQuote` | Doc. original §3 fila 5 | Rama explícita | Sin cambios | — | Ninguno | — | — | — | **PI** | Código ERP desde contexto | — |
+| 8 | `ServicioEliminarReservaArticuloQuote` | Doc. original §3 fila 5 | Rama explícita | Modificada | — | Rama `RMPEKING`; validación de bodega | `4e07987` | `0AfAK000000wxqx0AA` | Post-deploy `707AK00000H9CIw` | **ID** | — | — |
+| 9 | `ServicioCrearSCQuote` | Doc. original §3 fila 5 | Rama explícita | Modificada | — | Código ERP desde contexto | `27a2213` | `0AfAK000000x2PB0AY` | Post-deploy `707AK00000H9lER`; cobertura 125/134 = 93.28% | **ID** | — | — |
 | 10 | `QuoteController` | Doc. original §3 fila 6 | 2 Pricebooks + ramas | Modificada | 2 | Seis nombres autorizados, sin fallback | `9669237` | `0AfAK000000vlTd0AI` | 22/22 | **ID** | — | — |
 | 11 | `cT_QuoteCrcPDFController` | Doc. original §3 fila 6 | 2 Pricebooks + ramas | Modificada | 12 | `PEKING Dólares` → `PEKING Local`; retirado `Test.isRunningTest()` | rama sprint1 | `0AfAK000000vpk90AA` | Sí, desplegadas | **ID** | — | — |
 | 12 | `cT_QuoteUsdPDFController` | Doc. original §3 fila 6 | 2 Pricebooks + ramas | Modificada | 11 | `PEKING Local` → `PEKING Dólares`; retirado `Test.isRunningTest()` | rama sprint1 | `0AfAK000000vpfJ0AQ` | Sí, desplegadas | **ID** | — | — |
@@ -185,79 +185,51 @@ No forman parte de las 33 clases; corresponden al presupuesto de modelo y soport
 | `EmpresaContext`, `EmpresaResolver`, `EmpresaConfigurationException` | **ID** | `0AfAK000000vhrR0AQ` |
 | `Empresa_Admin` (Permission Set) | **ID** | `0AfAK000000viHF0AY` |
 
-## 5. Cálculo
+## 5. Cálculo — **superado por la sección 10**
 
-### 5.1 Totales
+> Los porcentajes que contenía esta sección se calculaban sobre la base de 25
+> clases derivada del documento inicial. Esa base dejó de ser la autoritativa
+> cuando se incorporó el Manual (fuente 1). El conteo vigente está en la
+> **sección 10.4**.
+>
+> **No se publica porcentaje final** mientras la clase 33 siga sin determinar: el
+> denominador no está cerrado.
 
-| Concepto | Valor |
-|---|---:|
-| Clases del alcance documental derivado | 25 |
-| Clases que Luis comunicó | ~33 |
-| Diferencia no atribuible sin la tabla de Luis | 8 |
-| Triggers nombrados en el documento original | 4 |
-| Triggers que Luis comunicó | 3 |
+Lo único que se conserva de esta sección es el criterio, que sigue vigente:
 
-### 5.2 Estado sobre las 25 clases documentales
-
-| Estado | Clases | % |
-|---|---:|---:|
-| Implementado y desplegado | 7 | 28.0% |
-| Implementado local, no desplegado | 0 | 0.0% |
-| Revisado, sin cambio necesario | 0 | 0.0% |
-| Pendiente de implementar | 8 | 32.0% |
-| Bloqueado por dato/decisión externa | 10 | 40.0% |
-| **Total** | **25** | **100%** |
-
-### 5.3 Estado sobre los triggers
-
-| Estado | Triggers (base 4) | % |
-|---|---:|---:|
-| Implementado y desplegado | 1 | 25.0% |
-| Bloqueado por decisión externa | 3 | 75.0% |
-
-Sobre la base de 3 triggers de la tabla de Luis, y bajo la lectura de que esos 3
-son la familia `ChanceAccount*`, el avance es **0 de 3 (0%)**.
-
-### 5.4 Porcentaje sobre componentes exactos
-
-| Base de cálculo | Desplegado | Total | % |
-|---|---:|---:|---:|
-| 25 clases documentales | 7 | 25 | **28.0%** |
-| 25 clases + 4 triggers | 8 | 29 | **27.6%** |
-| Base declarada por Luis (33 + 3) | 8 | 36 | **22.2%** |
-
-Los 6 componentes de la sección 4.3 y las 4 piezas de soporte de la 4.4 no se
-suman a estos porcentajes por no pertenecer al alcance documental verificable.
-Si la tabla de Luis los incluyera, el avance sobre 33 + 3 subiría a 14 de 36
-(**38.9%**), cifra que **no debe reportarse** hasta contar con esa tabla.
-
-### 5.5 Ninguna clase se marcó completada por haber sido analizada
-
-Las 18 clases en estado **PI** o **BLQ** fueron analizadas en el inventario y el
-plan, pero no tienen cambio productivo ni deploy. Analizar no es implementar.
+**Ninguna clase se marca completada por haber sido analizada.** Las clases en
+estado pendiente o bloqueado fueron analizadas en el inventario y en el plan, pero
+no tienen cambio productivo ni deploy. Analizar no es implementar.
 
 ## 6. Pendientes ejecutables priorizados
 
 Criterio: mismo patrón binario ya resuelto en bloques desplegados, con
 `EmpresaResolver` disponible en el org y sin decisión externa pendiente.
 
+Quedan **ocho** después del lote validado. `ServicioConsDispBodegaQuoli`,
+`ServicioEliminarReservaArticuloQuote`, `ServicioReservaApartadoArticulosQuote`,
+`ServicioCrearSCQuote` y `RM_VN_CambiarUbicacion_Ctrl` salieron de esta lista:
+están implementadas y desplegadas (ver sección 10.1).
+
 | Prioridad | Clase | Patrón | Por qué es ejecutable ya | Est. |
 |---:|---|---|---|---:|
-| 1 | `ServicioConsDispBodegaQuoli` | `Opportunity.BMW_Compania__c`: Bavarian → RM; `else` → Otobai | Receta idéntica a los bloques 13 y 14, ya desplegados | 2 h |
-| 2 | `ServicioEliminarReservaArticuloQuote` | Igual | Misma fuente y mismo consumidor de Quote | 2 h |
-| 3 | `ServicioReservaApartadoArticulosQuote` | Igual | Cierra el par reservar/liberar con la anterior | 3 h |
-| 4 | `ServicioCrearSCQuote` | Igual | Mismo patrón; código ERP `RMPEKING` ya autorizado | 3 h |
-| 5 | `QuoteSoftlandPedidoService` | Igual | Payload usa el código ERP ya confirmado | 3 h |
-| 6 | `servicioReservas` | `Product2.Empresa__c`, normaliza dos códigos | `RMPEKING` ya activo en `Product2.Empresa__c` (bloque 17) | 2 h |
-| 7 | `servicioEliminarReserva` | Igual | Cierra el par con la anterior | 2 h |
-| 8 | `OpportunityServiceInvoker` | `contains('Otobai')` con default Bavarian | No requiere decisión externa; sí regresión de anticipos | 2 h |
+| 1 | `QuoteSoftlandPedidoService` | Bavarian → RM; `else` → Otobai | Payload usa el código ERP ya confirmado; misma receta del lote recién desplegado | 3 h |
+| 2 | `servicioReservas` | `Product2.Empresa__c`, normaliza dos códigos | `RMPEKING` ya activo en `Product2.Empresa__c` (bloque 17) | 2 h |
+| 3 | `servicioEliminarReserva` | Igual | Cierra el par con la anterior | 2 h |
+| 4 | `QuoteSoftlandQueryService` | Obtiene la señal empresarial para el pedido | Complemento directo de la prioridad 1 | 2 h |
+| 5 | `OpportunityServiceInvoker` | `contains('Otobai')` con default Bavarian | No requiere decisión externa; sí regresión de anticipos | 2 h |
+| 6 | `Registrar_Anticipo_Controller` | Default Bavarian en dos bloques | Cierra el dominio de anticipos con la anterior | 3 h |
+| 7 | `QuoteService` | Constante `Bavarian Dólar` | Retirar la constante empresarial global | 2 h |
+| 8 | `productJSON` | Ramas RM* y prefijo Otobai | Mayor esfuerzo; conviene después del resto | 4 h |
 
-Realista para cerrar antes de mañana: **prioridades 1 a 4** (10 h estimadas), o
-1 a 3 más 6 y 7 si se prefiere cerrar el ciclo de reservas completo.
+Secuencia sugerida: 1 y 4 juntas (pedido Softland), luego 2 y 3 (par
+reservar/liberar de vehículos), luego 5 y 6 (anticipos).
 
 No ejecutable sin respuesta externa: los seis batches de catálogo,
-`BatchGetBodegaSoftland`, `savePDFfile`, `BMWServiceQuoteApprovalEmailInvocable`
-y los tres triggers `ChanceAccount*`.
+`BatchGetBodegaSoftland`, `savePDFfile`, `BMWServiceQuoteApprovalEmailInvocable`,
+`HttpCalloutCreateKit`, `precioProductoJSON`, `ServicioCitas`,
+`ServicioCitasFieldService` y los triggers `ChanceAccountBavarian` y
+`ChanceAccountContado`.
 
 ## 7. Riesgo abierto de `ProductSearcherController`
 
@@ -507,13 +479,13 @@ empresa/precio/bodega/integración; cubrir empresa nueva y empresa desconocida"*
 | 12 | `ProductControllerTwo` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vokr0AA` | Sí | — |
 | 13 | `cT_QuoteCrcPDFController` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vpk90AA` | Sí | — |
 | 14 | `cT_QuoteUsdPDFController` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vpfJ0AQ` | Sí | — |
-| 15 | `RM_VN_CambiarUbicacion_Ctrl` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Tabla de códigos sin retorno por defecto |
-| 16 | `ServicioEliminarReservaArticuloQuote` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Rama `RMPEKING`; validar bodega |
-| 17 | `ServicioReservaApartadoArticulosQuote` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Rama `RMPEKING` en `realizarReservaApartado` |
+| 15 | `RM_VN_CambiarUbicacion_Ctrl` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000x0Ll0AI` (commit `db73bed`) | 77/77 en deploy; 7/7 post-deploy `707AK00000H9YSw` | — |
+| 16 | `ServicioEliminarReservaArticuloQuote` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000wxqx0AA` (commit `4e07987`) | Post-deploy `707AK00000H9CIw` | — |
+| 17 | `ServicioReservaApartadoArticulosQuote` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000x0gk0AA` (commit `69dc466`) | Post-deploy `707AK00000H9jrT` | — |
 | 18 | `ProductSearcherController` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vuBx0AI` | 33/33, cobertura 94.79% | — |
 | 19 | `BMW_LineaPlantillaEmpresa` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vpU10AI` | Sí | — |
-| 20 | `ServicioConsDispBodegaQuoli` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Rama `RMPEKING`; eliminar `else` a Otobai |
-| 21 | `ServicioCrearSCQuote` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Código ERP desde contexto |
+| 20 | `ServicioConsDispBodegaQuoli` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000x1Hp0AI` (commit `f9571d7`) | Post-deploy `707AK00000H9Xcl` | — |
+| 21 | `ServicioCrearSCQuote` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000x2PB0AY` (commit `27a2213`) | Post-deploy `707AK00000H9lER`; cobertura 125/134 = 93.28% | — |
 | 22 | `QuoteSoftlandPedidoService` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Enviar `RMPEKING` en el payload |
 | 23 | `OpportunityServiceInvoker` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Eliminar default Bavarian |
 | 24 | `BatchGetBodegaSoftland` | Manual §7.1 | Igual | Bloqueada por definición externa | — | — | Modelo de Bodega y bodega PEKING |
@@ -524,8 +496,13 @@ empresa/precio/bodega/integración; cubrir empresa nueva y empresa desconocida"*
 | 29 | `QuoteSoftlandQueryService` | Manual §7.1 | Igual | Pendiente ejecutable | — | — | Consultar el lookup de Empresa |
 | 30 | `TrabajoQuoteController` | Manual §7.1 | Igual | Implementada y desplegada | `0AfAK000000vpx30AA` | Sí | — |
 
-Resumen de estados sobre las 30: **9 implementadas y desplegadas**, 14 pendientes
+Resumen de estados sobre las 30: **13 implementadas y desplegadas**, 10 pendientes
 ejecutables, 7 bloqueadas por definición externa.
+
+Lote validado incorporado en esta revisión: `RM_VN_CambiarUbicacion_Ctrl`,
+`ServicioConsDispBodegaQuoli`, `ServicioEliminarReservaArticuloQuote`,
+`ServicioReservaApartadoArticulosQuote` y `ServicioCrearSCQuote` pasaron de
+pendientes ejecutables a implementadas y desplegadas.
 
 Corrección importante: `TrabajoQuoteController` aparece en el Manual §7.1, la
 fuente de mayor jerarquía. Deja de considerarse trabajo adicional; la clasificación
@@ -627,17 +604,29 @@ Estados sobre las 32 determinadas:
 
 | Estado | Clases |
 |---|---:|
-| Implementada y desplegada | 8 |
+| Implementada y desplegada | **13** |
 | Implementada, pendiente de integrar | 0 |
-| Pendiente ejecutable | 13 |
-| Bloqueada por definición externa | 11 |
+| Pendiente ejecutable | **8** |
+| Bloqueada por definición externa | **11** |
 | Revisada, sin cambio necesario | 0 |
 
-Las ocho implementadas y desplegadas son `BMW_LineaPlantillaEmpresa`,
+Las trece implementadas y desplegadas son `BMW_LineaPlantillaEmpresa`,
 `ProductControllerTwo`, `QuoteController`, `cT_QuoteCrcPDFController`,
-`cT_QuoteUsdPDFController`, `UpdateCurrencyScheduler`, `BMW_ChangeCurrencyWOWOLI`
-y `ProductSearcherController`. Si la clase 33 resultara ser
-`TrabajoQuoteController`, serían nueve.
+`cT_QuoteUsdPDFController`, `UpdateCurrencyScheduler`, `BMW_ChangeCurrencyWOWOLI`,
+`ProductSearcherController`, `RM_VN_CambiarUbicacion_Ctrl`,
+`ServicioConsDispBodegaQuoli`, `ServicioEliminarReservaArticuloQuote`,
+`ServicioReservaApartadoArticulosQuote` y `ServicioCrearSCQuote`. Si la clase 33
+resultara ser `TrabajoQuoteController`, serían catorce.
+
+Evidencia del lote validado:
+
+| Clase | Commit | Deploy | Post-deploy | Pruebas |
+|---|---|---|---|---|
+| `RM_VN_CambiarUbicacion_Ctrl` | `db73bed` | `0AfAK000000x0Ll0AI` | `707AK00000H9YSw` | 77/77 en deploy; 7/7 post-deploy |
+| `ServicioConsDispBodegaQuoli` | `f9571d7` | `0AfAK000000x1Hp0AI` | `707AK00000H9Xcl` | — |
+| `ServicioEliminarReservaArticuloQuote` | `4e07987` | `0AfAK000000wxqx0AA` | `707AK00000H9CIw` | — |
+| `ServicioReservaApartadoArticulosQuote` | `69dc466` | `0AfAK000000x0gk0AA` | `707AK00000H9jrT` | — |
+| `ServicioCrearSCQuote` | `27a2213` | `0AfAK000000x2PB0AY` | `707AK00000H9lER` | Cobertura 125/134 = 93.28% |
 
 No se publica porcentaje: el denominador no está cerrado mientras falte la clase 33.
 

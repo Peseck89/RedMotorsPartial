@@ -49,6 +49,29 @@ solapamientos— no se sostiene: ninguna combinación de cinco está documentada
 las únicas clases registradas como recuperadas posteriormente que están dentro de
 las 30 son dos, no cinco.
 
+### 2.1 Estado sobre las 32 determinadas
+
+| Estado | Clases |
+|---|---:|
+| Implementada y desplegada | **13** |
+| Implementada, pendiente de integrar | 0 |
+| Pendiente ejecutable | **8** |
+| Bloqueada por definición externa | **11** |
+| Revisada, sin cambio necesario | 0 |
+
+Lote validado incorporado en esta revisión — cinco clases que pasaron de
+pendientes ejecutables a implementadas y desplegadas:
+
+| Clase | Commit | Deploy | Post-deploy | Pruebas |
+|---|---|---|---|---|
+| `RM_VN_CambiarUbicacion_Ctrl` | `db73bed` | `0AfAK000000x0Ll0AI` | `707AK00000H9YSw` | 77/77 en deploy; 7/7 post-deploy |
+| `ServicioConsDispBodegaQuoli` | `f9571d7` | `0AfAK000000x1Hp0AI` | `707AK00000H9Xcl` | — |
+| `ServicioEliminarReservaArticuloQuote` | `4e07987` | `0AfAK000000wxqx0AA` | `707AK00000H9CIw` | — |
+| `ServicioReservaApartadoArticulosQuote` | `69dc466` | `0AfAK000000x0gk0AA` | `707AK00000H9jrT` | — |
+| `ServicioCrearSCQuote` | `27a2213` | `0AfAK000000x2PB0AY` | `707AK00000H9lER` | Cobertura 125/134 = 93.28% |
+
+No se publica porcentaje: el denominador no está cerrado mientras falte la clase 33.
+
 ## 3. Triggers — resuelto
 
 El Manual, Anexo **A.2 Triggers (3)**, enumera literalmente los tres:
@@ -102,8 +125,25 @@ Manual estima en persona-semanas (30–45 y 55–85), no en el presupuesto de Sp
 30 h + 14 h.
 
 Esa frase pertenece a la tabla de horas consolidada y a la transcripción con Luis,
-que no forman parte del repositorio. No se prepara mensaje: basta con localizar
-esos dos artefactos.
+que no forman parte del repositorio.
+
+### 5.1 Mensaje preparado para Luis (no enviado)
+
+> Hola Luis. Ya cerré la reconciliación del Sprint 1 contra el Manual y el
+> documento de alcance. Tengo identificadas 32 de las 33 clases y los 3 triggers
+> (`ChanceAccountBavarian`, `ChanceAccountContado` y `WorkOrderTrigger`, tal como
+> los lista el Manual en A.2).
+>
+> Me falta un solo dato: cuál de estas cuatro contaste como la clase 33.
+>
+> - `ServicioCitasFieldService`
+> - `ServicioCitas`
+> - `RM_VN_CrearOportunidad_Ctrl`
+> - `TrabajoQuoteController`
+>
+> Con eso cierro la lista completa y te paso el avance exacto.
+>
+> Gracias.
 
 ## 6. Componentes que pueden seguirse trabajando sin respuesta
 
@@ -112,19 +152,17 @@ de tomar cualquiera conviene confirmar que Codex no la esté implementando.
 
 | Prioridad | Clase | Est. |
 |---:|---|---:|
-| 1 | `ServicioConsDispBodegaQuoli` | 2 h |
-| 2 | `ServicioEliminarReservaArticuloQuote` | 2 h |
-| 3 | `ServicioReservaApartadoArticulosQuote` | 3 h |
-| 4 | `ServicioCrearSCQuote` | 3 h |
-| 5 | `QuoteSoftlandPedidoService` | 3 h |
-| 6 | `servicioReservas` | 2 h |
-| 7 | `servicioEliminarReserva` | 2 h |
-| 8 | `OpportunityServiceInvoker` | 2 h |
-| 9 | `Registrar_Anticipo_Controller` | 3 h |
-| 10 | `QuoteService` | 2 h |
-| 11 | `QuoteSoftlandQueryService` | 2 h |
-| 12 | `productJSON` | 4 h |
-| 13 | `RM_VN_CambiarUbicacion_Ctrl` | 2 h |
+| 1 | `QuoteSoftlandPedidoService` | 3 h |
+| 2 | `QuoteSoftlandQueryService` | 2 h |
+| 3 | `servicioReservas` | 2 h |
+| 4 | `servicioEliminarReserva` | 2 h |
+| 5 | `OpportunityServiceInvoker` | 2 h |
+| 6 | `Registrar_Anticipo_Controller` | 3 h |
+| 7 | `QuoteService` | 2 h |
+| 8 | `productJSON` | 4 h |
+
+Secuencia sugerida: 1 y 2 juntas (pedido Softland), luego 3 y 4 (par
+reservar/liberar de vehículos), luego 5 y 6 (anticipos).
 
 `RM_VN_CrearOportunidad_Ctrl` también es ejecutable, pero pertenece al espacio 33
 todavía sin determinar.
