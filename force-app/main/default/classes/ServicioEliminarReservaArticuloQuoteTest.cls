@@ -74,6 +74,7 @@ public class ServicioEliminarReservaArticuloQuoteTest {
             StageName                    = 'Prospecting',
             CloseDate                    = Date.today().addDays(30),
             BMW_Compania__c              = 'Bavarian',
+            Empresa_Operadora__c         = null,
             BMW_PlacaDeVehiculoOElVIN__c = ast.Id
         );
         insert opp;
@@ -208,5 +209,107 @@ public class ServicioEliminarReservaArticuloQuoteTest {
         Test.stopTest();
 
         System.assertNotEquals(null, result, 'Resultado no debe ser null para RMOTOBAI');
+    }
+
+    @IsTest
+    static void lookupPekingDoesNotFallbackToOtobai() {
+        Empresa__c peking = createEmpresa('RMPEKING');
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+        opp.BMW_Compania__c = 'Bavarian';
+        opp.Empresa_Operadora__c = peking.Id;
+        update opp;
+
+        Quote q = [SELECT Id, QuoteNumber FROM Quote LIMIT 1];
+        List<String> lineItemIds = getLineItemIds(q.Id);
+        Test.setMock(HttpCalloutMock.class, new CalloutMock(lineItemIds));
+
+        Boolean exceptionThrown = false;
+        Test.startTest();
+        try {
+            new ServicioEliminarReservaArticuloQuote(q.QuoteNumber, lineItemIds)
+                .eliminarReservaArticulos();
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'RMPEKING debe detenerse con error controlado y no caer a Otobai.');
+        System.assertEquals(4, [SELECT COUNT() FROM QuoteLineItem WHERE QuoteId = :q.Id], 'No debe modificar líneas cuando la empresa no tiene contrato Softland confirmado.');
+    }
+
+    @IsTest
+    static void emptyCompanyDoesNotFallbackToOtobai() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+        opp.BMW_Compania__c = null;
+        opp.Empresa_Operadora__c = null;
+        update opp;
+
+        Quote q = [SELECT Id, QuoteNumber FROM Quote LIMIT 1];
+        List<String> lineItemIds = getLineItemIds(q.Id);
+        Test.setMock(HttpCalloutMock.class, new CalloutMock(lineItemIds));
+
+        Boolean exceptionThrown = false;
+        Test.startTest();
+        try {
+            new ServicioEliminarReservaArticuloQuote(q.QuoteNumber, lineItemIds)
+                .eliminarReservaArticulos();
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'Una empresa vacía debe detenerse con error controlado y no caer a Otobai.');
+        System.assertEquals(4, [SELECT COUNT() FROM QuoteLineItem WHERE QuoteId = :q.Id], 'No debe modificar líneas cuando la empresa está vacía.');
+    }
+
+    @IsTest
+    static void unsupportedLookupCompanyDoesNotFallbackToOtobai() {
+        Empresa__c unsupported = createEmpresa('RMUNKNOWN');
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+        opp.BMW_Compania__c = 'Bavarian';
+        opp.Empresa_Operadora__c = unsupported.Id;
+        update opp;
+
+        Quote q = [SELECT Id, QuoteNumber FROM Quote LIMIT 1];
+        List<String> lineItemIds = getLineItemIds(q.Id);
+        Test.setMock(HttpCalloutMock.class, new CalloutMock(lineItemIds));
+
+        Boolean exceptionThrown = false;
+        Test.startTest();
+        try {
+            new ServicioEliminarReservaArticuloQuote(q.QuoteNumber, lineItemIds)
+                .eliminarReservaArticulos();
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, exceptionThrown, 'Una empresa no soportada debe detenerse con error controlado y no caer a Otobai.');
+        System.assertEquals(4, [SELECT COUNT() FROM QuoteLineItem WHERE QuoteId = :q.Id], 'No debe modificar líneas cuando la empresa no está soportada.');
+    }
+
+    private static Empresa__c createEmpresa(String codigo) {
+        Empresa__c empresa = new Empresa__c(
+            Name = 'Empresa ' + codigo,
+            Codigo__c = codigo,
+            Codigo_ERP__c = codigo,
+            Nombre_Legal__c = 'Empresa ' + codigo,
+            Activa__c = true
+        );
+        insert empresa;
+        return empresa;
+    }
+
+    private static List<String> getLineItemIds(Id quoteId) {
+        List<String> lineItemIds = new List<String>();
+        for (QuoteLineItem qli : [
+            SELECT Id
+            FROM QuoteLineItem
+            WHERE QuoteId = :quoteId
+            ORDER BY CreatedDate ASC
+        ]) {
+            lineItemIds.add(qli.Id);
+        }
+        return lineItemIds;
     }
 }
