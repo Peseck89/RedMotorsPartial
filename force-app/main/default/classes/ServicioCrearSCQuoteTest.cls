@@ -68,6 +68,7 @@ private class ServicioCrearSCQuoteTest {
             StageName = 'Prospecting',
             CloseDate = Date.today().addDays(30),
             BMW_Compania__c = 'Bavarian',
+            Empresa_Operadora__c = null,
             Sucursal__c = validSucursal,
             BMW_TallerDeServicio__c = tallerDeServicio.Id 
         );
@@ -181,7 +182,7 @@ private class ServicioCrearSCQuoteTest {
     }
 
     private static Quote getTestQuote() {
-        return [SELECT Id, AccountId FROM Quote LIMIT 1];
+        return [SELECT Id, AccountId, OpportunityId FROM Quote LIMIT 1];
     }
 
     private static List<String> getLineItemIds() {
@@ -190,6 +191,26 @@ private class ServicioCrearSCQuoteTest {
             ids.add(qli.Id);
         }
         return ids;
+    }
+
+    private static Empresa__c createEmpresa(String codigo) {
+        Empresa__c empresa = new Empresa__c(
+            Name = 'Empresa ' + codigo,
+            Codigo__c = codigo,
+            Codigo_ERP__c = codigo + '-ERP',
+            Nombre_Legal__c = 'Empresa ' + codigo,
+            Activa__c = true
+        );
+        insert empresa;
+        return empresa;
+    }
+
+    private static List<QuoteLineItem> getQuoteLineItems(Id quoteId) {
+        return [
+            SELECT Id, Estado_Solicitud_Compra__c, Identificador_solicitud_de_compra__c
+            FROM QuoteLineItem
+            WHERE QuoteId = :quoteId
+        ];
     }
 
     private static MultiCalloutMock buildMockClientExists(String scResponse) {
@@ -445,5 +466,85 @@ private class ServicioCrearSCQuoteTest {
         Test.stopTest();
         
         System.assert(true);
+    }
+
+    @isTest
+    static void lookupPekingDoesNotFallbackToOtobai() {
+        Quote q = getTestQuote();
+        Empresa__c peking = createEmpresa('RMPEKING');
+        update new Opportunity(
+            Id = q.OpportunityId,
+            Empresa_Operadora__c = peking.Id,
+            BMW_Compania__c = 'Bavarian'
+        );
+
+        Boolean thrown = false;
+
+        Test.startTest();
+        try {
+            ServicioCrearSCQuote.crearSolicitudCompra(q.Id, 'Repuestos', 'Aereo', '0', getLineItemIds());
+        } catch (AuraHandledException e) {
+            thrown = true;
+        }
+        Test.stopTest();
+
+        System.assert(thrown, 'RMPEKING debe detenerse de forma controlada antes del callout externo.');
+        for (QuoteLineItem lineItem : getQuoteLineItems(q.Id)) {
+            System.assertEquals(null, lineItem.Estado_Solicitud_Compra__c);
+            System.assertEquals(null, lineItem.Identificador_solicitud_de_compra__c);
+        }
+    }
+
+    @isTest
+    static void emptyCompanyDoesNotFallbackToOtobai() {
+        Quote q = getTestQuote();
+        update new Opportunity(
+            Id = q.OpportunityId,
+            Empresa_Operadora__c = null,
+            BMW_Compania__c = null
+        );
+
+        Boolean thrown = false;
+
+        Test.startTest();
+        try {
+            ServicioCrearSCQuote.crearSolicitudCompra(q.Id, 'Repuestos', 'Aereo', '0', getLineItemIds());
+        } catch (AuraHandledException e) {
+            thrown = true;
+        }
+        Test.stopTest();
+
+        System.assert(thrown, 'Una empresa vacía no debe usar RMOTOBAI por descarte.');
+        for (QuoteLineItem lineItem : getQuoteLineItems(q.Id)) {
+            System.assertEquals(null, lineItem.Estado_Solicitud_Compra__c);
+            System.assertEquals(null, lineItem.Identificador_solicitud_de_compra__c);
+        }
+    }
+
+    @isTest
+    static void unsupportedLookupCompanyDoesNotFallbackToOtobai() {
+        Quote q = getTestQuote();
+        Empresa__c unsupported = createEmpresa('RMINVALID');
+        update new Opportunity(
+            Id = q.OpportunityId,
+            Empresa_Operadora__c = unsupported.Id,
+            BMW_Compania__c = 'Otobai'
+        );
+
+        Boolean thrown = false;
+
+        Test.startTest();
+        try {
+            ServicioCrearSCQuote.crearSolicitudCompra(q.Id, 'Repuestos', 'Aereo', '0', getLineItemIds());
+        } catch (AuraHandledException e) {
+            thrown = true;
+        }
+        Test.stopTest();
+
+        System.assert(thrown, 'Una Empresa no soportada no debe usar RMOTOBAI por descarte.');
+        for (QuoteLineItem lineItem : getQuoteLineItems(q.Id)) {
+            System.assertEquals(null, lineItem.Estado_Solicitud_Compra__c);
+            System.assertEquals(null, lineItem.Identificador_solicitud_de_compra__c);
+        }
     }
 }

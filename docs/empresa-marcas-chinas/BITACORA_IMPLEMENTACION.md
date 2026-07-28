@@ -2174,7 +2174,50 @@ Validación:
 
 Estado: Lote 4 completado, validado y desplegado en RedMotorsSandbox / Partial.
 
-## 39. Plantilla reutilizable de actualización
+## 39. Validación 33+3 — Lote 5: solicitud de compra en Quote
+
+Se inició la corrección de `ServicioCrearSCQuote`, componente confirmado en el documento
+original del alcance. La clase se utiliza desde controladores de líneas para crear
+solicitudes de compra asociadas a una cotización.
+
+Antes de modificarla se confirmó que la versión local difería de la versión vigente en
+RedMotorsSandbox / Partial. Se recuperó la versión desplegada y el cambio se aplicó sobre
+esa base.
+
+Comportamiento anterior:
+
+- `BMW_Compania__c = Bavarian` enviaba `RMBAVARIAN`.
+- Cualquier otro valor enviaba `RMOTOBAI`.
+
+Cambio aplicado:
+
+- `Opportunity.Empresa_Operadora__c` queda como fuente principal y se resuelve mediante
+  `EmpresaResolver`.
+- `Opportunity.BMW_Compania__c` se conserva como respaldo temporal cuando el lookup está
+  vacío.
+- `Bavarian` / `RMBAVARIAN` mantienen `RMBAVARIAN`.
+- `Otobai` / `RMOTOBAI` mantienen `RMOTOBAI`.
+- `RMPEKING` se reconoce explícitamente, pero se detiene antes del callout porque no existe
+  contrato confirmado de Softland para crear solicitudes de compra de Quote.
+- Empresa nula o no soportada produce error controlado y no cae por descarte en Otobai.
+
+No se modificaron endpoint, bodegas, sucursales, Service Territory, anticipos,
+inventario, Flows ni LWC.
+
+Validación:
+
+- Dry-run enfocado `0AfAK000000x2CH0AY`: 2/2 componentes, 17/17 pruebas,
+  0 fallas. Cobertura de `ServicioCrearSCQuote`: 125/134 = 93.28%.
+- Regresión relacionada `0AfAK000000x2KL0AY`: 2/2 componentes, 76/76 pruebas,
+  0 fallas. Cobertura de `ServicioCrearSCQuote`: 125/134 = 93.28%.
+- Deploy real `0AfAK000000x2PB0AY`: 2/2 componentes, 76/76 pruebas,
+  0 fallas. Estado: Succeeded en RedMotorsSandbox / Partial.
+- Verificación post-deploy `707AK00000H9lER`: `ServicioCrearSCQuoteTest`,
+  18/18 pruebas, 0 fallas.
+
+Estado: Lote 5 completado, validado y desplegado en RedMotorsSandbox / Partial.
+
+## 40. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
