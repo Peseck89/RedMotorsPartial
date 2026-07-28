@@ -1,576 +1,332 @@
-# Siguiente lote de 8 clases — preanálisis estático
-
-Estado: **preanálisis únicamente**. No se escribió código productivo, no se ejecutó
-Salesforce CLI, no se consultó ninguna org y no se desplegó nada. Ninguna clase se
-declara bloqueada: para cada una se indica qué falta verificar en Partial.
-
-Base del análisis: código presente en el worktree
-`RedMotors-Sprint1-Reconciliacion33`, rama
-`analysis/pc/redmotors-sprint1-reconcile-33x3-20260727`.
-
-Limitación del entorno: este entorno no tiene `sf` CLI y el proxy bloquea el
-acceso a Salesforce (`X-Proxy-Error: blocked-by-allowlist`). Por eso los comandos
-de la sección 6 están escritos para ejecutarse en tu PC.
-
-## 1. Resumen por clase
-
-| # | Clase | Fuente actual de Empresa | Patrón a corregir | ¿Implementable solo con el repo? |
-|---:|---|---|---|---|
-| 1 | `QuoteSoftlandPedidoService` | `Quote.Opportunity.BMW_Compania__c` | `if Bavarian → RMBAVARIAN else RMOTOBAI` | No — requiere confirmar contrato Softland de PEKING |
-| 2 | `QuoteSoftlandQueryService` | ninguna; solo provee el SOQL | No selecciona `Empresa_Operadora__c` | **Sí** |
-| 3 | `servicioReservas` | `Product2.Empresa__c` | Normaliza etiquetas y admite solo dos códigos | Parcial — falta confirmar valores de picklist |
-| 4 | `servicioEliminarReserva` | `Product2.Empresa__c` | Admite **solo** `RMBAVARIAN` | Parcial — misma verificación |
-| 5 | `OpportunityServiceInvoker` | `Opportunity.Pricebook2.Name` | Inicializa `RMBAVARIAN`; solo `contains('Otobai')` cambia | **Sí** |
-| 6 | `Registrar_Anticipo_Controller` | `Opportunity.Pricebook2.Name` | Mismo patrón en dos bloques | **Sí** |
-| 7 | `QuoteService` | RecordType y nombres de Pricebook | Constante muerta + default `Standard Price Book` | **Sí** |
-| 8 | `productJSON` | parámetro `empresa` del JSON entrante | Ramas binarias en producto y bodega | No — requiere datos de bodega PEKING |
-
----
-
-## 2. Lote 1 — Pedido Softland
-
-### 2.1 `QuoteSoftlandPedidoService`
-
-**Implementación actual.** 407 líneas. El único punto empresarial está en
-`calculateQuotePedidoPayload()`, líneas 25–30:
-
-```apex
-String empresa;
-if(quote.opportunity.bmw_compania__c == 'Bavarian'){
-    empresa = 'RMBAVARIAN';
-}else{
-    empresa = 'RMOTOBAI';
-}
-```
-
-El valor se asigna a `payload.compania` (línea 57). No hay validación posterior.
-
-**Llamadores.** `QuoteOrderSoftlandCallout` construye el servicio; el
-`QuoteSoftlandQueryService` es una dependencia interna (constructor, línea 11).
-
-**Pruebas.** No existe `QuoteSoftlandPedidoServiceTest`. La cobertura viene de
-`TestServiciosQuote`, que también cubre `QuoteOrderSoftlandCallout`.
-
-**Campos consumidos.** `Quote.Opportunity.BMW_Compania__c`,
-`Quote.CurrencyIsoCode`, `Quote.Centro_de_Costo__c` → `CentroCosto__c.centroCosto__c`,
-`Quote.BMW_CostoFijo__c`, `Quote.Precio_empleado__c`, `Quote.Cuenta_de_facturaci_n2__c`,
-`Quote.Opportunity.sucursal__c`.
-
-**Fallback.** Cualquier valor distinto de `Bavarian` —incluido nulo, `PEKING` o un
-valor desconocido— se envía a Softland como `RMOTOBAI`. Es el peor caso del lote:
-un pedido de PEKING se factura en Otobai sin error visible.
-
-**Callout / payload.** Esta clase solo construye el payload;
-`payload.compania` es el campo empresarial. El envío ocurre en
-`QuoteOrderSoftlandCallout`.
-
-**Cambio mínimo propuesto.** Resolver desde
-`Opportunity.Empresa_Operadora__r.Codigo_ERP__c` cuando el lookup esté informado;
-usar `BMW_Compania__c` solo como respaldo mediante una tabla explícita
-`Bavarian→RMBAVARIAN`, `Otobai→RMOTOBAI`, `PEKING→RMPEKING`; lanzar
-`EmpresaConfigurationException` ante nulo o desconocido, **antes** de construir el
-payload. No tocar moneda, centro de costo ni tipo de cliente.
-
-**Riesgos.** El pedido es una transacción financiera: un fallo que hoy pasa
-silencioso pasaría a bloquear el envío. Hay que confirmar con Diego o Luis que
-bloquear es el comportamiento deseado frente a seguir enviando a Otobai.
-
-**Verificar en Partial.**
-1. Que `Empresa__c` de PEKING exista y tenga `Codigo_ERP__c` poblado.
-2. Que el contrato Softland acepte `RMPEKING` en el endpoint de pedido — si no,
-   el cambio debe detenerse antes del callout en vez de enviar un código que el
-   ERP rechace.
-3. Valores activos de `Opportunity.BMW_Compania__c` (¿existe ya un valor PEKING?).
-4. Si `Opportunity.Empresa_Operadora__c` está poblado en Quotes reales.
-
-### 2.2 `QuoteSoftlandQueryService`
-
-**Implementación actual.** 260 líneas, de las cuales la lógica real son 13. Un
-único SOQL en `init()` que selecciona `opportunity.bmw_compania__c` pero **no**
-`opportunity.Empresa_Operadora__c`. El resto del archivo es un método `Method()`
-con declaraciones de enteros sin uso, aparentemente relleno de cobertura.
-
-**Llamadores.** Solo `QuoteSoftlandPedidoService` (constructor).
-
-**Pruebas.** Indirectas vía `TestServiciosQuote`.
-
-**Fallback.** Ninguno propio. La clase no decide empresa; el riesgo es de omisión:
-al no traer el lookup, obliga al consumidor a decidir con el campo heredado.
-
-**Cambio mínimo propuesto.** Agregar al SOQL
-`opportunity.Empresa_Operadora__c`, `opportunity.Empresa_Operadora__r.Codigo__c` y
-`opportunity.Empresa_Operadora__r.Codigo_ERP__c`. No cambiar el filtro ni el
-retorno. Es un cambio aditivo y es **prerequisito** de 2.1.
-
-**Riesgos.** Mínimos. El único cuidado es no romper la firma pública `getQuotes()`.
-
-**Verificar en Partial.** Que el lookup `Opportunity.Empresa_Operadora__c` exista
-con ese API name y que el perfil de integración tenga FLS de lectura sobre él y
-sobre `Empresa__c.Codigo_ERP__c`.
-
----
-
-## 3. Lote 2 — Reservas
-
-### 3.1 `servicioReservas`
-
-**Implementación actual.** 105 líneas. `getReservaById(Id OppId, Id ProdId)`:
-
-```apex
-Opportunity thisOpportunity = [SELECT Id, Name, BMW_Compania__c, ModelosProductos__c ...];
-Product2 thisProduct = [SELECT Id, vin__c, Empresa__c ...];
-if (thisProduct.Empresa__c == 'Bavarian') thisProduct.Empresa__c = 'RMBAVARIAN';
-if (thisProduct.Empresa__c == 'Otobai')  thisProduct.Empresa__c = 'RMOTOBAI';
-
-if (thisProduct.Empresa__c == 'RMBAVARIAN' || thisProduct.Empresa__c == 'RMOTOBAI'){
-    ... callout reserveVehicule ...
-} else {
-    responseMap.put('error', 'Empresa no válida');
-}
-```
-
-**Llamadores.** `ReservaOportunidadController`, `ReservaOppUsadosController`.
-
-**Pruebas.** `servicioReservasTest` con `servicioReservasMock`.
-
-**Campos consumidos.** `Product2.Empresa__c`, `Product2.vin__c`,
-`Opportunity.Name`, `Opportunity.BMW_Compania__c` (se consulta pero **nunca se
-usa**).
-
-**Fallback.** No hay fallback silencioso: una empresa desconocida cae en
-`'Empresa no válida'`. Eso es correcto por diseño accidental, pero hoy **excluye a
-PEKING**.
-
-**Callout.** `GET {URLSoftland}/ServiciosSoftlandProductivos/softlandAPI/catalogs/reserveVehicule?json=...`
-con `{"compania": ..., "codArticulo": vin__c, "oportunidad": Opportunity.Name}`.
-Nota: el segmento `ServiciosSoftlandProductivos` está **fijo en el código**, a
-diferencia de otras clases que usan `Label.ambienteSoftland`. Es una inconsistencia
-preexistente que conviene registrar, no necesariamente corregir en este cambio.
-
-**Cambio mínimo propuesto.** Sustituir la mutación en memoria de
-`thisProduct.Empresa__c` por una variable local resuelta con una tabla explícita
-que incluya `RMPEKING`, y agregar validación de coherencia entre la empresa del
-producto y la de la Opportunity (`Empresa_Operadora__r.Codigo__c` con respaldo en
-`BMW_Compania__c`), devolviendo error controlado si discrepan. Mantener el
-comportamiento actual para Bavarian y Otobai.
-
-**Riesgos.** Introducir la validación de coherencia puede bloquear reservas que
-hoy funcionan si los datos históricos tienen producto y oportunidad de empresas
-distintas. Hay que medir cuántos casos existen antes de activarla.
-
-**Verificar en Partial.**
-1. Valores activos de `Product2.Empresa__c` — ¿siguen existiendo las etiquetas
-   `Bavarian` y `Otobai`, o ya solo los códigos `RM*`? De eso depende si las dos
-   líneas de normalización siguen siendo necesarias.
-2. Si el endpoint `reserveVehicule` acepta `RMPEKING`.
-3. Cuántas Opportunities tienen producto con empresa distinta a la de la
-   oportunidad (medir el impacto de la validación de coherencia).
-
-### 3.2 `servicioEliminarReserva`
-
-**Implementación actual.** 62 líneas.
-
-```apex
-if (thisProduct.Empresa__c == 'Bavarian') thisProduct.Empresa__c = 'RMBAVARIAN';
-//thisProduct.Empresa__c = 'RMBAVARIAN';
-if (thisProduct.Empresa__c == 'RMBAVARIAN'){
-    ... callout unreserveVehicule ...
-}
-```
-
-**Defecto encontrado.** La simetría está rota **hoy**, antes de PEKING:
-`servicioReservas` reserva para Bavarian y Otobai, pero
-`servicioEliminarReserva` solo libera **Bavarian**. Una reserva de Otobai no puede
-liberarse por esta vía: el método simplemente no entra al `if` y retorna la
-respuesta vacía sin error. Además hay código anterior comentado en la línea 37.
-
-**Llamadores.** `QuitarReservaController`, `QuitarReservaUsadosController`;
-también aparece en `ReservaOportunidadController` y `ReservaOppUsadosController`.
-
-**Pruebas.** `servicioEliminarReservaTest` con `servicioEliminarReservaMock`.
-
-**Callout.** `GET .../softlandAPI/catalogs/unreserveVehicule?json=...`, mismo
-formato que la reserva.
-
-**Cambio mínimo propuesto.** Usar exactamente la misma resolución que
-`servicioReservas` (idealmente un método compartido), admitir `RMBAVARIAN`,
-`RMOTOBAI` y `RMPEKING`, devolver error controlado en cualquier otro caso y
-eliminar el comentario de la línea 37.
-
-**Riesgos.** Habilitar Otobai cambia comportamiento productivo existente: hoy esas
-liberaciones fallan en silencio. Es una corrección de defecto, no solo soporte de
-PEKING, y conviene que Luis lo sepa antes de desplegarla.
-
-**Verificar en Partial.** Si existen reservas activas de Otobai que quedarían
-liberables a partir del cambio, y si el endpoint `unreserveVehicule` acepta
-`RMOTOBAI` y `RMPEKING`.
-
----
-
-## 4. Lote 3 — Anticipos
-
-### 4.1 `OpportunityServiceInvoker`
-
-**Implementación actual.** 1796 líneas; la lógica empresarial está en las líneas
-13–35 del método invocable `sendOpportunity`:
-
-```apex
-String pricebookname = 'RMBAVARIAN';
-if(opp.Id != null){
-    try{
-        Opportunity opp2 = [Select Id,Pricebook2Id from opportunity Where Id=:opp.Id];
-        if(opp2.Pricebook2Id != null){
-            Pricebook2 pb = [Select Id,Name from Pricebook2 Where Id=: opp.Pricebook2Id];
-            if(pb!=null){
-                if(pb.Name.contains('Otobai')){ pricebookname = 'RMOTOBAI'; }
-            }
-        }
-    }catch(Exception e){ System.debug('Error--'+e.getMessage()); }
-}
-```
-
-**Fallback.** Triple: el valor inicial es `RMBAVARIAN`; solo `contains('Otobai')`
-lo cambia; y el `catch` se traga cualquier excepción dejando el default. `PEKING
-Local` y `PEKING Dólares` no contienen "Otobai", así que PEKING se envía como
-Bavarian.
-
-**Defecto adicional.** `opp` y `opp2` consultan lo mismo dos veces, y el
-`Pricebook2` se busca por `opp.Pricebook2Id` mientras la comprobación de nulo se
-hace sobre `opp2.Pricebook2Id`.
-
-**Llamadores.** Método `@InvocableMethod` — lo invocan Flows. Hay que identificar
-cuáles antes de cambiar el contrato (el cambio propuesto no altera la firma).
-
-**Pruebas.** `OpportunityServiceInvokerTest`.
-
-**Cambio mínimo propuesto.** Resolver una sola vez: preferir
-`Opportunity.Empresa_Operadora__r.Codigo_ERP__c`; si no está informado, mapear el
-nombre del Pricebook con la tabla de seis nombres ya autorizada
-(`Bavarian Local/Dólar`, `Otobai Local/Dólares`, `PEKING Local/Dólares`); ante
-nulo o desconocido lanzar error controlado antes de invocar el servicio. Retirar
-la consulta duplicada y dejar de silenciar la excepción.
-
-**Riesgos.** Es un invocable de Flow: un error no capturado interrumpe el Flow.
-Hay que decidir si se propaga la excepción o se registra y se aborta el envío.
-
-**Verificar en Partial.** Qué Flows invocan este método y cómo manejan el fallo;
-si `Empresa_Operadora__c` está poblado en las Opportunities que lo usan.
-
-### 4.2 `Registrar_Anticipo_Controller`
-
-**Implementación actual.** 2008 líneas. El mismo patrón aparece **dos veces**:
-líneas 35–44 y 123–130, ambas con `String pricebookname = 'RMBAVARIAN'` y
-`if(pb.Name.contains('Otobai'))`.
-
-**Llamadores.** Controlador de UI; `RegistrarAnticipoCasillasTst` sugiere un
-segundo punto de entrada.
-
-**Pruebas.** `Registrar_Anticipo_Controller_Test` y `RegistrarAnticipoCasillasTst`.
-
-**Fallback.** Idéntico a 4.1, duplicado. Un anticipo de PEKING se registraría
-contra Bavarian.
-
-**Cambio mínimo propuesto.** Extraer la resolución a un método privado único,
-resolverla una vez por transacción y reutilizar el resultado en ambos bloques.
-Misma tabla de seis nombres y mismo error controlado.
-
-**Riesgos.** Impacto contable directo. La regresión de Bavarian y Otobai debe
-probarse con especial cuidado; conviene incluir `RegistrarAnticipoCasillasTst` en
-la regresión seleccionada.
-
-**Verificar en Partial.** Si existen anticipos históricos con Pricebook cuyo
-nombre no contenga ni "Bavarian" ni "Otobai" (hoy quedaron como Bavarian).
-
----
-
-## 5. Lote 4 — Pricebook, producto e inventario
-
-### 5.1 `QuoteService`
-
-**Hallazgo que cambia el enunciado.** La constante existe:
-
-```apex
-public static final String PRICEBOOK_NAME = 'Bavarian Dólar';   // línea 3
-```
-
-pero **no está referenciada en ninguna clase del repositorio**. Es código muerto.
-El criterio "eliminar constantes de Pricebook usadas como default" no aplica tal
-cual: aquí la constante no se usa. Los defaults reales son otros dos:
-
-1. `getPricebookName(String oppId)` (líneas 259–271) inicializa
-   `pricebookName = 'Standard Price Book'` y solo lo cambia a
-   `'Venta Consumidor Final'` cuando el RecordType es `Venta_Consumidor_Final`.
-   No interviene la empresa.
-2. Búsqueda de precio de fantasía (líneas ~128–140) por
-   `Pricebook2.Name LIKE '%marca%' AND Pricebook2.Name LIKE '%año%'` con moneda
-   fija `'USD'`, y un segundo intento con marca y año alternativos antes de lanzar
-   `AuraHandledException`.
-
-**Llamadores.** Amplios: `RM_SyncQuoteController`, `RM_VN_QuoteController`,
-`RM_VN_CambiarVehiculo_Ctrl`, `RM_VN_CrearOportunidad_Ctrl`,
-`RM_Lead_Trigger_Helper`, además de handlers de trigger de Quote y
-OpportunityLineItem. Es la clase con mayor superficie de regresión del lote.
-
-**Pruebas.** `QuoteServiceControllerTest`.
-
-**Cambio mínimo propuesto.** Dos pasos independientes: retirar la constante muerta
-(cambio trivial y seguro), y añadir el filtro de empresa a la selección de
-Pricebook —por relación o por nombre autorizado— sin alterar el comportamiento
-por RecordType. El segundo paso solo tiene sentido si negocio confirma qué lista
-corresponde a PEKING en venta de vehículo nuevo.
-
-**Riesgos.** Alto por número de llamadores. Recomiendo separarlo en dos commits.
-
-**Verificar en Partial.** Si existen Pricebooks de PEKING con marca y año en el
-nombre siguiendo la convención de fantasía; qué nombre usa PEKING para el
-equivalente de `Venta Consumidor Final`.
-
-### 5.2 `productJSON`
-
-**Implementación actual.** 944 líneas. La empresa **no** se resuelve desde
-Salesforce: llega como dato externo.
-
-```apex
-public static String createProduct(String jsonStr)   // línea 9
-String empresa = wrapProductJSON.empresa;            // línea 36
-```
-
-El punto de entrada es `productWS`, un `@RestResource(urlMapping='/product/')`
-con `@HttpPost`: **Softland es quien llama**. Dos ramas binarias, cada una
-duplicada en el camino de creación y en el de actualización:
-
-- Producto (líneas 100–115): `RMBAVARIAN` busca por `Codigo_de_Producto__c`;
-  `RMOTOBAI` busca por `CodigoProductoInterno__c = articulo+'-'+empresa`.
-  Cualquier otro valor deja la lista `prod` **sin inicializar**.
-- Bodega (líneas 286–289 y 526–529): `RMBAVARIAN` busca
-  `ID_EXTERNO_BODEGA__c = disponible.bodega`; el `else` **implícito** busca
-  `'RMOTOBAI' + disponible.bodega`. Una empresa desconocida consultaría bodegas
-  con prefijo de Otobai.
-
-**Llamadores.** `productWS` (REST entrante) y `productJSONTest`.
-
-**Campos consumidos.** `Product2.Codigo_de_Producto__c`,
-`Product2.CodigoProductoInterno__c`, `Product2.Empresa__c`,
-`Bodega__c.ID_EXTERNO_BODEGA__c`, `Bodega__c.Bodega__c`,
-`ProductoXBodega__c.Identificador__c`.
-
-**Fallback.** El de bodega es el más grave: no es un default a Bavarian sino a
-**Otobai**, y produciría inventario cruzado si PEKING llegara sin rama propia.
-
-**Cambio mínimo propuesto.** Validar `empresa` contra los códigos configurados en
-`Empresa__c` al inicio de `createProduct`, rechazando con error explícito antes de
-cualquier SOQL o DML; sustituir el `else` implícito de bodega por ramas explícitas
-por empresa; y validar que la bodega encontrada pertenezca a la misma empresa del
-producto.
-
-**Riesgos.** Es una integración entrante: rechazar payloads que hoy se aceptan
-puede romper la sincronización de Softland. El cambio debe acordarse con quien
-opera la integración.
-
-**Verificar en Partial.**
-1. Convención de `ID_EXTERNO_BODEGA__c` para PEKING: ¿lleva prefijo `RMPEKING`,
-   otro, o ninguno? **Este dato no puede inventarse.**
-2. Si existen bodegas de PEKING creadas.
-3. Convención de `CodigoProductoInterno__c` para PEKING.
-4. Valores activos de `Product2.Empresa__c` tras el Bloque 17.
-
----
-
-## 6. Comandos para ejecutar en tu PC
-
-PowerShell, desde la raíz del worktree en el que vayas a implementar. Sustituye
-`RedMotorsSandbox` si usas otro alias.
-
-### 6.1 Verificación inicial
+# Siguiente lote de 8 clases — reconciliación Git contra Partial
+
+> **Revisión que invierte la premisa anterior.** La versión previa de este
+> documento asumía que las ocho clases estaban pendientes de implementar. La
+> comparación contra las versiones recuperadas de Partial demuestra que **las
+> ocho ya están implementadas en el org, con soporte explícito de PEKING**, y que
+> **Git es la copia atrasada**. El trabajo pendiente no es escribir el cambio sino
+> reconciliar Git con Partial y cerrar los puntos que quedaron fail-closed.
+
+Estado: análisis únicamente. No se ejecutó Salesforce CLI, no se desplegó nada, no
+se modificó Apex ni tests, y **no se copió ninguna versión de Git sobre Partial**.
+
+Fuentes comparadas:
+
+- Git: `RedMotors-Sprint1-Integracion\force-app\main\default\classes`
+- Partial: `RedMotors-Empresa-Marcas-Chinas\tmp-partial\classes`
+
+Hechos de Partial asumidos como ciertos: `Empresa__c` existe con 0 registros y solo
+`Codigo__c`; **no existe `Codigo_ERP__c`**; `Opportunity.Empresa_Operadora__c`
+existe con 0 registros poblados; `Opportunity.BMW_Compania__c` solo tiene
+`Bavarian` y `Otobai` activos; `Product2.Empresa__c` tiene `RMBAVARIAN`,
+`RMOTOBAI` y `RMPEKING` pero 0 productos PEKING; existen los Pricebooks
+`PEKING Local` y `PEKING Dólares`; no hay bodegas con convención `RMPEKING`.
+
+## 1. Diff semántico
+
+Método: se ignoraron fin de línea, comentarios y líneas en blanco; se extrajeron
+las firmas de métodos de cada versión y se compararon por nombre; se revisó a mano
+la lógica empresarial. **El tamaño del archivo no se usó como criterio**: casi toda
+la diferencia de volumen de Git corresponde a métodos de relleno de cobertura
+(`dummy`, `dummyMethod`, `Method`), no a lógica.
+
+| Clase | Líneas de código | Solo en Git | Solo en Partial |
+|---|---|---|---|
+| `QuoteSoftlandPedidoService` | git 388 / partial 154 | `dummyMethod` | `resolveCompanyErpCode`, `resolveLegacyCompanyCode`, `validateSupportedCompany` |
+| `QuoteSoftlandQueryService` | git 251 / partial 18 | `Method` | — |
+| `servicioReservas` | git 77 / partial 99 | — | `resolveProductCompany` |
+| `servicioEliminarReserva` | git 50 / partial 72 | — | `resolveProductCompany` |
+| `OpportunityServiceInvoker` | git 1759 / partial 104 | `dummy`, `dummyMethod` | `resolveCompanyCode`, `resolveLegacyCompanyFromPricebook` |
+| `Registrar_Anticipo_Controller` | git 1933 / partial 296 | `dummy`, `dummyMethod` | `resolveCompanyCode`, `resolveLegacyCompanyFromPricebook` |
+| `QuoteService` | git 2625 / partial 500 | **`getPricebookName`**, `name` | 12 métodos nuevos (ver 1.7) |
+| `productJSON` | git 811 / partial 551 | `dummyMethod` | 10 métodos nuevos (ver 1.8) |
+
+Conclusión transversal: **la base recomendada es Partial en las ocho**. Reemplazar
+Partial con Git eliminaría toda la resolución de empresa ya desplegada y
+reintroduciría los defaults binarios.
+
+### 1.1 `QuoteSoftlandPedidoService`
+
+- Solo en Git: el binario `if Bavarian → RMBAVARIAN else RMOTOBAI` y `dummyMethod`.
+- Solo en Partial: `resolveCompanyErpCode()` prefiere
+  `Quote.Opportunity.Empresa_Operadora__c` vía `EmpresaResolver.resolve()`; si es
+  nulo cae a `resolveLegacyCompanyCode(BMW_Compania__c)` con tabla explícita
+  `BAVARIAN|RMBAVARIAN→RMBAVARIAN`, `OTOBAI|RMOTOBAI→RMOTOBAI`,
+  `RMPEKING→RMPEKING`, y lanza `AuraHandledException` en cualquier otro caso.
+  `validateSupportedCompany()` vuelve a comprobar antes de usar el código.
+- A pesar del nombre del método, usa `context.codigo` (`Codigo__c`), **no**
+  `Codigo_ERP__c`. Es coherente con que ese campo no exista.
+- Riesgo de reemplazar Partial con Git: alto. Se perdería la resolución completa.
+- Base recomendada: **Partial**.
+
+### 1.2 `QuoteSoftlandQueryService`
+
+- Solo en Git: el método de relleno `Method()` con enteros sin uso. Es la totalidad
+  de la diferencia de 251 a 18 líneas.
+- Partial ya selecciona `opportunity.Empresa_Operadora__c` — la mejora que la
+  versión anterior de este documento proponía **ya está hecha**. Además añade
+  `CPEstatusDeAprobacion__c`, `Pedido_Interno_es_Plan__c`, `Canal_origen__c`,
+  `opportunity.Tipo_de_cliente_mostrador__c` y `opportunity.BMW_Aseguradora__r.Name`.
+- **Defecto de la versión Git**: no selecciona `BMW_Aseguradora__r.Name`, pero el
+  `QuoteSoftlandPedidoService` de Git sí lo consume. La pareja de Git es
+  internamente inconsistente; la de Partial no.
+- Riesgo de reemplazar Partial con Git: alto, y rompería el pedido.
+- Base recomendada: **Partial**.
+
+### 1.3 `servicioReservas`
+
+- Solo en Partial: `resolveProductCompany(String)` con tabla explícita y
+  `EmpresaConfigurationException` si viene vacío; más una compuerta previa al
+  callout: si el código resuelto es `RMPEKING`, retorna
+  `'No existe configuración confirmada de reserva Softland para RMPEKING.'` y no
+  ejecuta el callout.
+- Desapareció la mutación en memoria de `thisProduct.Empresa__c` que tenía Git.
+- Riesgo de reemplazar Partial con Git: alto.
+- Base recomendada: **Partial**.
+
+### 1.4 `servicioEliminarReserva`
+
+- Solo en Partial: el mismo `resolveProductCompany`, y dos compuertas explícitas:
+  `RMOTOBAI` y `RMPEKING` retornan mensaje de configuración no confirmada.
+- La asimetría que se había detectado en Git —Otobai no puede liberar— **sigue
+  existiendo en Partial**, pero ahora es explícita y controlada en vez de un
+  silencio: antes el método simplemente no entraba al `if` y devolvía respuesta
+  vacía. Es una mejora de diagnóstico, no la corrección funcional.
+- Git ya no aporta nada: solo el `//thisProduct.Empresa__c = 'RMBAVARIAN';`
+  comentado, que en Partial fue retirado.
+- Base recomendada: **Partial**.
+
+### 1.5 `OpportunityServiceInvoker`
+
+- Solo en Partial: `resolveCompanyCode(Opportunity)` prefiere
+  `Empresa_Operadora__c`; si es nulo y hay Pricebook, usa
+  `resolveLegacyCompanyFromPricebook(Pricebook2.Name)`; si no hay ninguno, lanza
+  `AuraHandledException`. Después admite solo `RMBAVARIAN` y `RMOTOBAI`.
+- Desaparecieron el `String pricebookname = 'RMBAVARIAN'` inicial, el
+  `contains('Otobai')`, la consulta duplicada `opp`/`opp2` y el `catch` que se
+  tragaba la excepción.
+- Base recomendada: **Partial**.
+
+### 1.6 `Registrar_Anticipo_Controller`
+
+- Solo en Partial: el mismo par `resolveCompanyCode` /
+  `resolveLegacyCompanyFromPricebook`, resolviendo una vez y reutilizando el
+  resultado en los bloques que en Git estaban duplicados.
+- Base recomendada: **Partial**.
+
+### 1.7 `QuoteService` — **única discrepancia bloqueante**
+
+- Solo en Partial (12 métodos): `resolveSupportedCompanyCode`,
+  `normalizeCompanyCode`, `ensureCompanyHasConfiguredBodega`, `getBodegaIdByCode`,
+  `getDefaultDeliveryBodegaCodeFromQuote`, `resolveDeliveryBodegaIdForQuote`,
+  `resolveDeliveryBodegaIdForVehicle`, `isPrincipalBodega`, `usesOtobaiPavasBodega`,
+  `isBavarianBrand`, `isMotoBrand`, `isPekingBrand`.
+  `resolveSupportedCompanyCode` recibe cuatro señales —lookup, `BMW_Compania__c`,
+  RecordType/marca y nombre de Pricebook— y `ensureCompanyHasConfiguredBodega`
+  lanza error controlado para `RMPEKING` y para cualquier código no soportado.
+- **Solo en Git: `getPricebookName(String oppId)`**, el selector por RecordType
+  (`Standard Price Book` / `Venta Consumidor Final`). **No existe en Partial.** Y
+  `RM_VN_QuoteController_Test` de Git lo invoca (línea 105). Si ese test sigue
+  llamándolo en el org, o no compila contra Partial, o el org tiene una versión
+  distinta del test.
+- La constante muerta `PRICEBOOK_NAME = 'Bavarian Dólar'` **sobrevive en ambas**.
+  Sigue sin estar referenciada por ninguna clase.
+- Riesgo: es el único punto donde reemplazar en cualquier dirección puede romper
+  algo. Requiere verificación antes de tocar la clase.
+- Base recomendada: **Partial**, condicionada a resolver `getPricebookName`.
+
+### 1.8 `productJSON`
+
+- Solo en Partial (10 métodos): `validateSupportedCompany`,
+  `validateCompanyCanProcessWarehouses`, `normalizeCompanyCode`,
+  `applyCoreProductFields`, `applyVehicleFields`, `applyUsedVehicleComissions`,
+  `buildVehicleDescription`, `resolveTipoProducto`, `getOpportunityId`,
+  `hasAvailableInventory`.
+- `validateSupportedCompany(empresa)` se ejecuta al inicio de `createProduct` y
+  acepta los tres códigos; `validateCompanyCanProcessWarehouses(empresa)` se llama
+  antes de cada bloque de bodegas, tanto en creación como en actualización. Se
+  introdujo `ProductCompanyConfigurationException`.
+- El `else` implícito que anteponía `'RMOTOBAI'` al código de bodega ya no puede
+  alcanzarse con una empresa no validada.
+- Base recomendada: **Partial**.
+
+### 1.9 Pruebas por versión
+
+`tmp-partial` trae también `OpportunityServiceInvokerTest`,
+`QuoteServiceControllerTest`, `Registrar_Anticipo_Controller_Test`,
+`RegistrarAnticipoCasillasTst`, `TestServiciosQuote`, `productJSONTest`,
+`servicioReservasTest`, `servicioEliminarReservaTest` y los dos mocks. Esas son las
+pruebas que corresponden a la implementación vigente. Las homónimas de Git
+corresponden a las versiones antiguas y **no deben desplegarse sobre Partial**.
+
+## 2. Fuente de Empresa por clase, hoy
+
+Con `Empresa_Operadora__c` en 0 registros y sin `Codigo_ERP__c`, la rama del lookup
+existe en el código pero **nunca se ejecuta**. La fuente efectiva es siempre la de
+respaldo.
+
+| Clase | Fuente preferida (inactiva hoy) | Fuente efectiva | ¿Alcanza a PEKING? |
+|---|---|---|---|
+| `QuoteSoftlandPedidoService` | `Opportunity.Empresa_Operadora__c` | `Opportunity.BMW_Compania__c` | **No** — solo tiene Bavarian y Otobai activos |
+| `QuoteSoftlandQueryService` | — | provee ambas al consumidor | No aplica |
+| `servicioReservas` | — | `Product2.Empresa__c` | Sí en el dato, pero 0 productos PEKING |
+| `servicioEliminarReserva` | — | `Product2.Empresa__c` | Igual |
+| `OpportunityServiceInvoker` | `Opportunity.Empresa_Operadora__c` | `Pricebook2.Name` | Sí — `PEKING Local` y `PEKING Dólares` existen |
+| `Registrar_Anticipo_Controller` | `Opportunity.Empresa_Operadora__c` | `Pricebook2.Name` | Sí — mismos Pricebooks |
+| `QuoteService` | `Opportunity.Empresa_Operadora__c` | `BMW_Compania__c`, marca y `Pricebook2.Name` | Parcial — por Pricebook y marca sí |
+| `productJSON` | — | `empresa` del payload REST | Sí — es dato externo |
+
+Consecuencia operativa: hoy **PEKING solo es alcanzable por Pricebook, por marca o
+por el payload REST**. Ninguna ruta que dependa de `BMW_Compania__c` puede producir
+PEKING mientras ese picklist no tenga el valor.
+
+Riesgo latente: `EmpresaResolver.resolve()` consulta `Empresa__c`, que tiene 0
+registros. Si `Empresa_Operadora__c` se poblara antes de crear los registros de
+`Empresa__c`, todas las rutas que hoy no se ejecutan empezarían a lanzar excepción.
+El orden correcto es crear primero los registros de `Empresa__c`.
+
+## 3. Clasificación A/B/C/D
+
+| Clase | Clasificación | Fundamento |
+|---|---|---|
+| `QuoteSoftlandQueryService` | **A** | Ya completa en Partial. Solo falta versionarla en Git |
+| `QuoteSoftlandPedidoService` | **B** | Resolución completa con PEKING reconocido; falla controlada si el código no es soportado |
+| `servicioReservas` | **B** | Reconoce `RMPEKING` y se detiene antes del callout por falta de contrato confirmado |
+| `productJSON` | **B** | Valida el código recibido y bloquea antes de tocar bodegas |
+| `servicioEliminarReserva` | **C** | Bavarian funciona; **Otobai y PEKING quedan bloqueados** por falta de configuración confirmada |
+| `OpportunityServiceInvoker` | **C** | Admite solo `RMBAVARIAN` y `RMOTOBAI`; PEKING lanza error |
+| `Registrar_Anticipo_Controller` | **C** | Igual que el anterior |
+| `QuoteService` | **D** | No debe tocarse hasta aclarar `getPricebookName` y la convención de bodega de PEKING |
+
+Nada queda en A salvo la clase que ya está terminada, porque la limitación no es de
+código sino de datos y de definiciones externas.
+
+## 4. Plan por clase
+
+El "cambio mínimo" de este lote es, en casi todos los casos, **traer Partial a Git**
+sin modificar lógica. Solo tres clases tienen trabajo funcional pendiente, y las
+tres dependen de definiciones externas.
+
+| # | Clase | Base | Cambio mínimo | Test a tocar | Bavarian | Otobai | PEKING | Nula/desconocida |
+|---:|---|---|---|---|---|---|---|---|
+| 1 | `QuoteSoftlandQueryService` | Partial | Versionar en Git tal cual; opcionalmente retirar `Method()` | `TestServiciosQuote` | Sin cambio | Sin cambio | No aplica | No aplica |
+| 2 | `QuoteSoftlandPedidoService` | Partial | Versionar en Git; retirar `dummyMethod` | `TestServiciosQuote` | `RMBAVARIAN` | `RMOTOBAI` | `RMPEKING` solo si llega por lookup | Excepción antes del payload |
+| 3 | `servicioReservas` | Partial | Versionar en Git | `servicioReservasTest` | Callout normal | Callout normal | Error controlado, sin callout | Excepción |
+| 4 | `servicioEliminarReserva` | Partial | Versionar en Git. **Funcional pendiente**: habilitar Otobai | `servicioEliminarReservaTest` | Callout normal | Hoy bloqueado | Bloqueado | Excepción |
+| 5 | `OpportunityServiceInvoker` | Partial | Versionar en Git; retirar `dummy`/`dummyMethod`. **Funcional pendiente**: admitir PEKING | `OpportunityServiceInvokerTest` | Por Pricebook | Por Pricebook | Error controlado | Excepción |
+| 6 | `Registrar_Anticipo_Controller` | Partial | Igual que el anterior | `Registrar_Anticipo_Controller_Test`, `RegistrarAnticipoCasillasTst` | Por Pricebook | Por Pricebook | Error controlado | Excepción |
+| 7 | `QuoteService` | Partial | **Nada hasta resolver `getPricebookName`** | `QuoteServiceControllerTest`, `RM_VN_QuoteController_Test` | Bodega `BR01` | Bodega Otobai | Error de bodega | Excepción |
+| 8 | `productJSON` | Partial | Versionar en Git; retirar `dummyMethod` | `productJSONTest` | Rama propia | Rama propia | Validado y bloqueado antes de bodega | Excepción |
+
+Manifest sugerido, uno por clase, en `manifest/`: `next8-<clase>.xml` con la
+`ApexClass` productiva y su test.
+
+## 5. Comandos PowerShell
+
+### 5.1 Verificación previa obligatoria — `QuoteService`
+
+Es lo primero que hay que resolver, antes de cualquier otro paso:
 
 ```powershell
-sf org display --target-org RedMotorsSandbox
-sf data query --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Id, Name, IsSandbox FROM Organization"
+# ¿El test del org sigue llamando a getPricebookName?
+sf project retrieve start --target-org RedMotorsSandbox `
+  --metadata "ApexClass:RM_VN_QuoteController_Test" --output-dir tmp-partial-check
+
+Select-String -Path tmp-partial-check\main\default\classes\RM_VN_QuoteController_Test.cls `
+  -Pattern "getPricebookName"
+
+# ¿Alguna otra clase del org lo invoca?
+sf data query --use-tooling-api --target-org RedMotorsSandbox --result-format human `
+  --query "SELECT Name FROM ApexClass WHERE Name LIKE '%Quote%' ORDER BY Name"
 ```
 
-### 6.2 Recuperar las 8 clases y sus pruebas
+Si el test del org **no** lo llama, `getPricebookName` fue retirado a propósito y
+Git está atrasado. Si **sí** lo llama, hay una incoherencia en el org que debe
+reportarse antes de tocar la clase.
 
-```powershell
-sf project retrieve start --target-org RedMotorsSandbox `
-  --metadata "ApexClass:QuoteSoftlandPedidoService" `
-             "ApexClass:QuoteSoftlandQueryService" `
-             "ApexClass:servicioReservas" `
-             "ApexClass:servicioEliminarReserva" `
-             "ApexClass:OpportunityServiceInvoker" `
-             "ApexClass:Registrar_Anticipo_Controller" `
-             "ApexClass:QuoteService" `
-             "ApexClass:productJSON" `
-  --output-dir tmp-partial
-
-sf project retrieve start --target-org RedMotorsSandbox `
-  --metadata "ApexClass:servicioReservasTest" `
-             "ApexClass:servicioEliminarReservaTest" `
-             "ApexClass:OpportunityServiceInvokerTest" `
-             "ApexClass:Registrar_Anticipo_Controller_Test" `
-             "ApexClass:RegistrarAnticipoCasillasTst" `
-             "ApexClass:QuoteServiceControllerTest" `
-             "ApexClass:productJSONTest" `
-             "ApexClass:TestServiciosQuote" `
-             "ApexClass:servicioReservasMock" `
-             "ApexClass:servicioEliminarReservaMock" `
-  --output-dir tmp-partial
-```
-
-### 6.3 Comparar Git contra Partial
+### 5.2 Reconciliar Partial hacia Git
 
 ```powershell
 $clases = @(
   'QuoteSoftlandPedidoService','QuoteSoftlandQueryService','servicioReservas',
   'servicioEliminarReserva','OpportunityServiceInvoker','Registrar_Anticipo_Controller',
-  'QuoteService','productJSON'
+  'productJSON'
 )
 foreach ($c in $clases) {
-  $git     = "force-app/main/default/classes/$c.cls"
-  $partial = "tmp-partial/main/default/classes/$c.cls"
-  Write-Host "=== $c ==="
-  git diff --no-index --stat -- $git $partial
+  Copy-Item "tmp-partial\classes\$c.cls"          "force-app\main\default\classes\$c.cls"          -Force
+  Copy-Item "tmp-partial\classes\$c.cls-meta.xml" "force-app\main\default\classes\$c.cls-meta.xml" -Force
 }
+git diff --stat -- force-app/main/default/classes
 ```
 
-Cualquier diferencia distinta de fin de línea significa que Partial tiene cambios
-que no están en Git y hay que reconciliar **antes** de tocar la clase.
+`QuoteService` queda deliberadamente fuera de la lista hasta cerrar 5.1.
 
-Fecha de última modificación en la org, para saber si alguien más la está tocando:
+### 5.3 Pruebas y validación por clase
 
 ```powershell
-sf data query --use-tooling-api --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Name, LastModifiedDate, LastModifiedBy.Name, ApiVersion, Status FROM ApexClass WHERE Name IN ('QuoteSoftlandPedidoService','QuoteSoftlandQueryService','servicioReservas','servicioEliminarReserva','OpportunityServiceInvoker','Registrar_Anticipo_Controller','QuoteService','productJSON') ORDER BY LastModifiedDate DESC"
+sf apex run test --target-org RedMotorsSandbox --tests <ClaseTest> `
+  --result-format human --code-coverage --wait 30
+
+sf project deploy start --target-org RedMotorsSandbox --dry-run `
+  --manifest manifest\next8-<clase>.xml `
+  --test-level RunSpecifiedTests --tests <ClaseTest> --wait 30
+
+sf project deploy start --target-org RedMotorsSandbox `
+  --manifest manifest\next8-<clase>.xml `
+  --test-level RunSpecifiedTests --tests <ClaseTest> --wait 30
+
+sf apex run test --target-org RedMotorsSandbox --tests <ClaseTest> `
+  --result-format human --code-coverage --wait 30
 ```
 
-### 6.4 Configuración de Empresa
+Nota: si Git y Partial ya coinciden tras 5.2, el deploy no cambia el org. El valor
+del ciclo es confirmar que la versión versionada compila y pasa pruebas.
+
+### 5.4 Datos que desbloquean las clases en C y D
 
 ```powershell
+# Registros de Empresa: hoy 0. Deben crearse antes de poblar Empresa_Operadora__c
 sf data query --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Id, Name, Codigo__c, Codigo_ERP__c, Nombre_Legal__c, Activa__c FROM Empresa__c ORDER BY Name"
-```
+  --query "SELECT Id, Name, Codigo__c, Activa__c FROM Empresa__c ORDER BY Name"
 
-### 6.5 Picklists y campos
-
-```powershell
-# Valores activos de los campos de empresa
-sf sobject describe --sobject Product2    --target-org RedMotorsSandbox | Out-File describe-Product2.json
-sf sobject describe --sobject Opportunity --target-org RedMotorsSandbox | Out-File describe-Opportunity.json
-sf sobject describe --sobject Quote       --target-org RedMotorsSandbox | Out-File describe-Quote.json
-sf sobject describe --sobject Bodega__c   --target-org RedMotorsSandbox | Out-File describe-Bodega.json
-```
-
-Confirmación puntual de que el lookup existe y es legible:
-
-```powershell
-sf data query --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Id, Empresa_Operadora__c, Empresa_Operadora__r.Codigo__c, Empresa_Operadora__r.Codigo_ERP__c, BMW_Compania__c FROM Opportunity WHERE Empresa_Operadora__c != null LIMIT 20"
-```
-
-### 6.6 Datos que decide cada lote
-
-Lote 1 — pedido Softland:
-
-```powershell
-sf data query --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT BMW_Compania__c, COUNT(Id) FROM Opportunity GROUP BY BMW_Compania__c"
-```
-
-Lote 2 — reservas:
-
-```powershell
-sf data query --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Empresa__c, COUNT(Id) FROM Product2 GROUP BY Empresa__c"
-
-# Productos cuya empresa difiere de la de su Opportunity (impacto de la validación de coherencia)
-sf data query --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Id, Name, Empresa__c FROM Product2 WHERE Empresa__c != null AND esVehiculo__c = true LIMIT 50"
-```
-
-Lote 3 — anticipos:
-
-```powershell
-sf data query --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Id, Name, IsActive, CurrencyIsoCode FROM Pricebook2 ORDER BY Name"
-
-# Opportunities cuyo Pricebook no contiene Bavarian ni Otobai: hoy quedan como Bavarian
-sf data query --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Id, Name, Pricebook2.Name FROM Opportunity WHERE Pricebook2Id != null AND (NOT Pricebook2.Name LIKE '%Bavarian%') AND (NOT Pricebook2.Name LIKE '%Otobai%') LIMIT 50"
-```
-
-Lote 4 — Pricebook, producto e inventario:
-
-```powershell
-# Convención de bodegas: dato imprescindible para productJSON
+# Convención de bodegas: bloquea QuoteService y productJSON
 sf data query --target-org RedMotorsSandbox --result-format human `
   --query "SELECT Id, Name, Bodega__c, ID_EXTERNO_BODEGA__c FROM Bodega__c ORDER BY ID_EXTERNO_BODEGA__c"
 
+# Pricebooks PEKING confirmados
 sf data query --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Id, Name, Codigo_de_Producto__c, CodigoProductoInterno__c, Empresa__c FROM Product2 WHERE Empresa__c = 'RMPEKING' LIMIT 50"
+  --query "SELECT Id, Name, IsActive, CurrencyIsoCode FROM Pricebook2 WHERE Name LIKE 'PEKING%'"
 
-# Flows que invocan OpportunityServiceInvoker
-sf data query --use-tooling-api --target-org RedMotorsSandbox --result-format human `
-  --query "SELECT Id, DeveloperName, ActiveVersionId FROM FlowDefinition"
+# Valores activos del picklist que hoy impide llegar a PEKING por Opportunity
+sf sobject describe --sobject Opportunity --target-org RedMotorsSandbox | Out-File describe-Opportunity.json
 ```
 
-### 6.7 Ciclo por clase, una vez decidido el cambio
+## 6. Qué puede comenzar de inmediato
 
-```powershell
-# Pruebas enfocadas
-sf apex run test --target-org RedMotorsSandbox --tests <ClaseTest> `
-  --result-format human --code-coverage --wait 30
+Reconciliación a Git, sin cambio funcional: `QuoteSoftlandQueryService`,
+`QuoteSoftlandPedidoService`, `servicioReservas`, `servicioEliminarReserva`,
+`OpportunityServiceInvoker`, `Registrar_Anticipo_Controller`, `productJSON`.
 
-# Dry-run
-sf project deploy start --target-org RedMotorsSandbox --dry-run `
-  --manifest manifest/<manifest-de-la-clase>.xml `
-  --test-level RunSpecifiedTests --tests <ClaseTest> --wait 30
+## 7. Qué requiere definición externa
 
-# Deploy real (solo Partial)
-sf project deploy start --target-org RedMotorsSandbox `
-  --manifest manifest/<manifest-de-la-clase>.xml `
-  --test-level RunSpecifiedTests --tests <ClaseTest> --wait 30
+| Tema | Bloquea | Pregunta |
+|---|---|---|
+| Contrato Softland de eliminación de reserva para Otobai | `servicioEliminarReserva` | ¿Por qué Otobai nunca pudo liberar reservas? ¿El endpoint lo soporta? |
+| Contrato Softland de reserva y liberación para PEKING | `servicioReservas`, `servicioEliminarReserva` | ¿Existe contrato para `RMPEKING`? |
+| Convención de `ID_EXTERNO_BODEGA__c` para PEKING | `QuoteService`, `productJSON` | ¿Qué prefijo o código usa la bodega de PEKING? |
+| Valor PEKING en `Opportunity.BMW_Compania__c` | `QuoteSoftlandPedidoService`, `QuoteService` | ¿Se agrega al picklist o se avanza poblando `Empresa_Operadora__c`? |
+| Registros de `Empresa__c` | Todas las rutas del lookup | ¿Cuándo se crean Bavarian, Otobai y PEKING como registros? |
+| `getPricebookName` | `QuoteService` | ¿Fue retirado a propósito del org? |
+| Anticipos y enlace de pago para PEKING | `OpportunityServiceInvoker`, `Registrar_Anticipo_Controller` | ¿PEKING opera anticipos en este Sprint? |
 
-# Post-deploy
-sf apex run test --target-org RedMotorsSandbox --tests <ClaseTest> `
-  --result-format human --code-coverage --wait 30
-```
+## 8. Orden final recomendado
 
----
+1. Verificar `getPricebookName` con los comandos de 5.1.
+2. Reconciliar a Git las siete clases de la sección 6 y ejecutar su regresión.
+3. Crear los registros de `Empresa__c` para Bavarian, Otobai y PEKING.
+4. Resolver la convención de bodega de PEKING.
+5. Recién entonces retomar `QuoteService` y el cierre funcional de PEKING en
+   anticipos y reservas.
 
-## 7. Qué se puede implementar con el repositorio y qué no
-
-**Implementable solo con el repositorio** (el cambio no depende de ningún dato
-externo desconocido):
-
-- `QuoteSoftlandQueryService` — añadir campos al SOQL.
-- `OpportunityServiceInvoker` — los seis nombres de Pricebook ya están
-  autorizados y documentados en el Bloque 2.
-- `Registrar_Anticipo_Controller` — misma tabla de nombres.
-- `QuoteService`, paso 1 — retirar la constante muerta `PRICEBOOK_NAME`.
-
-**Requiere resultados de Partial antes de escribir código:**
-
-- `QuoteSoftlandPedidoService` — `Codigo_ERP__c` de PEKING y aceptación de
-  `RMPEKING` por el contrato de pedido.
-- `servicioReservas` y `servicioEliminarReserva` — valores activos de
-  `Product2.Empresa__c` y aceptación de `RMPEKING`/`RMOTOBAI` por los endpoints
-  de reserva y liberación.
-- `QuoteService`, paso 2 — qué Pricebook corresponde a PEKING.
-- `productJSON` — convención de `ID_EXTERNO_BODEGA__c` para PEKING. Es el único
-  dato del lote que **no puede deducirse del código**.
-
-## 8. Orden recomendado
-
-1. `QuoteSoftlandQueryService` — aditivo, sin riesgo, y habilita el siguiente.
-2. `OpportunityServiceInvoker` — patrón acotado, tabla ya autorizada.
-3. `Registrar_Anticipo_Controller` — mismo patrón, cierra anticipos.
-4. `QuoteService` paso 1 — retirar la constante muerta.
-5. `QuoteSoftlandPedidoService` — en cuanto se confirme el `Codigo_ERP__c`.
-6. `servicioEliminarReserva` — corrige la asimetría con Otobai, que es un defecto
-   actual independiente de PEKING.
-7. `servicioReservas` — junto con la anterior, para mantener la simetría.
-8. `QuoteService` paso 2 y `productJSON` — al final, cuando existan las
-   definiciones de Pricebook y bodega de PEKING.
-
-Los cuatro primeros pueden ejecutarse de inmediato con los comandos de la sección
-6.7. Los cuatro últimos requieren primero las consultas de la sección 6.6.
+No se declara ninguna clase bloqueada de forma definitiva: las de categoría C y D
+tienen el camino identificado y dependen de datos, no de análisis.
