@@ -2378,7 +2378,58 @@ Validación:
 Estado: Next8 Lote 2 completado, validado y desplegado en RedMotorsSandbox /
 Partial.
 
-## 43. Plantilla reutilizable de actualización
+## 43. Validación 33+3 — Next8 Lote 3: enlace de pago desde Opportunity
+
+Fecha: 28/07/2026.
+
+Componentes:
+
+- `OpportunityServiceInvoker`;
+- `OpportunityServiceInvokerTest`.
+
+Antes de modificar se confirmó que la versión local difería de la versión
+vigente en RedMotorsSandbox / Partial. Se recuperó la versión desplegada y el
+cambio se aplicó sobre esa base.
+
+Comportamiento anterior:
+
+- La compañía enviada al servicio iniciaba siempre en `RMBAVARIAN`.
+- Solo cambiaba a `RMOTOBAI` cuando el nombre del Pricebook contenía `Otobai`.
+- Cualquier Pricebook desconocido, nulo o no relacionado con Otobai caía por
+  descarte en `RMBAVARIAN`.
+- No existía tratamiento explícito para `RMPEKING`.
+
+Cambio aplicado:
+
+- `Opportunity.Empresa_Operadora__c` es la fuente principal.
+- Si el lookup está vacío, se conserva el respaldo temporal por nombre de
+  Pricebook.
+- Pricebooks Bavarian conservan `RMBAVARIAN`.
+- Pricebooks Otobai conservan `RMOTOBAI`.
+- `RMPEKING` se reconoce explícitamente y se detiene antes del callout porque
+  no existe contrato confirmado de enlace de pago Softland para PEKING.
+- Empresa nula, Pricebook desconocido o empresa no soportada producen error
+  controlado.
+- No existe selección por descarte hacia Bavarian u Otobai.
+
+No se modificaron endpoint, autenticación, payload fuera de `compania`, Account,
+OpportunityLineItem, productos, datos financieros, Flows ni LWC.
+
+Validación:
+
+- Dry-run enfocado `0AfAK000000x44Q0AQ`: 2/2 componentes, 9/9 pruebas,
+  0 fallas. Cobertura de `OpportunityServiceInvoker`: 67/76 = 88.16%.
+- Regresión relacionada `0AfAK000000x31u0AA`: 2/2 componentes, 18/18 pruebas,
+  0 fallas.
+- Deploy real `0AfAK000000x5dB0AQ`: 2/2 componentes, 18/18 pruebas, 0 fallas.
+  Estado: Succeeded en RedMotorsSandbox / Partial.
+- Verificación post-deploy `707AK00000HA56U`: `OpportunityServiceInvokerTest`,
+  9/9 pruebas, 0 fallas.
+
+Estado: Next8 Lote 3 completado, validado y desplegado en RedMotorsSandbox /
+Partial.
+
+## 44. Plantilla reutilizable de actualización
 
 Copiar esta sección para cada siguiente cambio y completar solo con evidencia
 confirmada:
