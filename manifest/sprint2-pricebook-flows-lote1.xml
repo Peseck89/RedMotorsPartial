@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- Lote 1 Sprint 2 -- Pricebook. Solo los 3 Flows con vinculo documental explicito verificado (REGLAS_ALCANCE_AUTORIZADO.md, Fase 2). -->
+        <members>Opportunity_Flow</members>
+        <members>Opp_flow_v4</members>
+        <members>BMW_ImportarPlantilla</members>
+        <name>Flow</name>
+    </types>
+    <version>67.0</version>
+</Package>
