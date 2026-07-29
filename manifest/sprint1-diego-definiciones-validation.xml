@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- Bloque autorizado por Diego (29/07/2026): los seis catalogos Softland deben ejecutarse tambien para RMPEKING. -->
+        <!-- Productivos: BatchGetCatalogoSoftland (helper parametrizado) + 6 wrappers -->
+        <members>BatchGetCatalogoSoftland</members>
+        <members>BatchGetCategoriaClienteSoftland</members>
+        <members>BatchGetCentroCostoSoftland</members>
+        <members>BatchGetCondicionPagoSoftland</members>
+        <members>BatchGetCuentaContableSoftland</members>
+        <members>BatchGetImpuestoSoftland</members>
+        <members>BatchGetSubtipoDocumentoSoftland</members>
+        <!-- Schedulers: encolan explicitamente RMBAVARIAN + RMPEKING (RMOTOBAI no incluido, pendiente de Luis) -->
+        <members>ScheduleGetCategoriaClienteSoftland</members>
+        <members>ScheduleGetCentroCostoSoftland</members>
+        <members>ScheduleGetCondicionPagoSoftland</members>
+        <members>ScheduleGetCuentaContableSoftland</members>
+        <members>ScheduleGetImpuestoSoftland</members>
+        <members>ScheduleGetSubtipoDocumentoSoftland</members>
+        <!-- Tests reales de los 6 batch wrappers -->
+        <members>BatchGetCategoriaClienteSoftlandTest</members>
+        <members>BatchGetCentroCostoSoftlandTest</members>
+        <members>BatchGetCondicionPagoSoftlandTest</members>
+        <members>BatchGetCuentaContableSoftlandTest</members>
+        <members>BatchGetImpuestoSoftlandTest</members>
+        <members>BatchGetSubtipoDocumentoSoftlandTest</members>
+        <!-- Tests reales de los 6 schedulers -->
+        <members>ScheduleGetCategoriaClienteSoftlandTest</members>
+        <members>ScheduleGetCentroCostoSoftlandTest</members>
+        <members>ScheduleGetCondicionPagoSoftlandTest</members>
+        <members>ScheduleGetCuentaContableSoftlandTest</members>
+        <members>ScheduleGetImpuestoSoftlandTest</members>
+        <members>ScheduleGetSubtipoDocumentoSoftTest</members>
+        <!-- Test enfocado nuevo: eleva la cobertura de BatchGetCatalogoSoftland (ramas ActividadComercial/Aseguradora/Inventory/overloads sin company, no ejercitadas por ningun llamador real ni test existente) -->
+        <members>BatchGetCatalogoSoftlandTest</members>
+        <name>ApexClass</name>
+    </types>
+    <version>67.0</version>
+</Package>

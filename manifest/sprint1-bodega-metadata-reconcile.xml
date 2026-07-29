@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- Pendiente: retrieve para confirmar campos reales, obligatoriedad y relacion con Empresa antes de crear un registro de Bodega para RMPEKING. -->
+        <!-- No se ha ejecutado retrieve. Este manifest queda preparado a la espera de confirmacion (ver DECISIONES_DIEGO_20260729.md). -->
+        <members>Bodega__c</members>
+        <name>CustomObject</name>
+    </types>
+    <version>67.0</version>
+</Package>
