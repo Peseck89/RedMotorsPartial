@@ -22,3 +22,19 @@ Every agent working on Empresa / Marcas Chinas must read that file before analyz
 - When scope is inconclusive for a given element: keep working on already-authorized elements, document the doubt, prepare a concrete question, and do not implement the doubtful element.
 
 This rule applies to the whole Empresa / Marcas Chinas project, across every Sprint and every worktree, starting 2026-07-28.
+
+## MANDATORY CONTEXT-LOADING RULE (effective 2026-07-28)
+
+**Agents must not recursively read every document in `docs/empresa-marcas-chinas`.** Start only with `docs/empresa-marcas-chinas/README_CONTEXTO_ACTIVO.md`, then open only the files it explicitly lists as active for the current Sprint. Do not open historical Sprint 1 block-by-block documents, closure reports, or old inventories unless a currently-active document explicitly points to one to resolve a dependency.
+
+Active context for Sprint 2 (nothing else, unless a listed file points to it):
+
+1. `docs/empresa-marcas-chinas/REGLAS_ALCANCE_AUTORIZADO.md`
+2. `docs/empresa-marcas-chinas/SPRINT2_FUENTES_AUTORITATIVAS.md`
+3. `docs/empresa-marcas-chinas/INVENTARIO_SPRINT2_FLOWS_COMPONENTES.md`
+4. `docs/empresa-marcas-chinas/PLAN_EJECUCION_SPRINT2.md`
+5. The client's original scope document (PDF).
+6. The development Manual (DOCX) — only the sections already cited by the active documents above, not read wholesale.
+7. Direct answers from Luis and Diego.
+
+Sprint 1's closure documentation stays available strictly as a reference when resolving a Sprint 1 dependency — never as a starting point for Sprint 2 work. See `docs/empresa-marcas-chinas/INDICE_DOCUMENTOS_HISTORICOS.md` for the full historical document index and its usage warnings.

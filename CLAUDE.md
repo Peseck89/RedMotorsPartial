@@ -14,6 +14,10 @@ The goal is to let any AI tool understand the repo workflow without requiring th
 
 Full rule, authority order between sources, and the current authorization gate table live in `docs/empresa-marcas-chinas/REGLAS_ALCANCE_AUTORIZADO.md` and `AGENTS.md`. Read them before analyzing, modifying, testing, or deploying anything in the Empresa / Marcas Chinas project. This rule applies across every Sprint and every worktree.
 
+## MANDATORY CONTEXT-LOADING RULE (effective 2026-07-28)
+
+Agents must not recursively read every document in `docs/empresa-marcas-chinas`. Start only with `docs/empresa-marcas-chinas/README_CONTEXTO_ACTIVO.md`, then open only the files it lists as active for the current Sprint. Historical Sprint 1 documents are reference-only for resolving a Sprint 1 dependency, never a starting point for new work. See `AGENTS.md` for the full active-context list and `docs/empresa-marcas-chinas/INDICE_DOCUMENTOS_HISTORICOS.md` for the historical index.
+
 ## Core rules
 
 - Always confirm the repository before working: RedMotors or Altica.
