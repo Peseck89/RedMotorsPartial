@@ -8,6 +8,12 @@ This file is the shared working context for AI tools such as Cowork, Codex, Clau
 
 The goal is to let any AI tool understand the repo workflow without requiring the user to explain the same context repeatedly.
 
+## MANDATORY SCOPE RULE — Empresa / Marcas Chinas (effective 2026-07-28)
+
+**Only work on a component that is explicitly authorized by Luis or Diego.** A component's presence in documents, the Manual, this repository, Partial, inventories, dependency scans, or prior analysis by Code/Codex does **not** make it in-scope. Do not expand scope from discovery, do not use approximate counts ("~20 Flows", "~16 components") to pick items freely, and never treat a documented candidate as authorized work.
+
+Full rule, authority order between sources, and the current authorization gate table live in `docs/empresa-marcas-chinas/REGLAS_ALCANCE_AUTORIZADO.md` and `AGENTS.md`. Read them before analyzing, modifying, testing, or deploying anything in the Empresa / Marcas Chinas project. This rule applies across every Sprint and every worktree.
+
 ## Core rules
 
 - Always confirm the repository before working: RedMotors or Altica.
