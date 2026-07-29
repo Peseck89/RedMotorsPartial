@@ -151,4 +151,27 @@ Resultado del dry-run: 25/25 componentes compilados, **25/25 pruebas aprobadas**
     - Los 6 schedulers (`ScheduleGetCategoriaClienteSoftland`, `ScheduleGetCentroCostoSoftland`, `ScheduleGetCondicionPagoSoftland`, `ScheduleGetCuentaContableSoftland`, `ScheduleGetImpuestoSoftland`, `ScheduleGetSubtipoDocumentoSoftland`) **conservan RMBAVARIAN y agregan RMPEKING** (`System.enqueueJob(new BatchGetXxxSoftland('RMBAVARIAN')); System.enqueueJob(new BatchGetXxxSoftland('RMPEKING'));`).
     - **RMOTOBAI no fue agregado** a estos 6 schedulers — sigue pendiente de confirmación de Luis (ver punto 12).
     - **`precioProductoJSON` continúa pendiente y sin cambios** respecto a `HEAD` — el identificador de producto para RMPEKING sigue sin confirmar por Diego (ver puntos 3, 5 y 18); no se desplegó ninguna rama de PEKING en esta clase.
-    - **`scripts/apex/create_temp_peking_bodega.apex` no fue ejecutado** — sigue sin versionar y sin correr, a la espera de la metadata real de `Bodega__c` (ver punto 11 y `manifest/sprint1-bodega-metadata-reconcile.xml`).
+    - **`scripts/apex/create_temp_peking_bodega.apex` no fue ejecutado** — sigue sin versionar y sin correr, a la espera de la metadata real de `Bodega__c` (ver punto 11 y `manifest/sprint1-bodega-metadata-reconcile.xml`). *(Superado por el cierre de la bodega temporal, ver sección siguiente — el script sí se ejecutó posteriormente, únicamente en Partial.)*
+
+## Cierre documental — bodega temporal RMPEKING creada en Partial (2026-07-29, séptima pasada)
+
+48. **Diego autorizó una bodega temporal para pruebas de PEKING en Partial.** No es un código oficial de Softland ni una definición de negocio definitiva — es exclusivamente un registro de prueba para permitir validaciones funcionales de PEKING en la sandbox Partial mientras se confirma la bodega/código Softland real (ver punto 11).
+49. **El registro se creó correctamente en Partial.** Org: RedMotors Partial Sandbox. Usuario: `peseck89@gmail.com.partial.redmotors`. Objeto `Bodega__c`, Id `a2bAK0000000vvxYAA`:
+    - `Name`: `PEKING TEMPORAL - PARTIAL - NO USAR EN PRODUCCION`
+    - `CurrencyIsoCode`: `USD`
+    - `Alias__c`: `PKT01`
+    - `bodega__c`: `PKT01`
+    - `ID_EXTERNO_BODEGA__c`: `RMPEKINGTEMP01`
+    - `Bodega_vehiculos_nuevos__c`: `false`
+    - `Sucursal__c`: no asignada
+    - `CreatedDate`: `2026-07-29T22:56:44.000Z`, `CreatedBy`: Claudia Pérez
+    - Cantidad final encontrada en Partial: 1 registro.
+    - La creación se realizó únicamente en Partial, mediante Apex anónimo dinámico (no vía deploy de `scripts/apex/create_temp_peking_bodega.apex` directamente, ver punto 53). **No se tocó Producción.**
+50. **`PKT01` y `RMPEKINGTEMP01` son valores provisionales** — no representan códigos oficiales de Softland ni de negocio. Quedan sujetos a reemplazo cuando Diego/negocio confirmen el código real de bodega para PEKING (ver punto 17).
+51. **No existe relación directa entre `Bodega__c` y `Empresa`** en la metadata de este objeto — `Bodega__c` no tiene ningún campo de lookup/master-detail hacia `Empresa__c` u objeto equivalente. La vinculación entre bodega y empresa, si existe, se resuelve en otra parte del modelo (fuera del alcance de esta verificación).
+52. **No se asignó `Sucursal__c`** en el registro porque no existe todavía una Sucursal de PEKING confirmada por negocio. El campo quedó sin valor deliberadamente, no por omisión accidental.
+53. **La metadata recuperada (`force-app/main/default/objects/Bodega__c/`, vía `manifest/sprint1-bodega-metadata-reconcile.xml`) expone los campos `Sucursal__c` e `isPrincipal__c`**, pero al ejecutar `scripts/apex/create_temp_peking_bodega.apex` como Apex anónimo, esos campos **no fueron reconocidos mediante referencias estáticas** (`Bodega__c.Sucursal__c` / `Bodega__c.isPrincipal__c`) — el Apex anónimo dinámico no siempre resuelve referencias estáticas a metadata recién recuperada de la misma manera que una clase compilada y desplegada. Esto es una limitación observada del entorno de ejecución, no un hallazgo sobre la definición real de esos campos.
+54. **Se utilizó Schema dinámico y `SObject.put()`** (en vez de asignación directa por referencia estática de campo) precisamente para evitar depender de esas referencias estáticas no resueltas, y así poder completar la creación del registro provisional sin bloquearse por el punto 53.
+55. **El registro `a2bAK0000000vvxYAA` debe sustituirse o eliminarse** cuando negocio confirme los códigos oficiales de bodega para RMPEKING — no debe quedar como dato permanente ni usarse como referencia para integraciones reales.
+56. **No se realizó ningún cambio en Producción** en este cierre — toda la actividad (recuperación de metadata, ejecución de Apex anónimo, creación del registro) ocurrió exclusivamente en RedMotors Partial Sandbox.
+57. **Limpieza de worktree:** se eliminaron del árbol de trabajo local (sin versionar, nunca estuvieron en Git) `force-app/main/default/objects/Bodega__c/` (metadata recuperada, ya cumplió su propósito de permitir la ejecución del script) y `scripts/apex/` (contenía únicamente `create_temp_peking_bodega.apex`, ya ejecutado). Se conservan sin cambios `manifest/sprint1-bodega-metadata-reconcile.xml`, toda la documentación ya versionada, y el código funcional del bloque Softland.
