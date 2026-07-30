@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- Selector dinamico de Pricebook por Empresa en rm_vu_inventario (elimina el arreglo fijo Bavarian/Otobai). -->
+        <members>RM_VU_Inventario_Ctrl</members>
+        <members>RM_VU_Inventario_Ctrl_Test</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>rm_vu_inventario</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <version>51.0</version>
+</Package>

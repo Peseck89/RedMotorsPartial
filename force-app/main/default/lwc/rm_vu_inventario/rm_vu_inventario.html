@@ -21,6 +21,9 @@
                     <lightning-combobox label="Lista de precios" options={priceBooks}
                         variant="label-inline" onchange={handlePriceBookChange} dropdown-alignment="left" name="priceBookId"
                         placeholder="Todos" value={priceBookId}></lightning-combobox>
+                    <template if:true={hasPricebookMessage}>
+                        <p class="slds-text-color_weak slds-text-body_small">{pricebookMessage}</p>
+                    </template>
                 </lightning-layout-item>
 
                 <lightning-layout-item padding="horizontal-medium" size="12" small-device-size="12"

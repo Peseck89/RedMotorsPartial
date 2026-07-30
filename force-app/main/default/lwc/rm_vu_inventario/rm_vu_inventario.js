@@ -8,6 +8,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getRecords from '@salesforce/apex/RM_VU_Inventario_Ctrl.getRecords';
 import getTipoGasolina from '@salesforce/apex/RM_VU_Inventario_Ctrl.getTipoGasolina';
 import getUsadoRecordTypeOptions from '@salesforce/apex/RM_VU_Inventario_Ctrl.getUsadoRecordTypeOptions';
+import getPricebookOptions from '@salesforce/apex/RM_VU_Inventario_Ctrl.getPricebookOptions';
 
 const DELAY = 300;
 
@@ -63,19 +64,40 @@ export default class Rm_vu_inventario extends LightningElement {
         }
     } 
 
-    priceBooks = [
-        {
-            label: 'Bavarian Dólar',
-            value: 'Bavarian Dólar'
-        },
-        {
-            label: 'Otobai Dólares',
-            value: 'Otobai Dólares'
-        }
-    ];
+    priceBooks = [];
+    priceBookId = '';
+    pricebookMessage = '';
 
-    priceBookId = 'Bavarian Dólar'; 
-   
+    isLoadingPricebooks = true;
+    @wire(getPricebookOptions, { opportunityId: '$recordId' })
+    wiredPricebookOptions(result) {
+        if (result.data) {
+            const data = result.data;
+            this.priceBooks = (data.options || []).map(item => ({ label: item.label, value: item.value }));
+            this.priceBookId = data.selectedPricebookId || '';
+            this.pricebookMessage = data.status === 'EXITO' ? '' : (data.mensaje || '');
+        } else if (result.error) {
+            this.priceBooks = [];
+            this.priceBookId = '';
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error !',
+                    message: reduceErrors(result.error).join(', '),
+                    variant: 'error'
+                })
+            );
+        }
+
+        if (result.data || result.error) {
+            this.isLoadingPricebooks = false;
+            this.isLoadingInventario = true;
+        }
+    }
+
+    get hasPricebookMessage() {
+        return !!this.pricebookMessage;
+    }
+
     isLoadingRecordTypesUsados = true;
     recordTypesOptions;
     @wire(getUsadoRecordTypeOptions)
@@ -375,7 +397,7 @@ export default class Rm_vu_inventario extends LightningElement {
     }
     
     get isLoading(){
-        return this.isLoadingInventario || this.isLoadingTipoCombustible || this.isLoadingRecordTypesUsados;
+        return this.isLoadingInventario || this.isLoadingTipoCombustible || this.isLoadingRecordTypesUsados || this.isLoadingPricebooks;
     }
     
 }

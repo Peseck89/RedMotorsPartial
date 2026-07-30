@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Pricebook2.Empresa__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>EmpresaPricebookResolver</members>
+        <members>EmpresaPricebookResolverTest</members>
+        <members>RM_VU_Inventario_Ctrl</members>
+        <members>RM_VU_Inventario_Ctrl_Test</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Empresa_Admin</members>
+        <members>Vehiculos_Nuevos_PS</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
+        <!-- Cada Flow requiere su propio <version> igual a su apiVersion nativo al desplegar
+             individualmente (54.0 / 54.0 / 55.0 / 53.0 / 56.0) -- deployar uno por uno, no en bloque
+             con este manifest, para evitar errores de metadata legacy no relacionados con Sprint 2. -->
+        <members>Opportunity_Flow</members>
+        <members>Opp_flow_v4</members>
+        <members>BMW_ImportarPlantilla</members>
+        <members>BMW_Gestiona_Listas_de_Precios</members>
+        <members>Obtener_PricebookEntry_en_Linea_de_Plantilla_de_Presupuesto</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>rm_vu_inventario</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <version>51.0</version>
+</Package>

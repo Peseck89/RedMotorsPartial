@@ -13,30 +13,23 @@ public with sharing class RM_VU_Inventario_Ctrl {
     }
 
     @AuraEnabled(cacheable=true)
-    public static Map<String,Object> getRecords(String tipoVehiculo,String brand, String year,String  model,String productCode, String placa ,String  internalColor,String  externalColor ,String  tipoCombustible, Integer pageNumber, Boolean skipPagination, String priceBook){                
+    public static Map<String,Object> getRecords(String tipoVehiculo,String brand, String year,String  model,String productCode, String placa ,String  internalColor,String  externalColor ,String  tipoCombustible, Integer pageNumber, Boolean skipPagination, Id priceBookId){
         Map<String,Object> responseMap = new Map<String,Object>();
-        String priceBookId;        
         String currencyCode;
 
         if(skipPagination != null && skipPagination){
             PAGE_SIZE = 50000;
         }
-        
-        if(String.isBlank(priceBook)){
-            throw new AuraHandledException('La lista de precios es requerida.');
+
+        if(priceBookId == null){
+            return responseMap;
         }
 
-        List<Pricebook2> pbList =[SELECT Id FROM Pricebook2 WHERE Name = :priceBook AND IsActive = TRUE LIMIT 1];
+        List<Pricebook2> pbList = [SELECT Id, CurrencyIsoCode FROM Pricebook2 WHERE Id = :priceBookId AND IsActive = TRUE LIMIT 1];
         if (pbList.isEmpty()) {
-            throw new AuraHandledException('La lista de precios no existe.');
-        }    
-        priceBookId = pbList[0].Id;
-
-        RM_Config__mdt cfgMdtDPLVUCC = RM_Config__mdt.getInstance('Default_Price_List_VU_Currency_Code');
-        if (String.isBlank(cfgMdtDPLVUCC.Value__c)) {
-            throw new AuraHandledException('Se requiere el código de la moneda en el metadato de configuracion.');
+            throw new AuraHandledException('La lista de precios no existe o no está activa.');
         }
-        currencyCode = cfgMdtDPLVUCC.Value__c;
+        currencyCode = pbList[0].CurrencyIsoCode;
 
         List<PricebookEntry> pbeList = RM_VU_Service.gePBEBavarian(priceBookId,currencyCode,brand,year,model, placa);
 
@@ -153,6 +146,59 @@ public with sharing class RM_VU_Inventario_Ctrl {
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Map<String, Object> getPricebookOptions(Id opportunityId) {
+        Map<String, Object> response = new Map<String, Object>();
+        List<Map<String, String>> options = new List<Map<String, String>>();
+        response.put('options', options);
+        response.put('status', EmpresaPricebookResolver.STATUS_ERROR);
+        response.put('selectedPricebookId', null);
+
+        if (opportunityId == null) {
+            response.put('mensaje', 'Falta la Oportunidad para resolver la lista de precios.');
+            return response;
+        }
+
+        List<Opportunity> opps = [
+            SELECT Id, Empresa_Operadora__c, Pricebook2Id
+            FROM Opportunity
+            WHERE Id = :opportunityId
+            LIMIT 1
+        ];
+        if (opps.isEmpty()) {
+            response.put('mensaje', 'La Oportunidad no existe.');
+            return response;
+        }
+
+        Opportunity opp = opps[0];
+        if (opp.Empresa_Operadora__c == null) {
+            response.put('status', EmpresaPricebookResolver.STATUS_NO_CONFIGURADO);
+            response.put('mensaje', 'La Oportunidad no tiene Empresa configurada.');
+            return response;
+        }
+
+        EmpresaPricebookResolver.PricebookResolutionResult result = EmpresaPricebookResolver.resolveForEmpresa(
+            opp.Empresa_Operadora__c,
+            null,
+            opp.Pricebook2Id
+        );
+
+        for (EmpresaPricebookResolver.PricebookOption opt : result.opciones) {
+            options.add(new Map<String, String>{
+                'label' => opt.label,
+                'value' => opt.pricebookId,
+                'currencyIsoCode' => opt.currencyIsoCode
+            });
+        }
+
+        response.put('status', result.status);
+        response.put('mensaje', result.mensaje);
+        if (result.status == EmpresaPricebookResolver.STATUS_EXITO) {
+            response.put('selectedPricebookId', result.pricebookId);
+        }
+        return response;
     }
 
     @AuraEnabled(cacheable=true)
