@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- Bloque RMPEKING de los 3 Flows de Pricebook autorizados (ver REGLAS_ALCANCE_AUTORIZADO.md). -->
+        <!-- BLOQUEADO: ningun Flow fue modificado en este bloque. Ver EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md -->
+        <!-- para la causa exacta (Opportunity.BMW_Compania__c sin valor PEKING). Manifest preparado para la -->
+        <!-- validacion posterior una vez que el valor de compania quede resuelto. -->
+        <members>Opportunity_Flow</members>
+        <members>Opp_flow_v4</members>
+        <members>BMW_ImportarPlantilla</members>
+        <name>Flow</name>
+    </types>
+    <version>67.0</version>
+</Package>

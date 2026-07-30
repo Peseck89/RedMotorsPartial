@@ -170,6 +170,8 @@ Cuando se autorice el retrieve: comparar, para cada uno de los 3 Flows, (a) el n
 
 Verificado para los 3 Flows: la estructura (Decision + Assignments + RecordLookup por Name) está completamente documentada y es replicable **sin inventar Pricebook IDs, nombres, registros de `Empresa__c` ni códigos ERP** — el patrón de las 4 reglas existentes ya muestra exactamente qué agregar (una 5ª y 6ª regla con la misma forma). **Lo que falta y bloquea la implementación real no es la mecánica del Flow, sino el dato de negocio:** el nombre exacto del `Pricebook2` (Local y Dólar) de la compañía nueva y el valor exacto que tomará `BMW_Compania__c` para esa compañía. Ninguna fuente disponible en este repositorio los define — inventarlos violaría la regla 4. Esto se documenta como pregunta pendiente, no se resuelve por inferencia.
 
+**Actualización (2026-07-29, worktree `RedMotors-Sprint2-Pricebook-Flows-Peking`):** de las dos incógnitas de este párrafo, **los nombres de Pricebook ya quedaron confirmados** (`PEKING Local`, `PEKING Dólares` — mismos registros reales de `Pricebook2` verificados en Partial durante el bloque `precioProductoJSON` de Sprint 1). **El valor de `BMW_Compania__c` sigue sin resolver**, ahora con evidencia exhaustiva de solo lectura contra Partial (describe + datos reales + Record Types + contradicción encontrada en `QuoteSoftlandPedidoService.resolveLegacyCompanyCode`, que ya anticipa `RMPEKING` sin respaldo de picklist). **No se modificó ningún Flow en esta pasada.** Ver `EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md` para el detalle completo y la pregunta pendiente exacta.
+
 ### Candidatos mantenidos fuera del alcance confirmado
 
 Todo lo demás inventariado en `INVENTARIO_SPRINT2_FLOWS_COMPONENTES.md` queda reclasificado bajo esta regla:
