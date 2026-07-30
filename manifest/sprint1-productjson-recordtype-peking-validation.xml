@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- Correccion del riesgo de Record Type para RMPEKING en productJSON.cls -->
+        <!-- RecordTypeId se resuelve dinamicamente via DeveloperName = Producto_Red_Motors -->
+        <!-- para RMPEKING (sin Id fijo); RMBAVARIAN/RMOTOBAI conservan el Id fijo Vehiculos. -->
+        <!-- Bloqueo de bodega principal para RMPEKING se preserva sin cambios. -->
+        <!-- Ver DECISIONES_DIEGO_20260729.md, seccion "Correccion del riesgo de Record Type". -->
+        <members>productJSON</members>
+        <members>productJSONTest</members>
+        <name>ApexClass</name>
+    </types>
+    <version>67.0</version>
+</Package>

@@ -406,6 +406,50 @@ public class productJSON {
         }
     }
 
+    private static Id productoRedMotorsRecordTypeId;
+
+    private static final Id VEHICULOS_RECORD_TYPE_ID = '0124U00000111EDQAY';
+
+    /**
+     * Unico punto de resolucion del RecordTypeId de Product2 para RMPEKING/RMBAVARIAN/RMOTOBAI,
+     * invocado por applyCoreProductFields y applyVehicleFields. @TestVisible porque el bloqueo de
+     * bodega principal para RMPEKING impide observar el insert real en pruebas sin alterar
+     * comportamiento productivo; este metodo puro permite comprobar directamente cual RecordTypeId
+     * usaria produccion, sin DML ni datos.
+     */
+    @TestVisible
+    private static Id resolveProductRecordTypeId(String empresa, Boolean esVehiculo) {
+        if (empresa == 'RMPEKING') {
+            return getProductoRedMotorsRecordTypeId();
+        }
+        if (esVehiculo == true) {
+            return VEHICULOS_RECORD_TYPE_ID;
+        }
+        return null;
+    }
+
+    /**
+     * RMPEKING solo admite Empresa__c en el Record Type "Producto Red Motors" (Producto_Red_Motors);
+     * "Vehiculos" (default del org) no lo admite, asi que se resuelve dinamicamente en vez de asumir el default.
+     */
+    private static Id getProductoRedMotorsRecordTypeId() {
+        if (productoRedMotorsRecordTypeId == null) {
+            List<RecordType> productoRedMotorsRecordTypes = [
+                SELECT Id
+                FROM RecordType
+                WHERE SObjectType = 'Product2'
+                AND DeveloperName = 'Producto_Red_Motors'
+            ];
+            if (productoRedMotorsRecordTypes.isEmpty()) {
+                throw new ProductCompanyConfigurationException(
+                    'No existe el Record Type "Producto Red Motors" (DeveloperName Producto_Red_Motors) para Product2.'
+                );
+            }
+            productoRedMotorsRecordTypeId = productoRedMotorsRecordTypes[0].Id;
+        }
+        return productoRedMotorsRecordTypeId;
+    }
+
     private static void applyCoreProductFields(Product2 p, productRequestJSON w,
             Boolean isNewProduct, Boolean activo) {
         p.Name = w.descripcion;
@@ -442,6 +486,10 @@ public class productJSON {
         p.margen__c = w.margen;
         p.transito__c = w.transito;
         p.tipoProducto__c = resolveTipoProducto(w.tipo_producto);
+        Id resolvedRecordTypeId = resolveProductRecordTypeId(w.empresa, false);
+        if (resolvedRecordTypeId != null) {
+            p.RecordTypeId = resolvedRecordTypeId;
+        }
     }
 
     private static String resolveTipoProducto(String tipoProducto) {
@@ -463,7 +511,7 @@ public class productJSON {
         p.Anno__c             = anno;
         p.Descripci_n_Vehiculo__c = description2;
         p.tipoProducto__c     = 'Vehiculo';
-        p.RecordTypeId        = '0124U00000111EDQAY';
+        p.RecordTypeId        = resolveProductRecordTypeId(w.empresa, true);
         p.Color_Externo__c    = colorExterior;
         p.combustible__c      = w.combustible;
         p.Numero_Motor__c     = w.Numero_Motor;

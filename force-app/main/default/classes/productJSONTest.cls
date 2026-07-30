@@ -336,6 +336,18 @@ public class productJSONTest {
         System.assertEquals(true, product.esVehiculo__c);
         System.assertEquals(true, product.es_Vehiculo_en_transito__c);
         System.assertEquals('Motocicleta', product.Tipo_vehiculo__c);
+
+        Product2 productWithRecordType = [
+            SELECT RecordTypeId
+            FROM Product2
+            WHERE CodigoProductoInterno__c = :codigoInterno
+            LIMIT 1
+        ];
+        System.assertEquals(
+            '0124U00000111EDQAY',
+            productWithRecordType.RecordTypeId,
+            'RMOTOBAI debe conservar el Record Type Vehiculos sin cambios.'
+        );
     }
 
     @isTest
@@ -409,7 +421,7 @@ public class productJSONTest {
         System.assert(response.contains('"CODIGO":"200"'), 'Debe crear el vehiculo usado con exito.');
 
         Product2 prod = [
-            SELECT Id, Name, es_Vehiculo_usado__c, vin__c, Porcentaje_vendedor__c, Porcentaje_jefe__c
+            SELECT Id, Name, es_Vehiculo_usado__c, vin__c, Porcentaje_vendedor__c, Porcentaje_jefe__c, RecordTypeId
             FROM Product2
             WHERE Codigo_de_Producto__c = 'USED-TEST-999'
             LIMIT 1
@@ -419,6 +431,11 @@ public class productJSONTest {
         System.assertEquals('VIN-USED-COMPLETE-999', prod.vin__c, 'El VIN debe guardarse correctamente.');
         System.assertEquals(3, prod.Porcentaje_vendedor__c, 'La comision de vendedor debe calcularse bien.');
         System.assertEquals(2, prod.Porcentaje_jefe__c, 'La comision de jefe debe calcularse bien.');
+        System.assertEquals(
+            '0124U00000111EDQAY',
+            prod.RecordTypeId,
+            'RMBAVARIAN debe conservar el Record Type Vehiculos sin cambios.'
+        );
 
         // Verificación extra para asegurar que se insertó el ProductoXBodega__c
         List<ProductoXBodega__c> pxbList = [SELECT Id, Producto__c, Bodega__c FROM ProductoXBodega__c WHERE Producto__c = :prod.Id];
@@ -472,6 +489,104 @@ public class productJSONTest {
             [SELECT COUNT() FROM Product2 WHERE Codigo_de_Producto__c = :request.articulo],
             'No debe crear productos para una empresa no soportada.'
         );
+    }
+
+    // Las siguientes 5 pruebas invocan productJSON.resolveProductRecordTypeId directamente (@TestVisible):
+    // es el metodo real que applyCoreProductFields y applyVehicleFields usan para asignar RecordTypeId,
+    // por lo que validan el uso productivo real y no solo la existencia del Record Type en el org.
+    // El insert real de RMPEKING sigue bloqueado por testPekingDetieneAntesDeCrearProductoSinBodegaConfirmada
+    // (bodega principal no confirmada); la verificacion E2E del RecordTypeId sobre un Product2 insertado
+    // queda pendiente hasta que exista esa bodega.
+
+    @isTest
+    public static void testResolverRMPekingVehiculoUsaProductoRedMotors() {
+        Id expectedRecordTypeId = getProductoRedMotorsRecordTypeId();
+
+        Id resolvedRecordTypeId = productJSON.resolveProductRecordTypeId('RMPEKING', true);
+
+        System.assertEquals(
+            expectedRecordTypeId,
+            resolvedRecordTypeId,
+            'RMPEKING vehiculo debe resolver al Record Type Producto Red Motors.'
+        );
+        System.assertNotEquals(
+            '0124U00000111EDQAY',
+            resolvedRecordTypeId,
+            'RMPEKING vehiculo no debe resolver al Record Type Vehiculos.'
+        );
+    }
+
+    @isTest
+    public static void testResolverRMPekingNoVehiculoUsaProductoRedMotors() {
+        Id expectedRecordTypeId = getProductoRedMotorsRecordTypeId();
+
+        Id resolvedRecordTypeId = productJSON.resolveProductRecordTypeId('RMPEKING', false);
+
+        System.assertEquals(
+            expectedRecordTypeId,
+            resolvedRecordTypeId,
+            'RMPEKING no-vehiculo tambien debe resolver al Record Type Producto Red Motors.'
+        );
+    }
+
+    @isTest
+    public static void testResolverRMOtobaiVehiculoConservaVehiculos() {
+        Id resolvedRecordTypeId = productJSON.resolveProductRecordTypeId('RMOTOBAI', true);
+
+        System.assertEquals(
+            '0124U00000111EDQAY',
+            resolvedRecordTypeId,
+            'RMOTOBAI vehiculo debe conservar el Record Type Vehiculos sin cambios.'
+        );
+    }
+
+    @isTest
+    public static void testResolverRMBavarianVehiculoConservaVehiculos() {
+        Id resolvedRecordTypeId = productJSON.resolveProductRecordTypeId('RMBAVARIAN', true);
+
+        System.assertEquals(
+            '0124U00000111EDQAY',
+            resolvedRecordTypeId,
+            'RMBAVARIAN vehiculo debe conservar el Record Type Vehiculos sin cambios.'
+        );
+    }
+
+    @isTest
+    public static void testResolverEmpresaExistenteNoVehiculoConservaComportamientoPrevio() {
+        System.assertEquals(
+            null,
+            productJSON.resolveProductRecordTypeId('RMBAVARIAN', false),
+            'RMBAVARIAN no-vehiculo debe conservar la ausencia de asignacion de RecordTypeId (comportamiento previo).'
+        );
+        System.assertEquals(
+            null,
+            productJSON.resolveProductRecordTypeId('RMOTOBAI', false),
+            'RMOTOBAI no-vehiculo debe conservar la ausencia de asignacion de RecordTypeId (comportamiento previo).'
+        );
+    }
+
+    // Escenario "Record Type faltante" (fallo controlado de getProductoRedMotorsRecordTypeId cuando la query
+    // no encuentra Producto_Red_Motors): no se agrega una prueba automatizada para esta rama porque el unico
+    // Record Type Producto_Red_Motors real existe en el org y no se puede eliminar metadata para simular su
+    // ausencia (prohibido en este bloque), ni se introduce una abstraccion artificial (p.ej. un mecanismo
+    // inyectable solo para pruebas) para forzarla. Cobertura de esta rama: revision de codigo (ver
+    // DECISIONES_DIEGO_20260729.md) confirma que getProductoRedMotorsRecordTypeId lanza
+    // ProductCompanyConfigurationException de forma controlada, sin fallback silencioso a Vehiculos, cuando la
+    // lista de RecordType resulta vacia.
+
+    private static Id getProductoRedMotorsRecordTypeId() {
+        List<RecordType> productoRedMotorsRecordTypes = [
+            SELECT Id
+            FROM RecordType
+            WHERE SObjectType = 'Product2'
+            AND DeveloperName = 'Producto_Red_Motors'
+        ];
+        System.assertEquals(
+            1,
+            productoRedMotorsRecordTypes.size(),
+            'Debe existir exactamente un Record Type "Producto Red Motors" (DeveloperName Producto_Red_Motors) para Product2 en el org.'
+        );
+        return productoRedMotorsRecordTypes[0].Id;
     }
 
     private static productJSON.productRequestJSON buildBaseRequest(String articulo, String empresa) {
