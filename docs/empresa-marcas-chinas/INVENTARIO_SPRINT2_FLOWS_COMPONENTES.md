@@ -1,5 +1,9 @@
 # Inventario exacto Sprint 2 — Flows y Componentes (Empresa / Marcas Chinas)
 
+## Actualización (2026-07-30) — cierre del bloque Pricebook
+
+Los 5 Flows de Pricebook (sección B) y `rm_vu_inventario` (fila C.5) quedaron **AUTORIZADO Y CONFIRMADO** e implementados el 2026-07-30, tras la autorización explícita de Luis para `Pricebook2.Empresa__c`. Ver `REGLAS_ALCANCE_AUTORIZADO.md` (sección "Actualización 2026-07-30") y `CIERRE_TECNICO_SPRINT2_EMPRESA_PRICEBOOK.md` para el detalle. El resto de este inventario (candidatos no nombrados por Luis/Diego) sigue sin cambios de estado.
+
 ## Estado del documento
 
 **INVENTARIO, no alcance confirmado.** Ningún componente de este documento está autorizado para implementación. No se ejecutó Salesforce CLI ni retrieve de Partial en esta sesión — las columnas "existe en Partial" reflejan únicamente la comparación que el Manual de desarrollo capturó el 2026-07-22 (6 días de antigüedad respecto a hoy), no un estado verificado ahora.

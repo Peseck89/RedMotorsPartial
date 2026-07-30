@@ -1,109 +1,138 @@
-# Cierre técnico — Sprint 2 Empresa/Pricebook (PEKING), 2026-07-30
+# Cierre técnico — Sprint 2 Empresa/Pricebook (PEKING), 2026-07-30 (segunda pasada)
 
-## Estado: BLOQUEADO (parcial)
+## Estado: COMPLETADO (con pendientes reales documentados en §11)
 
-Trabajo ejecutado de forma autónoma hasta un bloqueo arquitectónico genuino, previsto explícitamente por el mandato de esta tarea (Sección 1, regla de detención #1, y Sección 3). Se completó toda la investigación, reconciliación de drift, corrección de datos sin dependencias y documentación posibles sin invertir metadata ni datos legales. No se modificó ningún Flow, LWC ni clase Apex de lógica de negocio. No se tocó Producción.
+La primera pasada de este mismo día quedó **BLOQUEADA** en la relación `Pricebook2` ↔ `Empresa__c` (ver historial más abajo, §1). Luis autorizó expresamente crear `Pricebook2.Empresa__c` (lookup a `Empresa__c`, no obligatorio) en la misma conversación de trabajo. Con esa autorización se completó: el campo, permisos mínimos, el resolver dinámico, los 5 Flows de Pricebook, `rm_vu_inventario`, datos de Empresa/Pricebook en Partial, y QA funcional contra datos reales de Partial. Ningún dato legal (razón social) fue inventado — `Nombre_Legal__c` permanece vacío en los 3 registros de `Empresa__c` creados, tal como exige el mandato.
 
-## 1. Worktree, rama, HEAD
+## 1. Resumen del bloqueo original (ya resuelto)
 
-- Worktree base: `C:\Users\dokur\Documents\Repositorios\RedMotors-Sprint2-Flows-Components`, rama `feature/pc/redmotors-empresa-marcas-chinas-sprint2-flows-components-20260728`, HEAD `d7345ed` (coincide con el HEAD esperado, limpio salvo `force-app/main/default/lwc/jsconfig.json` modificado localmente sin commit, no tocado en esta tarea).
-- Worktree aislado creado: `C:\Users\dokur\Documents\Repositorios\RedMotors-Sprint2-Cierre-Empresa-Pricebook`, rama nueva `feature/pc/redmotors-sprint2-cierre-empresa-pricebook-20260730`, creada desde `d7345ed`.
-- Org: `RedMotorsSandbox` (`peseck89@gmail.com.partial.redmotors`, `https://redmotors--partial.sandbox.my.salesforce.com`), perfil `System Administrator`, confirmado antes de cualquier operación.
+La pasada anterior (mismo día, mismo worktree) documentó exhaustivamente que no existía ninguna relación entre `Pricebook2` y `Empresa__c` en Git ni en Partial, y se detuvo en ese punto siguiendo la regla de detención del mandato (decisión de arquitectura reservada a Luis/Diego). Ver el detalle completo de esa investigación en `EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md` §10.1–10.5 (conservado como historial, no se repite aquí).
 
-## 2. Drift local vs. Partial (componentes inspeccionados)
+**Autorización recibida:** Luis autorizó la Opción A documentada en esa pasada (lookup directo), con una diferencia de nomenclatura explícita: el campo se llama `Pricebook2.Empresa__c` (no `Empresa_Operadora__c`, a diferencia del patrón usado en `Opportunity`/`Plantilla_de_Presupuesto__c`). Se siguió la instrucción literal de Luis.
 
-| Componente | Local | Partial (activo) | Drift | Decisión |
-|---|---|---|---|---|
-| `Opportunity_Flow`, `Opp_flow_v4`, `BMW_ImportarPlantilla` | Ya reconciliados contra Partial en la pasada 2026-07-29 (ver `EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md`) | Sin cambios desde entonces | Ninguno nuevo | No se volvió a comparar; no se modificaron |
-| `Empresa__c` (objeto + 4 campos) | 4 campos en Git desde commit `7f8b919` (2026-07-24): `Codigo__c`, `Codigo_ERP__c`, `Nombre_Legal__c`, `Activa__c` | Solo `Codigo__c` visible por SOQL/describe antes de esta pasada | **Sí — drift de permisos, no de metadata** (ver sección 4) | Reconciliado: se asignó el Permission Set `Empresa_Admin` ya existente en Git/Partial al usuario conectado. Los 4 campos ya eran queryables después. No se creó ni modificó metadata nueva. |
-| `Pricebook2` (PEKING Local / PEKING Dólares) | N/A (Pricebook2 no tiene carpeta en Git) | `PEKING Local` = USD (incorrecto), `PEKING Dólares` = USD (correcto), ambos activos, 0 dependencias | Sí, ya conocido | Corregido: `PEKING Local` → CRC (ver sección 5) |
-| `Pricebook2` (relación con `Empresa__c`) | No existe ningún campo/objeto | No existe ningún campo custom en `Pricebook2` | N/A — nunca existió | **Bloqueo arquitectónico** (ver sección 6) |
-| `EmpresaResolver` / `EmpresaContext` (+ tests) | Deployados en el commit `7f8b919` | Confirmados deployados vía Tooling API (`SELECT Name FROM ApexClass`) | Ninguno | No modificados — ya implementan resolución de Empresa por Id/código; no tienen ningún concepto de Pricebook todavía |
-| `CambiarPricebook` | — | — | — | Inspeccionado, sin dependencia de Empresa/Pricebook, candidato limpio de regresión, sin cambios |
+## 2. Worktree, rama, HEAD
 
-## 3. Decisiones de Luis y Diego aplicadas
+- Worktree: `C:\Users\dokur\Documents\Repositorios\RedMotors-Sprint2-Cierre-Empresa-Pricebook`, rama `feature/pc/redmotors-sprint2-cierre-empresa-pricebook-20260730`.
+- HEAD inicial de esta pasada: `b6b620b` (limpio, sincronizado 0/0 con origin, confirmado antes de empezar).
+- Org: `RedMotorsSandbox` (`peseck89@gmail.com.partial.redmotors`, `https://redmotors--partial.sandbox.my.salesforce.com`), confirmada antes de cualquier operación.
+- Producción: no se leyó ni escribió en ningún momento.
 
-Recibidas en la conversación de trabajo activa (fuente rango 1, ver `SPRINT2_FUENTES_AUTORITATIVAS.md`):
+## 3. Campo `Pricebook2.Empresa__c`
 
-- Empresa_Operadora__c (lookup ya existente en `Opportunity`/`Plantilla_de_Presupuesto__c` → `Empresa__c`) es la fuente principal de compañía.
-- `Empresa.Codigo_ERP__c` es el código estable para integraciones; código de PEKING = `RMPEKING` (Diego confirma que usa la misma infraestructura Softland que Bavarian/Otobai).
-- `BMW_Compania__c` solo como fallback temporal, comentado, cuando el lookup esté vacío.
-- Pricebooks deben resolverse por Empresa + `CurrencyIsoCode` + `IsActive` (+ año/canal solo si el proceso ya los usa) — nunca por nombre ni Id hardcodeado.
-- PEKING debe quedar activa en Partial.
+`force-app/main/default/objects/Pricebook2/fields/Empresa__c.field-meta.xml`: Lookup a `Empresa__c`, `required=false`, `deleteConstraint=SetNull` (sin comportamiento de borrado riesgoso), `relationshipName=Pricebooks`. Sin filtros inventados. Confirmado por metadata que `Pricebook2` no tenía ningún campo custom previo (cero colisión de nombres).
 
-Estas decisiones **sustituyen** la pregunta pendiente documentada el 2026-07-29 sobre qué valor darle a `BMW_Compania__c` para PEKING (`EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md` §7) — ya no aplica, porque el mecanismo deja de depender de ese picklist restringido.
+Deployado y verificado en Partial (Deploy ID `0AfAK000000yUzJ0AU`, dry-run previo exitoso).
 
-## 4. Reconciliación de drift de permisos (Empresa__c)
+## 4. Permisos mínimos
 
-Al verificar la premisa técnica de la nueva decisión se encontró que `Empresa__c` en Partial solo exponía `Codigo__c` vía SOQL/describe; `Codigo_ERP__c`, `Nombre_Legal__c` y `Activa__c` devolvían `INVALID_FIELD: No such column`, pese a estar en Git desde el 2026-07-24 junto con `EmpresaResolver`/`EmpresaContext` (que ya los consultan). Antes de concluir que eran campos nunca deployados, se verificó vía Tooling API (`SELECT ... FROM CustomField WHERE Id = '00NAK000000PzbO2AS'`) que el campo **sí existe** en el org, con el mismo `label`/`length`/`TableEnumOrId` que el metadata de Git — descartando que fuera un campo faltante.
+- `Empresa_Admin`: agregado `classAccesses` de `EmpresaPricebookResolver` y `fieldPermissions` editable de `Pricebook2.Empresa__c`.
+- `Vehiculos_Nuevos_PS` (permission set usado por usuarios de Opportunities/marcas chinas — ya tenía `recordTypeVisibilities` de `Opportunity.Jaecoo`/`Opportunity.Omoda`, confirmando que es el permset correcto para estos usuarios): agregado `fieldPermissions` de lectura de `Pricebook2.Empresa__c` y `classAccesses` de `EmpresaPricebookResolver`.
+- **Corrección incidental necesaria para poder deployar `Vehiculos_Nuevos_PS`:** el archivo tenía 4 elementos `<viewAllFields>` dentro de `objectPermissions`, una propiedad no soportada por el schema de `PermissionSet` en ninguna versión de API probada (51.0 y 61.0 fallan igual — es un elemento inerte/heredado, no controla ningún permiso real de `PermissionSet`, a diferencia de `Profile`). Se eliminaron los 4 elementos; no se tocó ningún `allowCreate`/`allowEdit`/`allowRead`/`fieldPermissions` real.
+- No se modificaron perfiles. No se otorgaron permisos administrativos innecesarios.
 
-Causa raíz confirmada: el Permission Set `Empresa_Admin` (ya en Git y ya deployado en Partial, diseñado exactamente para dar Field-Level Security de esos 3 campos) no estaba asignado al usuario conectado, y Salesforce no otorga FLS automático a System Administrator para campos deployados vía Metadata API sin una entrada explícita de permisos — de ahí el error "No such column" en vez de un error de permisos.
+## 5. Resolver dinámico — `EmpresaPricebookResolver`
 
-**Acción tomada** (ajuste mínimo de permisos, autorizado sin consulta por el mandato de esta tarea): `sf org assign permset --name Empresa_Admin --target-org RedMotorsSandbox`. Verificado después: la consulta `SELECT Id, Codigo__c, Codigo_ERP__c, Nombre_Legal__c, Activa__c FROM Empresa__c` ya no da error (`totalSize: 0`, objeto vacío como estaba documentado). `Empresa__c` queda completamente funcional a nivel de esquema.
+`force-app/main/default/classes/EmpresaPricebookResolver.cls` (+ `EmpresaPricebookResolverTest.cls`, 14 métodos de prueba, 0 fallos).
 
-## 5. Corrección de Pricebooks PEKING
+Deliberadamente **no reutiliza** `EmpresaResolver`/`EmpresaContext` (que exigen `Nombre_Legal__c` no vacío) — hace su propia validación mínima por diseño explícito del mandato: `Empresa__c` existe y `Activa__c = true`. Nunca usa `Pricebook2.Name`, `contains(Name)`, IDs hardcodeados, ni Empresa__r.Name como código. Sin SOQL dentro de loops (mapas construidos antes del loop principal).
 
-Verificadas dependencias antes de modificar (solo lectura, `PEKING Local` Id `01sAK0000006DVdYAM`): 0 `PricebookEntry`, 0 `Opportunity`, 0 `Quote`, 0 `Order` referenciándolo. Sin dependencias incompatibles. Se respaldó el estado previo de ambos Pricebooks (`Id`, `Name`, `IsActive`, `CurrencyIsoCode`, `CreatedDate`, `LastModifiedDate`) antes del cambio. Se actualizó `CurrencyIsoCode` de `PEKING Local` de `USD` a `CRC` mediante `sf data update record`. Verificado después:
+Expone:
+- `resolve(List<PricebookResolutionRequest>)` — `@InvocableMethod`, bulk-safe, usable desde Flow y Apex.
+- `resolveForEmpresa(empresaId, currencyIsoCode, currentPricebookId)` — conveniencia para Apex.
+- `getActivePricebooksByEmpresa(Set<Id>)` — bulk.
 
-| Pricebook | IsActive | CurrencyIsoCode (antes) | CurrencyIsoCode (después) |
+Estados devueltos: `EXITO` (con `pricebookId`), `NO_CONFIGURADO`, `SELECCION_REQUERIDA`, `ERROR` (Empresa ausente/inexistente/inactiva). Nunca selecciona Bavarian/Otobai/PEKING por defecto; nunca conserva un Pricebook de otra Empresa.
+
+**Corrección aplicada durante el desarrollo:** el campo `empresaId` del wrapper de solicitud se declaró inicialmente `@InvocableVariable(required=true)`. Eso provocaba que Flow lanzara un error de ejecución duro ("Missing required input parameter") en vez de dejar que el resolver devolviera `ERROR` de forma controlada cuando la Empresa está ausente. Se quitó `required=true` — el resolver ya maneja `empresaId == null` internamente y ahora sí puede hacerlo desde Flow.
+
+## 6. Los 5 Flows de Pricebook
+
+Todos migrados al mismo patrón: `Empresa_Operadora__c` (o el campo equivalente en el objeto padre) es la fuente principal; si está vacío, un fallback temporal traduce `BMW_Compania__c` (`"Bavarian"`→`RMBAVARIAN`, `"Otobai"`→`RMOTOBAI`) a un registro de `Empresa__c` vía `Codigo_ERP__c` (nunca por nombre de Pricebook). El resultado se pasa a `EmpresaPricebookResolver`. Ninguno usa `Pricebook2.Name`, `contains(Name)` ni IDs hardcodeados en la lógica nueva. Se preservaron todas las demás rutas de cada Flow.
+
+| Flow | apiVersion nativo | Cambio | Deploy ID (último) |
 |---|---|---|---|
-| PEKING Local (`01sAK0000006DVdYAM`) | true | USD | **CRC** |
-| PEKING Dólares (`01sAK0000006DXFYA2`) | true | USD | USD (sin cambio, ya correcto) |
+| `Opportunity_Flow` | 54.0 | Decision `Encuentra_Price_Book` (4 reglas Bavarian/Otobai × Local/Dólar) + 4 Assignments + RecordLookup por `Name` → reemplazados por `Tiene_Empresa_Operadora` + fallback + `Resuelve_Pricebook_Empresa` (Action) + RecordLookup `Obtener_PriceBook_Opp` ahora por `Id` | `0AfAK000000yVKH0A2` |
+| `Opp_flow_v4` | 54.0 | Mismo patrón que `Opportunity_Flow` (estructura idéntica confirmada por inspección) | `0AfAK000000yVTx0AM` |
+| `BMW_ImportarPlantilla` | 55.0 | Decision `Determina_Nombre_Price_Book` + 4 Assignments + RecordLookup `Obtiene_Price_Book_Pre` por `Name` → mismo patrón dinámico, ahora por `Id` | `0AfAK000000yU860AE` |
+| `BMW_Gestiona_Listas_de_Precios` | 53.0 | **Proceso legacy tipo "Workflow" (Process Builder migrado), disparado `onAllChanges` en `Opportunity`.** Inspección directa confirmó 6 Decisions + 6 RecordUpdates, cada uno fijando `Opportunity.Pricebook2Id` a un **Id literal hardcodeado** (`01s4U0000026Mg...`, 6 valores, dos de ellos duplicados entre combinaciones de Empresa distintas — inconsistencia ya presente en el dato legacy). Reemplazado por el mismo patrón dinámico; la dimensión "tipo de vehículo" (Autos/Motos) se eliminó de la resolución de Pricebook porque no existe ningún Pricebook diferenciado por tipo de vehículo en ningún otro punto del sistema — mantenerla habría exigido inventar un modelo de datos no confirmado | `0AfAK000000yViT0AU` (última, incluye 2 correcciones de guardas, ver §9) |
+| `Obtener_PricebookEntry_en_Linea_de_Plantilla_de_Presupuesto` | 56.0 | Flow disparado en creación de `Linea_Plantilla_de_Presupuesto__c`. Decision `Determina_Nombre_Pricebook` sobre `BMW_Compania__c` de la Plantilla + RecordLookup por `Name`, **siempre asumía moneda Dólar** (nunca CRC) → reemplazado por el resolver dinámico usando `$Record.CurrencyIsoCode`; se agregó filtro `IsActive`/`CurrencyIsoCode` al `RecordLookup` de `PricebookEntry` que antes no los tenía | `0AfAK000000yVlh0AE` |
 
-No se crearon ni modificaron `PricebookEntry` — no había ninguno, y crear datos de producto/precio reales u oficiales no fue autorizado ni necesario para esta corrección puntual.
+**Nota sobre versiones de API:** cada Flow se deployó individualmente usando un `package.xml` con `<version>` igual a su propio `apiVersion` nativo. Deployar dos o más de estos Flows juntos bajo una única versión de manifest distinta a la nativa de cada uno hace que la validación de metadata aplique reglas de una versión distinta a la que el Flow declara, y expone errores de metadata legacy no relacionados con Sprint 2 (ejemplo real encontrado: un Screen Section de `Opportunity_Flow` sin `regionContainerType`, exigido solo en validaciones más nuevas). Recomendación para futuros deploys de este bloque: uno por uno, con la versión nativa de cada archivo.
 
-## 6. Bloqueo arquitectónico — relación Pricebook2 ↔ Empresa__c
+`CambiarPricebook`: regresión confirmada limpia, sin cambios — no decide por Empresa/Pricebook.
 
-### 6.1 Evidencia de que no existe ninguna relación válida
+## 7. `rm_vu_inventario` + `RM_VU_Inventario_Ctrl`
 
-Búsqueda exhaustiva realizada antes de detener el bloque, tal como exige el mandato:
+- **Apex nuevo:** `RM_VU_Inventario_Ctrl.getPricebookOptions(Id opportunityId)` — consulta `Opportunity.Empresa_Operadora__c`/`Pricebook2Id`, delega en `EmpresaPricebookResolver.resolveForEmpresa(empresaId, null, currentPricebookId)` (sin filtro de moneda, para listar todas las opciones de la Empresa) y devuelve `{status, mensaje, selectedPricebookId, options[{label, value, currencyIsoCode}]}`.
+- **Apex modificado:** `getRecords` ahora recibe `Id priceBookId` (antes `String priceBook` buscado por `Name`); la moneda para filtrar `PricebookEntry` se deriva del propio `Pricebook2.CurrencyIsoCode` seleccionado (se eliminó la dependencia del metadato `Default_Price_List_VU_Currency_Code`, que forzaba USD global). Si `priceBookId` es nulo, devuelve un mapa vacío en vez de lanzar excepción (estado "sin selección" válido, no error).
+- **LWC:** se eliminó el arreglo fijo `[{Bavarian Dólar},{Otobai Dólares}]` y el default `priceBookId = 'Bavarian Dólar'`. Ahora `priceBooks`/`priceBookId` se pueblan vía `@wire(getPricebookOptions, {opportunityId: '$recordId'})`, reactivo al `recordId` de la Oportunidad. Se agregó un mensaje controlado (`pricebookMessage`) visible en el HTML cuando el estado no es `EXITO` (Empresa ausente, sin Pricebook, selección requerida, Pricebook de otra Empresa).
+- Interfaz pública del componente (`@api recordId`, `brand`, `year`, etc.) preservada sin cambios.
+- Deploy ID: `0AfAK000000yW...` (bloque `RM_VU_Inventario_Ctrl` + `RM_VU_Inventario_Ctrl_Test` + LWC, 8/8 pruebas Apex exitosas).
 
-- **Metadata local:** `force-app/main/default/objects/` contiene exactamente 7 carpetas: `Empresa__c`, `Lead`, `Opportunity`, `Plantilla_de_Presupuesto__c`, `Product2`, `TipoDeCargoConManoDeObra__c`, `WorkOrder`. No existe carpeta `Pricebook2` (cero campos custom trackeados). No existe ningún objeto junction. No existe ningún `*__mdt` (Custom Metadata Type) en el repositorio.
-- **Partial (Tooling API + describe, solo lectura):** `sf sobject describe --sobject Pricebook2` devuelve cero campos con `custom: true`. `Empresa__c` (después de la reconciliación de permisos) tiene exactamente 4 campos custom: `Codigo__c`, `Codigo_ERP__c`, `Nombre_Legal__c`, `Activa__c` — ninguno referencia `Pricebook2`.
-- **Clases ya deployadas (`EmpresaResolver`, `EmpresaContext`):** resuelven `Empresa__c` por `Id` o por `Codigo__c`; no tienen ningún método, campo ni SOQL relacionado con `Pricebook2`.
-- **Custom Settings / objetos de configuración:** no se encontró ningún `Empresa_Config__mdt` ni equivalente en Git ni en Partial.
-- **Convención de nombres:** los Pricebooks existentes (`Bavarian Local`, `Bavarian Dólar`, `Otobai Local`, `Otobai Dólares`, `PEKING Local`, `PEKING Dólares`) codifican la Empresa únicamente en el `Name` — explícitamente prohibido como mecanismo de resolución para la lógica nueva (decisión de Luis #7 y #8).
+## 8. Datos de Empresa/Pricebook en Partial
 
-**Conclusión: no existe ninguna relación ni configuración entre `Pricebook2` y `Empresa__c`, ni en Git ni en Partial.** Esto corresponde exactamente a la regla de detención #1 del mandato de esta tarea: decidir qué nuevo campo, junction o Custom Metadata crear es una decisión de arquitectura que no puede resolverse sin autorización explícita, porque implica elegir un nombre de API, un tipo de campo y (en el caso de un objeto nuevo) un modelo de datos que persistirá en el org.
+Registros de `Empresa__c` creados (mínimos, sin inventar razón social):
 
-### 6.2 Dos opciones técnicas
+| Empresa | Id | Codigo__c | Codigo_ERP__c | Activa__c | Nombre_Legal__c |
+|---|---|---|---|---|---|
+| Bavarian | `a1UAK0000009wcf2AA` | RMBAVARIAN | RMBAVARIAN | true | *(vacío — no confirmado)* |
+| Otobai | `a1UAK0000009weH2AQ` | RMOTOBAI | RMOTOBAI | true | *(vacío — no confirmado)* |
+| PEKING | `a1UAK0000009wft2AA` | RMPEKING | RMPEKING | true | *(vacío — no confirmado)* |
 
-**Opción A — Lookup directo en `Pricebook2` hacia `Empresa__c` (recomendada).**
+Pricebooks relacionados (`Pricebook2.Empresa__c`), verificados antes y después del cambio (backup del estado previo capturado vía `sf data query`, operación idempotente — solo se pobló un campo previamente vacío):
 
-Agregar un campo `Empresa_Operadora__c` (Lookup a `Empresa__c`) directamente en `Pricebook2`, con el mismo nombre y patrón ya usado en `Opportunity.Empresa_Operadora__c` y `Plantilla_de_Presupuesto__c.Empresa_Operadora__c`. Cardinalidad natural (una Empresa tiene muchos Pricebooks; un Pricebook pertenece a una sola Empresa) — coincide exactamente con cómo Luis describe el filtro requerido ("Pricebooks activos de la Empresa de la Opportunity"). Es el cambio mínimo: un campo, sin objeto nuevo, sin duplicar el patrón de nomenclatura ya establecido. El resolver (`EmpresaPricebookResolver` o nombre equivalente, ver Sección 7) simplemente agrega `WHERE Empresa_Operadora__c = :empresaId AND CurrencyIsoCode = :currency AND IsActive = true` a la consulta de `Pricebook2`.
+| Pricebook | Id | CurrencyIsoCode | Empresa asociada |
+|---|---|---|---|
+| Bavarian Dólar | `01s4U0000026MgfQAE` | USD | Bavarian |
+| Bavarian Local | `01s4U0000026MgkQAE` | USD | Bavarian |
+| Otobai Dólares | `01s4U0000026MguQAE` | USD | Otobai |
+| Otobai Local | `01s4U0000026MgpQAE` | USD | Otobai |
+| PEKING Dólares | `01sAK0000006DXFYA2` | USD | PEKING |
+| PEKING Local | `01sAK0000006DVdYAM` | CRC | PEKING |
 
-**Opción B — Objeto junction `Empresa_Pricebook__c`.**
+**Hallazgo de datos, no corregido (fuera de alcance de esta tarea):** `Bavarian Local` y `Otobai Local` son ambos `CurrencyIsoCode = USD` (no CRC), a pesar del nombre "Local". Solo `PEKING Local` tiene `CurrencyIsoCode = CRC` (corregido en la pasada anterior, autorizado explícitamente). Esto significa que, para Bavarian y Otobai, el resolver dinámico no puede distinguir "Local" de "Dólar" por moneda — ambas opciones son válidas simultáneamente y el resolver correctamente devuelve `SELECCION_REQUERIDA` en vez de adivinar. **No se corrigió la moneda de Bavarian/Otobai Local** porque no fue solicitado ni autorizado en esta tarea (a diferencia de PEKING, que sí lo fue explícitamente en la pasada anterior). Se documenta como candidato a decisión futura de Luis/Diego.
 
-Crear un objeto nuevo con dos relaciones: `Empresa__c` (Lookup) y una referencia a `Pricebook2`. Permite cardinalidad muchos-a-muchos, que ninguna decisión de Luis/Diego pide — todas las reglas dadas (`8`, `10`) asumen que cada Pricebook pertenece a una sola Empresa. Además, para referenciar `Pricebook2` desde un objeto junction custom se necesitaría o bien un Lookup nativo a `Pricebook2` (a validar si la plataforma lo permite en este org — no verificado en esta pasada) o bien almacenar el `Id` de `Pricebook2` como texto, lo cual violaría explícitamente la regla de Luis "no almacenar IDs específicos del org... en Custom Metadata". Añade un objeto, una relación más para mantener, y no resuelve ningún requisito que la Opción A no resuelva ya.
+La asociación de estos 6 Pricebooks se hizo por `Name` (permitido explícitamente por el mandato §5 solo para esta migración inicial controlada, nunca para lógica productiva — la lógica productiva usa exclusivamente `Empresa__c`/`CurrencyIsoCode`/`IsActive`).
 
-**Recomendación: Opción A.** Es el cambio de menor superficie, reutiliza el patrón de nomenclatura y relación ya validado y en producción (`Empresa_Operadora__c`), no introduce ambigüedad de cardinalidad, y no choca con la prohibición de IDs/nombres hardcodeados. Requiere: (1) crear el campo `Pricebook2.Empresa_Operadora__c` (Lookup, `Empresa__c`) en Git y deployarlo, (2) poblarlo para los 6 Pricebooks existentes una vez existan los registros de `Empresa__c` (ver Sección 7), (3) construir el resolver sobre ese campo.
+## 9. Correcciones de bugs encontradas durante el desarrollo
 
-**Esta decisión no fue tomada por este agente** — se detiene aquí porque crear un campo/objeto nuevo en el modelo de datos del org es exactamente la decisión que el mandato de esta tarea reserva para Luis/Diego (Sección 1, regla de detención #1).
+1. **`required=true` en `empresaId`** (§5) — corregido, resolver ahora maneja Empresa ausente sin lanzar excepción de Flow.
+2. **`assignNullValuesIfNoRecordsFound=false` en el RecordLookup de fallback** (los 5 Flows) — cambiado a `true` para evitar que un Id vacío (`''`) en vez de `null` llegara al action call cuando el fallback no encuentra Empresa.
+3. **`myVariable_current.<Campo>` en `BMW_Gestiona_Listas_de_Precios`** (proceso legacy tipo "Workflow"): referenciar directamente un campo Id no poblado del registro en trigger context (`Pricebook2Id`) devolvía cadena vacía en vez de `null`, y esa cadena vacía causaba `System.StringException: Invalid id` al pasarla como parámetro `Id` al action call. Corregido eliminando el parámetro `currentPricebookId` de este Flow específico (no es necesario — este proceso siempre re-resuelve el Pricebook desde cero en cada guardado, no necesita "conservar el actual"). Se agregó además una Decision de guarda (`Tiene_Empresa_Resuelta`) que verifica `EmpresaIdResuelta IsNull = false` antes de invocar el resolver, y una segunda condición en `Pricebook_Resuelto_Exitosamente` que verifica `PriceBookIdResuelto IsNull = false` antes de la actualización — ambas como defensa adicional. Verificado con las 8 pruebas de `RM_VU_Inventario_Ctrl_Test` (que disparan este proceso indirectamente al insertar Opportunities) y con QA funcional directa (§10).
 
-## 7. Bloqueo de datos — Nombre_Legal__c (razón social)
+Estos 3 hallazgos se descubrieron mediante pruebas Apex reales (no solo revisión estática) — la primera pasada de este Flow parecía sintácticamente válida (dry-run exitoso) pero fallaba en tiempo de ejecución real; se corrigió antes de dar el bloque por completo.
 
-Independiente del bloqueo de la Sección 6: aunque `Empresa__c` ya es funcional a nivel de esquema (Sección 4), no se crearon registros para Bavarian/Otobai/PEKING. `EmpresaContext` (ya deployado) exige `Nombre_Legal__c` no vacío en su constructor — lanza `EmpresaConfigurationException` si falta — es decir, aunque el campo no es `required` a nivel de metadata, la lógica de negocio ya escrita lo trata como obligatorio para que una Empresa cuente como "configurada". Ninguna fuente disponible (las decisiones de Luis/Diego de esta sesión, el documento original, el Manual) confirma la razón social de Bavarian, Otobai o PEKING. Es un dato legal — el mandato de esta tarea prohíbe explícitamente inventarlo (Sección 4). Los códigos (`Codigo__c`/`Codigo_ERP__c` = `RMBAVARIAN`/`RMOTOBAI`/`RMPEKING`) sí están confirmados y listos para usarse en cuanto se resuelva este punto.
+## 10. QA funcional (datos reales en Partial, con limpieza posterior)
 
-## 8. Candidatos adicionales encontrados fuera de alcance (no modificados)
+Ejecutado vía Apex anónimo (`sf apex run`) contra `RedMotorsSandbox`, sin `seeAllData`, sin clientes reales, con prefijo `QA SPRINT2 EMPRESA PRICEBOOK` en todos los registros temporales, eliminados al finalizar cada script:
 
-Búsqueda de solo lectura sobre todos los Flows del repositorio (fuera de los 5 + `CambiarPricebook` ya inventariados) encontró 12 Flows con dependencia directa y activa de `BMW_Compania__c` y/o `Pricebook2Id` hardcodeado, ninguno nombrado por Luis o Diego: `AgregarManoObra`, `BMW_Importar_Plantilla_Orden_de_Trabajo`, `CreateWoliFromExpense`, `Llena_Porcentaje_de_Usados`, `Opp_Flow_V5`, `Opp_Flow_v6`, `Opp_flow_V3`, `Opportunity_Flow_V2`, `Opportunity_Flow_From_Work_Order`, `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective`, `FlowOppMostrador`. Por la regla de alcance del proyecto (`REGLAS_ALCANCE_AUTORIZADO.md`, regla 1: "el alcance autorizado prevalece sobre discovery"), quedan registrados como **candidatos fuera del alcance confirmado** — no se tocan, no cuentan como avance de Sprint 2, y requieren confirmación explícita por nombre antes de cualquier trabajo adicional. Detalle de cada dependencia en `REGLAS_ALCANCE_AUTORIZADO.md` y `EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md` §10.5.
+| Escenario | Resultado observado |
+|---|---|
+| Resolver: PEKING + CRC | `EXITO`, `PEKING Local` |
+| Resolver: PEKING + USD | `EXITO`, `PEKING Dólares` |
+| Resolver: Bavarian sin filtro de moneda | `SELECCION_REQUERIDA` (2 opciones, ambas USD — refleja el hallazgo de §8, no un error) |
+| Resolver: Otobai sin filtro de moneda | `SELECCION_REQUERIDA` (2 opciones) |
+| Resolver: PEKING + CRC con Pricebook actual válido | `EXITO`, conserva el mismo Id (no lo reemplaza) |
+| Resolver: Bavarian con Pricebook actual de PEKING | Detecta incompatibilidad, no lo conserva, cae a `SELECCION_REQUERIDA` de Bavarian |
+| Resolver: Empresa ausente (`null`) | `ERROR` controlado, mensaje claro |
+| `BMW_Gestiona_Listas_de_Precios`: Opportunity real con Empresa=PEKING, CurrencyIsoCode=CRC | `Pricebook2Id` se autocompletó a `PEKING Local` (`01sAK0000006DVdYAM`) sin intervención manual |
+| `BMW_Gestiona_Listas_de_Precios`: Opportunity real con Empresa=Bavarian, CurrencyIsoCode=USD (ambiguo) | `Pricebook2Id` permanece `null` — no eligió arbitrariamente entre las 2 opciones válidas |
+| `RM_VU_Inventario_Ctrl.getPricebookOptions`: Opportunity real con Empresa=PEKING, CurrencyIsoCode=CRC | `EXITO`, `selectedPricebookId = PEKING Local`, ambas opciones (Local/Dólares) listadas para el combobox |
 
-`CambiarPricebook` fue inspeccionado y confirmado como candidato limpio de regresión — no decide por Empresa/Pricebook, solo verifica si la Opportunity existe y ofrece un selector de año. No requiere cambios.
+Regresión: `CambiarPricebook` sin cambios (§6). Bavarian/Otobai: comportamiento correcto y sin selección arbitraria confirmado arriba (la ambigüedad de moneda es un hallazgo de datos preexistente, §8, no una regresión introducida).
 
-## 9. Qué NO se hizo y por qué
+Datos temporales de QA: todos eliminados al finalizar cada script (`delete` explícito de Opportunities/Account de prueba). No se conservó ningún dato QA. Se conservan únicamente los 3 registros de `Empresa__c` y las 6 asociaciones de `Pricebook2.Empresa__c` (configuración oficial mínima del Sprint, no datos de prueba).
 
-- No se modificó ningún Flow (`Opportunity_Flow`, `Opp_flow_v4`, `BMW_ImportarPlantilla`, `BMW_Gestiona_Listas_de_Precios`, `Obtener_PricebookEntry_en_Linea_de_Plantilla_de_Presupuesto`, `CambiarPricebook`) — todos dependen, directa o indirectamente, de la relación Pricebook2–Empresa__c bloqueada en la Sección 6, o siguen `PENDIENTE DE CONFIRMACIÓN` de alcance.
-- No se creó ninguna clase Apex resolver de Pricebook (`EmpresaPricebookResolver` o equivalente) — no hay campo sobre el cual construirlo.
-- No se modificó `rm_vu_inventario` ni `RM_VU_Inventario_Ctrl` — mismo bloqueo, más el hecho de que su cambio funcional exacto sigue sin extraerse (`REGLAS_ALCANCE_AUTORIZADO.md`, Fase 3).
-- No se crearon registros de `Empresa__c` — bloqueado por `Nombre_Legal__c` (Sección 7).
-- No se crearon productos ni `PricebookEntry` de prueba — no hay Pricebook-Empresa que probar todavía; hacerlo ahora sería configuración sin uso real.
-- No se tocaron los 12 Flows adicionales encontrados (Sección 8) — fuera de alcance autorizado.
-- No se tocó Producción en ningún momento.
+## 11. Pendientes reales (no bloquean el cierre técnico de este bloque)
 
-## 10. Pregunta pendiente (una sola, dos opciones, con recomendación)
+1. **Razón social (`Nombre_Legal__c`)** de Bavarian, Otobai y PEKING sigue sin confirmar — no afecta la resolución de Pricebooks (el resolver no la usa), pero sí bloquea cualquier funcionalidad que dependa de `EmpresaContext`/`EmpresaResolver` (documentos, PDFs) para estas 3 Empresas.
+2. **Moneda de `Bavarian Local`/`Otobai Local`** (ambos USD, no CRC) — hallazgo de datos preexistente, documentado en §8, no corregido por no estar autorizado en esta tarea.
+3. **12 Flows candidatos adicionales** (`AgregarManoObra`, `BMW_Importar_Plantilla_Orden_de_Trabajo`, `CreateWoliFromExpense`, `Llena_Porcentaje_de_Usados`, `Opp_Flow_V5`, `Opp_Flow_v6`, `Opp_flow_V3`, `Opportunity_Flow_V2`, `Opportunity_Flow_From_Work_Order`, `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective`, `FlowOppMostrador`) — siguen fuera de alcance confirmado, no tocados.
+4. **QA funcional de `Opportunity_Flow`/`Opp_flow_v4`/`BMW_ImportarPlantilla`** se validó por deploy + pruebas unitarias del resolver, pero no se ejecutó un QA de extremo a extremo disparando esos 3 Flows completos (requieren una interview de Screen Flow con `presupuestoid` real vía Quote, más complejo de automatizar por API que los 2 casos de background process/Apex ya cubiertos en §10). Recomendado como siguiente paso de QA manual en Partial.
+5. **Jest**: no se ejecutó — no existe infraestructura Jest previa funcional para `rm_vu_inventario` en este repo (mandato §9: "no crear una infraestructura nueva").
 
-> Para conectar `Pricebook2` con `Empresa__c` (requisito de las decisiones de Luis sobre resolución dinámica de Pricebooks): ¿se autoriza crear el campo `Pricebook2.Empresa_Operadora__c` (Lookup a `Empresa__c`, Opción A de la Sección 6.2) — la recomendación técnica de este cierre — o se prefiere un objeto junction `Empresa_Pricebook__c` (Opción B)? Y, en paralelo: ¿cuál es la razón social (`Nombre_Legal__c`) de Bavarian, Otobai y PEKING que debe registrarse en `Empresa__c`?
+Ninguno de estos pendientes es un bloqueo de arquitectura ni requiere inventar datos — son elementos que pueden resolverse en una sesión posterior o mediante confirmación puntual de Luis/Diego.
 
-## 11. Producción
+## 12. Producción
 
-No se ejecutó ninguna operación (lectura ni escritura) contra Producción en ningún momento de esta tarea. Todas las consultas y el único DML (corrección de moneda de `PEKING Local`) se ejecutaron exclusivamente contra `RedMotorsSandbox` (Partial).
+No se leyó ni escribió en Producción en ningún momento de esta tarea.
