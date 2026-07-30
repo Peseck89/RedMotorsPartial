@@ -1,64 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>55.0</apiVersion>
+    <actionCalls>
+        <name>Resuelve_Pricebook_Empresa</name>
+        <label>Resuelve Pricebook Empresa</label>
+        <locationX>578</locationX>
+        <locationY>458</locationY>
+        <actionName>EmpresaPricebookResolver</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Asigna_PriceBookId_Resuelto</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>empresaId</name>
+            <value>
+                <elementReference>EmpresaIdResuelta</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>currencyIsoCode</name>
+            <value>
+                <elementReference>BMW_ObtenerPresupuesto.CurrencyIsoCode</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>currentPricebookId</name>
+            <value>
+                <elementReference>BMW_ObtenerPresupuesto.Pricebook2Id</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
     <assignments>
-        <name>Asigna_Bavarian_Dolar</name>
-        <label>Asigna Bavarian Dolar</label>
+        <name>Asigna_Empresa_Desde_Fallback</name>
+        <label>Asigna Empresa Desde Fallback</label>
         <locationX>842</locationX>
         <locationY>350</locationY>
+        <description>Fallback temporal: solo aplica cuando Opportunity.Empresa_Operadora__c está vacío.</description>
         <assignmentItems>
-            <assignToReference>PriceBookName</assignToReference>
+            <assignToReference>EmpresaIdResuelta</assignToReference>
             <operator>Assign</operator>
             <value>
-                <stringValue>Bavarian Dólar</stringValue>
+                <elementReference>BMW_Compania_Fallback_Empresa.Id</elementReference>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Obtiene_Price_Book_Pre</targetReference>
+            <targetReference>Resuelve_Pricebook_Empresa</targetReference>
         </connector>
     </assignments>
     <assignments>
-        <name>Asigna_Bavarian_Local</name>
-        <label>Asigna Bavarian Local</label>
-        <locationX>578</locationX>
-        <locationY>350</locationY>
-        <assignmentItems>
-            <assignToReference>PriceBookName</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>Bavarian Local</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Obtiene_Price_Book_Pre</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <name>Asigna_Oto_Dolar</name>
-        <label>Asigna Oto Dolar</label>
+        <name>Asigna_Empresa_Desde_Lookup</name>
+        <label>Asigna Empresa Desde Lookup</label>
         <locationX>314</locationX>
         <locationY>350</locationY>
         <assignmentItems>
-            <assignToReference>PriceBookName</assignToReference>
+            <assignToReference>EmpresaIdResuelta</assignToReference>
             <operator>Assign</operator>
             <value>
-                <stringValue>Otobai Dólares</stringValue>
+                <elementReference>BMW_ObtenerPresupuesto.Opportunity.Empresa_Operadora__c</elementReference>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Obtiene_Price_Book_Pre</targetReference>
+            <targetReference>Resuelve_Pricebook_Empresa</targetReference>
         </connector>
     </assignments>
     <assignments>
-        <name>Asigna_Oto_Local</name>
-        <label>Asigna Oto Local</label>
-        <locationX>50</locationX>
-        <locationY>350</locationY>
+        <name>Asigna_PriceBookId_Resuelto</name>
+        <label>Asigna PriceBookId Resuelto</label>
+        <locationX>578</locationX>
+        <locationY>566</locationY>
         <assignmentItems>
-            <assignToReference>PriceBookName</assignToReference>
+            <assignToReference>PriceBookIdResuelto</assignToReference>
             <operator>Assign</operator>
             <value>
-                <stringValue>Otobai Local</stringValue>
+                <elementReference>Resuelve_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -335,101 +351,29 @@
         </value>
     </choices>
     <decisions>
-        <name>Determina_Nombre_Price_Book</name>
-        <label>Determina Nombre Price Book</label>
+        <name>Tiene_Empresa_Operadora</name>
+        <label>Tiene Empresa Operadora</label>
         <locationX>578</locationX>
         <locationY>242</locationY>
+        <description>Empresa_Operadora__c es la fuente principal para resolver el Pricebook. BMW_Compania__c solo se usa como fallback temporal cuando el lookup está vacío (ver Asigna_Empresa_Desde_Fallback).</description>
         <defaultConnector>
-            <targetReference>Obtiene_Price_Book_Pre</targetReference>
+            <targetReference>BMW_Compania_Fallback_Empresa</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <defaultConnectorLabel>Sin Empresa Operadora (fallback)</defaultConnectorLabel>
         <rules>
-            <name>Otobai_Local</name>
+            <name>Empresa_Operadora_Presente</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>BMW_ObtenerPresupuesto.CurrencyIsoCode</leftValueReference>
-                <operator>EqualTo</operator>
+                <leftValueReference>BMW_ObtenerPresupuesto.Opportunity.Empresa_Operadora__c</leftValueReference>
+                <operator>IsNull</operator>
                 <rightValue>
-                    <stringValue>CRC</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>BMW_ObtenerPresupuesto.Opportunity.BMW_Compania__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Otobai</stringValue>
+                    <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Asigna_Oto_Local</targetReference>
+                <targetReference>Asigna_Empresa_Desde_Lookup</targetReference>
             </connector>
-            <label>Otobai Local</label>
-        </rules>
-        <rules>
-            <name>Otobai_Dolar</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>BMW_ObtenerPresupuesto.CurrencyIsoCode</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>USD</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>BMW_ObtenerPresupuesto.Opportunity.BMW_Compania__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Otobai</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Asigna_Oto_Dolar</targetReference>
-            </connector>
-            <label>Otobai Dolar</label>
-        </rules>
-        <rules>
-            <name>Bavarian_Local</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>BMW_ObtenerPresupuesto.CurrencyIsoCode</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>CRC</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>BMW_ObtenerPresupuesto.Opportunity.BMW_Compania__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Bavarian</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Asigna_Bavarian_Local</targetReference>
-            </connector>
-            <label>Bavarian Local</label>
-        </rules>
-        <rules>
-            <name>Bavarian_Dolar</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>BMW_ObtenerPresupuesto.CurrencyIsoCode</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>USD</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>BMW_ObtenerPresupuesto.Opportunity.BMW_Compania__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Bavarian</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Asigna_Bavarian_Dolar</targetReference>
-            </connector>
-            <label>Bavarian Dolar</label>
+            <label>Empresa Operadora Presente</label>
         </rules>
     </decisions>
     <decisions>
@@ -616,6 +560,12 @@
             <label>No tiene</label>
         </rules>
     </decisions>
+    <formulas>
+        <name>CodigoErpLegacyDesdeCompania</name>
+        <dataType>String</dataType>
+        <description>Fallback temporal: traduce el picklist legacy BMW_Compania__c a Empresa.Codigo_ERP__c solo cuando Opportunity.Empresa_Operadora__c está vacío. No decide el Pricebook por nombre, solo ubica la Empresa.</description>
+        <expression>CASE({!BMW_ObtenerPresupuesto.Opportunity.BMW_Compania__c}, "Otobai", "RMOTOBAI", "Bavarian", "RMBAVARIAN", "")</expression>
+    </formulas>
     <interviewLabel>Importar Plantilla {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Importar Plantilla</label>
     <loops>
@@ -690,6 +640,35 @@
         <inputReference>PartidasDePresupuesto</inputReference>
     </recordCreates>
     <recordLookups>
+        <name>BMW_Compania_Fallback_Empresa</name>
+        <label>BMW Compania Fallback Empresa</label>
+        <locationX>842</locationX>
+        <locationY>242</locationY>
+        <description>Fallback temporal: solo se ejecuta cuando Opportunity.Empresa_Operadora__c está vacío. Ubica la Empresa por Codigo_ERP__c, nunca por Pricebook.Name.</description>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Asigna_Empresa_Desde_Fallback</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Codigo_ERP__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>CodigoErpLegacyDesdeCompania</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Activa__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Empresa__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>BMW_ObtenerLineasDePlantilla</name>
         <label>Obtener Lineas de Plantilla</label>
         <locationX>578</locationX>
@@ -747,7 +726,7 @@
         <locationY>134</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Determina_Nombre_Price_Book</targetReference>
+            <targetReference>Tiene_Empresa_Operadora</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -893,17 +872,17 @@
         <name>Obtiene_Price_Book_Pre</name>
         <label>Obtiene Price Book Pre</label>
         <locationX>578</locationX>
-        <locationY>542</locationY>
+        <locationY>674</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Price_Book_vac_o</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Name</field>
+            <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>PriceBookName</elementReference>
+                <elementReference>PriceBookIdResuelto</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -1207,7 +1186,14 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <name>PriceBookName</name>
+        <name>EmpresaIdResuelta</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>PriceBookIdResuelto</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- Los 5 Flows de Pricebook migrados al resolver dinamico EmpresaPricebookResolver. -->
+        <!-- Empresa_Operadora__c es la fuente principal; BMW_Compania__c queda como fallback temporal comentado. -->
+        <!-- Ninguno selecciona Pricebook por nombre ni Id hardcodeado. -->
+        <members>Opportunity_Flow</members>
+        <members>Opp_flow_v4</members>
+        <members>BMW_ImportarPlantilla</members>
+        <members>BMW_Gestiona_Listas_de_Precios</members>
+        <members>Obtener_PricebookEntry_en_Linea_de_Plantilla_de_Presupuesto</members>
+        <name>Flow</name>
+    </types>
+    <version>53.0</version>
+</Package>
