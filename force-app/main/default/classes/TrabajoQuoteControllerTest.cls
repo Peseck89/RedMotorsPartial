@@ -137,6 +137,29 @@ public class TrabajoQuoteControllerTest {
     }
 
     @isTest
+    static void unknownLegacyCompanyDoesNotFallbackToOtobai() {
+        // BMW_Compania__c es un picklist restringido: en datos reales de Partial solo admite
+        // 'Bavarian'/'Otobai'/null, por lo que insertar 'PEKING' falla con
+        // INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST. Se prueba el resolver puro
+        // (TrabajoQuoteController.resolveEmpresaLegacy, @TestVisible) directamente con un
+        // Opportunity NO insertado (sin DML) para simular un valor legacy no migrado
+        // (p. ej. PEKING/Omoda/Jaecoo) sin violar el picklist restringido en base de datos.
+        Opportunity opportunity = new Opportunity(BMW_Compania__c = 'PEKING');
+
+        Boolean controlledExceptionThrown = false;
+        try {
+            TrabajoQuoteController.resolveEmpresaLegacy(opportunity);
+        } catch (EmpresaConfigurationException e) {
+            controlledExceptionThrown = true;
+        }
+
+        System.assert(
+            controlledExceptionThrown,
+            'Un valor legacy de BMW_Compania__c no mapeado debe producir una EmpresaConfigurationException controlada, nunca RMOTOBAI.'
+        );
+    }
+
+    @isTest
     static void inactiveLookupReturnsControlledError() {
         ScenarioData scenario = createScenario(
             'RMPEKING',

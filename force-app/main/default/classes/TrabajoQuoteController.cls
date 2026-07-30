@@ -193,20 +193,7 @@ public class TrabajoQuoteController {
         String empresa;
          String tipodecargo = label;
         String tipoDeVehiculo;
-        if(quo.Opportunity.Empresa_Operadora__c != null){
-            EmpresaContext empresaContext = EmpresaResolver.resolve(quo.Opportunity.Empresa_Operadora__c);
-            empresa = empresaContext.codigo.trim().toUpperCase();
-            Set<String> empresasSoportadas = new Set<String>{'RMBAVARIAN', 'RMOTOBAI', 'RMPEKING'};
-            if(!empresasSoportadas.contains(empresa)){
-                throw new EmpresaConfigurationException('La Empresa ' + empresa + ' no está soportada para trabajos de Quote.');
-            }
-        }else if(quo.Opportunity.BMW_Compania__c == 'Bavarian' || quo.Opportunity.BMW_Compania__c == 'RMBavarian'){
-            empresa = 'RMBAVARIAN';
-        }else if(quo.Opportunity.BMW_Compania__c == 'Otobai'){
-            empresa = 'RMOTOBAI';
-        }else{
-            throw new EmpresaConfigurationException('La empresa de la Opportunity no está configurada para trabajos de Quote.');
-        }
+        empresa = resolveEmpresaLegacy(quo.Opportunity);
         if(quo.Opportunity.BMW_TipoDeVehiculo__c == 'Autos'){
             tipoDeVehiculo = 'Automóvil';
         }
@@ -268,6 +255,31 @@ public class TrabajoQuoteController {
     } catch (Exception e) { throw new AuraHandledException('Error al guardar el Quote Line Item: ' + e.getMessage());
     }
 }
+
+    // Resolver puro (sin DML/callouts propios más allá de EmpresaResolver, que solo consulta):
+    // Empresa_Operadora__c es la fuente principal; BMW_Compania__c es fallback temporal solo
+    // mientras se completa la migración. Extraído de saveTrabajo() para poder probarlo de forma
+    // aislada (@TestVisible) sin depender de un valor de picklist restringido inválido en BD.
+    @TestVisible
+    private static String resolveEmpresaLegacy(Opportunity opportunity) {
+        if(opportunity.Empresa_Operadora__c != null){
+            EmpresaContext empresaContext = EmpresaResolver.resolve(opportunity.Empresa_Operadora__c);
+            String empresa = empresaContext.codigo.trim().toUpperCase();
+            Set<String> empresasSoportadas = new Set<String>{'RMBAVARIAN', 'RMOTOBAI', 'RMPEKING'};
+            if(!empresasSoportadas.contains(empresa)){
+                throw new EmpresaConfigurationException('La Empresa ' + empresa + ' no está soportada para trabajos de Quote.');
+            }
+            return empresa;
+        // Fallback temporal: BMW_Compania__c solo se usa mientras se completa la migración a Empresa_Operadora__c.
+        }else if(opportunity.BMW_Compania__c == 'Bavarian' || opportunity.BMW_Compania__c == 'RMBavarian'){
+            return 'RMBAVARIAN';
+        }else if(opportunity.BMW_Compania__c == 'Otobai'){
+            return 'RMOTOBAI';
+        }else{
+            throw new EmpresaConfigurationException('La empresa de la Opportunity no está configurada para trabajos de Quote.');
+        }
+    }
+
 	private static final Map<String, String> TIPO_CARGO_VALUE_TO_LABEL = new Map<String, String>{
     '1' => 'Cliente',
     '3' => 'Aseguradora',

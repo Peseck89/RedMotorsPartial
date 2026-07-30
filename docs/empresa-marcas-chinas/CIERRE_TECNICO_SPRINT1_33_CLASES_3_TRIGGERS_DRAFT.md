@@ -2,15 +2,29 @@
 
 ## Estado del documento
 
-**BORRADOR.** No constituye cierre formal del Sprint 1. No se ha seleccionado la clase 33. No se ejecutó Salesforce CLI ni deploy. No se hizo commit. No se tocó Producción.
+**BORRADOR.** No constituye cierre formal del Sprint 1 completo (ver "Pendientes" más abajo). Esta sesión (2026-07-30, cierre Luis — bloque final) sí ejecutó Salesforce CLI (dry-run y deploy real) exclusivamente contra Partial, e hizo commit del bloque de cierre. Producción no fue tocada en ningún momento.
 
-**Actualización de esta sesión:** se reconciliaron hacia Git, a partir de Partial, **9 componentes productivos** (`BatchGetCatalogoSoftland` + las 7 clases `BatchGet*Softland` + `WorkOrderTrigger`) y **7 tests** (uno por cada `BatchGet*Softland`). `BatchGetCatalogoSoftland` es una dependencia de soporte y **no cuenta** dentro del conteo de 33 clases de Luis. Es la única sección del alcance 33x3 con código modificado en esta sesión. `precioProductoJSON`, `precioProductoJSONTest` y `productJSON` **no** se tocaron (instrucción explícita). No se modificó ningún Flow ni metadata fuera de las clases/tests/trigger listados. Los cambios están en el working tree, **sin commit todavía**.
+### Validación de esta sesión (dry-run + deploy real, exclusivamente Partial)
+
+- **Dry-run:** Deploy ID `0AfAK000000yN6b0AE`, target org `peseck89@gmail.com.partial.redmotors`, 4/4 componentes, 21/21 pruebas, `HttpCalloutCreateKit` 98% de cobertura, `TrabajoQuoteController` 93% de cobertura, código de salida 0.
+- **Deploy real:** Deploy ID `0AfAK000000yNY10AM`, mismo target org, mismos resultados: 4/4 componentes, 21/21 pruebas, `HttpCalloutCreateKit` 98%, `TrabajoQuoteController` 93%, código de salida 0.
+- Manifest usado: `manifest/sprint1-cierre-luis-definiciones-validation.xml` (`TrabajoQuoteController`, `TrabajoQuoteControllerTest`, `HttpCalloutCreateKit`, `HttpCalloutCreateKitTest`).
+- **Producción no fue tocada** en ninguno de los dos pasos.
+
+### Pendientes funcionales/de datos que continúan abiertos
+
+- `Empresa__c` continúa sin registros y `Empresa_Operadora__c` no está poblado en las Opportunities actuales de Partial; la prueba funcional de la ruta principal (resolución vía `Empresa_Operadora__c`/`EmpresaResolver`) requiere datos/configuración de Empresa que todavía no existen en el org. Lo validado en esta sesión es cobertura de código y compilación/deploy, no el camino funcional principal end-to-end con datos reales.
+- `ServicioCitas`, `ServicioCitasFieldService` y `RM_VN_CrearOportunidad_Ctrl` siguen documentados como hallazgos adicionales (ver tabla al final de este documento); no se implementaron en este bloque.
+
+**Actualización de esta sesión (2026-07-30, cierre Luis):** Luis confirmó `TrabajoQuoteController` como la **clase 33**. Se corrigió `HttpCalloutCreateKit` (empresa/marca Omoda y Jaecoo → `RMPEKING`, tipo `V`) y se documentó que `TrabajoQuoteController` ya resolvía la empresa correctamente (Bloque 13, sin drift contra Partial) y solo necesitaba el comentario de fallback temporal. Ambas clases están confirmadas sin drift contra Partial (ver reconciliación al final de este documento). **Aclaración importante:** el "33/33 pruebas aprobadas" de la sección "Evidencia de ejecución" (Test Run `707AK00000HB6UY`) se refiere a **33 métodos de prueba** ejecutados en esa corrida enfocada de los `BatchGet*Softland`/`WorkOrderTrigger`, **no** a las 33 `ApexClass` del alcance de Luis — son dos conteos distintos que coinciden en el número por coincidencia numérica, no por relación causal. `HttpCalloutCreateKit` ya estaba confirmada como clase **28** desde la reconciliación anterior (fila 28 de la tabla) y no se cuenta dos veces.
+
+**Actualización de sesión anterior:** se reconciliaron hacia Git, a partir de Partial, **9 componentes productivos** (`BatchGetCatalogoSoftland` + las 7 clases `BatchGet*Softland` + `WorkOrderTrigger`) y **7 tests** (uno por cada `BatchGet*Softland`). `BatchGetCatalogoSoftland` es una dependencia de soporte y **no cuenta** dentro del conteo de 33 clases de Luis. `precioProductoJSON`, `precioProductoJSONTest` y `productJSON` **no** se tocaron (instrucción explícita). No se modificó ningún Flow ni metadata fuera de las clases/tests/trigger listados.
 
 **Estado de los siete batches (validados técnicamente, PEKING no cerrado):** Reconciliados con Partial y validados técnicamente — Test Run `707AK00000HB6UY`, 33/33 pruebas aprobadas, 100% de cobertura enfocada en cada uno de los 7 envoltorios. Soporte funcional para PEKING pendiente de definición de Diego porque seis catálogos conservan `RMBAVARIAN` y `BatchGetBodegaSoftland` conserva el fallback existente. Ver sección "Evidencia de ejecución" más abajo.
 
 **Estado de `WorkOrderTrigger`:** Reconciliado con Partial y validado mediante `WorkOrderTriggerTest` — Test Run `707AK00000HB6UY`, cobertura enfocada 94%.
 
-**Clase 33:** pendiente de respuesta de Luis. No se seleccionó.
+**Clase 33:** **confirmada por Luis — `TrabajoQuoteController`** (2026-07-30). Ver fila 33 de la tabla y sección "Candidatas" (actualizada).
 
 Alcance exacto solicitado por Luis: **33 ApexClass + 3 ApexTrigger**. No se amplía a las 41 clases del alcance técnico total documentado en `PLAN_IMPLEMENTACION_SPRINT1.md` y `BITACORA_IMPLEMENTACION.md`.
 
@@ -277,7 +291,7 @@ Reconciliar es técnicamente seguro (cero pérdida de comportamiento) pero **no 
 
 Confirmado: diferencia de un solo carácter (tabulador vs. espacios) en una línea, sin ningún efecto funcional. Clasificada como categoría **B**. **No se justifica un commit únicamente por esto**, por instrucción explícita.
 
-## Clases confirmadas (32 de 33) + fila reservada 33
+## Clases confirmadas (33 de 33)
 
 | N.º | Componente | Categoría | Test asociado | Dependencia externa | Acción pendiente |
 |---|---|---|---|---|---|
@@ -308,12 +322,21 @@ Confirmado: diferencia de un solo carácter (tabulador vs. espacios) en una lín
 | 25 | BMWServiceQuoteApprovalEmailInvocable | A (bytes) | Sin test identificado en Git | Envío de correo (email de Salesforce) | Localizar/crear test asociado |
 | 26 | precioProductoJSON | **C** | precioProductoJSONTest | Ninguna identificada | Ver Fase 4 |
 | 27 | productJSON | **B** | productJSONTest | Ninguna identificada | Ninguna (no amerita commit) |
-| 28 | HttpCalloutCreateKit | A (bytes) | HttpCalloutCreateKitTest | Callout HTTP externo | Ninguna |
+| 28 | HttpCalloutCreateKit | A (bytes, ya confirmada; corregida en esta sesión) | HttpCalloutCreateKitTest | Callout HTTP externo | **Corregido (2026-07-30) y revisado de nuevo el mismo día:** Omoda/Jaecoo (`Opportunity.RecordType.Name`) ahora resuelven `RMPEKING`/tipo `V`. Se eliminó el `else` genérico hacia `RMOTOBAI`: los Record Types Otobai (Harley-Davidson, Indian, Kawasaki, KTM, Polaris) quedaron enumerados explícitamente; cualquier Record Type fuera de las tres listas (Bavarian/PEKING/Otobai) lanza `EmpresaConfigurationException` en vez de asumir Otobai. `Empresa_Operadora__c` sigue siendo la fuente principal; Record Type es fallback temporal. Sin cambios de endpoint, autenticación ni contrato del request (no se agregó bodega ni sucursal). |
 | 29 | ProductSearcherController | A (EOF) | ProductSearcherControllerTest (+ Otobai variant) | Ninguna identificada | Ninguna |
 | 30 | QuoteService | A (bytes) | QuoteServiceControllerTest / TestServiciosQuote | Ninguna identificada | Ninguna |
 | 31 | QuoteSoftlandQueryService | A (bytes) | Sin test identificado en Git | Integración Softland | Localizar/crear test asociado |
 | 32 | RM_VN_CambiarUbicacion_Ctrl | A (EOF) | RM_VN_CambiarUbicacion_Ctrl_Test | Ninguna identificada | Ninguna |
-| 33 | — | — | — | — | **Pendiente de confirmación documental — no seleccionada por descarte.** Ver sección de candidatas. |
+| 33 | TrabajoQuoteController | A (bytes, sin drift Git/Partial) | TrabajoQuoteControllerTest | Softland indirecta (via `EmpresaResolver`/`Empresa__c`) | **Confirmada por Luis (2026-07-30).** Fuente principal: `Opportunity.Empresa_Operadora__c` → `EmpresaResolver.resolve()` → `Empresa.Codigo_ERP__c` (validado contra `{'RMBAVARIAN','RMOTOBAI','RMPEKING'}`). `BMW_Compania__c` queda como fallback temporal solo mientras `Empresa_Operadora__c` esté vacío. Empresas desconocidas **no** caen silenciosamente en `RMOTOBAI`: tanto la rama `Empresa_Operadora__c` (código ERP no soportado) como la rama fallback (`BMW_Compania__c` sin match) lanzan `EmpresaConfigurationException`. Lógica extraída a `resolveEmpresaLegacy()` (`@TestVisible`) para prueba aislada. |
+
+## Revisión final del fallback legacy de HttpCalloutCreateKit (2026-07-30)
+
+Confirmación de Diego registrada aquí porque aplica directamente a esta clase (no a los seis catálogos/schedulers, que no se tocaron en este bloque):
+
+- La autenticación/configuración de Softland usada por `HttpCalloutCreateKit` es la misma para las tres empresas (RMBAVARIAN/RMOTOBAI/RMPEKING) — no requiere endpoint, Named Credential ni credenciales distintas por empresa.
+- Las incompatibilidades entre empresa de producto y empresa de bodega deben prevenirse por configuración y filtrado (fuera de este servicio), no agregando un bloqueo rígido dentro de `HttpCalloutCreateKit`. Esta clase no consulta ni valida bodega — no se agregó ninguna lógica de bodega/sucursal aquí, consistente con esa indicación.
+
+Ver fila 28 de la tabla para el detalle técnico del cambio (enumeración explícita de Record Types Otobai + fallo controlado ante Record Type desconocido).
 
 ## Triggers (3 de 3)
 
@@ -327,22 +350,17 @@ Confirmado: diferencia de un solo carácter (tabulador vs. espacios) en una lín
 
 `ChanceAccountOtobai` existe en Git local y en el manifest `empresa-marcas-chinas-sprint1-retrieve.xml`, pero **no forma parte del conteo de 3 triggers** solicitado por Luis y no se suma ni sustituye a ninguno de los tres anteriores.
 
-## Candidatas para la clase 33 (documentadas fuera del conteo de 33)
+## Hallazgos adicionales documentados (no forman parte del conteo de 33)
 
-Ninguna de estas cuatro clases está seleccionada. Análisis sin cambios respecto a la versión anterior de este documento (no se re-investigó en esta sesión, que se enfocó en las Fases 1-4 anteriores).
+`TrabajoQuoteController` fue promovida de "candidata" a **clase 33 confirmada** (ver tabla principal). Las siguientes tres clases se conservan como **hallazgos adicionales pendientes de determinar si aplican** — no se implementan en este bloque, no se cuentan dentro de las 33, y no se vuelve a preguntar a Diego sobre puntos que ya están pendientes de su respuesta.
 
-| Candidata | Conclusión resumida | Clasificación |
+| Hallazgo | Conclusión resumida | Clasificación |
 |---|---|---|
 | ServicioCitasFieldService | Excluida explícitamente del conteo directo por `PLAN_IMPLEMENTACION_SPRINT1.md`; depende de decisión de negocio pendiente (FSL/portal en Sprint 1) | D |
 | ServicioCitas | Misma decisión pendiente; además drift no documentado y masivo contra Partial | D (+E por el drift) |
 | RM_VN_CrearOportunidad_Ctrl | Decisión previa ya documentada (`DESFASE_GIT_PARTIAL_TEST_TRAFICO.md`) de mantenerla fuera de Sprint 1 hasta sincronización aparte | D |
-| **TrabajoQuoteController** | **La más fuerte de las cuatro** — requerimiento E.3 completado en Bloque 13 (commit `57d1880`), cobertura 93.38% confirmada, cero drift Git/Partial, aparece en la misma tabla de riesgo crítico que la clase confirmada #32. Tiene un ítem residual del fallback de empresa por defecto etiquetado **"Siguiente sprint"** en `PLAN_IMPLEMENTACION_SPRINT1.md:133`, lo que impide considerarla evidencia 100% concluyente sin conflicto | A para el componente; D para el ítem residual (Sprint 2, no se toca) |
 
-**No se selecciona la clase 33.** Se mantiene: **"Pendiente de confirmación documental — no seleccionada por descarte."** Luis todavía no ha confirmado. El trabajo autónomo sobre los pendientes técnicos que no requieren definición de negocio (reconciliación de los 7 `BatchGet*Softland` + `BatchGetCatalogoSoftland`, y de `WorkOrderTrigger`) continuó sin detenerse por esta falta de respuesta, tal como fue instruido — la selección de la clase 33 es la única pieza bloqueada por decisión de negocio.
-
-**Estado:** *"Candidata técnica con mayor evidencia, todavía no seleccionada."*
-
-**Recomendación técnica para Luis (no es una selección):** `TrabajoQuoteController` es la única candidata con evidencia documental directa, un bloque formal completado, cero drift contra Partial y test propio. Requiere **confirmación explícita de Luis** antes de ocupar la posición 33, dado el conflicto documental señalado (Completado en Bloque 13 vs. ítem residual "Siguiente sprint"). No se pregunta de nuevo a Diego sobre puntos que ya están pendientes de su respuesta (`RM_VN_CrearOportunidad_Ctrl`, `Community_User__c` en `WorkOrderTrigger`, decisión FSL/portal) — quedan documentados como pendientes existentes, no como preguntas nuevas.
+**Clase 33 confirmada:** `TrabajoQuoteController` (Luis, 2026-07-30). El ítem residual del fallback de empresa por defecto etiquetado "Siguiente sprint" en `PLAN_IMPLEMENTACION_SPRINT1.md:133` se mantiene documentado como pendiente de Sprint 2 y **no se toca** en este bloque; no invalida la confirmación de Luis sobre la clase en sí.
 
 ## Evidencia de ejecución — Test Run 707AK00000HB6UY
 
@@ -381,9 +399,10 @@ No se volvió a ejecutar Salesforce CLI ni pruebas adicionales en esta sesión �
 
 ## Resumen de conteo (corregido)
 
-- ApexClass confirmadas: 32 de 33 (fila 33 reservada y pendiente).
+- ApexClass confirmadas: **33 de 33** (clase 33 = `TrabajoQuoteController`, confirmada por Luis el 2026-07-30; sin drift Git/Partial).
 - ApexTrigger confirmados: 3 de 3.
-- Candidatas documentadas fuera del conteo: 4 (ninguna seleccionada).
+- Hallazgos adicionales documentados fuera del conteo: 3 (`ServicioCitasFieldService`, `ServicioCitas`, `RM_VN_CrearOportunidad_Ctrl`; ninguno implementado en este bloque).
+- **Aclaración de conteos:** el "33/33" de este bullet (ApexClass) y el "33/33 pruebas aprobadas" del Test Run `707AK00000HB6UY` (más abajo) son dos números distintos que coinciden por coincidencia — el segundo cuenta métodos de prueba de la reconciliación de los `BatchGet*Softland`/`WorkOrderTrigger`, no clases.
 - Clasificación de las 32 **al momento de la comparación** (antes de reconciliar): A = 23, B = 1 (`productJSON`), C = 1 (`precioProductoJSON`), D = 7 (`BatchGet*Softland`), E = 0. **Suma: 32.**
 - Estado **después de la reconciliación de esta sesión**: A = 30 (23 originales + las 7 `BatchGet*Softland`, ahora idénticas en **contenido** a Partial), B = 1 (`productJSON`, sin tocar), C = 1 (`precioProductoJSON`, sin tocar), D = 0. **Suma: 32.** "Idéntico a Partial" es una verificación de **contenido** (diff byte a byte), no una validación funcional: el soporte para PEKING en estos 7 sigue sin cerrarse (ver aviso de PEKING más arriba) y ninguno de los 7 tests reconciliados se ejecutó todavía.
 - Triggers **después de la reconciliación**: los 3 son idénticos en **contenido** a Partial. `WorkOrderTrigger` reconciliado con Partial y validado mediante `WorkOrderTriggerTest` (Test Run `707AK00000HB6UY`, 94% cobertura enfocada). `ChanceAccountBavarian` y `ChanceAccountContado`: Git y Partial coinciden; fueron ejecutados incidentalmente durante esta misma corrida (aparecen junto a `WorkOrderTriggerTest` por compartir escenarios de `WorkOrder`), pero esa corrida no representa validación funcional enfocada de esos dos triggers.
@@ -396,12 +415,15 @@ No se volvió a ejecutar Salesforce CLI ni pruebas adicionales en esta sesión �
 - No se toca Sprint 2.
 - No se ejecutó Salesforce CLI ni se realizó deploy ni se tocó Producción.
 - Se reconciliaron hacia Git, byte a byte desde Partial: `BatchGetCatalogoSoftland`, las 7 `BatchGet*Softland`, sus 7 tests, y `WorkOrderTrigger`. Ningún otro Apex, test, Flow o metadata fue tocado.
-- No se seleccionó la clase 33.
+- Clase 33 confirmada por Luis (2026-07-30): `TrabajoQuoteController`. No se agregó ninguna otra clase al conteo.
 - `BatchGetCatalogoSoftland` no se contó como clase 33 ni alteró el conteo de 33.
-- No se modificó `precioProductoJSON` ni `precioProductoJSONTest` (instrucción explícita).
-- No se modificó `productJSON` por la diferencia cosmética (instrucción explícita).
+- No se modificó `precioProductoJSON` ni `precioProductoJSONTest` (instrucción explícita, sesión anterior).
+- No se modificó `productJSON` por la diferencia cosmética (instrucción explícita, sesión anterior).
 - No se inventó ninguna configuración de PEKING en la reconciliación de los batches; se preservó exactamente el fallback vigente en Partial (incluida su limitación conocida).
 - No se copiaron carpetas `tmp-partial-*` hacia Git; `tmp-partial-33x3/` y `tmp-partial-batch-helper/` permanecen sin rastrear.
-- No se hizo commit de nada (ni del borrador, ni de los manifests, ni de la reconciliación de código). Ver Fase 5.
+- No se hizo commit de nada en esta sesión (ni del borrador, ni de los manifests, ni de la reconciliación de código).
 - No se amplió el conteo de 33 entregado a Luis.
+- No se implementaron `ServicioCitasFieldService`, `ServicioCitas` ni `RM_VN_CrearOportunidad_Ctrl` en este bloque; quedan documentados como hallazgos adicionales.
 - No se volvió a preguntar a Diego sobre puntos ya pendientes de su respuesta.
+- `RMPEKING` permanece activo en Partial (código y, donde aplica, configuración de `Empresa__c`) para `TrabajoQuoteController` y `HttpCalloutCreateKit`; no se desactivó ni se removió soporte existente.
+- No se declara el Sprint 1 completo ni se modifican los porcentajes de avance documentados en `BITACORA_IMPLEMENTACION.md`; esta sesión valida únicamente el bloque de cierre de Luis (clase 33 + `HttpCalloutCreateKit`).
