@@ -164,3 +164,7 @@ Controladores Apex identificados como dependencia directa de los LWC de la secci
 - `BusquedaDetalladaController` (← `busquedaDetallada`)
 
 El resto de controladores asociados a los componentes de las secciones A2/C2/D2 no se determinaron en esta sesión (no se leyó el código fuente de cada componente, solo se inventarió su existencia y su mención documental). Esta lista es referencia técnica únicamente — **no se agrega ninguna clase Apex al conteo de componentes de Sprint 2**.
+
+## G. Actualización (2026-07-30) — 12 candidatos adicionales encontrados, ninguno autorizado
+
+Una búsqueda de solo lectura sobre los 455 Flows del repositorio (worktree `RedMotors-Sprint2-Cierre-Empresa-Pricebook`) para verificar dependencias directas de `BMW_Compania__c`/`Pricebook2Id` encontró 12 Flows adicionales a los 5+1 ya inventariados en la sección B: `AgregarManoObra`, `BMW_Importar_Plantilla_Orden_de_Trabajo`, `CreateWoliFromExpense`, `Llena_Porcentaje_de_Usados`, `Opp_Flow_V5`, `Opp_Flow_v6`, `Opp_flow_V3`, `Opportunity_Flow_V2`, `Opportunity_Flow_From_Work_Order`, `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective`, `FlowOppMostrador`. Ninguno fue nombrado por Luis o Diego — por la regla 1 de `REGLAS_ALCANCE_AUTORIZADO.md` quedan como **candidatos fuera del alcance confirmado**, sin modificar. Detalle de cada dependencia en `REGLAS_ALCANCE_AUTORIZADO.md` (actualización 2026-07-30) y `EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md` §10.5. `CambiarPricebook` fue confirmado como candidato limpio de regresión (sin dependencia de Empresa/Pricebook).

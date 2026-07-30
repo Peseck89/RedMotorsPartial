@@ -198,3 +198,32 @@ Todo lo demás inventariado en `INVENTARIO_SPRINT2_FLOWS_COMPONENTES.md` queda r
 - **No se investigan de nuevo los 48 Flows ni los 36 componentes completos del inventario.** El trabajo de investigación adicional se limita exclusivamente al bloque Pricebook + `rm_vu_inventario`.
 
 Este documento actualiza la vigencia de `PLAN_EJECUCION_SPRINT2.md`; ese archivo no se reescribió para no perder el detalle de investigación ya hecho, pero **su estado operativo queda sustituido por esta tabla de autorización**.
+
+## Actualización (2026-07-30) — decisiones de Luis/Diego recibidas y bloqueo estructural encontrado
+
+Luis y Diego confirmaron en la conversación de trabajo activa (worktree `RedMotors-Sprint2-Cierre-Empresa-Pricebook`, rama `feature/pc/redmotors-sprint2-cierre-empresa-pricebook-20260730`): `Empresa_Operadora__c` (lookup ya existente en `Opportunity`/`Plantilla_de_Presupuesto__c` a `Empresa__c`) es la fuente principal de compañía; `BMW_Compania__c` solo fallback temporal comentado; código ERP de PEKING es `RMPEKING`; los Pricebooks deben resolverse dinámicamente por Empresa + `CurrencyIsoCode` + `IsActive`, nunca por nombre ni Id hardcodeado. Esto sustituye la pregunta pendiente sobre el valor de `BMW_Compania__c` documentada en `EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md` §7 — ya no se necesita esa respuesta porque el mecanismo cambia de raíz.
+
+**Bloqueo encontrado al verificar la premisa técnica de la nueva decisión:** no existe ninguna relación ni configuración entre `Pricebook2` y `Empresa__c`, ni en Git ni en Partial (búsqueda exhaustiva: cero campos custom en `Pricebook2` vía describe de Partial, cero objetos junction o `*__mdt` en el repo). Es exactamente el caso previsto por la regla de detención de esta tarea para decisiones de nuevo campo/metadata — no se inventó ningún campo, Id ni Custom Metadata. Detalle completo, evidencia y las 2 opciones técnicas + recomendación en `CIERRE_TECNICO_SPRINT2_EMPRESA_PRICEBOOK.md` y `EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md` §10.
+
+**Consecuencia sobre la tabla de autorización de arriba:** los 3 Flows `AUTORIZADO PARA IMPLEMENTACIÓN` (`Opportunity_Flow`, `Opp_flow_v4`, `BMW_ImportarPlantilla`) permanecen autorizados en alcance pero **su implementación queda bloqueada** hasta resolver la relación Pricebook2–Empresa__c — no se puede escribir la lógica de resolución dinámica que exigen las decisiones de Luis sin ese campo. `rm_vu_inventario` sigue `AUTORIZADO EN ALCANCE / CAMBIO FUNCIONAL PENDIENTE`, ahora además bloqueado por la misma causa estructural. `BMW_Gestiona_Listas_de_Precios` y `Obtener_PricebookEntry_en_Linea_de_Plantilla_de_Presupuesto` siguen `PENDIENTE DE CONFIRMACIÓN` — se completó su inspección de solo lectura (ver evidencia abajo) pero no se modificaron.
+
+**`CambiarPricebook` (regresión, Sprint 2 mandato §7.6):** inspeccionado — no decide por Empresa/Pricebook, solo por si la Opportunity existe (`IfNotNull`) y un selector de año de interés. Confirmado como candidato limpio de regresión, sin cambio necesario.
+
+**Nuevos candidatos fuera de alcance confirmado (regla 1 de este documento — no se modifican, no cuentan como avance de Sprint 2):** búsqueda de solo lectura sobre todos los Flows del repo encontró 12 adicionales con dependencia directa y activa de `BMW_Compania__c` y/o `Pricebook2Id` hardcodeado, ninguno nombrado por Luis o Diego:
+
+| Flow | Dependencia encontrada |
+|---|---|
+| `AgregarManoObra` | Decision `IFEMPRESAFACTURA` sobre `empresaFactura__c EqualTo "RMBAVARIAN"` + 4 Ids de `Pricebook2` hardcodeados |
+| `BMW_Importar_Plantilla_Orden_de_Trabajo` | Decisions `Empresa_Otobai`/`Empresa_Bavarian` sobre `BMW_Compania__c` |
+| `CreateWoliFromExpense` | Decision `BavarianOrOtobai`/`IfBavarian` + 4 asignaciones de `Pricebook2Id` |
+| `Llena_Porcentaje_de_Usados` | 4 decisions (`Bavarian_Dolar`/`Bavarian_Local`/`Otobai_Dolar`/`Otobai_Local`) que asignan `Pricebook2Id` |
+| `Opp_Flow_V5`, `Opp_Flow_v6`, `Opp_flow_V3`, `Opportunity_Flow_V2` | Versiones hermanas de `Opportunity_Flow`/`Opp_flow_v4`, mismo patrón `BMW_Compania__c` × `CurrencyIsoCode` |
+| `Opportunity_Flow_From_Work_Order` | `BMW_Compania__c EqualTo "Bavarian"/"Otobai"` |
+| `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective` | Decision sobre `Datos_Opp.BMW_Compania__c EqualTo "Otobai"` + propagación de `Pricebook2Id` |
+| `FlowOppMostrador` | Choice de pantalla hardcodeado `Bavarian`/`Otobai` (sin PEKING) |
+
+Estos 12 quedan registrados como candidatos, no se tocan, y requieren confirmación explícita por nombre de Luis/Diego antes de cualquier análisis adicional.
+
+**Segundo bloqueo (datos, no arquitectura):** `Nombre_Legal__c` (razón social) es exigido por `EmpresaContext`/`EmpresaResolver` ya deployados para que una Empresa cuente como configurada, pero ninguna fuente disponible confirma el nombre legal de Bavarian, Otobai ni PEKING. No se creó ningún registro de `Empresa__c` para no inventar ese dato. Ver `EVIDENCIA_PRICEBOOK_FLOWS_PEKING_20260729.md` §10.4.
+
+**Trabajo completado sin bloqueo en esta pasada:** corrección de `CurrencyIsoCode` de `PEKING Local` (USD→CRC) en Partial, sin dependencias; reconciliación de un drift de permisos (Permission Set `Empresa_Admin` no asignado al usuario conectado, causaba que los campos `Codigo_ERP__c`/`Nombre_Legal__c`/`Activa__c` de `Empresa__c` parecieran no existir vía SOQL/describe aunque sí estaban deployados) — ajuste mínimo de permisos, sin ampliar alcance ni inventar metadata.
