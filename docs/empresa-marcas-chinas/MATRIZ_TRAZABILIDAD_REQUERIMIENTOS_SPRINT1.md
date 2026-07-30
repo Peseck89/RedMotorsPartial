@@ -480,12 +480,13 @@ C).
 2. **Requerimiento:** Reemplazar el filtro `Bavarian%`/`Otobai%` por selección basada en relación/código de empresa — exactamente el mismo patrón ya aplicado en `QuoteController`, `QuoterController` y `BMW_LineaPlantillaEmpresa`.
 3. **Componentes:** `BusquedaDetalladaController.getActivePricebooks()`, `precioProductoJSON`.
 4. **Bloque:** Ninguno.
-5. **Estado:** Pendiente decisión.
-6. **Evidencia:** `IMPLEMENTACION_BLOQUE10_BUSQUEDA_DETALLADA.md` y bitácora §33: `BusquedaDetalladaController` depende de `User.Sucursal__c` y nombres fijos de sucursal/territorio; en Partial no se encontraron usuarios, sucursales ni `ServiceTerritory` PEKING/Omoda/Jaecoo. `precioProductoJSON` usa convenciones distintas de llave de producto para Bavarian (`Codigo_de_Producto__c`) y Otobai (`CodigoProductoInterno__c` compuesto); en Partial no se encontraron productos ni `PricebookEntry` PEKING/Omoda/Jaecoo.
-7. **Riesgo pendiente:** alto si se inventa una regla; podría exponer Pricebooks/territorios incorrectos o actualizar productos con una llave de integración equivocada.
-8. **Acción faltante:** definir relación sucursal/empresa/Pricebook/Service Territory para PEKING y la llave de producto RMPEKING/Softland.
-9. **Responsable de decisión:** Luis/Diego y, para la llave de producto, el contrato/proceso Softland correspondiente.
-10. **Confirmación:** no se modificó código productivo ni se integraron pruebas de caracterización que congelaran comportamientos defectuosos.
+5. **Estado:** `BusquedaDetalladaController` — pendiente decisión. `precioProductoJSON` (llave de producto RMPEKING) — **resuelto por evidencia técnica e implementado**, ver punto 6a.
+6. **Evidencia (`BusquedaDetalladaController`, sigue pendiente):** `IMPLEMENTACION_BLOQUE10_BUSQUEDA_DETALLADA.md` y bitácora §33: `BusquedaDetalladaController` depende de `User.Sucursal__c` y nombres fijos de sucursal/territorio; en Partial no se encontraron usuarios, sucursales ni `ServiceTerritory` PEKING/Omoda/Jaecoo.
+6a. **Resuelto (`precioProductoJSON`, 2026-07-29):** investigación exhaustiva de solo lectura en Partial (`RedMotors-Sprint1-PrecioProducto-Peking`, ver `DECISIONES_DIEGO_20260729.md`) confirmó `CodigoProductoInterno__c` como campo único global, el patrón `articulo-EMPRESA` cumplido al 100% en toda la población existente, `productJSON.cls` ya desplegado en Partial con exactamente `articulo + '-RMPEKING'`, y 11,840 colisiones reales de `Codigo_de_Producto__c` entre RMBAVARIAN/RMOTOBAI. Implementado en `precioProductoJSON.cls`: RMPEKING agregado a la búsqueda por `CodigoProductoInterno__c = articulo + '-RMPEKING'` y a la selección de Pricebooks `PEKING Local`/`PEKING Dólares`. **Desplegado exitosamente en Partial** (deploy `0AfAK000000xxqT0AQ`, 2/2 componentes, 5/5 pruebas, cobertura 90%); Producción no fue tocada.
+7. **Riesgo pendiente:** alto para `BusquedaDetalladaController` si se inventa una regla de sucursal/territorio sin confirmación; ya no aplica a la llave de producto de `precioProductoJSON` (resuelta).
+8. **Acción faltante:** definir relación sucursal/empresa/Pricebook/Service Territory para PEKING (`BusquedaDetalladaController`). La llave de producto RMPEKING/Softland ya no es una acción faltante.
+9. **Responsable de decisión:** Luis/Diego, para la relación sucursal/empresa/Pricebook/Service Territory de `BusquedaDetalladaController` (sigue pendiente).
+10. **Confirmación:** no se modificó `BusquedaDetalladaController`. `precioProductoJSON` sí se modificó (ver punto 6a), con pruebas nuevas — no se integraron pruebas de caracterización que congelaran comportamientos defectuosos.
 
 ### J.1b `productJSON`, `ProductoLocalizacionHelper`, `HttpCalloutGetProductRefPrices`/`Fresh` — integración Softland real
 
@@ -716,7 +717,7 @@ No quedan requerimientos pendientes dentro del Sprint 1 comprometido.
 - G.2 batches/schedulers Softland de catálogo.
 - H.2 branding legal/PDF.
 - H.5 contrato Softland para PEKING.
-- J.1a `BusquedaDetalladaController`/`precioProductoJSON` — sucursal/territorio y llave de producto PEKING.
+- J.1a `BusquedaDetalladaController`/`precioProductoJSON` — sucursal/territorio pendiente; la llave de producto PEKING de `precioProductoJSON` ya quedó resuelta e implementada (ver detalle J.1a, punto 6a).
 - J.1b `productJSON`/`ProductoLocalizacionHelper`/`HttpCalloutGetProductRefPrices`/`Fresh`.
 - J.2 propósito de los triggers de Account.
 - L.2 perfiles/Permission Sets dedicados de marca.

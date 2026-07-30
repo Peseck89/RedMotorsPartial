@@ -27,7 +27,7 @@ public class precioProductoJSON {
                                         WHERE Codigo_de_Producto__c = :articulo
                                     ];    
             }
-            else if(empresa=='RMOTOBAI') {
+            else if(empresa=='RMOTOBAI' || empresa=='RMPEKING') {
                 String identificador = articulo+'-'+empresa;
                 prod =     [
                                         SELECT Id
@@ -35,7 +35,7 @@ public class precioProductoJSON {
                                         WHERE CodigoProductoInterno__c = :identificador
                                     ];
             }
-            
+
             if(prod.size()!=0)
             {
                 Product2 actualProduct = prod[0];
@@ -55,6 +55,10 @@ public class precioProductoJSON {
                 {
                     priceBooksLocal = [SELECT Id,Name FROM Pricebook2 WHERE Name='Otobai Local'];
                     priceBooksDolar = [SELECT Id,Name FROM Pricebook2 WHERE Name='Otobai Dólares'];
+                } else if(empresa == 'RMPEKING')
+                {
+                    priceBooksLocal = [SELECT Id,Name FROM Pricebook2 WHERE Name='PEKING Local'];
+                    priceBooksDolar = [SELECT Id,Name FROM Pricebook2 WHERE Name='PEKING Dólares'];
                 }
                                 
                 List<PricebookEntry> lstPBE = [SELECT Id FROM PricebookEntry WHERE product2Id = :actualProduct.Id AND Pricebook2Id=:standardPB[0].Id];

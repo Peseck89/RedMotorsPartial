@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <!-- Soporte RMPEKING en precioProductoJSON: CodigoProductoInterno__c = articulo + '-RMPEKING' -->
+        <!-- Pricebooks confirmados: PEKING Local (CRC) y PEKING Dolares (USD) -->
+        <!-- Decision resuelta por evidencia tecnica, ver DECISIONES_DIEGO_20260729.md -->
+        <members>precioProductoJSON</members>
+        <members>precioProductoJSONTest</members>
+        <name>ApexClass</name>
+    </types>
+    <version>67.0</version>
+</Package>
