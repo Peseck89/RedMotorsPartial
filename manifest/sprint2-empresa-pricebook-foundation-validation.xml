@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>Empresa__c.Codigo_ERP__c</members>
-        <members>Empresa__c.Nombre_Legal__c</members>
-        <members>Empresa__c.Activa__c</members>
-        <members>Empresa__c.Codigo__c</members>
+        <!-- Campo autorizado por Luis (2026-07-30): Pricebook2.Empresa__c, lookup a Empresa__c, no obligatorio. -->
+        <members>Pricebook2.Empresa__c</members>
         <name>CustomField</name>
     </types>
-    <version>60.0</version>
+    <types>
+        <!-- Resolver dinamico de Pricebooks por Empresa, no reutiliza la validacion de Nombre_Legal__c de EmpresaContext. -->
+        <members>EmpresaPricebookResolver</members>
+        <members>EmpresaPricebookResolverTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <!-- Acceso minimo al nuevo campo y al resolver: administracion de Empresas y usuarios de Opportunities/rm_vu_inventario. -->
+        <members>Empresa_Admin</members>
+        <members>Vehiculos_Nuevos_PS</members>
+        <name>PermissionSet</name>
+    </types>
+    <version>51.0</version>
 </Package>

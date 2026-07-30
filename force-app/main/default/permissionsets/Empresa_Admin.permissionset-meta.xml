@@ -8,9 +8,18 @@
         <apexClass>EmpresaResolver</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>EmpresaPricebookResolver</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <fieldPermissions>
         <editable>true</editable>
         <field>Empresa__c.Activa__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Pricebook2.Empresa__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
