@@ -142,7 +142,7 @@ export default class Rm_vu_inventario extends LightningElement {
                         productInternalColor : item.Producto__r.Color__c ? item.Producto__r.Color__c : '',
                         productExternalColor : item.Producto__r.Color_Externo__c ? item.Producto__r.Color_Externo__c : '',
                         unitPrice : pbe && pbe.UnitPrice ? parseFloat(pbe.UnitPrice).toFixed(2) : 0,
-                        currencyCode : pbe && pbe.CurrencyCode ? parseFloat(pbe.CurrencyCode) : 0,
+                        currencyCode : pbe && pbe.CurrencyIsoCode ? pbe.CurrencyIsoCode : undefined,
                         bodegaName : item.Bodega__r && item.Bodega__r.Name ? item.Bodega__r.Name : '-',
                         productUrl: this.sfdcBaseURL + '/'+item.Producto__r.Id,
                         pbeId: pbe ? pbe.Id : null
@@ -389,7 +389,7 @@ export default class Rm_vu_inventario extends LightningElement {
             productInternalColor : item.Producto__r.Color__c ? item.Producto__r.Color__c : '',
             productExternalColor : item.Producto__r.Color_Externo__c ? item.Producto__r.Color_Externo__c : '',
             unitPrice : pbe && pbe.UnitPrice ? parseFloat(pbe.UnitPrice).toFixed(2) : 0,
-            currencyCode : pbe && pbe.CurrencyCode ? parseFloat(pbe.CurrencyCode) : 0,
+            currencyCode : pbe && pbe.CurrencyIsoCode ? pbe.CurrencyIsoCode : undefined,
             bodegaName : item.Bodega__r && item.Bodega__r.Name ? item.Bodega__r.Name : '-',
             productUrl: this.sfdcBaseURL + '/'+item.Producto__r.Id,
         };

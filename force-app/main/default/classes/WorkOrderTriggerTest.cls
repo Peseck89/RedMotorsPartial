@@ -4,20 +4,35 @@ public class WorkOrderTriggerTest {
 
     @testSetup
     static void setupConfiguration() {
-        insert new List<Pricebook2>{
-            new Pricebook2(Name = 'Bavarian Local', IsActive = true),
-            new Pricebook2(Name = 'Bavarian Dólar', IsActive = true),
-            new Pricebook2(Name = 'Otobai Local', IsActive = true),
-            new Pricebook2(Name = 'Otobai Dólares', IsActive = true),
-            new Pricebook2(Name = 'PEKING Local', IsActive = true),
-            new Pricebook2(Name = 'PEKING Dólares', IsActive = true),
-            new Pricebook2(Name = INITIAL_PRICEBOOK, IsActive = true)
-        };
-        insert new List<Empresa__c>{
+        // Empresa__c primero: el trigger ahora resuelve Pricebook2Id vía Pricebook2.Empresa__c +
+        // CurrencyIsoCode + IsActive (EmpresaPricebookResolver), no por Name (remediación
+        // hallazgo Luis #9, 2026-07-31). RMUNKNOWN queda sin Pricebooks asociados a propósito
+        // (escenario "cero opciones"). RMMULTI queda con 2 Pricebooks activos en la misma moneda
+        // a propósito (escenario "múltiples opciones" / SELECCION_REQUERIDA).
+        List<Empresa__c> empresas = new List<Empresa__c>{
             createEmpresa('RMBAVARIAN'),
             createEmpresa('RMOTOBAI'),
             createEmpresa('RMPEKING'),
-            createEmpresa('RMUNKNOWN')
+            createEmpresa('RMUNKNOWN'),
+            createEmpresa('RMMULTI')
+        };
+        insert empresas;
+
+        Map<String, Id> empresaIdByCodigo = new Map<String, Id>();
+        for (Empresa__c empresa : empresas) {
+            empresaIdByCodigo.put(empresa.Codigo__c, empresa.Id);
+        }
+
+        insert new List<Pricebook2>{
+            new Pricebook2(Name = 'Bavarian Local', IsActive = true, CurrencyIsoCode = 'CRC', Empresa__c = empresaIdByCodigo.get('RMBAVARIAN')),
+            new Pricebook2(Name = 'Bavarian Dólar', IsActive = true, CurrencyIsoCode = 'USD', Empresa__c = empresaIdByCodigo.get('RMBAVARIAN')),
+            new Pricebook2(Name = 'Otobai Local', IsActive = true, CurrencyIsoCode = 'CRC', Empresa__c = empresaIdByCodigo.get('RMOTOBAI')),
+            new Pricebook2(Name = 'Otobai Dólares', IsActive = true, CurrencyIsoCode = 'USD', Empresa__c = empresaIdByCodigo.get('RMOTOBAI')),
+            new Pricebook2(Name = 'PEKING Local', IsActive = true, CurrencyIsoCode = 'CRC', Empresa__c = empresaIdByCodigo.get('RMPEKING')),
+            new Pricebook2(Name = 'PEKING Dólares', IsActive = true, CurrencyIsoCode = 'USD', Empresa__c = empresaIdByCodigo.get('RMPEKING')),
+            new Pricebook2(Name = 'Multi Opcion A', IsActive = true, CurrencyIsoCode = 'USD', Empresa__c = empresaIdByCodigo.get('RMMULTI')),
+            new Pricebook2(Name = 'Multi Opcion B', IsActive = true, CurrencyIsoCode = 'USD', Empresa__c = empresaIdByCodigo.get('RMMULTI')),
+            new Pricebook2(Name = INITIAL_PRICEBOOK, IsActive = true)
         };
     }
 
@@ -85,9 +100,19 @@ public class WorkOrderTriggerTest {
         assertPricebookPreserved(null, null, 'CRC');
     }
 
+    // "Cero opciones": RMUNKNOWN no tiene ningún Pricebook2.Empresa__c asociado -> resolver
+    // devuelve NO_CONFIGURADO -> el trigger no elige nada, conserva el Pricebook existente.
     @isTest
     static void unknownLookupCodeDoesNotFallbackToPicklist() {
         assertPricebookPreserved('RMUNKNOWN', 'RMBAVARIAN', 'CRC');
+    }
+
+    // "Múltiples opciones": RMMULTI tiene 2 Pricebooks activos en la misma moneda (USD) ->
+    // resolver devuelve SELECCION_REQUERIDA -> el trigger no elige arbitrariamente entre los 2,
+    // conserva el Pricebook existente (no hay pantalla en este contexto para pedir selección).
+    @isTest
+    static void multipleValidPricebooksDoesNotChooseArbitrarily() {
+        assertPricebookPreserved('RMMULTI', null, 'USD');
     }
 
     @isTest

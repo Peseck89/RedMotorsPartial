@@ -2,52 +2,60 @@ trigger WorkOrderTrigger on WorkOrder (after update, before insert, before updat
 
     if(trigger.isBefore && !Trigger.isDelete)
     {
-        Map<String, String> pricebookMap = new Map<String, String>();
-        Set<Id> empresaIds = new Set<Id>();
-
-        for(Pricebook2 rec : [SELECT id, Name from Pricebook2])
-        {
-            pricebookMap.put(rec.Name, rec.Id);
-        }
-
+        // Resolución de Pricebook2Id por Empresa__c + CurrencyIsoCode + IsActive, vía la misma
+        // EmpresaPricebookResolver que usan los Flows de Sprint 2 (nunca por Name/Id fijo).
+        // Compatibilidad temporal: el lookup empresaFacturaCP__c tiene precedencia y el picklist
+        // heredado empresaFactura__c se usa únicamente cuando el lookup está vacío, resuelto a
+        // la Empresa__c real por Codigo__c (remediación hallazgo Luis #9, 2026-07-31).
+        Set<String> legacyCodigos = new Set<String>();
         for (WorkOrder rec : Trigger.new)
         {
-            if (rec.empresaFacturaCP__c != null)
+            if (rec.empresaFacturaCP__c == null && String.isNotBlank(rec.empresaFactura__c))
             {
-                empresaIds.add(rec.empresaFacturaCP__c);
+                legacyCodigos.add(rec.empresaFactura__c);
             }
         }
 
-        Map<Id, String> empresaCodigoById = new Map<Id, String>();
-        for (Empresa__c empresa : [
-            SELECT Id, Codigo__c
-            FROM Empresa__c
-            WHERE Id IN :empresaIds
-        ])
+        Map<String, Id> empresaIdByCodigo = new Map<String, Id>();
+        if (!legacyCodigos.isEmpty())
         {
-            empresaCodigoById.put(empresa.Id, empresa.Codigo__c);
+            for (Empresa__c empresa : [
+                SELECT Id, Codigo__c
+                FROM Empresa__c
+                WHERE Codigo__c IN :legacyCodigos
+            ])
+            {
+                empresaIdByCodigo.put(empresa.Codigo__c, empresa.Id);
+            }
         }
 
-        for(WorkOrder rec : trigger.new)
+        List<EmpresaPricebookResolver.PricebookResolutionRequest> resolutionRequests =
+            new List<EmpresaPricebookResolver.PricebookResolutionRequest>();
+        for (WorkOrder rec : Trigger.new)
         {
-            // Compatibilidad temporal: el lookup tiene precedencia y el
-            // picklist heredado se utiliza únicamente cuando el lookup está vacío.
-            String codigoEmpresa = rec.empresaFacturaCP__c != null
-                ? empresaCodigoById.get(rec.empresaFacturaCP__c)
-                : rec.empresaFactura__c;
+            Id empresaId = rec.empresaFacturaCP__c != null
+                ? rec.empresaFacturaCP__c
+                : empresaIdByCodigo.get(rec.empresaFactura__c);
 
-            if(rec.CurrencyISOCode == 'USD' && codigoEmpresa == 'RMOTOBAI')
-                rec.Pricebook2Id = pricebookMap.get('Otobai Dólares');
-            else if(rec.CurrencyISOCode == 'CRC' && codigoEmpresa == 'RMOTOBAI')
-                rec.Pricebook2Id = pricebookMap.get('Otobai Local');
-            else if(rec.CurrencyISOCode == 'USD' && codigoEmpresa == 'RMBAVARIAN')
-                rec.Pricebook2Id = pricebookMap.get('Bavarian Dólar');
-            else if(rec.CurrencyISOCode == 'CRC' && codigoEmpresa == 'RMBAVARIAN')
-                rec.Pricebook2Id = pricebookMap.get('Bavarian Local');
-            else if(rec.CurrencyISOCode == 'USD' && codigoEmpresa == 'RMPEKING')
-                rec.Pricebook2Id = pricebookMap.get('PEKING Dólares');
-            else if(rec.CurrencyISOCode == 'CRC' && codigoEmpresa == 'RMPEKING')
-                rec.Pricebook2Id = pricebookMap.get('PEKING Local');
+            EmpresaPricebookResolver.PricebookResolutionRequest request = new EmpresaPricebookResolver.PricebookResolutionRequest();
+            request.empresaId = empresaId;
+            request.currencyIsoCode = rec.CurrencyISOCode;
+            request.currentPricebookId = rec.Pricebook2Id;
+            resolutionRequests.add(request);
+        }
+
+        List<EmpresaPricebookResolver.PricebookResolutionResult> resolutions = EmpresaPricebookResolver.resolve(resolutionRequests);
+        for (Integer i = 0; i < trigger.new.size(); i++)
+        {
+            EmpresaPricebookResolver.PricebookResolutionResult resolution = resolutions[i];
+            // Solo EXITO actualiza Pricebook2Id. NO_CONFIGURADO/SELECCION_REQUERIDA/ERROR
+            // (Empresa ausente, sin Pricebooks activos, o ambigüedad de moneda) dejan el valor
+            // existente intacto: no hay pantalla en este contexto (trigger) para pedir selección
+            // manual, y elegir arbitrariamente violaría la regla de no-selección-silenciosa.
+            if (resolution.isExito())
+            {
+                trigger.new[i].Pricebook2Id = resolution.pricebookId;
+            }
         }
     }
     if(trigger.isBefore && trigger.isUpdate && !Trigger.isDelete)

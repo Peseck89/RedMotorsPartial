@@ -11,7 +11,7 @@ public with sharing class RM_VU_Service {
     public static List<PricebookEntry> gePBEBavarian( String priceBookId,String currencyCode,String brand, String year, String modelOrName, String placa) {        
         List<PricebookEntry> pbeList = new List<PricebookEntry>();
 
-        String soqlString = 'SELECT Product2Id,UnitPrice FROM PricebookEntry WHERE Pricebook2Id = :priceBookId AND Pricebook2.IsActive = TRUE AND Pricebook2.CurrencyIsoCode = :currencyCode AND CurrencyIsoCode = :currencyCode AND IsActive = TRUE AND Product2.IsActive = TRUE AND Product2.es_Vehiculo_usado__c = TRUE AND Product2.Producto_Reservado__c = FALSE ';
+        String soqlString = 'SELECT Product2Id,UnitPrice,CurrencyIsoCode FROM PricebookEntry WHERE Pricebook2Id = :priceBookId AND Pricebook2.IsActive = TRUE AND Pricebook2.CurrencyIsoCode = :currencyCode AND CurrencyIsoCode = :currencyCode AND IsActive = TRUE AND Product2.IsActive = TRUE AND Product2.es_Vehiculo_usado__c = TRUE AND Product2.Producto_Reservado__c = FALSE ';
         
         if(String.isNotBlank(brand)){
             brand = '%'+String.escapeSingleQuotes(brand)+'%';

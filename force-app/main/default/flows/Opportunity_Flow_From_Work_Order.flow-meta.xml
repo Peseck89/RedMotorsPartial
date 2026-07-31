@@ -252,9 +252,9 @@
         <locationX>182</locationX>
         <locationY>1574</locationY>
         <defaultConnector>
-            <targetReference>CreateOpportunity_0_0</targetReference>
+            <targetReference>Empresa_No_Reconocida</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <defaultConnectorLabel>Empresa no reconocida (detiene la ruta)</defaultConnectorLabel>
         <rules>
             <name>IFRMBAVARIAN</name>
             <conditionLogic>and</conditionLogic>
@@ -269,6 +269,36 @@
                 <targetReference>CreateOpportunity_0</targetReference>
             </connector>
             <label>IFRMBAVARIAN</label>
+        </rules>
+        <rules>
+            <name>IFRMOTOBAI</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>EmpresaFactura</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>RMOTOBAI</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CreateOpportunity_0_0</targetReference>
+            </connector>
+            <label>IFRMOTOBAI</label>
+        </rules>
+        <rules>
+            <name>IFRMPEKING</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>EmpresaFactura</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>RMPEKING</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CreateOpportunity_0_0_0</targetReference>
+            </connector>
+            <label>IFRMPEKING</label>
         </rules>
     </decisions>
     <decisions>
@@ -408,6 +438,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Empresa_Operadora__c</field>
+            <value>
+                <elementReference>EmpresaOperadoraId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>ForecastCategoryName</field>
             <value>
                 <stringValue>Pipeline</stringValue>
@@ -494,6 +530,101 @@
             <field>Departamento__c</field>
             <value>
                 <stringValue>Ventas</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Empresa_Operadora__c</field>
+            <value>
+                <elementReference>EmpresaOperadoraId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ForecastCategoryName</field>
+            <value>
+                <stringValue>Pipeline</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <stringValue>0124U00000111OTQAY</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>StageName</field>
+            <value>
+                <stringValue>Oferta</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WorkOrder__c</field>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>contacto__c</field>
+            <value>
+                <elementReference>ContactoFinal</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordCreates>
+    <recordCreates>
+        <name>CreateOpportunity_0_0_0</name>
+        <label>CreateOpportunity PEKING</label>
+        <locationX>578</locationX>
+        <locationY>1682</locationY>
+        <assignRecordIdToReference>CreatedOppotunityID</assignRecordIdToReference>
+        <connector>
+            <targetReference>CreateQuote</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>AccountId</field>
+            <value>
+                <elementReference>CuentaWO</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BMW_PlacaDeVehiculoOElVIN__c</field>
+            <value>
+                <elementReference>VehiculoWO</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BMW_TallerDeServicio__c</field>
+            <value>
+                <elementReference>Territorio</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BMW_TipoDeVehiculo__c</field>
+            <value>
+                <stringValue>Autos</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>CloseDate</field>
+            <value>
+                <elementReference>TodayPlus15Days</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>CurrencyIsoCode</field>
+            <value>
+                <elementReference>Moneda</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Departamento__c</field>
+            <value>
+                <stringValue>Ventas</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Empresa_Operadora__c</field>
+            <value>
+                <elementReference>EmpresaOperadoraId</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -627,6 +758,37 @@
         <object>WorkOrder</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
+    <recordLookups>
+        <name>Busca_Empresa_Operadora</name>
+        <label>Busca Empresa Operadora</label>
+        <locationX>182</locationX>
+        <locationY>1520</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IFEmpresa</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Codigo__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>EmpresaFactura</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Activa__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Empresa__c</object>
+        <outputAssignments>
+            <assignToReference>EmpresaOperadoraId</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
     <recordUpdates>
         <name>actualizawo</name>
         <label>actualizawo</label>
@@ -708,7 +870,7 @@
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>IFEmpresa</targetReference>
+            <targetReference>Busca_Empresa_Operadora</targetReference>
         </connector>
         <fields>
             <name>SeleccionMonedaMensaje</name>
@@ -729,6 +891,22 @@
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Empresa_No_Reconocida</name>
+        <label>Empresa No Reconocida</label>
+        <locationX>860</locationX>
+        <locationY>1682</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Mensaje_Empresa_No_Reconocida</name>
+            <fieldText>&lt;p&gt;No se pudo determinar la Empresa facturadora de esta Orden de Trabajo (código: {!EmpresaFactura}). No se creó la Oportunidad. Contacte a un administrador.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
     </screens>
     <screens>
         <name>Presupuesto</name>
@@ -1025,6 +1203,13 @@
     </variables>
     <variables>
         <name>EmpresaFactura</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>EmpresaOperadoraId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>

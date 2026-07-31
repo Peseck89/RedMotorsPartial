@@ -75,7 +75,7 @@
         <actionName>EmpresaPricebookResolver</actionName>
         <actionType>apex</actionType>
         <connector>
-            <targetReference>Asigna_PriceBookId_Resuelto</targetReference>
+            <targetReference>Verifica_Estado_Pricebook</targetReference>
         </connector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
@@ -1281,6 +1281,30 @@
             <stringValue>10</stringValue>
         </value>
     </choices>
+    <decisions>
+        <name>Verifica_Estado_Pricebook</name>
+        <label>Verifica Estado Pricebook</label>
+        <locationX>946</locationX>
+        <locationY>10160</locationY>
+        <defaultConnector>
+            <targetReference>Aviso_Pricebook_No_Disponible</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Sin resolución (detiene la ruta de Pricebook)</defaultConnectorLabel>
+        <rules>
+            <name>Pricebook_Resuelto_OK</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Resuelve_Pricebook_Empresa.status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>EXITO</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asigna_PriceBookId_Resuelto</targetReference>
+            </connector>
+        </rules>
+    </decisions>
     <decisions>
         <name>Copy_1_of_Copy_2_of_Es_cuenta_empresarial</name>
         <label>Copy 1 of Copy 2 of Es cuenta empresarial</label>
@@ -3549,6 +3573,22 @@
         </connector>
         <inputReference>AssetCreadoOBuscado</inputReference>
     </recordUpdates>
+    <screens>
+        <name>Aviso_Pricebook_No_Disponible</name>
+        <label>Aviso Pricebook No Disponible</label>
+        <locationX>1054</locationX>
+        <locationY>10280</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Mensaje_Pricebook_No_Disponible</name>
+            <fieldText>&lt;p&gt;{!Resuelve_Pricebook_Empresa.mensaje}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
     <screens>
         <name>Buscar_cuenta</name>
         <label>Buscar cuenta</label>
