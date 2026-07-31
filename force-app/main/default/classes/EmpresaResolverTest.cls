@@ -98,8 +98,12 @@ private class EmpresaResolverTest {
         }
     }
 
+    // Codigo_ERP__c/Nombre_Legal__c ya NO bloquean resolve() (remediación hallazgo Luis #1,
+    // 2026-07-31): una Empresa activa con código pero sin ERP o sin razón social se resuelve
+    // igual (rutas que no necesitan ese dato, como TrabajoQuoteController, siguen funcionando);
+    // solo se rechaza en el punto de uso real vía requireCodigoErp()/requireNombreLegal().
     @IsTest
-    static void rejectsIncompleteConfiguration() {
+    static void resolvesEmpresaWithMissingErpOrLegalNameAndDefersEnforcementToRequireMethods() {
         Empresa__c missingErp = buildEmpresa(
             'Sin ERP',
             'RMSINERP',
@@ -116,13 +120,24 @@ private class EmpresaResolverTest {
         );
         insert new List<Empresa__c>{ missingErp, missingLegalName };
 
-        for (Id empresaId : new Set<Id>{ missingErp.Id, missingLegalName.Id }) {
-            try {
-                EmpresaResolver.resolve(empresaId);
-                System.assert(false, 'Debió rechazar la configuración incompleta.');
-            } catch (EmpresaConfigurationException expected) {
-                System.assert(expected.getMessage().contains('incompleta'));
-            }
+        EmpresaContext sinErp = EmpresaResolver.resolve(missingErp.Id);
+        System.assertEquals(null, sinErp.codigoErp);
+        System.assert(sinErp.isConfigured());
+        try {
+            sinErp.requireCodigoErp();
+            System.assert(false, 'requireCodigoErp() debe exigir el dato en el punto de uso.');
+        } catch (EmpresaConfigurationException expected) {
+            System.assert(expected.getMessage().contains('código ERP'));
+        }
+
+        EmpresaContext sinLegal = EmpresaResolver.resolve(missingLegalName.Id);
+        System.assertEquals(null, sinLegal.nombreLegal);
+        System.assert(sinLegal.isConfigured());
+        try {
+            sinLegal.requireNombreLegal();
+            System.assert(false, 'requireNombreLegal() debe exigir el dato en el punto de uso.');
+        } catch (EmpresaConfigurationException expected) {
+            System.assert(expected.getMessage().contains('nombre legal'));
         }
     }
 

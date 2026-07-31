@@ -87,30 +87,51 @@ private class EmpresaContextTest {
         );
     }
 
+    // Codigo_ERP__c y Nombre_Legal__c ya NO bloquean la construcción del contexto (remediación
+    // hallazgo Luis #1, 2026-07-31): ningún consumidor real necesita ambos campos siempre, así
+    // que el contexto se construye igual y solo require*() exige el dato en el punto de uso real.
     @IsTest
-    static void rejectsMissingCodigoErp() {
+    static void constructsContextWithMissingCodigoErpAndRequireCodigoErpFailsLater() {
         Empresa__c empresa = createValidEmpresa();
-        assertInvalidContext(
+        EmpresaContext context = new EmpresaContext(
             empresa.Id,
             'RMSINERP',
             null,
             'Empresa Sin ERP S.A.',
-            true,
-            'no tiene código ERP configurado'
+            true
         );
+
+        System.assertEquals(null, context.codigoErp);
+        System.assertEquals(true, context.isConfigured());
+
+        try {
+            context.requireCodigoErp();
+            System.assert(false, 'requireCodigoErp() debe exigir el dato en el punto de uso.');
+        } catch (EmpresaConfigurationException expected) {
+            System.assert(expected.getMessage().contains('no tiene código ERP configurado'));
+        }
     }
 
     @IsTest
-    static void rejectsMissingNombreLegal() {
+    static void constructsContextWithMissingNombreLegalAndRequireNombreLegalFailsLater() {
         Empresa__c empresa = createValidEmpresa();
-        assertInvalidContext(
+        EmpresaContext context = new EmpresaContext(
             empresa.Id,
             'RMSINLEGAL',
             'ERP_SIN_LEGAL',
             null,
-            true,
-            'no tiene nombre legal configurado'
+            true
         );
+
+        System.assertEquals(null, context.nombreLegal);
+        System.assertEquals(true, context.isConfigured());
+
+        try {
+            context.requireNombreLegal();
+            System.assert(false, 'requireNombreLegal() debe exigir el dato en el punto de uso.');
+        } catch (EmpresaConfigurationException expected) {
+            System.assert(expected.getMessage().contains('no tiene nombre legal configurado'));
+        }
     }
 
     @IsTest

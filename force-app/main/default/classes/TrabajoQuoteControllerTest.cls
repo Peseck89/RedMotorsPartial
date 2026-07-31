@@ -121,6 +121,35 @@ public class TrabajoQuoteControllerTest {
         assertCompanyLaborSelection('RMPEKING', true, null, 'RMPEKING', 'TQC-PEK');
     }
 
+    // Regresión hallazgo Luis #1 (2026-07-31): resolveEmpresaLegacy solo necesita
+    // empresaContext.codigo (vía requireCodigoErp() nunca se llama en esta ruta), así que una
+    // Empresa activa y con código pero SIN Nombre_Legal__c (estado real de Bavarian/Otobai/PEKING
+    // en Partial hoy) debe seguir resolviendo trabajos de Quote con normalidad, sin lanzar
+    // "configuración incompleta".
+    @isTest
+    static void lookupWithoutNombreLegalStillResolvesLabor() {
+        Empresa__c empresaSinRazonSocial = new Empresa__c(
+            Name = 'Empresa TQC-SINLEGAL',
+            Codigo__c = 'RMPEKING',
+            Codigo_ERP__c = 'RMPEKING',
+            Nombre_Legal__c = null,
+            Activa__c = true
+        );
+        insert empresaSinRazonSocial;
+
+        Opportunity opportunity = new Opportunity(
+            Empresa_Operadora__c = empresaSinRazonSocial.Id
+        );
+
+        String resolvedEmpresa = TrabajoQuoteController.resolveEmpresaLegacy(opportunity);
+
+        System.assertEquals(
+            'RMPEKING',
+            resolvedEmpresa,
+            'Debe resolver por Empresa_Operadora__c aunque Nombre_Legal__c esté vacío.'
+        );
+    }
+
     @isTest
     static void lookupTakesPriorityOverContradictoryPicklist() {
         assertCompanyLaborSelection('RMPEKING', true, 'Bavarian', 'RMPEKING', 'TQC-PRIORITY');

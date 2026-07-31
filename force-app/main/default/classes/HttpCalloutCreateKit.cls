@@ -65,8 +65,8 @@ public class HttpCalloutCreateKit extends HttpCallout {
     public static void sendCreateKitRequest(List <Id> OppIds){
         List <Opportunity> Opps = [Select Id, Name, ConsecutivoOportunidad__c, RecordType.Name, Amount, CurrencyIsoCode, Empresa_Operadora__c, (Select Id ,Product2.Codigo_de_Producto__c ,Product2.RecordType.Name ,Quantity ,Preciodefacturacion__c, UnitPrice,Product2.esVehiculo__c FROM OpportunityLineItems where esRegalia__c = false ) from Opportunity where id IN: OppIds];
         List <HttpCalloutCreateKit> mapCalls = new List <HttpCalloutCreateKit> ();
-		Boolean sendRequest = false;
         for(Opportunity opp: Opps){
+            Boolean sendRequest = false;
             String tipo = resolveTipo(opp);
             String compania = resolveCompania(opp);
             HttpCalloutCreateKit temp = new HttpCalloutCreateKit(opp.ConsecutivoOportunidad__c,opp.Name,tipo,compania,0,opp.CurrencyIsoCode);

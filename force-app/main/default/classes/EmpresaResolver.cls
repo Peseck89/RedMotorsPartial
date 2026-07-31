@@ -143,11 +143,9 @@ public with sharing class EmpresaResolver {
                 'La Empresa ' + empresa.Codigo__c + ' está inactiva.'
             );
         }
-        if (String.isBlank(empresa.Codigo_ERP__c) || String.isBlank(empresa.Nombre_Legal__c)) {
-            throw new EmpresaConfigurationException(
-                'La Empresa ' + empresa.Codigo__c + ' tiene configuración incompleta.'
-            );
-        }
+        // Codigo_ERP__c/Nombre_Legal__c ya no se validan aquí como "configuración incompleta"
+        // genérica: EmpresaContext los deja opcionales en el constructor y los exige solo cuando
+        // un consumidor real llama requireCodigoErp()/requireNombreLegal(). Ver EmpresaContext.cls.
 
         return new EmpresaContext(
             empresa.Id,

@@ -30,16 +30,14 @@ public class EmpresaContext {
                 'La Empresa ' + codigo + ' está inactiva.'
             );
         }
-        if (String.isBlank(codigoErp)) {
-            throw new EmpresaConfigurationException(
-                'La Empresa ' + codigo + ' no tiene código ERP configurado.'
-            );
-        }
-        if (String.isBlank(nombreLegal)) {
-            throw new EmpresaConfigurationException(
-                'La Empresa ' + codigo + ' no tiene nombre legal configurado.'
-            );
-        }
+        // Codigo_ERP__c y Nombre_Legal__c NO se exigen aquí: ningún consumidor real de
+        // EmpresaContext en producción llama requireNombreLegal() (verificado, 2026-07-31 -
+        // remediación hallazgo Luis #1), y los que sí necesitan el código ERP (HttpCalloutCreateKit,
+        // QuoteSoftlandPedidoService) ya llaman requireCodigoErp() explícitamente, que sigue
+        // exigiéndolo en el punto de uso. Exigirlos aquí bloqueaba rutas (integración ERP, trabajos
+        // de Quote) que nunca leen esos campos, con Empresas reales que aún no tienen razón social
+        // confirmada (Bavarian/Otobai/PEKING en Partial). Ver
+        // docs/empresa-marcas-chinas/REMEDIACION_ANALISIS_LUIS_CODEX_20260731.md.
 
         this.empresaId = empresaId;
         this.codigo = codigo;

@@ -183,6 +183,25 @@ public class HttpCalloutCreateKitTest {
         System.assertEquals('RMPEKING', request.get('compania'));
     }
 
+    // Regresión hallazgo Luis #1 (2026-07-31): resolveCompania solo necesita
+    // empresaContext.requireCodigoErp() (nunca requireNombreLegal()), así que una Empresa activa
+    // con Codigo_ERP__c pero SIN Nombre_Legal__c (estado real de Bavarian/Otobai/PEKING en
+    // Partial hoy) debe seguir resolviendo la compañía del KIT con normalidad.
+    @isTest
+    static void empresaLookupWorksWithoutNombreLegal() {
+        Empresa__c empresa = new Empresa__c(
+            Name = 'Empresa CK-SINLEGAL',
+            Codigo__c = 'RMPEKING',
+            Codigo_ERP__c = 'RMPEKING',
+            Nombre_Legal__c = null,
+            Activa__c = true
+        );
+        insert empresa;
+
+        Map<String, Object> request = runSendCreateKitAndCapture('BMW', empresa.Id, 'CK-SINLEGAL');
+        System.assertEquals('RMPEKING', request.get('compania'));
+    }
+
     @isTest
     static void unknownRecordTypeDoesNotFallbackToOtobai() {
         // Record Type real pero no de marca (no Bavarian/PEKING/Otobai) y sin Empresa_Operadora__c:
@@ -301,6 +320,181 @@ public class HttpCalloutCreateKitTest {
         insert new OpportunityLineItem(
             OpportunityId = opp.Id,
             Product2Id = vehiculo.Id,
+            Quantity = 1,
+            UnitPrice = 1000
+        );
+
+        return opp.Id;
+    }
+
+    // ====== Regresión: sendRequest no debe conservarse entre Opportunities del mismo batch ======
+    // Bug original: "Boolean sendRequest = false;" estaba declarado fuera del for que recorre
+    // Opps, así que una vez que una Opportunity con línea Vehiculos lo ponía en true, todas las
+    // Opportunities siguientes del mismo batch heredaban ese true aunque no tuvieran línea
+    // Vehiculos (o, en el caso inverso, heredaban false y una elegible real sí se procesaba bien
+    // pero la siguiente no elegible después de ella indebidamente sí enviaba). El fix declara
+    // sendRequest dentro del for, reiniciado en cada Opportunity.
+
+    @isTest
+    static void multipleOpportunities_eligibleThenIneligibleThenEligible_sendsOnlyEligibleOnes() {
+        CaptureCalloutMock mock = new CaptureCalloutMock();
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Id opp1 = createOpportunityWithEligibility('BMW', null, 'CK-SEQ1', true);
+        Id opp2 = createOpportunityWithEligibility('BMW', null, 'CK-SEQ2', false);
+        Id opp3 = createOpportunityWithEligibility('BMW', null, 'CK-SEQ3', true);
+
+        Test.startTest();
+        HttpCalloutCreateKit.sendCreateKitRequest(new List<Id>{ opp1, opp2, opp3 });
+        Test.stopTest();
+
+        System.assertEquals(
+            2,
+            mock.capturedEndpoints.size(),
+            'Solo las 2 Opportunities elegibles (con línea Vehiculos) deben enviar KIT; la no elegible en medio no debe heredar el estado de la anterior.'
+        );
+        String allEndpoints = String.join(mock.capturedEndpoints, '|');
+        System.assert(allEndpoints.contains('CK-SEQ1'), 'Debe incluir la Opportunity 1 (elegible).');
+        System.assert(!allEndpoints.contains('CK-SEQ2'), 'No debe incluir la Opportunity 2 (no elegible, en medio del batch).');
+        System.assert(allEndpoints.contains('CK-SEQ3'), 'Debe incluir la Opportunity 3 (elegible).');
+    }
+
+    @isTest
+    static void multipleOpportunities_reversedOrder_ineligibleEligibleIneligible_sendsOnlyEligibleOne() {
+        CaptureCalloutMock mock = new CaptureCalloutMock();
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Id opp1 = createOpportunityWithEligibility('BMW', null, 'CK-REV1', false);
+        Id opp2 = createOpportunityWithEligibility('BMW', null, 'CK-REV2', true);
+        Id opp3 = createOpportunityWithEligibility('BMW', null, 'CK-REV3', false);
+
+        Test.startTest();
+        HttpCalloutCreateKit.sendCreateKitRequest(new List<Id>{ opp1, opp2, opp3 });
+        Test.stopTest();
+
+        System.assertEquals(
+            1,
+            mock.capturedEndpoints.size(),
+            'Solo la Opportunity 2 (elegible, en medio) debe enviar KIT; la 3ra no debe heredar el true de la 2da.'
+        );
+        System.assert(
+            mock.capturedEndpoints[0].contains('CK-REV2'),
+            'El único callout debe corresponder a la Opportunity 2.'
+        );
+    }
+
+    @isTest
+    static void multipleOpportunities_noneEligible_sendsNoCallouts() {
+        CaptureCalloutMock mock = new CaptureCalloutMock();
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Id opp1 = createOpportunityWithEligibility('BMW', null, 'CK-NONE1', false);
+        Id opp2 = createOpportunityWithEligibility('BMW', null, 'CK-NONE2', false);
+
+        Test.startTest();
+        HttpCalloutCreateKit.sendCreateKitRequest(new List<Id>{ opp1, opp2 });
+        Test.stopTest();
+
+        System.assertEquals(0, mock.capturedEndpoints.size(), 'Ninguna Opportunity elegible no debe generar callouts.');
+    }
+
+    @isTest
+    static void multipleOpportunities_allEligible_sendsAllCallouts() {
+        CaptureCalloutMock mock = new CaptureCalloutMock();
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Id opp1 = createOpportunityWithEligibility('BMW', null, 'CK-ALL1', true);
+        Id opp2 = createOpportunityWithEligibility('BMW', null, 'CK-ALL2', true);
+        Id opp3 = createOpportunityWithEligibility('BMW', null, 'CK-ALL3', true);
+
+        Test.startTest();
+        HttpCalloutCreateKit.sendCreateKitRequest(new List<Id>{ opp1, opp2, opp3 });
+        Test.stopTest();
+
+        System.assertEquals(3, mock.capturedEndpoints.size(), 'Las 3 Opportunities elegibles deben enviar KIT.');
+    }
+
+    @isTest
+    static void singleOpportunity_eligible_sendsOneCallout() {
+        CaptureCalloutMock mock = new CaptureCalloutMock();
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Id opp1 = createOpportunityWithEligibility('BMW', null, 'CK-SINGLE-ELIG', true);
+
+        Test.startTest();
+        HttpCalloutCreateKit.sendCreateKitRequest(new List<Id>{ opp1 });
+        Test.stopTest();
+
+        System.assertEquals(1, mock.capturedEndpoints.size(), 'Una única Opportunity elegible debe enviar exactamente un KIT.');
+    }
+
+    @isTest
+    static void singleOpportunity_ineligible_sendsNoCallout() {
+        CaptureCalloutMock mock = new CaptureCalloutMock();
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        Id opp1 = createOpportunityWithEligibility('BMW', null, 'CK-SINGLE-INELIG', false);
+
+        Test.startTest();
+        HttpCalloutCreateKit.sendCreateKitRequest(new List<Id>{ opp1 });
+        Test.stopTest();
+
+        System.assertEquals(0, mock.capturedEndpoints.size(), 'Una única Opportunity no elegible no debe enviar KIT.');
+    }
+
+    // Igual que createBrandOpportunity, pero permite controlar si la Opportunity es "elegible"
+    // (tiene una línea de producto RecordType Vehiculos con esVehiculo__c=true, lo que dispara
+    // sendRequest=true) o "no elegible" (línea de producto genérico, sin Vehiculos).
+    private static Id createOpportunityWithEligibility(String recordTypeDeveloperName, Id empresaOperadoraId, String uniqueSuffix, Boolean eligible) {
+        Id opportunityRecordTypeId = [
+            SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND DeveloperName = :recordTypeDeveloperName LIMIT 1
+        ].Id;
+
+        Pricebook2 pricebook = new Pricebook2(Name = 'CK Pricebook ' + uniqueSuffix, IsActive = true);
+        insert pricebook;
+
+        Product2 product;
+        if (eligible) {
+            Id vehiculoProductRecordTypeId = [
+                SELECT Id FROM RecordType WHERE SObjectType = 'Product2' AND DeveloperName = 'Vehiculos' LIMIT 1
+            ].Id;
+            product = new Product2(
+                Name = 'CK Vehiculo ' + uniqueSuffix,
+                RecordTypeId = vehiculoProductRecordTypeId,
+                esVehiculo__c = true,
+                modelo__c = 'CK Modelo ' + uniqueSuffix,
+                Codigo_de_Producto__c = uniqueSuffix,
+                IsActive = true
+            );
+        } else {
+            product = new Product2(
+                Name = 'CK NoVehiculo ' + uniqueSuffix,
+                Codigo_de_Producto__c = uniqueSuffix,
+                IsActive = true
+            );
+        }
+        insert product;
+
+        insert new PricebookEntry(
+            Pricebook2Id = pricebook.Id,
+            Product2Id = product.Id,
+            UnitPrice = 1000,
+            IsActive = true
+        );
+
+        Opportunity opp = new Opportunity(
+            Name = 'CK Opportunity ' + uniqueSuffix,
+            StageName = 'Closed Won',
+            CloseDate = Date.today(),
+            RecordTypeId = opportunityRecordTypeId,
+            Pricebook2Id = pricebook.Id,
+            Empresa_Operadora__c = empresaOperadoraId
+        );
+        insert opp;
+
+        insert new OpportunityLineItem(
+            OpportunityId = opp.Id,
+            Product2Id = product.Id,
             Quantity = 1,
             UnitPrice = 1000
         );
