@@ -200,3 +200,78 @@ Ver §3.5 y §3.6 — `Opp_flow_V3`, `Opp_Flow_v6`, `Opportunity_Flow_V2`, `aper
 5. **Permission set correcto para `WorkOrder.empresaFacturaCP__c`** (§6.4, hallazgo adicional no reportado por Luis) — Luis/Diego.
 
 No se repiten preguntas ya respondidas en sesiones anteriores (por ejemplo, el código ERP de PEKING y la relación `Pricebook2.Empresa__c` ya fueron resueltos y no se vuelven a preguntar).
+
+---
+
+## 8. Adenda 2026-07-31 (misma jornada) — último hallazgo de Luis: `rm_vu_inventario` envía `priceBook`, Apex espera `priceBookId`
+
+Worktree: `RedMotors-Sprint2-RmVuInventario-Param-Fix`, rama `fix/pc/redmotors-sprint2-rm-vu-inventario-pricebook-param-20260731`, creada desde el HEAD real limpio de `feature/pc/redmotors-empresa-marcas-chinas-sprint2-flows-components-20260728` (`6ab6029`, el mismo commit que cerró §1–§7 de este documento).
+
+### 8.1 Causa confirmada
+
+`RM_VU_Inventario_Ctrl.getRecords` (`force-app/main/default/classes/RM_VU_Inventario_Ctrl.cls:16`) declara el parámetro `Id priceBookId`. El LWC `rm_vu_inventario.js` lo invocaba con la clave `priceBook` en **exactamente 2 lugares** (confirmado con `grep` sobre todo el bundle — JS, HTML, meta.xml — no aparece en ningún otro llamado):
+
+1. Línea 116 — `@wire(getRecords, {..., priceBook: "$priceBookId"})`, carga normal/reactiva del inventario.
+2. Línea 340 — `getRecords({..., priceBook: this.priceBookId})` dentro de `getData()`, usado por `handleExportToCSV` para la exportación CSV.
+
+Como la clave enviada (`priceBook`) no coincide con el nombre del parámetro Apex (`priceBookId`), la plataforma simplemente no la mapea: `priceBookId` llegaba **siempre `null`** a Apex, sin importar qué Pricebook seleccionara el usuario en el combobox. El método tiene un guard explícito (`if(priceBookId == null){ return responseMap; }`) que hacía que el inventario devolviera un mapa vacío en todos los casos — tanto la grilla en pantalla como el CSV exportado quedaban permanentemente vacíos, sin importar la selección del usuario. No se encontró ningún otro llamado incorrecto ni ninguna dependencia adicional que necesitara cambiar; no fue necesario modificar la firma pública de `RM_VU_Inventario_Ctrl.getRecords`.
+
+### 8.2 Corrección
+
+`force-app/main/default/lwc/rm_vu_inventario/rm_vu_inventario.js`:
+
+- Línea 116 (wire reactivo): `priceBook: "$priceBookId"` → `priceBookId: "$priceBookId"`.
+- Línea 340 (llamado imperativo de CSV): `priceBook: this.priceBookId` → `priceBookId: this.priceBookId`.
+- Adicionalmente, se cambió el valor por defecto/de reseteo de `priceBookId` de `''` (string vacío) a `null` en 3 puntos (declaración de campo, y las dos ramas del handler `wiredPricebookOptions`). Motivo: antes de esta corrección `priceBookId` nunca llegaba realmente a Apex (por la clave incorrecta), así que el caso "enviar `''` a un parámetro `Id`" nunca se había ejercitado en producción; al corregir la clave, ese código quedó expuesto por primera vez. Se validó que el guard `if(priceBookId == null)` de Apex ya maneja `null` de forma limpia (sin error, sin toast, simplemente sin filas) — usar `null` en vez de `''` evita un posible error de coerción de tipo `Id` en la primera carga del componente, antes de que `getPricebookOptions` resuelva el Pricebook real.
+- No se envía el objeto completo `{label, value}` ni el label: el LWC ya extraía solo `value` (el Id real) al poblar `priceBooks`/`priceBookId` desde `data.options`, y `handlePriceBookChange` toma `event.target.value` (el Id seleccionado) — ambos puntos ya eran correctos, se confirmaron sin necesidad de cambio.
+- El selector conserva el Pricebook actual válido: `wiredPricebookOptions` ya asignaba `this.priceBookId = data.selectedPricebookId` (ahora con fallback `null` en vez de `''`), sin cambios de lógica.
+- El cambio de selector ya recarga el inventario: `handlePriceBookChange` actualiza `this.priceBookId` y el `@wire(getRecords, ...)` es reactivo sobre `$priceBookId`, sin cambios de lógica.
+- El CSV ya usaba `this.priceBookId` (la misma variable del selector en pantalla), solo con la clave incorrecta — corregido.
+- No se modificó la lógica dinámica Empresa–Pricebook (`getPricebookOptions`, `EmpresaPricebookResolver`) ni los 4 Flows de selección de marca.
+
+### 8.3 Pruebas técnicas
+
+No existe infraestructura Jest funcional para este LWC (confirmado antes y ahora, sin cambios) — no se creó una nueva, según el mandato. Se ejecutaron las pruebas Apex relacionadas (sin necesidad de modificarlas, ya que no se tocó ningún `.cls`): `RM_VU_Inventario_Ctrl_Test`, `RM_VU_Service_Test`, `EmpresaPricebookResolverTest` (dependencia directa de `getPricebookOptions`).
+
+Validación estática de que ambos llamados usan la clave exacta `priceBookId` y de que no queda ningún llamado con la clave incorrecta: `grep -n "priceBook" force-app/main/default/lwc/rm_vu_inventario/rm_vu_inventario.js` — confirmado, cero ocurrencias de `priceBook:` como clave de llamado; las únicas coincidencias restantes son el estado interno del componente (`priceBooks`, `priceBookId`) y la búsqueda local `priceBookEntries.find(...)`, ninguna es un llamado a Apex.
+
+### 8.4 Dry-run y deploy
+
+Manifest: `manifest/rm-vu-inventario-pricebook-param-fix.xml` (`LightningComponentBundle: rm_vu_inventario`; no se incluyó ningún `ApexClass` porque no fue necesario modificar Apex).
+
+| Paso | Deploy ID | Resultado |
+|---|---|---|
+| Dry-run (`RunSpecifiedTests`: `RM_VU_Inventario_Ctrl_Test`, `RM_VU_Service_Test`, `EmpresaPricebookResolverTest`) | `0AfAK000000yuc10AA` | 0 errores de componente, 23/23 pruebas, 0 fallas |
+| Deploy real a Partial | `0AfAK000000yudd0AA` | 0 errores de componente, 23/23 pruebas |
+
+Org destino: `RedMotorsSandbox` (confirmado Partial, `https://redmotors--partial.sandbox.my.salesforce.com`) en ambos casos.
+
+Cobertura Apex: no aplica un número nuevo — no se modificó ningún `.cls`/trigger en este cambio, por lo que no hay código Apex nuevo que cubrir. El resultado del deploy no reporta `codeCoverage` por clase porque el manifest solo contiene el LWC (comportamiento esperado de la Metadata API: la cobertura por clase se calcula sobre los componentes Apex del propio manifest desplegado). La cobertura de línea base de `RM_VU_Inventario_Ctrl`/`RM_VU_Service`, estable desde la remediación anterior de esta misma jornada (§3.7), no se vio afectada.
+
+### 8.5 Prueba visual real
+
+**Estado: PENDIENTE DE EVIDENCIA VISUAL MANUAL** — este entorno no dispone de navegador ni automatización visual, por lo que no se declara realizada la prueba visual. Se preparó una Opportunity QA seria en Partial y se dejaron los 10 pasos exactos para que Claudia la ejecute.
+
+**Opportunity QA:** `QA RM_VU_INVENTARIO PARAM FIX Cuenta-BMW-31/07/2026`
+Id: `006AK00000J0LG8YAN`
+Link: `https://redmotors--partial.sandbox.my.salesforce.com/006AK00000J0LG8YAN`
+Configuración: Cuenta QA dedicada (`QA RM_VU_INVENTARIO PARAM FIX Cuenta`, sin cliente real), RecordType `BMW`, `Empresa_Operadora__c` = Bavarian, `Pricebook2Id` = `Bavarian Dólar` (USD), `CurrencyIsoCode` = `USD`. Se eligió Bavarian (no PEKING) porque `Bavarian Dólar` y `Bavarian Local` tienen inventario de vehículos usados real en Partial (4342 y 4341 `PricebookEntry` respectivamente, confirmado por query) — dan 2 opciones válidas en el selector para poder probar también el cambio de Pricebook. **No se borra este registro hasta obtener la evidencia visual.**
+
+**Pasos exactos para Claudia:**
+
+1. Abrir el link de la Opportunity de arriba en Partial.
+2. En la página de la Opportunity, abrir el botón/acción **"Agregar vehiculo usado"** (Quick Action `Opportunity.Agregar_vehiculo_usado`, componente `rm_vu_agregar_vehiculo`, que contiene a `rm_vu_inventario`) — puede estar en la barra de acciones o en el menú "Más acciones" (▾) según el layout.
+3. Confirmar que aparece el selector **"Lista de precios"** con al menos 2 opciones (`Bavarian Dólar`, `Bavarian Local`).
+4. Confirmar que el selector ya trae seleccionado `Bavarian Dólar` (el Pricebook actual de la Opportunity) y que la grilla de inventario **carga filas** (antes de esta corrección quedaba siempre vacía).
+5. Cambiar el selector a `Bavarian Local`.
+6. Confirmar que la grilla se **actualiza** (nuevas filas, o el mismo conteo si el catálogo es igual entre ambos Pricebooks — lo relevante es que la llamada se dispare de nuevo, visible por el spinner de carga).
+7. Con cualquiera de los 2 Pricebooks seleccionado, hacer clic en el botón de exportar y elegir **CSV** (separador coma o punto y coma).
+8. Abrir el archivo `Inventario Usados.csv` descargado y confirmar que contiene filas con datos (nombre, modelo, año, precio, bodega) correspondientes al Pricebook que estaba seleccionado en pantalla.
+9. Confirmar que en ningún momento aparece un toast de error por "Pricebook nulo" o similar.
+10. Si es posible, abrir las DevTools del navegador (pestaña Network o Console) durante el paso 4 o 6 y confirmar que la llamada a `RM_VU_Inventario_Ctrl.getRecords` envía la clave `priceBookId` (no `priceBook`) con un Id de 18 caracteres como valor.
+
+No se debe usar ningún Pricebook ni producto de PEKING para esta prueba (PEKING sigue sin `PricebookEntry`, hallazgo #4 de §6.2 — no relacionado con este fix, no se inventó ningún dato). No se modificaron razones sociales, monedas, catálogos, precios ni Permission Sets en esta tarea.
+
+### 8.6 Git
+
+Commit `fix(empresa): pass Pricebook Id from used inventory` en `fix/pc/redmotors-sprint2-rm-vu-inventario-pricebook-param-20260731`, pusheado a `origin`, fast-forward limpio hacia `feature/pc/redmotors-empresa-marcas-chinas-sprint2-flows-components-20260728` (`RedMotors-Sprint2-Flows-Components`), pusheado. Ninguno de los 4 Flows de selección de marca (`Opp_flow_V3`, `Opp_Flow_v6`, `Opportunity_Flow_V2`, `aperturaCaseWorOrderEvent`, identificados en §3.5/§6.5) fue modificado en esta tarea — confirmado por `git diff --stat` del commit (solo 2 archivos: el LWC y el manifest).

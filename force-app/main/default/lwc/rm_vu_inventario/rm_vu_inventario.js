@@ -65,7 +65,7 @@ export default class Rm_vu_inventario extends LightningElement {
     } 
 
     priceBooks = [];
-    priceBookId = '';
+    priceBookId = null;
     pricebookMessage = '';
 
     isLoadingPricebooks = true;
@@ -74,11 +74,11 @@ export default class Rm_vu_inventario extends LightningElement {
         if (result.data) {
             const data = result.data;
             this.priceBooks = (data.options || []).map(item => ({ label: item.label, value: item.value }));
-            this.priceBookId = data.selectedPricebookId || '';
+            this.priceBookId = data.selectedPricebookId || null;
             this.pricebookMessage = data.status === 'EXITO' ? '' : (data.mensaje || '');
         } else if (result.error) {
             this.priceBooks = [];
-            this.priceBookId = '';
+            this.priceBookId = null;
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error !',
@@ -113,7 +113,7 @@ export default class Rm_vu_inventario extends LightningElement {
 
     isLoadingInventario = true;
     tipoVehiculo = '';
-    @wire(getRecords,{ tipoVehiculo: "$tipoVehiculo",brand: "$brand", model: "$model" ,year: "$year" , internalColor: "$internalColor",  externalColor: "$externalColor" , tipoCombustible:'$tipoCombustible', placa: "$placa", pageNumber : "$pageNumber" , priceBook: "$priceBookId"})    
+    @wire(getRecords,{ tipoVehiculo: "$tipoVehiculo",brand: "$brand", model: "$model" ,year: "$year" , internalColor: "$internalColor",  externalColor: "$externalColor" , tipoCombustible:'$tipoCombustible', placa: "$placa", pageNumber : "$pageNumber" , priceBookId: "$priceBookId"})
     wiredRecords(result) { 
         this.records = [];       
         this.wiredRecordsResult = result;
@@ -337,7 +337,7 @@ export default class Rm_vu_inventario extends LightningElement {
     isExportingCSV = false;
     async getData(separator){
         this.isExportingCSV = true;
-        getRecords({ tipoVehiculo: this.tipoVehiculo,brand: this.brand, model: this.model ,year: this.year, internalColor: this.internalColor,externalColor: this.externalColor, tipoCombustible:this.tipoCombustible,placa: this.placa, skipPagination: true, priceBook: this.priceBookId})
+        getRecords({ tipoVehiculo: this.tipoVehiculo,brand: this.brand, model: this.model ,year: this.year, internalColor: this.internalColor,externalColor: this.externalColor, tipoCombustible:this.tipoCombustible,placa: this.placa, skipPagination: true, priceBookId: this.priceBookId})
         .then(data => {
             if(data.prodXBodItems){
                 Object.values(data.prodXBodItems).forEach((item, index) => {
