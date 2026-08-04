@@ -42,25 +42,55 @@ Los lotes son pequeños, ordenados y aún no autorizados para ejecución. Apex, 
 
 **¿Antes de respuestas funcionales?** Parcialmente: diseño y pruebas negativas sí; asociaciones reales no.
 
-## Lote 2 — Flows críticos no bloqueados
+## Lote 2 — Flows activos, dividido por bloqueo real
 
-**Elementos:** los 12 Flows activos con impacto PEKING: `PlanDeMantenimientoV2`, `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective`, `SegregateWOLIs`, `CreateWoliFromExpense`, `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent`, `AgregarManoObra`, `Opp_Flow_V5` v29, `Opp_flow_V3` v28, `Opp_Flow_v6` v79 y `Opportunity_Flow_V2` v6.
+La depuración del Lote 2.1 confirmó la vigencia de los doce Flows y eliminó las preguntas obsoletas de vigencia. La ejecución se divide así:
 
-**Cambios propuestos:** sustituir decisiones Bavarian/Otobai y Pricebooks nominales por Empresa/configuración; detener rutas no configuradas; conservar fallback legacy únicamente donde esté documentado.
+### Sublote 2A — Pricebook/PBE con guardas seguras
 
-**Dependencias:** Lote 1; N1/N2 para pruebas positivas PEKING. No se requiere otra decisión de vigencia de Luis.
+**Elementos:** `PlanDeMantenimientoV2`, `CreateWoliFromExpense`, `AgregarManoObra`.
 
-**Riesgo:** alto; afecta Opportunity, Quote, Work Order, WOLI, Event y PricebookEntry.
+**Estado:** `EJECUTABLE_TÉCNICAMENTE` con aprobación específica. Puede retirar IDs/nombres fijos, adoptar `EmpresaPricebookResolver` y detener estados no exitosos sin inventar datos. N1 solo bloquea QA positivo PEKING y cierre funcional.
 
-**Tests:** cada Flow con Bavarian/Otobai; empresa desconocida; Empresa ausente; Pricebook incompatible; rollback de error.
+### Sublote 2B — Quote→Work Order
 
-**Videos:** Quote→WO normal/selectivo; gasto→WOLI; caso→WO/Event; mano de obra; mantenimiento.
+**Elementos:** `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective`.
 
-**Terminado:** ninguna ruta residual selecciona otra empresa; pruebas negativas completas y positivas con datos confirmados.
+**Estado:** `REQUIERE_NEGOCIO` (N2: bodega, territorio, reserva/despacho/taller).
 
-**Orden:** mantenimiento → Quote/WO/segregación → gasto/MO → caso/evento → Flows legacy activos.
+### Sublote 2C — segregación y garantía
 
-**¿Antes de respuestas funcionales?** Solo refactor seguro y pruebas negativas tras aprobación; cierre funcional no.
+**Elemento:** `SegregateWOLIs`.
+
+**Estado:** `REQUIERE_NEGOCIO` y confirmación técnica de Diego sobre Record Type configurable.
+
+### Sublote 2D1 — Opportunity sin divergencia de versión
+
+**Elementos:** `Opp_flow_V3`, `Opportunity_Flow_V2`.
+
+**Estado:** `REQUIERE_LUIS` para UX y precedencia del lookup Empresa.
+
+### Sublote 2D2 — Opportunity con active/latest distintos
+
+**Elementos:** `Opp_Flow_V5`, `Opp_Flow_v6`.
+
+**Estado:** `REQUIERE_DIEGO` para versión base; después requiere la decisión UX aplicable.
+
+### Sublote 2E — Caso, Work Order y evento
+
+**Elementos:** `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent`.
+
+**Estado:** el primero `REQUIERE_LUIS` por UX y ambos requieren negocio para servicios/agenda/territorio.
+
+**Riesgo general:** alto; afecta Opportunity, Quote, Work Order, WOLI, Event y PricebookEntry.
+
+**Tests comunes:** Bavarian/Otobai; PEKING explícito; empresa desconocida/ausente; Pricebook incompatible o ambiguo; estado no exitoso sin escritura; regresión de rutas no empresariales.
+
+**Videos:** por sublote y solo cuando existan datos funcionales confirmados.
+
+**Terminado:** ninguna ruta residual selecciona otra Empresa; pruebas negativas completas y positivas con datos confirmados.
+
+**Orden actualizado:** 2A → respuestas externas → 2B/2C/2D/2E según desbloqueo.
 
 ## Lote 3 — componentes de inventario VN/VU
 
@@ -164,4 +194,4 @@ Los lotes son pequeños, ordenados y aún no autorizados para ejecución. Apex, 
 
 ## Lote recomendado para iniciar
 
-**Lote 0**, limitado inicialmente a reconciliación de solo lectura y decisiones de fuente. Es el único lote que reduce riesgo sin requerir inventar datos funcionales. No debe sincronizar ni sobrescribir archivos hasta recibir aprobación específica posterior.
+**Sublote 2A**, limitado a `PlanDeMantenimientoV2`, `CreateWoliFromExpense` y `AgregarManoObra`, mediante autorización específica. Permite retirar resolución insegura y completar pruebas negativas sin inventar catálogo, productos o precios. Los demás sublotes esperan las decisiones registradas en `PREGUNTAS_BLOQUEOS_SPRINT2.md`.

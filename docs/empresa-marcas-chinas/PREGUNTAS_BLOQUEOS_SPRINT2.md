@@ -1,93 +1,83 @@
-# Preguntas consolidadas para desbloquear Sprint 2
+# Preguntas reales para desbloquear Sprint 2
 
-Las 16 filas todavía bloqueadas se agrupan por decisión compartida. No se repiten preguntas ni se reabren las decisiones ya confirmadas sobre Flows activos en Producción y exclusión de usados para PEKING.
+Esta versión elimina preguntas ya respondidas sobre vigencia productiva, usados, arquitectura Empresa/Pricebook, incorporación de bundles y conciliación general Git–Partial.
+
+## Decisiones resueltas — no volver a preguntar
+
+- Solo se trabajan Flows activos en Producción; los doce candidatos del Lote 2 están activos.
+- Los procesos exclusivos de usados no soportan PEKING.
+- El lookup Empresa es principal; legacy Bavarian/Otobai es fallback temporal.
+- `EmpresaPricebookResolver` es el contrato común y no selecciona opciones ambiguas.
+- `kpiSucursales` y `cT_Estadisticas_Inventario_lwc` ya están versionados.
+- Nueve conflictos Git–Partial fueron conciliados; despacho conserva dependencias faltantes separadas.
 
 ## Para Luis
 
-### L1. Bundles solo en Partial
+### L1. UX y precedencia de Empresa en Flows de Opportunity
 
-**Pregunta:** ¿`kpiSucursales` y `cT_Estadisticas_Inventario_lwc` forman parte del producto vigente y deben incorporarse al control de versiones para Sprint 2?
+**Pregunta:** En `Opp_Flow_V5`, `Opp_flow_V3`, `Opportunity_Flow_V2`, `Opp_Flow_v6` y `aperturaCaseWorOrderEvent`, ¿la Empresa debe elegirse mediante un lookup/selector de `Empresa__c` o derivarse del registro/contexto? Para `Opportunity_Flow_V2`, ¿qué precedencia tiene la Empresa elegida frente a `$User.Empresa__c`?
 
-**Desbloquea:** `kpiSucursales`, `cT_Estadisticas_Inventario_lwc` y la conciliación exacta de los 25 bundles.
+**Desbloquea:** sublotes 2D1, parte de 2D2 y `aperturaCaseWorOrderEvent` en 2E.
 
-**Alternativa recomendada:** si son vigentes, incorporarlos primero en un lote exclusivo de reconciliación, sin cambios funcionales; si no lo son, documentar exclusión/retiro con evidencia de invocadores.
+**Alternativa recomendada:** lookup Empresa explícito cuando existe interacción; contexto del registro cuando no existe pantalla. `$User.Empresa__c` puede sugerir, pero no sobrescribir silenciosamente una Empresa explícita. No agregar PEKING al picklist legacy.
 
 ## Para Diego
 
-### D1. Autoridad de los 11 conflictos de fuente
+### D1. Base de versión para Flows con active/latest distintos
 
-**Pregunta:** Para cada recurso distinto de `productSearcher`, `quoliGridDespacho`, `woliGridDespacho`, `busquedaDetallada`, `qoSearchDetailProduct`, `woSearchDetailProduct`, `pricebookReferenceDetails`, `CommunityMenu`, `CommunityControl`, `customerCommunity_lwc` y `callcenterCommunity_lwc`, ¿qué lado contiene el comportamiento vigente que debe preservarse?
+**Pregunta:** Para `Opp_Flow_V5` (v29 activa, v30 Draft) y `Opp_Flow_v6` (v79 activa, v80 Draft), ¿qué versión debe ser la base editable y qué cambios del Draft deben preservarse antes de migrar Empresa/Pricebook?
 
-**Desbloquea:** 11 conflictos y los lotes de inventario, despacho, búsquedas y Community.
+**Desbloquea:** sublote 2D2.
 
-**Alternativa recomendada:** decisión por archivo, no por bundle; Partial conserva evidencia de ejecución y Git conserva historial. Construir una versión reconciliada solo después de aprobar el diff.
+**Alternativa recomendada:** partir de la versión activa y conciliar explícitamente solo cambios Draft aprobados; no activar el Draft por inferencia.
 
-### D2. Contrato empresarial compartido
+### D2. Record Type configurable para segregación
 
-**Pregunta:** ¿`empresaFactura` representa un lookup Empresa, un código ERP u otro identificador, y cuál será el contrato estable de reemplazo para `qoSearchDetailProduct`, `woSearchDetailProduct`, `localizacionDetails` y `pricebookReferenceDetails`?
+**Pregunta:** ¿Se aprueba resolver el Record Type de `SegregateWOLIs` por DeveloperName más configuración por Empresa/proceso, eliminando el Id dependiente de org?
 
-**Desbloquea:** esos cuatro LWC y sus dependencias `WoliGridController`/`WoliGridController2`.
+**Desbloquea:** parte técnica del sublote 2C.
 
-**Alternativa recomendada:** usar Id de `Empresa__c`/`Empresa_Operadora__c` como entrada primaria y resolver `Codigo_ERP__c` únicamente en la capa de integración.
-
-### D3. Record Types sin Id fijo
-
-**Pregunta:** ¿Qué mecanismo aprobado debe reemplazar el Record Type Id fijo de `SegregateWOLIs`, y cómo debe relacionarse Empresa con Record Type en `rm_vn_get_record_opp_record_types` y `ReciboUsadosFlow`?
-
-**Desbloquea:** `SegregateWOLIs` y `rm_vn_get_record_opp_record_types`.
-
-**Alternativa recomendada:** DeveloperName estable más configuración por Empresa/proceso; nunca Id de org ni inferencia por nombre comercial.
+**Alternativa recomendada:** DeveloperName estable y configuración empresarial; nunca Id literal.
 
 ## Para negocio
 
-### N1. Configuración comercial mínima
+### N1. Catálogo, moneda y precios para pruebas positivas
 
-**Pregunta:** ¿Cuáles son las asociaciones oficiales Empresa–moneda–Pricebook–catálogo/producto/precio aplicables a PEKING para mantenimiento, mano de obra, gastos, inventario y plantillas?
+**Pregunta:** ¿Cuál es la fuente oficial de productos y precios PEKING para mantenimiento, gastos y mano de obra, y cuál es la moneda correcta de las listas “Local” de Bavarian y Otobai?
 
-**Desbloquea:** `PlanDeMantenimientoV2`, `CreateWoliFromExpense`, `AgregarManoObra`, `rm_vn_crear_opp_inventario`, `productSearcher`, `pricebookReferenceDetails`, los cinco Flows ya técnicamente compatibles y sus pruebas E2E.
+**Desbloquea:** cierre funcional de `PlanDeMantenimientoV2`, `CreateWoliFromExpense` y `AgregarManoObra`. No bloquea su refactor técnico seguro.
 
-**Alternativa recomendada:** registrar asociaciones en configuración gobernada por `Empresa__c`; sin respuesta, devolver “no configurado” y no seleccionar un Pricebook alterno.
+**Alternativa recomendada:** mientras no existan PBE oficiales, retornar no configurado y detener; nunca copiar productos/precios de otra Empresa.
 
-### N2. Operación de bodega, despacho y taller
+### N2. Quote→WO, bodega, territorio y despacho
 
-**Pregunta:** ¿Qué bodegas, territorios, reglas de bodega principal/apartados, reserva, despacho, devolución, taller y mano de obra aplican oficialmente a PEKING?
+**Pregunta:** ¿Qué bodegas, territorios, reglas de bodega principal/apartados, reserva, despacho, devolución y taller aplican oficialmente a PEKING?
 
-**Desbloquea:** `quoliGridDespacho`, `woliGridDespacho`, `qoSearchDetailProduct`, `woSearchDetailProduct`, `rm_vn_inventario`, `rm_vn_inventario_movil`, `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective`, `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent` y `BMW_ImportarPlantilla` para QA completo.
+**Desbloquea:** `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective` y la parte operativa de `aperturaCaseWorOrderEvent`/`ct_newCaseWorkOrderEvent`.
 
-**Alternativa recomendada:** configuración explícita por Empresa; si una función no aplica, bloquearla con mensaje controlado.
+**Alternativa recomendada:** configuración explícita por Empresa; función no configurada debe detenerse con mensaje controlado.
 
 ### N3. Garantía y segregación
 
-**Pregunta:** ¿Qué reglas funcionales aprobadas aplican a PEKING para garantía y segregación de cargos/WOLI?
+**Pregunta:** ¿Qué reglas de garantía, segregación de cargos y WOLI aplican a PEKING?
 
-**Desbloquea:** `assetGarantiaLookupLwc` y `SegregateWOLIs`.
+**Desbloquea:** comportamiento funcional de `SegregateWOLIs`.
 
-**Alternativa recomendada:** política por Empresa y proceso; ausencia de configuración equivale a “no disponible”, nunca a heredar Otobai/Bavarian.
+**Alternativa recomendada:** política por Empresa; ausencia de configuración significa no disponible, nunca heredar Otobai.
 
-### N4. Softland
+### N4. Servicios y agenda
 
-**Pregunta:** ¿Cuáles son los mapeos ERP y operaciones Softland autorizadas para PEKING en inventario, localizaciones, referencias de precio, despacho y creación de cuentas?
+**Pregunta:** ¿Qué servicios, agenda, sucursales y territorios aplican a PEKING para los procesos de Caso→Work Order→Event?
 
-**Desbloquea:** `rm_vn_inventario`, `rm_vn_inventario_movil`, `localizacionDetails`, `pricebookReferenceDetails`, `quoliGridDespacho`, `woliGridDespacho`, `Opp_flow_v4` y componentes de búsqueda.
+**Desbloquea:** sublote 2E.
 
-**Alternativa recomendada:** resolver el código ERP desde Empresa en la capa de integración y manejar falta de configuración como error controlado.
+**Alternativa recomendada:** configuración empresarial aprobada; no inferir servicios o sucursales por similitud.
 
-### N5. Community, citas y legal
+## Preguntas de otros lotes que permanecen vigentes
 
-**Pregunta:** ¿Qué sucursales, servicios, usuarios operativos, capacidades, reglas de citas y textos legales aprobados corresponden a PEKING?
+- Contrato y operaciones Softland autorizadas para inventario/localización/despacho.
+- Sucursales, servicios, capacidades, usuarios y textos legales para Community.
+- Perfiles QA y permisos funcionales por proceso.
+- Dependencias faltantes de despacho antes de conciliar `quoliGridDespacho`/`woliGridDespacho`.
 
-**Desbloquea:** `CommunityMenu`, `CommunityControl`, `customerCommunity_lwc`, `callcenterCommunity_lwc` y la validación integrada de `CommunityCalendar`.
-
-**Alternativa recomendada:** externalizar servicios/capacidades por Empresa; mantener PEKING oculto hasta recibir contenido operativo y legal aprobado.
-
-### N6. Permisos QA y funcionales
-
-**Pregunta:** ¿Qué perfiles QA y permisos funcionales deben usar inventario, cambio de bodega, despacho, garantía, usados y Community para PEKING?
-
-**Desbloquea:** QA de `rm_vn_inventario`, `rm_vn_inventario_movil`, despacho, garantía, usados y Community.
-
-**Alternativa recomendada:** mínimo privilegio por función y evidencia con perfiles QA, sin crear permisos por analogía.
-
-## Cobertura de los 16 bloqueos
-
-Las preguntas anteriores cubren los 16 elementos bloqueados. `ReciboUsadosFlow`, `rm_vu_inventario`, `rm_vu_crear_opp` y `Carga_MO_26_Lavado_a_Caso` no son bloqueos: están clasificados `NO APLICA`. Un mismo elemento bloqueado puede requerir una decisión técnica y otra funcional; por eso los grupos no son mutuamente excluyentes. Ninguna respuesta autoriza implementación.
+Ninguna respuesta de este documento autoriza implementación por sí sola; cada sublote requiere aprobación expresa.
