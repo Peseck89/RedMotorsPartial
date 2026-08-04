@@ -5,6 +5,7 @@ private class EmpresaPricebookResolverTest {
         Empresa__c empresa = new Empresa__c(
             Name = codigo,
             Codigo__c = codigo,
+            Codigo_ERP__c = codigo,
             Activa__c = activa
         );
         if (doInsert) {
@@ -250,5 +251,95 @@ private class EmpresaPricebookResolverTest {
 
         results = EmpresaPricebookResolver.resolve(null);
         System.assertEquals(0, results.size());
+    }
+
+    @IsTest
+    static void testLookupPrincipalResuelvePekingSinUsarFallbackLegacy() {
+        Empresa__c peking = createEmpresa('RMPEKING', true, true);
+        Empresa__c otobai = createEmpresa('RMOTOBAI', true, true);
+        Pricebook2 pekingPricebook = createPricebook('PB prueba PEKING', peking.Id, 'CRC', true);
+        createPricebook('PB prueba Otobai', otobai.Id, 'CRC', true);
+
+        EmpresaPricebookResolver.PricebookResolutionResult result = EmpresaPricebookResolver.resolveForSource(
+            peking.Id,
+            'Otobai',
+            'CRC',
+            null
+        );
+
+        System.assertEquals(EmpresaPricebookResolver.STATUS_EXITO, result.status);
+        System.assertEquals(peking.Id, result.empresaId, 'El lookup debe prevalecer sobre el fallback legacy.');
+        System.assertEquals(pekingPricebook.Id, result.pricebookId, 'PEKING no debe caer en el Pricebook de Otobai.');
+    }
+
+    @IsTest
+    static void testLookupVacioUsaFallbackLegacyBavarianYOtobai() {
+        Empresa__c bavarian = createEmpresa('RMBAVARIAN', true, true);
+        Empresa__c otobai = createEmpresa('RMOTOBAI', true, true);
+        Pricebook2 bavarianPricebook = createPricebook('PB prueba Bavarian', bavarian.Id, 'CRC', true);
+        Pricebook2 otobaiPricebook = createPricebook('PB prueba Otobai', otobai.Id, 'CRC', true);
+
+        EmpresaPricebookResolver.PricebookResolutionResult bavarianResult =
+            EmpresaPricebookResolver.resolveForSource(null, ' Bavarian ', 'CRC', null);
+        EmpresaPricebookResolver.PricebookResolutionResult otobaiResult =
+            EmpresaPricebookResolver.resolveForSource(null, 'otobai', 'CRC', null);
+
+        System.assertEquals(bavarian.Id, bavarianResult.empresaId);
+        System.assertEquals(bavarianPricebook.Id, bavarianResult.pricebookId);
+        System.assertEquals(otobai.Id, otobaiResult.empresaId);
+        System.assertEquals(otobaiPricebook.Id, otobaiResult.pricebookId);
+    }
+
+    @IsTest
+    static void testLegacyDesconocidoNoCaeEnEmpresaPorDefecto() {
+        Empresa__c bavarian = createEmpresa('RMBAVARIAN', true, true);
+        createPricebook('PB prueba Bavarian', bavarian.Id, 'CRC', true);
+
+        EmpresaPricebookResolver.PricebookResolutionResult result = EmpresaPricebookResolver.resolveForSource(
+            null,
+            'PEKING',
+            'CRC',
+            null
+        );
+
+        System.assertEquals(EmpresaPricebookResolver.STATUS_ERROR, result.status);
+        System.assertEquals(null, result.empresaId);
+        System.assertEquals(null, result.pricebookId);
+        System.assert(result.mensaje.contains('fallback temporal'));
+    }
+
+    @IsTest
+    static void testFallbackConfiguradoSinEmpresaRetornaNoConfigurado() {
+        EmpresaPricebookResolver.PricebookResolutionResult result = EmpresaPricebookResolver.resolveForSource(
+            null,
+            'Bavarian',
+            'CRC',
+            null
+        );
+
+        System.assertEquals(EmpresaPricebookResolver.STATUS_NO_CONFIGURADO, result.status);
+        System.assertEquals(null, result.empresaId);
+        System.assertEquals(null, result.pricebookId);
+    }
+
+    @IsTest
+    static void testFallbackAmbiguoNoSeleccionaEmpresa() {
+        Empresa__c primera = createEmpresa('BAV01', true, false);
+        primera.Codigo_ERP__c = 'RMBAVARIAN';
+        Empresa__c segunda = createEmpresa('BAV02', true, false);
+        segunda.Codigo_ERP__c = 'RMBAVARIAN';
+        insert new List<Empresa__c>{ primera, segunda };
+
+        EmpresaPricebookResolver.PricebookResolutionResult result = EmpresaPricebookResolver.resolveForSource(
+            null,
+            'Bavarian',
+            'CRC',
+            null
+        );
+
+        System.assertEquals(EmpresaPricebookResolver.STATUS_ERROR, result.status);
+        System.assertEquals(null, result.empresaId);
+        System.assertEquals(null, result.pricebookId);
+        System.assert(result.mensaje.contains('más de una Empresa'));
     }
 }
