@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <apiVersion>54.0</apiVersion>
+    <actionCalls>
+        <name>Resolver_Pricebook_Empresa</name><label>Resolver Pricebook Empresa</label>
+        <locationX>858</locationX><locationY>5210</locationY>
+        <actionName>EmpresaPricebookResolver</actionName><actionType>apex</actionType>
+        <connector><targetReference>Validar_Estado_Pricebook</targetReference></connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters><name>empresaId</name><value><elementReference>BMW_ObtenerPresupuesto.Opportunity.Empresa_Operadora__c</elementReference></value></inputParameters>
+        <inputParameters><name>currencyIsoCode</name><value><elementReference>BMW_ObtenerPresupuesto.Opportunity.CurrencyIsoCode</elementReference></value></inputParameters>
+        <inputParameters><name>currentPricebookId</name><value><elementReference>BMW_ObtenerPresupuesto.Opportunity.Pricebook2Id</elementReference></value></inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <assignments>
+        <name>Aplicar_Empresa_Seleccionada</name><label>Aplicar Empresa Seleccionada</label>
+        <locationX>858</locationX><locationY>2522</locationY>
+        <assignmentItems><assignToReference>EmpresaUsuario</assignToReference><operator>Assign</operator><value><elementReference>EmpresaSeleccionada.recordName</elementReference></value></assignmentItems>
+        <connector><targetReference>AsignarContactoCuentaFacturacionBuscados</targetReference></connector>
+    </assignments>
     <assignments>
         <name>Asigna_Bavarial_Local</name>
         <label>Asigna Bavarial Local</label>
@@ -10,7 +27,7 @@
             <assignToReference>PriceBookName</assignToReference>
             <operator>Assign</operator>
             <value>
-                <stringValue>Bavarian Local</stringValue>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -26,7 +43,7 @@
             <assignToReference>PriceBookName</assignToReference>
             <operator>Assign</operator>
             <value>
-                <stringValue>Bavarian Dólar</stringValue>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -65,7 +82,7 @@
             <assignToReference>PriceBookName</assignToReference>
             <operator>Assign</operator>
             <value>
-                <stringValue>Otobai Local</stringValue>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -81,7 +98,7 @@
             <assignToReference>PriceBookName</assignToReference>
             <operator>Assign</operator>
             <value>
-                <stringValue>Otobai Dólares</stringValue>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -639,7 +656,7 @@
             <assignToReference>EmpresaUsuario</assignToReference>
             <operator>Assign</operator>
             <value>
-                <elementReference>Empresa0</elementReference>
+                <elementReference>EmpresaSeleccionada.recordName</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -872,6 +889,16 @@
             <stringValue>10</stringValue>
         </value>
     </choices>
+    <decisions>
+        <name>Validar_Estado_Pricebook</name><label>Validar Estado Pricebook</label>
+        <locationX>858</locationX><locationY>5318</locationY>
+        <defaultConnector><targetReference>Aviso_Empresa_Pricebook_No_Disponible</targetReference></defaultConnector>
+        <defaultConnectorLabel>NO_CONFIGURADO, SELECCION_REQUERIDA o ERROR</defaultConnectorLabel>
+        <rules><name>Pricebook_Resuelto</name><conditionLogic>and</conditionLogic>
+            <conditions><leftValueReference>Resolver_Pricebook_Empresa.status</leftValueReference><operator>EqualTo</operator><rightValue><stringValue>EXITO</stringValue></rightValue></conditions>
+            <connector><targetReference>Obtener_PriceBook_Opp</targetReference></connector><label>EXITO</label>
+        </rules>
+    </decisions>
     <decisions>
         <name>Copy_1_of_Que_Tipo_de_Oportunidad</name>
         <label>Copy 1 of Que Tipo de Oportunidad</label>
@@ -1360,6 +1387,11 @@
         <picklistObject>RecordType</picklistObject>
     </dynamicChoiceSets>
     <formulas>
+        <name>EmpresaLegacySeleccionada</name><dataType>String</dataType>
+        <description>Compatibilidad temporal: solo Bavarian y Otobai se escriben en el campo legacy.</description>
+        <expression>CASE({!EmpresaSeleccionada.recordName}, &quot;Bavarian&quot;, &quot;Bavarian&quot;, &quot;Otobai&quot;, &quot;Otobai&quot;, &quot;&quot;)</expression>
+    </formulas>
+    <formulas>
         <name>TimeCitaLoopNumber</name>
         <dataType>Number</dataType>
         <expression>VALUE( MID( TEXT( {!DateTimeCitaLoop}), 12, 2 ) )-6</expression>
@@ -1639,8 +1671,12 @@
         <inputAssignments>
             <field>BMW_Compania__c</field>
             <value>
-                <elementReference>EmpresaUsuario</elementReference>
+                <elementReference>EmpresaLegacySeleccionada</elementReference>
             </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Empresa_Operadora__c</field>
+            <value><elementReference>EmpresaSeleccionada.recordId</elementReference></value>
         </inputAssignments>
         <inputAssignments>
             <field>BMW_PlacaDeVehiculoOElVIN__c</field>
@@ -1899,7 +1935,7 @@
         <locationY>5102</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Encuentra_Price_Book</targetReference>
+            <targetReference>Resolver_Pricebook_Empresa</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -1924,7 +1960,7 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Name</field>
+            <field>Id</field>
             <operator>Contains</operator>
             <value>
                 <elementReference>SucursalUsuario</elementReference>
@@ -2116,7 +2152,7 @@
             <field>Name</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>PriceBookName</elementReference>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -2212,6 +2248,13 @@
         </connector>
         <inputReference>AssetCreadoOBuscado</inputReference>
     </recordUpdates>
+    <screens>
+        <name>Aviso_Empresa_Pricebook_No_Disponible</name><label>Empresa o Pricebook no disponible</label>
+        <locationX>1122</locationX><locationY>5318</locationY>
+        <allowBack>true</allowBack><allowFinish>true</allowFinish><allowPause>false</allowPause>
+        <fields><name>Mensaje_Empresa_Pricebook</name><fieldText>&lt;p&gt;No fue posible resolver una configuración válida de Empresa y Pricebook. {!Resolver_Pricebook_Empresa.mensaje}&lt;/p&gt;</fieldText><fieldType>DisplayText</fieldType></fields>
+        <showFooter>true</showFooter><showHeader>true</showHeader>
+    </screens>
     <screens>
         <name>Buscar_Veh_culo</name>
         <label>Buscar Vehículo</label>
@@ -2658,9 +2701,7 @@
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
-        <connector>
-            <targetReference>AsignarContactoCuentaFacturacionBuscados</targetReference>
-        </connector>
+        <connector><targetReference>Aplicar_Empresa_Seleccionada</targetReference></connector>
         <fields>
             <name>Display1</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-size: 20px;&quot;&gt;Información del presupuesto&lt;/strong&gt;&lt;/p&gt;</fieldText>
@@ -2837,23 +2878,16 @@
                 <name>Crear_Veh_culo_0_Section2_Column2</name>
                 <fieldType>Region</fieldType>
                 <fields>
-                    <name>Empresa0</name>
-                    <choiceReferences>Bavarian</choiceReferences>
-                    <choiceReferences>Otobai</choiceReferences>
-                    <dataType>String</dataType>
-                    <fieldText>Empresa</fieldText>
-                    <fieldType>DropdownBox</fieldType>
+                    <name>EmpresaSeleccionada</name>
+                    <extensionName>flowruntime:lookup</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters><name>fieldApiName</name><value><stringValue>Empresa_Operadora__c</stringValue></value></inputParameters>
+                    <inputParameters><name>label</name><value><stringValue>Empresa</stringValue></value></inputParameters>
+                    <inputParameters><name>objectApiName</name><value><stringValue>Opportunity</stringValue></value></inputParameters>
+                    <inputParameters><name>required</name><value><booleanValue>true</booleanValue></value></inputParameters>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
-                    <visibilityRule>
-                        <conditionLogic>and</conditionLogic>
-                        <conditions>
-                            <leftValueReference>EmpresaUsuario</leftValueReference>
-                            <operator>IsNull</operator>
-                            <rightValue>
-                                <booleanValue>true</booleanValue>
-                            </rightValue>
-                        </conditions>
-                    </visibilityRule>
+                    <storeOutputAutomatically>true</storeOutputAutomatically>
                 </fields>
                 <fields>
                     <name>Tipo_de_oportunidad0</name>
