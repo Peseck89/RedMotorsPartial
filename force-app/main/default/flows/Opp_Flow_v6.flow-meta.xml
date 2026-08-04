@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <apiVersion>54.0</apiVersion>
+    <actionCalls>
+        <name>Resolver_Pricebook_Empresa</name><label>Resolver Pricebook Empresa</label>
+        <locationX>1963</locationX><locationY>11912</locationY>
+        <actionName>EmpresaPricebookResolver</actionName><actionType>apex</actionType>
+        <connector><targetReference>Validar_Estado_Pricebook</targetReference></connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters><name>empresaId</name><value><elementReference>BMW_ObtenerPresupuesto.Opportunity.Empresa_Operadora__c</elementReference></value></inputParameters>
+        <inputParameters><name>currencyIsoCode</name><value><elementReference>BMW_ObtenerPresupuesto.Opportunity.CurrencyIsoCode</elementReference></value></inputParameters>
+        <inputParameters><name>currentPricebookId</name><value><elementReference>BMW_ObtenerPresupuesto.Opportunity.Pricebook2Id</elementReference></value></inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
     <actionCalls>
         <name>ApexConsultaCedula</name>
         <label>ApexConsultaCedula</label>
@@ -67,12 +79,30 @@
             <name>rtList</name>
         </outputParameters>
     </actionCalls>
-    <apiVersion>54.0</apiVersion>
+    <actionCalls>
+        <name>redirect_quote</name>
+        <label>redirect quote</label>
+        <locationX>1963</locationX>
+        <locationY>13544</locationY>
+        <actionName>ecflc:flowIdRedirect</actionName>
+        <actionType>component</actionType>
+        <connector>
+            <targetReference>Presupuesto</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>recordId</name>
+            <value>
+                <elementReference>presupuestoid</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
     <assignments>
         <name>Asigna_Bavarial_Local</name>
         <label>Asigna Bavarial Local</label>
         <locationX>1963</locationX>
-        <locationY>11720</locationY>
+        <locationY>12020</locationY>
         <assignmentItems>
             <assignToReference>PriceBookName</assignToReference>
             <operator>Assign</operator>
@@ -88,7 +118,7 @@
         <name>Asigna_Bavarian_Dolar</name>
         <label>Asigna Bavarian Dolar</label>
         <locationX>2227</locationX>
-        <locationY>11720</locationY>
+        <locationY>12020</locationY>
         <assignmentItems>
             <assignToReference>PriceBookName</assignToReference>
             <operator>Assign</operator>
@@ -104,7 +134,7 @@
         <name>Asigna_campa_a_aseguradora</name>
         <label>Asigna campaña aseguradora</label>
         <locationX>1831</locationX>
-        <locationY>10088</locationY>
+        <locationY>10388</locationY>
         <assignmentItems>
             <assignToReference>CampaniaId</assignToReference>
             <operator>Assign</operator>
@@ -240,12 +270,12 @@
         <name>asigna_empresa</name>
         <label>asigna empresa</label>
         <locationX>1831</locationX>
-        <locationY>7448</locationY>
+        <locationY>7748</locationY>
         <assignmentItems>
             <assignToReference>EmpresaUsuario</assignToReference>
             <operator>Assign</operator>
             <value>
-                <elementReference>Compania</elementReference>
+                <elementReference>Copy_1_of_Empresa0.recordName</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -256,7 +286,7 @@
         <name>Asigna_Oto_Local</name>
         <label>Asigna Oto Local</label>
         <locationX>1435</locationX>
-        <locationY>11720</locationY>
+        <locationY>12020</locationY>
         <assignmentItems>
             <assignToReference>PriceBookName</assignToReference>
             <operator>Assign</operator>
@@ -272,7 +302,7 @@
         <name>Asigna_Otobai_Dolar</name>
         <label>Asigna Otobai Dolar</label>
         <locationX>1699</locationX>
-        <locationY>11720</locationY>
+        <locationY>12020</locationY>
         <assignmentItems>
             <assignToReference>PriceBookName</assignToReference>
             <operator>Assign</operator>
@@ -303,8 +333,8 @@
     <assignments>
         <name>Asignar</name>
         <label>Asignar</label>
-        <locationX>1270</locationX>
-        <locationY>9080</locationY>
+        <locationX>1072</locationX>
+        <locationY>9380</locationY>
         <assignmentItems>
             <assignToReference>ReccordType</assignToReference>
             <operator>Assign</operator>
@@ -336,7 +366,7 @@
         <name>Asignar_Auto</name>
         <label>Asignar Auto</label>
         <locationX>1567</locationX>
-        <locationY>11096</locationY>
+        <locationY>11396</locationY>
         <assignmentItems>
             <assignToReference>TipoAsset</assignToReference>
             <operator>Assign</operator>
@@ -352,7 +382,7 @@
         <name>Asignar_Colones</name>
         <label>Asignar Colones</label>
         <locationX>1699</locationX>
-        <locationY>10796</locationY>
+        <locationY>11096</locationY>
         <assignmentItems>
             <assignToReference>Currency</assignToReference>
             <operator>Assign</operator>
@@ -368,7 +398,7 @@
         <name>Asignar_Colones_Default</name>
         <label>Asignar Colones Default</label>
         <locationX>2227</locationX>
-        <locationY>10796</locationY>
+        <locationY>11096</locationY>
         <assignmentItems>
             <assignToReference>Currency</assignToReference>
             <operator>Assign</operator>
@@ -384,7 +414,7 @@
         <name>Asignar_Dolares</name>
         <label>Asignar Dolares</label>
         <locationX>1963</locationX>
-        <locationY>10796</locationY>
+        <locationY>11096</locationY>
         <assignmentItems>
             <assignToReference>Currency</assignToReference>
             <operator>Assign</operator>
@@ -400,7 +430,7 @@
         <name>Asignar_info_Asset</name>
         <label>Asignar info Asset</label>
         <locationX>1963</locationX>
-        <locationY>6584</locationY>
+        <locationY>6884</locationY>
         <assignmentItems>
             <assignToReference>AssetNumeroPlaca</assignToReference>
             <operator>Assign</operator>
@@ -542,7 +572,7 @@
         <name>Asignar_info_Asset_0</name>
         <label>Asignar info Asset</label>
         <locationX>1963</locationX>
-        <locationY>8372</locationY>
+        <locationY>8672</locationY>
         <assignmentItems>
             <assignToReference>AssetNumeroPlaca</assignToReference>
             <operator>Assign</operator>
@@ -644,6 +674,13 @@
         <locationX>875</locationX>
         <locationY>4610</locationY>
         <assignmentItems>
+            <assignToReference>CuentaBuscadaHolder</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>idCuentaBuscadaoCreadaNew</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
             <assignToReference>idCuentaBuscadaoCreadaNew</assignToReference>
             <operator>Assign</operator>
             <value>
@@ -658,7 +695,7 @@
         <name>AsignarAsetBuscado_0_0</name>
         <label>AsignarAsetBuscado</label>
         <locationX>1963</locationX>
-        <locationY>8264</locationY>
+        <locationY>8564</locationY>
         <assignmentItems>
             <assignToReference>AssetCreadoOBuscado</assignToReference>
             <operator>Assign</operator>
@@ -674,7 +711,7 @@
         <name>AsignarAsetBuscado_0_0_0</name>
         <label>AsignarAsetBuscado</label>
         <locationX>2210</locationX>
-        <locationY>5708</locationY>
+        <locationY>6008</locationY>
         <assignmentItems>
             <assignToReference>AssetCreadoOBuscado</assignToReference>
             <operator>Assign</operator>
@@ -690,7 +727,7 @@
         <name>AsignarAsetBuscado_0_0_0_0</name>
         <label>AsignarAsetBuscado</label>
         <locationX>2474</locationX>
-        <locationY>5708</locationY>
+        <locationY>6008</locationY>
         <assignmentItems>
             <assignToReference>AssetCreadoOBuscado</assignToReference>
             <operator>Assign</operator>
@@ -706,7 +743,7 @@
         <name>AsignarAssetCreado</name>
         <label>AsignarAssetCreado</label>
         <locationX>1748</locationX>
-        <locationY>6308</locationY>
+        <locationY>6608</locationY>
         <assignmentItems>
             <assignToReference>AssetCreadoOBuscado</assignToReference>
             <operator>Assign</operator>
@@ -738,7 +775,7 @@
         <name>AsignarCargoInterno</name>
         <label>AsignarCargoInterno</label>
         <locationX>1699</locationX>
-        <locationY>10388</locationY>
+        <locationY>10688</locationY>
         <assignmentItems>
             <assignToReference>CargoInterno</assignToReference>
             <operator>Assign</operator>
@@ -754,7 +791,7 @@
         <name>AsignarContactoCuentaFacturacionBuscados</name>
         <label>AsignarContactoCuentaFacturacionBuscados</label>
         <locationX>1963</locationX>
-        <locationY>7940</locationY>
+        <locationY>8240</locationY>
         <assignmentItems>
             <assignToReference>Asset_0_0.ContactId</assignToReference>
             <operator>Assign</operator>
@@ -802,7 +839,7 @@
         <name>AsignarEmpleado</name>
         <label>AsignarEmpleado</label>
         <locationX>1963</locationX>
-        <locationY>10388</locationY>
+        <locationY>10688</locationY>
         <assignmentItems>
             <assignToReference>AsignarEmpleadoValue</assignToReference>
             <operator>Assign</operator>
@@ -859,6 +896,7 @@
             </value>
         </assignmentItems>
         <connector>
+            <isGoTo>true</isGoTo>
             <targetReference>Obtiene_RT_de_Cuenta</targetReference>
         </connector>
     </assignments>
@@ -866,7 +904,7 @@
         <name>AsignarVariablesUsuario</name>
         <label>AsignarVariablesUsuario</label>
         <locationX>1963</locationX>
-        <locationY>7232</locationY>
+        <locationY>7532</locationY>
         <assignmentItems>
             <assignToReference>SucursalUsuario</assignToReference>
             <operator>Assign</operator>
@@ -926,7 +964,7 @@
         <name>AsignTestVariable1</name>
         <label>AsignTestVariable1</label>
         <locationX>2474</locationX>
-        <locationY>5276</locationY>
+        <locationY>5576</locationY>
         <assignmentItems>
             <assignToReference>TestVariable1</assignToReference>
             <operator>Assign</operator>
@@ -942,7 +980,7 @@
         <name>AsignTestVariable2</name>
         <label>AsignTestVariable2</label>
         <locationX>2474</locationX>
-        <locationY>5384</locationY>
+        <locationY>5684</locationY>
         <assignmentItems>
             <assignToReference>TestVariable2</assignToReference>
             <operator>Assign</operator>
@@ -997,7 +1035,7 @@
         <name>CentrodeCosto2</name>
         <label>CentrodeCosto2</label>
         <locationX>1699</locationX>
-        <locationY>10496</locationY>
+        <locationY>10796</locationY>
         <assignmentItems>
             <assignToReference>CentroCostoAsignado</assignToReference>
             <operator>Assign</operator>
@@ -1013,12 +1051,12 @@
         <name>Coloca_PB_en_Quote</name>
         <label>Coloca PB en Quote</label>
         <locationX>1831</locationX>
-        <locationY>12128</locationY>
+        <locationY>12428</locationY>
         <assignmentItems>
             <assignToReference>BMW_ObtenerPresupuesto.Pricebook2Id</assignToReference>
             <operator>Assign</operator>
             <value>
-                <elementReference>Obtener_PriceBook_Opp.Id</elementReference>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -1029,7 +1067,7 @@
         <name>Copy_1_of_Asignar_Auto</name>
         <label>Copy 1 of Asignar Auto</label>
         <locationX>1831</locationX>
-        <locationY>11096</locationY>
+        <locationY>11396</locationY>
         <assignmentItems>
             <assignToReference>TipoAsset</assignToReference>
             <operator>Assign</operator>
@@ -1184,6 +1222,23 @@
         </connector>
     </assignments>
     <assignments>
+        <name>Copy_1_of_asignarAseguradoraId</name>
+        <label>Copy 1 of asignarAseguradoraId</label>
+        <locationX>875</locationX>
+        <locationY>5018</locationY>
+        <assignmentItems>
+            <assignToReference>idCuentaBuscadaoCreadaNew</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>CuentaBuscadaHolder</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>ifEmpresa</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Copy_1_of_AsignarTipoOppUsuario</name>
         <label>Copy 1 of AsignarTipoOppUsuario</label>
         <locationX>2371</locationX>
@@ -1225,8 +1280,8 @@
     <assignments>
         <name>Copy_1_of_Copy_1_of_Copy_2_of_Copy_1_of_SetServiceTerritory</name>
         <label>Copy 1 of Copy 1 of Copy 2 of Copy 1 of SetServiceTerritory</label>
-        <locationX>1600</locationX>
-        <locationY>9512</locationY>
+        <locationX>1270</locationX>
+        <locationY>9812</locationY>
         <assignmentItems>
             <assignToReference>ServiceTerritoryBuscado</assignToReference>
             <operator>Assign</operator>
@@ -1241,8 +1296,8 @@
     <assignments>
         <name>Copy_1_of_Copy_2_of_Asignar</name>
         <label>Copy 1 of Copy 2 of Asignar</label>
-        <locationX>2656</locationX>
-        <locationY>9080</locationY>
+        <locationX>2854</locationX>
+        <locationY>9380</locationY>
         <assignmentItems>
             <assignToReference>ReccordType</assignToReference>
             <operator>Assign</operator>
@@ -1264,8 +1319,8 @@
     <assignments>
         <name>Copy_1_of_Copy_2_of_Copy_1_of_SetServiceTerritory</name>
         <label>Copy 1 of Copy 2 of Copy 1 of SetServiceTerritory</label>
-        <locationX>1864</locationX>
-        <locationY>9512</locationY>
+        <locationX>1534</locationX>
+        <locationY>9812</locationY>
         <assignmentItems>
             <assignToReference>ServiceTerritoryBuscado</assignToReference>
             <operator>Assign</operator>
@@ -1278,10 +1333,26 @@
         </connector>
     </assignments>
     <assignments>
+        <name>Copy_1_of_Copy_3_of_Copy_1_of_Copy_2_of_Copy_1_of_SetServiceTerritory</name>
+        <label>Copy 1 of Copy 3 of Copy 1 of Copy 2 of Copy 1 of SetServiceTerritory</label>
+        <locationX>2062</locationX>
+        <locationY>9812</locationY>
+        <assignmentItems>
+            <assignToReference>ServiceTerritoryBuscado</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Pavas_Otobai.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Que_Tipo_Oportunidad</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Copy_1_of_EmpresaAsignar</name>
         <label>Copy 1 of EmpresaAsignar</label>
         <locationX>1633</locationX>
-        <locationY>8696</locationY>
+        <locationY>8996</locationY>
         <assignmentItems>
             <assignToReference>EmpresaUsuario</assignToReference>
             <operator>Assign</operator>
@@ -1289,15 +1360,30 @@
                 <elementReference>Compania</elementReference>
             </value>
         </assignmentItems>
+        <assignmentItems><assignToReference>EmpresaSeleccionadaId</assignToReference><operator>Assign</operator><value><elementReference>Copy_1_of_Empresa0.recordId</elementReference></value></assignmentItems>
         <connector>
             <targetReference>iftipoOportunidad</targetReference>
         </connector>
     </assignments>
     <assignments>
+        <name>Aplicar_Empresa_Seleccionada_Principal</name><label>Aplicar Empresa Seleccionada Principal</label>
+        <locationX>1963</locationX><locationY>8240</locationY>
+        <assignmentItems><assignToReference>EmpresaUsuario</assignToReference><operator>Assign</operator><value><elementReference>Empresa0.recordName</elementReference></value></assignmentItems>
+        <assignmentItems><assignToReference>EmpresaSeleccionadaId</assignToReference><operator>Assign</operator><value><elementReference>Empresa0.recordId</elementReference></value></assignmentItems>
+        <connector><targetReference>AsignarContactoCuentaFacturacionBuscados</targetReference></connector>
+    </assignments>
+    <assignments>
+        <name>Aplicar_Empresa_Seleccionada_Mostrador</name><label>Aplicar Empresa Seleccionada Mostrador</label>
+        <locationX>1007</locationX><locationY>1274</locationY>
+        <assignmentItems><assignToReference>EmpresaUsuario</assignToReference><operator>Assign</operator><value><elementReference>Copy_1_of_Empresa0.recordName</elementReference></value></assignmentItems>
+        <assignmentItems><assignToReference>EmpresaSeleccionadaId</assignToReference><operator>Assign</operator><value><elementReference>Copy_1_of_Empresa0.recordId</elementReference></value></assignmentItems>
+        <connector><targetReference>IfSearch</targetReference></connector>
+    </assignments>
+    <assignments>
         <name>Copy_1_of_SetServiceTerritory</name>
         <label>Copy 1 of SetServiceTerritory</label>
-        <locationX>544</locationX>
-        <locationY>9512</locationY>
+        <locationX>214</locationX>
+        <locationY>9812</locationY>
         <assignmentItems>
             <assignToReference>ServiceTerritoryBuscado</assignToReference>
             <operator>Assign</operator>
@@ -1312,8 +1398,8 @@
     <assignments>
         <name>Copy_2_of_Asignar</name>
         <label>Copy 2 of Asignar</label>
-        <locationX>2392</locationX>
-        <locationY>9080</locationY>
+        <locationX>2590</locationX>
+        <locationY>9380</locationY>
         <assignmentItems>
             <assignToReference>ReccordType</assignToReference>
             <operator>Assign</operator>
@@ -1335,8 +1421,8 @@
     <assignments>
         <name>Copy_2_of_Copy_1_of_SetServiceTerritory</name>
         <label>Copy 2 of Copy 1 of SetServiceTerritory</label>
-        <locationX>2128</locationX>
-        <locationY>9512</locationY>
+        <locationX>2326</locationX>
+        <locationY>9812</locationY>
         <assignmentItems>
             <assignToReference>ServiceTerritoryBuscado</assignToReference>
             <operator>Assign</operator>
@@ -1351,8 +1437,8 @@
     <assignments>
         <name>Copy_2_of_SetServiceTerritory</name>
         <label>Copy 2 of SetServiceTerritory</label>
-        <locationX>1336</locationX>
-        <locationY>9404</locationY>
+        <locationX>1006</locationX>
+        <locationY>9704</locationY>
         <assignmentItems>
             <assignToReference>ServiceTerritoryBuscado</assignToReference>
             <operator>Assign</operator>
@@ -1381,10 +1467,26 @@
         </connector>
     </assignments>
     <assignments>
+        <name>Copy_3_of_Copy_1_of_Copy_2_of_Copy_1_of_SetServiceTerritory</name>
+        <label>Copy 3 of Copy 1 of Copy 2 of Copy 1 of SetServiceTerritory</label>
+        <locationX>1798</locationX>
+        <locationY>9812</locationY>
+        <assignmentItems>
+            <assignToReference>ServiceTerritoryBuscado</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Bavarian_Pavas.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Que_Tipo_Oportunidad</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Copy_3_of_Copy_1_of_SetServiceTerritory</name>
         <label>Copy 3 of Copy 1 of SetServiceTerritory</label>
-        <locationX>808</locationX>
-        <locationY>9512</locationY>
+        <locationX>478</locationX>
+        <locationY>9812</locationY>
         <assignmentItems>
             <assignToReference>ServiceTerritoryBuscado</assignToReference>
             <operator>Assign</operator>
@@ -1400,14 +1502,15 @@
         <name>EmpresaAsignar</name>
         <label>EmpresaAsignar</label>
         <locationX>1897</locationX>
-        <locationY>8696</locationY>
+        <locationY>8996</locationY>
         <assignmentItems>
             <assignToReference>EmpresaUsuario</assignToReference>
             <operator>Assign</operator>
             <value>
-                <elementReference>Empresa0</elementReference>
+                <elementReference>Empresa0.recordName</elementReference>
             </value>
         </assignmentItems>
+        <assignmentItems><assignToReference>EmpresaSeleccionadaId</assignToReference><operator>Assign</operator><value><elementReference>Empresa0.recordId</elementReference></value></assignmentItems>
         <connector>
             <targetReference>iftipoOportunidad</targetReference>
         </connector>
@@ -1438,8 +1541,8 @@
     <assignments>
         <name>SetServiceTerritory</name>
         <label>SetServiceTerritory</label>
-        <locationX>1072</locationX>
-        <locationY>9404</locationY>
+        <locationX>742</locationX>
+        <locationY>9704</locationY>
         <assignmentItems>
             <assignToReference>ServiceTerritoryBuscado</assignToReference>
             <operator>Assign</operator>
@@ -1453,6 +1556,14 @@
     </assignments>
     <choices>
         <name>Aseguradora</name>
+        <choiceText>Aseguradora-Taller</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Aseguradora</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Aseguradora1</name>
         <choiceText>Aseguradora</choiceText>
         <dataType>String</dataType>
         <value>
@@ -1609,6 +1720,14 @@
         <dataType>String</dataType>
     </choices>
     <choices>
+        <name>Mec_nico_independiente</name>
+        <choiceText>Mecánico independiente</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Mecánico independiente</stringValue>
+        </value>
+    </choices>
+    <choices>
         <name>Mostrador</name>
         <choiceText>Mostrador</choiceText>
         <dataType>String</dataType>
@@ -1665,6 +1784,14 @@
         </value>
     </choices>
     <choices>
+        <name>Talleropcion</name>
+        <choiceText>Taller</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Taller</stringValue>
+        </value>
+    </choices>
+    <choices>
         <name>Whatsapp</name>
         <choiceText>&lt;span style=&quot;font-size: 13px;&quot;&gt;Whatsapp&lt;/span&gt;</choiceText>
         <dataType>String</dataType>
@@ -1681,10 +1808,17 @@
         </value>
     </choices>
     <decisions>
+        <name>Validar_Estado_Pricebook</name><label>Validar Estado Pricebook</label>
+        <locationX>1963</locationX><locationY>12020</locationY>
+        <defaultConnector><targetReference>Aviso_Empresa_Pricebook_No_Disponible</targetReference></defaultConnector>
+        <defaultConnectorLabel>NO_CONFIGURADO, SELECCION_REQUERIDA o ERROR</defaultConnectorLabel>
+        <rules><name>Pricebook_Resuelto</name><conditionLogic>and</conditionLogic><conditions><leftValueReference>Resolver_Pricebook_Empresa.status</leftValueReference><operator>EqualTo</operator><rightValue><stringValue>EXITO</stringValue></rightValue></conditions><connector><targetReference>Obtener_PriceBook_Opp</targetReference></connector><label>EXITO</label></rules>
+    </decisions>
+    <decisions>
         <name>compania_no_nulo</name>
         <label>compania no nulo</label>
         <locationX>1963</locationX>
-        <locationY>7340</locationY>
+        <locationY>7640</locationY>
         <defaultConnector>
             <targetReference>Copy_1_of_IfTipoAseguradora</targetReference>
         </defaultConnector>
@@ -1709,7 +1843,7 @@
         <name>Copy_1_of_compania_no_nulo</name>
         <label>Copy 1 of compania no nulo</label>
         <locationX>1765</locationX>
-        <locationY>8588</locationY>
+        <locationY>8888</locationY>
         <defaultConnector>
             <targetReference>EmpresaAsignar</targetReference>
         </defaultConnector>
@@ -1799,7 +1933,7 @@
         <name>Copy_1_of_IfTipoAseguradora</name>
         <label>Copy 1 of IfTipoAseguradora</label>
         <locationX>1963</locationX>
-        <locationY>7640</locationY>
+        <locationY>7940</locationY>
         <defaultConnector>
             <targetReference>Crear_Veh_culo_0</targetReference>
         </defaultConnector>
@@ -1824,14 +1958,14 @@
         <name>Copy_1_of_Que_Tipo_de_Oportunidad</name>
         <label>Copy 1 of Que Tipo de Oportunidad</label>
         <locationX>1963</locationX>
-        <locationY>12836</locationY>
+        <locationY>13244</locationY>
         <defaultConnector>
-            <targetReference>Presupuesto</targetReference>
+            <targetReference>redirect_quote</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Copy_1_of_Aeeguradora</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>or</conditionLogic>
             <conditions>
                 <leftValueReference>TipoOppUsuario</leftValueReference>
                 <operator>EqualTo</operator>
@@ -1871,6 +2005,32 @@
         </rules>
     </decisions>
     <decisions>
+        <name>Copy_2_of_IfTipoAseguradora</name>
+        <label>Copy 2 of IfTipoAseguradora</label>
+        <locationX>1007</locationX>
+        <locationY>4910</locationY>
+        <defaultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>ifEmpresa</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Copy_2_of_yestipoAseguradora</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Copy_1_of_Tipo_de_cliente</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Aseguradora</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_asignarAseguradoraId</targetReference>
+            </connector>
+            <label>Copy 2 of yestipoAseguradora</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Copy_2_of_VinExiste</name>
         <label>Copy 2 of VinExiste</label>
         <locationX>831</locationX>
@@ -1899,7 +2059,7 @@
         <name>Cuenta_Empresa</name>
         <label>Cuenta Empresa</label>
         <locationX>1550</locationX>
-        <locationY>5708</locationY>
+        <locationY>6008</locationY>
         <defaultConnector>
             <targetReference>Crear_Nueva_Cuenta_0</targetReference>
         </defaultConnector>
@@ -1948,8 +2108,8 @@
     <decisions>
         <name>decide_compa_ia</name>
         <label>decide compañia</label>
-        <locationX>676</locationX>
-        <locationY>9296</locationY>
+        <locationX>346</locationX>
+        <locationY>9596</locationY>
         <defaultConnector>
             <targetReference>Copy_3_of_Copy_1_of_GetServiceTerritory</targetReference>
         </defaultConnector>
@@ -2031,7 +2191,7 @@
         <name>DesitionCampo</name>
         <label>DesitionCampo</label>
         <locationX>2474</locationX>
-        <locationY>5492</locationY>
+        <locationY>5792</locationY>
         <defaultConnector>
             <targetReference>Asignar_info_Asset</targetReference>
         </defaultConnector>
@@ -2071,7 +2231,7 @@
         <name>Encuentra_Price_Book</name>
         <label>Encuentra Price Book</label>
         <locationX>1963</locationX>
-        <locationY>11612</locationY>
+        <locationY>11912</locationY>
         <defaultConnector>
             <targetReference>Obtener_PriceBook_Opp</targetReference>
         </defaultConnector>
@@ -2194,7 +2354,7 @@
         <name>If_Moneda_Seleccionada</name>
         <label>If Moneda Seleccionada</label>
         <locationX>1963</locationX>
-        <locationY>10688</locationY>
+        <locationY>10988</locationY>
         <defaultConnector>
             <targetReference>Asignar_Colones_Default</targetReference>
         </defaultConnector>
@@ -2248,7 +2408,7 @@
         <name>ifEmpresa</name>
         <label>ifEmpresa</label>
         <locationX>1963</locationX>
-        <locationY>8480</locationY>
+        <locationY>8780</locationY>
         <defaultConnector>
             <targetReference>iftipoOportunidad</targetReference>
         </defaultConnector>
@@ -2297,8 +2457,8 @@
     <decisions>
         <name>IFSucursal</name>
         <label>IFSucursal</label>
-        <locationX>1270</locationX>
-        <locationY>9188</locationY>
+        <locationX>1072</locationX>
+        <locationY>9488</locationY>
         <defaultConnector>
             <targetReference>Sucursal_del_Usuario</targetReference>
         </defaultConnector>
@@ -2313,6 +2473,13 @@
                     <stringValue>Call Center</stringValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>$User.Username</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>ccrm1@redmotorscr.com</stringValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <targetReference>decide_compa_ia</targetReference>
             </connector>
@@ -2325,7 +2492,7 @@
                 <leftValueReference>SucursalUsuario</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Uruca Motorrad</stringValue>
+                    <stringValue>Pavas</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -2378,7 +2545,7 @@
         <name>iftipoOportunidad</name>
         <label>iftipoOportunidad</label>
         <locationX>1963</locationX>
-        <locationY>8972</locationY>
+        <locationY>9272</locationY>
         <defaultConnector>
             <targetReference>Copy_1_of_Copy_2_of_Asignar</targetReference>
         </defaultConnector>
@@ -2432,7 +2599,7 @@
         <name>No_existe_vehiculo</name>
         <label>No existe vehiculo</label>
         <locationX>1963</locationX>
-        <locationY>5168</locationY>
+        <locationY>5468</locationY>
         <defaultConnector>
             <targetReference>AsignTestVariable1</targetReference>
         </defaultConnector>
@@ -2511,7 +2678,7 @@
         <name>Nueva_Cuenta</name>
         <label>Nueva Cuenta</label>
         <locationX>1748</locationX>
-        <locationY>5600</locationY>
+        <locationY>5900</locationY>
         <defaultConnector>
             <targetReference>Crear_Vehiculo_0_0</targetReference>
         </defaultConnector>
@@ -2536,7 +2703,7 @@
         <name>Price_Book_vac_o</name>
         <label>Price Book vacío</label>
         <locationX>1963</locationX>
-        <locationY>12020</locationY>
+        <locationY>12320</locationY>
         <defaultConnector>
             <targetReference>TipoCliente</targetReference>
         </defaultConnector>
@@ -2561,7 +2728,7 @@
         <name>Que_Tipo_Oportunidad</name>
         <label>Que Tipo de Oportunidad</label>
         <locationX>1963</locationX>
-        <locationY>9872</locationY>
+        <locationY>10172</locationY>
         <defaultConnector>
             <targetReference>TipodeCliente</targetReference>
         </defaultConnector>
@@ -2647,8 +2814,8 @@
     <decisions>
         <name>Sucursal_del_Usuario</name>
         <label>Sucursal del Usuario</label>
-        <locationX>1864</locationX>
-        <locationY>9296</locationY>
+        <locationX>1798</locationX>
+        <locationY>9596</locationY>
         <defaultConnector>
             <targetReference>Copy_2_of_Copy_1_of_GetServiceTerritory</targetReference>
         </defaultConnector>
@@ -2683,13 +2850,44 @@
             </connector>
             <label>Usuario de Pinares</label>
         </rules>
+        <rules>
+            <name>Pavas_Bavarian</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$User.Sucursal__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Pavas</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Bavarian_Pavas</targetReference>
+            </connector>
+            <label>Pavas Bavarian</label>
+        </rules>
+        <rules>
+            <name>Pavas_Otobai</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$User.Sucursal__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Uruca Otras Marcas</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Pavas_Otobai</targetReference>
+            </connector>
+            <label>Pavas Otobai</label>
+        </rules>
     </decisions>
     <decisions>
         <name>Tipo_Vehiculo_o_Moto</name>
         <label>Tipo Vehiculo o Moto</label>
         <locationX>1963</locationX>
-        <locationY>10988</locationY>
+        <locationY>11288</locationY>
         <defaultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Asignar_Auto</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
@@ -2748,6 +2946,7 @@
                 </rightValue>
             </conditions>
             <connector>
+                <isGoTo>true</isGoTo>
                 <targetReference>Copy_1_of_Asignar_Auto</targetReference>
             </connector>
             <label>Tipo de Usuario</label>
@@ -2757,7 +2956,7 @@
         <name>TipoCliente</name>
         <label>TipoCliente</label>
         <locationX>1963</locationX>
-        <locationY>12536</locationY>
+        <locationY>12836</locationY>
         <defaultConnector>
             <targetReference>Copy_1_of_Copy_1_of_Copy_2_of_Actualiza_opp</targetReference>
         </defaultConnector>
@@ -2807,12 +3006,42 @@
             </connector>
             <label>TipoOppAseguradora</label>
         </rules>
+        <rules>
+            <name>Tallerop</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Copy_1_of_Tipo_de_cliente</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Talleropcion</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_3_of_Copy_1_of_Copy_2_of_Actualiza_opp</targetReference>
+            </connector>
+            <label>Taller</label>
+        </rules>
+        <rules>
+            <name>MecanicoInd</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Copy_1_of_Tipo_de_cliente</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Mec_nico_independiente</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Copy_1_of_Copy_3_of_Copy_1_of_Copy_2_of_Actualiza_opp</targetReference>
+            </connector>
+            <label>MecanicoInd</label>
+        </rules>
     </decisions>
     <decisions>
         <name>TipodeCliente</name>
         <label>TipodeCliente</label>
         <locationX>1963</locationX>
-        <locationY>10280</locationY>
+        <locationY>10580</locationY>
         <defaultConnector>
             <targetReference>If_Moneda_Seleccionada</targetReference>
         </defaultConnector>
@@ -2892,7 +3121,7 @@
         <name>VinExiste</name>
         <label>VinExiste</label>
         <locationX>1451</locationX>
-        <locationY>5492</locationY>
+        <locationY>5792</locationY>
         <defaultConnector>
             <targetReference>Nueva_Cuenta</targetReference>
         </defaultConnector>
@@ -2913,6 +3142,7 @@
             <label>ExisteVIN</label>
         </rules>
     </decisions>
+    <description>Con Cambio de opcion de aseguradora</description>
     <dynamicChoiceSets>
         <name>Tipocuenta</name>
         <dataType>Picklist</dataType>
@@ -2921,6 +3151,7 @@
         <picklistField>SobjectType</picklistField>
         <picklistObject>RecordType</picklistObject>
     </dynamicChoiceSets>
+    <environments>Default</environments>
     <formulas>
         <name>Apellido1</name>
         <dataType>String</dataType>
@@ -3036,6 +3267,11 @@
         <name>year</name>
         <dataType>String</dataType>
         <expression>LEFT({!FechaNacimientoTexto},FIND(&apos;,&apos;, {!FechaNacimientoTexto})-1)</expression>
+    </formulas>
+    <formulas>
+        <name>EmpresaLegacySeleccionada</name><dataType>String</dataType>
+        <description>Compatibilidad temporal: solo Bavarian y Otobai se escriben en el campo legacy.</description>
+        <expression>CASE({!EmpresaUsuario}, &quot;Bavarian&quot;, &quot;Bavarian&quot;, &quot;Otobai&quot;, &quot;Otobai&quot;, &quot;&quot;)</expression>
     </formulas>
     <interviewLabel>Opp Flow v6 {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Opp Flow v6</label>
@@ -3199,7 +3435,7 @@
         <name>Crear_Nueva_Cuenta</name>
         <label>Crear Nueva Cuenta</label>
         <locationX>1418</locationX>
-        <locationY>5816</locationY>
+        <locationY>6116</locationY>
         <assignRecordIdToReference>IdCuentaCreada</assignRecordIdToReference>
         <connector>
             <targetReference>Crear_Vehiculo_0</targetReference>
@@ -3240,7 +3476,7 @@
         <name>Crear_Nueva_Cuenta_0</name>
         <label>Crear Nueva Cuenta</label>
         <locationX>1682</locationX>
-        <locationY>5816</locationY>
+        <locationY>6116</locationY>
         <assignRecordIdToReference>IdCuentaCreada</assignRecordIdToReference>
         <connector>
             <targetReference>Crear_Vehiculo_0</targetReference>
@@ -3358,7 +3594,7 @@
         <name>Crear_Vehiculo_0</name>
         <label>Crear Vehiculo</label>
         <locationX>1550</locationX>
-        <locationY>6008</locationY>
+        <locationY>6308</locationY>
         <assignRecordIdToReference>IdVehiculoCreado</assignRecordIdToReference>
         <connector>
             <targetReference>Asset_0</targetReference>
@@ -3429,7 +3665,7 @@
         <name>Crear_Vehiculo_0_0</name>
         <label>Crear Vehiculo</label>
         <locationX>1946</locationX>
-        <locationY>5708</locationY>
+        <locationY>6008</locationY>
         <assignRecordIdToReference>IdVehiculoCreado</assignRecordIdToReference>
         <connector>
             <targetReference>Asset_0</targetReference>
@@ -3494,7 +3730,7 @@
         <name>CreateOpportunity</name>
         <label>CreateOpportunity</label>
         <locationX>1963</locationX>
-        <locationY>11288</locationY>
+        <locationY>11588</locationY>
         <assignRecordIdToReference>CreatedOppotunityID</assignRecordIdToReference>
         <connector>
             <targetReference>CreateQuote</targetReference>
@@ -3514,9 +3750,10 @@
         <inputAssignments>
             <field>BMW_Compania__c</field>
             <value>
-                <elementReference>EmpresaUsuario</elementReference>
+                <elementReference>EmpresaLegacySeleccionada</elementReference>
             </value>
         </inputAssignments>
+        <inputAssignments><field>Empresa_Operadora__c</field><value><elementReference>EmpresaSeleccionadaId</elementReference></value></inputAssignments>
         <inputAssignments>
             <field>BMW_PlacaDeVehiculoOElVIN__c</field>
             <value>
@@ -3601,7 +3838,7 @@
         <name>CreateQuote</name>
         <label>CreateQuote</label>
         <locationX>1963</locationX>
-        <locationY>11396</locationY>
+        <locationY>11696</locationY>
         <assignRecordIdToReference>presupuestoid</assignRecordIdToReference>
         <connector>
             <targetReference>BMW_ObtenerPresupuesto</targetReference>
@@ -3699,7 +3936,7 @@
         <name>Asset_0</name>
         <label>Asset</label>
         <locationX>1748</locationX>
-        <locationY>6200</locationY>
+        <locationY>6500</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>AsignarAssetCreado</targetReference>
@@ -3720,7 +3957,7 @@
         <name>Asset_0_0</name>
         <label>Asset</label>
         <locationX>1963</locationX>
-        <locationY>6692</locationY>
+        <locationY>6992</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>GetEventsAsset</targetReference>
@@ -3741,7 +3978,7 @@
         <name>Asset_0_0_0</name>
         <label>Asset</label>
         <locationX>1963</locationX>
-        <locationY>8156</locationY>
+        <locationY>8456</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>AsignarAsetBuscado_0_0</targetReference>
@@ -3762,7 +3999,7 @@
         <name>Asset_0_0_0_0</name>
         <label>Asset</label>
         <locationX>2210</locationX>
-        <locationY>5600</locationY>
+        <locationY>5900</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>AsignarAsetBuscado_0_0_0</targetReference>
@@ -3783,7 +4020,7 @@
         <name>Asset_0_0_0_0_0_0</name>
         <label>Asset</label>
         <locationX>2474</locationX>
-        <locationY>5600</locationY>
+        <locationY>5900</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>AsignarAsetBuscado_0_0_0_0</targetReference>
@@ -3825,10 +4062,10 @@
         <name>BMW_ObtenerPresupuesto</name>
         <label>Obtener Presupuesto</label>
         <locationX>1963</locationX>
-        <locationY>11504</locationY>
+        <locationY>11804</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Encuentra_Price_Book</targetReference>
+            <targetReference>Resolver_Pricebook_Empresa</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -3908,15 +4145,15 @@
     <recordLookups>
         <name>Copy_1_of_GetServiceTerritory</name>
         <label>Copy 1 of GetServiceTerritory</label>
-        <locationX>544</locationX>
-        <locationY>9404</locationY>
+        <locationX>214</locationX>
+        <locationY>9704</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Copy_1_of_SetServiceTerritory</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Name</field>
+            <field>Id</field>
             <operator>Contains</operator>
             <value>
                 <stringValue>Pavas - Mostrador Bavarian</stringValue>
@@ -3957,8 +4194,8 @@
     <recordLookups>
         <name>Copy_2_of_Copy_1_of_GetServiceTerritory</name>
         <label>Copy 2 of Copy 1 of GetServiceTerritory</label>
-        <locationX>2128</locationX>
-        <locationY>9404</locationY>
+        <locationX>2326</locationX>
+        <locationY>9704</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Copy_2_of_Copy_1_of_SetServiceTerritory</targetReference>
@@ -3985,8 +4222,8 @@
     <recordLookups>
         <name>Copy_2_of_GetServiceTerritory</name>
         <label>Copy 2 of GetServiceTerritory</label>
-        <locationX>1336</locationX>
-        <locationY>9296</locationY>
+        <locationX>1006</locationX>
+        <locationY>9596</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Copy_2_of_SetServiceTerritory</targetReference>
@@ -3996,7 +4233,7 @@
             <field>Name</field>
             <operator>Contains</operator>
             <value>
-                <stringValue>Otobai</stringValue>
+                <stringValue>Pavas - Mostrador Otobai</stringValue>
             </value>
         </filters>
         <filters>
@@ -4013,11 +4250,67 @@
     <recordLookups>
         <name>Copy_3_of_Copy_1_of_GetServiceTerritory</name>
         <label>Copy 3 of Copy 1 of GetServiceTerritory</label>
-        <locationX>808</locationX>
-        <locationY>9404</locationY>
+        <locationX>478</locationX>
+        <locationY>9704</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Copy_3_of_Copy_1_of_SetServiceTerritory</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Pavas - Mostrador Otobai</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ServiceTerritory</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Bavarian_Pavas</name>
+        <label>Get Bavarian Pavas</label>
+        <locationX>1798</locationX>
+        <locationY>9704</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Copy_3_of_Copy_1_of_Copy_2_of_Copy_1_of_SetServiceTerritory</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Pavas - Mostrador Bavarian</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>ServiceTerritory</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Pavas_Otobai</name>
+        <label>Get Pavas Otobai</label>
+        <locationX>2062</locationX>
+        <locationY>9704</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Copy_1_of_Copy_3_of_Copy_1_of_Copy_2_of_Copy_1_of_SetServiceTerritory</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -4084,7 +4377,7 @@
         <name>GetContactoAsset</name>
         <label>GetContactoAsset</label>
         <locationX>1963</locationX>
-        <locationY>7016</locationY>
+        <locationY>7316</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>GetUser</targetReference>
@@ -4105,7 +4398,7 @@
         <name>GetCuentaAsset</name>
         <label>GetCuentaAsset</label>
         <locationX>1963</locationX>
-        <locationY>6908</locationY>
+        <locationY>7208</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>GetContactoAsset</targetReference>
@@ -4147,7 +4440,7 @@
         <name>GetEventsAsset</name>
         <label>GetEventsAsset</label>
         <locationX>1963</locationX>
-        <locationY>6800</locationY>
+        <locationY>7100</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>GetCuentaAsset</targetReference>
@@ -4167,8 +4460,8 @@
     <recordLookups>
         <name>GetMostradorEscazu</name>
         <label>GetMostradorEscazu</label>
-        <locationX>1600</locationX>
-        <locationY>9404</locationY>
+        <locationX>1270</locationX>
+        <locationY>9704</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Copy_1_of_Copy_1_of_Copy_2_of_Copy_1_of_SetServiceTerritory</targetReference>
@@ -4195,8 +4488,8 @@
     <recordLookups>
         <name>GetServicePinares</name>
         <label>GetServicePinares</label>
-        <locationX>1864</locationX>
-        <locationY>9404</locationY>
+        <locationX>1534</locationX>
+        <locationY>9704</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Copy_1_of_Copy_2_of_Copy_1_of_SetServiceTerritory</targetReference>
@@ -4223,8 +4516,8 @@
     <recordLookups>
         <name>GetServiceTerritory</name>
         <label>GetServiceTerritory</label>
-        <locationX>1072</locationX>
-        <locationY>9296</locationY>
+        <locationX>742</locationX>
+        <locationY>9596</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>SetServiceTerritory</targetReference>
@@ -4234,7 +4527,7 @@
             <field>Name</field>
             <operator>Contains</operator>
             <value>
-                <stringValue>Motorrad</stringValue>
+                <stringValue>Pavas - Mostrador Bavarian</stringValue>
             </value>
         </filters>
         <filters>
@@ -4252,7 +4545,7 @@
         <name>GetUser</name>
         <label>GetUser</label>
         <locationX>1963</locationX>
-        <locationY>7124</locationY>
+        <locationY>7424</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>AsignarVariablesUsuario</targetReference>
@@ -4294,7 +4587,7 @@
         <name>GetVehiculo</name>
         <label>GetVehiculo</label>
         <locationX>1451</locationX>
-        <locationY>5384</locationY>
+        <locationY>5684</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>VinExiste</targetReference>
@@ -4336,7 +4629,7 @@
         <name>Obtener_PriceBook_Opp</name>
         <label>Obtener PriceBook Opp</label>
         <locationX>1963</locationX>
-        <locationY>11912</locationY>
+        <locationY>12212</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Price_Book_vac_o</targetReference>
@@ -4346,7 +4639,7 @@
             <field>Name</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>PriceBookName</elementReference>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -4357,7 +4650,7 @@
         <name>Obtiene_Campa_a_Aseguradora</name>
         <label>Obtiene Campaña Aseguradora</label>
         <locationX>1831</locationX>
-        <locationY>9980</locationY>
+        <locationY>10280</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Asigna_campa_a_aseguradora</targetReference>
@@ -4399,7 +4692,7 @@
         <name>Actualiza_opp</name>
         <label>Actualiza opp</label>
         <locationX>1831</locationX>
-        <locationY>12344</locationY>
+        <locationY>12644</locationY>
         <connector>
             <targetReference>TipoCliente</targetReference>
         </connector>
@@ -4414,7 +4707,7 @@
         <inputAssignments>
             <field>Pricebook2Id</field>
             <value>
-                <elementReference>Obtener_PriceBook_Opp.Id</elementReference>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </inputAssignments>
         <object>Opportunity</object>
@@ -4423,7 +4716,7 @@
         <name>Actualiza_PB</name>
         <label>Actualiza PB</label>
         <locationX>1831</locationX>
-        <locationY>12236</locationY>
+        <locationY>12536</locationY>
         <connector>
             <targetReference>Actualiza_opp</targetReference>
         </connector>
@@ -4432,10 +4725,10 @@
     <recordUpdates>
         <name>ActualizarOppAseguradora</name>
         <label>ActualizarOppAseguradora</label>
-        <locationX>2095</locationX>
-        <locationY>12644</locationY>
+        <locationX>1831</locationX>
+        <locationY>12944</locationY>
         <connector>
-            <targetReference>Copy_1_of_Que_Tipo_de_Oportunidad</targetReference>
+            <targetReference>ActualizarQuoteAseguradora</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -4446,6 +4739,12 @@
             </value>
         </filters>
         <inputAssignments>
+            <field>BMW_Aseguradora__c</field>
+            <value>
+                <elementReference>SelectedAseguradoraId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Cuenta_de_Facturaci_n__c</field>
             <value>
                 <elementReference>SelectedAseguradoraId</elementReference>
@@ -4454,12 +4753,36 @@
         <object>Opportunity</object>
     </recordUpdates>
     <recordUpdates>
+        <name>ActualizarQuoteAseguradora</name>
+        <label>ActualizarQuoteAseguradora</label>
+        <locationX>1831</locationX>
+        <locationY>13052</locationY>
+        <connector>
+            <targetReference>Copy_1_of_Que_Tipo_de_Oportunidad</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>presupuestoid</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Cuenta_de_facturaci_n2__c</field>
+            <value>
+                <elementReference>SelectedAseguradoraId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Quote</object>
+    </recordUpdates>
+    <recordUpdates>
         <name>Copy_1_of_Actualiza_opp</name>
         <label>Copy 1 of Actualiza opp</label>
         <locationX>1831</locationX>
-        <locationY>12944</locationY>
+        <locationY>13352</locationY>
         <connector>
-            <targetReference>Presupuesto</targetReference>
+            <targetReference>redirect_quote</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -4486,8 +4809,8 @@
     <recordUpdates>
         <name>Copy_1_of_Copy_1_of_Copy_2_of_Actualiza_opp</name>
         <label>Copy 1 of Copy 1 of Copy 2 of Actualiza opp</label>
-        <locationX>2359</locationX>
-        <locationY>12644</locationY>
+        <locationX>2623</locationX>
+        <locationY>12944</locationY>
         <connector>
             <targetReference>Copy_1_of_Que_Tipo_de_Oportunidad</targetReference>
         </connector>
@@ -4510,8 +4833,8 @@
     <recordUpdates>
         <name>Copy_1_of_Copy_2_of_Actualiza_opp</name>
         <label>Copy 1 of Copy 2 of Actualiza opp</label>
-        <locationX>1831</locationX>
-        <locationY>12644</locationY>
+        <locationX>1567</locationX>
+        <locationY>12944</locationY>
         <connector>
             <targetReference>Copy_1_of_Que_Tipo_de_Oportunidad</targetReference>
         </connector>
@@ -4532,10 +4855,34 @@
         <object>Opportunity</object>
     </recordUpdates>
     <recordUpdates>
+        <name>Copy_1_of_Copy_3_of_Copy_1_of_Copy_2_of_Actualiza_opp</name>
+        <label>Copy 1 of Copy 3 of Copy 1 of Copy 2 of Actualiza opp</label>
+        <locationX>2359</locationX>
+        <locationY>12944</locationY>
+        <connector>
+            <targetReference>Copy_1_of_Que_Tipo_de_Oportunidad</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>CreatedOppotunityID</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Tipo_de_cliente_mostrador__c</field>
+            <value>
+                <stringValue>Mecánico independiente</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
+    <recordUpdates>
         <name>Copy_2_of_Actualiza_opp</name>
         <label>Copy 2 of Actualiza opp</label>
-        <locationX>1567</locationX>
-        <locationY>12644</locationY>
+        <locationX>1303</locationX>
+        <locationY>12944</locationY>
         <connector>
             <targetReference>Copy_1_of_Que_Tipo_de_Oportunidad</targetReference>
         </connector>
@@ -4556,20 +4903,51 @@
         <object>Opportunity</object>
     </recordUpdates>
     <recordUpdates>
+        <name>Copy_3_of_Copy_1_of_Copy_2_of_Actualiza_opp</name>
+        <label>Copy 3 of Copy 1 of Copy 2 of Actualiza opp</label>
+        <locationX>2095</locationX>
+        <locationY>12944</locationY>
+        <connector>
+            <targetReference>Copy_1_of_Que_Tipo_de_Oportunidad</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>CreatedOppotunityID</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Tipo_de_cliente_mostrador__c</field>
+            <value>
+                <stringValue>Taller</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
+    <recordUpdates>
         <name>UpdateAsset</name>
         <label>UpdateAsset</label>
         <locationX>1963</locationX>
-        <locationY>8048</locationY>
+        <locationY>8348</locationY>
         <connector>
             <targetReference>Asset_0_0_0</targetReference>
         </connector>
         <inputReference>AssetCreadoOBuscado</inputReference>
     </recordUpdates>
     <screens>
+        <name>Aviso_Empresa_Pricebook_No_Disponible</name><label>Empresa o Pricebook no disponible</label>
+        <locationX>2227</locationX><locationY>12020</locationY>
+        <allowBack>true</allowBack><allowFinish>true</allowFinish><allowPause>false</allowPause>
+        <fields><name>Mensaje_Empresa_Pricebook</name><fieldText>&lt;p&gt;No fue posible resolver una configuración válida de Empresa y Pricebook. {!Resolver_Pricebook_Empresa.mensaje}&lt;/p&gt;</fieldText><fieldType>DisplayText</fieldType></fields>
+        <showFooter>true</showFooter><showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Buscar_Veh_culo</name>
         <label>Buscar Vehículo</label>
         <locationX>1963</locationX>
-        <locationY>5060</locationY>
+        <locationY>5360</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -4607,6 +4985,14 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -4664,6 +5050,14 @@
                         <assignToReference>AssetVIN</assignToReference>
                         <name>selectedRecordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -4695,13 +5089,31 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>No_Existe_Veh_culo</name>
             <dataType>Boolean</dataType>
             <fieldText>Crear vehículo nuevo</fieldText>
             <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
@@ -4714,6 +5126,7 @@
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
+        <backButtonLabel>Atrás</backButtonLabel>
         <connector>
             <targetReference>Noexistevehiculo</targetReference>
         </connector>
@@ -4721,6 +5134,14 @@
             <name>NombreCuentaDisplay</name>
             <fieldText>&lt;p&gt;{!NombreCuentaParaDisplay}&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Copy_1_of_AssetDataTable</name>
@@ -4756,6 +5177,14 @@
                 <assignToReference>AssetCreadoBuscadoNew</assignToReference>
                 <name>firstSelectedId</name>
             </outputParameters>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -4793,21 +5222,48 @@
             <dataType>Boolean</dataType>
             <fieldText>Deseo buscar un vehículo</fieldText>
             <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Deseo_crear_un_nuevo_veh_culo</name>
             <dataType>Boolean</dataType>
             <fieldText>Deseo crear un nuevo vehículo</fieldText>
             <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>NoAsociarPlaca2</name>
             <dataType>Boolean</dataType>
             <fieldText>Sin placa ( Para casos de lifestyle y coolant)</fieldText>
             <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Copy_1_of_Buscar_Veh_culo_Section1</name>
@@ -4843,6 +5299,14 @@
                         <assignToReference>AssetCreadoBuscadoNew</assignToReference>
                         <name>recordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -4907,6 +5371,14 @@
                         <assignToReference>AssetVIN</assignToReference>
                         <name>selectedRecordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -4945,6 +5417,15 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Copy_1_of_Buscar_Veh_culo_Section2</name>
@@ -4954,48 +5435,129 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>VehiculoHolder.numeroDePlaca__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>VehiculoHolder.Tipo_de_veh_culo__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>VehiculoHolder.Marca_Nvo__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>VehiculoHolder.Modelo_Nvo__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>VehiculoHolder.NumeroDeChasis__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>VehiculoHolder.Motor__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>VehiculoHolder.Color__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>VehiculoHolder.Anio__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <fieldType>ObjectProvided</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
                     <objectFieldReference>VehiculoHolder.Kilometros__c</objectFieldReference>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <inputParameters>
                     <name>width</name>
@@ -5006,6 +5568,15 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -5024,6 +5595,7 @@
                 </conditions>
             </visibilityRule>
         </fields>
+        <nextOrFinishButtonLabel>Siguiente</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
@@ -5035,13 +5607,22 @@
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
+        <backButtonLabel>Atrás</backButtonLabel>
         <connector>
-            <targetReference>ifEmpresa</targetReference>
+            <targetReference>Copy_2_of_IfTipoAseguradora</targetReference>
         </connector>
         <fields>
             <name>Copy_2_of_Display1</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 20px; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);&quot;&gt;Contacto y cuenta de facturación&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Copy_1_of_Crear_Veh_culo_Section1</name>
@@ -5053,6 +5634,14 @@
                     <name>Copy_1_of_NombreCuenta</name>
                     <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Nombre del propietario:&lt;/strong&gt;  {!AccountName} {!AccountFirstName} {!AccountLastName}&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <inputParameters>
                     <name>width</name>
@@ -5074,6 +5663,15 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Copy_1_of_Crear_Veh_culo_Section2</name>
@@ -5121,6 +5719,14 @@
                         <assignToReference>ContactoCreadoBuscadoNew</assignToReference>
                         <name>recordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Copy_1_of_LookUpCuentaFacturacion</name>
@@ -5162,16 +5768,40 @@
                         <assignToReference>idCuentaBuscadaoCreadaNew</assignToReference>
                         <name>recordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Copy_1_of_InfoVehi</name>
                     <fieldText>&lt;p&gt;&lt;b style=&quot;background-color: rgb(255, 255, 255); font-size: 20px; color: rgb(0, 0, 0);&quot;&gt;Información del vehículo&lt;/b&gt;&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Copy_1_of_InfoVehiculo</name>
                     <fieldText>&lt;p&gt;&lt;strong style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255); font-size: 14px;&quot;&gt;Número de placa :&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;{!AssetNumeroPlaca}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px; color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;VIN:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetNumeroVin}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px; color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;Marca:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetMarca}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255); font-size: 14px;&quot;&gt;Modelo:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetModelo}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px; color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;Año:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetAnno}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px; color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;Color:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetColor}&lt;/span&gt;&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <inputParameters>
                     <name>width</name>
@@ -5193,6 +5823,15 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Copy_1_of_Crear_Veh_culo_Section3</name>
@@ -5209,7 +5848,17 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
+        <nextOrFinishButtonLabel>Siguiente</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
@@ -5225,6 +5874,14 @@
             <name>Copy_1_of_ExisteVINTEXTO</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 20px; color: rgb(255, 11, 11);&quot;&gt;No se puede crear el vehículo, ya existe un vehículo con ese VIN&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
@@ -5233,7 +5890,7 @@
         <name>Crear_Veh_culo</name>
         <label>Crear Vehículo</label>
         <locationX>1451</locationX>
-        <locationY>5276</locationY>
+        <locationY>5576</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -5251,49 +5908,112 @@
                     <dataType>String</dataType>
                     <fieldText>Placa</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Marca</name>
                     <dataType>String</dataType>
                     <fieldText>Marca</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Modelo</name>
                     <dataType>String</dataType>
                     <fieldText>Modelo</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>N_mero_de_Chasis</name>
                     <dataType>String</dataType>
                     <fieldText>Número de Chasis</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Motor</name>
                     <dataType>String</dataType>
                     <fieldText>Motor</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Color</name>
                     <dataType>String</dataType>
                     <fieldText>Color</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>A_o2</name>
                     <dataType>String</dataType>
                     <fieldText>Año</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>false</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <validationRule>
                         <errorMessage>&lt;p&gt;El valor debe ser un número de 4 digitos.&lt;/p&gt;</errorMessage>
                         <formulaExpression>OR(
@@ -5307,8 +6027,17 @@
                     <dataType>Number</dataType>
                     <fieldText>Kilometros</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <scale>0</scale>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <inputParameters>
                     <name>width</name>
@@ -5346,13 +6075,30 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>No_existe_Cuenta</name>
                     <dataType>Boolean</dataType>
                     <fieldText>No existe Cuenta</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Cuenta_Empresarial</name>
@@ -5362,7 +6108,16 @@
                     </defaultValue>
                     <fieldText>Cuenta Empresarial</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -5379,7 +6134,16 @@
                     <dataType>String</dataType>
                     <fieldText>Nombre de la Cuenta</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -5403,7 +6167,16 @@
                     <dataType>String</dataType>
                     <fieldText>Nombre</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -5420,7 +6193,16 @@
                     <dataType>String</dataType>
                     <fieldText>Apellido</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -5437,8 +6219,17 @@
                     <dataType>Number</dataType>
                     <fieldText>Cédula</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <scale>0</scale>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -5457,6 +6248,14 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -5475,6 +6274,14 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -5506,6 +6313,15 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Crear_Veh_culo_Section2</name>
@@ -5522,6 +6338,15 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
@@ -5530,17 +6355,26 @@
         <name>Crear_Veh_culo_0</name>
         <label>Crear Vehículo</label>
         <locationX>1963</locationX>
-        <locationY>7832</locationY>
+        <locationY>8132</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
+        <backButtonLabel>Atrás</backButtonLabel>
         <connector>
-            <targetReference>AsignarContactoCuentaFacturacionBuscados</targetReference>
+            <targetReference>Aplicar_Empresa_Seleccionada_Principal</targetReference>
         </connector>
         <fields>
             <name>Display1</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-size: 20px;&quot;&gt;Información del presupuesto&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Crear_Veh_culo_0_Section1</name>
@@ -5552,6 +6386,14 @@
                     <name>NombreCuenta</name>
                     <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Nombre del propietario:&lt;/strong&gt;  {!AccountName} {!AccountFirstName} {!AccountLastName}&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <inputParameters>
                     <name>width</name>
@@ -5573,6 +6415,15 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Crear_Veh_culo_0_Section2</name>
@@ -5620,6 +6471,14 @@
                         <assignToReference>ContactoCreadoBuscadoNew</assignToReference>
                         <name>recordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>LookUpCuentaFacturacion</name>
@@ -5661,6 +6520,14 @@
                         <assignToReference>idCuentaBuscadaoCreadaNew</assignToReference>
                         <name>recordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Moneda0</name>
@@ -5669,22 +6536,55 @@
                     <dataType>String</dataType>
                     <fieldText>Moneda</fieldText>
                     <fieldType>DropdownBox</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>InfoVehi</name>
                     <fieldText>&lt;p&gt;&lt;b style=&quot;background-color: rgb(255, 255, 255); font-size: 20px; color: rgb(0, 0, 0);&quot;&gt;Información del vehículo&lt;/b&gt;&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>InfoVehiculo</name>
                     <fieldText>&lt;p&gt;&lt;strong style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255); font-size: 14px;&quot;&gt;Número de placa :&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;{!AssetNumeroPlaca}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px; color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;VIN:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetNumeroVin}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px; color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;Marca:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetMarca}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255); font-size: 14px;&quot;&gt;Modelo:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetModelo}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px; color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;Año:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetAnno}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;strong style=&quot;font-size: 14px; color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;Color:&lt;/strong&gt;&lt;span style=&quot;color: rgb(68, 68, 68); background-color: rgb(255, 255, 255);&quot;&gt;  {!AssetColor}&lt;/span&gt;&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>garantiavehiculo</name>
                     <fieldText>&lt;p&gt;&lt;strong style=&quot;font-size: 20px;&quot;&gt;Información del plan de mantenimiento del vehículo&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Plan de mantenimiento:&lt;/strong&gt;&amp;nbsp;{!AssetWarrantyNumber}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Término de plan de mantenimiento:&lt;/strong&gt; {!AssetWarrantyTerm}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Fecha de inicio:&lt;/strong&gt; {!AssetWarrantyStartDate}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Fecha final: &lt;/strong&gt;{!AssetWarrantyEndDate}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Efectivo a partir de: &lt;/strong&gt;{!AssetWarrantyEfectiveStartDate}&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Tipo de plan de mantenimiento:&lt;/strong&gt; {!AssetWarantyType}&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -5706,22 +6606,22 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <name>Empresa0</name>
-                    <choiceReferences>Bavarian</choiceReferences>
-                    <choiceReferences>Otobai</choiceReferences>
-                    <dataType>String</dataType>
-                    <fieldText>Empresa</fieldText>
-                    <fieldType>DropdownBox</fieldType>
-                    <isRequired>true</isRequired>
-                    <visibilityRule>
-                        <conditionLogic>and</conditionLogic>
-                        <conditions>
-                            <leftValueReference>EmpresaUsuario</leftValueReference>
-                            <operator>IsNull</operator>
-                            <rightValue>
-                                <booleanValue>true</booleanValue>
-                            </rightValue>
-                        </conditions>
-                    </visibilityRule>
+                    <extensionName>flowruntime:lookup</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters><name>fieldApiName</name><value><stringValue>Empresa_Operadora__c</stringValue></value></inputParameters>
+                    <inputParameters><name>label</name><value><stringValue>Empresa</stringValue></value></inputParameters>
+                    <inputParameters><name>objectApiName</name><value><stringValue>Opportunity</stringValue></value></inputParameters>
+                    <inputParameters><name>required</name><value><booleanValue>true</booleanValue></value></inputParameters>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Aseguradora0</name>
@@ -5775,6 +6675,14 @@
                         <assignToReference>AseguradoraId</assignToReference>
                         <name>selectedRecordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -5832,6 +6740,14 @@
                         <assignToReference>ServiceTerritoryId</assignToReference>
                         <name>selectedRecordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <inputParameters>
                     <name>width</name>
@@ -5842,6 +6758,15 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Crear_Veh_culo_0_Section3</name>
@@ -5858,7 +6783,17 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
+        <nextOrFinishButtonLabel>Siguiente</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
@@ -5866,17 +6801,26 @@
         <name>ExisteVIN2</name>
         <label>ExisteVIN</label>
         <locationX>1154</locationX>
-        <locationY>5600</locationY>
+        <locationY>5900</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
+            <isGoTo>true</isGoTo>
             <targetReference>Crear_Veh_culo</targetReference>
         </connector>
         <fields>
             <name>ExisteVINTEXTO</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 20px; color: rgb(255, 11, 11);&quot;&gt;No se puede crear el vehículo, ya existe un vehículo con ese VIN&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
@@ -5889,6 +6833,7 @@
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
+        <backButtonLabel>Atrás</backButtonLabel>
         <connector>
             <targetReference>Es_cuenta_empresarial</targetReference>
         </connector>
@@ -5896,6 +6841,14 @@
             <name>MuestaCedula</name>
             <fieldText>&lt;p&gt;Cédula&lt;/p&gt;&lt;p&gt;{!Cedula1}&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>NombreEmpresa</name>
@@ -5905,7 +6858,16 @@
             </defaultValue>
             <fieldText>Nombre</fieldText>
             <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>false</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -5925,7 +6887,16 @@
             </defaultValue>
             <fieldText>Nombre</fieldText>
             <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>false</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -5945,7 +6916,16 @@
             </defaultValue>
             <fieldText>Apellido</fieldText>
             <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>false</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -5988,6 +6968,14 @@
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>TelefonoServicioNuevo1</name>
@@ -6032,6 +7020,14 @@
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>ProfesionServicioNuevo</name>
@@ -6041,7 +7037,16 @@
             </defaultValue>
             <fieldText>Profesión</fieldText>
             <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>false</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -6061,7 +7066,16 @@
             </defaultValue>
             <fieldText>Fecha de Nacimiento</fieldText>
             <fieldType>InputField</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>false</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
             <visibilityRule>
                 <conditionLogic>and</conditionLogic>
                 <conditions>
@@ -6073,6 +7087,7 @@
                 </conditions>
             </visibilityRule>
         </fields>
+        <nextOrFinishButtonLabel>Siguiente</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
@@ -6085,12 +7100,20 @@
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>IfSearch</targetReference>
+            <targetReference>Aplicar_Empresa_Seleccionada_Mostrador</targetReference>
         </connector>
         <fields>
             <name>Copy_1_of_Display1</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-size: 20px;&quot;&gt;Información del presupuesto&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Pantalla_Inicial_Mostrador_Section1</name>
@@ -6100,48 +7123,45 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <name>Copy_1_of_Empresa0</name>
-                    <choiceReferences>Bavarian</choiceReferences>
-                    <choiceReferences>Otobai</choiceReferences>
-                    <dataType>String</dataType>
-                    <fieldText>Empresa</fieldText>
-                    <fieldType>DropdownBox</fieldType>
-                    <isRequired>true</isRequired>
-                    <visibilityRule>
-                        <conditionLogic>and</conditionLogic>
-                        <conditions>
-                            <leftValueReference>EmpresaUsuario</leftValueReference>
-                            <operator>IsNull</operator>
-                            <rightValue>
-                                <booleanValue>true</booleanValue>
-                            </rightValue>
-                        </conditions>
-                        <conditions>
-                            <leftValueReference>GetUserPermisos.Profile.Name</leftValueReference>
-                            <operator>NotEqualTo</operator>
-                            <rightValue>
-                                <stringValue>Asesor Call Center</stringValue>
-                            </rightValue>
-                        </conditions>
-                        <conditions>
-                            <leftValueReference>GetUserPermisos.Profile.Name</leftValueReference>
-                            <operator>NotEqualTo</operator>
-                            <rightValue>
-                                <stringValue>Asesor Call Center V2</stringValue>
-                            </rightValue>
-                        </conditions>
-                    </visibilityRule>
+                    <extensionName>flowruntime:lookup</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters><name>fieldApiName</name><value><stringValue>Empresa_Operadora__c</stringValue></value></inputParameters>
+                    <inputParameters><name>label</name><value><stringValue>Empresa</stringValue></value></inputParameters>
+                    <inputParameters><name>objectApiName</name><value><stringValue>Opportunity</stringValue></value></inputParameters>
+                    <inputParameters><name>required</name><value><booleanValue>true</booleanValue></value></inputParameters>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Copy_1_of_Tipo_de_cliente</name>
                     <choiceReferences>Comercial</choiceReferences>
                     <choiceReferences>Interno</choiceReferences>
                     <choiceReferences>Empleado</choiceReferences>
-                    <choiceReferences>Aseguradora</choiceReferences>
+                    <choiceReferences>Aseguradora1</choiceReferences>
+                    <choiceReferences>Talleropcion</choiceReferences>
+                    <choiceReferences>Mec_nico_independiente</choiceReferences>
                     <dataType>String</dataType>
                     <defaultSelectedChoiceReference>Comercial</defaultSelectedChoiceReference>
                     <fieldText>Tipo de cliente</fieldText>
                     <fieldType>DropdownBox</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -6187,6 +7207,14 @@
                         <assignToReference>SelectedAseguradoraId</assignToReference>
                         <name>selectedRecordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -6235,6 +7263,14 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -6254,7 +7290,16 @@
                     <defaultSelectedChoiceReference>Colones</defaultSelectedChoiceReference>
                     <fieldText>Moneda</fieldText>
                     <fieldType>DropdownBox</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>Compania</name>
@@ -6263,7 +7308,16 @@
                     <dataType>String</dataType>
                     <fieldText>Compañía</fieldText>
                     <fieldType>DropdownBox</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>or</conditionLogic>
                         <conditions>
@@ -6301,7 +7355,16 @@
                     <defaultSelectedChoiceReference>Buscar_por_c_dula</defaultSelectedChoiceReference>
                     <fieldText>Buscar por:</fieldText>
                     <fieldType>DropdownBox</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>AccountLookup</name>
@@ -6331,6 +7394,14 @@
                         <assignToReference>idCuentaBuscada</assignToReference>
                         <name>selectedRecordId</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -6370,6 +7441,14 @@
                         <assignToReference>selectedRecordTypeId</assignToReference>
                         <name>Selection</name>
                     </outputParameters>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -6386,7 +7465,16 @@
                     <dataType>String</dataType>
                     <fieldText>Cedula</fieldText>
                     <fieldType>InputField</fieldType>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -6407,7 +7495,17 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
+        <nextOrFinishButtonLabel>Siguiente</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
@@ -6415,13 +7513,10 @@
         <name>Presupuesto</name>
         <label>Presupuesto</label>
         <locationX>1963</locationX>
-        <locationY>13136</locationY>
+        <locationY>13652</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
-        <connector>
-            <targetReference>GetUserPermisos</targetReference>
-        </connector>
         <fields>
             <name>Presupuesto_Section1</name>
             <fieldType>RegionContainer</fieldType>
@@ -6432,6 +7527,14 @@
                     <name>Crear</name>
                     <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 22px;&quot;&gt;Presupuesto creado exitosamente&lt;/strong&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 12px;&quot;&gt;&lt;em&gt;Sí desea ver el presupuesto creado de click al siguiente botón&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;&lt;br&gt;&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>btn1</name>
@@ -6452,6 +7555,14 @@
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <inputParameters>
                     <name>width</name>
@@ -6462,6 +7573,15 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
@@ -6485,8 +7605,18 @@
             <dataType>String</dataType>
             <fieldText>Tipo de oportunidad</fieldText>
             <fieldType>DropdownBox</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
+        <nextOrFinishButtonLabel>Siguiente</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
@@ -6502,7 +7632,16 @@
             <name>mensaje_error</name>
             <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 18px; color: rgb(255, 8, 8);&quot;&gt;Error al crear la cuenta, este correo ha sido encontrado en otra cuenta existente o bien el formato de teléfono fue incorrecto.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
+        <nextOrFinishButtonLabel>Terminar</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
@@ -6514,6 +7653,9 @@
         </connector>
     </start>
     <status>Active</status>
+    <variables>
+        <name>EmpresaSeleccionadaId</name><dataType>String</dataType><isCollection>false</isCollection><isInput>false</isInput><isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>AccountCodigoSoftland</name>
         <dataType>String</dataType>
@@ -6769,6 +7911,13 @@
     </variables>
     <variables>
         <name>CreatedOppotunityID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>CuentaBuscadaHolder</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
