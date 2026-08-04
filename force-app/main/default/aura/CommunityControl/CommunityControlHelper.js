@@ -411,6 +411,7 @@
           document.getElementById("vehiculeIdSoonEvent").style.display = "";
           component.set("v.isModalOpenExistingCitation", true);
           //document.getElementById("container").style.display = "none";
+          //document.getElementById("containerTesting").style.display = "none";
           console.log('corre conexion h 1');
         } else {
           document.getElementById("vehiculeIdSoonEvent").style.display = "none";
@@ -2205,6 +2206,7 @@
     console.log('entro myFunction2');
     component.set("v.isLoading", true);
     component.set("v.controllerFirstRun", false);
+    
     $(".button-collapse").sideNav();
     var calendar = document.getElementById("calendar-table");
     var gridTable = document.getElementById("table-body");
@@ -2217,6 +2219,7 @@
 
 
     function createCalendar(date, side) {//correcto crea calendario}
+      
       console.log('entro createCalendar');
       console.log('-------Date-----');
       helper.currentDate = date;
@@ -2253,12 +2256,17 @@
 
         console.log('************************************ Nuevo proceso para rojos y verdes  ************************************');
         console.log(lastDay);
-
-        let today = new Date();
-        // Extract the day, month, and year
-        let day = String(today.getDate()).padStart(2, '0'); // Adds a leading zero if needed
-        let month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-        let year = today.getFullYear();
+        document.getElementById("containerTesting").style.display = "";
+        var mesRenderizado = new Date(helper.currentDate.getFullYear(), helper.currentDate.getMonth(), 1);
+        var hoyDate = new Date();
+        hoyDate.setHours(0, 0, 0, 0);
+        var fechaParaApi = mesRenderizado < hoyDate ? hoyDate : mesRenderizado;
+        if (helper.currentDate.getMonth() === hoyDate.getMonth() && helper.currentDate.getFullYear() === hoyDate.getFullYear()) {
+          fechaParaApi = hoyDate;
+        }
+        let day = String(fechaParaApi.getDate()).padStart(2, '0');
+        let month = String(fechaParaApi.getMonth() + 1).padStart(2, '0');
+        let year = fechaParaApi.getFullYear();
         var selectedTabServiceCenter = component.get("v.selTabId");
         // Combine into the desired format
         let formattedDate = `${day}/${month}/${year}`;
@@ -2274,12 +2282,61 @@
           if(state === "SUCCESS"){
             component.set("v.isLoading", true);
             console.log('===================INTENTANDO RESPUESTA===================');
+            
             console.log(response.getReturnValue());
             var data = JSON.parse(response.getReturnValue());
             console.log(data);
             var opciones = data.opciones; 
             let latestDate = opciones.sort()[opciones.length - 1];
-            
+
+            // === SALTAR AL PRIMER MES CON DISPONIBILIDAD ===
+            if (opciones.length > 0) {
+                var hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+
+                var fechasOrdenadas = opciones.slice().sort();
+                var primeraDisponible = null;
+
+                for (var f = 0; f < fechasOrdenadas.length; f++) {
+                    var fechaOp = new Date(fechasOrdenadas[f] + 'T00:00:00');
+                    if (fechaOp >= hoy) {
+                        primeraDisponible = fechaOp;
+                        break;
+                    }
+                }
+
+                if (primeraDisponible != null) {
+                    var mesPrimera = primeraDisponible.getMonth();
+                    var anioPrimera = primeraDisponible.getFullYear();
+
+                    // SIEMPRE actualizar currentDate al dia de la primera disponible
+                    helper.currentDate = new Date(anioPrimera, mesPrimera, primeraDisponible.getDate());
+                    helper.selectedDate = primeraDisponible;
+
+                    // Si es un mes diferente, recalcular la grilla
+                    if (startDate.getMonth() !== mesPrimera || startDate.getFullYear() !== anioPrimera) {
+                        startDate = new Date(anioPrimera, mesPrimera, 1);
+                        lastDay = new Date(anioPrimera, mesPrimera + 1, 0);
+                        saveDate = lastDay;
+                        lastDay = lastDay.getDate();
+
+                        var monthName = helper.currentDate.toLocaleString("es-ES", { month: "long" });
+                        var yearNum = helper.currentDate.toLocaleString("es-ES", { year: "numeric" });
+                        monthTitle.innerHTML = monthName + ' ' + yearNum;
+
+                        gridTable.innerHTML = "";
+                        var newTr = document.createElement("div");
+                        newTr.className = "row";
+                        currentTr = gridTable.appendChild(newTr);
+                        for (var i = 1; i < (startDate.getDay() || 7); i++) {
+                            var emptyDivCol = document.createElement("div");
+                            emptyDivCol.className = "col empty-day";
+                            currentTr.appendChild(emptyDivCol);
+                        }
+                    }
+                }
+            }
+            // === FIN SALTAR AL PRIMER MES ===
 
             for (let i = 1; i <= lastDay; i++) {
               
@@ -2402,6 +2459,7 @@
                 //*********************** CORRECCION DE COLORES CLAENDARIO ****************************
                 //var dayAvailability = listOfDate[yourDate];
                 if(true){
+                   
                   console.log("despues showEvents eventsOnSelectedDate");           
                   // console.log(serviceCenters);
                   var mapaSoloEventos = serviceCenters[3]; // este trae todos los eventos de la sucursal
@@ -3028,8 +3086,10 @@
             setTimeout(() => {
               component.set("v.isLoading", false);
             }, 2000);
+            document.getElementById("containerTesting").style.display = "none";
           } else {
             component.set("v.isLoading", false);
+             document.getElementById("containerTesting").style.display = "none";
               // Handle any errors
               var errors = response.getError();
               if (errors && errors[0] && errors[0].message) {
@@ -3062,6 +3122,7 @@
   
     prevButton.onclick = function changeMonthPrev() {
       component.set("v.isLoading", true);
+      
       helper.currentDate = new Date(helper.currentDate.getFullYear(), helper.currentDate.getMonth() - 1);
       createCalendar(helper.currentDate, "left");
       setTimeout(() => {
@@ -3070,6 +3131,7 @@
     }
     nextButton.onclick = function changeMonthNext() {
       component.set("v.isLoading", true);
+      
       helper.currentDate = new Date(helper.currentDate.getFullYear(), helper.currentDate.getMonth() + 1);
       createCalendar(helper.currentDate, "right");
       setTimeout(() => {

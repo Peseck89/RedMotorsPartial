@@ -654,11 +654,6 @@
                                                                                 </aura:iteration>
                                                                             </div>
                                                                         </div> -->
-                                                                    
-                                                                        <div id="countdown"
-                                                                            style="padding-block:10px;width: 100px;font-size: 14px;color:red;border-style: solid;border-color: red;"></div>
-                                                                        <br />
-
                                                                         <div id="creandocita2_" style="padding-top:2px">
                                                                             <lightning:button variant="neutral" label="Volver" title="Volver" onclick="{! c.closeModelConfirmation }" />
                                                                             <aura:if isTrue="{!v.tipoCita != true}">
@@ -668,6 +663,11 @@
                                                                                 <lightning:button aura:id="myButton" disabled="true" variant="brand" label="Presiona para confirmar" title="Presiona para confirmar" onclick="{! c.myTest }" />
                                                                             </aura:if>  
                                                                         </div>
+                                                                        <div id="countdown"
+                                                                            style="padding-block:10px;width: 100px;font-size: 14px;color:red;border-style: solid;border-color: red;"></div>
+                                                                        <br />
+
+                                                                        
 
                                                                     </div>
                                                                     <aura:if isTrue="{!v.tipoCita }">

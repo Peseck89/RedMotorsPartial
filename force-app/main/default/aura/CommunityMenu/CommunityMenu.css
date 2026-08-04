@@ -34,9 +34,13 @@
 
 }
 
+.THIS .cancel-appoinment h4 {
+    color: #fff !important;
+}
+
 .THIS .consulta-btn {
     position: fixed;
-    bottom: 20px;
+    bottom: 60px;
     right: 20px;
     background-color: #FFF;
     color: #1c69d4;
@@ -72,6 +76,17 @@
   .THIS .consulta-btn-text {
     font-weight: bold;
   }
+
+  .THIS .head-container-child h4 {
+        display: none;
+    }
+
+    @media (min-width: 769px) {
+        .THIS #calendarComponent {
+            margin-top: 60px;
+        }
+    }
+
   
   @media (max-width: 768px) {
     .THIS .consulta-btn {
@@ -84,6 +99,24 @@
         height: 20px;
         margin-right: 6px;
     }
+
+     .THIS .cancelMargin {
+        margin-bottom: 30px !important;
+    }
+
+    .THIS .ms-auto {
+    margin-left: 0 !important;
+  }
+
+  .THIS .content-wrapper {
+        margin-top: 57.6% !important;
+    }
+
+    .THIS .head-container-child h4 {
+        display: block;
+    }
+
+
   }
   
   @media (max-width: 480px) {
@@ -100,3 +133,12 @@
         margin-right: 0;
     }
   }
+
+  @media (max-width: 820px) {
+    .THIS .cust-back-btn {
+        margin-bottom: 5px !important;
+    }
+    .THIS .cust-margin {
+        margin-bottom: 5px !important;
+    }
+}

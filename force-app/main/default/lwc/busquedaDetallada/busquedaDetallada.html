@@ -86,6 +86,7 @@
         </template>
 
         <template lwc:else>
+          <!-- Vista: Lista de precios -->
           <template lwc:if={showButtonPrice}>
             <div lwc:if={productCodeSelected}>
               <c-pricebook-reference-details
@@ -95,6 +96,7 @@
             </div>
           </template>
 
+          <!-- Vista: Localizaciones -->
           <template lwc:if={showButtonLocation}>
             <div lwc:if={productCodeSelected}>
               <c-localizacion-details
@@ -115,6 +117,17 @@
             {toogleLabelPricebook}
           </button>
         </template>
+
+       <!-- ✅ Aparece SOLO cuando ya entraste a "Ver Lista de Precios" Y el perfil contiene "Admin" -->
+        <template lwc:if={showUpdatePriceButton}>
+          <button
+            class="slds-button slds-button_brand slds-m-left_small"
+            onclick={handleShowUpdatePricebookTableToggle}
+            disabled={disablePriceRederence}>
+            {toogleLabelUpdatePricebook}
+          </button>
+        </template>
+
         <template lwc:if={showButtonLocation}>
           <button
             class="slds-button slds-button_brand slds-m-left_small"

@@ -1498,7 +1498,7 @@
     component.set("v.isLoading", true);
     //este es el bueno este controla cuando se cambia el servicio en la tabs
     document.getElementById("container").style.display = "";
-    
+    document.getElementById("containerTesting").style.display = "";
     document.getElementById("container").style.display = "";
 
     document.getElementById("container").style.display = "";

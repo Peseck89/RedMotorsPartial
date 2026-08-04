@@ -1,17 +1,26 @@
-import  { LightningElement, track, api, wire }from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
 import searchProducts from "@salesforce/apex/WoliGridController.searchProducts";
-import { getRecord, getFieldValue } from "lightning/uiRecordApi";
+import updateFreshPriceFromSoftland from "@salesforce/apex/WoliGridController.updateFreshPriceFromSoftland";
+
+import USER_ID from '@salesforce/user/Id';
+import { getRecord } from "lightning/uiRecordApi";
+import PROFILE_NAME from '@salesforce/schema/User.Profile.Name';
+
 import empresaFactura from '@salesforce/schema/WorkOrder.empresaFactura__c';
 import empresaFactura2 from '@salesforce/schema/Quote.empresaFactura__c';
 
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const COLS = [
-    { label: 'Código', fieldName: 'ProductCode', type: 'text' },
-    { label: 'Producto', fieldName: 'Name', type: 'text' },
-    { label: 'Precio', fieldName: 'precio', type: 'currency',typeAttributes: {  maximumFractionDigits: 2,currencyCode: { fieldName: 'currencyCode' } } },
-    //{ label: 'Bodega', fieldName: 'Bodega', type: 'text' },
-    //{ label: 'Cantidad disponible', fieldName: 'cantidadDisponible', type: 'text' },
-    { label: 'Tipo', fieldName: 'productType', type: 'text' },
+  { label: 'Código', fieldName: 'ProductCode', type: 'text' },
+  { label: 'Producto', fieldName: 'Name', type: 'text' },
+
+  { label: 'Sustitutivo', fieldName: 'sustitutivo', type: 'text' },
+  { label: 'Alternativo', fieldName: 'alternativo', type: 'text' },
+  { label: 'Margen', fieldName: 'margen', type: 'text' },
+  { label: 'Tránsito', fieldName: 'transito', type: 'text' },
+
+  { label: 'Precio', fieldName: 'precio', type: 'currency', typeAttributes: { maximumFractionDigits: 2, currencyCode: { fieldName: 'currencyCode' } } },
 ];
 
 const originalCOLS = [...COLS];
@@ -19,221 +28,301 @@ const originalCOLS = [...COLS];
 export default class WoSearchDetailProduct extends LightningElement {
     @api recordId;
     @api showSearchModal;
+
     @track productList = [];
     @track cols = [...COLS];
+
     @track showButtonPrice = true;
+    @track showButtonUpdatePrice = false; // estado "estoy en precios"
     @track showButtonLocation = true;
+
     idList = [];
     productIds = [];
     workOrderList = [];
-    //priceBookIdList = [];
+
     productCodeSelected;
+    pricebookEntryIdSelected; // ✅ nuevo para actualizar UnitPrice del PBE correcto
+
     disablePriceRederence = true;
     disableLocalizaciones = true;
 
-    selectedRows =[];
+    selectedRows = [];
 
-    //Bodegas Logic
     refreshTable = true;
     bodegasCols = new Set();
-    //Render Logic
+
     showDetailedSearch = true;
 
     disableButtons = false;
-    toogleLabelPricebook = 'Ver Lista de Precios'; 
-    toogleLabelLocation = 'Ver Localizaciones'; 
+    toogleLabelPricebook = 'Ver Lista de Precios';
+    toogleLabelUpdatePricebook = 'Actualizar Precio';
+    toogleLabelLocation = 'Ver Localizaciones';
 
-    //wire
-     /*renderedCallback() {
-        this.refreshTable = false;
-        this.resetCOLS();
-      }*/
+    empresaFactura;
 
-    @wire(getRecord, { recordId: '$recordId', fields: [empresaFactura]}) 
-    empresaFacturaWO({error, data}) {
-        //console.log(this.recid);
+    // ✅ Admin filter (Profile.Name contiene "admin")
+    @track isAdminProfile = false;
+    profileName;
+
+    @wire(getRecord, { recordId: USER_ID, fields: [PROFILE_NAME] })
+    userProfileWire({ error, data }) {
         if (data) {
-            this.empresaFactura = data.fields.empresaFactura__c.value;
+            const pName = data.fields?.Profile?.value?.fields?.Name?.value;
+            this.profileName = pName;
+            this.isAdminProfile = !!pName && pName.toLowerCase().includes('admin');
         } else if (error) {
-           // console.log(error);
-            this.error = error ;
+            this.isAdminProfile = false;
         }
     }
-    @wire(getRecord, { recordId: '$recordId', fields: [empresaFactura2]}) 
-    empresaFacturaQO({error, data}) {
-        //console.log(this.recid);
-        if (data) {
-            this.empresaFactura = data.fields.empresaFactura__c.value;
-        } else if (error) {
-           // console.log(error);
-            this.error = error ;
-        }
+
+    // ✅ SOLO muestra el botón si estoy en vista de precios y soy admin
+    get showUpdatePriceButton() {
+        return this.showButtonUpdatePrice && this.isAdminProfile;
+    }
+
+    @wire(getRecord, { recordId: '$recordId', fields: [empresaFactura] })
+    empresaFacturaWO({ error, data }) {
+        if (data) this.empresaFactura = data.fields.empresaFactura__c.value;
+        else if (error) this.error = error;
+    }
+
+    @wire(getRecord, { recordId: '$recordId', fields: [empresaFactura2] })
+    empresaFacturaQO({ error, data }) {
+        if (data) this.empresaFactura = data.fields.empresaFactura__c.value;
+        else if (error) this.error = error;
     }
 
     handleSearchProduct() {
-        var pickListValue = '';
-        var searchinput = this.template.querySelector("lightning-input").value;
+        const pickListValue = '';
+        const searchinput = this.template.querySelector("lightning-input")?.value || '';
+
         this.resetCOLS();
-        this.bodegasCols = new Set();
         this.refreshTable = false;
-        searchProducts({ productType: pickListValue, queryValue:searchinput, workOrder: this.recordId})
-                .then((result) => {
-                    this.productList = result;
-                    this.addBodegaColumns(this.productList);
-                    this.error = undefined;
-                })
-                .catch((error) => {
-                    this.error = error;
-                    this.productList_test = undefined;
-                    console.log(error);
-                    
+
+        searchProducts({ productType: pickListValue, queryValue: searchinput, workOrder: this.recordId })
+            .then((result) => {
+                // Asegura ID (por si a veces no viene)
+                this.productList = (result || []).map(r => {
+                    const row = { ...r };
+                    if (!row.ID) {
+                        row.ID = row.productId || row.priceBookEntry || `ROW_${Math.random().toString(36).slice(2)}`;
+                    }
+                    return row;
+                });
+
+                this.addBodegaColumns(this.productList);
+                this.error = undefined;
+            })
+            .catch((error) => {
+                this.error = error;
+                // eslint-disable-next-line no-console
+                console.log(error);
             });
-       
     }
 
     selectProducts() {
-        // console.log(event);
-         var selectedRecords = this.template.querySelector("lightning-datatable").getSelectedRows();
-         //console.log(selectedRecords);
-         this.idList = [];
-         this.productIds = [];
-         this.workOrderList = [];
-         //this.priceBookIdList = [];
-         //this.productCodeSelected = '';
-         if(selectedRecords){
-                 let ids = '';
-                 selectedRecords.forEach(currentItem => {
-                     //if(this.idList.indexOf(currentItem.ID)==-1){
-                        currentItem.CanDeleteWolis__c = true;
-                        this.idList.push(currentItem.ID);
-                        this.productIds.push(currentItem.productId);
-                        this.workOrderList.push(currentItem);
-                        //this.priceBookIdList.push(currentItem.priceBookEntry);
-                    // }
-                    this.productCodeSelected = selectedRecords.length === 1 ? currentItem.ProductCode : this.productCodeSelected;
-                    this.disablePriceRederence =  selectedRecords.length > 1;
-                    this.disableLocalizaciones =  selectedRecords.length > 1;
+        const dt = this.template.querySelector("lightning-datatable");
+        const selectedRecords = dt ? dt.getSelectedRows() : [];
 
- 
-                 });
-                 this.selectedIds = ids.replace(/^,/, '');
-             }
-             this.selectedRows = this.idList;
-        //console.log(JSON.stringify(this.workOrderList));
-     }
+        this.idList = [];
+        this.productIds = [];
+        this.workOrderList = [];
+        this.productCodeSelected = null;
+        this.pricebookEntryIdSelected = null;
 
-     cleanUp(){
+        if (selectedRecords && selectedRecords.length) {
+            selectedRecords.forEach(currentItem => {
+                currentItem.CanDeleteWolis__c = true;
+                this.idList.push(currentItem.ID);
+                this.productIds.push(currentItem.productId);
+                this.workOrderList.push(currentItem);
+            });
+
+            if (selectedRecords.length === 1) {
+                const only = selectedRecords[0];
+                this.productCodeSelected = only.ProductCode;
+
+                this.pricebookEntryIdSelected =
+                    only.priceBookEntry ||
+                    only.pricebookEntryId ||
+                    only.PricebookEntryId ||
+                    null;
+
+                this.disablePriceRederence = false;
+                this.disableLocalizaciones = false;
+            } else {
+                this.disablePriceRederence = true;
+                this.disableLocalizaciones = true;
+            }
+        } else {
+            this.disablePriceRederence = true;
+            this.disableLocalizaciones = true;
+        }
+
+        this.selectedRows = this.idList;
+    }
+
+    cleanUp() {
         this.productList = [];
         this.idList = [];
         this.productIds = [];
         this.workOrderList = [];
-        //this.resetCOLS();
+        this.productCodeSelected = null;
+        this.pricebookEntryIdSelected = null;
+        this.selectedRows = [];
+        this.disablePriceRederence = true;
+        this.disableLocalizaciones = true;
+        this.resetCOLS();
     }
 
-
-    //Events
     handleCancel() {
         this.cleanUp();
-        this.dispatchEvent(new CustomEvent('cancel', {
-            detail: {
-                message: false
-            }
-        }));
+        this.dispatchEvent(new CustomEvent('cancel', { detail: { message: false } }));
     }
 
     handleAddLines() {
-        this.dispatchEvent(new CustomEvent('addlines', {
-            detail: {
-                message: this.workOrderList
-            }
-        }));
+        this.dispatchEvent(new CustomEvent('addlines', { detail: { message: this.workOrderList } }));
         this.cleanUp();
     }
 
-
     //Bodegas Logic
     addBodegaColumns(data) {
-        // Loop through the data to collect unique bodega names and dynamically add columns
         data.forEach((item) => {
-          if (item.bodegas) {
-            console.log(item.bodegas);
-            item.bodegas.forEach((bodega) => {
-              const fieldName = `bodega_${bodega.Id}`;
-              item[fieldName] = bodega.cantidadDisponible;
-              const columnName = bodega.isPrincipal
-                ? bodega.name + "(Principal)"
-                : bodega.name;
-              const column = {
-                label: columnName,
+            if (!item.bodegas || !item.bodegas.length) return;
+
+            const principal = item.bodegas.find((b) => b.isPrincipal);
+            if (!principal) return;
+
+            const fieldName = `bodega_${principal.Id}`;
+            item[fieldName] = principal.cantidadDisponible;
+
+            const column = {
+                label: principal.name + "(Principal)",
                 fieldName: fieldName,
                 type: "text"
-              };
-              this.addColumnAtIndex(bodega.Id, column);
-            });
-          }
+            };
+
+            this.addColumnAtIndex(principal.Id, column);
         });
-      }
-    
-      validateBodegaPrincipal(data) {
-        if (data.productType === "Materiales") {
-            const principalBodega = data.bodegas.find(bodega => bodega.isPrincipal && bodega.cantidadDisponible > 0);
-            const hasApartados = data.bodegas.find(bodega => bodega.name.toLowerCase().includes("apartados") && bodega.cantidadDisponible > 0);
-            if (!principalBodega && hasApartados) {
-                data.bodegaID = hasApartados.Id;
-                data.Bodega = hasApartados.name;
-                data.cantidadDisponible = hasApartados.cantidadDisponible;
-                data.changedToApartados = true;
-            } else{
-              data.changedToApartados = false;
-            }
-            return !!principalBodega || !!hasApartados;
+    }
+
+    addColumnAtIndex(bodegaId, column) {
+        const priceIndex = this.cols.findIndex(c => c.fieldName === 'precio');
+        const index = (priceIndex === -1) ? this.cols.length : priceIndex;
+
+        if (!this.bodegasCols.has(bodegaId) && !this.cols.some(c => c.fieldName === column.fieldName)) {
+            this.cols = [
+                ...this.cols.slice(0, index),
+                column,
+                ...this.cols.slice(index)
+            ];
+            this.bodegasCols.add(bodegaId);
         }
-        return true;
-      }
-    
-      addColumnAtIndex(bodegaId, column) {
-        const index = 2 + this.bodegasCols.size;
-        if (index >= 0 && index <= this.cols.length && !this.bodegasCols.has(bodegaId)) {
-          this.cols.splice(index, 0, column);
-          this.bodegasCols.add(bodegaId);
-        }
-        this.orderColumns();
         this.rerenderTable();
-      }
-    
-      orderColumns() {
-        const principalColumnIndex = this.cols.findIndex(col => col.label.endsWith("(Principal)"));
-        if (principalColumnIndex !== -1) {
-          // Remove the existing principal column from its current position
-          const removedColumn = this.cols.splice(principalColumnIndex, 1)[0];
-          // Insert the removed principal column at the second position
-          this.cols.splice(2, 0, removedColumn);
-        }
-      }
-    
-      resetCOLS() {
-        if (this.cols.length > 4) {
-          this.cols = [...originalCOLS];
-        }
+    }
+
+    resetCOLS() {
+        this.cols = [...originalCOLS];
         this.bodegasCols = new Set();
-      }
+    }
 
-      rerenderTable() {
+    rerenderTable() {
         this.refreshTable = true;
-      }
+    }
 
-      handleShowPricebookTableToggle(){
+    handleShowPricebookTableToggle() {
         this.showDetailedSearch = !this.showDetailedSearch;
-        this.disableButtons = !this.disableButtons;
-        this.showButtonLocation = this.showDetailedSearch ? true : false;
-        this.toogleLabelPricebook = this.showDetailedSearch ? 'Ver Lista de Precios' : 'Atrás';
+
+        const inPriceView = !this.showDetailedSearch;
+
+        this.disableButtons = inPriceView;
+
+        this.showButtonLocation = !inPriceView;
+        this.showButtonUpdatePrice = inPriceView;
+
+        this.toogleLabelPricebook = inPriceView ? 'Atrás' : 'Ver Lista de Precios';
         this.selectedRows = this.idList;
-      }
-      handleShowLocalizacionTableToggle(){
+    }
+
+    // ✅ Ahora SÍ actualiza precio (y solo admin lo puede ejecutar)
+    async handleShowUpdatePricebookTableToggle() {
+        if (!this.isAdminProfile) {
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'No autorizado',
+                message: 'Esta acción solo está disponible para perfiles Admin.',
+                variant: 'error'
+            }));
+            return;
+        }
+
+        if (this.showDetailedSearch) {
+            this.handleShowPricebookTableToggle();
+            return;
+        }
+
+        if (!this.productCodeSelected) {
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Sin producto',
+                message: 'Selecciona un producto para actualizar el precio.',
+                variant: 'warning'
+            }));
+            return;
+        }
+
+        const prevDisable = this.disablePriceRederence;
+        this.disablePriceRederence = true;
+
+        try {
+            const result = await updateFreshPriceFromSoftland({
+                productCode: this.productCodeSelected,
+                empresaFactura: this.empresaFactura,
+                pricebookEntryId: this.pricebookEntryIdSelected
+            });
+
+            if (result?.success) {
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Precio actualizado',
+                    message: `Nuevo: ${result.newUnitPrice} | Fecha: ${result.fecha || 'N/A'}`,
+                    variant: 'success'
+                }));
+
+                const child = this.template.querySelector('c-pricebook-reference-details');
+                if (child && typeof child.refresh === 'function') {
+                    child.refresh();
+                }
+            } else {
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'No se pudo actualizar',
+                    message: result?.message || 'Error desconocido',
+                    variant: 'error'
+                }));
+            }
+        } catch (e) {
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Error al actualizar precio',
+                message: (e?.body?.message) ? e.body.message : (e?.message || 'Error desconocido'),
+                variant: 'error'
+            }));
+        } finally {
+            this.disablePriceRederence = prevDisable;
+            this.showButtonUpdatePrice = true;
+            this.showButtonLocation = false;
+            this.disableButtons = true;
+            this.selectedRows = this.idList;
+        }
+    }
+
+    handleShowLocalizacionTableToggle() {
         this.showDetailedSearch = !this.showDetailedSearch;
-        this.disableButtons = !this.disableButtons;
-        this.showButtonPrice = this.showDetailedSearch ? true : false;
-        this.toogleLabelLocation = this.showDetailedSearch ? 'Ver Localizaciones' : 'Atrás';
+
+        const inLocationView = !this.showDetailedSearch;
+
+        this.disableButtons = inLocationView;
+
+        this.showButtonPrice = !inLocationView;
+        this.showButtonUpdatePrice = false;
+
+        this.toogleLabelLocation = inLocationView ? 'Atrás' : 'Ver Localizaciones';
         this.selectedRows = this.idList;
-      }
+    }
 }

@@ -360,7 +360,7 @@
         if(listOfElements[i] == 'Cambio llantas'){
           document.getElementById("cambioLlantas").style.display = "";         
         } 
-        if(listOfElements[i] == 'Cambio Frenos y/o Discos'){
+        if(listOfElements[i] == 'Cambio de fibras'){
           document.getElementById("cambioFrenos").style.display = "";         
         }     
         if(listOfElements[i] == 'Líquido de frenos'){
@@ -407,6 +407,7 @@
           document.getElementById("vehiculeIdSoonEvent").style.display = "";
           component.set("v.isModalOpenExistingCitation", true);
           document.getElementById("container").style.display = "none";
+          document.getElementById("containerTesting").style.display = "";
           console.log('corre conexion h 1');
         } else {
           document.getElementById("vehiculeIdSoonEvent").style.display = "none";
@@ -1681,7 +1682,7 @@
   
   /* Server calls _________________________________________________________________________________________________________________________________*/
   
-  createNewCalendarEvent: function (day, hour, component) {
+  createNewCalendarEvent: function (day, hour, component, onSuccess, onFailure) {
     var user = component.get("v.userInfo").Id;
     var selectedVehicle = component.get("v.vehicleSelected");
     var vehicleId = component.get("v.vehicleId");
@@ -1755,6 +1756,54 @@
       kilometrosEsti = '' + component.get("v.estimatedKM");
     }
 
+    var releaseTemporaryHold = function() {
+      var releaseAction = component.get("c.releaseHoursAvailability");
+      releaseAction.setParams({
+        calendarId: component.get("v.selTabId"),
+        horaSelc: component.get("v.startDateHour")
+      });
+      releaseAction.setCallback(this, function(response) {
+        if (response.getState() !== "SUCCESS") {
+          console.error("No fue posible liberar la reserva temporal.", response.getError());
+        }
+      });
+      $A.enqueueAction(releaseAction);
+    };
+
+    var notifyFailure = function(type, message, errors) {
+      component.set("v.espacioNoOcupado", false);
+      releaseTemporaryHold();
+      if (errors) {
+        console.error(message, errors);
+      }
+      if (typeof onFailure === "function") {
+        onFailure({
+          type: type,
+          message: message
+        });
+      } else {
+        component.set("v.creationErrorMessage", message);
+        component.set("v.isModalOpenFinalConfirmation", false);
+        component.set("v.isModalOpenConfirmation", false);
+        component.set("v.isModalLibreDeCitas", true);
+        component.set("v.isLoading", false);
+      }
+    };
+
+    var notifySuccess = function(result) {
+      component.set("v.espacioNoOcupado", true);
+      releaseTemporaryHold();
+      if (typeof onSuccess === "function") {
+        onSuccess(result);
+      } else {
+        component.set("v.myResult", result);
+        component.set("v.isModalOpenFinalConfirmation", true);
+        component.set("v.isModalOpenConfirmation", false);
+        component.set("v.isModalLibreDeCitas", false);
+        component.set("v.isLoading", false);
+      }
+    };
+
     //================================= ESTO VALIDA QUE SI ESTE LIBRE ==================================
 
       
@@ -1773,135 +1822,81 @@
         if (state === "SUCCESS") {
 
           var result = response.getReturnValue();
-          console.log(result);
+          var data;
+          try {
+            data = JSON.parse(result);
+          } catch (parseError) {
+            notifyFailure(
+              "INVALID_RESPONSE",
+              "No fue posible validar el horario seleccionado. No se realizó ninguna reserva. Por favor, intente nuevamente.",
+              parseError
+            );
+            return;
+          }
 
-          var data = JSON.parse(response.getReturnValue());
-          let bolresponse = true;
-          if(data.ValidarCitaExitoso == 'true'){
-            bolresponse = true
+          if(data.ValidarCitaExitoso === "true"){
             //================================== ESTO CREA LA CITA EN SALESFORCE ===============================
-            console.log( 'Datos Calendario ');
-            console.log(serviceCenter);
-            console.log(day);
-            console.log(startDateHour);
-            var espacioOcupado =  bolresponse;
-            console.log( 'Espacio ocupado es : ' + espacioOcupado);
-            console.log(espacioOcupado == true);
-              if(espacioOcupado == true){
-                console.log('entro a espacioOcupado');
-                var action = component.get("c.createCalendarEventW");
-                action.setParams({
-                  KilimeEsti:kilometrosEsti,
-                  userId: user,
-                  calendarId: serviceCenter,
-                  daySelected: day,
-                  selectedStartHour: startDateHour,
-                  selectedEndHour: endDateHour,
-                  usersToExclude: asesores,
-                  selectedVehicle: selectedVehicle,
-                  vehicleId: ownVehicleId, // Placa de vehículo que no es propio.
-                  ownVehicleId: ownVehicleId, // Id vehículo que es propio
-                  description: description,
-                  selectedServiceCenter: null
-              
-                });
-                console.log('entro antes llamada');
-                action.setCallback(this, function (response) {
-                  
-                  var state = response.getState();
-                  console.log('response ' + state);
-                  if (state === "SUCCESS") {
-                    var result = response.getReturnValue();
-                    component.set('v.myResult', result);
-                    if(result == null || result == '' || result == undefined || result.length ==0){
-                      component.set("v.isModalLibreDeCitas", true);
-                      component.set('v.espacioNoOcupado',false);
-                      component.set("v.isModalOpenFinalConfirmation", false)
-                      setTimeout(() => {component.set("v.isModalOpenFinalConfirmation", false);}, 10);
-                    }
-                    console.log(result);
-                    return result;
-                    console.log('corre conexion h 2');
-                  } else if (state === "INCOMPLETE") {
-                    // do something
-                  } else if (state === "ERROR") {
-                    console.log(response);
-                    console.log( JSON.stringify(response));
-                  
-                    console.log(response.getReturnValue());
-                    var errors = response.getError();
-                    console.log(response.getError);
-                    console.log("Error message: " + errors[0].message);
-              
-                    if (errors) {
-                      if (errors[0] && errors[0].message) {
-                        console.log("Error message: " + errors[0].message);
-                      }
-                    } else {
-                      console.log("Unknown error");
-                    }
-                  }
-                });
-                $A.enqueueAction(action);
-              }
-              component.set("v.isLoading", false);
-
-            var hourSelected = component.get("v.startDateHour");  
-            var serviceCenter2 = component.get("v.selTabId");
-            var action3 = component.get("c.releaseHoursAvailability");
-            action3.setParams({
-              
-              "calendarId" : serviceCenter2,
-              "horaSelc" : hourSelected          
+            var action = component.get("c.createCalendarEventW");
+            action.setParams({
+              KilimeEsti:kilometrosEsti,
+              userId: user,
+              calendarId: serviceCenter,
+              daySelected: day,
+              selectedStartHour: startDateHour,
+              selectedEndHour: endDateHour,
+              usersToExclude: asesores,
+              selectedVehicle: selectedVehicle,
+              vehicleId: ownVehicleId, // Placa de vehículo que no es propio.
+              ownVehicleId: ownVehicleId, // Id vehículo que es propio
+              description: description,
+              selectedServiceCenter: null
             });
-            action3.setCallback(this, function(response) {
-              var state = response.getState();
-              if (state === "SUCCESS") {
-                var storeResponse = response.getReturnValue();  
-                console.log(storeResponse);      
-                //component.set("v.horasReservas", storeResponse);
-                console.log('corre conexion h 7');
+            action.setCallback(this, function (createResponse) {
+              var createState = createResponse.getState();
+              if (createState === "SUCCESS") {
+                var createdEvent = createResponse.getReturnValue();
+                if (createdEvent && createdEvent.Id) {
+                  notifySuccess(createdEvent);
+                } else {
+                  notifyFailure(
+                    "UNAVAILABLE",
+                    "Este espacio ya no está disponible. No se realizó ninguna reserva. Por favor, actualice la página y seleccione otro horario."
+                  );
+                }
+              } else if (createState === "INCOMPLETE") {
+                notifyFailure(
+                  "INCOMPLETE",
+                  "No fue posible confirmar la comunicación con Salesforce. No se realizó ninguna reserva. Por favor, intente nuevamente."
+                );
               } else {
-                console.log("error");
-                console.log(response.getError());
+                notifyFailure(
+                  "CREATE_ERROR",
+                  "No fue posible crear la cita. No se realizó ninguna reserva. Por favor, intente nuevamente.",
+                  createResponse.getError()
+                );
               }
-
             });
-            $A.enqueueAction(action3);
-            component.set("v.isModalLibreDeCitas", false);
+            $A.enqueueAction(action);
           }else{
-            bolresponse = false
+            notifyFailure(
+              "UNAVAILABLE",
+              "Este espacio ya no está disponible. No se realizó ninguna reserva. Por favor, actualice la página y seleccione otro horario."
+            );
           }
-          
-        
-        component.set('v.espacioNoOcupado', bolresponse);
-        
-        return bolresponse;
-      console.log('corre conexion h 2');
         } else if (state === "INCOMPLETE") {
-          // do something
-        } else if (state === "ERROR") {
-          console.log(response);
-          console.log( JSON.stringify(response));
-        
-          console.log(response.getReturnValue());
-          var errors = response.getError();
-          console.log(response.getError);
-          console.log("Error message: " + errors[0].message);
-    
-          if (errors) {
-            if (errors[0] && errors[0].message) {
-              console.log("Error message: " + errors[0].message);
-            }
-          } else {
-            console.log("Unknown error");
-          }
+          notifyFailure(
+            "INCOMPLETE",
+            "No fue posible confirmar la comunicación con Salesforce. No se realizó ninguna reserva. Por favor, intente nuevamente."
+          );
+        } else {
+          notifyFailure(
+            "VALIDATION_ERROR",
+            "No fue posible validar el horario seleccionado. No se realizó ninguna reserva. Por favor, intente nuevamente.",
+            response.getError()
+          );
         }
       });
       $A.enqueueAction(action2);
-      setTimeout(() => {
-        console.log('esperando respuesta');
-      }, 3000);
     
   },
   
@@ -2046,6 +2041,7 @@
     function createCalendar(date, side) {//correcto crea calendario}
       component.set("v.isLoading", true);
       document.getElementById('container').style.display = "none";
+      document.getElementById("containerTesting").style.display = "";
       document.getElementById('centroDeServicio').style.display = "none";
       document.getElementById('centroDeServicio2').style.display = "";
       
@@ -2085,12 +2081,22 @@
 
         console.log('************************************ Nuevo proceso para rojos y verdes  ************************************');
         console.log(lastDay);
-
-        let today = new Date();
-        // Extract the day, month, and year
-        let day = String(today.getDate()).padStart(2, '0'); // Adds a leading zero if needed
-        let month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-        let year = today.getFullYear();
+        // Esto lo comente porque estaba diferente en prod
+        // let today = new Date();
+        // // Extract the day, month, and year
+        // let day = String(today.getDate()).padStart(2, '0'); // Adds a leading zero if needed
+        // let month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        // let year = today.getFullYear();
+        var mesRenderizado = new Date(helper.currentDate.getFullYear(), helper.currentDate.getMonth(), 1);
+        var hoyDate = new Date();
+        hoyDate.setHours(0, 0, 0, 0);
+        var fechaParaApi = mesRenderizado < hoyDate ? hoyDate : mesRenderizado;
+        if (helper.currentDate.getMonth() === hoyDate.getMonth() && helper.currentDate.getFullYear() === hoyDate.getFullYear()) {		
+                      fechaParaApi = hoyDate;		
+                  }
+        let day = String(fechaParaApi.getDate()).padStart(2, '0');        
+        let month = String(fechaParaApi.getMonth() + 1).padStart(2, '0');
+        let year = fechaParaApi.getFullYear();
         var selectedTabServiceCenter = component.get("v.selTabId");
         // Combine into the desired format
         let formattedDate = `${day}/${month}/${year}`;
@@ -2113,15 +2119,70 @@
             document.getElementById('centroDeServicio').style.display = "";
             
             document.getElementById('container').style.display = "";
+            document.getElementById("containerTesting").style.display = "none";
             //component.set("v.isLoading", false);
             component.set("v.isLoading", true);
             console.log('===================INTENTANDO RESPUESTA===================');
             console.log(response.getReturnValue());
             var data = JSON.parse(response.getReturnValue());
             console.log(data);
-            var opciones = data.opciones; 
+            var opciones = data.opciones;
             let latestDate = opciones.sort()[opciones.length - 1];
+
+            // === SALTAR AL PRIMER MES CON DISPONIBILIDAD ===
+            if (opciones.length > 0) {
+                var hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                
+                var fechasOrdenadas = opciones.slice().sort();
+                var primeraDisponible = null;
+                
+                for (var f = 0; f < fechasOrdenadas.length; f++) {
+                    var fechaOp = new Date(fechasOrdenadas[f] + 'T00:00:00');
+                    if (fechaOp >= hoy) {
+                        primeraDisponible = fechaOp;
+                        break;
+                    }
+                }
+                
+                if (primeraDisponible != null) {
+                    var mesPrimera = primeraDisponible.getMonth();
+                    var anioPrimera = primeraDisponible.getFullYear();
+                    
+                    // SIEMPRE actualizar currentDate al día de la primera disponible
+                    helper.currentDate = new Date(anioPrimera, mesPrimera, primeraDisponible.getDate());
+                    helper.selectedDate = primeraDisponible;
+                    
+                    // Si es un mes diferente, recalcular la grilla
+                    if (startDate.getMonth() !== mesPrimera || startDate.getFullYear() !== anioPrimera) {
+                        startDate = new Date(anioPrimera, mesPrimera, 1);
+                        lastDay = new Date(anioPrimera, mesPrimera + 1, 0);
+                        saveDate = lastDay;
+                        lastDay = lastDay.getDate();
+                        
+                        var monthName = helper.currentDate.toLocaleString("es-ES", { month: "long" });
+                        var yearNum = helper.currentDate.toLocaleString("es-ES", { year: "numeric" });
+                        monthTitle.innerHTML = monthName + ' ' + yearNum;
+                        
+                        gridTable.innerHTML = "";
+                        var newTr = document.createElement("div");
+                        newTr.className = "row";
+                        currentTr = gridTable.appendChild(newTr);
+                        for (var i = 1; i < (startDate.getDay() || 7); i++) {
+                            var emptyDivCol = document.createElement("div");
+                            emptyDivCol.className = "col empty-day";
+                            currentTr.appendChild(emptyDivCol);
+                        }
+                    }
+                }
+            }
+            // === FIN SALTAR AL PRIMER MES ===
             
+            // === DEBUG AGREGAR AQUI ===
+            console.log('=== DEBUG SELECCION ===');
+            console.log('helper.currentDate: ' + helper.currentDate);
+            console.log('helper.currentDate.getDate(): ' + helper.currentDate.getDate());
+            console.log('helper.selectedDate: ' + helper.selectedDate);
 
             for (let i = 1; i <= lastDay; i++) {
               
@@ -2133,7 +2194,14 @@
               var dayInLoop = new Date(saveDate.getFullYear(), saveDate.getMonth(), i, 0);          
               var dayInLoopFormattedDate = String(dayInLoop.getDate()).padStart(2, '0') + '/' + String(dayInLoop.getMonth() + 1).padStart(2, '0') + '/' + dayInLoop.getFullYear()  ;
               
-              
+              // === DEBUG AGREGAR AQUI ===
+              if (i == 14 || i == 22) {
+                  console.log('=== DIA ' + i + ' ===');
+                  console.log('selectedDayBlock es null: ' + (selectedDayBlock == null));
+                  console.log('i == helper.currentDate.getDate(): ' + (i == helper.currentDate.getDate()));
+                  console.log('selectedDate match: ' + (helper.selectedDate.toDateString() == new Date(helper.currentDate.getFullYear(), helper.currentDate.getMonth(), i).toDateString()));
+              }
+
 
               var testDate = new Date(2022, 11, 1, 0);
       
@@ -2785,9 +2853,7 @@
                     isYourDateLessThanOrEqualToLatest = true;
                   }                  
                 }
-                console.log('********************************** isYourDateInOpciones **********************************');
-                console.log(isYourDateInOpciones);
-                console.log(isYourDateLessThanOrEqualToLatest);
+
                 if (isYourDateInOpciones && isYourDateLessThanOrEqualToLatest  ) {
                    classColorAdapted = 'circle-green-availability';
                 } else if(!isYourDateInOpciones && isYourDateLessThanOrEqualToLatest && (new Date(yourDate) > yesterday)) {
@@ -2835,10 +2901,18 @@
               return node;
             }    
             
-              component.set("v.isLoading", false);
+            setTimeout($A.getCallback(function() {
+                if (opciones.length > 0) {
+                    showEvents();
+                    document.getElementById("sidebar").style.display = "";
+                } else {
+                    component.set("v.isLoading", false);
+                }
+            }), 1000);
+              //component.set("v.isLoading", false);
           
           } else {
-            component.set("v.isLoading", false);
+            //component.set("v.isLoading", false);
               // Handle any errors
               var errors = response.getError();
               if (errors && errors[0] && errors[0].message) {

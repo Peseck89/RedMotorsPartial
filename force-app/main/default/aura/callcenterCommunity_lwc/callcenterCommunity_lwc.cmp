@@ -528,14 +528,14 @@
                                                         <div class="slds-backdrop slds-backdrop_open"></div>
                                                     </aura:if>
                                                 </div>
-                                                <div class="slds-m-around_xx-large" >
+                                                <div class="slds-m-around_xx-large" style="max-height:80vh; overflow-y:scroll;">
                                                     <aura:if isTrue="{!v.isModalOpenConfirmation}">
 
                                                         <!-- Modal/Popup Box starts here-->
                                                         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-                                                            <div class="slds-modal__container">
+                                                            <div class="slds-modal__container" style="max-height:80vh; overflow-y:scroll;">
                                                                 <!-- Modal/Popup Box Header Starts here-->
-                                                                <header class="slds-modal__header">
+                                                                <header class="slds-modal__header" style="max-height:80vh; overflow-y:scroll;" >
                                                                     <div id="creandocita1_" style="padding:0 20px; font-size: 15px">
                                                                         <button style="top:0 !important;width:17px !important;right:1px !important;border: none !important; " class="slds-button slds-button_icon slds-modal__close mybuttonx" title="Close" onclick="{!c.closeModalConfirmacion}">
                                                                             X
@@ -603,22 +603,24 @@
                                                                             </div>
 
                                                                         </aura:if> 
+                                                                        
                                                                         <br/>
-                                                                        <div id="countdown" style="padding-block:10px;width: 100px;font-size: 14px;color:red;border-style: solid;border-color: red;"></div>
+                                                                        <div id="creandocita2_" style="padding-top:2px">
+                                                                            <lightning:button variant="neutral" label="Volver" title="Volver" onclick="{! c.closeModelConfirmation }" />
+                                                                            <aura:if isTrue="{!v.tipoCita != true}">
+                                                                                <lightning:button variant="brand" label="Presiona para confirmar" title="Presiona para confirmar" onclick="{! c.myTest }" />
+                                                                            </aura:if>  
+                                                                            <aura:if isTrue="{!v.tipoCita }">
+                                                                                <lightning:button aura:id="myButton" disabled="true" variant="brand" label="Presiona para confirmar" title="Presiona para confirmar" onclick="{! c.myTest }" />
+                                                                            </aura:if>  
+                                                                        </div>
+                                                                        
                                                                         <br/>
                                                                         <br/>
                                                                     </div>
 
-                                                                    <div id="creandocita2_" style="padding-top:2px">
-                                                                        <lightning:button variant="neutral" label="Volver" title="Volver" onclick="{! c.closeModelConfirmation }" />
-                                                                        <aura:if isTrue="{!v.tipoCita != true}">
-                                                                            <lightning:button variant="brand" label="Presiona para confirmar" title="Presiona para confirmar" onclick="{! c.myTest }" />
-                                                                        </aura:if>  
-                                                                        <aura:if isTrue="{!v.tipoCita }">
-                                                                            <lightning:button aura:id="myButton" disabled="true" variant="brand" label="Presiona para confirmar" title="Presiona para confirmar" onclick="{! c.myTest }" />
-                                                                        </aura:if>  
-                                                                    </div>
                                                                     
+                                                                    <div id="countdown" style="padding-block:10px;width: 100px;font-size: 14px;color:red;border-style: solid;border-color: red;"></div>
                                                                     
                                                                 </header>
 

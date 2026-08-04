@@ -219,9 +219,9 @@
         var parameters = {
           'selectedService': selectedService
         };
-        setTimeout(() => {
-          component.set("v.isLoading", false);
-        }, 1000);
+        // setTimeout(() => {
+        //   component.set("v.isLoading", false);
+        // }, 6000);
         var result = helper.getServerResponse(component, event, helper, apexMethod, parameters);
         console.log('paso metodo getCalendarAvailabilityForService');
         
@@ -382,8 +382,11 @@
     }]);
 
       setTimeout(() => {
+        component.set("v.quitarCuadroBlanco", false);
+      }, 2000);
+      setTimeout(() => {
         component.set("v.isLoading", false);
-    }, 1000);
+    }, 6000);
 
 
     var term = component.get("c.getTerminosYCondi");
@@ -1007,74 +1010,52 @@
     var intervalId = component.get("v.setIntervalId");
     var esFormulario = component.get("v.tipoCita");
     var lstPreguntas = component.get("v.inputCount");
-    var noHayVacios = true;
-    if(esFormulario == true){
+    if (esFormulario === true) {
       for(var z = 0; z < lstPreguntas.length; z++){
         var pregunta = "v.pregunta" + (z+1);
         var vacio = component.get(pregunta);
-        if(vacio == null || vacio == undefined || vacio == ''){
+        if(vacio == null || vacio === ''){
           alert("Por favor complete el cuestionario.");
-          noHayVacios = false;
-        }else{
-          noHayVacios = true;
+          component.set("v.isLoading", false);
+          return;
         }
       }
-      if(noHayVacios){
-        window.clearInterval(intervalId);
-          clearInterval(intervalId);
-      
-          console.log('entro myTest');
-          var selectedHour = component.get("v.selectedHour");
-          console.log(selectedHour);
-          var ddate = new Date(helper.selectedDate.getFullYear(), helper.selectedDate.getMonth(), helper.selectedDate.getDate());
-          console.log(ddate);
-          var result = helper.createNewCalendarEvent(ddate, selectedHour, component);
-          console.log('=============================ESPACIO NO OCUPADO DE REGRESO==========================');
-          setTimeout(() => {
-            var espacioOcupado =  component.get('v.espacioNoOcupado');
-            console.log( 'Espacio ocupado es : ' + espacioOcupado);
-            if(espacioOcupado == true){
-              component.set("v.isModalOpenFinalConfirmation", true);
-              component.set("v.isModalOpenConfirmation", false);
-              component.set("v.isModalLibreDeCitas", false);
-            }else{
-              component.set("v.isModalLibreDeCitas", true);
-              component.set("v.isModalOpenConfirmation", false);
-              
-            }
-          }, 3000);
-          
-      }
-    }else{
-      window.clearInterval(intervalId);
-      clearInterval(intervalId);
-  
-      console.log('entro myTest');
-      var selectedHour = component.get("v.selectedHour");
-      console.log(selectedHour);
-      var ddate = new Date(helper.selectedDate.getFullYear(), helper.selectedDate.getMonth(), helper.selectedDate.getDate());
-      console.log(ddate);
-      var result = helper.createNewCalendarEvent(ddate, selectedHour, component);
-      console.log('=============================ESPACIO NO OCUPADO DE REGRESO==========================');
-      setTimeout(() => {
-        var espacioOcupado =  component.get('v.espacioNoOcupado');
-        console.log( 'Espacio ocupado es : ' + espacioOcupado);
-        if(espacioOcupado == true){
-          component.set("v.isModalOpenFinalConfirmation", true);
-          component.set("v.isModalOpenConfirmation", false);
-        }else{
-          component.set("v.isModalLibreDeCitas", true);
-          component.set("v.isModalOpenConfirmation", false);
-          
-        }
-      }, 3000);
-      
-      
     }
-    setTimeout(() => {
-      component.set("v.isLoading", false);
-    }, 5000);
-    
+
+    window.clearInterval(intervalId);
+    clearInterval(intervalId);
+
+    var selectedHour = component.get("v.selectedHour");
+    var ddate = new Date(
+      helper.selectedDate.getFullYear(),
+      helper.selectedDate.getMonth(),
+      helper.selectedDate.getDate()
+    );
+
+    helper.createNewCalendarEvent(
+      ddate,
+      selectedHour,
+      component,
+      function(result) {
+        component.set("v.myResult", result);
+        component.set("v.espacioNoOcupado", true);
+        component.set("v.isModalOpenFinalConfirmation", true);
+        component.set("v.isModalOpenConfirmation", false);
+        component.set("v.isModalLibreDeCitas", false);
+        component.set("v.isLoading", false);
+      },
+      function(errorInfo) {
+        var defaultMessage = "No fue posible crear la cita. No se realizó ninguna reserva. Por favor, actualice la página e intente nuevamente.";
+        component.set("v.creationErrorMessage",
+          errorInfo && errorInfo.message ? errorInfo.message : defaultMessage
+        );
+        component.set("v.espacioNoOcupado", false);
+        component.set("v.isModalOpenFinalConfirmation", false);
+        component.set("v.isModalOpenConfirmation", false);
+        component.set("v.isModalLibreDeCitas", true);
+        component.set("v.isLoading", false);
+      }
+    );
   },
 
   nuevaCitaMovil: function(component, event, helper) {
@@ -1476,8 +1457,8 @@
     //este es el bueno este controla cuando se cambia el servicio en la tabs
     document.getElementById("container").style.display = "";
     
-    document.getElementById("container").style.display = "";
-
+    document.getElementById("containerTesting").style.display = "";
+    document.getElementById('container').style.display = "";
     document.getElementById("container").style.display = "";
     document.getElementById("sidebar").style.display = "none";   
     var selectedService = component.get("v.serviceSelected");
@@ -1794,9 +1775,13 @@
 
               let text = String(listaTotal[i]);
               const myArray = text.split(",");
+              console.log('Mi array: ', myArray);
               console.log(myArray[0]);
               var nombreSub = myArray[0];
+              console.log('primer array: ', nombreSub);
+              
               var idDocSub = myArray[1];
+              console.log('segundo array: ', idDocSub);
 
               var newTr = document.createElement("div");
               newTr.className = "eventCard col-md-6 destruir";
@@ -1813,7 +1798,6 @@
               var newDivlIntLab = document.createElement("div");
               newDivlIntLab.className = "mr-servicio-image";
                           
-              
               var newImgIntDiv = document.createElement("img");
               newImgIntDiv.className = "additionalServiceIcons";
               //https://redmotors.file.force.com/servlet/servlet.ImageServer?id=0154U000008XxqK&oid=00D0P000000Dvkz
@@ -1867,8 +1851,6 @@
     });
     $A.enqueueAction(action);
 
-   
-    
     var c = component.get('c.getReportarFallo'); 
     c.setParams({
       "serviceSelected" : selectedService,
@@ -1903,9 +1885,6 @@
         }else{
           document.getElementById("seleccionVehiculo").style.display = "none";
         }
-
-        
-        
       } else {
         console.log("error");
         console.log(response.getError());
@@ -1913,10 +1892,6 @@
 
     });
     $A.enqueueAction(c);
-
-
-
-
   },
 
   myFunction: function(component, event, helper) {

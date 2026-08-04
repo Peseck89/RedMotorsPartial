@@ -1,0 +1,35 @@
+<template>
+    <lightning-card >
+    <span style="font-size: 26px; color: rgb(29, 71, 199);margin: 37px;">KPI Sucursales</span>
+    </br></br>
+    </br></br>
+        <div class="kpi-grid"> 
+                <div class="kpi-card big">
+                    <div class="kpi-title">Vehículos activos en taller Autos</div>
+                    <div class="kpi-value">{kpis.casosAbiertos}</div>
+                    <div class="kpi-sub">Casos abiertos</div>
+                </div>
+                <div class="kpi-card big">
+                    <div class="kpi-title">Vehículos activos en taller Motos</div>
+                    <div class="kpi-value">{kpis.casosAbiertosMotos}</div>
+                    <div class="kpi-sub">Casos abiertos</div>
+                </div>
+        </div>
+        <div class="kpi-grid">    
+            
+        
+            <template for:each={sucursales} for:item="s" for:index="index">
+                <div
+                    key={s.nombre}
+                    class={s.clase}
+                >
+                    <div class="kpi-title">{s.nombre}</div>
+                    <div class="kpi-value">{s.cantidad}</div>
+                    <div class="kpi-sub">Alertas activas</div>
+                </div>
+            </template>
+        </div>
+
+
+    </lightning-card>
+</template>

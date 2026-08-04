@@ -537,7 +537,7 @@
                                                         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                                                             <div class="slds-modal__container">
                                                                 <!-- Modal/Popup Box Header Starts here-->
-                                                                <header class="slds-modal__header">
+                                                                <header class="slds-modal__header" style="max-height:80vh; overflow-y:scroll;">
                                                                     <div id="creandocita1_" style="padding:0 20px; font-size: 15px">
                                                                         <button style="top:0 !important;width:17px !important;right:1px !important;border: none !important; " class="slds-button slds-button_icon slds-modal__close mybuttonx" title="Close" onclick="{!c.closeModalConfirmacion}">
                                                                             X
@@ -605,21 +605,23 @@
                                                                             </div>
 
                                                                         </aura:if> 
+                                                                        
                                                                         <br/>
-                                                                        <div id="countdown" style="padding-block:10px;width: 100px;font-size: 14px;color:red;border-style: solid;border-color: red;"></div>
+                                                                        <div id="creandocita2_" style="padding-top:2px">
+                                                                            <lightning:button variant="neutral" label="Volver" title="Volver" onclick="{! c.closeModelConfirmation }" />
+                                                                            <aura:if isTrue="{!v.tipoCita != true}">
+                                                                                <lightning:button variant="brand" label="Presiona para confirmar" title="Presiona para confirmar" onclick="{! c.myTest }" />
+                                                                            </aura:if>  
+                                                                            <aura:if isTrue="{!v.tipoCita }">
+                                                                                <lightning:button aura:id="myButton" disabled="true" variant="brand" label="Presiona para confirmar" title="Presiona para confirmar" onclick="{! c.myTest }" />
+                                                                            </aura:if>  
+                                                                        </div>
+                                                                        
                                                                         <br/>
                                                                         <br/>
                                                                     </div>
 
-                                                                    <div id="creandocita2_" style="padding-top:2px">
-                                                                        <lightning:button variant="neutral" label="Volver" title="Volver" onclick="{! c.closeModelConfirmation }" />
-                                                                        <aura:if isTrue="{!v.tipoCita != true}">
-                                                                            <lightning:button variant="brand" label="Presiona para confirmar" title="Presiona para confirmar" onclick="{! c.myTest }" />
-                                                                        </aura:if>  
-                                                                        <aura:if isTrue="{!v.tipoCita }">
-                                                                            <lightning:button aura:id="myButton" disabled="true" variant="brand" label="Presiona para confirmar" title="Presiona para confirmar" onclick="{! c.myTest }" />
-                                                                        </aura:if>  
-                                                                    </div>
+                                                                    <div id="countdown" style="padding-block:10px;width: 100px;font-size: 14px;color:red;border-style: solid;border-color: red;"></div>
                                                                     
                                                                     
                                                                 </header>
@@ -1133,6 +1135,21 @@
                                                     <div class="slds-backdrop slds-backdrop_open"></div>
                                                
                                                 </div>
+
+
+                                                    <div id="containerTesting" style="display:none">
+                                                        <!-- Add your spinner markup or use Salesforce's spinner component here -->
+                                                        <!-- For example, you can use SLDS (Salesforce Lightning Design System) spinner -->
+                                                        <div class="spinner-container" style="background-color: rgba(0, 0, 0, 0.25);top: 0;left: 0;position:fixed;width: 100%;height: 100%; align-items: center;justify-content: center;z-index: 9999;">
+                                                            <div class="slds-spinner slds-spinner_medium">
+                                                                <div class="slds-spinner__dot-a"></div>
+                                                                <div class="slds-spinner__dot-b"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                
+
+
                                                 <!-- CALENDARIO -->
                                                 <div id="container" style="display: none;">
                                                     <div id="containerCalendario" class="" >
