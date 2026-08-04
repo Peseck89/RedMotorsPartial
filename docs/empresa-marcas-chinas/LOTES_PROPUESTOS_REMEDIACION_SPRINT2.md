@@ -8,7 +8,7 @@ Los lotes son pequeños, ordenados y aún no autorizados para ejecución. Apex, 
 
 **Cambios propuestos:** ninguno funcional. Comparar recurso por recurso, identificar propietario/cambio vigente, documentar decisión autoritativa y preparar una base reconciliada. Incorporar bundles faltantes solo si Luis lo confirma.
 
-**Dependencias:** L1 y D1; inventario de invocadores y dependencias. La vigencia productiva de los Flows ya está confirmada.
+**Dependencias:** inventario de invocadores y dependencias. La vigencia productiva y las bases v29/v79 ya están confirmadas; los Draft v30/v80 se ignoran.
 
 **Riesgo:** crítico si se sobrescribe Partial; bajo si el lote permanece documental y de solo lectura.
 
@@ -62,25 +62,25 @@ La depuración del Lote 2.1 confirmó la vigencia de los doce Flows y eliminó l
 
 **Elemento:** `SegregateWOLIs`.
 
-**Estado:** `REQUIERE_NEGOCIO` y confirmación técnica de Diego sobre Record Type configurable.
+**Estado:** la sustitución del Id fijo por DeveloperName es `EJECUTABLE_TÉCNICAMENTE`. El comportamiento de garantía/segregación para PEKING permanece `REQUIERE_NEGOCIO` (N3).
 
 ### Sublote 2D1 — Opportunity sin divergencia de versión
 
 **Elementos:** `Opp_flow_V3`, `Opportunity_Flow_V2`.
 
-**Estado:** `REQUIERE_LUIS` para UX y precedencia del lookup Empresa.
+**Estado:** `EJECUTABLE_TÉCNICAMENTE`. Ambos deben presentar selección explícita de Empresa. En `Opportunity_Flow_V2`, la selección explícita prevalece sobre `$User.Empresa__c`.
 
 ### Sublote 2D2 — Opportunity con active/latest distintos
 
 **Elementos:** `Opp_Flow_V5`, `Opp_Flow_v6`.
 
-**Estado:** `REQUIERE_DIEGO` para versión base; después requiere la decisión UX aplicable.
+**Estado:** `EJECUTABLE_TÉCNICAMENTE`. `Opp_Flow_V5` parte exclusivamente de v29 activa e ignora v30 Draft; `Opp_Flow_v6` parte exclusivamente de v79 activa e ignora v80 Draft. Ambos deben presentar selección explícita de Empresa.
 
 ### Sublote 2E — Caso, Work Order y evento
 
 **Elementos:** `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent`.
 
-**Estado:** el primero `REQUIERE_LUIS` por UX y ambos requieren negocio para servicios/agenda/territorio.
+**Estado:** la UX de `aperturaCaseWorOrderEvent` está resuelta mediante selección explícita de Empresa. Ambos Flows permanecen `REQUIERE_NEGOCIO` (N4: servicios, agenda, sucursales y territorios).
 
 **Riesgo general:** alto; afecta Opportunity, Quote, Work Order, WOLI, Event y PricebookEntry.
 
@@ -90,7 +90,7 @@ La depuración del Lote 2.1 confirmó la vigencia de los doce Flows y eliminó l
 
 **Terminado:** ninguna ruta residual selecciona otra Empresa; pruebas negativas completas y positivas con datos confirmados.
 
-**Orden actualizado:** 2A → respuestas externas → 2B/2C/2D/2E según desbloqueo.
+**Orden actualizado:** 2A completado → 2D1/2D2 → corrección técnica de Record Type en 2C → 2B/2C funcional/2E después de respuestas de negocio.
 
 ## Lote 3 — componentes de inventario VN/VU
 
@@ -194,4 +194,11 @@ La depuración del Lote 2.1 confirmó la vigencia de los doce Flows y eliminó l
 
 ## Lote recomendado para iniciar
 
-**Sublote 2A**, limitado a `PlanDeMantenimientoV2`, `CreateWoliFromExpense` y `AgregarManoObra`, mediante autorización específica. Permite retirar resolución insegura y completar pruebas negativas sin inventar catálogo, productos o precios. Los demás sublotes esperan las decisiones registradas en `PREGUNTAS_BLOQUEOS_SPRINT2.md`.
+**Sublote 2D**, dividido en dos despliegues pequeños y sujeto a autorización específica:
+
+1. **2D1:** `Opp_flow_V3` v28 y `Opportunity_Flow_V2` v6.
+2. **2D2:** `Opp_Flow_V5` desde v29 activa y `Opp_Flow_v6` desde v79 activa; v30/v80 Draft se ignoran.
+
+Es el siguiente lote totalmente ejecutable porque ya están confirmadas la selección explícita de Empresa, la precedencia frente a `$User.Empresa__c` y las versiones base. Debe conservar las rutas vigentes, resolver Pricebook mediante Empresa y detener estados no configurados sin inventar datos.
+
+Como tarea independiente posterior puede ejecutarse la sustitución del Record Type Id de `SegregateWOLIs` por DeveloperName. La lógica funcional de garantía/segregación permanece bloqueada por N3.

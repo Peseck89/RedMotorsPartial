@@ -10,34 +10,22 @@ Esta versión elimina preguntas ya respondidas sobre vigencia productiva, usados
 - `EmpresaPricebookResolver` es el contrato común y no selecciona opciones ambiguas.
 - `kpiSucursales` y `cT_Estadisticas_Inventario_lwc` ya están versionados.
 - Nueve conflictos Git–Partial fueron conciliados; despacho conserva dependencias faltantes separadas.
+- Luis confirmó selección explícita de Empresa en `Opp_Flow_V5`, `Opp_flow_V3`, `Opp_Flow_v6`, `Opportunity_Flow_V2` y `aperturaCaseWorOrderEvent`.
+- En `Opportunity_Flow_V2`, la Empresa seleccionada explícitamente prevalece sobre `$User.Empresa__c`; el dato del usuario no puede sobrescribirla.
+- `Opp_Flow_V5` debe modificarse desde v29 activa; v30 Draft se ignora.
+- `Opp_Flow_v6` debe modificarse desde v79 activa; v80 Draft se ignora.
+- `SegregateWOLIs` debe resolver el Record Type por DeveloperName y eliminar el Id dependiente del ambiente.
 
-## Para Luis
+## Flows sin bloqueo de decisión
 
-### L1. UX y precedencia de Empresa en Flows de Opportunity
+- `Opp_Flow_V5` — ejecutable desde v29 activa.
+- `Opp_flow_V3` — ejecutable desde v28 activa.
+- `Opp_Flow_v6` — ejecutable desde v79 activa.
+- `Opportunity_Flow_V2` — ejecutable desde v6 activa, con precedencia de Empresa explícita.
 
-**Pregunta:** En `Opp_Flow_V5`, `Opp_flow_V3`, `Opportunity_Flow_V2`, `Opp_Flow_v6` y `aperturaCaseWorOrderEvent`, ¿la Empresa debe elegirse mediante un lookup/selector de `Empresa__c` o derivarse del registro/contexto? Para `Opportunity_Flow_V2`, ¿qué precedencia tiene la Empresa elegida frente a `$User.Empresa__c`?
+Estos cuatro Flows pueden integrar el selector de Empresa y la resolución dinámica de Pricebook sin otra decisión funcional conocida. La ejecución requiere autorización específica.
 
-**Desbloquea:** sublotes 2D1, parte de 2D2 y `aperturaCaseWorOrderEvent` en 2E.
-
-**Alternativa recomendada:** lookup Empresa explícito cuando existe interacción; contexto del registro cuando no existe pantalla. `$User.Empresa__c` puede sugerir, pero no sobrescribir silenciosamente una Empresa explícita. No agregar PEKING al picklist legacy.
-
-## Para Diego
-
-### D1. Base de versión para Flows con active/latest distintos
-
-**Pregunta:** Para `Opp_Flow_V5` (v29 activa, v30 Draft) y `Opp_Flow_v6` (v79 activa, v80 Draft), ¿qué versión debe ser la base editable y qué cambios del Draft deben preservarse antes de migrar Empresa/Pricebook?
-
-**Desbloquea:** sublote 2D2.
-
-**Alternativa recomendada:** partir de la versión activa y conciliar explícitamente solo cambios Draft aprobados; no activar el Draft por inferencia.
-
-### D2. Record Type configurable para segregación
-
-**Pregunta:** ¿Se aprueba resolver el Record Type de `SegregateWOLIs` por DeveloperName más configuración por Empresa/proceso, eliminando el Id dependiente de org?
-
-**Desbloquea:** parte técnica del sublote 2C.
-
-**Alternativa recomendada:** DeveloperName estable y configuración empresarial; nunca Id literal.
+`SegregateWOLIs` puede sustituir técnicamente el Id fijo por DeveloperName, pero su comportamiento completo para PEKING continúa bloqueado por N3. `aperturaCaseWorOrderEvent` ya no espera una decisión de UX, pero continúa bloqueado por N4.
 
 ## Para negocio
 
@@ -73,11 +61,21 @@ Esta versión elimina preguntas ya respondidas sobre vigencia productiva, usados
 
 **Alternativa recomendada:** configuración empresarial aprobada; no inferir servicios o sucursales por similitud.
 
-## Preguntas de otros lotes que permanecen vigentes
+## Bloqueos de negocio que permanecen vigentes
 
 - Contrato y operaciones Softland autorizadas para inventario/localización/despacho.
 - Sucursales, servicios, capacidades, usuarios y textos legales para Community.
 - Perfiles QA y permisos funcionales por proceso.
 - Dependencias faltantes de despacho antes de conciliar `quoliGridDespacho`/`woliGridDespacho`.
+
+## Clasificación después de las respuestas
+
+| Estado | Flows |
+|---|---|
+| Ejecutables técnicamente | `Opp_Flow_V5`, `Opp_flow_V3`, `Opp_Flow_v6`, `Opportunity_Flow_V2` |
+| Bloqueados por N2 | `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective` |
+| Bloqueado por N3 | `SegregateWOLIs` (salvo sustitución técnica del Record Type) |
+| Bloqueados por N4 | `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent` |
+| Implementados técnicamente; QA positivo bloqueado por N1 | `PlanDeMantenimientoV2`, `CreateWoliFromExpense`, `AgregarManoObra` |
 
 Ninguna respuesta de este documento autoriza implementación por sí sola; cada sublote requiere aprobación expresa.
