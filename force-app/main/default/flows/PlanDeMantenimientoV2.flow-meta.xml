@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>57.0</apiVersion>
+    <actionCalls>
+        <name>Resolver_Pricebook_Empresa</name>
+        <label>Resolver Pricebook Empresa</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>EmpresaPricebookResolver</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Validar_Estado_Pricebook</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>empresaId</name>
+            <value><elementReference>EmpresaIdResuelta</elementReference></value>
+        </inputParameters>
+        <inputParameters>
+            <name>currencyIsoCode</name>
+            <value><elementReference>GetQuote.CurrencyIsoCode</elementReference></value>
+        </inputParameters>
+        <inputParameters>
+            <name>currentPricebookId</name>
+            <value><elementReference>GetQuote.Pricebook2Id</elementReference></value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <assignments>
+        <name>Asignar_Empresa_Fallback</name>
+        <label>Asignar Empresa Fallback</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>EmpresaIdResuelta</assignToReference>
+            <operator>Assign</operator>
+            <value><elementReference>Obtener_Empresa_Fallback.Id</elementReference></value>
+        </assignmentItems>
+        <connector><targetReference>Resolver_Pricebook_Empresa</targetReference></connector>
+    </assignments>
+    <assignments>
+        <name>Asignar_Empresa_Lookup</name>
+        <label>Asignar Empresa Lookup</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>EmpresaIdResuelta</assignToReference>
+            <operator>Assign</operator>
+            <value><elementReference>GetOpp.Empresa_Operadora__c</elementReference></value>
+        </assignmentItems>
+        <connector><targetReference>Resolver_Pricebook_Empresa</targetReference></connector>
+    </assignments>
     <assignments>
         <name>MostrarError</name>
         <label>MostrarError</label>
@@ -162,6 +211,63 @@
         </value>
     </choices>
     <decisions>
+        <name>Tiene_Empresa_Operadora</name>
+        <label>Tiene Empresa Operadora</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector><targetReference>Obtener_Empresa_Fallback</targetReference></defaultConnector>
+        <defaultConnectorLabel>Sin lookup: fallback controlado</defaultConnectorLabel>
+        <rules>
+            <name>Empresa_Lookup_Presente</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetOpp.Empresa_Operadora__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue><booleanValue>false</booleanValue></rightValue>
+            </conditions>
+            <connector><targetReference>Asignar_Empresa_Lookup</targetReference></connector>
+            <label>Empresa lookup presente</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validar_Estado_Pricebook</name>
+        <label>Validar Estado Pricebook</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector><targetReference>Error_Configuracion_Empresa</targetReference></defaultConnector>
+        <defaultConnectorLabel>NO_CONFIGURADO, SELECCION_REQUERIDA o ERROR</defaultConnectorLabel>
+        <rules>
+            <name>Pricebook_Resuelto</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Resolver_Pricebook_Empresa.status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue><stringValue>EXITO</stringValue></rightValue>
+            </conditions>
+            <connector><targetReference>GetPricebookEntry</targetReference></connector>
+            <label>EXITO</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validar_PricebookEntry</name>
+        <label>Validar Pricebook Entry</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector><targetReference>Error_Configuracion_Empresa</targetReference></defaultConnector>
+        <defaultConnectorLabel>Producto sin entrada activa</defaultConnectorLabel>
+        <rules>
+            <name>PricebookEntry_Encontrado</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetPricebookEntry.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue><booleanValue>false</booleanValue></rightValue>
+            </conditions>
+            <connector><targetReference>If</targetReference></connector>
+            <label>Entrada encontrada</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>If</name>
         <label>If</label>
         <locationX>611</locationX>
@@ -233,6 +339,12 @@
             <label>Extra</label>
         </rules>
     </decisions>
+    <formulas>
+        <name>CodigoErpLegacyEmpresa</name>
+        <dataType>String</dataType>
+        <description>Fallback temporal limitado a Bavarian y Otobai. Todo valor desconocido produce vacío.</description>
+        <expression>CASE({!GetOpp.BMW_Compania__c}, "Bavarian", "RMBAVARIAN", "RMBAVARIAN", "RMBAVARIAN", "Otobai", "RMOTOBAI", "RMOTOBAI", "RMOTOBAI", "")</expression>
+    </formulas>
     <formulas>
         <name>FechaFin</name>
         <dataType>Date</dataType>
@@ -455,10 +567,8 @@
         <label>GetPricebookEntry</label>
         <locationX>611</locationX>
         <locationY>674</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>If</targetReference>
-        </connector>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector><targetReference>Validar_PricebookEntry</targetReference></connector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Product2Id</field>
@@ -471,8 +581,13 @@
             <field>Pricebook2Id</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>01s4U0000026MgfQAE</stringValue>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value><booleanValue>true</booleanValue></value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>PricebookEntry</object>
@@ -577,14 +692,34 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <name>Obtener_Empresa_Fallback</name>
+        <label>Obtener Empresa Fallback</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector><targetReference>Asignar_Empresa_Fallback</targetReference></connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Codigo_ERP__c</field>
+            <operator>EqualTo</operator>
+            <value><elementReference>CodigoErpLegacyEmpresa</elementReference></value>
+        </filters>
+        <filters>
+            <field>Activa__c</field>
+            <operator>EqualTo</operator>
+            <value><booleanValue>true</booleanValue></value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Empresa__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>ProductMantenimiento</name>
         <label>ProductMantenimiento</label>
         <locationX>611</locationX>
         <locationY>566</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>GetPricebookEntry</targetReference>
-        </connector>
+        <connector><targetReference>Tiene_Empresa_Operadora</targetReference></connector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Codigo_de_Producto__c</field>
@@ -597,6 +732,22 @@
         <object>Product2</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
+    <screens>
+        <name>Error_Configuracion_Empresa</name>
+        <label>Configuración de Empresa no disponible</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Mensaje_Error_Empresa</name>
+            <fieldText>&lt;p&gt;No fue posible resolver una Empresa, Pricebook o entrada de producto válida. {!Resolver_Pricebook_Empresa.mensaje}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
     <screens>
         <name>Costo_Plan</name>
         <label>Costo Plan</label>
@@ -782,6 +933,13 @@
         </connector>
     </start>
     <status>Active</status>
+    <variables>
+        <name>EmpresaIdResuelta</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>Error</name>
         <dataType>Boolean</dataType>
