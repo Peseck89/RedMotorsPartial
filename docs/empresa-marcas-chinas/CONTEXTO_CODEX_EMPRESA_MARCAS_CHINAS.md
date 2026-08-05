@@ -56,3 +56,13 @@ Primero análisis e inventario completo de los puntos afectados; después cambio
 ## Estado actual
 
 Línea base creada desde `origin/main`. Sin retrieve de Salesforce, sin cambios funcionales, sin metadata nueva. Único contenido nuevo en el working tree: esta carpeta de contexto y los dos documentos fuente.
+
+## Actualización documental — 2026-08-05
+
+La revisión TD-RQ308 confirmó diferencias entre el alcance original de PortalNet y el requerimiento posterior versión 0.13 de Red Motors. Luis aprobó en general el documento de diferencias y autorizó comenzar Sprint 3 con el alcance original, sin incorporar automáticamente ampliaciones ni inventar definiciones funcionales. Sprint 2 permanece pausado y no cerrado por cinco Flows pendientes de respuestas de negocio.
+
+Documentos relacionados:
+
+- [`TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx`](TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx)
+- [`CONTEXTO_RQ308_Y_AUTORIZACION_SPRINT3_20260805.md`](CONTEXTO_RQ308_Y_AUTORIZACION_SPRINT3_20260805.md)
+- [`MATRIZ_DECISIONES_RQ308_SPRINT2_SPRINT3_20260805.md`](MATRIZ_DECISIONES_RQ308_SPRINT2_SPRINT3_20260805.md)
