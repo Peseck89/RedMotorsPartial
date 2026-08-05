@@ -66,3 +66,10 @@ Documentos relacionados:
 - [`TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx`](TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx)
 - [`CONTEXTO_RQ308_Y_AUTORIZACION_SPRINT3_20260805.md`](CONTEXTO_RQ308_Y_AUTORIZACION_SPRINT3_20260805.md)
 - [`MATRIZ_DECISIONES_RQ308_SPRINT2_SPRINT3_20260805.md`](MATRIZ_DECISIONES_RQ308_SPRINT2_SPRINT3_20260805.md)
+
+## Preparación de Sprint 3 — 2026-08-05
+
+- [Matriz de alcance de Sprint 3](MATRIZ_ALCANCE_SPRINT3_20260805.csv)
+- [Plan de inicio de Sprint 3](PLAN_INICIO_SPRINT3_20260805.md)
+- [Lotes propuestos de Sprint 3](LOTES_PROPUESTOS_SPRINT3_20260805.md)
+- [Resumen de preparación de Sprint 3](RESUMEN_PREPARACION_SPRINT3_20260805.md)
