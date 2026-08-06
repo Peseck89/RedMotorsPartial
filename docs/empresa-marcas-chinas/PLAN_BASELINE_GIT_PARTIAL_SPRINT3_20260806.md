@@ -58,3 +58,7 @@ Primero resolver asignaciones de Layout/FlexiPage y seleccionar el subconjunto r
 La selección detallada sustituye cualquier interpretación de recuperar las 219 filas en bloque y se encuentra en `SELECCION_BASELINE_GIT_PARTIAL_SPRINT3_20260806.md`.
 
 El primer candidato futuro queda limitado a los seis Layouts con relación nominal a Record Types Omoda/Jaecoo/PEKING. Antes de recuperar al worktree se debe confirmar que esos Record Types representan el alcance PEKING y aprobar cada nombre API. FlexiPages no entran al primer baseline: no se demostró una activación explícita Omoda/Jaecoo/PEKING. Quick Actions deben tratarse en un lote separado por sus dependencias Flow/Visualforce.
+
+## Estado posterior S3-0.3 — 2026-08-06
+
+La integridad del inventario se completó como análisis con limitaciones. B0-UI-1 continúa únicamente propuesto y no autorizado. Su siguiente condición es revisar las preguntas pendientes de negocio y Softland; el cierre analítico no permite retrieve al worktree, cambio funcional ni deploy.

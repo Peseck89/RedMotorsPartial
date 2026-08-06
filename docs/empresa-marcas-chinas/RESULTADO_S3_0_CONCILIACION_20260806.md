@@ -148,3 +148,9 @@ Detalle: `AUDITORIA_COBERTURA_S3_0_20260806.md`, `UNIVERSO_Y_CRITERIOS_SELECCION
 Se preservan los resultados anteriores como historia. La integridad vigente está en las versiones V2/V3 y en `CORRECCION_INTEGRIDAD_S3_0_20260806.md`. La matriz nominal corregida contiene 224 componentes únicos y un placeholder; no cuenta dos veces `Product2-Product Layout V1.1`.
 
 La evidencia de asignación está en `MATRIZ_ASIGNACIONES_UI_S3_0_20260806.csv`. Demuestra asignaciones declaradas, no acceso ni uso efectivo. Seis Layouts tienen relación nominal con Record Types Omoda/Jaecoo/PEKING; no se encontró activación FlexiPage explícita para esos Record Types. S3-0 continúa abierto y no autoriza ningún lote funcional.
+
+## 14. Cierre de integridad S3-0.3 — 2026-08-06
+
+S3-0 queda `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`. La V4 contiene 225 componentes nominales y un placeholder; la matriz UI V2 distingue las seis referencias de perfil no resueltas sin registrar identificadores. Los 4,735 ProfileLayouts se conservaron porque son asignaciones distintas; no había duplicados reales.
+
+Persisten Softland, decisiones de negocio y QA funcional. No hay funcionalidad implementada, baseline autorizado ni lote funcional listo.

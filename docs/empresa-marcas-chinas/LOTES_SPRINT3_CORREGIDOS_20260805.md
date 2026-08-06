@@ -111,3 +111,9 @@ Antes de cualquier lote funcional debe aprobarse el baseline Git–Partial espec
 ### Corrección S3-0.2 — 2026-08-06
 
 La integridad nominal quedó corregida a 224 componentes únicos más un placeholder. La selección de baseline se redujo a candidatos con evidencia en `MATRIZ_ASIGNACIONES_UI_S3_0_20260806.csv`; no se autoriza recuperar 219 componentes ni iniciar funcionalidad. S3-0 permanece `EN_PROGRESO_CON_BRECHAS_DE_COBERTURA` por asignaciones no demostradas, decisiones funcionales y mecanismo Softland pendiente.
+
+### Cierre S3-0.3 — 2026-08-06
+
+S3-0 queda `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`: inventario nominal e integridad terminados, sin implementación. Ningún lote funcional está listo. La siguiente decisión es revisar las preguntas pendientes de negocio y la identificación del mecanismo Softland.
+
+B0-UI-1 continúa propuesto y no autorizado. `Opportunity_Record_Page_VN` también continúa sin autorización. El cierre analítico no habilita baseline, retrieve al worktree, dry-run ni deploy.

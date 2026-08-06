@@ -155,3 +155,9 @@ Se revisaron 61 Layouts, 25 FlexiPages, 50 acciones referenciadas, 383 Validatio
 Las versiones vigentes son `UNIVERSO_Y_CRITERIOS_SELECCION_S3_0_V2_20260806.csv`, `MATRIZ_NOMINAL_S3_0_V3_20260806.csv`, `MATRIZ_ASIGNACIONES_UI_S3_0_20260806.csv`, `CORRECCION_INTEGRIDAD_S3_0_20260806.md` y `SELECCION_BASELINE_GIT_PARTIAL_SPRINT3_20260806.md`. Los archivos previos se conservan como históricos.
 
 El conteo corregido es 224 componentes nominales únicos y un placeholder. Seis Layouts tienen relación nominal con Record Types Omoda/Jaecoo/PEKING; ninguna FlexiPage quedó demostrada como activación específica para esos Record Types. La existencia no equivale a activación ni acceso efectivo. S3-0 sigue abierto y no hay lote funcional listo.
+
+### Cierre de integridad S3-0.3 — 2026-08-06
+
+El estado vigente es `S3-0 — COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`. Las fuentes finales son `MATRIZ_NOMINAL_S3_0_V4_20260806.csv`, `MATRIZ_ASIGNACIONES_UI_S3_0_V2_20260806.csv` y `CIERRE_INTEGRIDAD_S3_0_20260806.md`; las versiones anteriores se conservan como historia.
+
+El inventario final contiene 225 componentes nominales y un placeholder, con 27 FlexiPages. Los 4,735 ProfileLayouts son asignaciones distintas: 4,655 resueltas y 80 asociadas a seis referencias estables. No se encontraron duplicados reales. Siguen pendientes Softland, decisiones de negocio y QA; ningún lote funcional ni baseline está autorizado.

@@ -70,3 +70,11 @@ S3-0.2 eliminó 175 contradicciones de inclusión/exclusión, normalizó 19 nomb
 La evidencia de `ProfileLayout` produjo 4,735 combinaciones relevantes y seis Layouts relacionados nominalmente con Record Types Omoda/Jaecoo/PEKING; 14 Layouts seleccionados quedaron explícitamente sin asignación demostrada. La metadata de aplicaciones/objetos produjo 1,580 activaciones de FlexiPage; ninguna vincula explícitamente una página del universo con esos Record Types. Diecisiete páginas no tienen asignación demostrada. Las cinco acciones nominales presentan diez exposiciones declaradas; `WorkOrder.BMW_CambiarMoneda` no tiene exposición demostrada.
 
 La existencia continúa separada de activación y de acceso efectivo. El estado permanece `S3-0 — EN_PROGRESO_CON_BRECHAS_DE_COBERTURA`; no existe lote funcional listo.
+
+## Cierre posterior S3-0.3 — 2026-08-06
+
+Las tres inconsistencias residuales quedaron corregidas en `MATRIZ_NOMINAL_S3_0_V4_20260806.csv` y `MATRIZ_ASIGNACIONES_UI_S3_0_V2_20260806.csv`. El estado vigente pasa a `S3-0 — COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`.
+
+El conteo final es 225 componentes nominales únicos más un placeholder, con 27 FlexiPages. `Opportunity_Record_Page_VU` quedó registrada una sola vez como exclusiva de usados y `NO_APLICA` para PEKING. Seis Approval Processes excluidos quedaron alineados con `Aplica_PEKING = No`.
+
+Los 4,735 ProfileLayouts corresponden a 4,735 asignaciones distintas: 4,655 con perfil resuelto y 80 asociadas a seis referencias estables no sensibles. No se encontraron duplicados reales. Este cierre no implementa funcionalidad ni autoriza baseline, `Opportunity_Record_Page_VN` o un lote funcional.
