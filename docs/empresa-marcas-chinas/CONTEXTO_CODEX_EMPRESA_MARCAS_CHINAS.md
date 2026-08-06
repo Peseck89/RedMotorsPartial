@@ -193,3 +193,9 @@ La matriz V2 conserva 94 reglas: 66 sin cambio con regresión, 4 candidatas téc
 B9-1 fue autorizado y quedó `IMPLEMENTADO_EN_PARTIAL_PENDIENTE_QA_FUNCIONAL`. Las cuatro Validation Rules candidatas fueron recuperadas, versionadas y extendidas exclusivamente con los Record Types Omoda y Jaecoo. El dry-run `0AfAK0000011gB70AI`, el deploy a `RedMotorsSandbox` `0AfAK0000011gCj0AI` y el retrieve posterior `09SAK000003GhKD2A0` fueron exitosos.
 
 La equivalencia técnica quedó demostrada 4/4 y no se alteraron propiedades ni condiciones ajenas al Record Type. No se modificaron datos ni Producción. El QA funcional y la regresión permanecen pendientes; B9-1 no está cerrado ni validado funcionalmente.
+
+### B7-0 — selección técnica de Layouts, FlexiPages y Quick Actions — 2026-08-06
+
+Se clasificaron exclusivamente los 78 componentes del bloque 7 ya registrados en S3-0: 46 Layouts, 27 FlexiPages y 5 Quick Actions. El resultado vigente es 10 `SIN_CAMBIO_REQUIERE_REGRESION`, 0 candidatos técnicos, 63 `BLOQUEADO_ASIGNACION_FUNCIONAL`, 0 dependencias directas de Diego, 1 `DRIFT_REQUIERE_CONCILIACION` y 4 `NO_APLICA`.
+
+Los seis Layouts de Opportunity relacionados con Omoda/Jaecoo ya tienen asignaciones explícitas para ambos Record Types y no requieren cambio técnico demostrado. `Opportunity_Record_Page_VN` conserva drift y no tiene activación Omoda/Jaecoo demostrada. No existe B7-1 con la evidencia actual y no se modificó Salesforce. B9-1 permanece pendiente de QA funcional.

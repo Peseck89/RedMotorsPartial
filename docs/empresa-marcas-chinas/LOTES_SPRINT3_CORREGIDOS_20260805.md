@@ -159,3 +159,9 @@ B9-1 queda `CANDIDATO_PENDIENTE_REVISION` con cuatro Validation Rules de Opportu
 B9-1 quedó `IMPLEMENTADO_EN_PARTIAL_PENDIENTE_QA_FUNCIONAL`. Se versionó el baseline y se agregaron Omoda/Jaecoo únicamente a las cuatro Validation Rules aprobadas. El dry-run y el deploy a Partial fueron exitosos, y el retrieve posterior resultó equivalente a Git.
 
 El QA técnico está completo. Continúan pendientes las pruebas funcionales positivas, negativas y de regresión con datos QA autorizados; por ello el lote no está cerrado ni validado funcionalmente.
+
+### B7-0 — selección técnica de UI — 2026-08-06
+
+B7-0 quedó `COMPLETADO_COMO_ANALISIS` sobre 78 componentes ya inventariados: 46 Layouts, 27 FlexiPages y 5 Quick Actions. Diez no requieren cambio y quedan para regresión; 63 están bloqueados por asignación funcional; 1 presenta drift Git–Partial y 4 no aplican por ser de usados.
+
+No existe un B7-1 aislable y no se propone lote funcional. `Opportunity_Record_Page_VN` requiere primero una conciliación técnica separada y una decisión de asignación; no fue modificado. B9-1 conserva su estado `IMPLEMENTADO_EN_PARTIAL_PENDIENTE_QA_FUNCIONAL`.
