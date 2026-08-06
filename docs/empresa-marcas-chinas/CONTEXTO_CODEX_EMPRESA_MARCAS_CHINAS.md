@@ -181,3 +181,9 @@ Se actualizaron las 22 preguntas consolidadas: 1 respondida, 7 parcialmente resp
 Se revisaron nominalmente las 94 Validation Rules de S3-0, sin ampliar el universo ni modificar metadata. La clasificación final es: 32 `SIN_CAMBIO_REQUIERE_REGRESION`, 0 `CANDIDATO_AJUSTE_TECNICO`, 9 `BLOQUEADO_DATOS_OPERATIVOS`, 4 `BLOQUEADO_NEGOCIO`, 46 `DEPENDENCIA_DIEGO` y 3 `NO_APLICA`.
 
 No existe un B9-1 técnicamente aislado con la evidencia actual y no se requiere baseline de candidatas. Las fuentes vigentes son `MATRIZ_VALIDATION_RULES_B9_0_20260806.csv` y `RESULTADO_B9_0_VALIDATION_RULES_20260806.md`. No hubo implementación ni cambio en Salesforce.
+
+### Corrección B9-0.1 — dependencia real de perfiles
+
+La conclusión anterior queda sustituida para planificación, sin borrarse como historia. De las 46 dependencias originales, 34 eran excepciones genéricas de Admin, 6 dependen de perfiles funcionales concretos, 2 contienen ProfileId y 4 combinan Profile genérico con Record Types legacy.
+
+La matriz V2 conserva 94 reglas: 66 sin cambio con regresión, 4 candidatas técnicas, 9 bloqueadas por datos, 4 por negocio, 8 dependencias reales de Diego y 3 no aplicables. B9-1 queda propuesto, no autorizado, con cuatro reglas de Opportunity y baseline interno pendiente. No se modificó Salesforce.

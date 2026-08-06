@@ -147,3 +147,9 @@ No se identifica un lote funcional nuevo que tenga baseline suficiente, datos in
 B9-0 quedó `COMPLETADO_COMO_ANALISIS`: se revisaron exactamente 94 Validation Rules. El resultado fue 32 sin cambio técnico con regresión pendiente, 9 bloqueadas por datos operativos, 4 bloqueadas por negocio, 46 dependencias de Diego y 3 no aplicables a PEKING. No existe todavía una candidata técnica aislada, por lo que B9-1 no se propone ni se autoriza.
 
 La evidencia nominal está en `MATRIZ_VALIDATION_RULES_B9_0_20260806.csv` y `RESULTADO_B9_0_VALIDATION_RULES_20260806.md`. Ninguna regla fue modificada.
+
+### Corrección B9-0.1 — dependencia real de perfiles
+
+La revisión específica de las 46 dependencias corrigió el resultado: 34 eran referencias genéricas de Admin y no dependen de Diego; 4 combinaban una excepción Admin genérica con Record Types legacy y son candidatas técnicas; 8 sí dependen de perfiles funcionales o ProfileId.
+
+B9-1 queda `CANDIDATO_PENDIENTE_REVISION` con cuatro Validation Rules de Opportunity. Requiere baseline interno desde Partial y autorización posterior; no fue implementado.

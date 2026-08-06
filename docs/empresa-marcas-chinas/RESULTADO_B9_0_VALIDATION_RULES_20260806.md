@@ -84,3 +84,11 @@ Una regla inactiva no fue clasificada como `NO_APLICA` por su estado; en los tre
 B9-0 queda completado como selección técnica, pero no produce un primer lote funcional seguro. El siguiente paso es obtener perfiles de Diego y resolver datos operativos y responsables. Después deberá repetirse únicamente la selección de candidatas sobre estas 59 reglas dependientes o bloqueadas, sin reabrir las 94 ni el universo de S3-0.
 
 No se realizó implementación, retrieve al worktree, dry-run, deploy, DML ni consulta a Producción.
+
+## Corrección B9-0.1 — dependencia real de perfiles
+
+La clasificación original se conserva como historia, pero fue corregida después de revisar exclusivamente sus 46 `DEPENDENCIA_DIEGO`. Una exclusión genérica de Admin no requiere conocer el perfil PEKING.
+
+Resultado vigente: 66 `SIN_CAMBIO_REQUIERE_REGRESION`, 4 `CANDIDATO_AJUSTE_TECNICO`, 9 `BLOQUEADO_DATOS_OPERATIVOS`, 4 `BLOQUEADO_NEGOCIO`, 8 `DEPENDENCIA_DIEGO` y 3 `NO_APLICA`; total 94.
+
+Treinta y cuatro referencias genéricas pasaron a sin cambio, cuatro reglas mixtas pasaron a candidatas y ocho dependencias reales se conservaron: seis por perfiles funcionales y dos por ProfileId. La fuente vigente es `MATRIZ_VALIDATION_RULES_B9_0_V2_20260806.csv`; el detalle está en `AUDITORIA_DEPENDENCIA_PERFILES_B9_0_20260806.md` y la propuesta no autorizada en `PROPUESTA_LOTE_B9_1_VALIDATION_RULES_20260806.md`.
