@@ -177,3 +177,9 @@ RMPEKING y los dos Pricebooks PEKING existen y están correctamente relacionados
 B9-AP0 quedó `COMPLETADO_COMO_ANALISIS`. El universo demostrado contiene 18 Approval Processes: 12 incluidos y 6 exclusiones financieras/auxiliares ya justificadas. Entre los 12 incluidos hay 8 `SIN_CAMBIO_REQUIERE_REGRESION`, 2 `BLOQUEADO_DATOS_OPERATIVOS`, 1 `BLOQUEADO_APROBADOR_NEGOCIO` y 1 `BLOQUEADO_REGLA_NEGOCIO`.
 
 Ningún paso referencia directamente un Role; los 15 Roles y cualquier jerarquía nueva permanecen `DEPENDENCIA_DIEGO_POR_JERARQUIA`. No existe B9-AP1 porque ningún proceso requiere únicamente extender PEKING/Omoda/Jaecoo: los reutilizables ya son neutrales y los demás necesitan datos o decisiones. B7-0 sigue terminado sin candidato, B9-1 continúa pendiente de QA funcional y B11-0 está terminado. La siguiente revisión dirigida pendiente es catálogos y schedulers Softland.
+
+### B11-0.1 — catálogos y schedulers Softland — 2026-08-06
+
+B11-0.1 quedó `COMPLETADO_COMO_ANALISIS`. Los seis catálogos confirmados ya están parametrizados para RMPEKING en Partial mediante una implementación histórica de Sprint 1, pero la línea vigente conserva el baseline anterior limitado a RMBAVARIAN. No hay schedulers relacionados activos en Partial.
+
+B11-1 queda `CANDIDATO_PENDIENTE_REVISION` para reconciliar exclusivamente `BatchGetCatalogoSoftland`, seis wrappers, seis schedulers y sus pruebas. No incluye ejecución, programación, datos reales ni bodega. `BatchGetBodegaSoftland` permanece `BLOQUEADO_DATOS_OPERATIVOS`; el rediseño global de catálogos por Empresa es `DEUDA_LEGACY_NO_ABSORBER`.

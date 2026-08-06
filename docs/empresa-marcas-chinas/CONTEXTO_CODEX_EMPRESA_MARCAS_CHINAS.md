@@ -215,3 +215,9 @@ María confirmó después de reunión con negocio que se mantiene el documento i
 La auditoría dirigida demostró 18 Approval Processes nominales: 12 incluidos y 6 exclusiones financieras/auxiliares. De los incluidos, 8 procesos de descuento son neutrales y dinámicos (`SIN_CAMBIO_REQUIERE_REGRESION`); 2 procesos de centro de costo están bloqueados por datos operativos; el proceso activo de garantía está bloqueado por aprobador de negocio; y la variante inactiva de garantía de cita está bloqueada por regla de negocio.
 
 Ningún paso asigna directamente un Role. Los 15 Roles y la jerarquía permanecen a cargo de Diego, sin un Role técnico adicional demostrado para este frente. No existe B9-AP1. B7-0 está terminado sin candidato; B9-1 sigue implementado en Partial pendiente de QA funcional; B11-0 está terminado. La siguiente verificación pendiente es catálogos y schedulers Softland. Sprint 3 no está cerrado.
+
+### B11-0.1 — catálogos y schedulers Softland — 2026-08-06
+
+La revisión dirigida demostró que los seis catálogos confirmados por Diego ya reciben RMPEKING en Partial: `BatchGetCatalogoSoftland` parametriza compañía, los seis wrappers la propagan y los seis schedulers encolan RMBAVARIAN y RMPEKING por separado. Esta implementación proviene de Sprint 1 y no está reconciliada en la línea vigente. No hay jobs programados activos para los schedulers revisados.
+
+B11-1 queda `CANDIDATO_PENDIENTE_REVISION` para reconciliar esos 13 componentes productivos y sus pruebas, sin ejecución de catálogos ni creación de datos. Bodega queda bloqueada: no existen bodegas PEKING oficiales y la clave externa actual no separa PEKING de Bavarian. Tras B11-1, el trabajo restante de Sprint 3 será QA o dependerá de negocio, datos o Diego; Sprint 3 no se declara cerrado.
