@@ -62,3 +62,36 @@
 | Sprint 1 y Sprint 3, bloque 11 | Apex/batches previos y validaciones configurables | ¿Qué pendientes pertenecen al frente técnico de Sprint 1 y cuáles son validaciones configurables del bloque 11 de Sprint 3? | Diego / líder técnico | Absorber refactor previo dentro de Sprint 3 o dejar una validación sin responsable. | PENDIENTE_DIEGO |
 
 Responder cada punto o indicar la persona responsable. Una respuesta funcional no autoriza por sí sola implementación, carga de datos ni cambios de seguridad.
+
+## Reevaluación posterior por respuesta de Diego — 2026-08-06
+
+Se conserva la redacción histórica de las 22 preguntas y se actualiza su estado sin asumir datos ni autorizaciones:
+
+| # | Componente o proceso | Estado actualizado | Aplicación de la respuesta | Pendiente real |
+|---:|---|---|---|---|
+| 1 | Layouts/FlexiPages de Opportunity, Account y Quote | `SIGUE_PENDIENTE` | Sin cambio | Asignación de páginas y Layouts por Record Type/perfil |
+| 2 | Default Pricebook VN | `SIGUE_PENDIENTE` | Sin cambio | Regla comercial cuando falta selección explícita |
+| 3 | Descuentos y aprobaciones | `PARCIALMENTE_RESPONDIDA` | La regla general es igual a las áreas existentes | Umbrales, niveles y aprobadores nominales |
+| 4 | Centros de costo | `PARCIALMENTE_RESPONDIDA` | La regla general es igual; no existen registros PEKING | Valores, referencia y responsable/aprobador |
+| 5 | Bodegas | `SIGUE_PENDIENTE` | Sin cambio | Bodegas oficiales y función operativa |
+| 6 | Sucursales, territorios y talleres | `PARCIALMENTE_RESPONDIDA` | Se confirma ausencia de registros territoriales PEKING | Valores y relación oficial de sucursales, territorios y talleres |
+| 7 | Reservas, cancelaciones y devoluciones | `RESPONDIDA` | Se gestionan conforme a la Empresa enviada | QA integral pendiente por datos; no constituye autorización de creación |
+| 8 | Quote → Work Order | `PARCIALMENTE_RESPONDIDA` | Procesos equivalentes deben operar por Empresa | Condiciones, líneas y validaciones específicas de Quote→WO |
+| 9 | Servicios, agenda, asesores y mecánicos | `PARCIALMENTE_RESPONDIDA` | Se confirma ausencia de asesores/registros equivalentes PEKING | Servicios, capacidades, referencias y registros mínimos |
+| 10 | Garantía | `SIGUE_PENDIENTE` | Sin cambio | Cobertura, criterios y responsables |
+| 11 | Segregación de cargos y WOLIs | `PARCIALMENTE_RESPONDIDA` | Aplica la regla general existente | Criterios nominales, centros de costo, garantía y QA |
+| 12 | Jerarquía y roles | `DEPENDENCIA_DIEGO` | Diego creará la jerarquía | Disponibilidad y evidencia; no volver a solicitar al negocio por ahora |
+| 13 | Accesos mínimos | `SIGUE_PENDIENTE` | Sin cambio | Acceso mínimo por función |
+| 14 | Profile/Permission Set para campos concretos | `DEPENDENCIA_DIEGO` | Diego creará perfiles | Coordinar alcance de campos y Permission Sets sin duplicar perfiles |
+| 15 | Logos y datos legales | `SIGUE_PENDIENTE` | Sin cambio | Contenido oficial |
+| 16 | Plantillas y remitentes | `SIGUE_PENDIENTE` | Sin cambio | Plantillas y remitentes oficiales |
+| 17 | Productos y precios | `SIGUE_PENDIENTE` | Sin cambio | Fuente oficial |
+| 18 | Monedas y catálogos | `SIGUE_PENDIENTE` | Sin cambio | Monedas y catálogos oficiales |
+| 19 | Cuentas, términos y numeraciones | `SIGUE_PENDIENTE` | Sin cambio | Valores oficiales cuando apliquen |
+| 20 | Configuración Softland autoritativa | `SIGUE_PENDIENTE` | Reservas/devoluciones no resuelven este mecanismo | Tipo y nombre lógico sin valores sensibles |
+| 21 | Consumidores RMPEKING | `PARCIALMENTE_RESPONDIDA` | Reservas/devoluciones consumen la Empresa enviada | Resto de consumidores y señal verificable |
+| 22 | Separación Sprint 1 / bloque 11 | `DEPENDENCIA_DIEGO` | Requiere delimitación técnica de Diego | Clasificación nominal de pendientes |
+
+**Conteo:** 1 `RESPONDIDA`, 7 `PARCIALMENTE_RESPONDIDA`, 11 `SIGUE_PENDIENTE` y 3 `DEPENDENCIA_DIEGO`; total 22.
+
+Jerarquía y perfiles no se vuelven a solicitar al negocio por ahora. La disponibilidad de datos QA, su referencia y cualquier autorización de creación permanecen pendientes.

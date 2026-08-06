@@ -132,3 +132,12 @@ B0-UI-1 continúa propuesto y no autorizado. `Opportunity_Record_Page_VN` tambi�
 Los frentes excluidos no están cancelados ni fuera del proyecto; simplemente no se ejecutan en Sprint 3. S3-0 permanece `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`. S3-1 a S3-4 siguen sin autorización funcional.
 
 La siguiente decisión es revisar las preguntas consolidadas de negocio y Softland. B0-UI-1 continúa propuesto y no autorizado, y `Opportunity_Record_Page_VN` continúa sin autorización.
+
+### Reevaluación por respuesta de Diego — 2026-08-06
+
+- S3-1 sigue sin autorización; la respuesta no define asignaciones de Layouts/FlexiPages ni datos de identidad.
+- S3-2 reduce el bloqueo general: PEKING debe mantener las reglas existentes. Cada Validation Rule debe inspeccionarse nominalmente; las fórmulas con marcas, Record Types, perfiles o datos específicos no quedan desbloqueadas automáticamente.
+- S3-3 sigue bloqueado para implementación. La lógica general queda confirmada, pero aprobadores, centros de costo y garantía siguen pendientes. Jerarquía y perfiles son `DEPENDENCIA_DIEGO` y no forman un lote propio del equipo.
+- S3-4 sigue bloqueado: reservas y devoluciones por Empresa no definen el mecanismo autoritativo de Softland.
+
+No se identifica un lote funcional nuevo que tenga baseline suficiente, datos independientes y prueba aislada completa. Solo queda habilitada una revisión nominal preparatoria, no una implementación.

@@ -167,3 +167,11 @@ El inventario final contiene 225 componentes nominales y un placeholder, con 27 
 Sprint 3 contiene únicamente los bloques 7, 9 y 11. Los bloques 8, 12, 13 y 14 quedan `FUERA_DE_SPRINT3_CONFIRMADO`; el bloque 10 permanece `NA` para Profiles y Permission Sets amplios. Estos frentes no están cancelados ni fuera del proyecto: solo quedan fuera de este Sprint.
 
 S3-0 permanece `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`; S3-1 a S3-4 no tienen autorización funcional. Las preguntas pendientes de Sprint 2 y Sprint 3 quedaron consolidadas en `PREGUNTAS_CONSOLIDADAS_NEGOCIO_PEKING_20260806.md`. `MENSAJE_GRUPO_PREGUNTAS_PEKING_20260806.md` es un borrador preparado y no existe confirmación de envío.
+
+### Decisión de Diego sobre reglas, operación y QA — 2026-08-06
+
+Diego confirmó que PEKING mantiene el comportamiento general de las áreas existentes y que reservas, devoluciones y procesos equivalentes se gestionan por la Empresa enviada. La definición reduce bloqueos de arquitectura, pero no autoriza implementación ni creación de datos.
+
+No existen registros PEKING suficientes de asesores, territorios, centros de costo y equivalentes para QA integral, ni una referencia exacta documentada para construirlos. Diego creará jerarquía y perfiles; ambos quedan como `DEPENDENCIA_DIEGO` y no deben duplicarse.
+
+Se actualizaron las 22 preguntas consolidadas: 1 respondida, 7 parcialmente respondidas, 11 pendientes y 3 dependencias de Diego. No se creó ningún dato QA ni se realizó cambio funcional. La trazabilidad completa está en `DECISION_DIEGO_REGLAS_OPERACION_QA_20260806.md` y `REEVALUACION_BLOQUEOS_RESPUESTA_DIEGO_20260806.md`.

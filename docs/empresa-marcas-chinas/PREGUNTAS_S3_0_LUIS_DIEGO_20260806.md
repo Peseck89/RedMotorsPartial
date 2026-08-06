@@ -38,3 +38,12 @@ La pregunta sobre la asignación de los bloques 8, 12, 13 y 14 quedó resuelta: 
 Las preguntas sobre conciliación técnica, baseline o autorización de un primer lote no se envían a negocio; son controles internos y permanecen sin autorización. S3-0 ya está `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`.
 
 Las dudas funcionales todavía abiertas de Sprint 2 y Sprint 3 fueron consolidadas, sin repetir definiciones confirmadas, en `PREGUNTAS_CONSOLIDADAS_NEGOCIO_PEKING_20260806.md`. El mensaje al grupo está preparado, no enviado.
+
+## Respuesta posterior de Diego — 2026-08-06
+
+- PEKING mantiene el mismo comportamiento general que las áreas existentes.
+- Reservas, devoluciones y procesos equivalentes se gestionan por la Empresa enviada.
+- No existen registros PEKING suficientes de asesores, territorios, centros de costo y equivalentes para QA integral; tampoco está definida la referencia exacta para construirlos.
+- Diego creará jerarquía y perfiles. Estos puntos pasan a `DEPENDENCIA_DIEGO` y no se vuelven a solicitar al negocio por ahora.
+
+La respuesta no resuelve el mecanismo autoritativo de Softland, los aprobadores, la garantía ni los valores operativos. Tampoco autoriza creación de datos. La clasificación detallada de las 22 preguntas está en `PREGUNTAS_CONSOLIDADAS_NEGOCIO_PEKING_20260806.md`.
