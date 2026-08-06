@@ -132,3 +132,13 @@ No se consultaron valores de credenciales, secretos, tokens ni endpoints sensibl
 S3-0 produjo un inventario nominal completo de los componentes identificados, pero conserva limitaciones de evidencia sobre asignaciones activas y el mecanismo configurable de Softland. Por ello se registra como análisis ejecutado con limitaciones y no como cierre funcional.
 
 No existe todavía un primer lote funcional listo. La única acción técnica aislable es conciliar el drift de `Opportunity_Record_Page_VN`, pero debe presentarse para aprobación y no debe confundirse con implementación PEKING.
+
+## 12. Corrección posterior S3-0.1 — 2026-08-06
+
+El resultado anterior se conserva como evidencia histórica del commit `5316bea`, pero la auditoría posterior determinó que no demostraba el universo completo. El estado vigente se corrige a `S3-0 — EN_PROGRESO_CON_BRECHAS_DE_COBERTURA`.
+
+Se documentaron 61 Layouts, 25 FlexiPages, 50 acciones custom referenciadas, 383 Validation Rules, 18 Approval Processes y los 15 Roles existentes. La matriz V2 separa 225 filas nominales de un placeholder de investigación.
+
+Persisten brechas de asignación efectiva de Layouts/FlexiPages, baseline Git y mecanismo Softland. Los 65 componentes de la cohorte original que solo existen en Partial siguen sin modificación. No existe lote funcional listo ni autorización para `Opportunity_Record_Page_VN`.
+
+Detalle: `AUDITORIA_COBERTURA_S3_0_20260806.md`, `UNIVERSO_Y_CRITERIOS_SELECCION_S3_0_20260806.csv`, `MATRIZ_NOMINAL_S3_0_V2_20260806.csv` y `PLAN_BASELINE_GIT_PARTIAL_SPRINT3_20260806.md`.

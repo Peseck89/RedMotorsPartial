@@ -104,4 +104,6 @@ El bloque 14 no tiene Sprint escrito. Sigue siendo necesario para el cierre gene
 
 ## Decisión de inicio
 
-S3-0 fue ejecutado exclusivamente como conciliación de lectura. No existe un lote funcional autorizado para implementación; la [propuesta posterior](PROPUESTA_PRIMER_LOTE_FUNCIONAL_SPRINT3_20260806.md) permanece `CANDIDATO_PENDIENTE_APROBACION` y no contiene todavía un cambio funcional elegible.
+S3-0 fue ejecutado exclusivamente como conciliación de lectura. La auditoría posterior del 2026-08-06 corrigió su estado a `S3-0 — EN_PROGRESO_CON_BRECHAS_DE_COBERTURA`. No existe un lote funcional autorizado; la [propuesta posterior](PROPUESTA_PRIMER_LOTE_FUNCIONAL_SPRINT3_20260806.md) queda `SIN_LOTE_FUNCIONAL_LISTO`.
+
+Antes de cualquier lote funcional debe aprobarse el baseline Git–Partial específico descrito en `PLAN_BASELINE_GIT_PARTIAL_SPRINT3_20260806.md`. Esta condición no autoriza `Opportunity_Record_Page_VN`, retrieves al worktree, dry-run ni deploy.

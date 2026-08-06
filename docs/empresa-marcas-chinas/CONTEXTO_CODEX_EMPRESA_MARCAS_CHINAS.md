@@ -143,3 +143,9 @@ auditoría.
 crearon los dos archivos de índice mencionados arriba y se hicieron ediciones conservadoras y
 puntuales a `README_CONTEXTO_ACTIVO.md` y a este archivo. Ningún documento existente fue movido,
 renombrado, archivado ni eliminado.
+
+## Auditoría de cobertura S3-0.1 — 2026-08-06
+
+El estado vigente es `S3-0 — EN_PROGRESO_CON_BRECHAS_DE_COBERTURA`. El resultado anterior se conserva como histórico. La revisión posterior demostró el universo de los bloques 7, 9 y 11 en `UNIVERSO_Y_CRITERIOS_SELECCION_S3_0_20260806.csv`, `AUDITORIA_COBERTURA_S3_0_20260806.md`, `MATRIZ_NOMINAL_S3_0_V2_20260806.csv` y `PLAN_BASELINE_GIT_PARTIAL_SPRINT3_20260806.md`.
+
+Se revisaron 61 Layouts, 25 FlexiPages, 50 acciones referenciadas, 383 Validation Rules, 18 Approval Processes y 15 Roles. La matriz V2 contiene 225 filas nominales y un placeholder Softland que no cuenta como componente confirmado. Los 65 componentes solo Partial de la cohorte original permanecen sin modificación. No existe lote funcional listo y `Opportunity_Record_Page_VN` no está autorizada.

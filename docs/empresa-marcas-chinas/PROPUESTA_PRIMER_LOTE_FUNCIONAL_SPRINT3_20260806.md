@@ -1,6 +1,6 @@
 # Propuesta del primer lote funcional — Sprint 3
 
-**Estado: CANDIDATO_PENDIENTE_APROBACION**
+**Estado: SIN_LOTE_FUNCIONAL_LISTO — S3-0 EN_PROGRESO_CON_BRECHAS_DE_COBERTURA**
 
 ## Resultado de la evaluación
 
@@ -22,3 +22,9 @@ Esta conciliación no constituye un lote funcional PEKING y no está autorizada 
 - confirmar identidad, moneda, plantillas y catálogos aplicables;
 - identificar el mecanismo autoritativo de configuración Softland sin exponer secretos;
 - volver a presentar los componentes nominales elegibles para aprobación.
+
+## Corrección posterior S3-0.1 — 2026-08-06
+
+La ampliación del universo invalida cualquier lectura de esta propuesta como lote listo. Antes de autorizar funcionalidad debe aprobarse el baseline específico descrito en `PLAN_BASELINE_GIT_PARTIAL_SPRINT3_20260806.md`.
+
+`Opportunity_Record_Page_VN` permanece sin autorización. Su drift es evidencia técnica, no permiso para retrieve al worktree, conciliación, cambio o deploy.
