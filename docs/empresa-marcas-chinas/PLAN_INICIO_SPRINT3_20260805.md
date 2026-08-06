@@ -1,5 +1,7 @@
 # Plan de inicio — Sprint 3
 
+> ESTADO: SUSTITUIDO PARA EJECUCIÓN. Este documento fue preparado con una versión incompleta de la línea base. Se conserva únicamente para trazabilidad y no autoriza implementación.
+
 Fecha de corte: 5 de agosto de 2026.
 
 ## 1. Objetivo

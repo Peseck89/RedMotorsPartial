@@ -69,7 +69,23 @@ Documentos relacionados:
 
 ## Preparación de Sprint 3 — 2026-08-05
 
-- [Matriz de alcance de Sprint 3](MATRIZ_ALCANCE_SPRINT3_20260805.csv)
-- [Plan de inicio de Sprint 3](PLAN_INICIO_SPRINT3_20260805.md)
-- [Lotes propuestos de Sprint 3](LOTES_PROPUESTOS_SPRINT3_20260805.md)
-- [Resumen de preparación de Sprint 3](RESUMEN_PREPARACION_SPRINT3_20260805.md)
+- [Matriz preliminar de alcance de Sprint 3 — sustituida para ejecución](MATRIZ_ALCANCE_SPRINT3_PRELIMINAR_20260805.csv)
+- [Plan preliminar de Sprint 3 — sustituido para ejecución](PLAN_INICIO_SPRINT3_20260805.md)
+- [Lotes preliminares de Sprint 3 — sustituidos para ejecución](LOTES_PROPUESTOS_SPRINT3_20260805.md)
+- [Resumen preliminar de Sprint 3 — sustituido para ejecución](RESUMEN_PREPARACION_SPRINT3_20260805.md)
+
+## Corrección de línea base de Sprint 3 — 2026-08-05
+
+El plan preparado anteriormente quedó sustituido para ejecución y se conserva únicamente para trazabilidad. La línea base vigente es la versión actualizada del documento de alcance, que incluye la tabla consolidada y los bloques 1 a 14.
+
+Sprint 3 explícito contiene solo tres bloques: Layouts/FlexiPages/Quick Actions; Validation Rules/Approval Processes/roles; y Custom Metadata/integración Softland configurable. List Views, Global Value Sets, Pricebooks/PricebookEntry y E2E/regresión no tienen Sprint escrito y requieren confirmación.
+
+Sprint 2 continúa pausado y no cerrado. Durante esta corrección no se implementó ningún cambio en Salesforce.
+
+- [Fuente actualizada](DEV_Evaluacion_Alcance_Actualizada_20260805.docx)
+- [Fuentes autoritativas](FUENTES_AUTORITATIVAS_EMPRESA_MARCAS_CHINAS.md)
+- [Inconsistencias de la fuente](INCONSISTENCIAS_FUENTE_ACTUALIZADA_20260805.md)
+- [Matriz corregida](MATRIZ_ALCANCE_SPRINT3_CORREGIDA_20260805.csv)
+- [Plan corregido](PLAN_SPRINT3_CORREGIDO_20260805.md)
+- [Lotes corregidos](LOTES_SPRINT3_CORREGIDOS_20260805.md)
+- [Resumen de corrección](RESUMEN_CORRECCION_SPRINT3_20260805.md)

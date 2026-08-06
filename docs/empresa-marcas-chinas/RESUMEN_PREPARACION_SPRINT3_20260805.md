@@ -1,5 +1,7 @@
 # Resumen de preparación — Sprint 3
 
+> ESTADO: SUSTITUIDO PARA EJECUCIÓN. Este documento fue preparado con una versión incompleta de la línea base. Se conserva únicamente para trazabilidad y no autoriza implementación.
+
 Sprint 3 puede comenzar con el alcance original de PortalNet, tal como autorizó Luis. El inicio no significa que Sprint 2 esté cerrado: siguen pendientes cinco Flows de postventa y esas correcciones no se incorporan a este plan.
 
 ## Qué incluye el alcance original

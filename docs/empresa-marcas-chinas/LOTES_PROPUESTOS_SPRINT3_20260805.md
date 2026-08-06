@@ -1,5 +1,7 @@
 # Lotes propuestos — Sprint 3
 
+> ESTADO: SUSTITUIDO PARA EJECUCIÓN. Este documento fue preparado con una versión incompleta de la línea base. Se conserva únicamente para trazabilidad y no autoriza implementación.
+
 Fecha de corte: 5 de agosto de 2026. Ningún lote de este documento está autorizado para implementación automática.
 
 ## Lote S3-0 — Inventario y conciliación declarativa
