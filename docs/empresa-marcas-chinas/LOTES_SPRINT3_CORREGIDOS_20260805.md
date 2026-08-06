@@ -1,6 +1,6 @@
 # Lotes corregidos — Sprint 3
 
-> S3-0 queda pendiente de revisión y autorización de Luis. Ningún lote funcional puede comenzar antes de esta confirmación.
+> Luis autorizó exclusivamente la ejecución de S3-0 el 6 de agosto de 2026. Esta autorización no comprende ningún lote funcional.
 
 Fecha de corte: 5 de agosto de 2026.
 
@@ -8,7 +8,7 @@ No existe un lote funcional listo para implementación. Los estados de este docu
 
 ## S3-0 — Conciliación del Sprint 3 explícito
 
-**Estado: CANDIDATO**
+**Estado: ANALISIS_EJECUTADO_CON_LIMITACIONES**
 
 - **Incluye:** bloque 7; bloque 9; bloque 11.
 - **Componentes:** Layouts, FlexiPages, cinco Quick Actions; Validation Rules, Approval Processes y 15 roles; RM_Config, mappings y configuración Softland.
@@ -21,6 +21,8 @@ No existe un lote funcional listo para implementación. Los estados de este docu
 - **Condición para comenzar:** repositorio limpio y manifest limitado.
 - **Condición para cerrar:** todos los componentes reales de los bloques 7, 9 y 11 quedan clasificados con evidencia.
 - **Reversión:** total; es un lote de análisis.
+
+S3-0 produjo una [matriz nominal](MATRIZ_NOMINAL_S3_0_20260806.csv) de 72 componentes y un [resultado de conciliación](RESULTADO_S3_0_CONCILIACION_20260806.md). No se marca `COMPLETADO_COMO_ANALISIS` porque siguen pendientes evidencia de asignaciones activas y la identificación del mecanismo autoritativo de configuración Softland.
 
 ## S3-1 — UI declarativa aplicable a PEKING
 
@@ -102,4 +104,4 @@ El bloque 14 no tiene Sprint escrito. Sigue siendo necesario para el cierre gene
 
 ## Decisión de inicio
 
-El único lote recomendado, una vez revisado y autorizado por Luis, es S3-0 exclusivamente como conciliación de lectura. No existe un lote funcional autorizado para implementación.
+S3-0 fue ejecutado exclusivamente como conciliación de lectura. No existe un lote funcional autorizado para implementación; la [propuesta posterior](PROPUESTA_PRIMER_LOTE_FUNCIONAL_SPRINT3_20260806.md) permanece `CANDIDATO_PENDIENTE_APROBACION` y no contiene todavía un cambio funcional elegible.

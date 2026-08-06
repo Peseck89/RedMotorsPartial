@@ -101,6 +101,15 @@ Sprint 2 continúa pausado y no cerrado. Durante esta corrección no se implemen
 - [Lotes corregidos](LOTES_SPRINT3_CORREGIDOS_20260805.md)
 - [Resumen de corrección](RESUMEN_CORRECCION_SPRINT3_20260805.md)
 
+## Ejecución de S3-0 — 2026-08-06
+
+Luis autorizó continuar exclusivamente con la conciliación de lectura S3-0. El inventario nominal se ejecutó sobre los bloques 7, 9 y 11, sin cambios en Salesforce y sin autorizar lotes funcionales.
+
+- [Matriz nominal S3-0](MATRIZ_NOMINAL_S3_0_20260806.csv)
+- [Resultado de conciliación](RESULTADO_S3_0_CONCILIACION_20260806.md)
+- [Propuesta del primer lote funcional](PROPUESTA_PRIMER_LOTE_FUNCIONAL_SPRINT3_20260806.md)
+- [Preguntas pendientes para Luis, Diego y negocio](PREGUNTAS_S3_0_LUIS_DIEGO_20260806.md)
+
 ## Auditoría documental — Etapa 3 (2026-08-05)
 
 Se realizó una auditoría documental externa en tres etapas (inventario, revisión/clasificación,
