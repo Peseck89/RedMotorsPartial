@@ -4,6 +4,8 @@
 
 Ver la regla completa, el orden de autoridad entre fuentes y la tabla de autorización vigente en [`REGLAS_ALCANCE_AUTORIZADO.md`](REGLAS_ALCANCE_AUTORIZADO.md). Esa regla es obligatoria para cualquier agente (Claude Code, Codex, Cowork, ChatGPT) que trabaje en este proyecto, en cualquier Sprint o worktree.
 
+**Índice maestro de auditoría (agregado 2026-08-05):** para el estado vigente completo del proyecto (Sprint 1/2/3, TD-RQ308, documentos sustituidos, worktrees pendientes) sin depender de inventarios de auditoría de más de mil filas, ver [`auditoria/INDICE_MAESTRO_AUDITORIA.md`](auditoria/INDICE_MAESTRO_AUDITORIA.md) y [`auditoria/MATRIZ_DOCUMENTOS_CLAVE_VIGENCIA.csv`](auditoria/MATRIZ_DOCUMENTOS_CLAVE_VIGENCIA.csv).
+
 ## REGLA DE CARGA DE CONTEXTO (obligatoria, vigente desde 2026-07-28)
 
 **Los agentes no deben leer recursivamente todos los documentos de `docs/empresa-marcas-chinas`.** Deben comenzar únicamente por este archivo (`README_CONTEXTO_ACTIVO.md`) y abrir después solo los archivos expresamente listados abajo como contexto activo del Sprint en curso. No abrir documentos históricos de Sprint 1 (bloques, reconciliación 33x3, cierres, inventarios antiguos) salvo que un documento activo remita expresamente a uno de ellos para resolver una dependencia puntual.
@@ -20,11 +22,34 @@ Ver la regla completa, el orden de autoridad entre fuentes y la tabla de autoriz
 
 El cierre de Sprint 1 (`CIERRE_TECNICO_SPRINT1_33_CLASES_3_TRIGGERS_DRAFT.md` y todo lo indexado en [`INDICE_DOCUMENTOS_HISTORICOS.md`](INDICE_DOCUMENTOS_HISTORICOS.md)) queda disponible **solo como referencia** cuando se consulte una dependencia de ese Sprint — nunca como punto de partida para trabajo de Sprint 2.
 
+## Contexto activo de Sprint 3 y TD-RQ308 (agregado 2026-08-05)
+
+Luis autorizó el 2026-08-05 **continuar Sprint 3** con el alcance del documento original de
+PortalNet, para ganar tiempo, aunque algunas definiciones puedan ajustarse después ("Puedes
+continuar con Sprint 3 con lo que tenemos del documento original... es mejor continuar para ganar
+tiempo, aunque luego cambie un poco la definición"). Esta instrucción prevalece sobre cualquier
+lectura de los documentos de abajo como bloqueo total a la espera de confirmaciones — las
+definiciones pendientes quedan como puntos que pueden generar ajustes posteriores, no como condición
+para no avanzar. Detalle completo en `auditoria/INDICE_MAESTRO_AUDITORIA.md` sección 7.3.
+
+Documentos vigentes para Sprint 3 y TD-RQ308 (además de los del Sprint 2 listados arriba, que siguen
+aplicando porque Sprint 2 está pausado, no cerrado):
+
+1. [`DEV_Evaluacion_Alcance_Actualizada_20260805.docx`](DEV_Evaluacion_Alcance_Actualizada_20260805.docx) — fuente principal de alcance vigente.
+2. [`TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx`](TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx) — documento oficial para Red Motors, aprobado en general por Luis.
+3. [`CONTEXTO_RQ308_Y_AUTORIZACION_SPRINT3_20260805.md`](CONTEXTO_RQ308_Y_AUTORIZACION_SPRINT3_20260805.md)
+4. [`PLAN_SPRINT3_CORREGIDO_20260805.md`](PLAN_SPRINT3_CORREGIDO_20260805.md), [`LOTES_SPRINT3_CORREGIDOS_20260805.md`](LOTES_SPRINT3_CORREGIDOS_20260805.md), [`MATRIZ_ALCANCE_SPRINT3_CORREGIDA_20260805.csv`](MATRIZ_ALCANCE_SPRINT3_CORREGIDA_20260805.csv)
+
+**Sustituidos — no usar para ejecución** (autodeclarados "SUSTITUIDO PARA EJECUCIÓN", conservados solo
+por trazabilidad): `LOTES_PROPUESTOS_SPRINT3_20260805.md`, `PLAN_INICIO_SPRINT3_20260805.md`,
+`RESUMEN_PREPARACION_SPRINT3_20260805.md`, `MATRIZ_ALCANCE_SPRINT3_PRELIMINAR_20260805.csv`.
+
 ## Estado actual (2026-07-28)
 
 - **Sprint 1 (33x3):** cerrado técnicamente en `feature/pc/redmotors-empresa-marcas-chinas-sprint1-20260724` (HEAD `bf1e260`). Clase 33 pendiente de confirmación de Luis.
 - **Sprint 2 (Flows/LWC/Aura):** worktree `RedMotors-Sprint2-Flows-Components`, rama `feature/pc/redmotors-empresa-marcas-chinas-sprint2-flows-components-20260728`. Ningún componente funcional modificado todavía.
 - **Alcance de Sprint 2 al día de hoy:** `Opportunity_Flow`, `Opp_flow_v4`, `BMW_ImportarPlantilla` → **AUTORIZADO PARA IMPLEMENTACIÓN** (bloqueados por dato de negocio faltante, ver tabla-puerta). `rm_vu_inventario` → **AUTORIZADO EN ALCANCE / CAMBIO FUNCIONAL PENDIENTE**. `BMW_Gestiona_Listas_de_Precios`, `Obtener_PricebookEntry_en_Linea_de_Plantilla_de_Presupuesto` → **PENDIENTE DE CONFIRMACIÓN**. Detalle completo en `REGLAS_ALCANCE_AUTORIZADO.md`.
+- **Sprint 3 (agregado 2026-08-05):** autorizado por Luis para **continuar** con el alcance del documento original de PortalNet. Ver sección "Contexto activo de Sprint 3 y TD-RQ308" arriba y `auditoria/INDICE_MAESTRO_AUDITORIA.md`.
 
 ## Documentos de control (no forman parte del contexto activo de lectura por defecto)
 

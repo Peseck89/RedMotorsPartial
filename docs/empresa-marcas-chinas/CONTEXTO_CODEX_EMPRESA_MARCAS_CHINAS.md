@@ -100,3 +100,37 @@ Sprint 2 continúa pausado y no cerrado. Durante esta corrección no se implemen
 - [Plan corregido](PLAN_SPRINT3_CORREGIDO_20260805.md)
 - [Lotes corregidos](LOTES_SPRINT3_CORREGIDOS_20260805.md)
 - [Resumen de corrección](RESUMEN_CORRECCION_SPRINT3_20260805.md)
+
+## Auditoría documental — Etapa 3 (2026-08-05)
+
+Se realizó una auditoría documental externa en tres etapas (inventario, revisión/clasificación,
+consolidación de contexto) sobre este y los demás worktrees relacionados con RedMotors. Como
+resultado de la Etapa 3, se creó un **índice maestro versionado** dentro de este repositorio:
+
+- Índice maestro: [`auditoria/INDICE_MAESTRO_AUDITORIA.md`](auditoria/INDICE_MAESTRO_AUDITORIA.md) —
+  punto único de consulta para el estado vigente de Sprint 1, Sprint 2, Sprint 3 y TD-RQ308, sin
+  necesidad de abrir los inventarios completos de la auditoría externa.
+- Matriz de vigencia: [`auditoria/MATRIZ_DOCUMENTOS_CLAVE_VIGENCIA.csv`](auditoria/MATRIZ_DOCUMENTOS_CLAVE_VIGENCIA.csv)
+  — clasificación concisa (vigente / evidencia histórica / sustituido) de los documentos clave del
+  proyecto.
+- Ubicación de las auditorías externas completas (no versionadas, fuera de este repositorio):
+  `C:\Users\dokur\Documents\Auditorias-RedMotors-PEKING\Etapa1-Inventario-20260805-193325\`,
+  `...\Etapa2-Revision-Clasificacion-20260805-200727\` y `...\Etapa3-Consolidacion-Contexto-20260805-205625\`.
+
+**Repositorio autoritativo confirmado:** este mismo worktree,
+`RedMotors-Sprint2-Flows-Components`, rama `feature/pc/redmotors-empresa-marcas-chinas-sprint2-flows-components-20260728`.
+
+**Estado actual de Sprint 3:** autorizado para **continuar** con el alcance del documento original de
+PortalNet, por instrucción directa de Luis del 2026-08-05 (ver
+`CONTEXTO_RQ308_Y_AUTORIZACION_SPRINT3_20260805.md` y `auditoria/INDICE_MAESTRO_AUDITORIA.md` sección
+7.3). Las preguntas pendientes de `PLAN_SPRINT3_CORREGIDO_20260805.md` (sección 12) no deben tratarse
+como bloqueo total — quedan como definiciones que pueden generar ajustes posteriores.
+
+**Worktree roto excluido:** `RedMotors-Empresa-Marcas-Chinas` (referencia `.git` rota) permanece sin
+reparar, mover ni eliminar, y sin ningún comando Git ejecutado dentro de él en las tres etapas de la
+auditoría.
+
+**Ninguna limpieza física fue ejecutada** en ninguna de las tres etapas de esta auditoría. Solo se
+crearon los dos archivos de índice mencionados arriba y se hicieron ediciones conservadoras y
+puntuales a `README_CONTEXTO_ACTIVO.md` y a este archivo. Ningún documento existente fue movido,
+renombrado, archivado ni eliminado.
