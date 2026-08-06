@@ -95,3 +95,15 @@ Se conserva la redacción histórica de las 22 preguntas y se actualiza su estad
 **Conteo:** 1 `RESPONDIDA`, 7 `PARCIALMENTE_RESPONDIDA`, 11 `SIGUE_PENDIENTE` y 3 `DEPENDENCIA_DIEGO`; total 22.
 
 Jerarquía y perfiles no se vuelven a solicitar al negocio por ahora. La disponibilidad de datos QA, su referencia y cualquier autorización de creación permanecen pendientes.
+
+## Aplicación de B9-0 — 2026-08-06
+
+La pregunta general sobre si PEKING requiere reglas distintas ya no se repite. La revisión nominal de 94 Validation Rules identificó:
+
+- 32 reglas que no requieren cambio técnico y solo necesitan regresión;
+- 9 reglas que siguen bloqueadas por datos operativos;
+- 4 reglas que siguen bloqueadas por aprobadores, responsables o criterios de aseguradora;
+- 46 reglas que dependen directamente de perfiles a cargo de Diego;
+- 3 reglas que no aplican a PEKING.
+
+No quedó ninguna candidata técnica aislada. Permanecen vigentes únicamente las preguntas sobre datos, responsables y criterios concretos ya registradas; no se agrega una pregunta nueva ni se solicita a negocio información sobre controles internos.

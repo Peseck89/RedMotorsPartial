@@ -175,3 +175,9 @@ Diego confirmó que PEKING mantiene el comportamiento general de las áreas exis
 No existen registros PEKING suficientes de asesores, territorios, centros de costo y equivalentes para QA integral, ni una referencia exacta documentada para construirlos. Diego creará jerarquía y perfiles; ambos quedan como `DEPENDENCIA_DIEGO` y no deben duplicarse.
 
 Se actualizaron las 22 preguntas consolidadas: 1 respondida, 7 parcialmente respondidas, 11 pendientes y 3 dependencias de Diego. No se creó ningún dato QA ni se realizó cambio funcional. La trazabilidad completa está en `DECISION_DIEGO_REGLAS_OPERACION_QA_20260806.md` y `REEVALUACION_BLOQUEOS_RESPUESTA_DIEGO_20260806.md`.
+
+### B9-0 — selección técnica de Validation Rules — 2026-08-06
+
+Se revisaron nominalmente las 94 Validation Rules de S3-0, sin ampliar el universo ni modificar metadata. La clasificación final es: 32 `SIN_CAMBIO_REQUIERE_REGRESION`, 0 `CANDIDATO_AJUSTE_TECNICO`, 9 `BLOQUEADO_DATOS_OPERATIVOS`, 4 `BLOQUEADO_NEGOCIO`, 46 `DEPENDENCIA_DIEGO` y 3 `NO_APLICA`.
+
+No existe un B9-1 técnicamente aislado con la evidencia actual y no se requiere baseline de candidatas. Las fuentes vigentes son `MATRIZ_VALIDATION_RULES_B9_0_20260806.csv` y `RESULTADO_B9_0_VALIDATION_RULES_20260806.md`. No hubo implementación ni cambio en Salesforce.

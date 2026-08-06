@@ -141,3 +141,9 @@ La siguiente decisión es revisar las preguntas consolidadas de negocio y Softla
 - S3-4 sigue bloqueado: reservas y devoluciones por Empresa no definen el mecanismo autoritativo de Softland.
 
 No se identifica un lote funcional nuevo que tenga baseline suficiente, datos independientes y prueba aislada completa. Solo queda habilitada una revisión nominal preparatoria, no una implementación.
+
+### B9-0 — revisión nominal de Validation Rules — 2026-08-06
+
+B9-0 quedó `COMPLETADO_COMO_ANALISIS`: se revisaron exactamente 94 Validation Rules. El resultado fue 32 sin cambio técnico con regresión pendiente, 9 bloqueadas por datos operativos, 4 bloqueadas por negocio, 46 dependencias de Diego y 3 no aplicables a PEKING. No existe todavía una candidata técnica aislada, por lo que B9-1 no se propone ni se autoriza.
+
+La evidencia nominal está en `MATRIZ_VALIDATION_RULES_B9_0_20260806.csv` y `RESULTADO_B9_0_VALIDATION_RULES_20260806.md`. Ninguna regla fue modificada.
