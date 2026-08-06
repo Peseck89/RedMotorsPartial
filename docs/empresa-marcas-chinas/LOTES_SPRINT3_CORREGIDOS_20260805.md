@@ -171,3 +171,9 @@ No existe un B7-1 aislable y no se propone lote funcional. `Opportunity_Record_P
 B11-0 quedó `COMPLETADO_COMO_ANALISIS`. La fuente autoritativa está fragmentada: `Empresa__c` controla contexto/código ERP; `Pricebook2.Empresa__c` y moneda controlan la resolución dinámica; Custom Labels controlan endpoint/ambiente/autenticación compartidos. `RM_Config.Default_Price_List_VN` es un default global legacy, no Empresa-aware.
 
 RMPEKING y los dos Pricebooks PEKING existen y están correctamente relacionados en Partial, pero el default comercial, catálogos y contratos operativos siguen pendientes. No existe un B11-1 aislable; no se propone lote funcional. B7 continúa bloqueado por asignaciones y B9-1 pendiente de QA funcional.
+
+### B9-AP0 — Approval Processes y dependencias de roles — 2026-08-06
+
+B9-AP0 quedó `COMPLETADO_COMO_ANALISIS`. El universo demostrado contiene 18 Approval Processes: 12 incluidos y 6 exclusiones financieras/auxiliares ya justificadas. Entre los 12 incluidos hay 8 `SIN_CAMBIO_REQUIERE_REGRESION`, 2 `BLOQUEADO_DATOS_OPERATIVOS`, 1 `BLOQUEADO_APROBADOR_NEGOCIO` y 1 `BLOQUEADO_REGLA_NEGOCIO`.
+
+Ningún paso referencia directamente un Role; los 15 Roles y cualquier jerarquía nueva permanecen `DEPENDENCIA_DIEGO_POR_JERARQUIA`. No existe B9-AP1 porque ningún proceso requiere únicamente extender PEKING/Omoda/Jaecoo: los reutilizables ya son neutrales y los demás necesitan datos o decisiones. B7-0 sigue terminado sin candidato, B9-1 continúa pendiente de QA funcional y B11-0 está terminado. La siguiente revisión dirigida pendiente es catálogos y schedulers Softland.

@@ -205,3 +205,13 @@ Los seis Layouts de Opportunity relacionados con Omoda/Jaecoo ya tienen asignaci
 La fuente autoritativa no es un único Custom Metadata: `Empresa__c` y `EmpresaResolver` controlan el contexto/código ERP; `Pricebook2.Empresa__c`, moneda y `EmpresaPricebookResolver` controlan Pricebook; los Custom Labels existentes controlan endpoint, ambiente y autenticación compartidos. Sus valores sensibles no fueron consultados ni documentados.
 
 Partial confirma una Empresa RMPEKING activa y dos Pricebooks activos asociados, CRC y USD. `RM_Config.Default_Price_List_VN` sigue siendo un default global legacy por nombre. Los consumidores restantes están divididos entre dinámicos, bloqueos controlados y hardcodes históricos. No existe B11-1 seguro sin decisiones o datos adicionales. B7 no tiene candidato y B9-1 permanece pendiente de QA funcional.
+
+### Confirmación de negocio sobre la fuente de Sprint 3 — 2026-08-06
+
+María confirmó después de reunión con negocio que se mantiene el documento inicial de análisis como fuente autoritativa y se trabaja únicamente lo marcado allí como Sprint 3. Permanecen incluidos solo los bloques 7, 9 y 11. RQ PEKING/EcoDrive v0.13 sirve para deltas y extras, sin ampliar automáticamente el Sprint.
+
+### B9-AP0 — Approval Processes y roles — 2026-08-06
+
+La auditoría dirigida demostró 18 Approval Processes nominales: 12 incluidos y 6 exclusiones financieras/auxiliares. De los incluidos, 8 procesos de descuento son neutrales y dinámicos (`SIN_CAMBIO_REQUIERE_REGRESION`); 2 procesos de centro de costo están bloqueados por datos operativos; el proceso activo de garantía está bloqueado por aprobador de negocio; y la variante inactiva de garantía de cita está bloqueada por regla de negocio.
+
+Ningún paso asigna directamente un Role. Los 15 Roles y la jerarquía permanecen a cargo de Diego, sin un Role técnico adicional demostrado para este frente. No existe B9-AP1. B7-0 está terminado sin candidato; B9-1 sigue implementado en Partial pendiente de QA funcional; B11-0 está terminado. La siguiente verificación pendiente es catálogos y schedulers Softland. Sprint 3 no está cerrado.

@@ -37,3 +37,9 @@ El requerimiento PEKING v0.13 y [TD-RQ308_Diferencias_Alcance_Entrega_Oficial.do
 ## 5. Versión anterior
 
 La versión anterior del documento se conserva por trazabilidad, pero no debe utilizarse para reconstruir la asignación por Sprint. Los documentos generados con esa línea base quedaron sustituidos para ejecución.
+
+## Confirmación de negocio posterior — 2026-08-06
+
+María confirmó, después de reunión con negocio, que se continúa bajo el documento inicial de análisis y se trabaja en lo indicado allí como Sprint 3. En consecuencia, la fuente principal señalada en la sección 1 mantiene su autoridad y solo los bloques 7, 9 y 11 pertenecen al Sprint 3 vigente.
+
+El requerimiento PEKING/EcoDrive v0.13 conserva su función de referencia para diferencias y extras; no amplía automáticamente el Sprint. La decisión completa está en `DECISION_NEGOCIO_CONTINUIDAD_DOCUMENTO_INICIAL_20260806.md`.

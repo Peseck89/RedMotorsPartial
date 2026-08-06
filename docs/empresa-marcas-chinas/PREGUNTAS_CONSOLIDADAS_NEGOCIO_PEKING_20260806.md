@@ -20,8 +20,8 @@
 |---|---|---|---|---|---|
 | Sprint 3, bloque 7 | Layouts y FlexiPages de Opportunity, Account y Quote | ¿Qué Layouts y páginas deben utilizar los Record Types Omoda y Jaecoo, por aplicación y perfil? | Negocio / responsable de Ventas | Mostrar campos o acciones incorrectos y confundir visibilidad con acceso. | PENDIENTE_NEGOCIO |
 | Sprint 3, bloque 11 | `RM_Config.Default_Price_List_VN` y procesos VN | ¿Cuál es la regla comercial cuando no existe una selección explícita válida de Pricebook, considerando que los dos Pricebooks PEKING esperados ya están identificados? | Negocio / Ventas | Seleccionar otra Empresa o continuar sin Pricebook válido. | PENDIENTE_NEGOCIO |
-| Sprint 3, bloque 9 | Validation Rules y ocho Approval Processes de descuento de Opportunity | ¿Qué reglas, umbrales y niveles de aprobación aplican a descuentos de Omoda y Jaecoo? | Negocio / Ventas / Finanzas | Bloquear ventas válidas o aprobar descuentos indebidos. | PENDIENTE_NEGOCIO |
-| Sprint 2 y Sprint 3, bloque 9 | Quote, WorkOrder, Validation Rules y Approval Processes de centro de costo | ¿Qué reglas de centro de costo aplican a PEKING y qué rol funcional aprueba cada caso? | Negocio / Finanzas | Imputar o aprobar costos de forma incorrecta. | PENDIENTE_NEGOCIO |
+| Sprint 3, bloque 9 | Ocho Approval Processes de descuento de Opportunity | ¿Qué fuente autorizada poblará para PEKING los responsables de Jefatura, Gerencia y Dirección requeridos por los campos de aprobador relacionados, y cuándo estarán disponibles para QA? | Negocio / Ventas / Seguridad | Probar con responsables inexistentes o no autorizados. | PENDIENTE_DATOS_QA |
+| Sprint 2 y Sprint 3, bloque 9 | Quote y WorkOrder; procesos de centro de costo | ¿Cuáles son los centros de costo y responsables PEKING oficiales que deben poblar los campos de aprobador relacionados? | Negocio / Finanzas | Imputar o aprobar costos con datos de otra Empresa. | PENDIENTE_NEGOCIO |
 
 ## Taller y postventa
 
@@ -32,14 +32,14 @@
 | Sprint 2 | Reserva, apartado, despacho y devolución | ¿Qué reglas y estados aplican a reservas, cancelaciones y devoluciones PEKING? | Negocio / Operaciones | Liberar o retener inventario indebidamente. | PENDIENTE_NEGOCIO |
 | Sprint 2 | `Work_Order_from_Quote` y `Work_Order_from_Quote_Selective` | ¿En qué condiciones se crea una Work Order desde Quote, qué líneas se transfieren y qué validaciones deben detener el proceso? | Negocio / Taller | Crear órdenes o líneas incompletas, duplicadas o para otra Empresa. | PENDIENTE_NEGOCIO |
 | Sprint 2 | `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent`, Community y calendario | ¿Qué servicios, agendas, capacidades, asesores y mecánicos corresponden a cada sucursal o taller PEKING? | Negocio / Taller / Call Center | Ofrecer servicios o disponibilidad inexistentes. | PENDIENTE_NEGOCIO |
-| Sprint 2 y Sprint 3, bloque 9 | `assetGarantiaLookupLwc`, `PROCESO_DE_APROB_GARANTIA` y aprobación de cita de taller | ¿Qué coberturas, criterios y roles funcionales aplican a garantías PEKING? | Negocio / Garantías / Taller | Aprobar o rechazar garantías con reglas de otra Empresa. | PENDIENTE_NEGOCIO |
+| Sprint 2 y Sprint 3, bloque 9 | `assetGarantiaLookupLwc`, `PROCESO_DE_APROB_GARANTIA` y aprobación inactiva de cita de taller | ¿Qué coberturas y excepciones aplican a garantías PEKING, quién debe aprobarlas y debe la aprobación de cita de taller permanecer inactiva? | Negocio / Garantías / Taller | Aprobar o rechazar garantías con usuarios o reglas legacy; activar un proceso sin autorización. | PENDIENTE_NEGOCIO |
 | Sprint 2 | `SegregateWOLIs`, WOLI y cargos | ¿Qué reglas determinan la segregación de cargos y WOLIs para PEKING? | Negocio / Taller / Finanzas | Mezclar cargos, responsables o tratamientos contables. | PENDIENTE_NEGOCIO |
 
 ## Accesos
 
 | Sprint de origen | Componente o proceso afectado | Decisión requerida | Responsable esperado | Riesgo de asumir | Estado |
 |---|---|---|---|---|---|
-| Sprint 3, bloque 9 | Los 15 roles existentes y cualquier rol nuevo | ¿Cuál es la jerarquía funcional de Ventas y Postventa PEKING y qué responsabilidades representa cada nivel? | Negocio / Seguridad | Otorgar visibilidad excesiva o impedir la operación. | PENDIENTE_NEGOCIO |
+| Sprint 3, bloque 9 | Los 15 roles existentes y cualquier rol nuevo | Diego creará la jerarquía y perfiles; coordinar disponibilidad y evidencia sin solicitar otra definición al negocio. | Diego | Duplicar jerarquía o interferir con una dependencia externa. | DEPENDENCIA_DIEGO |
 | Sprint 2 y Sprint 3 | Flows, componentes, Layouts y aprobaciones | ¿Cuáles son los accesos mínimos requeridos por función para operar PEKING? | Negocio / Seguridad / responsables de proceso | Confundir exposición visual con autorización real. | PENDIENTE_NEGOCIO |
 | Sprint 2 | Campos concretos ya identificados en inventario, despacho, WorkOrder y Community | Cuando un proceso requiera campos restringidos, ¿qué Permission Set o perfil funcional debe habilitarlos y para qué población QA/operativa? | Seguridad / responsable funcional | Probar con permisos irreales o ampliar accesos innecesariamente. | PENDIENTE_RESPONSABLE |
 
@@ -71,7 +71,7 @@ Se conserva la redacción histórica de las 22 preguntas y se actualiza su estad
 |---:|---|---|---|---|
 | 1 | Layouts/FlexiPages de Opportunity, Account y Quote | `SIGUE_PENDIENTE` | Sin cambio | Asignación de páginas y Layouts por Record Type/perfil |
 | 2 | Default Pricebook VN | `SIGUE_PENDIENTE` | Sin cambio | Regla comercial cuando falta selección explícita |
-| 3 | Descuentos y aprobaciones | `PARCIALMENTE_RESPONDIDA` | La regla general es igual a las áreas existentes | Umbrales, niveles y aprobadores nominales |
+| 3 | Descuentos y aprobaciones | `RESPONDIDA_TECNICAMENTE_PENDIENTE_QA` | La paridad aplica y la metadata confirma umbral mayor a cero, variantes de nivel y aprobadores dinámicos por campos relacionados | Datos autorizados en los campos Jefatura, Gerencia y Dirección para QA |
 | 4 | Centros de costo | `PARCIALMENTE_RESPONDIDA` | La regla general es igual; no existen registros PEKING | Valores, referencia y responsable/aprobador |
 | 5 | Bodegas | `SIGUE_PENDIENTE` | Sin cambio | Bodegas oficiales y función operativa |
 | 6 | Sucursales, territorios y talleres | `PARCIALMENTE_RESPONDIDA` | Se confirma ausencia de registros territoriales PEKING | Valores y relación oficial de sucursales, territorios y talleres |
@@ -107,3 +107,11 @@ La pregunta general sobre si PEKING requiere reglas distintas ya no se repite. L
 - 3 reglas que no aplican a PEKING.
 
 No quedó ninguna candidata técnica aislada. Permanecen vigentes únicamente las preguntas sobre datos, responsables y criterios concretos ya registradas; no se agrega una pregunta nueva ni se solicita a negocio información sobre controles internos.
+
+## Aplicación de B9-AP0 — 2026-08-06
+
+La metadata resolvió existencia, estado, criterios, pasos y tipo de aprobador de los 12 Approval Processes incluidos. Los ocho procesos de descuento son neutrales a Empresa/Marca/RecordType, usan `Descuento_Total__c > 0` y resuelven Jefatura, Gerencia y Dirección mediante campos de usuario relacionados. Ya no se pregunta por el criterio, umbral técnico, niveles existentes ni Roles actuales.
+
+Permanecen tres decisiones genuinas: disponibilidad autorizada de responsables para QA de descuentos; centros de costo y responsables PEKING; y cobertura/aprobador de garantía, incluyendo si el proceso inactivo de cita debe permanecer así. Los 15 Roles y la jerarquía siguen a cargo de Diego, pero ninguno está referenciado directamente como aprobador por estos procesos.
+
+**Conteo histórico:** la línea de conteo anterior corresponde a la reevaluación previa de las 22 preguntas. B9-AP0 no elimina filas históricas: actualiza la pregunta 3 a `RESPONDIDA_TECNICAMENTE_PENDIENTE_QA` y precisa las preguntas 4 y 10.
