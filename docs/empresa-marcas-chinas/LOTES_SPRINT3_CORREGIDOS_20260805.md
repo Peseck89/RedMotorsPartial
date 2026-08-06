@@ -107,3 +107,7 @@ El bloque 14 no tiene Sprint escrito. Sigue siendo necesario para el cierre gene
 S3-0 fue ejecutado exclusivamente como conciliación de lectura. La auditoría posterior del 2026-08-06 corrigió su estado a `S3-0 — EN_PROGRESO_CON_BRECHAS_DE_COBERTURA`. No existe un lote funcional autorizado; la [propuesta posterior](PROPUESTA_PRIMER_LOTE_FUNCIONAL_SPRINT3_20260806.md) queda `SIN_LOTE_FUNCIONAL_LISTO`.
 
 Antes de cualquier lote funcional debe aprobarse el baseline Git–Partial específico descrito en `PLAN_BASELINE_GIT_PARTIAL_SPRINT3_20260806.md`. Esta condición no autoriza `Opportunity_Record_Page_VN`, retrieves al worktree, dry-run ni deploy.
+
+### Corrección S3-0.2 — 2026-08-06
+
+La integridad nominal quedó corregida a 224 componentes únicos más un placeholder. La selección de baseline se redujo a candidatos con evidencia en `MATRIZ_ASIGNACIONES_UI_S3_0_20260806.csv`; no se autoriza recuperar 219 componentes ni iniciar funcionalidad. S3-0 permanece `EN_PROGRESO_CON_BRECHAS_DE_COBERTURA` por asignaciones no demostradas, decisiones funcionales y mecanismo Softland pendiente.

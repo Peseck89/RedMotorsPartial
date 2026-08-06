@@ -60,3 +60,13 @@ Persisten estas limitaciones:
 ## Conclusión
 
 S3-0 no puede cerrarse. Su estado correcto es `EN_PROGRESO_CON_BRECHAS_DE_COBERTURA`. La cobertura del universo ya está documentada, pero falta versionamiento controlado, evidencia de asignación y decisiones funcionales. No existe lote funcional listo ni autorización sobre `Opportunity_Record_Page_VN`.
+
+## Corrección posterior S3-0.2 — 2026-08-06
+
+Los CSV anteriores se conservan como resultado histórico de `c3f253c`. Las versiones corregidas son `UNIVERSO_Y_CRITERIOS_SELECCION_S3_0_V2_20260806.csv` y `MATRIZ_NOMINAL_S3_0_V3_20260806.csv`.
+
+S3-0.2 eliminó 175 contradicciones de inclusión/exclusión, normalizó 19 nombres de Layout con `%2E`, recalculó existencia Git y fusionó el duplicado semántico de `Product2-Product Layout V1.1`. El conteo vigente es 224 componentes nominales y un placeholder.
+
+La evidencia de `ProfileLayout` produjo 4,735 combinaciones relevantes y seis Layouts relacionados nominalmente con Record Types Omoda/Jaecoo/PEKING; 14 Layouts seleccionados quedaron explícitamente sin asignación demostrada. La metadata de aplicaciones/objetos produjo 1,580 activaciones de FlexiPage; ninguna vincula explícitamente una página del universo con esos Record Types. Diecisiete páginas no tienen asignación demostrada. Las cinco acciones nominales presentan diez exposiciones declaradas; `WorkOrder.BMW_CambiarMoneda` no tiene exposición demostrada.
+
+La existencia continúa separada de activación y de acceso efectivo. El estado permanece `S3-0 — EN_PROGRESO_CON_BRECHAS_DE_COBERTURA`; no existe lote funcional listo.

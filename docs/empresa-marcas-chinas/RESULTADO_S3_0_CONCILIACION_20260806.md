@@ -142,3 +142,9 @@ Se documentaron 61 Layouts, 25 FlexiPages, 50 acciones custom referenciadas, 383
 Persisten brechas de asignación efectiva de Layouts/FlexiPages, baseline Git y mecanismo Softland. Los 65 componentes de la cohorte original que solo existen en Partial siguen sin modificación. No existe lote funcional listo ni autorización para `Opportunity_Record_Page_VN`.
 
 Detalle: `AUDITORIA_COBERTURA_S3_0_20260806.md`, `UNIVERSO_Y_CRITERIOS_SELECCION_S3_0_20260806.csv`, `MATRIZ_NOMINAL_S3_0_V2_20260806.csv` y `PLAN_BASELINE_GIT_PARTIAL_SPRINT3_20260806.md`.
+
+## 13. Corrección posterior S3-0.2 — 2026-08-06
+
+Se preservan los resultados anteriores como historia. La integridad vigente está en las versiones V2/V3 y en `CORRECCION_INTEGRIDAD_S3_0_20260806.md`. La matriz nominal corregida contiene 224 componentes únicos y un placeholder; no cuenta dos veces `Product2-Product Layout V1.1`.
+
+La evidencia de asignación está en `MATRIZ_ASIGNACIONES_UI_S3_0_20260806.csv`. Demuestra asignaciones declaradas, no acceso ni uso efectivo. Seis Layouts tienen relación nominal con Record Types Omoda/Jaecoo/PEKING; no se encontró activación FlexiPage explícita para esos Record Types. S3-0 continúa abierto y no autoriza ningún lote funcional.

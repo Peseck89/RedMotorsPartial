@@ -52,3 +52,9 @@ Antes de incorporar cada lote se conserva el retrieve temporal y el commit anter
 ## Orden recomendado
 
 Primero resolver asignaciones de Layout/FlexiPage y seleccionar el subconjunto real. Después construir baseline de reglas/procesos aplicables. El bloque Softland permanece detenido. Ningún lote funcional debe comenzar hasta aprobar el baseline específico que consume.
+
+## Ajuste posterior S3-0.2 — 2026-08-06
+
+La selección detallada sustituye cualquier interpretación de recuperar las 219 filas en bloque y se encuentra en `SELECCION_BASELINE_GIT_PARTIAL_SPRINT3_20260806.md`.
+
+El primer candidato futuro queda limitado a los seis Layouts con relación nominal a Record Types Omoda/Jaecoo/PEKING. Antes de recuperar al worktree se debe confirmar que esos Record Types representan el alcance PEKING y aprobar cada nombre API. FlexiPages no entran al primer baseline: no se demostró una activación explícita Omoda/Jaecoo/PEKING. Quick Actions deben tratarse en un lote separado por sus dependencias Flow/Visualforce.
