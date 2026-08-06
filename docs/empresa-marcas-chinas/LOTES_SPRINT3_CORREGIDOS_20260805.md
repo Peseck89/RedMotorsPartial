@@ -153,3 +153,9 @@ La evidencia nominal está en `MATRIZ_VALIDATION_RULES_B9_0_20260806.csv` y `RES
 La revisión específica de las 46 dependencias corrigió el resultado: 34 eran referencias genéricas de Admin y no dependen de Diego; 4 combinaban una excepción Admin genérica con Record Types legacy y son candidatas técnicas; 8 sí dependen de perfiles funcionales o ProfileId.
 
 B9-1 queda `CANDIDATO_PENDIENTE_REVISION` con cuatro Validation Rules de Opportunity. Requiere baseline interno desde Partial y autorización posterior; no fue implementado.
+
+### Resultado B9-1 — 2026-08-06
+
+B9-1 quedó `IMPLEMENTADO_EN_PARTIAL_PENDIENTE_QA_FUNCIONAL`. Se versionó el baseline y se agregaron Omoda/Jaecoo únicamente a las cuatro Validation Rules aprobadas. El dry-run y el deploy a Partial fueron exitosos, y el retrieve posterior resultó equivalente a Git.
+
+El QA técnico está completo. Continúan pendientes las pruebas funcionales positivas, negativas y de regresión con datos QA autorizados; por ello el lote no está cerrado ni validado funcionalmente.

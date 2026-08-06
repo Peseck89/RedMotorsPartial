@@ -7,7 +7,9 @@
   ISPICKVAL(StageName, &quot;Finalizado&quot;),
   OR(
     $RecordType.DeveloperName = &quot;BMW&quot;,
-    $RecordType.DeveloperName = &quot;MINI&quot;
+    $RecordType.DeveloperName = &quot;MINI&quot;,
+    $RecordType.DeveloperName = &quot;Omoda&quot;,
+    $RecordType.DeveloperName = &quot;Jaecoo&quot;
   ),
   NOT(ISBLANK(Aprobador__c)),
   Aprobador__c &lt;&gt; &quot;Vendedor&quot;,

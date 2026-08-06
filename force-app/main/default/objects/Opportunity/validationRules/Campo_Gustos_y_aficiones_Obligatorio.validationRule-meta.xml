@@ -10,6 +10,6 @@ NOT(ISCHANGED(Tiene_Vehiculos_Reservados__c)),
 NOT(OR(
 $Profile.Name = &apos;System Administrator&apos;,
 $Profile.Name = &apos;Administrador del sistema&apos;
-)),RecordType.Name = &apos;BMW&apos; || RecordType.Name = &apos;MINI&apos; || RecordType.Name = &apos;Kawasaki&apos; || RecordType.Name = &apos;Motorrad&apos; || RecordType.Name = &apos;Polaris&apos;, ISPICKVAL(  StageName  , &quot;Oferta&quot;),ISBLANK(TEXT( Account.Gusto_y_aficiones__c )))</errorConditionFormula>
+)),RecordType.Name = &apos;BMW&apos; || RecordType.Name = &apos;MINI&apos; || RecordType.Name = &apos;Kawasaki&apos; || RecordType.Name = &apos;Motorrad&apos; || RecordType.Name = &apos;Polaris&apos; || RecordType.Name = &apos;Omoda&apos; || RecordType.Name = &apos;Jaecoo&apos;, ISPICKVAL(  StageName  , &quot;Oferta&quot;),ISBLANK(TEXT( Account.Gusto_y_aficiones__c )))</errorConditionFormula>
     <errorMessage>Para pasar a &quot;Oferta&quot; por favor llenar el campo “Gusto y aficiones” que se encuentra en la sección &quot;Otra información&quot; de la cuenta.</errorMessage>
 </ValidationRule>

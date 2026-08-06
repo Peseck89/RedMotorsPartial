@@ -7,7 +7,9 @@
   ISPICKVAL(StageName, &quot;Finalizado&quot;),
   OR(
     $RecordType.DeveloperName = &quot;BMW&quot;,
-    $RecordType.DeveloperName = &quot;MINI&quot;
+    $RecordType.DeveloperName = &quot;MINI&quot;,
+    $RecordType.DeveloperName = &quot;Omoda&quot;,
+    $RecordType.DeveloperName = &quot;Jaecoo&quot;
   ),
   NOT(Tiene_Vehiculos_Reservados__c)
 )</errorConditionFormula>

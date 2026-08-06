@@ -187,3 +187,9 @@ No existe un B9-1 técnicamente aislado con la evidencia actual y no se requiere
 La conclusión anterior queda sustituida para planificación, sin borrarse como historia. De las 46 dependencias originales, 34 eran excepciones genéricas de Admin, 6 dependen de perfiles funcionales concretos, 2 contienen ProfileId y 4 combinan Profile genérico con Record Types legacy.
 
 La matriz V2 conserva 94 reglas: 66 sin cambio con regresión, 4 candidatas técnicas, 9 bloqueadas por datos, 4 por negocio, 8 dependencias reales de Diego y 3 no aplicables. B9-1 queda propuesto, no autorizado, con cuatro reglas de Opportunity y baseline interno pendiente. No se modificó Salesforce.
+
+### Ejecución B9-1 — 2026-08-06
+
+B9-1 fue autorizado y quedó `IMPLEMENTADO_EN_PARTIAL_PENDIENTE_QA_FUNCIONAL`. Las cuatro Validation Rules candidatas fueron recuperadas, versionadas y extendidas exclusivamente con los Record Types Omoda y Jaecoo. El dry-run `0AfAK0000011gB70AI`, el deploy a `RedMotorsSandbox` `0AfAK0000011gCj0AI` y el retrieve posterior `09SAK000003GhKD2A0` fueron exitosos.
+
+La equivalencia técnica quedó demostrada 4/4 y no se alteraron propiedades ni condiciones ajenas al Record Type. No se modificaron datos ni Producción. El QA funcional y la regresión permanecen pendientes; B9-1 no está cerrado ni validado funcionalmente.

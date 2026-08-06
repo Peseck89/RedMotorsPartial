@@ -33,3 +33,11 @@ Las cuatro reglas existen en Partial y no estaban versionadas en Git durante S3-
 - No se alteran umbrales, aprobadores, datos, mensajes ni estados de activación.
 - Las pruebas positivas, negativas y de regresión pasan en Partial.
 - La evidencia identifica la regla y el escenario sin datos sensibles.
+
+## Resultado de ejecución B9-1
+
+**Estado:** `B9-1 — IMPLEMENTADO_EN_PARTIAL_PENDIENTE_QA_FUNCIONAL`
+
+El baseline fue versionado en un checkpoint técnico separado. El dry-run `0AfAK0000011gB70AI` y el deploy `0AfAK0000011gCj0AI` finalizaron exitosamente con las cuatro reglas y sin errores. El retrieve posterior `09SAK000003GhKD2A0` fue semánticamente equivalente a la versión implementada.
+
+El ajuste incorporó únicamente Omoda y Jaecoo en las condiciones de Record Type existentes. El QA técnico quedó completado; no hubo manipulación de datos y el QA funcional positivo, negativo y de regresión permanece pendiente. La evidencia detallada está en `RESULTADO_B9_1_VALIDATION_RULES_20260806.md`.
