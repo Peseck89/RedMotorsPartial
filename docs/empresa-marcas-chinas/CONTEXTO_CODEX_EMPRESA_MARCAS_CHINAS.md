@@ -1,5 +1,14 @@
 # Contexto del Proyecto — RedMotors: Inclusión escalable de nueva Empresa y marcas chinas
 
+## Contexto operativo vigente
+
+- Worktree actual: `C:\Users\dokur\Documents\Repositorios\RedMotors-Sprint2-Flows-Components`
+- Rama actual: `feature/pc/redmotors-empresa-marcas-chinas-sprint2-flows-components-20260728`
+- Último commit de línea base: `264d344`
+- Org de lectura: `RedMotorsSandbox`
+- Estado: Sprint 2 pausado, Sprint 3 autorizado únicamente contra el alcance original.
+- Restricción: ningún bloque funcional está autorizado todavía para implementación; primero se requiere la revisión de Luis y el cierre de S3-0.
+
 ## Nombre del proyecto
 
 RedMotors — Inclusión escalable de nueva Empresa y marcas chinas — Sprint 1.
@@ -13,6 +22,8 @@ Permitir que RedMotors incorpore de forma escalable nuevas Empresas y marcas (in
 Línea base y análisis inicial: creación del entorno de trabajo aislado (rama y carpeta separadas de VN-RQ106), recopilación de las fuentes documentales entregadas, e inventario de los puntos del código que hoy asumen únicamente dos Empresas (Otobai/Bavarian). No incluye cambios funcionales, retrieve de metadata ni deploys — eso corresponde a sprints posteriores una vez cerrado el análisis.
 
 ## Carpeta y rama
+
+> Antecedente histórico de Sprint 1. No usar como ruta operativa actual.
 
 - Carpeta (worktree): `C:\Users\dokur\Documents\Repositorios\RedMotors-Empresa-Marcas-Chinas`
 - Rama: `feature/pc/redmotors-empresa-marcas-chinas-sprint1-20260724`

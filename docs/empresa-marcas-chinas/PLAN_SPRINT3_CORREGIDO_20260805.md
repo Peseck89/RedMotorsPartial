@@ -111,7 +111,19 @@ La evidencia debe separar:
 
 Existir o estar desplegado no demuestra aceptación.
 
-## 12. Criterio de cierre
+## 12. Revisión pendiente de Luis
+
+Antes de iniciar S3-0 se solicita a Luis confirmar:
+
+1. Que el Sprint 3 explícito contiene los bloques 7, 9 y 11.
+2. Si los bloques 8, 12, 13 y 14 deben incorporarse a Sprint 3 o asignarse de otra forma.
+3. Que los Profiles y Permission Sets amplios no forman parte automática de Sprint 3.
+4. Que S3-0 puede iniciar como inventario y conciliación exclusivamente de lectura.
+5. Que no se comenzará ninguna implementación antes de presentar el resultado nominal de S3-0.
+
+S3-0 no modifica Salesforce ni consume decisiones pendientes como supuestos. Después de S3-0 se presentará a Luis el primer lote funcional candidato. Ningún lote funcional será ejecutado sin una nueva revisión o autorización.
+
+## 13. Criterio de cierre
 
 Sprint 3 no podrá declararse completo hasta:
 

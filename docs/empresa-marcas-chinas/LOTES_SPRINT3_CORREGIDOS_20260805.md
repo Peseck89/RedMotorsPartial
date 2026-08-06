@@ -1,8 +1,10 @@
 # Lotes corregidos — Sprint 3
 
+> S3-0 queda pendiente de revisión y autorización de Luis. Ningún lote funcional puede comenzar antes de esta confirmación.
+
 Fecha de corte: 5 de agosto de 2026.
 
-No existe un lote funcional listo para implementación. Los estados de este documento son CANDIDATO, BLOQUEADO, PENDIENTE_CONFIRMAR_SPRINT y LISTO_PARA_IMPLEMENTACION.
+No existe un lote funcional listo para implementación. Los estados de este documento son CANDIDATO, BLOQUEADO y PENDIENTE_CONFIRMAR_SPRINT.
 
 ## S3-0 — Conciliación del Sprint 3 explícito
 
@@ -100,4 +102,4 @@ El bloque 14 no tiene Sprint escrito. Sigue siendo necesario para el cierre gene
 
 ## Decisión de inicio
 
-El único lote recomendado para iniciar es S3-0, exclusivamente como conciliación de lectura. No existe un lote con estado LISTO_PARA_IMPLEMENTACION.
+El único lote recomendado, una vez revisado y autorizado por Luis, es S3-0 exclusivamente como conciliación de lectura. No existe un lote funcional autorizado para implementación.
