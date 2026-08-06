@@ -22,3 +22,14 @@ Fecha de corte: 5 de agosto de 2026.
 - Documento oficial: [`TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx`](TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx).
 - Bloqueos vigentes de Sprint 2: [`PREGUNTAS_BLOQUEOS_SPRINT2.md`](PREGUNTAS_BLOQUEOS_SPRINT2.md).
 - Estado por elemento: [`MATRIZ_CIERRE_SPRINT2.csv`](MATRIZ_CIERRE_SPRINT2.csv).
+
+## Decisiones posteriores — 6 de agosto de 2026
+
+| Tema | Decisión o estado | Fuente | Impacto | Acción siguiente | Responsable |
+|---|---|---|---|---|---|
+| Alcance explícito de Sprint 3 | Solo bloques 7, 9 y 11 | Confirmación de Luis del 2026-08-06 | Limita la ejecución del Sprint a interfaz declarativa, reglas/aprobaciones/roles y configuración Softland | Mantener S3-1 a S3-4 sin autorización hasta resolver sus dependencias | Equipo del proyecto |
+| Bloques 8, 12, 13 y 14 | `FUERA_DE_SPRINT3_CONFIRMADO` | Confirmación de Luis del 2026-08-06 | Ya no requieren pregunta de asignación a Luis | Gestionarlos fuera de Sprint 3; no considerarlos cancelados | Luis / planificación |
+| Bloque 10 | `NA` para Profiles y Permission Sets amplios | Documento de alcance y confirmación de límites de Sprint 3 | Evita absorber cambios amplios de seguridad | Consultar solo accesos mínimos concretos cuando un proceso los requiera | Seguridad / negocio |
+| S3-0 | `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES` | Cierre de integridad S3-0.3 | Inventario y asignaciones documentados, sin implementación | Revisar decisiones funcionales pendientes | Negocio / Diego |
+| Preguntas restantes | Deben consolidarse con los pendientes de Sprint 2 y enviarse al grupo | Instrucción de Luis del 2026-08-06 | Centraliza decisiones de negocio y Softland | Revisar `PREGUNTAS_CONSOLIDADAS_NEGOCIO_PEKING_20260806.md` y enviar el mensaje cuando corresponda | Claudia / grupo responsable |
+| Mensaje al grupo | Preparado; envío no confirmado | `MENSAJE_GRUPO_PREGUNTAS_PEKING_20260806.md` | Evita afirmar una comunicación no comprobada | Enviar o asignar responsable fuera de esta tarea documental | Claudia |

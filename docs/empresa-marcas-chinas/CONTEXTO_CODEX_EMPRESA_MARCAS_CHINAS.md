@@ -161,3 +161,9 @@ El conteo corregido es 224 componentes nominales únicos y un placeholder. Seis 
 El estado vigente es `S3-0 — COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`. Las fuentes finales son `MATRIZ_NOMINAL_S3_0_V4_20260806.csv`, `MATRIZ_ASIGNACIONES_UI_S3_0_V2_20260806.csv` y `CIERRE_INTEGRIDAD_S3_0_20260806.md`; las versiones anteriores se conservan como historia.
 
 El inventario final contiene 225 componentes nominales y un placeholder, con 27 FlexiPages. Los 4,735 ProfileLayouts son asignaciones distintas: 4,655 resueltas y 80 asociadas a seis referencias estables. No se encontraron duplicados reales. Siguen pendientes Softland, decisiones de negocio y QA; ningún lote funcional ni baseline está autorizado.
+
+### Decisión de alcance de Luis — 2026-08-06
+
+Sprint 3 contiene únicamente los bloques 7, 9 y 11. Los bloques 8, 12, 13 y 14 quedan `FUERA_DE_SPRINT3_CONFIRMADO`; el bloque 10 permanece `NA` para Profiles y Permission Sets amplios. Estos frentes no están cancelados ni fuera del proyecto: solo quedan fuera de este Sprint.
+
+S3-0 permanece `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`; S3-1 a S3-4 no tienen autorización funcional. Las preguntas pendientes de Sprint 2 y Sprint 3 quedaron consolidadas en `PREGUNTAS_CONSOLIDADAS_NEGOCIO_PEKING_20260806.md`. `MENSAJE_GRUPO_PREGUNTAS_PEKING_20260806.md` es un borrador preparado y no existe confirmación de envío.

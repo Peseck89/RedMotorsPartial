@@ -30,3 +30,11 @@ No se repiten preguntas ya resueltas. Se agregan únicamente estas precisiones:
 - **Diego — identificación Softland:** sin revelar valores, endpoints ni secretos, confirmar el nombre API y tipo de metadata que constituye la fuente autoritativa. Desbloquea el placeholder, que sigue fuera del conteo nominal.
 
 No se formula una nueva pregunta a negocio: las decisiones funcionales sobre descuentos, centros de costo, garantía, identidad, plantillas, moneda, catálogos y jerarquía ya están enumeradas arriba.
+
+## Decisión posterior de Luis — 2026-08-06
+
+La pregunta sobre la asignación de los bloques 8, 12, 13 y 14 quedó resuelta: están `FUERA_DE_SPRINT3_CONFIRMADO`. El bloque 10 permanece `NA`. Ninguno se considera cancelado ni fuera del proyecto.
+
+Las preguntas sobre conciliación técnica, baseline o autorización de un primer lote no se envían a negocio; son controles internos y permanecen sin autorización. S3-0 ya está `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`.
+
+Las dudas funcionales todavía abiertas de Sprint 2 y Sprint 3 fueron consolidadas, sin repetir definiciones confirmadas, en `PREGUNTAS_CONSOLIDADAS_NEGOCIO_PEKING_20260806.md`. El mensaje al grupo está preparado, no enviado.

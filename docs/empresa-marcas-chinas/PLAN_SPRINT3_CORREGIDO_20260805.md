@@ -134,3 +134,11 @@ Sprint 3 no podrá declararse completo hasta:
 - validar configuración Softland existente con RMPEKING;
 - producir evidencia técnica, funcional y de regresión;
 - mantener las ampliaciones TD-RQ308 fuera del alcance automático.
+
+## 14. Decisión posterior de Luis — 2026-08-06
+
+Luis confirmó que Sprint 3 contiene únicamente los bloques 7, 9 y 11. Los bloques 8, 12, 13 y 14 quedan `FUERA_DE_SPRINT3_CONFIRMADO`; el bloque 10 continúa `NA` para ajustes amplios de Profiles y Permission Sets.
+
+Esta exclusión es solo respecto de Sprint 3: no cancela los frentes ni los retira del proyecto. La sección 12 queda resuelta y ya no debe utilizarse para preguntar a Luis por la asignación de esos bloques.
+
+S3-0 está `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`. S3-1, S3-2, S3-3 y S3-4 continúan sin autorización funcional. Las dudas restantes se consolidaron para negocio y Softland en `PREGUNTAS_CONSOLIDADAS_NEGOCIO_PEKING_20260806.md`.

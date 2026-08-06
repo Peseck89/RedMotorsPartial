@@ -117,3 +117,18 @@ La integridad nominal quedó corregida a 224 componentes únicos más un placeho
 S3-0 queda `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`: inventario nominal e integridad terminados, sin implementación. Ningún lote funcional está listo. La siguiente decisión es revisar las preguntas pendientes de negocio y la identificación del mecanismo Softland.
 
 B0-UI-1 continúa propuesto y no autorizado. `Opportunity_Record_Page_VN` también continúa sin autorización. El cierre analítico no habilita baseline, retrieve al worktree, dry-run ni deploy.
+
+### Decisión de alcance confirmada por Luis — 2026-08-06
+
+| Bloque/lote | Estado vigente |
+|---|---|
+| 7, 9 y 11 | Único alcance expresamente asignado a Sprint 3 |
+| S3-P1 — bloque 8 | `FUERA_DE_SPRINT3_CONFIRMADO` |
+| Bloque 10 — Profiles/Permission Sets amplios | `NA`; fuera de Sprint 3 |
+| S3-P2 — bloque 12 | `FUERA_DE_SPRINT3_CONFIRMADO` |
+| S3-P3 — bloque 13 | `FUERA_DE_SPRINT3_CONFIRMADO` |
+| S3-P4 — bloque 14 | `FUERA_DE_SPRINT3_CONFIRMADO` |
+
+Los frentes excluidos no están cancelados ni fuera del proyecto; simplemente no se ejecutan en Sprint 3. S3-0 permanece `COMPLETADO_COMO_ANALISIS_CON_LIMITACIONES`. S3-1 a S3-4 siguen sin autorización funcional.
+
+La siguiente decisión es revisar las preguntas consolidadas de negocio y Softland. B0-UI-1 continúa propuesto y no autorizado, y `Opportunity_Record_Page_VN` continúa sin autorización.
