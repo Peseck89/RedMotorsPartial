@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Campo_Gustos_y_aficiones_Obligatorio</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+NOT(Bypass_CheckIn_Validations_Until__c &gt; NOW()),
+NOT(ISCHANGED(alertEmail__c)),
+NOT(ISCHANGED(NombreProducto__c)),
+NOT(ISCHANGED(Tiene_Vehiculos_Reservados__c)),
+NOT(OR(
+$Profile.Name = &apos;System Administrator&apos;,
+$Profile.Name = &apos;Administrador del sistema&apos;
+)),RecordType.Name = &apos;BMW&apos; || RecordType.Name = &apos;MINI&apos; || RecordType.Name = &apos;Kawasaki&apos; || RecordType.Name = &apos;Motorrad&apos; || RecordType.Name = &apos;Polaris&apos;, ISPICKVAL(  StageName  , &quot;Oferta&quot;),ISBLANK(TEXT( Account.Gusto_y_aficiones__c )))</errorConditionFormula>
+    <errorMessage>Para pasar a &quot;Oferta&quot; por favor llenar el campo “Gusto y aficiones” que se encuentra en la sección &quot;Otra información&quot; de la cuenta.</errorMessage>
+</ValidationRule>
