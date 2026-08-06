@@ -165,3 +165,9 @@ El QA técnico está completo. Continúan pendientes las pruebas funcionales pos
 B7-0 quedó `COMPLETADO_COMO_ANALISIS` sobre 78 componentes ya inventariados: 46 Layouts, 27 FlexiPages y 5 Quick Actions. Diez no requieren cambio y quedan para regresión; 63 están bloqueados por asignación funcional; 1 presenta drift Git–Partial y 4 no aplican por ser de usados.
 
 No existe un B7-1 aislable y no se propone lote funcional. `Opportunity_Record_Page_VN` requiere primero una conciliación técnica separada y una decisión de asignación; no fue modificado. B9-1 conserva su estado `IMPLEMENTADO_EN_PARTIAL_PENDIENTE_QA_FUNCIONAL`.
+
+### B11-0 — trazabilidad de configuración Softland — 2026-08-06
+
+B11-0 quedó `COMPLETADO_COMO_ANALISIS`. La fuente autoritativa está fragmentada: `Empresa__c` controla contexto/código ERP; `Pricebook2.Empresa__c` y moneda controlan la resolución dinámica; Custom Labels controlan endpoint/ambiente/autenticación compartidos. `RM_Config.Default_Price_List_VN` es un default global legacy, no Empresa-aware.
+
+RMPEKING y los dos Pricebooks PEKING existen y están correctamente relacionados en Partial, pero el default comercial, catálogos y contratos operativos siguen pendientes. No existe un B11-1 aislable; no se propone lote funcional. B7 continúa bloqueado por asignaciones y B9-1 pendiente de QA funcional.

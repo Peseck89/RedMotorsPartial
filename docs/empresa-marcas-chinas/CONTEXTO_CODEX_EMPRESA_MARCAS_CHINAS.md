@@ -199,3 +199,9 @@ La equivalencia técnica quedó demostrada 4/4 y no se alteraron propiedades ni 
 Se clasificaron exclusivamente los 78 componentes del bloque 7 ya registrados en S3-0: 46 Layouts, 27 FlexiPages y 5 Quick Actions. El resultado vigente es 10 `SIN_CAMBIO_REQUIERE_REGRESION`, 0 candidatos técnicos, 63 `BLOQUEADO_ASIGNACION_FUNCIONAL`, 0 dependencias directas de Diego, 1 `DRIFT_REQUIERE_CONCILIACION` y 4 `NO_APLICA`.
 
 Los seis Layouts de Opportunity relacionados con Omoda/Jaecoo ya tienen asignaciones explícitas para ambos Record Types y no requieren cambio técnico demostrado. `Opportunity_Record_Page_VN` conserva drift y no tiene activación Omoda/Jaecoo demostrada. No existe B7-1 con la evidencia actual y no se modificó Salesforce. B9-1 permanece pendiente de QA funcional.
+
+### B11-0 — trazabilidad de Empresa, Softland y Pricebook — 2026-08-06
+
+La fuente autoritativa no es un único Custom Metadata: `Empresa__c` y `EmpresaResolver` controlan el contexto/código ERP; `Pricebook2.Empresa__c`, moneda y `EmpresaPricebookResolver` controlan Pricebook; los Custom Labels existentes controlan endpoint, ambiente y autenticación compartidos. Sus valores sensibles no fueron consultados ni documentados.
+
+Partial confirma una Empresa RMPEKING activa y dos Pricebooks activos asociados, CRC y USD. `RM_Config.Default_Price_List_VN` sigue siendo un default global legacy por nombre. Los consumidores restantes están divididos entre dinámicos, bloqueos controlados y hardcodes históricos. No existe B11-1 seguro sin decisiones o datos adicionales. B7 no tiene candidato y B9-1 permanece pendiente de QA funcional.
