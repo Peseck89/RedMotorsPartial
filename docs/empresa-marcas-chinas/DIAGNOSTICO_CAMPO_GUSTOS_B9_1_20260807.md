@@ -174,3 +174,34 @@ El riesgo principal es ampliar correctamente el bloqueo a registros legacy ya ex
 - No hubo DML persistente; únicamente datos transaccionales de `@IsTest` con rollback automático.
 - No se consultó Producción.
 - No se revisaron las otras 94 Validation Rules.
+
+## Actualización posterior — intento controlado de corrección
+
+La validación check-only posterior demostró que sustituir únicamente el predicado final no corrige el defecto. Se probaron `ISPICKVAL(Account.Gusto_y_aficiones__c, "")`, `LEN(TEXT(Account.Gusto_y_aficiones__c)) = 0` y `TEXT(Account.Gusto_y_aficiones__c) = ""`. El último predicado sí detectó el `null` cuando se evaluó de forma aislada, pero la fórmula completa continuó permitiendo `Oferta`.
+
+El aislamiento progresivo confirmó que la condición previa:
+
+```text
+NOT(Bypass_CheckIn_Validations_Until__c > NOW())
+```
+
+no habilita la regla cuando `Bypass_CheckIn_Validations_Until__c` es `null`. Los otros campos usados en excepciones conservaron exactamente sus valores antes y después de la transición. Al retirar únicamente esa condición en una prueba temporal, el mismo escenario BMW con `null` quedó bloqueado.
+
+La corrección mínima real validada en check-only requiere dos cambios localizados:
+
+```text
+OR(
+  ISBLANK(Bypass_CheckIn_Validations_Until__c),
+  NOT(Bypass_CheckIn_Validations_Until__c > NOW())
+)
+```
+
+y:
+
+```text
+TEXT(Account.Gusto_y_aficiones__c) = ""
+```
+
+Con ambos cambios, la validación `0AfAK0000012CNt0AM` aprobó 15 de 15 pruebas: `null` y valor real para Omoda, Jaecoo, BMW, MINI, Kawasaki, Motorrad y Polaris, más Omoda con `Por actualizar`. El valor `Por actualizar` continuó permitido.
+
+Esta alternativa no fue desplegada ni incorporada a la metadata versionada porque modifica también la condición de bypass y la autorización recibida limitaba el cambio al predicado final. El estado permanece `CORRECCION_TECNICA_PROPUESTA_PENDIENTE_REVISION` hasta autorizar expresamente la normalización del bypass nulo.
