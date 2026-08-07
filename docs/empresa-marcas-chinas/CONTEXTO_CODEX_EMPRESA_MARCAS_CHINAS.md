@@ -221,3 +221,11 @@ Ningún paso asigna directamente un Role. Los 15 Roles y la jerarquía permanece
 La revisión dirigida demostró que los seis catálogos confirmados por Diego ya reciben RMPEKING en Partial: `BatchGetCatalogoSoftland` parametriza compañía, los seis wrappers la propagan y los seis schedulers encolan RMBAVARIAN y RMPEKING por separado. Esta implementación proviene de Sprint 1 y no está reconciliada en la línea vigente. No hay jobs programados activos para los schedulers revisados.
 
 B11-1 queda `CANDIDATO_PENDIENTE_REVISION` para reconciliar esos 13 componentes productivos y sus pruebas, sin ejecución de catálogos ni creación de datos. Bodega queda bloqueada: no existen bodegas PEKING oficiales y la clave externa actual no separa PEKING de Bavarian. Tras B11-1, el trabajo restante de Sprint 3 será QA o dependerá de negocio, datos o Diego; Sprint 3 no se declara cerrado.
+
+### QA funcional B9-1 — 2026-08-07
+
+Diego autorizó datos de prueba claramente identificados. Debido a que el usuario técnico tiene perfil administrador y las reglas lo exceptúan, el QA se ejecutó en un contexto Apex de prueba con perfil no administrador y rollback automático; no se conservaron datos ni metadata temporal.
+
+Las reglas de descuento, formalización y vehículo reservado completaron escenarios positivos, negativos y regresión BMW. La validación de vehículo no creó reservas reales. `Campo_Gustos_y_aficiones_Obligatorio` falló para Omoda: permitió pasar a Oferta con el campo de Account comprobado como vacío. Los escenarios Jaecoo y legacy de esa regla quedaron sin ejecutar tras la aserción.
+
+B9-1 queda `QA_FUNCIONAL_PARCIAL`. No se modificó la regla, no hubo correos, callouts, reservas, pedidos, jobs activos ni datos QA residuales. La evidencia está en `RESULTADO_QA_FUNCIONAL_B9_1_20260807.md`.

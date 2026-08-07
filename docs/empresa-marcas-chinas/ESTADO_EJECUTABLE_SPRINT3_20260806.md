@@ -98,3 +98,16 @@ No se realizó deploy porque Partial ya era equivalente: `DEPLOY_NO_NECESARIO_PA
 `TRABAJO_TECNICO_AISLABLE_AGOTADO_CON_INFORMACION_ACTUAL`
 
 Esta condición significa que no queda otra modificación técnica segura y aislable con la información vigente. No equivale a `SPRINT3_CERRADO`: todavía faltan QA funcional, datos, decisiones y dependencias externas.
+
+## Resultado QA B9-1 — 2026-08-07
+
+B9-1 queda `QA_FUNCIONAL_PARCIAL`:
+
+- `Cambiar_a_Finalizado_Descuento`: QA de regla completado.
+- `Cambiar_a_Finalizado_Formalizacion`: QA de regla completado.
+- `Cambiar_Oportunidad_a_Finalizado_VH`: QA de regla completado sin reserva real; E2E no aplica a esta ejecución.
+- `Campo_Gustos_y_aficiones_Obligatorio`: QA fallido para Omoda; permitió Oferta con el campo de Account vacío. Jaecoo y regresión de esta regla siguen pendientes.
+
+No quedan datos QA persistentes ni efectos externos. No se autoriza corregir la regla a partir de esta evidencia; se requiere un análisis técnico específico y aprobación para modificarla.
+
+Sprint 3 permanece abierto.

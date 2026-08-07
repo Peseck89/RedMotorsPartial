@@ -55,3 +55,14 @@
 `TRABAJO_TECNICO_AISLABLE_AGOTADO_CON_INFORMACION_ACTUAL`
 
 Lo restante es QA, una definición de negocio/datos o una dependencia externa. Esto no equivale a `SPRINT3_CERRADO`.
+
+## Actualización QA B9-1 — 2026-08-07
+
+Tres de las cuatro Validation Rules completaron QA positivo, negativo y regresión. El pendiente B9-1 se reduce a:
+
+| Componente/proceso | Qué falta | Responsable | Evidencia | Acción posterior |
+|---|---|---|---|---|
+| `Campo_Gustos_y_aficiones_Obligatorio` | Analizar por qué Omoda no bloquea con el campo vacío; repetir Omoda, Jaecoo y BMW/MINI | Desarrollo / QA, previa autorización | Validation `0AfAK0000012Ah30AE`; resultado QA del 2026-08-07 | Auditar fórmula/orden de ejecución, proponer corrección limitada y repetir matriz |
+| `Cambiar_Oportunidad_a_Finalizado_VH` | Video/E2E solo si el cierre general exige probar el proceso real de reserva | Negocio / QA | QA de la Validation Rule pasó sin crear reserva | Ejecutar posteriormente con datos seguros y autorización específica |
+
+El estado consolidado es `B9-1 — QA_FUNCIONAL_PARCIAL`; Sprint 3 no está cerrado.

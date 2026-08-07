@@ -108,3 +108,13 @@ No se crearon ni modificaron oportunidades o datos de negocio. Quedan pendientes
 - No se modificaron datos, perfiles, jerarquía, Approval Processes, Flows, Apex, LWC/Aura ni Custom Metadata.
 - No se modificó ninguna Validation Rule fuera de las cuatro autorizadas.
 - Sprint 3 no fue ampliado.
+
+## QA funcional posterior — 2026-08-07
+
+El estado vigente de QA es `B9-1 — QA_FUNCIONAL_PARCIAL`.
+
+Las reglas de descuento, formalización y vehículo reservado completaron escenarios positivos, negativos y regresión BMW en contexto seguro de prueba. La prueba de vehículo validó exclusivamente el booleano de la Validation Rule; no creó reservas ni ejecutó un proceso E2E.
+
+`Campo_Gustos_y_aficiones_Obligatorio` falló: Omoda pudo pasar a Oferta con `Account.Gusto_y_aficiones__c` realmente vacío. Jaecoo y regresión legacy de esa regla no se ejecutaron después de la aserción fallida.
+
+La evidencia está en `RESULTADO_QA_FUNCIONAL_B9_1_20260807.md`. No se modificó ninguna Validation Rule ni se desplegó la clase temporal de prueba.
