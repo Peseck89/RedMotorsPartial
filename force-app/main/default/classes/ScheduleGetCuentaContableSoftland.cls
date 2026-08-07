@@ -1,5 +1,6 @@
 global class ScheduleGetCuentaContableSoftland implements Schedulable{
     global void execute(SchedulableContext SC) {
-        System.enqueueJob(new BatchGetCuentaContableSoftland());
+        System.enqueueJob(new BatchGetCuentaContableSoftland('RMBAVARIAN'));
+        System.enqueueJob(new BatchGetCuentaContableSoftland('RMPEKING'));
     }
 }

@@ -1,4 +1,5 @@
 public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallouts {
+    public static final String DEFAULT_COMPANY = 'RMBAVARIAN';
     public static final String ACTIVIDAD_COMERCIAL = 'ActividadComercial';
     public static final String ASEGURADORA = 'Aseguradora';
     public static final String BODEGA = 'Bodega';
@@ -47,19 +48,19 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
             } else if (catalogName == BODEGA) {
                 calloutBodega(url, auth.token_type, auth.access_token, 1, new List<Bodega__c>(), new HttpCalloutBodega(), company);
             } else if (catalogName == CATEGORIA_CLIENTE) {
-                calloutCategoriaCliente(url, ambiente, auth.token_type, auth.access_token, 1, new List<categoriaCliente__c>());
+                calloutCategoriaCliente(url, ambiente, auth.token_type, auth.access_token, 1, new List<categoriaCliente__c>(), company);
             } else if (catalogName == CENTRO_COSTO) {
-                calloutCentroCosto(url, ambiente, auth.token_type, auth.access_token, 1, new List<centroCosto__c>());
+                calloutCentroCosto(url, ambiente, auth.token_type, auth.access_token, 1, new List<centroCosto__c>(), company);
             } else if (catalogName == CONDICION_PAGO) {
-                calloutCondicionPago(url, ambiente, auth.token_type, auth.access_token, 1, new List<condicionPago__c>());
+                calloutCondicionPago(url, ambiente, auth.token_type, auth.access_token, 1, new List<condicionPago__c>(), company);
             } else if (catalogName == CUENTA_CONTABLE) {
-                calloutCuentaContable(url, ambiente, auth.token_type, auth.access_token, 1, new List<CuentaContable__c>());
+                calloutCuentaContable(url, ambiente, auth.token_type, auth.access_token, 1, new List<CuentaContable__c>(), company);
             } else if (catalogName == IMPUESTO) {
-                calloutImpuesto(url, ambiente, auth.token_type, auth.access_token, 1, new List<Impuesto__c>());
+                calloutImpuesto(url, ambiente, auth.token_type, auth.access_token, 1, new List<Impuesto__c>(), company);
             } else if (catalogName == INVENTORY) {
                 calloutInventory(url, auth.token_type, auth.access_token, 1, new List<Product2>(), new HttpCalloutInventory(groupNumber), actualCurrency);
             } else if (catalogName == SUBTIPO_DOCUMENTO) {
-                calloutSubtipoDocumento(url, ambiente, auth.token_type, auth.access_token, 1, new List<SubtipoDocumento__c>());
+                calloutSubtipoDocumento(url, ambiente, auth.token_type, auth.access_token, 1, new List<SubtipoDocumento__c>(), company);
             }
             System.debug('--------- End Process --------');
         } catch (System.CalloutException e) {
@@ -183,8 +184,13 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
     }
 
     public static String calloutCategoriaCliente(String url, String ambiente, String tokenType, String token, Integer actualPage, List<categoriaCliente__c> lstCC) {
+        return calloutCategoriaCliente(url, ambiente, tokenType, token, actualPage, lstCC, DEFAULT_COMPANY);
+    }
+
+    public static String calloutCategoriaCliente(String url, String ambiente, String tokenType, String token, Integer actualPage, List<categoriaCliente__c> lstCC, String company) {
+        String compania = String.isBlank(company) ? DEFAULT_COMPANY : company;
         try {
-            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getCategorias_Cliente?pageNo=' + actualPage + '&pageSize=10&compania=RMBAVARIAN');
+            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getCategorias_Cliente?pageNo=' + actualPage + '&pageSize=10&compania=' + compania);
             for (Object item : dataRows(root)) {
                 Map<String, Object> row = (Map<String, Object>) item;
                 CategoriaCliente__c cc = new CategoriaCliente__c();
@@ -194,7 +200,7 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
                 lstCC.add(cc);
             }
             if (actualPage < pageCount(root)) {
-                return calloutCategoriaCliente(url, ambiente, tokenType, token, actualPage + 1, lstCC);
+                return calloutCategoriaCliente(url, ambiente, tokenType, token, actualPage + 1, lstCC, compania);
             }
             return upsertCatalog(lstCC, CategoriaCliente__c.Fields.CategoriaCliente__c);
         } catch (System.CalloutException e) {
@@ -204,8 +210,13 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
     }
 
     public static String calloutCentroCosto(String url, String ambiente, String tokenType, String token, Integer actualPage, List<centroCosto__c> lstCC) {
+        return calloutCentroCosto(url, ambiente, tokenType, token, actualPage, lstCC, DEFAULT_COMPANY);
+    }
+
+    public static String calloutCentroCosto(String url, String ambiente, String tokenType, String token, Integer actualPage, List<centroCosto__c> lstCC, String company) {
+        String compania = String.isBlank(company) ? DEFAULT_COMPANY : company;
         try {
-            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getCentroCostos?compania=RMBAVARIAN&pageNo=' + actualPage + '&pageSize=10');
+            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getCentroCostos?compania=' + compania + '&pageNo=' + actualPage + '&pageSize=10');
             System.debug(JSON.serializePretty(root));
             for (Object item : dataRows(root)) {
                 Map<String, Object> row = (Map<String, Object>) item;
@@ -216,7 +227,7 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
                 lstCC.add(record);
             }
             if (actualPage < pageCount(root)) {
-                return calloutCentroCosto(url, ambiente, tokenType, token, actualPage + 1, lstCC);
+                return calloutCentroCosto(url, ambiente, tokenType, token, actualPage + 1, lstCC, compania);
             }
             return upsertCatalog(lstCC, CentroCosto__c.Fields.centroCosto__c);
         } catch (System.CalloutException e) {
@@ -226,8 +237,13 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
     }
 
     public static String calloutCondicionPago(String url, String ambiente, String tokenType, String token, Integer actualPage, List<condicionPago__c> lstCP) {
+        return calloutCondicionPago(url, ambiente, tokenType, token, actualPage, lstCP, DEFAULT_COMPANY);
+    }
+
+    public static String calloutCondicionPago(String url, String ambiente, String tokenType, String token, Integer actualPage, List<condicionPago__c> lstCP, String company) {
+        String compania = String.isBlank(company) ? DEFAULT_COMPANY : company;
         try {
-            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getCondicionPagos?compania=RMBAVARIAN&pageNo=' + actualPage + '&pageSize=10');
+            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getCondicionPagos?compania=' + compania + '&pageNo=' + actualPage + '&pageSize=10');
             for (Object item : dataRows(root)) {
                 Map<String, Object> row = (Map<String, Object>) item;
                 condicionPago__c cp = new condicionPago__c();
@@ -237,7 +253,7 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
                 lstCP.add(cp);
             }
             if (actualPage < pageCount(root)) {
-                return calloutCondicionPago(url, ambiente, tokenType, token, actualPage + 1, lstCP);
+                return calloutCondicionPago(url, ambiente, tokenType, token, actualPage + 1, lstCP, compania);
             }
             return upsertCatalog(lstCP, condicionPago__c.Fields.condicionPago__c);
         } catch (System.CalloutException e) {
@@ -247,8 +263,13 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
     }
 
     public static String calloutCuentaContable(String url, String ambiente, String tokenType, String token, Integer actualPage, List<CuentaContable__c> lstCC) {
+        return calloutCuentaContable(url, ambiente, tokenType, token, actualPage, lstCC, DEFAULT_COMPANY);
+    }
+
+    public static String calloutCuentaContable(String url, String ambiente, String tokenType, String token, Integer actualPage, List<CuentaContable__c> lstCC, String company) {
+        String compania = String.isBlank(company) ? DEFAULT_COMPANY : company;
         try {
-            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getCuentaContable?compania=RMBAVARIAN&pageNo=' + actualPage + '&pageSize=10');
+            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getCuentaContable?compania=' + compania + '&pageNo=' + actualPage + '&pageSize=10');
             System.debug(JSON.serializePretty(root));
             for (Object item : dataRows(root)) {
                 Map<String, Object> row = (Map<String, Object>) item;
@@ -259,7 +280,7 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
                 lstCC.add(cc);
             }
             if (actualPage < pageCount(root)) {
-                return calloutCuentaContable(url, ambiente, tokenType, token, actualPage + 1, lstCC);
+                return calloutCuentaContable(url, ambiente, tokenType, token, actualPage + 1, lstCC, compania);
             }
             return upsertCatalog(lstCC, CuentaContable__c.Fields.CuentaContable__c);
         } catch (System.CalloutException e) {
@@ -269,8 +290,13 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
     }
 
     public static String calloutImpuesto(String url, String ambiente, String tokenType, String token, Integer actualPage, List<Impuesto__c> lstI) {
+        return calloutImpuesto(url, ambiente, tokenType, token, actualPage, lstI, DEFAULT_COMPANY);
+    }
+
+    public static String calloutImpuesto(String url, String ambiente, String tokenType, String token, Integer actualPage, List<Impuesto__c> lstI, String company) {
+        String compania = String.isBlank(company) ? DEFAULT_COMPANY : company;
         try {
-            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getImpuestos?compania=RMBAVARIAN&pageNo=' + actualPage + '&pageSize=10');
+            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getImpuestos?compania=' + compania + '&pageNo=' + actualPage + '&pageSize=10');
             System.debug(JSON.serializePretty(root));
             for (Object item : dataRows(root)) {
                 Map<String, Object> row = (Map<String, Object>) item;
@@ -282,7 +308,7 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
                 lstI.add(imp);
             }
             if (actualPage < pageCount(root)) {
-                return calloutImpuesto(url, ambiente, tokenType, token, actualPage + 1, lstI);
+                return calloutImpuesto(url, ambiente, tokenType, token, actualPage + 1, lstI, compania);
             }
             return upsertCatalog(lstI, Impuesto__c.Fields.codigoImpuesto__c);
         } catch (System.CalloutException e) {
@@ -345,8 +371,13 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
     }
 
     public static String calloutSubtipoDocumento(String url, String ambiente, String tokenType, String token, Integer actualPage, List<SubtipoDocumento__c> lstSD) {
+        return calloutSubtipoDocumento(url, ambiente, tokenType, token, actualPage, lstSD, DEFAULT_COMPANY);
+    }
+
+    public static String calloutSubtipoDocumento(String url, String ambiente, String tokenType, String token, Integer actualPage, List<SubtipoDocumento__c> lstSD, String company) {
+        String compania = String.isBlank(company) ? DEFAULT_COMPANY : company;
         try {
-            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getSubtiposDocCC?compania=RMBAVARIAN&pageNo=' + actualPage + '&pageSize=10');
+            Map<String, Object> root = getLegacyCatalog(url, ambiente, tokenType, token, 'softlandAPI/Catalogs/getSubtiposDocCC?compania=' + compania + '&pageNo=' + actualPage + '&pageSize=10');
             for (Object item : dataRows(root)) {
                 Map<String, Object> row = (Map<String, Object>) item;
                 SubtipoDocumento__c record = new SubtipoDocumento__c();
@@ -356,7 +387,7 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
                 lstSD.add(record);
             }
             if (actualPage < pageCount(root)) {
-                return calloutSubtipoDocumento(url, ambiente, tokenType, token, actualPage + 1, lstSD);
+                return calloutSubtipoDocumento(url, ambiente, tokenType, token, actualPage + 1, lstSD, compania);
             }
             return upsertCatalog(lstSD, SubtipoDocumento__c.Fields.subtipo__c);
         } catch (System.CalloutException e) {

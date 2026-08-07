@@ -9,10 +9,21 @@ public class ScheduleGetCategoriaClienteSoftlandTest {
         Test.startTest();
         Test.setMock(HttpCalloutMock.class, new ExampleCalloutMock());
         String sch = '0 0 23 * * ?';
-        system.schedule('Test check', sch, bgv);
+        String jobId = system.schedule('Test check', sch, bgv);
         Test.stopTest();
+
+        CronTrigger ct = [SELECT Id, CronExpression FROM CronTrigger WHERE Id = :jobId];
+        System.assertEquals(sch, ct.CronExpression);
+
+        List<AsyncApexJob> queueableJobs = [
+            SELECT Id
+            FROM AsyncApexJob
+            WHERE ApexClass.Name = 'BatchGetCategoriaClienteSoftland'
+            AND JobType = 'Queueable'
+        ];
+        System.assertEquals(2, queueableJobs.size(), 'El scheduler debe encolar dos Queueables independientes de BatchGetCategoriaClienteSoftland: uno para RMBAVARIAN y uno para RMPEKING');
     }
-    
+
     public class ExampleCalloutMock implements HttpCalloutMock{
         public HttpResponse respond(HTTPRequest req){
             HttpResponse res = new HttpResponse();

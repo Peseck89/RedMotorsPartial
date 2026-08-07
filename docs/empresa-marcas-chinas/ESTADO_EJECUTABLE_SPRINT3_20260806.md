@@ -63,3 +63,38 @@ B7-0 terminó como análisis sobre 78 componentes. Diez no requieren cambio y qu
 No se agotó todo el trabajo técnico ejecutable: queda **B11-1**, limitado a reconciliación y pruebas del soporte de seis catálogos ya desplegado. Después de ese lote no queda otro cambio técnico aislable en los bloques 7, 9 u 11 con la evidencia actual; lo restante será QA o dependerá de decisiones, datos o entregables externos.
 
 Esta conclusión no declara Sprint 3 cerrado.
+
+## Resultado posterior a B11-1 — 2026-08-06
+
+B11-1 quedó `RECONCILIADO_Y_VALIDADO_TECNICAMENTE`. Las 13 clases productivas y sus 13 pruebas se conciliaron con el estado vigente de Partial. Las 13 pruebas dirigidas ejecutaron 36 métodos, todos aprobados; el dry-run dirigido terminó sin errores y el retrieve posterior confirmó equivalencia semántica de las 13 productivas y sus metadatos.
+
+No se realizó deploy porque Partial ya era equivalente: `DEPLOY_NO_NECESARIO_PARTIAL_YA_EQUIVALENTE`. Tampoco se ejecutaron catálogos reales, se programaron schedulers ni se crearon datos.
+
+### PENDIENTE_SOLO_DE_QA
+
+- B9-1: cuatro Validation Rules ya implementadas.
+- Ocho Approval Processes neutrales a Empresa.
+- Diez componentes UI sin cambio técnico.
+- B11-1: validación funcional del contenido de los seis catálogos con datos oficiales.
+
+### BLOQUEADO_NEGOCIO_O_DATOS
+
+- Asignaciones funcionales restantes del bloque 7.
+- Centros de costo, cuentas, responsables y demás registros operativos PEKING.
+- Garantía y aprobador autorizado.
+- Bodegas oficiales y estrategia de segregación/clave.
+- Default comercial de Pricebook cuando no hay selección explícita.
+
+### DEPENDENCIA_DIEGO
+
+- Jerarquía, perfiles y su disponibilidad posterior para QA de seguridad.
+
+### FUERA_DE_SPRINT3
+
+- Bloques 8, 12, 13 y 14, sin considerarlos cancelados.
+- Bloque 10 amplio, marcado NA.
+- Requisitos adicionales que no estén en los bloques 7, 9 u 11 del documento inicial.
+
+`TRABAJO_TECNICO_AISLABLE_AGOTADO_CON_INFORMACION_ACTUAL`
+
+Esta condición significa que no queda otra modificación técnica segura y aislable con la información vigente. No equivale a `SPRINT3_CERRADO`: todavía faltan QA funcional, datos, decisiones y dependencias externas.
