@@ -115,3 +115,36 @@ La metadata resolvió existencia, estado, criterios, pasos y tipo de aprobador d
 Permanecen tres decisiones genuinas: disponibilidad autorizada de responsables para QA de descuentos; centros de costo y responsables PEKING; y cobertura/aprobador de garantía, incluyendo si el proceso inactivo de cita debe permanecer así. Los 15 Roles y la jerarquía siguen a cargo de Diego, pero ninguno está referenciado directamente como aprobador por estos procesos.
 
 **Conteo histórico:** la línea de conteo anterior corresponde a la reevaluación previa de las 22 preguntas. B9-AP0 no elimina filas históricas: actualiza la pregunta 3 a `RESPONDIDA_TECNICAMENTE_PENDIENTE_QA` y precisa las preguntas 4 y 10.
+
+## Depuración final posterior a B11-0, B11-0.1 y B11-1 — 2026-08-06
+
+Esta sección es el estado vigente; las tablas anteriores se conservan como trazabilidad histórica.
+
+### Resueltas o reducidas sin nueva pregunta
+
+- **Regla general de PEKING:** respondida por Diego; se mantiene el comportamiento existente.
+- **Reservas y devoluciones:** respondidas a nivel funcional; operan según la Empresa enviada. Solo falta QA con datos autorizados.
+- **Criterios y niveles de los ocho procesos de descuento:** resueltos por metadata; son neutrales y usan aprobadores dinámicos. Solo falta disponibilidad de usuarios/registros QA.
+- **Tipo de configuración Softland:** resuelto técnicamente por B11-0. La autoridad está distribuida entre Empresa, Pricebook por Empresa/moneda y Custom Labels compartidos; no se requiere una nueva configuración ni se documentan valores sensibles.
+- **Seis consumidores de catálogo RMPEKING:** resueltos técnicamente por B11-0.1/B11-1. Propagan `company`, incluyen RMPEKING y quedaron reconciliados; falta validar contenido real.
+- **Separación Sprint 1 / Sprint 3 para esos catálogos:** resuelta. El soporte provenía de Sprint 1 y B11-1 lo incorporó como reconciliación del bloque 11, sin absorber refactor adicional.
+- **Jerarquía y perfiles:** dependencia a cargo de Diego; no volver a pedir definición al negocio.
+
+### Preguntas genuinas que permanecen
+
+1. Asignación exacta de Layouts/FlexiPages restantes por aplicación, perfil y Record Type.
+2. Regla comercial del Pricebook cuando no existe selección explícita válida.
+3. Disponibilidad autorizada de Jefatura, Gerencia y Dirección para QA de descuentos.
+4. Centros de costo y responsables PEKING oficiales.
+5. Bodegas oficiales y función operativa.
+6. Sucursales, territorios y talleres oficiales y sus relaciones.
+7. Condiciones, líneas y validaciones específicas de Quote a Work Order.
+8. Servicios, agenda, capacidades, asesores y mecánicos; referencia para datos mínimos QA.
+9. Cobertura, excepciones y aprobador de garantía; estado deseado del proceso inactivo de cita.
+10. Criterios nominales de segregación de cargos/WOLIs que dependan de centros de costo o garantía.
+11. Accesos mínimos por función y campos concretos, coordinados con los perfiles de Diego.
+12. Logos, datos legales, plantillas y remitentes oficiales.
+13. Productos, precios, monedas, catálogos, cuentas, términos y numeraciones oficiales cuando apliquen.
+14. Bodegas y contenido real de los seis catálogos para validación funcional Softland.
+
+No quedan preguntas abiertas sobre Git, ramas, baseline, endpoints sensibles, nueva instancia Softland, contexto ERP, pertenencia de Omoda/Jaecoo, aplicación a usados o nombres esperados de Pricebooks.
