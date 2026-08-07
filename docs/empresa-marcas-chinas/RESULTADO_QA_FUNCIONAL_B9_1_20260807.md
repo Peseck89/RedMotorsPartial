@@ -2,7 +2,7 @@
 
 **Fecha:** 7 de agosto de 2026
 
-**Estado:** `B9-1 — QA_FUNCIONAL_PARCIAL`
+**Estado vigente:** `B9-1 — QA_FUNCIONAL_COMPLETADO`
 
 ## Alcance
 
@@ -92,8 +92,22 @@ Consultas posteriores confirmaron:
 - Callouts reales: ninguno.
 - Reservas, pedidos o aprobaciones: ninguno.
 
-## Conclusión
+## Conclusión inicial — sustituida por el cierre posterior
 
 B9-1 no puede pasar a `QA_FUNCIONAL_COMPLETADO`. Tres reglas tienen evidencia positiva, negativa y de regresión suficiente a nivel de Validation Rule. `Campo_Gustos_y_aficiones_Obligatorio` conserva un fallo funcional y escenarios pendientes.
 
 Sprint 3 no se declara cerrado.
+
+## Cierre posterior de `Campo_Gustos_y_aficiones_Obligatorio`
+
+El defecto fue corregido después de autorizar expresamente los dos cambios mínimos demostrados: normalizar el bypass nulo y evaluar el picklist relacionado mediante comparación textual con vacío. No se modificaron Record Types, `Por actualizar`, otras excepciones ni otras Validation Rules.
+
+La prueba temporal posterior al deploy ejecutó:
+
+- `null` bloqueado para Omoda, Jaecoo, BMW, MINI, Kawasaki, Motorrad y Polaris;
+- valor real permitido para los mismos siete Record Types;
+- `Por actualizar` permitido para Omoda.
+
+Resultado: 15 pruebas ejecutadas, 15 aprobadas y 0 fallidas. Validation ID: `0AfAK0000012CcP0AU`.
+
+Las otras tres reglas del lote ya contaban con QA funcional completo en la ejecución inicial. Con el cierre de la regla pendiente, el estado consolidado pasa a `B9-1 — QA_FUNCIONAL_COMPLETADO`. Esto no equivale al cierre automático de Sprint 3.

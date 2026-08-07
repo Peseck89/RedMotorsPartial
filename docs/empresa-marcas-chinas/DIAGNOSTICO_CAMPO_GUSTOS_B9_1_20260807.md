@@ -3,7 +3,7 @@
 Fecha: 2026-08-07  
 Ambiente consultado: Partial (`RedMotorsSandbox`)  
 Regla analizada: `Opportunity.Campo_Gustos_y_aficiones_Obligatorio`  
-Estado: `CORRECCION_TECNICA_PROPUESTA_PENDIENTE_REVISION`
+Estado vigente: `B9-1 — QA_FUNCIONAL_COMPLETADO`
 
 ## Resultado ejecutivo
 
@@ -205,3 +205,14 @@ TEXT(Account.Gusto_y_aficiones__c) = ""
 Con ambos cambios, la validación `0AfAK0000012CNt0AM` aprobó 15 de 15 pruebas: `null` y valor real para Omoda, Jaecoo, BMW, MINI, Kawasaki, Motorrad y Polaris, más Omoda con `Por actualizar`. El valor `Por actualizar` continuó permitido.
 
 Esta alternativa no fue desplegada ni incorporada a la metadata versionada porque modifica también la condición de bypass y la autorización recibida limitaba el cambio al predicado final. El estado permanece `CORRECCION_TECNICA_PROPUESTA_PENDIENTE_REVISION` hasta autorizar expresamente la normalización del bypass nulo.
+
+## Cierre de la corrección autorizada
+
+Posteriormente se autorizó expresamente aplicar ambos predicados exactamente como fueron validados. La regla fue desplegada de forma exclusiva a Partial y el retrieve posterior confirmó equivalencia exacta con Git.
+
+- Dry-run dirigido: `0AfAK00000126vC0AQ`, exitoso, 1/1 componente.
+- Deploy dirigido: `0AfAK0000012CZB0A2`, exitoso, únicamente la Validation Rule.
+- Retrieve posterior: `09SAK000003IG1R2AW`.
+- QA posterior al deploy: `0AfAK0000012CcP0AU`, 15/15 pruebas aprobadas.
+- `Por actualizar`: permanece permitido.
+- Estado final: `B9-1 — QA_FUNCIONAL_COMPLETADO`.
