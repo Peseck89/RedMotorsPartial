@@ -5,6 +5,8 @@
 **Rama:** `feature/pc/redmotors-empresa-marcas-chinas-sprint2-flows-components-20260728`
 **HEAD de partida:** `5c43085` (verificado en el PRECHECK; branch sincronizada 0/0 con origin)
 
+**Actualización (2026-08-07, tarde) — `RECORD_TYPES_OMODA_JAECOO_NO_HABILITADOS_PARA_USUARIOS_ACTIVOS`:** al preparar los datos QA persistentes para el Video 1 de evidencias UI (ver `PLAN_EVIDENCIAS_FINALES_SPRINT3_20260807.md`), se descubrió que **ningún usuario activo en Partial, incluido `System Administrator`, puede crear una Opportunity con Record Type Omoda o Jaecoo**. Confirmado dos veces por vías independientes: `sf data create record` y Apex anónimo en contexto de sistema, ambos con el mismo error `INVALID_CROSS_REFERENCE_KEY: Record Type ID: this ID value isn't valid for the user`. Esto es una restricción de **visibilidad de Record Type a nivel de Profile/Permission Set**, distinta y más profunda que la asignación de Layout ya documentada en la sección B7 de abajo. No es falta de datos QA, no es defecto de Layout, no es efecto secundario de automatización (el preflight de triggers/Flows de insert se completó y fue seguro; el bloqueo ocurre antes de que cualquier automatización se ejecute). Detalle completo en la sección "Hallazgo: visibilidad de Record Types Omoda/Jaecoo" más abajo. Responsable: Diego (Profiles/Permission Sets). No se modificó ningún Profile, Permission Set, Role, Layout assignment ni activación de FlexiPage.
+
 **Este documento NO declara Sprint 3 terminado.** Agota el trabajo técnico interno autorizado y ejecutable con la información disponible hoy sobre B7, B9 y B11, usando exclusivamente los análisis y matrices ya existentes (`RESULTADO_B7_0_UI_20260806.md`, `MATRIZ_UI_B7_0_20260806.csv`, `RESULTADO_B9_0_VALIDATION_RULES_20260806.md`, `MATRIZ_VALIDATION_RULES_B9_0_V2_20260806.csv`, `RESULTADO_B9_AP0_APPROVAL_PROCESSES_20260806.md`, `RESULTADO_B11_0_1_CATALOGOS_SOFTLAND_20260806.md`, `RESULTADO_B11_1_CATALOGOS_SOFTLAND_20260806.md`, `RESULTADO_QA_FUNCIONAL_B9_1_20260807.md`). No se volvió a auditar el universo completo (563 componentes, 94 Validation Rules, 78 elementos UI).
 
 Toda ejecución de este lote se hizo mediante `@IsTest` con `--dry-run`/check-only. **Cero deploys persistidos, cero datos reales, cero jobs programados, cero correos reales, cero aprobaciones persistentes.** Las clases Apex usadas para generar esta evidencia fueron temporales: se compilaron y ejecutaron en modo check-only y no quedaron desplegadas ni versionadas, siguiendo el mismo patrón ya usado en B9-1 y B11-1.
@@ -46,6 +48,43 @@ Toda ejecución de este lote se hizo mediante `@IsTest` con `--dry-run`/check-on
 | B11 — Seis catálogos Softland + schedulers | 13 clases productivas + 13 pruebas | `RECONCILIADO_Y_VALIDADO_TECNICAMENTE` (B11-1, sin cambios nuevos este lote) | Ninguno — verificado documentalmente que sigue vigente (soporte RMPEKING, 6 catálogos, 13 clases reconciliadas, mocks/tests, mismo endpoint/instancia, cero schedulers activos, equivalencia Partial/Git) | No se repitieron las 36 pruebas — sin cambio nuevo en esos componentes en este lote | Test Run `707AK00000I2ACX` (36/36); Validation `0AfAK0000011hWz0AI` | Validación funcional de contenido real de catálogo | DATOS_OFICIALES | Negocio / Softland / QA |
 | B11 — Bodega | `BatchGetBodegaSoftland`, `Bodega__c`, `ID_EXTERNO_BODEGA__c` | `BLOQUEADO_DATOS_OPERATIVOS` (B11-0.1) → **prueba aislada ejecutada; permanece `BLOQUEADO_ESTRATEGIA_CLAVE_BODEGA_PEKING`** | Ninguno — no se propone ni se aplica ninguna convención de clave | **Prueba aislada, reversible, con mock HTTP (sin callout real, sin datos persistentes):** se confirmó empíricamente que ejecutar `BatchGetBodegaSoftland('RMPEKING')` sobre un registro de bodega ya existente con clave `ID_EXTERNO_BODEGA__c` cruda (comportamiento real de `RMBAVARIAN` según el código) **actualiza el mismo registro** en lugar de crear uno separado — el código solo antepone prefijo de compañía para `RMOTOBAI` (`BatchGetCatalogoSoftland.cls` línea 173), nunca para `RMPEKING` ni `RMBAVARIAN` | Validation ID `0AfAK0000012DTd0AM` (1/1 prueba aprobada, colisión confirmada) | El placeholder permitió probar el **mecanismo** (que la colisión ocurre), no resuelve la **configuración oficial** (qué convención de clave separa PEKING de Bavarian, ni las bodegas oficiales PEKING). Inventar una convención ahora violaría la regla de no asumir alcance | BLOQUEADO_ESTRATEGIA_CLAVE_BODEGA_PEKING → NEGOCIO / DATOS_OFICIALES | Operaciones / Softland / negocio |
 | B11 — Pricebook default | Consumidores de `PEKING Local` / `PEKING Dólares` | `PENDIENTE_DEFINICION_FUNCIONAL_PRICEBOOK_DEFAULT` (sin cambio) | Ninguno — no se implementó selección por defecto | No aplica — explícitamente fuera de alcance de este lote | — | Regla comercial de precedencia cuando no hay selección explícita | DECISION_FUNCIONAL | Ventas / negocio |
+| B7 — Video 1 (Layouts Opportunity Omoda/Jaecoo) | Evidencia manual UI | `EJECUTABLE_AHORA` (según cierre inicial) → **`BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE`** | Ninguno | Preflight de automatizaciones de insert completado y seguro (ver hallazgo abajo); la creación de la Opportunity Omoda/Jaecoo en sí falla antes de llegar a ejecutar ninguna automatización | `INVALID_CROSS_REFERENCE_KEY` reproducido por API y por Apex anónimo; registros QA creados, verificados sin efectos secundarios y eliminados tras el hallazgo (ver limpieza) | Habilitar Omoda/Jaecoo como Record Types visibles para al menos un Profile/Permission Set activo | DIEGO | Diego (Profiles/Permission Sets) |
+| B7 — Video 2 (FlexiPages APP_DEFAULT) | Evidencia manual UI | `EJECUTABLE_AHORA` (según cierre inicial) → **`BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE`** | Ninguno | Verificado técnicamente: la activación App Default de las 3 FlexiPages es genérica y no depende de Record Type, pero el objetivo del video exige abrir una Opportunity/Quote Omoda/Jaecoo, imposible de crear hoy | Misma evidencia que Video 1 (dependencia idéntica) | Mismo que Video 1 | DIEGO | Diego |
+| B7 — Video 3 (Quick Action genérica de Quote) | Evidencia manual UI | `EJECUTABLE_AHORA` (según cierre inicial) → **`BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE`** (dependencia transitiva) | Ninguno | Verificado técnicamente: `Quote` solo tiene Record Types `Taller`/`Nuevos` propios (sin restricción independiente para Omoda/Jaecoo); el bloqueo es exclusivamente porque el Quote de prueba necesita una Opportunity Omoda/Jaecoo como padre | Consulta directa de `RecordType` sobre `Quote`; misma evidencia base que Video 1 | Mismo que Video 1 | DIEGO | Diego |
+
+---
+
+## Hallazgo: visibilidad de Record Types Omoda/Jaecoo (`RECORD_TYPES_OMODA_JAECOO_NO_HABILITADOS_PARA_USUARIOS_ACTIVOS`)
+
+**Qué es:** ningún usuario activo en Partial tiene los Record Types `Omoda` ni `Jaecoo` de `Opportunity` habilitados en su Profile/Permission Set, incluido el usuario `System Administrator` conectado (Claudia Pérez). No es una cuestión de asignación de Layout (eso ya estaba documentado en el precheck de UI del mismo día) — es una capa de seguridad anterior y más restrictiva: la visibilidad del propio Record Type.
+
+**Qué NO es:**
+- No es falta de datos QA — Diego ya autorizó placeholders y estos se prepararon correctamente para BMW.
+- No es un defecto de los Layouts ni de las FlexiPages — nunca se llegó a evaluar Layout alguno porque la creación del registro falló antes.
+- No es un efecto secundario de automatización — el preflight de triggers Apex (`AccountTrigger`→`AccountTriggerHandler`, `OpportunityTrigger`→`OpportunityTriggerHandler`, `OpportunityOriginTracking`) y de los 12 Flows activos con `RecordTriggerType` `Create`/`CreateAndUpdate` sobre `Account`/`Opportunity` se completó de forma exhaustiva y confirmó que un insert mínimo (sin `Sucursal__c`, `LeadSource`, `Trafico__c`, `contacto__c`, `RT_Lead__c`, `CreadaEnConversion__c`, campos de identificación/Softland en Account, ni `StageName='Cerrada Ganada'`) no dispara emails, callouts, reservas, pedidos, aprobaciones ni jobs. El error de Record Type ocurre en la capa de validación de acceso, antes de que cualquier trigger o Flow se ejecute.
+
+**Evidencia técnica:**
+1. `sf data create record` con `RecordTypeId` de Omoda → `INVALID_CROSS_REFERENCE_KEY: Record Type ID: this ID value isn't valid for the user: 012AK0000002McMYAU`.
+2. `sf data create record` con `RecordTypeId` de Jaecoo → mismo error, `012AK0000002McLYAU`.
+3. Apex anónimo ejecutado como el mismo usuario (contexto de sistema, no API REST) intentando el mismo insert de Omoda → **idéntico error**, descartando que fuera una particularidad del cliente CLI o de la API de datos.
+4. La misma Opportunity con Record Type `BMW` (`0120P000000arDlQAI`) se creó sin ningún problema bajo el mismo usuario, confirmando que el bloqueo es específico de Omoda/Jaecoo y no un problema general de permisos del usuario.
+
+**Registros QA usados para esta evidencia (ya eliminados, ver limpieza):**
+- 3 Accounts: `QA_PEKING_UI_S3_20260807 - Omoda`, `- Jaecoo`, `- BMW Regresion`.
+- 1 Opportunity: `QA_PEKING_UI_S3_20260807 - BMW Regresion-BMW-07/08/2026` (Record Type BMW; Omoda y Jaecoo nunca llegaron a crearse).
+
+**Limpieza ejecutada (2026-08-07):**
+
+| Registro | Id | Verificación previa | Acción |
+|---|---|---|---|
+| Account Omoda | `001AK00000PKBFYYA5` | 0 Contacts, 0 Opportunities relacionadas propias (aparte de la BMW en la cuenta BMW) | Eliminado |
+| Account Jaecoo | `001AK00000PKDApYAP` | 0 Contacts | Eliminado |
+| Account BMW Regresion | `001AK00000PKJuYYAX` | 1 Opportunity relacionada (la de este lote) | Eliminado tras eliminar la Opportunity |
+| Opportunity BMW | `006AK00000JJ17BYAT` | 0 Tasks, 0 ProcessInstance, 0 Quotes, 0 OpportunityLineItems, 0 AsyncApexJob pendientes | Eliminado primero (hijo antes que padre) |
+
+Verificación posterior: `SELECT COUNT(Id) FROM Account WHERE Name LIKE 'QA_PEKING_UI_S3_20260807%'` = 0; `SELECT COUNT(Id) FROM Opportunity WHERE Name LIKE 'QA_PEKING_UI_S3_20260807%'` = 0; `SELECT COUNT(Id) FROM AsyncApexJob WHERE CreatedDate = TODAY AND Status IN ('Queued','Preparing','Processing','Holding')` = 0. Cero registros residuales, cero jobs generados por este lote.
+
+**Responsable de la resolución:** Diego, mediante ajuste de Profile(s) o Permission Set(s) para incluir Omoda y Jaecoo en los Record Types visibles de al menos un perfil activo (administrador o de negocio). Este equipo no modificó ni modificará Profiles, Permission Sets, Roles, Layout assignments ni activaciones de FlexiPage para resolverlo — está fuera del alcance autorizado de este lote.
 
 ---
 
@@ -92,7 +131,9 @@ No. `Opportunity.MusthaveActivity` (el único candidato identificado como pendie
 
 **C. ¿Queda alguna evidencia manual que pueda grabarse ahora?**
 
-Sí, exactamente las tres listadas en `PLAN_EVIDENCIAS_FINALES_SPRINT3_20260807.md` (Layouts de Opportunity, FlexiPages APP_DEFAULT, Quick Action genérica de Quote) — los 10 componentes UI que B7-0 ya clasificó sin cambio técnico. Todo lo demás en B7 depende de una asignación funcional que aún no existe.
+**Actualización (2026-08-07, tarde): No.** Al intentar preparar los datos QA persistentes para el Video 1, se descubrió que ningún usuario activo puede crear una Opportunity Omoda ni Jaecoo (`RECORD_TYPES_OMODA_JAECOO_NO_HABILITADOS_PARA_USUARIOS_ACTIVOS`, ver sección dedicada arriba). Los 3 videos de `PLAN_EVIDENCIAS_FINALES_SPRINT3_20260807.md` (Layouts de Opportunity, FlexiPages APP_DEFAULT, Quick Action genérica de Quote) quedan `BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE` — los tres, verificado técnicamente y no asumido, incluyendo los dos que en principio no dependían de Record Type (Videos 2 y 3 dependen transitivamente de poder crear la Opportunity/Quote Omoda-Jaecoo que su objetivo exige comparar). Los datos QA usados para descubrir esto (3 Accounts + 1 Opportunity BMW) ya fueron eliminados tras confirmar cero efectos secundarios.
+
+`EVIDENCIAS_UI_PLAN_FINAL_BLOQUEADAS_POR_DEPENDENCIA_EXTERNA`
 
 **D. ¿Cuáles son exactamente los pendientes externos?**
 
@@ -105,10 +146,11 @@ Sí, exactamente las tres listadas en `PLAN_EVIDENCIAS_FINALES_SPRINT3_20260807.
 7. Contenido oficial de los seis catálogos Softland para validación funcional real.
 8. Regla comercial de Pricebook por defecto (PEKING Local vs. PEKING Dólares) cuando no hay selección explícita.
 9. Análisis adicional (fuera de este lote) de qué automatización activa interfiere con `Campo_Sucursal_Obligatorio` antes de repetir su QA.
+10. **(Agregado 2026-08-07, tarde)** Habilitar Omoda y Jaecoo como Record Types visibles en al menos un Profile/Permission Set activo — sin esto, los 3 videos de `PLAN_EVIDENCIAS_FINALES_SPRINT3_20260807.md` quedan `BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE` y no puede crearse ningún dato QA persistente de Opportunity Omoda/Jaecoo, para evidencia ni para ningún otro propósito.
 
 **E. ¿Quién debe resolver cada uno?**
 
-- **Diego:** puntos 2 (perfiles) y 3 (jerarquía).
+- **Diego:** puntos 2 (perfiles), 3 (jerarquía) y 10 (visibilidad de Record Types).
 - **Negocio / Ventas / Taller:** punto 1 (asignación de UI) y 8 (Pricebook default).
 - **Finanzas / negocio:** punto 4 (centro de costo y aprobador oficiales).
 - **Garantías / Taller:** punto 5.
@@ -116,8 +158,10 @@ Sí, exactamente las tres listadas en `PLAN_EVIDENCIAS_FINALES_SPRINT3_20260807.
 - **Negocio / Softland / QA:** punto 7 (catálogos).
 - **Desarrollo (interno, en un lote posterior autorizado):** punto 9.
 
-Dado que **A = NO y B = NO**, corresponde declarar:
+Dado que **A = NO y B = NO**, sigue siendo válido declarar:
 
 ## `TRABAJO_TECNICO_INTERNO_AGOTADO`
 
-Esto **no significa que Sprint 3 esté terminado.** Queda C = SÍ (3 videos ejecutables ahora, ver `PLAN_EVIDENCIAS_FINALES_SPRINT3_20260807.md`) y una lista extensa de pendientes externos (D/E arriba) que no dependen de trabajo técnico adicional nuestro, sino de Diego, negocio o datos oficiales.
+**Confirmado vigente tras el hallazgo de visibilidad de Record Types (2026-08-07, tarde).** El hallazgo no reabre ni contradice A o B: no es un cambio técnico pendiente de nuestro lado (es una configuración de Profile/Permission Set que corresponde a Diego) ni un QA automatizable (ya se intentó exhaustivamente y el bloqueo se confirmó de forma definitiva por dos vías independientes). Lo que sí cambió es **C**, que pasa de SÍ a NO: los 3 videos de evidencia UI que antes parecían ejecutables ahora están `BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE`.
+
+Esto **no significa que Sprint 3 esté terminado.** No queda ningún video ejecutable ahora mismo (`EVIDENCIAS_UI_PLAN_FINAL_BLOQUEADAS_POR_DEPENDENCIA_EXTERNA`), y la lista de pendientes externos (D/E arriba) creció con el punto 10 (visibilidad de Record Types, responsable Diego), que no depende de trabajo técnico adicional nuestro.

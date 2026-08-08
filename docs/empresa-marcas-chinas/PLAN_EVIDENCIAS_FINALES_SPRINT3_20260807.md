@@ -1,14 +1,32 @@
 # Plan de evidencias finales — Sprint 3 (B7, B9, B11)
 
 **Fecha:** 7 de agosto de 2026
+**Actualizado:** 7 de agosto de 2026 — bloqueo de visibilidad de Record Types
 
-Este documento lista **exclusivamente** las evidencias manuales (video) todavía necesarias y actualmente ejecutables — es decir, componentes cuyo QA técnico ya está agotado y cuyo único pendiente real es una verificación visual, no una decisión externa o un dato que aún no existe. No se pide grabar nada que siga bloqueado por negocio, datos oficiales o Diego: esos casos se listan al final solo para dejar constancia de por qué no están aquí.
+## ACTUALIZACIÓN CRÍTICA (2026-08-07, tarde) — `RECORD_TYPES_OMODA_JAECOO_NO_HABILITADOS_PARA_USUARIOS_ACTIVOS`
 
-Precondición común a todos los videos: perfil QA autorizado por Diego para cada Record Type (Omoda/Jaecoo), sesión en Partial (`RedMotorsSandbox`) — nunca Producción.
+**Los 3 videos de este plan quedan `BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE`.** Al intentar preparar los datos QA persistentes mínimos (1 Opportunity Omoda, 1 Jaecoo, 1 BMW de regresión) se descubrió que **ningún usuario activo en Partial — incluido `System Administrator` — puede crear un registro con Record Type Omoda o Jaecoo**. El error `INVALID_CROSS_REFERENCE_KEY: Record Type ID: this ID value isn't valid for the user` se reprodujo de forma idéntica:
+
+- vía API de datos estándar (`sf data create record`) para Omoda y para Jaecoo por separado;
+- vía Apex anónimo ejecutado en contexto de sistema con el mismo usuario (descarta que fuera un problema del cliente CLI o de la API REST específicamente).
+
+Esto **no es** falta de datos QA, **no es** un defecto de los Layouts ni de las FlexiPages, y **no es** un efecto secundario de ninguna automatización (el preflight de automatizaciones activas de insert se completó y fue seguro; el bloqueo ocurre antes de que cualquier trigger o Flow llegue a ejecutarse, en la validación de acceso al Record Type). Es una restricción de **visibilidad/habilitación de Record Type a nivel de Profile/Permission Set**, una capa de seguridad distinta y más profunda que la asignación de Layout ya documentada. Detalle completo, evidencia y estado de limpieza en `CIERRE_TRABAJO_INTERNO_SPRINT3_20260807.md`.
+
+**Responsable:** Diego (Profiles/Permission Sets). No se modificó ningún Profile, Permission Set, Role, Layout assignment ni activación de FlexiPage para intentar resolverlo — eso está fuera del alcance de este equipo en este lote.
+
+Este documento se conserva íntegro debajo como referencia de qué grabar y cómo, para ejecutarse en cuanto Diego habilite los Record Types — no se descarta ni se reescribe el contenido técnico, que sigue siendo válido.
+
+---
+
+Este documento lista las evidencias manuales (video) identificadas para B7 — actualmente **todas bloqueadas** por el hallazgo de arriba, no por falta de análisis. Antes del hallazgo, los 3 correspondían a los 10 componentes UI que B7-0 ya clasificó sin cambio técnico. No se pide grabar nada que siga bloqueado por negocio, datos oficiales o Diego: esos casos se listan al final solo para dejar constancia de por qué no están aquí.
+
+Precondición común a todos los videos: perfil QA autorizado por Diego para cada Record Type (Omoda/Jaecoo) **y que Diego habilite Omoda/Jaecoo como Record Types visibles para ese perfil** — precondición nueva, agregada tras el hallazgo de arriba —, sesión en Partial (`RedMotorsSandbox`) — nunca Producción.
 
 ---
 
 ## Video 1 — Layouts de Opportunity (Omoda/Jaecoo) sin cambio técnico
+
+**Estado: `BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE`.** Es el video directamente afectado: su objeto es demostrar los Layouts que Omoda/Jaecoo ya tienen asignados, y no puede existir una Opportunity Omoda ni Jaecoo para abrir.
 
 **Objetivo:** confirmar visualmente que los 6 Layouts de Opportunity ya asignados a Omoda y Jaecoo renderizan campos, secciones y acciones sin errores, en paridad con BMW/MINI.
 
@@ -33,6 +51,8 @@ Precondición común a todos los videos: perfil QA autorizado por Diego para cad
 
 ## Video 2 — FlexiPages APP_DEFAULT (Opportunity y Quote genéricas)
 
+**Estado: `BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE`.** Verificado técnicamente, no asumido: la activación App Default de estas 3 FlexiPages es en sí misma genérica (no depende de Record Type), pero el objetivo del video es "confirmar que cargan sin error **para Omoda/Jaecoo**", lo que exige abrir una Opportunity/Quote de esos Record Types — imposible de crear hoy. La porción de regresión con BMW sí sería técnicamente ejecutable de forma aislada, pero no cumple el objetivo del video tal como está definido (comparar Omoda/Jaecoo contra legacy), por lo que no se graba una versión parcial.
+
 **Objetivo:** confirmar que `Opportunity_Record_Page1`, `Quote_Record_Page` y `Quote_Record_Page2` cargan sin error para Omoda/Jaecoo a través de su activación genérica App Default.
 
 **Precondición:** mismo perfil QA autorizado; una Opportunity y un Quote de prueba por marca (Omoda, Jaecoo, y BMW como regresión).
@@ -55,6 +75,8 @@ Precondición común a todos los videos: perfil QA autorizado por Diego para cad
 ---
 
 ## Video 3 — Quick Action genérica de Quote
+
+**Estado: `BLOQUEADO_POR_VISIBILIDAD_RECORDTYPE`** (dependencia transitiva, verificada técnicamente y no asumida). `Quote` tiene solo 2 Record Types propios (`Taller`, `Nuevos`, confirmado por consulta directa) — no existe una restricción de visibilidad independiente a nivel de Quote para Omoda/Jaecoo. El bloqueo viene exclusivamente de que un Quote de prueba Omoda/Jaecoo requiere primero una Opportunity Omoda/Jaecoo como padre, y esa Opportunity no puede crearse. Si solo se necesitara la marca BMW, este video sería ejecutable hoy, pero el objetivo definido exige la comparación con Omoda/Jaecoo.
 
 **Objetivo:** confirmar que `Quote.BMW_Duplicar_Partidas_de_Presupuesto` es visible y ejecuta correctamente sobre un Quote Omoda/Jaecoo.
 
