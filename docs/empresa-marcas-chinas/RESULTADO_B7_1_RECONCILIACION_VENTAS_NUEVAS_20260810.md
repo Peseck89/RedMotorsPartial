@@ -28,11 +28,17 @@ objeto). Resultado, por objeto:
 
 ## 2. Cruce contra los 63 bloqueados — números reales
 
+**Actualización (2026-08-10, ronda posterior):** tras el ajuste ejecutado en la sección 6 (`Flag_Vehiculo_Nuevo_FM__c`),
+`Quote_Record_Page_VN` pasó de `REQUIERE_AJUSTE_TECNICO_CONCRETO` a `RESUELTO_AJUSTE_VEHICULO_NUEVO_OMODA_JAECOO`.
+El resumen actualizado:
+
 | Resultado | Cantidad |
 |---|---:|
 | Total `BLOQUEADO_ASIGNACION_FUNCIONAL` en B7-0 | 63 |
-| **Coinciden exactamente con un Layout que ya usa Ventas Nuevas** → reclasificados | **8** |
-| Siguen bloqueados, sin coincidencia con Ventas Nuevas | 55 |
+| Coinciden exactamente con un Layout que ya usa Ventas Nuevas → reclasificados (sección 2.1) | 8 |
+| `Quote_Record_Page_VN` → resuelto tras el ajuste de `Flag_Vehiculo_Nuevo_FM__c` (sección 6) | 1 |
+| **Total resuelto** | **9** |
+| Siguen bloqueados, sin coincidencia con Ventas Nuevas ni ajuste aplicable | **54** |
 
 **No se declaran los 63 resueltos. No se mantiene "63 pendientes" sin distinción — el criterio sí resuelve una
 parte real y verificable, documentada abajo.**
@@ -67,7 +73,10 @@ documento). Se documenta como hallazgo, sin ampliar el alcance de este lote: `Qu
 Layout real y relevante de Ventas Nuevas para Quote, y **ya se confirmó funcionando con datos QA reales Omoda,
 Jaecoo y BMW** (ver sección 4).
 
-### 2.2 Los 55 que siguen bloqueados — desglose real, no "pendiente" genérico
+### 2.2 Los 54 que siguen bloqueados — desglose real, no "pendiente" genérico
+
+`Quote_Record_Page_VN` **ya no aparece en esta tabla** — se resolvió tras el ajuste descrito en la sección 6 y se
+movió al conteo de resueltos (sección 2, arriba).
 
 | Subgrupo | Cantidad | Motivo real |
 |---|---:|---|
@@ -75,9 +84,8 @@ Jaecoo y BMW** (ver sección 4).
 | Con asignación real, pero para Taller/Postventa, no para venta de autos nuevos | 14 (`Account-Taller`, `Account-RM Asesor Taller`, `Account-RM Asistente Taller - RO`, `Account-RM Lider Taller - RO`, `Account-RM Lider Taller`, `Account-BMW Cuenta Empresarial - RO`, `Account-Cuenta Empresarial Sin Botones`, `Account-Account Layout` genérico, `WorkOrder-RM Asesor Taller`, `WorkOrder-RM Lider Taller`, `WorkOrder-Work Order Layout`, `WorkOrder-Work Order Layout Copy`, `WorkOrder-Work Order Main`, `WorkOrder-Work Order Main Sin Botones`) | El criterio "Ventas Nuevas" no aplica — son para el flujo de Taller/Postventa (mecánicos, asistentes), un proceso de negocio distinto al de venta, sin definición de si Omoda/Jaecoo tendrán Taller propio todavía. |
 | Con asignación real, para Opportunity/Product2/Quote de otros segmentos legacy | 5 (`Opportunity-Autos` genérico sin marca, `Opportunity-Motocicletas`, `Opportunity-Taller Autos`, `Product2-Vehiculos` genérico, `Quote_Record_Page6` de Taller) | Son para motos/taller/mostrador, no para el flujo de venta de autos nuevos que Omoda/Jaecoo replican. |
 | Quick Actions que dependen de una plantilla/proceso propio, no de perfil | 3 (`BMW_EnviarCorreoPresupuesto`, `Quote.BMW_ImportarPlantilla`, `WorkOrder.BMW_ImportarPlantilla`) | Necesitan una plantilla de correo o de presupuesto propia de PEKING, aprobada por negocio; el criterio de perfil no resuelve una definición de contenido. |
-| `Quote_Record_Page_VN` (FlexiPage, 316 asignaciones) | 1 | Mismo patrón de riesgo que `Opportunity_Record_Page_VN` (nombre `_VN`, cientos de asignaciones por Record Type "Nuevos") — no se auditó su drift en este lote (fuera del alcance de esta tarea), se deja como candidato a revisar en un lote posterior, sin tocar. |
 
-**Total verificado:** 32 + 14 + 5 + 3 + 1 = 55, exacto, coincide con la resta 63 − 8 = 55.
+**Total verificado:** 32 + 14 + 5 + 3 = 54, exacto, coincide con la resta 63 − 9 = 54.
 
 ---
 
@@ -175,7 +183,10 @@ funcional. No llegó ninguna respuesta nueva sobre Garantía en este lote.
 
 ---
 
-## 6. `Quote_Record_Page_VN` — resultado del análisis dirigido (2026-08-10, tarde)
+## 6. `Quote_Record_Page_VN` — resultado del análisis dirigido (2026-08-10, tarde) — RESUELTO
+
+**Estado final: `RESUELTO_AJUSTE_VEHICULO_NUEVO_OMODA_JAECOO`** (ver ejecución completa en 6.1, abajo). El análisis
+original que llevó a esta ejecución se conserva íntegro:
 
 **Qué es y quién la usa:** es la página de registro de Presupuesto (Quote) que se activa para el Record Type
 `Nuevos` — el mismo Record Type que usa cualquier venta de auto nuevo, de cualquier marca (confirmado con los 3
@@ -217,25 +228,78 @@ Ventas Nuevas que Luis pidió replicar.
 necesita ningún cambio), sino en el campo fórmula compartido `Flag_Vehiculo_Nuevo_FM__c`, que además ya afecta
 otros componentes fuera del alcance de esta revisión (las Validation Rules de B9-1).
 
-**Cambio mínimo propuesto (no ejecutado, no desplegado):** agregar `'Omoda'` y `'Jaecoo'` a la lista de valores del
-`OR(RecordType.Name=...)` dentro de la fórmula de `Flag_Vehiculo_Nuevo_FM__c`. Es un cambio de una sola fórmula,
-sin tocar la página, sin tocar ninguna Validation Rule directamente (aunque sí cambiaría su resultado indirecto,
-dado que varias reglas ya dependen del mismo campo). **No se ejecuta sin autorización expresa**, porque afecta más
-de un componente ya evaluado por separado (`MusthaveActivity` y las otras 2 reglas del mismo patrón) y su alcance
-real debe decidirse en conjunto, no solo para esta página.
+**Cambio mínimo propuesto:** agregar `'Omoda'` y `'Jaecoo'` a la lista de valores del `OR(RecordType.Name=...)`
+dentro de la fórmula de `Flag_Vehiculo_Nuevo_FM__c`.
 
-**El conteo de 55 se mantiene sin cambio** (no baja a 54): un ajuste técnico concreto pendiente de autorización
-sigue siendo un pendiente, no una resolución automática como los 8 de la sección 2.1.
+---
+
+### 6.1 Ejecución (2026-08-10, ronda posterior — autorizada por Luis tras confirmar los 3 criterios de la sección 3 del mandato)
+
+**Localización exacta:** el campo fuente es `Opportunity.Flag_Vehiculo_Nuevo_FM__c` (fórmula real). `Quote.Flag_Vehiculo_Nuevo_FM__c`
+es un campo espejo — su fórmula es únicamente `Opportunity.Flag_Vehiculo_Nuevo_FM__c` — por lo que modificar solo el
+campo de Opportunity basta; Quote se actualiza automáticamente sin tocarlo.
+
+**Fórmula anterior:**
+```
+OR(RecordType.Name = 'BMW',RecordType.Name = 'MINI',RecordType.Name = 'Motorrad',RecordType.Name = 'Polaris',RecordType.Name = 'Kawasaki', RecordType.Name = 'Indian' )
+```
+
+**Fórmula desplegada:**
+```
+OR(RecordType.Name = 'BMW',RecordType.Name = 'MINI',RecordType.Name = 'Motorrad',RecordType.Name = 'Polaris',RecordType.Name = 'Kawasaki', RecordType.Name = 'Indian', RecordType.Name = 'Omoda', RecordType.Name = 'Jaecoo' )
+```
+
+**Referencias reales encontradas en Git** (además de `Quote_Record_Page_VN` y `MusthaveActivity`), y su impacto:
+
+| Componente | Qué hace con el campo | Impacto del cambio |
+|---|---|---|
+| `RM_Opportunity_Trigger_Helper.desReservarItems` | Si una Oportunidad se cierra "Perdida" y `Flag_Vehiculo_Nuevo_FM__c=true`, desreserva automáticamente los productos reservados (job asíncrono) | Ahora también aplica a Omoda/Jaecoo — antes no ocurría para ellas. Coherente con tratarlas como vehículo nuevo. |
+| `QuoteTriggerHelper.calculateTaxes` | Si `Quote.Flag_Vehiculo_Nuevo_FM__c=true` (o cliente exonerado), `Tax=0`; si no, `Tax=Subtotal*0.13` | Los Presupuestos Omoda/Jaecoo dejan de calcular ese 13% adicional — mismo trato que BMW/MINI. **Efecto financiero real**, señalado explícitamente aquí, no oculto. |
+| Flow `Actualiza_impuesto_cuando_cliente_ya_no_es_exonerado` | Se dispara en Quote solo cuando `Flag_Vehiculo_Nuevo_FM__c=false` y cambió la exoneración del cliente | Deja de aplicar a Quotes Omoda/Jaecoo — mismo mecanismo fiscal que el punto anterior, coherente. |
+| `Vehiculos_Nuevos_PS` (Permission Set) | Solo otorga permiso de lectura sobre el campo (es fórmula, no editable) | Sin impacto — no depende del valor de la fórmula. |
+
+**¿Coincide con la regla funcional "Omoda/Jaecoo = Ventas Nuevas"?** Sí, en los 4 casos: ninguno introduce lógica
+nueva, todos extienden el alcance de un mecanismo ya existente a dos marcas más, sin cambiar el comportamiento de
+las marcas existentes.
+
+**Deploy:** dry-run (0 errores) → deploy real → retrieve posterior confirmó **0 diferencias** Git-Partial.
+
+**Revalidación con registros QA reales:**
+
+| Verificación | Resultado |
+|---|---|
+| `Opportunity.Flag_Vehiculo_Nuevo_FM__c` — Omoda | `true` (antes `false`) |
+| `Opportunity.Flag_Vehiculo_Nuevo_FM__c` — Jaecoo | `true` (antes `false`) |
+| `Opportunity.Flag_Vehiculo_Nuevo_FM__c` — BMW (regresión) | `true` (sin cambio) |
+| `Quote.Flag_Vehiculo_Nuevo_FM__c` — Omoda, Jaecoo, BMW | `true` en los 3 (hereda automáticamente) |
+| `Quote.Tax` — Omoda, Jaecoo, BMW | `0` en los 3 |
+| `MusthaveActivity` — Omoda, sin actividad, perfil no administrador | Bloquea correctamente (antes no aplicaba) |
+| `MusthaveActivity` — Jaecoo, mismo escenario | Bloquea correctamente (antes no aplicaba) |
+| `MusthaveActivity` — BMW, mismo escenario (regresión) | Sigue bloqueando igual, sin regresión |
+
+Prueba dirigida ejecutada con una clase `@IsTest` temporal (`B7_1_MusthaveActivityRegressionTest`, `System.runAs`
+con un usuario Standard User creado y revertido dentro del propio contexto de prueba, para evitar la excepción de
+administrador que la regla ya contempla) en modo `--dry-run --test-level RunSpecifiedTests`: **3 de 3 pruebas
+aprobadas, 0 fallidas**. La clase no quedó desplegada ni versionada — se descartó tras confirmar el resultado,
+siguiendo el mismo patrón ya usado en B9-1.
+
+**Controles de seguridad confirmados:** ejecución en modo `checkOnly=true` (Validate Only) — cero datos persistidos;
+código de la clase de prueba sin llamadas HTTP ni `Messaging.sendEmail`; verificación posterior por consulta
+directa confirmó 0 registros residuales con el prefijo de esta prueba.
+
+**Resultado:** `Quote_Record_Page_VN` pasa de `REQUIERE_AJUSTE_TECNICO_CONCRETO` a
+**`RESUELTO_AJUSTE_VEHICULO_NUEVO_OMODA_JAECOO`**. El conteo de pendientes UI baja de 55 a **54** (ver sección 2).
 
 ---
 
 ## Resumen de reclasificación
 
-| Estado | B7-0 (2026-08-06/07) | B7-1 (2026-08-10, con Ventas Nuevas) |
+| Estado | B7-0 (2026-08-06/07) | B7-1 (2026-08-10, con Ventas Nuevas + ajuste ejecutado) |
 |---|---:|---:|
 | `SIN_CAMBIO_REQUIERE_REGRESION` | 10 | 10 (sin cambio) |
 | `RESUELTO_POR_EQUIVALENCIA_VENTAS_NUEVAS` (nuevo) | 0 | **8** |
-| `BLOQUEADO_ASIGNACION_FUNCIONAL` (genuino) | 63 | **55** |
-| `DRIFT_REQUIERE_CONCILIACION` | 1 | 1 (sin cambio; análisis ampliado en sección 3) |
+| `RESUELTO_AJUSTE_VEHICULO_NUEVO_OMODA_JAECOO` (nuevo) | 0 | **1** |
+| `BLOQUEADO_ASIGNACION_FUNCIONAL` (genuino) | 63 | **54** |
+| `DRIFT_REQUIERE_CONCILIACION` | 1 | 1 (sin cambio; `Opportunity_Record_Page_VN`, análisis en sección 3) |
 | `NO_APLICA` | 4 | 4 (sin cambio) |
 | **Total** | **78** | **78** |

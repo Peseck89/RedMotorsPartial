@@ -64,23 +64,41 @@ el mismo nivel de certeza.
 **Actualización (10 de agosto, tarde) — nueva definición de Luis: "Omoda y Jaecoo deben reutilizar la configuración
 equivalente de Ventas Nuevas".** Se aplicó ese criterio a los 63 pendientes, verificando técnicamente qué pantallas
 usa hoy un asesor de "Ventas Nuevas" (los perfiles que ya venden BMW/MINI/etc. nuevos) para cada objeto. Resultado:
-**8 de los 63 quedan resueltos** sin ningún desarrollo adicional; **55 siguen pendientes**, con el motivo real
-identificado (no genérico). Detalle técnico completo en `RESULTADO_B7_1_RECONCILIACION_VENTAS_NUEVAS_20260810.md`.
+**9 de los 63 quedan resueltos**; **54 siguen pendientes**, con el motivo real identificado (no genérico). Detalle
+técnico completo en `RESULTADO_B7_1_RECONCILIACION_VENTAS_NUEVAS_20260810.md`.
 
 | Grupo | Cantidad | Qué significa | Ejemplo concreto |
 |---|---:|---|---|
 | **Resuelto por la nueva definición — sin desarrollo pendiente** | **8** (2 pantallas de Cuenta, 4 de Producto, 1 de Presupuesto, 1 de Orden de Trabajo) | Estas pantallas no distinguen por marca — se asignan solo por el perfil del asesor. En cuanto exista el perfil de Omoda/Jaecoo (que Diego ya está preparando), verán automáticamente las mismas pantallas que ya usa BMW, sin que nuestro equipo tenga que tocar nada más | La pantalla de Cuenta Empresarial que ya usa un asesor BMW es la misma que verá un asesor Omoda en cuanto tenga su perfil asignado |
+| **`Quote_Record_Page_VN` — resuelta con un ajuste ejecutado hoy** | **1** página de Presupuesto | Ver explicación completa abajo | La pestaña "Agregar extras" del Presupuesto ya se ve igual para Omoda/Jaecoo que para BMW |
 | Requiere decisión de asignación (Taller/Postventa) | 14 pantallas | Son para el flujo de taller/mecánicos, no de venta — un proceso distinto, sin definir todavía si Omoda/Jaecoo tendrán taller propio | Pantalla de Orden de Trabajo para mecánicos |
 | Requiere decisión de asignación (otros segmentos) | 5 pantallas | Son de motos, mostrador u otros segmentos que no corresponden al patrón de venta de autos nuevos que Omoda/Jaecoo replican | Pantalla de Oportunidad de motocicletas |
 | Sin ningún uso demostrado hoy (probablemente no se necesitan, sin descartar) | 32 elementos | Ningún asesor activo las usa actualmente, ni para Ventas Nuevas ni para ningún otro proceso — son variantes antiguas sin actividad | Páginas numeradas de respaldo sin asignar a nadie |
 | Requiere definición de negocio (plantilla/proceso propio) | 3 botones de acción rápida | Necesitan una plantilla de correo o presupuesto propia de PEKING que negocio debe aprobar — no se resuelve solo con el perfil | "Enviar Correo de Presupuesto" necesita remitente y plantilla propios de PEKING |
-| `Quote_Record_Page_VN` — ya revisada, requiere un ajuste técnico puntual (no de esta página) | 1 página | La mayor parte de la página ya funciona igual para Omoda/Jaecoo que para BMW. Pero dos partes específicas (la pestaña "Agregar extras" y la sincronización de vehículo nuevo) no aparecen para Omoda/Jaecoo porque dependen de un campo que nunca se actualizó para incluir estas marcas — el mismo campo que ya se había detectado como problema en una regla de validación anterior (`MusthaveActivity`, B9-1) | Un asesor Omoda no ve el botón "Agregar extras" que sí ve un asesor BMW en la misma pantalla |
 | No aplicable (categoría aparte, no cuenta dentro de los 63) | 4 páginas | Exclusivas del proceso de vehículos usados; Luis ya confirmó que PEKING no vende usados en esta etapa | Páginas de "Inventario de Usados" |
 
-**Nota de conteo:** los 63 se reparten así: 8 resueltos + 14 Taller/Postventa + 5 otros segmentos + 32 sin uso
-demostrado + 3 botones + 1 página `Quote_Record_Page_VN` = 63. Las 4 páginas "No aplicable" y la página
+**Nota de conteo:** los 63 se reparten así: 8 resueltos + 1 `Quote_Record_Page_VN` (resuelta) + 14 Taller/Postventa
++ 5 otros segmentos + 32 sin uso demostrado + 3 botones = 63. Las 4 páginas "No aplicable" y la página
 `Opportunity_Record_Page_VN` de abajo **no forman parte de los 63** — son categorías separadas desde la auditoría
 original (`NO_APLICA` y `DRIFT_REQUIERE_CONCILIACION`, cada una su propio grupo dentro de los 78 totales).
+
+**`Quote_Record_Page_VN` — qué se hizo y qué cambió:**
+
+- **Antes:** la pantalla de Presupuesto ya reconocía correctamente como "vehículo nuevo" a las marcas existentes
+  (BMW, MINI, Motorrad, Polaris, Kawasaki, Indian), pero no a Omoda ni Jaecoo — aunque ambas también venden
+  vehículos nuevos. Por eso dos partes de esa pantalla (la pestaña "Agregar extras" y la sincronización interna de
+  vehículo nuevo) no se mostraban para Omoda/Jaecoo.
+- **Cambio:** se incorporaron Omoda y Jaecoo a esa misma identificación de "vehículo nuevo", agregándolas al
+  listado de marcas que ya tenían las demás. No se tocó la pantalla en sí, ni ninguna otra configuración — solo se
+  amplió el listado de marcas de ese único indicador.
+- **Resultado:** las funciones de Ventas Nuevas que dependen de ese indicador ya quedan disponibles también para
+  Omoda y Jaecoo, igual que para BMW/MINI. Se confirmó con datos de prueba reales: el indicador ya marca "sí" para
+  Omoda y Jaecoo, sin cambiar el resultado para las marcas existentes (regresión verificada). También se confirmó,
+  con una prueba dirigida y sin persistir datos, que un control de calidad relacionado (exigir una actividad
+  registrada antes de avanzar la venta) ahora también aplica correctamente a Omoda/Jaecoo, igual que a BMW.
+- **Efecto adicional a tener en cuenta:** ese mismo indicador también decide si un Presupuesto lleva un impuesto
+  adicional del 13% o no. Con este cambio, los Presupuestos de Omoda/Jaecoo dejan de llevar ese impuesto adicional,
+  igual que ya ocurre con BMW/MINI — es el mismo trato, no un descuento especial inventado para PEKING.
 
 **Caso especial — `Opportunity_Record_Page_VN` (no es uno de los 63; es su propia categoría desde la auditoría
 original):** se analizó con el nuevo criterio. Para agregar Omoda/Jaecoo con la misma configuración que ya usa BMW
