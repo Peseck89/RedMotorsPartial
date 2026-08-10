@@ -48,7 +48,7 @@ en Salesforce.
 | 7 | Página `Opportunity_Record_Page1` | Oportunidad | Activación general (todas las marcas, sin distinción) | Ya no depende del bloqueo de Record Type (se resolvió); falta la confirmación visual de carga sin errores — ver lista de capturas |
 | 8 | Página `Quote_Record_Page` | Presupuesto | Activación general | Se creó un Presupuesto Omoda y uno Jaecoo reales, ligados a sus Oportunidades; el sistema confirmó que el registro carga sus datos sin error (6 secciones: Datos del presupuesto, Información de cliente, Totales, Preparado para, Dirección, Información del sistema). Falta la confirmación visual — ver lista de capturas |
 | 9 | Página `Quote_Record_Page2` | Presupuesto | Activación general | Igual que el anterior — falta confirmación visual |
-| 10 | Botón "Duplicar Partidas de Presupuesto" | Presupuesto | Disponible para todas las marcas, según el análisis de la pantalla | **Hallazgo nuevo:** al consultar directamente qué acciones están disponibles en el Presupuesto Omoda real, este botón **no aparece** en la lista que el sistema devuelve. El análisis anterior (basado en leer la configuración de la pantalla) decía que sí estaba disponible para cualquier marca. Esta diferencia debe confirmarse abriendo la pantalla en el navegador antes de dar el punto por cerrado |
+| 10 | Botón "Duplicar Partidas de Presupuesto" | Presupuesto | Disponible para todas las marcas, según el análisis de la pantalla | **Diagnóstico cerrado.** Se confirmó que este botón está agregado solo a una pantalla que ningún asesor de ventas activo usa hoy — la pantalla real que usa cualquier venta de auto nuevo (BMW incluido) tampoco lo tiene. No es una diferencia de PEKING: BMW y Omoda/Jaecoo se comportan exactamente igual. No requiere corrección ni decisión de negocio |
 
 **Lo que el desbloqueo permitió probar, y lo que todavía falta:** ya no existe el bloqueo de fondo (crear el
 registro). Lo que queda pendiente para los elementos marcados "No probado" es exclusivamente una cuestión de
@@ -61,21 +61,28 @@ Presupuesto más 1 botón, ya asignados a Omoda y Jaecoo desde antes de este pro
 administrador tiene acceso; los demás requieren un perfil de negocio distinto al administrador para confirmarse con
 el mismo nivel de certeza.
 
-**Los 63 elementos restantes — clasificados para negocio (no se dice "63 variantes nuevas", se agrupan):**
+**Actualización (10 de agosto, tarde) — nueva definición de Luis: "Omoda y Jaecoo deben reutilizar la configuración
+equivalente de Ventas Nuevas".** Se aplicó ese criterio a los 63 pendientes, verificando técnicamente qué pantallas
+usa hoy un asesor de "Ventas Nuevas" (los perfiles que ya venden BMW/MINI/etc. nuevos) para cada objeto. Resultado:
+**8 de los 63 quedan resueltos** sin ningún desarrollo adicional; **55 siguen pendientes**, con el motivo real
+identificado (no genérico). Detalle técnico completo en `RESULTADO_B7_1_RECONCILIACION_VENTAS_NUEVAS_20260810.md`.
 
 | Grupo | Cantidad | Qué significa | Ejemplo concreto |
 |---|---:|---|---|
-| Reutilizar probable | 0 | Ninguno cumple hoy los cuatro requisitos a la vez (asignación clara a PEKING, sin conflictos de versión, sin depender de perfiles pendientes, y que se pueda aislar para prueba) | — |
-| Requiere decisión de asignación | 40 formularios (Layouts) | Existen varias versiones legacy (para BMW, MINI, motos, etc.) y hace falta que negocio decida cuál usará Omoda/Jaecoo — no se puede adivinar | Ej.: decidir si Omoda usa el mismo formulario que MINI o necesita uno propio |
-| Requiere decisión de asignación | 19 páginas (FlexiPages) | Igual que arriba, pero para páginas completas de registro | Ej.: qué página ve un asesor de Omoda al abrir un Presupuesto |
-| Requiere definición de negocio | 4 botones de acción rápida | El proceso de negocio que activan (enviar correo de presupuesto, cambiar moneda, importar plantilla) aún no está definido para Omoda/Jaecoo | Ej.: "Enviar Correo de Presupuesto" necesita una plantilla y remitente propios de PEKING que negocio debe aprobar |
-| No aplicable | 4 páginas | Son exclusivas del proceso de vehículos usados; Luis ya confirmó que PEKING no vende usados en esta etapa | Páginas de "Inventario de Usados" |
-| Requiere conciliación técnica previa | 1 página (`Opportunity_Record_Page_VN`) | Esta página tiene una diferencia entre lo que hay en el ambiente de pruebas y lo que está documentado (posiblemente porque Diego ya empezó a renombrar perfiles) — hay que confirmar con Diego antes de tocarla | Los nombres de los perfiles que pueden ver ciertas pestañas cambiaron de "Asesor de Ventas MINI y Nuevos V2" a "New Asesor Ventas" |
+| **Resuelto por la nueva definición — sin desarrollo pendiente** | **8** (2 pantallas de Cuenta, 4 de Producto, 1 de Presupuesto, 1 de Orden de Trabajo) | Estas pantallas no distinguen por marca — se asignan solo por el perfil del asesor. En cuanto exista el perfil de Omoda/Jaecoo (que Diego ya está preparando), verán automáticamente las mismas pantallas que ya usa BMW, sin que nuestro equipo tenga que tocar nada más | La pantalla de Cuenta Empresarial que ya usa un asesor BMW es la misma que verá un asesor Omoda en cuanto tenga su perfil asignado |
+| Requiere decisión de asignación (Taller/Postventa) | 14 pantallas | Son para el flujo de taller/mecánicos, no de venta — un proceso distinto, sin definir todavía si Omoda/Jaecoo tendrán taller propio | Pantalla de Orden de Trabajo para mecánicos |
+| Requiere decisión de asignación (otros segmentos) | 5 pantallas | Son de motos, mostrador u otros segmentos que no corresponden al patrón de venta de autos nuevos que Omoda/Jaecoo replican | Pantalla de Oportunidad de motocicletas |
+| Sin ningún uso demostrado hoy (probablemente no se necesitan, sin descartar) | 32 elementos | Ningún asesor activo las usa actualmente, ni para Ventas Nuevas ni para ningún otro proceso — son variantes antiguas sin actividad | Páginas numeradas de respaldo sin asignar a nadie |
+| Requiere definición de negocio (plantilla/proceso propio) | 3 botones de acción rápida | Necesitan una plantilla de correo o presupuesto propia de PEKING que negocio debe aprobar — no se resuelve solo con el perfil | "Enviar Correo de Presupuesto" necesita remitente y plantilla propios de PEKING |
+| Requiere conciliación técnica previa | 1 página (`Opportunity_Record_Page_VN`) | Diferencia entre el ambiente de pruebas y lo documentado — hay que confirmar con Diego antes de tocarla | Nombres de perfiles cambiados de "Asesor de Ventas MINI y Nuevos V2" a "New Asesor Ventas" |
+| No aplicable | 4 páginas | Exclusivas del proceso de vehículos usados; Luis ya confirmó que PEKING no vende usados en esta etapa | Páginas de "Inventario de Usados" |
 
-**Caso especial — `Opportunity_Record_Page_VN`:** el desbloqueo de acceso no resuelve esta pregunta. Luis confirmó
-que él tampoco sabe si el cambio de nombres de perfiles corresponde al trabajo paralelo de Diego. **Queda
-`PENDIENTE_CONFIRMACION_DIEGO_RENOMBRE_PERFILES`** — no se modificó ni se revirtió nada por suposición, y este
-punto no detiene el resto del trabajo.
+**Caso especial — `Opportunity_Record_Page_VN`:** se analizó con el nuevo criterio. Para agregar Omoda/Jaecoo con
+la misma configuración que ya usa BMW en esta página, hace falta escribir el nombre exacto del perfil de destino —
+y ese es justo el nombre que está en proceso de cambio (mismo hallazgo de renombre). Luis confirmó que él tampoco
+sabe si ese cambio corresponde al trabajo paralelo de Diego. **Queda `PENDIENTE_CONFIRMACION_DIEGO_RENOMBRE_PERFILES`**
+— no se modificó ni se revirtió nada por suposición, y este punto no detuvo el resto del trabajo (los 8 elementos
+resueltos arriba no dependen de esto).
 
 ---
 
@@ -117,6 +124,17 @@ cambie el resultado.
 aprobación de centro de costo (uno para Presupuesto, uno para Orden de Trabajo) están escritos de forma neutral —
 no distinguen por marca ni tipo de vehículo, así que Omoda y Jaecoo ya quedan cubiertos sin cambios.
 
+**Actualización (10 de agosto, tarde) — definición confirmada de Luis:** los 8 procesos de descuento de Omoda y
+Jaecoo deben usar exactamente la misma jerarquía de aprobadores (jefe, gerente, director) que Diego ya está
+armando para toda la empresa — no una jerarquía especial para PEKING. Esto cierra la duda funcional: ya no falta
+decidir "qué jerarquía usar", solo falta que Diego termine de construirla en el ambiente de pruebas.
+
+| Aspecto | Estado |
+|---|---|
+| Qué jerarquía deben usar los 8 procesos de descuento | **Ya definido** — la misma de Diego, sin desarrollo especial para PEKING |
+| Trabajo técnico adicional necesario para PEKING | **Ninguno** — los 8 procesos ya son neutrales a la marca |
+| Prueba final de envío/aprobación real | Pendiente únicamente de que Diego termine de construir esa jerarquía en el ambiente de pruebas |
+
 **Qué se probó con datos de prueba (placeholder), en una ronda anterior el mismo día:**
 - **Centro de costo:** se creó un centro de costo de prueba (identificado claramente como "Test"), modelado igual
   que los reales, y un presupuesto y una orden de trabajo de prueba enlazados a él. El sistema aceptó correctamente
@@ -126,11 +144,11 @@ no distinguen por marca ni tipo de vehículo, así que Omoda y Jaecoo ya quedan 
   descubrió que el sistema **recalcula automáticamente** quién debe aprobar (jefe, gerente, director) según la
   estructura de mando del vendedor dueño de la venta — sin importar qué se intente forzar manualmente. Se
   comprobó que este comportamiento es igual para Omoda que para BMW, así que **no es un problema específico de
-  PEKING**: es que la estructura de mando (organigrama de aprobadores) todavía no está armada en el ambiente de
-  pruebas. Eso es justo el trabajo de permisos/jerarquía que Diego ya tiene asignado — no se fabricó una jerarquía
-  falsa para evitar este hallazgo.
+  PEKING**: es exactamente la estructura de mando que Diego está armando. No se fabricó una jerarquía falsa para
+  evitar este hallazgo.
 - **Garantía:** no se tocó — está fuera de este lote a propósito, porque todavía falta que negocio defina la regla
-  y quién aprueba las garantías de Omoda/Jaecoo. No se decidió eso por nuestra cuenta.
+  y quién aprueba las garantías de Omoda/Jaecoo. No se decidió eso por nuestra cuenta. No llegó ninguna respuesta
+  nueva sobre Garantía en esta ronda.
 
 No se repitió esta prueba en la ronda de hoy después del desbloqueo porque no hay ningún dato nuevo (Omoda ya
 había sido probado con el mecanismo anterior de PEKING vía BMW) que cambie el resultado.
