@@ -74,15 +74,21 @@ identificado (no genérico). Detalle técnico completo en `RESULTADO_B7_1_RECONC
 | Requiere decisión de asignación (otros segmentos) | 5 pantallas | Son de motos, mostrador u otros segmentos que no corresponden al patrón de venta de autos nuevos que Omoda/Jaecoo replican | Pantalla de Oportunidad de motocicletas |
 | Sin ningún uso demostrado hoy (probablemente no se necesitan, sin descartar) | 32 elementos | Ningún asesor activo las usa actualmente, ni para Ventas Nuevas ni para ningún otro proceso — son variantes antiguas sin actividad | Páginas numeradas de respaldo sin asignar a nadie |
 | Requiere definición de negocio (plantilla/proceso propio) | 3 botones de acción rápida | Necesitan una plantilla de correo o presupuesto propia de PEKING que negocio debe aprobar — no se resuelve solo con el perfil | "Enviar Correo de Presupuesto" necesita remitente y plantilla propios de PEKING |
-| Requiere conciliación técnica previa | 1 página (`Opportunity_Record_Page_VN`) | Diferencia entre el ambiente de pruebas y lo documentado — hay que confirmar con Diego antes de tocarla | Nombres de perfiles cambiados de "Asesor de Ventas MINI y Nuevos V2" a "New Asesor Ventas" |
-| No aplicable | 4 páginas | Exclusivas del proceso de vehículos usados; Luis ya confirmó que PEKING no vende usados en esta etapa | Páginas de "Inventario de Usados" |
+| Pantalla con el mismo patrón de riesgo que la página de Oportunidad con drift (`Quote_Record_Page_VN`), sin auditar en este lote | 1 página | Tiene 316 asignaciones por Record Type "Nuevos", igual de sensible que la página de Oportunidad de abajo, pero no se revisó si también tiene una diferencia entre Partial y lo documentado — queda para un lote posterior, sin tocar | Página de Presupuesto equivalente a `Opportunity_Record_Page_VN`, pero del lado de Quote |
+| No aplicable (categoría aparte, no cuenta dentro de los 63) | 4 páginas | Exclusivas del proceso de vehículos usados; Luis ya confirmó que PEKING no vende usados en esta etapa | Páginas de "Inventario de Usados" |
 
-**Caso especial — `Opportunity_Record_Page_VN`:** se analizó con el nuevo criterio. Para agregar Omoda/Jaecoo con
-la misma configuración que ya usa BMW en esta página, hace falta escribir el nombre exacto del perfil de destino —
-y ese es justo el nombre que está en proceso de cambio (mismo hallazgo de renombre). Luis confirmó que él tampoco
-sabe si ese cambio corresponde al trabajo paralelo de Diego. **Queda `PENDIENTE_CONFIRMACION_DIEGO_RENOMBRE_PERFILES`**
-— no se modificó ni se revirtió nada por suposición, y este punto no detuvo el resto del trabajo (los 8 elementos
-resueltos arriba no dependen de esto).
+**Nota de conteo:** los 63 se reparten así: 8 resueltos + 14 Taller/Postventa + 5 otros segmentos + 32 sin uso
+demostrado + 3 botones + 1 página `Quote_Record_Page_VN` = 63. Las 4 páginas "No aplicable" y la página
+`Opportunity_Record_Page_VN` de abajo **no forman parte de los 63** — son categorías separadas desde la auditoría
+original (`NO_APLICA` y `DRIFT_REQUIERE_CONCILIACION`, cada una su propio grupo dentro de los 78 totales).
+
+**Caso especial — `Opportunity_Record_Page_VN` (no es uno de los 63; es su propia categoría desde la auditoría
+original):** se analizó con el nuevo criterio. Para agregar Omoda/Jaecoo con la misma configuración que ya usa BMW
+en esta página, hace falta escribir el nombre exacto del perfil de destino — y ese es justo el nombre que está en
+proceso de cambio (mismo hallazgo de renombre). Luis confirmó que él tampoco sabe si ese cambio corresponde al
+trabajo paralelo de Diego. **Queda `PENDIENTE_CONFIRMACION_DIEGO_RENOMBRE_PERFILES`** — no se modificó ni se
+revirtió nada por suposición, y este punto no detuvo el resto del trabajo (los 8 elementos resueltos arriba no
+dependen de esto).
 
 ---
 
