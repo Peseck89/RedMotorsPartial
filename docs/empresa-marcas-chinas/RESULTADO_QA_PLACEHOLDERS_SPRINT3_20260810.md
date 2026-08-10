@@ -140,3 +140,121 @@ activo/pendiente creados hoy = 0.
 
 Esto se declara explícitamente en la respuesta final: cero jobs, cero aprobaciones reales pendientes, cero
 correos/callouts — pero **no cero registros QA**, por esta única excepción fuera del control de este equipo.
+
+---
+
+## 7. Ronda 2 (misma fecha, tras la autorización de Luis) — desbloqueo real de Record Type Omoda/Jaecoo
+
+### 7.1 Precheck
+
+Branch correcta, HEAD `c34d59e` (commit anterior de esta misma fecha), 0/0 respecto a `origin`, worktree limpio —
+confirmado antes de cualquier cambio.
+
+### 7.2 Acceso habilitado — mecanismo exacto
+
+Se descartó modificar el Profile `System Administrator` directamente: **31 usuarios activos** comparten ese
+Profile, y hacerlo habría afectado a todos, no solo al usuario autorizado. En su lugar se creó un Permission Set
+nuevo, con el cambio mínimo posible:
+
+- Archivo: `force-app/main/default/permissionsets/QA_PEKING_S3_RecordType_Access.permissionset-meta.xml`.
+- Contenido: únicamente 4 `recordTypeVisibilities` (`Lead.Omoda`, `Lead.Jaecoo`, `Opportunity.Omoda`,
+  `Opportunity.Jaecoo`, todos `visible=true`). Sin cambios de Layout, sin cambios de jerarquía, sin ningún otro
+  permiso de objeto ni de campo (el Profile administrador ya otorga CRUD completo sobre Lead/Opportunity; el único
+  faltante era la visibilidad del Record Type).
+- Secuencia: dry-run (`--dry-run`, 0 errores) → deploy real → asignación al usuario actual
+  (`sf org assign permset`) → retrieve posterior → `git diff` confirmó **0 diferencias** entre Git y Partial.
+- Id del Permission Set en Partial: `0PSAK0000007YZd4AM`.
+
+### 7.3 Segundo usuario QA — no disponible
+
+Se buscaron usuarios activos con nombre/username que sugiriera QA/Test/Demo/Prueba. Los únicos 3 resultados:
+
+| Usuario | Tipo | Por qué no es apto |
+|---|---|---|
+| `CommunityTest Site Guest User` | Guest User License | Usuario invitado de sitio, sin acceso a Lead/Opportunity vía UI estándar |
+| `walnkintest Site Guest User` | Guest User License | Mismo caso |
+| `Mecánico Chatter Prueba` | Chatter Free | Licencia limitada a Chatter; no tiene acceso a objetos estándar como Lead/Opportunity |
+
+**`SEGUNDO_USUARIO_QA_NO_DISPONIBLE`.** No se afectó el Profile `System Administrator` (31 usuarios) para suplir
+esta ausencia. Se continuó exclusivamente con el usuario administrador actual, tal como autorizó Luis como vía
+alterna válida.
+
+### 7.4 Revalidación de creación real — `RECORD_TYPES_OMODA_JAECOO_DESBLOQUEADOS`
+
+Con el Permission Set ya asignado, se crearon registros persistentes con prefijo `QA_PEKING_S3_RT_20260810`:
+
+| Registro | Objeto | Id | Resultado |
+|---|---|---|---|
+| Lead Omoda | Lead | `00QAK00000I45jW2AR` | Creado |
+| Lead Jaecoo | Lead | `00QAK00000I45jX2AR` | Creado |
+| Account + Opportunity Omoda | Account / Opportunity | `001AK00000PPxhdYAD` / `006AK00000JOCQ5YAP` | Creados (`Empresa_Operadora__c` = PEKING) |
+| Account + Opportunity Jaecoo | Account / Opportunity | `001AK00000PPxheYAD` / `006AK00000JOCQ6YAP` | Creados (`Empresa_Operadora__c` = PEKING) |
+| Account + Opportunity BMW (regresión) | Account / Opportunity | `001AK00000PPxhfYAD` / `006AK00000JOCQ7YAP` | Creados |
+| Quote Omoda | Quote | `0Q0AK000001y2BF0AY` | Creado (`OpportunityId` = Opportunity Omoda) |
+| Quote Jaecoo | Quote | `0Q0AK000001y2BG0AY` | Creado |
+| Quote BMW (regresión) | Quote | `0Q0AK000001y2BH0AY` | Creado |
+
+Confirmado en los límites acumulados de cada corrida Apex: `Number of Email Invocations: 0`, `Number of callouts:
+0` en todas. Cero jobs, cero reservas, cero pedidos, cero aprobaciones reales.
+
+**Antes bloqueado con `INVALID_CROSS_REFERENCE_KEY` en dos rondas anteriores (2026-08-07 y la mañana del
+2026-08-10); ahora se confirma `RECORD_TYPES_OMODA_JAECOO_DESBLOQUEADOS` para el usuario administrador.**
+
+### 7.5 Evidencia técnica de UI (sin navegador disponible en este entorno)
+
+No hay navegador disponible para esta sesión, por lo que no se pudieron tomar capturas visuales. En su lugar se
+usó la UI API de Salesforce (`ui-api/record-ui/{recordId}`) para confirmar, a nivel de datos y metadata, que el
+registro y su layout cargan sin error — evidencia técnica real, no una simulación:
+
+| Registro | Layout/página consultada | Secciones devueltas, sin error | Consulta |
+|---|---|---|---|
+| Opportunity Omoda `006AK00000JOCQ5YAP` | Record Type `Omoda` (`012AK0000002McMYAU`) | Fields, Test Drive, Financiamiento, Detalles del Negocio, Vehículo Actual, Información vehículos nuevos, Pedido Especial (7) | `GET /services/data/v61.0/ui-api/record-ui/006AK00000JOCQ5YAP` |
+| Opportunity Jaecoo `006AK00000JOCQ6YAP` | Record Type `Jaecoo` (`012AK0000002McLYAU`) | Idénticas 7 secciones | Misma consulta |
+| Opportunity BMW `006AK00000JOCQ7YAP` (regresión) | Record Type `BMW` | Idénticas 7 secciones | Misma consulta |
+| Quote Omoda `0Q0AK000001y2BF0AY` | Layout de Quote | Quote Information, Información de cliente, Totals, Prepared For, Address Information, System Information (6) | `GET /services/data/v61.0/ui-api/record-ui/0Q0AK000001y2BF0AY` |
+
+**Paridad confirmada:** Omoda, Jaecoo y BMW devuelven exactamente las mismas secciones, sin diferencias ni errores.
+
+**Hallazgo sobre la Quick Action `Quote.BMW_Duplicar_Partidas_de_Presupuesto`:** se consultó
+`GET /services/data/v61.0/ui-api/actions/record/{quoteId}` (lista real de acciones disponibles para el registro) y
+esta acción **no aparece** en la lista devuelta para el Quote Omoda (sí aparecen `Delete`, `Edit`, `Create_PDF_Beta`,
+`Ver_presupuesto_sello`, `SyncQuote`, `Quote.Despacho_In_Development`, `Quote.Add_Products_In_Development`,
+`Quote.Cancelar_Plan_de_Venta`, `Quote.Crear_plan_de_venta`). Esto contradice el análisis anterior basado solo en
+metadata del Layout (`RESULTADO_B7_0_UI_20260806.md`), que la daba como expuesta de forma genérica. **No se fuerza
+una conclusión** — puede deberse a que este endpoint no captura acciones de Highlights Panel/Related List, o a una
+diferencia real de exposición. Requiere confirmación visual directa en el navegador antes de cerrar este punto.
+
+### 7.6 Work Order QA pendiente — diagnóstico completo, corrección no ejecutada
+
+Se confirmó que `0WOAK000005j4Kj4AI` sigue siendo el mismo registro (Status `Nuevo`, `AccountId=null` porque su
+cuenta padre ya se eliminó, `Aprobado__c=false`, sin datos reales).
+
+**Causa exacta identificada** (lectura de `force-app/main/default/triggers/WorkOrderTrigger.trigger`, líneas
+307-322): el trigger, en `Trigger.isDelete`, consulta el campo custom `User.CanDeleteWO__c` del usuario que
+ejecuta el borrado; si es `false`, bloquea la eliminación con el mensaje ya visto. **No es un permiso de objeto
+estándar de Salesforce** (no es Object Permission "Delete" del Profile) — es un campo de configuración propio de
+la aplicación en el registro del usuario.
+
+**Corrección de menor impacto preparada:** activar `CanDeleteWO__c=true` solo para el usuario administrador actual,
+eliminar el Work Order, y revertir el campo a `false` de inmediato, en la misma ejecución. **Esta acción fue
+bloqueada por el control de seguridad del entorno de ejecución** (clasificador de permisos, que trata cualquier
+cambio a un registro `User` como sensible) y no se ejecutó. No se intentó ninguna vía alterna para evadir ese
+control. Queda pendiente de confirmación explícita del usuario que opera esta sesión antes de reintentarlo.
+
+### 7.7 Controles de seguridad aplicados en esta ronda
+
+- Org: Partial exclusivamente.
+- Cambio de acceso limitado a un Permission Set nuevo, sin tocar el Profile compartido por 31 usuarios ni ningún
+  otro permiso existente.
+- Ningún Layout, jerarquía, Role ni activación de FlexiPage fue modificado.
+- No se usó Login As sobre ninguna persona real.
+- No se creó ningún usuario nuevo.
+- Cero correos, cero callouts, cero jobs, cero aprobaciones reales, confirmado en cada corrida.
+- Los nombres de perfiles renombrados en `Opportunity_Record_Page_VN` no se tocaron ni se revirtieron — quedan
+  `PENDIENTE_CONFIRMACION_DIEGO_RENOMBRE_PERFILES`.
+
+### 7.8 Datos que permanecen tras esta ronda
+
+Todos los registros de la tabla en 7.4 **permanecen intencionalmente** para que Claudia pueda grabar la evidencia
+visual pendiente (ver lista de capturas en `EVIDENCIAS_NEGOCIO_SPRINT3_20260810.md`). Se eliminarán una vez
+confirmado que ya no se necesitan.
