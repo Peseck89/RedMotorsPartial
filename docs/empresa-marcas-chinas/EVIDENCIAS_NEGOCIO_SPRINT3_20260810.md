@@ -174,15 +174,15 @@ técnico completo.
 | Oportunidad de prueba BMW con referencia a PEKING | Probar la conexión Oportunidad↔Empresa PEKING sin el permiso bloqueado | Eliminado |
 | Centro de costo de prueba | Probar la regla de centro de costo obligatorio y la entrada al proceso de aprobación | Eliminado |
 | Presupuesto (Quote) de prueba | Probar la regla de centro de costo obligatorio, casos positivo y negativo | Eliminado |
-| Orden de Trabajo de prueba `0WOAK000005j4Kj4AI` | Probar la misma regla en una Orden de Trabajo | **Sigue existiendo.** El sistema bloqueó su eliminación por un permiso específico (ver abajo). El intento de habilitar ese permiso temporalmente quedó pendiente de tu confirmación explícita, ver Resultado Final |
+| Orden de Trabajo de prueba `0WOAK000005j4Kj4AI` | Probar la misma regla en una Orden de Trabajo | **Eliminado (10 de agosto, con autorización explícita de Luis).** Se activó temporalmente el permiso específico que lo bloqueaba, se eliminó el registro, se confirmó por consulta que ya no existe, y el permiso se devolvió exactamente a su valor original |
 | Bodega de prueba "Bodega1Peking" | Confirmar que una bodega PEKING con código propio no choca con las de Bavarian/Otobai | Eliminado |
 
-**Diagnóstico del Work Order que no se pudo eliminar:** no es un permiso de objeto estándar de Salesforce — es un
-campo de configuración propio de la aplicación (`CanDeleteWO__c`, en el registro del usuario) que el sistema revisa
-antes de permitir borrar cualquier Orden de Trabajo. Activarlo temporalmente para el usuario administrador,
-eliminar el registro y desactivarlo de inmediato es el cambio de menor impacto posible — pero esa acción quedó
-bloqueada por un control de seguridad del entorno de trabajo (que trata cualquier cambio a un registro de usuario
-como sensible) y no se completó todavía. Ver punto 8 del Resultado Final.
+**Diagnóstico y cierre del Work Order:** no era un permiso de objeto estándar de Salesforce — era un campo de
+configuración propio de la aplicación (`CanDeleteWO__c`, en el registro del usuario) que el sistema revisa antes de
+permitir borrar cualquier Orden de Trabajo. Se activó temporalmente solo para el usuario administrador, se eliminó
+el registro, se confirmó por consulta directa que ya no existe, y el campo se restauró exactamente a su valor
+original (`false`). No se modificó ningún otro campo, usuario ni configuración. Detalle completo en
+`RESULTADO_QA_PLACEHOLDERS_SPRINT3_20260810.md` sección 7.6.
 
 ### Ronda 2 (10 de agosto, después del desbloqueo) — quedan temporalmente para que Claudia grabe evidencia
 

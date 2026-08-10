@@ -111,13 +111,15 @@ antes solo se había probado dentro de `@IsTest` con reversión automática.
 
 ## 6. Limpieza
 
-Se intentó eliminar, en orden hijo→padre, los 6 registros de la tabla de la sección 2. **5 de 6 se eliminaron
-correctamente.** El Work Order (`0WOAK000005j4Kj4AI`) **no pudo eliminarse**: el sistema devolvió el error "El
-usuario no cuenta con los permisos para eliminar órdenes de trabajo" — un `WorkOrderTrigger` bloquea la eliminación
-de cualquier Work Order para este perfil, de forma deliberada (probablemente para evitar huérfanos que afecten la
-integración con Softland). No es un permiso que este equipo deba ni pueda ajustar dentro de este lote (equivaldría
-a tocar una regla de negocio de integridad de datos, fuera del alcance autorizado), y no se intentó ninguna vía
-alterna para forzarlo.
+**(Estado original de este intento, en el momento de esta ronda; ver actualización posterior en la sección 7.6 —
+el Work Order SÍ fue eliminado más tarde el mismo día, con autorización explícita de Luis).** Se intentó eliminar,
+en orden hijo→padre, los 6 registros de la tabla de la sección 2. **5 de 6 se eliminaron correctamente en este
+momento.** El Work Order (`0WOAK000005j4Kj4AI`) **no pudo eliminarse en este intento**: el sistema devolvió el
+error "El usuario no cuenta con los permisos para eliminar órdenes de trabajo" — un `WorkOrderTrigger` bloquea la
+eliminación de cualquier Work Order para este perfil, de forma deliberada (probablemente para evitar huérfanos que
+afecten la integración con Softland). No era un permiso que este equipo pudiera ajustar sin autorización explícita
+(equivalía a tocar una regla de negocio de integridad de datos), y no se intentó ninguna vía alterna para forzarlo
+en ese momento.
 
 | Registro | Resultado de la eliminación |
 |---|---|
@@ -126,20 +128,24 @@ alterna para forzarlo.
 | Account `001AK00000PPdMfYAL` | Eliminado |
 | `CentroCosto__c` `a2cAK00000VUwUeYAL` | Eliminado |
 | `Bodega__c` `a2bAK00000014cfYAA` (Bodega1Peking) | Eliminado |
-| WorkOrder `0WOAK000005j4Kj4AI` | **No se pudo eliminar** — bloqueado por regla de permisos del propio sistema, no por elección de este equipo |
+| WorkOrder `0WOAK000005j4Kj4AI` | **No se pudo eliminar en este intento** — bloqueado por regla de permisos del propio sistema. **Eliminado posteriormente el mismo día, ver sección 7.6** |
 
 Verificación posterior (`SELECT COUNT()`): Accounts con prefijo QA = 0, Opportunities con prefijo QA = 0, Quotes con
 prefijo QA = 0, `CentroCosto__c` con prefijo QA = 0, `Bodega__c` "Bodega1Peking" = 0, `AsyncApexJob` en estado
 activo/pendiente creados hoy = 0.
 
-**Registro que queda temporalmente, con motivo:**
-
-| Id | Motivo |
-|---|---|
-| WorkOrder `0WOAK000005j4Kj4AI` | No se pudo eliminar por una regla de permisos del sistema que bloquea la eliminación de Work Orders para este perfil. Es un registro huérfano (su Account y su Opportunity padre ya fueron eliminados), sin datos sensibles, sin monto real, sin aprobación pendiente (`Aprobado__c=false`, sin envío a `Approval.process` persistido), y sin ninguna relación con Softland ni facturación real. Queda identificable por su `Empresa_Operadora__c`/`BMW_CentroDeCosto__c` ya sin referencia (el Centro de Costo fue eliminado) y por haberse creado en esta fecha. Requiere que alguien con el permiso de eliminación de Work Orders (o Diego, si es un ajuste de permisos) lo elimine, o quedar documentado como excepción conocida. |
+**Actualización (2026-08-10, misma fecha, ronda 3) — `WorkOrder` eliminado:** Luis autorizó expresamente eliminar
+este registro y, si el impedimento era de permiso, agregar el mínimo necesario. Se diagnosticó la causa exacta
+(campo `User.CanDeleteWO__c`, ver sección 7.6) y se ejecutó el procedimiento de menor impacto: se reconfirmó el
+valor inicial (`CanDeleteWO__c = false` para el usuario administrador), se reconfirmó que el Work Order seguía
+huérfano y sin dependencias (`Status = Nuevo`, `AccountId = null`, `Aprobado__c = false`, 0 `ProcessInstance`, 0
+`WorkOrderLineItem`), se activó `CanDeleteWO__c = true` únicamente para ese usuario, se eliminó exclusivamente
+`0WOAK000005j4Kj4AI`, se confirmó por query que ya no existe (`0` resultados), y se restauró `CanDeleteWO__c`
+exactamente a su valor original (`false`). Ningún otro campo del usuario ni ningún otro registro fue modificado.
+Detalle completo en la sección 7.6 (actualizada) más abajo.
 
 Esto se declara explícitamente en la respuesta final: cero jobs, cero aprobaciones reales pendientes, cero
-correos/callouts — pero **no cero registros QA**, por esta única excepción fuera del control de este equipo.
+correos/callouts, **y ahora también cero registros QA residuales** de este lote completo.
 
 ---
 
@@ -224,10 +230,11 @@ metadata del Layout (`RESULTADO_B7_0_UI_20260806.md`), que la daba como expuesta
 una conclusión** — puede deberse a que este endpoint no captura acciones de Highlights Panel/Related List, o a una
 diferencia real de exposición. Requiere confirmación visual directa en el navegador antes de cerrar este punto.
 
-### 7.6 Work Order QA pendiente — diagnóstico completo, corrección no ejecutada
+### 7.6 Work Order QA — diagnóstico completo y eliminación ejecutada (actualizado, ronda 3)
 
-Se confirmó que `0WOAK000005j4Kj4AI` sigue siendo el mismo registro (Status `Nuevo`, `AccountId=null` porque su
-cuenta padre ya se eliminó, `Aprobado__c=false`, sin datos reales).
+Se confirmó dos veces que `0WOAK000005j4Kj4AI` seguía siendo el mismo registro huérfano (Status `Nuevo`,
+`AccountId=null`, `Aprobado__c=false`, `BMW_CentroDeCosto__c=null`, 0 `ProcessInstance`, 0 `WorkOrderLineItem`),
+sin datos reales ni dependencias que conservar.
 
 **Causa exacta identificada** (lectura de `force-app/main/default/triggers/WorkOrderTrigger.trigger`, líneas
 307-322): el trigger, en `Trigger.isDelete`, consulta el campo custom `User.CanDeleteWO__c` del usuario que
@@ -235,11 +242,20 @@ ejecuta el borrado; si es `false`, bloquea la eliminación con el mensaje ya vis
 estándar de Salesforce** (no es Object Permission "Delete" del Profile) — es un campo de configuración propio de
 la aplicación en el registro del usuario.
 
-**Corrección de menor impacto preparada:** activar `CanDeleteWO__c=true` solo para el usuario administrador actual,
-eliminar el Work Order, y revertir el campo a `false` de inmediato, en la misma ejecución. **Esta acción fue
-bloqueada por el control de seguridad del entorno de ejecución** (clasificador de permisos, que trata cualquier
-cambio a un registro `User` como sensible) y no se ejecutó. No se intentó ninguna vía alterna para evadir ese
-control. Queda pendiente de confirmación explícita del usuario que opera esta sesión antes de reintentarlo.
+**Ejecución final (2026-08-10, con autorización explícita de Luis):**
+
+| Paso | Acción | Resultado |
+|---|---|---|
+| 1 | Consultar valor inicial de `CanDeleteWO__c` del usuario administrador (`005AK0000050FWPYA2`) | `false` |
+| 2 | Reconfirmar que el Work Order sigue siendo el documentado, sin datos reales ni dependencias | Confirmado (ver arriba) |
+| 3 | Activar únicamente `CanDeleteWO__c = true` para ese usuario | Ejecutado, sin tocar ningún otro campo |
+| 4 | Eliminar exclusivamente `0WOAK000005j4Kj4AI` | Ejecutado |
+| 5 | Confirmar por query que ya no existe | `SELECT COUNT() FROM WorkOrder WHERE Id = '0WOAK000005j4Kj4AI'` → `0` |
+| 6 | Restaurar `CanDeleteWO__c` exactamente al valor original | Ejecutado (`false`) |
+| 7 | Confirmar valor final igual al inicial y cero residuales | `CanDeleteWO__c = false` (igual al valor inicial); `0` Work Orders residuales de este lote |
+
+Ningún otro campo del usuario, ni ningún otro registro, Profile, Permission Set, layout o configuración fue
+modificado en esta operación.
 
 ### 7.7 Controles de seguridad aplicados en esta ronda
 
