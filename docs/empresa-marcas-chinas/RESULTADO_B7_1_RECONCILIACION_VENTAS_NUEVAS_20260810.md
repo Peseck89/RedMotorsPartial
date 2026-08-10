@@ -173,6 +173,62 @@ funcional. No llegó ninguna respuesta nueva sobre Garantía en este lote.
 
 ---
 
+---
+
+## 6. `Quote_Record_Page_VN` — resultado del análisis dirigido (2026-08-10, tarde)
+
+**Qué es y quién la usa:** es la página de registro de Presupuesto (Quote) que se activa para el Record Type
+`Nuevos` — el mismo Record Type que usa cualquier venta de auto nuevo, de cualquier marca (confirmado con los 3
+Quotes QA reales creados hoy: Omoda, Jaecoo y BMW, los tres con Record Type `Nuevos`). El nombre "VN" es
+"Vehículos Nuevos".
+
+**Comparación Git vs Partial:** esta página **no existe en Git** (ya estaba así documentado en B7-0: `NO_EXISTE`
+en Git, `EXISTE` en Partial). Por lo tanto **no hay drift Git–Partial que conciliar** — nunca hubo una versión de
+referencia en este repositorio con la que comparar. Esto es distinto del caso de `Opportunity_Record_Page_VN`, que
+sí existe en ambos lados y sí mostró diferencias reales. Se hizo un retrieve de solo lectura contra Partial para
+inspeccionar el contenido (sin persistirlo — el archivo se descartó después de la inspección, no quedó en el
+repositorio).
+
+**Qué se encontró, componente por componente:**
+
+| Componente de la página | Condición de visibilidad | Afecta a Omoda/Jaecoo |
+|---|---|---|
+| Panel de detalle, related lists, path assistant, pestaña de actividad, pestaña principal | Sin condición — siempre visible | No, funciona igual para todas las marcas |
+| Botón "Ver presupuesto sello" | Solo si `Opportunity.RecordType.Name = "Taller"` | No aplica a Omoda/Jaecoo (venden autos nuevos, no Taller) — igual que BMW |
+| Botones "Cancelar/Crear plan de venta" | Solo si el perfil del usuario contiene la palabra "Admin" | Condición genérica por texto, no depende de ningún nombre de perfil específico ni del renombre en curso — no bloquea a Omoda/Jaecoo |
+| Botón "Duplicar Partidas de Presupuesto" | No está en esta página (confirmado — coincide con el diagnóstico de la sección 4) | No aplica |
+| Pestaña "Agregar extras" (`addExtraProduct`) | Solo si `Record.Flag_Vehiculo_Nuevo_FM__c = true` | **Sí — no se muestra para Omoda ni Jaecoo** |
+| Componente `rm_vn_sync_quote` (sincronización de vehículo nuevo) | Solo si `Flag_Vehiculo_Nuevo_FM__c = true` O el Record Type de la Oportunidad es Motorrad/Kawasaki/Polaris/Otobai/Indian | **Sí — no se activa para Omoda ni Jaecoo** |
+
+**La causa raíz:** `Flag_Vehiculo_Nuevo_FM__c` es el mismo campo fórmula ya identificado en el cierre de B9-1
+(`CIERRE_TRABAJO_INTERNO_SPRINT3_20260807.md`, hallazgo de `Opportunity.MusthaveActivity`) — su fórmula es
+`OR(RecordType.Name='BMW','MINI','Motorrad','Polaris','Kawasaki','Indian')`, que **no incluye Omoda ni Jaecoo**.
+Es la **segunda vez** que este mismo campo aparece excluyendo estructuralmente a Omoda/Jaecoo — confirma, con un
+segundo caso real, la hipótesis que B9-1 dejó planteada como pendiente de validar ("otras filas... podrían ser
+exclusiones estructurales por RecordType/fórmula").
+
+**Qué significa para negocio:** el resto de la página de Presupuesto de autos nuevos ya funciona igual para
+Omoda/Jaecoo que para BMW. Pero dos piezas específicas — la pestaña "Agregar extras" y la sincronización de
+vehículo nuevo — **no aparecerían** para Omoda/Jaecoo aunque sí aparecen para BMW, porque dependen de un campo que
+nunca se actualizó para incluir las marcas nuevas. Esto **sí es una diferencia real** frente a la configuración de
+Ventas Nuevas que Luis pidió replicar.
+
+**Clasificación: `B. REQUIERE_AJUSTE_TECNICO_CONCRETO`** — pero el ajuste no está en esta página (su XML no
+necesita ningún cambio), sino en el campo fórmula compartido `Flag_Vehiculo_Nuevo_FM__c`, que además ya afecta
+otros componentes fuera del alcance de esta revisión (las Validation Rules de B9-1).
+
+**Cambio mínimo propuesto (no ejecutado, no desplegado):** agregar `'Omoda'` y `'Jaecoo'` a la lista de valores del
+`OR(RecordType.Name=...)` dentro de la fórmula de `Flag_Vehiculo_Nuevo_FM__c`. Es un cambio de una sola fórmula,
+sin tocar la página, sin tocar ninguna Validation Rule directamente (aunque sí cambiaría su resultado indirecto,
+dado que varias reglas ya dependen del mismo campo). **No se ejecuta sin autorización expresa**, porque afecta más
+de un componente ya evaluado por separado (`MusthaveActivity` y las otras 2 reglas del mismo patrón) y su alcance
+real debe decidirse en conjunto, no solo para esta página.
+
+**El conteo de 55 se mantiene sin cambio** (no baja a 54): un ajuste técnico concreto pendiente de autorización
+sigue siendo un pendiente, no una resolución automática como los 8 de la sección 2.1.
+
+---
+
 ## Resumen de reclasificación
 
 | Estado | B7-0 (2026-08-06/07) | B7-1 (2026-08-10, con Ventas Nuevas) |
