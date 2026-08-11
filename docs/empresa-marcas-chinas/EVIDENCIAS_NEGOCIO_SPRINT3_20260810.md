@@ -246,66 +246,63 @@ necesitan.
 
 ---
 
-## 6. Evidencias visuales grabadas y estado del reporte (actualizado tras revisión de Claudia)
+## 6. Evidencias visuales — `COMPLETADA` (actualizado tras revisión y aprobación de Claudia)
 
-Claudia grabó y revisó manualmente los 3 videos previstos. Son evidencia externa/manual — **no están versionados
-en este repositorio de Git**, viven fuera de él (archivos `.mp4`).
+**Estado: `EVIDENCIA_VISUAL_SPRINT3_COMPLETADA`.** Claudia grabó, revisó y aprobó manualmente las 4 evidencias
+previstas. Son evidencia externa/manual — **no están versionadas en este repositorio de Git**, viven fuera de él
+(archivos `.mp4`).
 
 ### 6.1 Qué demuestra cada video
 
 **"Evidencia Sprint 3 - Opportunity Omoda - Venta Nueva PEKING.mp4"**
 - Que se trabaja en Sandbox/Partial, nunca Producción.
-- La Opportunity QA Omoda completa, con Record Type "Omoda" visible.
-- Etapa "Interesado", Sucursal, Pricebook "PEKING Local" (identificado como selección QA, no default oficial),
-  Forma de Pago, y datos comerciales suficientes para no parecer un registro técnico vacío.
+- La Opportunity QA Omoda real, representando una Venta Nueva, con Record Type "Omoda" visible.
+- Etapa "Interesado", Pricebook "PEKING Local" (identificado como selección QA, no default oficial), datos
+  comerciales suficientes para no parecer un registro técnico vacío.
 - Que la página carga sin errores.
 
 **"Evidencia Sprint 3 - Opportunity Jaecoo - Venta Nueva PEKING.mp4"**
-- El mismo patrón que Omoda: Record Type "Jaecoo", Pricebook "PEKING Local", datos comerciales, carga sin errores.
+- El mismo comportamiento que Omoda: Record Type "Jaecoo", Pricebook "PEKING Local", datos comerciales, carga sin
+  errores.
 
 **"Evidencia Sprint 3 - Opportunity BMW - Comparacion Venta Nueva.mp4"**
-- El mismo patrón de Venta Nueva, con Record Type "BMW".
+- Comparación con una Venta Nueva ya existente (BMW).
 - La diferencia real y visible: **Director de Ventas, Gerente de Sucursal y Jefe de Sucursal aparecen poblados**
   — a diferencia de Omoda/Jaecoo, donde esos tres campos quedan vacíos. El video deja constancia visual de que
   esta asignación automática **ya existe hoy para BMW y todavía no para Omoda/Jaecoo** — es trabajo de jerarquía
   pendiente de Diego, no un defecto de la pantalla ni de las validaciones.
 
+**"Evidencia Sprint 3 - Presupuesto Omoda - Agregar Extras.mp4"**
+- El Presupuesto `PT-00080224` (Omoda), con la pestaña **"Agregar extras" visible** y el componente de
+  **sincronización visible** — ambos ausentes antes del ajuste de esta ronda.
+- Confirma visualmente el ajuste desplegado a `Flag_Vehiculo_Nuevo_FM__c` (que ahora incluye a Omoda/Jaecoo como
+  vehículo nuevo), no solo a nivel de dato interno sino en la pantalla real que vería un asesor.
+
 ### 6.2 Clasificación de los frentes de evidencia
 
 | Frente | Estado |
 |---|---|
-| A. Opportunity / UI Omoda-Jaecoo | `EVIDENCIA_VISUAL_COMPLETA` — los 3 videos ya cubren esto |
-| B. Lead Omoda-Jaecoo | `EVIDENCIA_TECNICA_SUFICIENTE` — ya se probó por dos vías técnicas independientes que se pueden crear; es un hecho binario (se puede/no se puede crear), no requiere confirmación visual adicional |
-| C. Quote / Presupuesto Omoda-Jaecoo | `EVIDENCIA_TECNICA_SUFICIENTE`, con una excepción — ver 6.3 (la pestaña "Agregar extras" sí conviene mostrarla) |
-| D. Flag Vehículo Nuevo / "Agregar extras" | `EVIDENCIA_VISUAL_AUN_NECESARIA` — es un hallazgo concreto de esta ronda (antes no aparecía para Omoda/Jaecoo, ahora sí) que se entiende mucho mejor viéndolo que describiéndolo |
-| E. Validation Rules | `EVIDENCIA_TECNICA_SUFICIENTE` — 15/15 pruebas dirigidas ya documentadas (B9-1); no requiere video |
-| F. Approval Processes de descuento | `PENDIENTE_DEFINICION_EXTERNA` — lógica ya resuelta, pero la prueba real depende de que Diego termine la jerarquía; no hay nada que grabar todavía |
-| G. Centro de costo | `EVIDENCIA_TECNICA_SUFICIENTE` — entrada a "Pendiente de aprobación" ya confirmada dos veces; la aprobación real depende de datos oficiales de Finanzas, no de una grabación |
-| H. Softland / catálogos | `EVIDENCIA_TECNICA_SUFICIENTE` — 36/36 pruebas automatizadas ya documentadas; el contenido real de catálogo depende de datos oficiales, no de un video |
-| I. UI restantes (54 pendientes) | `PENDIENTE_DEFINICION_EXTERNA` — la mayoría requiere decisión de negocio (Taller, segmentos, plantillas) antes de que grabar tenga sentido |
-| J. `Opportunity_Record_Page_VN` | `PENDIENTE_DEFINICION_EXTERNA` — bloqueado por la confirmación de Diego sobre el renombre de perfiles, no por falta de grabación |
-| K. Jerarquía Director/Gerente/Jefe de Sucursal | `EVIDENCIA_VISUAL_COMPLETA` — el video de BMW ya deja constancia visual de la diferencia; no hace falta nada adicional hasta que Diego complete la jerarquía |
+| A. Opportunity / UI Omoda-Jaecoo | `EVIDENCIA_VISUAL_COMPLETA` |
+| B. Lead Omoda-Jaecoo | `EVIDENCIA_TECNICA_SUFICIENTE` — probado por dos vías técnicas independientes; hecho binario, no requería video |
+| C. Quote / Presupuesto Omoda-Jaecoo | `EVIDENCIA_VISUAL_COMPLETA` — cerrado con la Evidencia 4 (Agregar extras) |
+| D. Flag Vehículo Nuevo / "Agregar extras" | `EVIDENCIA_VISUAL_COMPLETA` |
+| E. Validation Rules | `EVIDENCIA_TECNICA_SUFICIENTE` — 15/15 pruebas dirigidas ya documentadas (B9-1) |
+| F. Approval Processes de descuento | `PENDIENTE_DEFINICION_EXTERNA` — lógica ya resuelta, prueba real depende de que Diego termine la jerarquía |
+| G. Centro de costo | `EVIDENCIA_TECNICA_SUFICIENTE` — entrada a "Pendiente de aprobación" ya confirmada dos veces |
+| H. Softland / catálogos | `EVIDENCIA_TECNICA_SUFICIENTE` — 36/36 pruebas automatizadas ya documentadas |
+| I. UI restantes (54 pendientes) | `PENDIENTE_DEFINICION_EXTERNA` — requiere decisión de negocio antes de que grabar tenga sentido |
+| J. `Opportunity_Record_Page_VN` | `PENDIENTE_DEFINICION_EXTERNA` — bloqueado por confirmación de Diego |
+| K. Jerarquía Director/Gerente/Jefe de Sucursal | `EVIDENCIA_VISUAL_COMPLETA` — el video de BMW deja constancia visual de la diferencia |
 
-### 6.3 Evidencia visual que sí sigue conviniendo (no por costumbre, sino por valor real)
+### 6.3 Qué falta antes de poder regenerar el Word final — separado por grupo
 
-Solo un punto queda con valor real de mostrarse visualmente antes de cerrar este frente: la pestaña **"Agregar
-extras"** del Presupuesto, que antes de esta ronda no aparecía para Omoda/Jaecoo y ahora sí (por el ajuste de
-`Flag_Vehiculo_Nuevo_FM__c` ejecutado el mismo día). Es un antes/después concreto que se explica mucho mejor
-viéndolo que leyéndolo. **No hace falta un recorrido completo de Quote** — con abrir el Presupuesto Omoda y
-mostrar esa pestaña por 10-15 segundos es suficiente.
+**A. Evidencias que Claudia todavía debe grabar:** ninguna — las 4 evidencias visuales previstas ya están
+completas.
 
-**No se necesita** video de Lead (evidencia técnica ya suficiente) ni un recorrido adicional de Quote más allá de
-ese punto puntual.
-
-### 6.4 Qué falta antes de poder regenerar el Word final — separado por grupo
-
-**A. Evidencias que Claudia todavía debe grabar:**
-- Un video corto (10-15 segundos) mostrando la pestaña "Agregar extras" en el Presupuesto Omoda (ver 6.3).
-
-**B. Respuestas pendientes de Diego:**
+**B. Pendiente de Diego:**
 - Nombre final del perfil de Ventas Nuevas para `Opportunity_Record_Page_VN`.
 - Confirmación de si el renombre de perfiles ya visto es su trabajo en curso.
-- Fecha estimada de la jerarquía de aprobadores (Director/Gerente/Jefe de Sucursal) para Omoda/Jaecoo.
+- Jerarquía de aprobadores (Director/Gerente/Jefe de Sucursal) para Omoda/Jaecoo.
 
 **C. Trabajo técnico pendiente (nuestro lado):**
 - Ninguno identificado — todo el trabajo técnico automatizable ya se ejecutó.
