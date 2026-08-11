@@ -46,7 +46,7 @@ Si falta cualquiera de estos, Salesforce no deja guardar y muestra el campo en r
 
 | Campo (como se ve en pantalla) | Nombre técnico | Valor a usar | De dónde sale |
 |---|---|---|---|
-| Nombre de la Oportunidad | `Name` | Ver tabla de la sección 6 (nombre de evidencia) | Lo escribe Claudia |
+| Nombre de la Oportunidad | `Name` | Lo que escribas se **reemplaza automáticamente** al guardar — ver nota abajo | El sistema lo reescribe siempre |
 | Campaña | `Campana__c` | Ver nota abajo — no existe todavía una campaña de PEKING | Se elige de una lista existente |
 | Sucursal | `Sucursal__c` | Cualquiera de las sucursales existentes (ej. "Escazú") — no hay una sucursal específica de PEKING todavía | Se elige de una lista |
 | Nombre del Producto | `NombreProducto__c` | Texto libre, ej. "Omoda C5 (prueba QA)" o "Jaecoo J7 (prueba QA)" | Lo escribe Claudia |
@@ -57,7 +57,7 @@ Si falta cualquiera de estos, Salesforce no deja guardar y muestra el campo en r
 | Fecha de Cierre | `CloseDate` | Cualquier fecha futura, ej. 30 días adelante | Lo escribe Claudia |
 | Etapa | `StageName` | **"Interesado"** | Se elige de una lista — ver nota importante abajo |
 | Origen del Lead | `LeadSource` | "Página Web" (o cualquier valor genérico existente) | Se elige de una lista |
-| Correo del Cliente | `CorreoElectronicoCliente__c` | Correo ficticio, ej. `qa.peking.evidencia@example.com` | Lo escribe Claudia |
+| Correo del Cliente | `CorreoElectronicoCliente__c` | Lo que escribas aquí **no se guarda** — ver nota abajo | El sistema lo reescribe siempre |
 | Forma de Pago | `Forma_de_Pago__c` | "Contado" | Se elige de una lista |
 | Entidad | `Entidad__c` | "No aplica" (ya que la forma de pago es Contado) | Se elige de una lista |
 | Tipo de Cliente | `Tipo_de_Cliente__c` | "Conquista" | Se elige de una lista |
@@ -72,6 +72,21 @@ Cerrada Ganada, Cerrada Perdida, Usado, Finalizado. La etapa correcta para una O
 campaña activa existente únicamente para poder guardar el formulario — **no representa una campaña real de
 PEKING**, es solo un requisito técnico de la pantalla.
 
+**Corrección importante (confirmada al preparar la primera evidencia real, 2026-08-10):**
+
+- **El Nombre de la Oportunidad no se queda con lo que se escribe.** Al guardar, el sistema lo reemplaza siempre
+  (para cualquier marca, no solo PEKING) con el patrón `{Nombre de la Cuenta}-{Marca}-{Fecha}`, por ejemplo:
+  `QA_PEKING_S3_EVIDENCIA - Cliente Omoda-Omoda-10/08/2026`. No es necesario escribir un nombre elaborado en este
+  campo — el nombre final depende del nombre de la Cuenta elegida.
+- **El Correo del Cliente tampoco se queda con lo que se escribe directamente en ese campo al crear el registro.**
+  El sistema lo completa automáticamente copiándolo del campo "Correo electrónico empresarial" de la **Cuenta**
+  seleccionada (no del texto que el asesor escriba en el formulario de la Oportunidad). **Para que este campo quede
+  con un valor real: la Cuenta debe tener su propio correo cargado antes de crear la Oportunidad**, o hay que
+  editar el campo manualmente en la Oportunidad ya guardada (sí se puede corregir después, editando el registro).
+  Esto aplica igual para BMW/MINI — no es una diferencia de PEKING.
+- **"Vendedor" (`Vendedor__c`) no es un nombre ni una persona — es una casilla de Sí/No** (verdadero/falso). Marca
+  simplemente si la Oportunidad corresponde a un vendedor, no a quién.
+
 ### B. Recomendados para que la evidencia se vea realista
 
 Salesforce permite guardar sin estos, pero un asesor normalmente los llena:
@@ -83,7 +98,7 @@ Salesforce permite guardar sin estos, pero un asesor normalmente los llena:
 | Fecha posible de compra | `Fecha_Posible_Compra__c` | Fecha estimada de decisión del cliente |
 | Contacto | `contacto__c` | Si ya existe un contacto asociado a la cuenta |
 | Monto | `Amount` | Precio estimado del vehículo, aunque sea aproximado |
-| Vendedor | `Vendedor__c` | Nombre del asesor (puede ser el mismo usuario) |
+| Vendedor | `Vendedor__c` | Es una casilla de Sí/No (no un nombre) — marcarla si corresponde a un vendedor |
 
 ### C. Se completan solos (no los llena Claudia)
 
