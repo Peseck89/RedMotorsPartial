@@ -1,5 +1,13 @@
 # Grabar 3 videos cortos — Omoda, Jaecoo, BMW (Sprint 3)
 
+**Estado: `COMPLETADO`.** Claudia grabó y revisó los 3 videos:
+`Evidencia Sprint 3 - Opportunity Omoda - Venta Nueva PEKING.mp4`,
+`Evidencia Sprint 3 - Opportunity Jaecoo - Venta Nueva PEKING.mp4`,
+`Evidencia Sprint 3 - Opportunity BMW - Comparacion Venta Nueva.mp4`.
+Son archivos externos/manuales — **no están versionados en este repositorio de Git**. Qué demuestra cada uno:
+`EVIDENCIAS_NEGOCIO_SPRINT3_20260810.md` sección 6.1. Esta guía se conserva íntegra abajo como referencia de cómo
+se grabaron, para repetir el mismo patrón si hiciera falta un video adicional.
+
 **Org:** Partial (`RedMotorsSandbox`) — nunca Producción.
 **Duración objetivo:** 30-45 segundos cada video. No hace falta recorrer todos los campos.
 
