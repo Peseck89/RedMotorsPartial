@@ -67,10 +67,13 @@ en la lista real que ve un asesor — esa lista solo tiene: Interesado, Oportuni
 Cerrada Ganada, Cerrada Perdida, Usado, Finalizado. La etapa correcta para una Oportunidad recién creada es
 **"Interesado"**.
 
-**Nota sobre Campaña:** hoy no existe ninguna campaña de marketing específica de PEKING/Omoda/Jaecoo en el sistema
-— solo campañas antiguas de otras marcas (ej. "Motorrad Expo 2 Ruedas 2019"). Para esta prueba, elegir cualquier
-campaña activa existente únicamente para poder guardar el formulario — **no representa una campaña real de
-PEKING**, es solo un requisito técnico de la pantalla.
+**Nota sobre Campaña:** hoy no existe ninguna campaña de marketing específica de PEKING/Omoda/Jaecoo en el sistema.
+Tampoco fue posible crear una campaña QA nueva — el usuario administrador no tiene permiso de creación (Create)
+sobre el objeto Campaña en absoluto (hallazgo confirmado, no es un límite de este formulario en particular). Se
+revisaron las campañas activas existentes buscando una neutral, y se usó **"Prueba"** — nombre genérico, sin
+asociación a ninguna marca — en lugar de reutilizar una campaña de otra marca (como "Motorrad Expo 2 Ruedas 2019",
+usada al inicio y luego corregida). **No representa una campaña real de PEKING**, es solo un requisito técnico de
+la pantalla.
 
 **Corrección importante (confirmada al preparar la primera evidencia real, 2026-08-10):**
 

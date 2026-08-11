@@ -5,6 +5,11 @@
 **Fuente usada:** `GUIA_CREACION_MANUAL_OPPORTUNITY_OMODA_JAECOO_SPRINT3_20260810.md`, sección 6. No se volvió a
 investigar el proceso desde cero.
 
+**Actualización (2026-08-10, ronda posterior):** la Campaña de este registro se corrigió de `Motorrad Expo 2
+Ruedas 2019` a **`Prueba`** (`7014U000002EyI4QAK`), una campaña neutral sin asociación a ninguna marca — ver
+`RESULTADO_EVIDENCIA_OMODA_JAECOO_BMW_SPRINT3_20260810.md` sección 1 para el detalle completo. El resto de este
+documento (campos obligatorios, recomendados, hallazgos) sigue vigente sin cambios.
+
 ---
 
 ## 1. Registro creado
@@ -26,7 +31,7 @@ investigar el proceso desde cero.
 | Record Type | Omoda |
 | Cuenta | `QA_PEKING_S3_EVIDENCIA - Cliente Omoda` |
 | Cuenta de Facturación | La misma cuenta |
-| Campaña | `Motorrad Expo 2 Ruedas 2019` (placeholder técnico existente — ver nota) |
+| Campaña | `Prueba` (`7014U000002EyI4QAK`) — placeholder neutral, corregido desde `Motorrad Expo 2 Ruedas 2019` (ver actualización arriba) |
 | Sucursal | Escazú (placeholder — no hay sucursal oficial PEKING) |
 | Nombre del Producto | Omoda C5 (prueba QA) |
 | Moneda | CRC |

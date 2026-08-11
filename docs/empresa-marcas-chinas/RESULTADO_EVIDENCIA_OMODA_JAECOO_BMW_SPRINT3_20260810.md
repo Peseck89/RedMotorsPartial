@@ -16,13 +16,34 @@ creación de Campañas en Partial, sin importar qué campo se use. No es una aut
 restricción de permisos de objeto.
 
 **No se forzó el acceso** (no se creó ni modificó ningún Permission Set para otorgar ese permiso, por estar fuera
-del alcance autorizado de esta tarea puntual). Se mantuvo, para los tres registros, la misma campaña placeholder ya
-usada en Omoda (`Motorrad Expo 2 Ruedas 2019`, Id `7010P000000soKKQAY`) — así los tres quedan consistentes entre
-sí, aunque ninguna represente una campaña real de PEKING.
+del alcance autorizado de esta tarea puntual). Se mantuvo inicialmente, para los tres registros, la misma campaña
+placeholder ya usada en Omoda (`Motorrad Expo 2 Ruedas 2019`, Id `7010P000000soKKQAY`) — así los tres quedaron
+consistentes entre sí, aunque ninguna representara una campaña real de PEKING.
+
+### 1.1 Actualización — Campaña neutral encontrada y aplicada (misma fecha, ronda posterior)
+
+Se revisaron las campañas activas existentes en Partial buscando una opción genérica/neutra (patrones "Ventas
+Nuevas", "General", "Prueba/QA", "Vehículos", "Comercial"), evitando cualquier campaña asociada claramente a otra
+marca. **No existe ninguna campaña con "Ventas" en el nombre.** Entre las candidatas neutrales encontradas
+(`Prueba`, `Test 001`, `prueba kevin`, `Prueba Mailchip`), se eligió:
+
+- **Campaña usada:** `Prueba` — Id `7014U000002EyI4QAK`, activa, sin asociación a ninguna marca ni a una persona
+  específica (se descartaron `prueba kevin` y `Prueba Mailchip` por estar ligadas a un nombre/herramienta
+  personal, menos adecuadas para una evidencia profesional).
+
+Se actualizó el campo Campaña de los tres registros (`006AK00000JOSOPYA5`, `006AK00000JOORHYA5`,
+`006AK00000JOORIYA5`) a esta campaña neutral. Confirmado por consulta directa tras la actualización: los tres
+muestran `Campaign.Name = "Prueba"`. Sigue siendo un placeholder técnico, **no representa una campaña real de
+PEKING** — solo es visualmente más adecuado para Omoda/Jaecoo que reutilizar el nombre de una campaña de otra
+marca.
+
+**Confirmado sin efectos secundarios:** 0 emails, 0 callouts, 0 jobs asíncronos activos tras la actualización. El
+Nombre y el Correo del Cliente de los tres registros no se recalcularon (el trigger que los recalcula solo actúa
+cuando cambia el Record Type, que no fue el caso aquí) — permanecen exactamente como ya estaban validados.
 
 ---
 
-## 2. Omoda — sin cambios respecto al resultado anterior
+## 2. Omoda — sin cambios respecto al resultado anterior (salvo la Campaña, ver 1.1)
 
 No se modificó la Campaign de Omoda (`006AK00000JOSOPYA5`) porque no existe una Campaign QA nueva a la cual
 cambiarla — sigue usando el mismo placeholder que ya tenían Jaecoo y BMW. El resto del registro permanece
@@ -63,7 +84,7 @@ correcto desde el primer intento, sin necesitar el paso de corrección que sí h
 | Etapa (Stage) | Interesado | Interesado | Interesado | Igual en los tres |
 | Formulario/Layout usado | `Opportunity-Autos V1.4` | El mismo | El mismo | Sin distinción por marca |
 | Campos obligatorios (15) | Completos | Completos | Completos | Mismo formulario, mismas exigencias |
-| Campaign | Placeholder compartido (`Motorrad Expo 2 Ruedas 2019`) | El mismo placeholder | El mismo placeholder | Ninguna marca tiene campaña oficial propia todavía; ver hallazgo sección 1 |
+| Campaign | Placeholder neutral compartido (`Prueba`) | El mismo placeholder | El mismo placeholder | Ninguna marca tiene campaña oficial propia todavía; corregido de una campaña de otra marca a una neutral — ver sección 1.1 |
 | Sucursal | Escazú (placeholder) | Escazú (placeholder) | Escazú (real, sin necesidad de placeholder) | Para PEKING no existe sucursal oficial; para BMW "Escazú" ya es una sucursal real de venta |
 | Moneda | CRC | CRC | USD | Cada una coherente con su Pricebook |
 | Pricebook | PEKING Local (selección QA, no default oficial) | PEKING Local (selección QA, no default oficial) | BMW - 2024 (uso normal, sin ambigüedad) | Para PEKING sigue sin existir una regla de "cuál usar por defecto"; para BMW la elección es la habitual |
