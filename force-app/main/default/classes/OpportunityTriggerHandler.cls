@@ -81,17 +81,23 @@ public class OpportunityTriggerHandler extends TriggerHandler {
                     JefedeSucursalMotorrad__c,
                     DirectordeVentasHarley__c,
                     GerentedeSucursalHarley__c,
-                    JefedeSucursalHarley__c
+                    JefedeSucursalHarley__c,
+                    DirectordeVentasOmoda__c,
+                    GerentedeSucursalOmoda__c,
+                    JefesdeSucursalOmoda__c,
+                    DirectordeVentasJaecoo__c,
+                    GerentedeSucursalJaecoo__c,
+                    JefesdeSucursalJaecoo__c
                 FROM Sucursal__c
                 WHERE Name IN: sucursalesNombres]){
                     mapSucursales.put(suc.Name,suc);
             }
         }
-        
+
         system.debug('mapa sucursal:  ' + mapSucursales.values());
 
         for (Opportunity opp:newRecordList) {
-            
+
             system.debug(':::OWNER 3:  ' + opp.OwnerId);
         
             if(accountMap!=null&&accountMap.containsKey(opp.AccountId)){
@@ -193,11 +199,36 @@ public class OpportunityTriggerHandler extends TriggerHandler {
                         
                     if(mapSucursales.get(opp.Sucursal__c).GerentedeSucursalHarley__c != null) opp.GerenteSucursal__c = mapSucursales.get(opp.Sucursal__c).GerentedeSucursalHarley__c;
                         
-                    if(mapSucursales.get(opp.Sucursal__c).JefedeSucursalHarley__c != null) opp.JefeSucursal__c = mapSucursales.get(opp.Sucursal__c).JefedeSucursalHarley__c;                     
-                }              
-                                                                
+                    if(mapSucursales.get(opp.Sucursal__c).JefedeSucursalHarley__c != null) opp.JefeSucursal__c = mapSucursales.get(opp.Sucursal__c).JefedeSucursalHarley__c;
+                }
+                //Marca: Omoda
+                if(rt_map.get(opp.recordTypeID).getName().equals('Omoda')){
+                    system.debug(rt_map.get(opp.recordTypeID).getName() + '| Director: ' + mapSucursales.get(opp.Sucursal__c).DirectordeVentasOmoda__c + '| Gerente: ' + mapSucursales.get(opp.Sucursal__c).GerentedeSucursalOmoda__c + '| Jefe: ' + mapSucursales.get(opp.Sucursal__c).JefesdeSucursalOmoda__c);
+
+                    if(mapSucursales.get(opp.Sucursal__c).DirectordeVentasOmoda__c!=null)
+                        opp.DirectorVentas__c = mapSucursales.get(opp.Sucursal__c).DirectordeVentasOmoda__c;
+
+                    if(mapSucursales.get(opp.Sucursal__c).GerentedeSucursalOmoda__c!=null)
+                        opp.GerenteSucursal__c = mapSucursales.get(opp.Sucursal__c).GerentedeSucursalOmoda__c;
+
+                    if(mapSucursales.get(opp.Sucursal__c).JefesdeSucursalOmoda__c!=null)
+                        opp.JefeSucursal__c = mapSucursales.get(opp.Sucursal__c).JefesdeSucursalOmoda__c;
+                }
+                //Marca: Jaecoo
+                if(rt_map.get(opp.recordTypeID).getName().equals('Jaecoo')){
+                    system.debug(rt_map.get(opp.recordTypeID).getName() + '| Director: ' + mapSucursales.get(opp.Sucursal__c).DirectordeVentasJaecoo__c + '| Gerente: ' + mapSucursales.get(opp.Sucursal__c).GerentedeSucursalJaecoo__c + '| Jefe: ' + mapSucursales.get(opp.Sucursal__c).JefesdeSucursalJaecoo__c);
+
+                    if(mapSucursales.get(opp.Sucursal__c).DirectordeVentasJaecoo__c!=null)
+                        opp.DirectorVentas__c = mapSucursales.get(opp.Sucursal__c).DirectordeVentasJaecoo__c;
+
+                    if(mapSucursales.get(opp.Sucursal__c).GerentedeSucursalJaecoo__c!=null)
+                        opp.GerenteSucursal__c = mapSucursales.get(opp.Sucursal__c).GerentedeSucursalJaecoo__c;
+
+                    if(mapSucursales.get(opp.Sucursal__c).JefesdeSucursalJaecoo__c!=null)
+                        opp.JefeSucursal__c = mapSucursales.get(opp.Sucursal__c).JefesdeSucursalJaecoo__c;
+                }
             }
-            system.debug(':::OWNER 4:  ' + opp.OwnerId);   
+            system.debug(':::OWNER 4:  ' + opp.OwnerId);
         }
 
         RM_Opportunity_Trigger_Helper.setTallerOpportunityValues(newRecordList);
@@ -269,13 +300,19 @@ public class OpportunityTriggerHandler extends TriggerHandler {
                     JefedeSucursalMotorrad__c,
                     DirectordeVentasHarley__c,
                     GerentedeSucursalHarley__c,
-                    JefedeSucursalHarley__c
+                    JefedeSucursalHarley__c,
+                    DirectordeVentasOmoda__c,
+                    GerentedeSucursalOmoda__c,
+                    JefesdeSucursalOmoda__c,
+                    DirectordeVentasJaecoo__c,
+                    GerentedeSucursalJaecoo__c,
+                    JefesdeSucursalJaecoo__c
                 FROM Sucursal__c
                 WHERE Name IN: sucursalesNombres]){
                     mapSucursales.put(suc.Name,suc);
             }
         }
-        
+
         system.debug('mapa sucursal:  ' + mapSucursales.values());
 
         for (Opportunity opp : newRecordList) {
@@ -363,12 +400,27 @@ public class OpportunityTriggerHandler extends TriggerHandler {
                         
                     if(mapSucursales.get(opp.Sucursal__c).GerentedeSucursalHarley__c != null)  opp.GerenteSucursal__c = mapSucursales.get(opp.Sucursal__c).GerentedeSucursalHarley__c;
                         
-                    if(mapSucursales.get(opp.Sucursal__c).JefedeSucursalHarley__c != null) opp.JefeSucursal__c = mapSucursales.get(opp.Sucursal__c).JefedeSucursalHarley__c;                     
-                }              
-                                                                
-            }  
-            system.debug(':::OWNER 8:  ' + opp.OwnerId);     
-        }               
+                    if(mapSucursales.get(opp.Sucursal__c).JefedeSucursalHarley__c != null) opp.JefeSucursal__c = mapSucursales.get(opp.Sucursal__c).JefedeSucursalHarley__c;
+                }else if(rt_map.get(opp.recordTypeID).getName().equals('Omoda')){//Marca: Omoda
+                    system.debug(rt_map.get(opp.recordTypeID).getName() + '| Director: ' + mapSucursales.get(opp.Sucursal__c).DirectordeVentasOmoda__c + '| Gerente: ' + mapSucursales.get(opp.Sucursal__c).GerentedeSucursalOmoda__c + '| Jefe: ' + mapSucursales.get(opp.Sucursal__c).JefesdeSucursalOmoda__c);
+
+                    if(mapSucursales.get(opp.Sucursal__c).DirectordeVentasOmoda__c != null) opp.DirectorVentas__c = mapSucursales.get(opp.Sucursal__c).DirectordeVentasOmoda__c;
+
+                    if(mapSucursales.get(opp.Sucursal__c).GerentedeSucursalOmoda__c != null) opp.GerenteSucursal__c = mapSucursales.get(opp.Sucursal__c).GerentedeSucursalOmoda__c;
+
+                    if(mapSucursales.get(opp.Sucursal__c).JefesdeSucursalOmoda__c != null) opp.JefeSucursal__c = mapSucursales.get(opp.Sucursal__c).JefesdeSucursalOmoda__c;
+                }else if(rt_map.get(opp.recordTypeID).getName().equals('Jaecoo')){//Marca: Jaecoo
+                    system.debug(rt_map.get(opp.recordTypeID).getName() + '| Director: ' + mapSucursales.get(opp.Sucursal__c).DirectordeVentasJaecoo__c + '| Gerente: ' + mapSucursales.get(opp.Sucursal__c).GerentedeSucursalJaecoo__c + '| Jefe: ' + mapSucursales.get(opp.Sucursal__c).JefesdeSucursalJaecoo__c);
+
+                    if(mapSucursales.get(opp.Sucursal__c).DirectordeVentasJaecoo__c != null) opp.DirectorVentas__c = mapSucursales.get(opp.Sucursal__c).DirectordeVentasJaecoo__c;
+
+                    if(mapSucursales.get(opp.Sucursal__c).GerentedeSucursalJaecoo__c != null) opp.GerenteSucursal__c = mapSucursales.get(opp.Sucursal__c).GerentedeSucursalJaecoo__c;
+
+                    if(mapSucursales.get(opp.Sucursal__c).JefesdeSucursalJaecoo__c != null) opp.JefeSucursal__c = mapSucursales.get(opp.Sucursal__c).JefesdeSucursalJaecoo__c;
+                }
+            }
+            system.debug(':::OWNER 8:  ' + opp.OwnerId);
+        }
     }
     
     public override void afterInsert(){
