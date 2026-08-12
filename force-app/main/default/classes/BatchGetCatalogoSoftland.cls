@@ -170,7 +170,12 @@ public class BatchGetCatalogoSoftland implements Queueable, Database.AllowsCallo
                 Bodega__c bodega = new Bodega__c();
                 bodega.Name = value(row, 'nombre');
                 bodega.bodega__c = value(row, 'bodega');
-                bodega.ID_EXTERNO_BODEGA__c = company == 'RMOTOBAI' ? 'RMOTOBAI' + value(row, 'bodega') : value(row, 'bodega');
+                // Clave externa estable por Empresa: RMBAVARIAN conserva el formato historico sin
+                // prefijo (compatibilidad con bodegas ya sincronizadas); cualquier otra empresa
+                // (RMOTOBAI y, cuando se habilite, RMPEKING) usa su propio codigo como prefijo para
+                // que dos empresas nunca puedan colisionar con el mismo codigo Softland de bodega.
+                String bodegaExternalIdPrefix = company == 'RMBAVARIAN' ? '' : company;
+                bodega.ID_EXTERNO_BODEGA__c = bodegaExternalIdPrefix + value(row, 'bodega');
                 lstBod.add(bodega);
             }
             if (actualPage < pageCount) {

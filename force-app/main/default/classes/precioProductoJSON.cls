@@ -17,7 +17,25 @@ public class precioProductoJSON {
         String Porcentaje_jefe = wrapProductJSON.Porcentaje_jefe;
         
         try
-        {  
+        {
+            // Resolucion directa por Codigo_ERP__c/Activa__c en lugar de EmpresaResolver:
+            // EmpresaResolver.resolveByCodigo exige Nombre_Legal__c poblado y hoy ese campo esta
+            // vacio para las tres Empresas (Bavarian, Otobai, Peking) en RedMotorsSandbox, por lo
+            // que usarlo aqui habria roto tambien a Bavarian y Otobai. Ver hallazgo documentado
+            // en el bloque previo al cierre de Sprint 2.
+            List<Empresa__c> empresaMatches = [
+                SELECT Id
+                FROM Empresa__c
+                WHERE Codigo_ERP__c = :empresa AND Activa__c = true
+                LIMIT 1
+            ];
+            if (empresaMatches.isEmpty()) {
+                throw new EmpresaConfigurationException(
+                    'No existe una Empresa activa configurada para ' + empresa + '.'
+                );
+            }
+            Id empresaId = empresaMatches[0].Id;
+
             List<Product2> prod;
             if(empresa=='RMBAVARIAN')
             {
@@ -25,17 +43,19 @@ public class precioProductoJSON {
                                         SELECT Id
                                         FROM Product2
                                         WHERE Codigo_de_Producto__c = :articulo
-                                    ];    
+                                    ];
             }
-            else if(empresa=='RMOTOBAI') {
+            else if(empresa=='RMOTOBAI' || empresa=='RMPEKING') {
                 String identificador = articulo+'-'+empresa;
                 prod =     [
                                         SELECT Id
                                         FROM Product2
                                         WHERE CodigoProductoInterno__c = :identificador
                                     ];
+            } else {
+                prod = new List<Product2>();
             }
-            
+
             if(prod.size()!=0)
             {
                 Product2 actualProduct = prod[0];
@@ -44,19 +64,23 @@ public class precioProductoJSON {
                 actualProduct.precio__c =  Decimal.valueOf(precio_dolar);
                 update actualProduct;
                 List<Pricebook2> standardPB = [SELECT Id,Name FROM Pricebook2 WHERE IsStandard=true];
-                List<Pricebook2> priceBooksLocal;
-                List<Pricebook2> priceBooksDolar;
-                
-                if(empresa == 'RMBAVARIAN')
-                {
-					priceBooksLocal = [SELECT Id,Name FROM Pricebook2 WHERE Name='Bavarian Local'];
-                    priceBooksDolar = [SELECT Id,Name FROM Pricebook2 WHERE Name='Bavarian Dólar'];                    
-                } else if(empresa == 'RMOTOBAI')
-                {
-                    priceBooksLocal = [SELECT Id,Name FROM Pricebook2 WHERE Name='Otobai Local'];
-                    priceBooksDolar = [SELECT Id,Name FROM Pricebook2 WHERE Name='Otobai Dólares'];
+                List<Pricebook2> priceBooksLocal = new List<Pricebook2>();
+                List<Pricebook2> priceBooksDolar = new List<Pricebook2>();
+
+                // Resolucion via Empresa__c (no por nombre literal): permite Bavarian, Otobai, Peking
+                // y cualquier empresa futura sin nuevas ramas hardcodeadas por compania.
+                for (Pricebook2 pb : [
+                    SELECT Id, Name
+                    FROM Pricebook2
+                    WHERE Empresa__c = :empresaId AND IsActive = true
+                ]) {
+                    if (pb.Name.contains('Local')) {
+                        priceBooksLocal.add(pb);
+                    } else {
+                        priceBooksDolar.add(pb);
+                    }
                 }
-                                
+
                 List<PricebookEntry> lstPBE = [SELECT Id FROM PricebookEntry WHERE product2Id = :actualProduct.Id AND Pricebook2Id=:standardPB[0].Id];
                 
                 if(lstPBE.size()!=0)

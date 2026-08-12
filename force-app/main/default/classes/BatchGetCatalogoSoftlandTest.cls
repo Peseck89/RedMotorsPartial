@@ -120,6 +120,87 @@ public class BatchGetCatalogoSoftlandTest {
         System.assertEquals(1, batchJobs.size(), 'calloutInventory debe encolar el batch BatchUpsertProduct2 con el inventario obtenido');
     }
 
+    // Precheck 2026-08-12: la clave externa de Bodega solo prefijaba RMOTOBAI; cualquier otra
+    // empresa (RMBAVARIAN y, si se habilita, RMPEKING) usaba el codigo crudo de Softland sin
+    // prefijo, con riesgo de colision si dos empresas comparten el mismo codigo de bodega.
+    //
+    // Cada empresa sincroniza Bodega en su propio Queueable (un enqueueJob por compania en
+    // ScheduleGetBodegaSoftland), es decir en transacciones separadas. Por eso estas pruebas
+    // ejercitan calloutBodega una compania por metodo/transaccion: encadenar callout+DML de varias
+    // companias dentro de una misma transaccion de prueba dispara la restriccion real de Salesforce
+    // "uncommitted work pending... before calling out", que no ocurre en produccion.
+
+    @isTest
+    static void testCalloutBodegaRMBAVARIANKeepsUnprefixedExternalId() {
+        Test.setMock(HttpCalloutMock.class, new SuccessCalloutMock());
+
+        Test.startTest();
+        BatchGetCatalogoSoftland.calloutBodega(
+            Label.URLSoftland, 'Bearer', 'token', 1, new List<Bodega__c>(), new HttpCalloutBodega(), 'RMBAVARIAN'
+        );
+        Test.stopTest();
+
+        List<Bodega__c> bodegas = [SELECT ID_EXTERNO_BODEGA__c FROM Bodega__c WHERE bodega__c = 'BOD001'];
+        System.assertEquals(1, bodegas.size());
+        System.assertEquals('BOD001', bodegas[0].ID_EXTERNO_BODEGA__c,
+            'RMBAVARIAN debe conservar la clave externa historica sin prefijo.');
+    }
+
+    @isTest
+    static void testCalloutBodegaRMOTOBAIKeepsHistoricalPrefix() {
+        Test.setMock(HttpCalloutMock.class, new SuccessCalloutMock());
+
+        Test.startTest();
+        BatchGetCatalogoSoftland.calloutBodega(
+            Label.URLSoftland, 'Bearer', 'token', 1, new List<Bodega__c>(), new HttpCalloutBodega(), 'RMOTOBAI'
+        );
+        Test.stopTest();
+
+        List<Bodega__c> bodegas = [SELECT ID_EXTERNO_BODEGA__c FROM Bodega__c WHERE bodega__c = 'BOD001'];
+        System.assertEquals(1, bodegas.size());
+        System.assertEquals('RMOTOBAIBOD001', bodegas[0].ID_EXTERNO_BODEGA__c,
+            'RMOTOBAI debe conservar exactamente el prefijo historico RMOTOBAI (sin este el fix rompe la sincronizacion existente).');
+    }
+
+    @isTest
+    static void testCalloutBodegaRMPEKINGGetsOwnPrefix() {
+        Test.setMock(HttpCalloutMock.class, new SuccessCalloutMock());
+
+        Test.startTest();
+        BatchGetCatalogoSoftland.calloutBodega(
+            Label.URLSoftland, 'Bearer', 'token', 1, new List<Bodega__c>(), new HttpCalloutBodega(), 'RMPEKING'
+        );
+        Test.stopTest();
+
+        List<Bodega__c> bodegas = [SELECT ID_EXTERNO_BODEGA__c FROM Bodega__c WHERE bodega__c = 'BOD001'];
+        System.assertEquals(1, bodegas.size());
+        System.assertEquals('RMPEKINGBOD001', bodegas[0].ID_EXTERNO_BODEGA__c,
+            'RMPEKING debe recibir su propio prefijo derivado de la empresa, evitando colision con Bavarian u Otobai.');
+    }
+
+    @isTest
+    static void testBodegaExternalIdsDoNotCollideAcrossEmpresasWithSameSoftlandCode() {
+        // Sin callouts: reproduce directamente el resultado esperado de tres sincronizaciones
+        // independientes (una por Queueable/compania) que comparten el mismo codigo Softland crudo.
+        List<Bodega__c> bodegas = new List<Bodega__c>{
+            new Bodega__c(Name = 'Registro Test', bodega__c = 'BOD001', ID_EXTERNO_BODEGA__c = 'BOD001'),
+            new Bodega__c(Name = 'Registro Test', bodega__c = 'BOD001', ID_EXTERNO_BODEGA__c = 'RMOTOBAIBOD001'),
+            new Bodega__c(Name = 'Registro Test', bodega__c = 'BOD001', ID_EXTERNO_BODEGA__c = 'RMPEKINGBOD001')
+        };
+
+        Test.startTest();
+        Database.UpsertResult[] results = Database.upsert(bodegas, Bodega__c.Fields.ID_EXTERNO_BODEGA__c, false);
+        Test.stopTest();
+
+        for (Database.UpsertResult result : results) {
+            System.assert(result.isSuccess(), 'Cada empresa debe poder persistir su propia Bodega sin colisionar con otra: ' + result.getErrors());
+        }
+
+        Integer totalBodegas = [SELECT COUNT() FROM Bodega__c WHERE bodega__c = 'BOD001'];
+        System.assertEquals(3, totalBodegas,
+            'Tres empresas con el mismo codigo Softland de bodega deben producir tres registros distintos, no sobrescribirse entre si.');
+    }
+
     @isTest
     static void testLegacyOverloadCategoriaClienteDefaultsToRMBAVARIAN() {
         EndpointCaptureMock mock = new EndpointCaptureMock();
