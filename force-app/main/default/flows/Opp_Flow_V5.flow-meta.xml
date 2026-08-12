@@ -1675,8 +1675,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <isGoTo>true</isGoTo>
-                <targetReference>VehiculosEncontradosFalse</targetReference>
+                <targetReference>Seleccionar_Empresa_Taller</targetReference>
             </connector>
             <label>configTaller</label>
         </rules>
@@ -2234,7 +2233,13 @@
         <name>EmpresaLegacySeleccionada</name>
         <dataType>String</dataType>
         <description>Compatibilidad temporal: solo Bavarian y Otobai se escriben en el campo legacy.</description>
-        <expression>CASE({!EmpresaSeleccionada.recordName}, &quot;Bavarian&quot;, &quot;Bavarian&quot;, &quot;Otobai&quot;, &quot;Otobai&quot;, &quot;&quot;)</expression>
+        <expression>CASE(IF(NOT(ISBLANK({!EmpresaSeleccionadaTaller.recordName})), {!EmpresaSeleccionadaTaller.recordName}, {!EmpresaSeleccionada.recordName}), &quot;Bavarian&quot;, &quot;Bavarian&quot;, &quot;Otobai&quot;, &quot;Otobai&quot;, &quot;&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>EmpresaOperadoraSeleccionadaId</name>
+        <dataType>String</dataType>
+        <description>Usa la selección específica de Taller cuando existe; conserva la selección general para las demás rutas.</description>
+        <expression>IF(NOT(ISBLANK({!EmpresaSeleccionadaTaller.recordId})), {!EmpresaSeleccionadaTaller.recordId}, {!EmpresaSeleccionada.recordId})</expression>
     </formulas>
     <interviewLabel>Opp Flow V5 {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Opp Flow V5</label>
@@ -2611,7 +2616,7 @@
         </inputAssignments>
         <inputAssignments>
             <field>Empresa_Operadora__c</field>
-            <value><elementReference>EmpresaSeleccionada.recordId</elementReference></value>
+            <value><elementReference>EmpresaOperadoraSeleccionadaId</elementReference></value>
         </inputAssignments>
         <inputAssignments>
             <field>BMW_PlacaDeVehiculoOElVIN__c</field>
@@ -6342,6 +6347,60 @@
             </styleProperties>
         </fields>
         <nextOrFinishButtonLabel>Actualizar</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Seleccionar_Empresa_Taller</name>
+        <label>Seleccionar Empresa</label>
+        <locationX>50</locationX>
+        <locationY>458</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>VehiculosEncontradosFalse</targetReference>
+        </connector>
+        <fields>
+            <name>EmpresaSeleccionadaTaller</name>
+            <extensionName>flowruntime:lookup</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>fieldApiName</name>
+                <value>
+                    <stringValue>Empresa_Operadora__c</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>label</name>
+                <value>
+                    <stringValue>Empresa</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>objectApiName</name>
+                <value>
+                    <stringValue>Opportunity</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>required</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <nextOrFinishButtonLabel>Siguiente</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>

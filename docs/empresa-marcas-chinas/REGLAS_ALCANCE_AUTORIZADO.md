@@ -243,8 +243,47 @@ Esta sección reconcilia el estado histórico de `Opp_Flow_V5` sin flexibilizar 
 | Implementación y deploy históricos | El commit `abb03f3` (*implement explicit company selection in versioned flows*, 2026-08-04) modificó `Opp_Flow_V5` dentro del sublote 2D2. `RESULTADO_LOTE2D2_FLOWS_OPPORTUNITY.md` documenta el deploy `0AfAK0000010Smx0AE` a Partial y la activación de la nueva v30 basada en la v29 activa. | Está comprobado que el Flow fue trabajado y desplegado dentro de Sprint 2. Este hecho no sustituye la evidencia de autorización específica ni amplía automáticamente el permiso a cambios posteriores. |
 | Evidencia de autorización específica del sublote | No se conserva en las fuentes revisadas una instrucción directa y atribuible de Luis o Diego que autorice expresamente la ejecución del sublote 2D2. La documentación técnica afirma que las versiones base estaban autorizadas, pero no reproduce la aprobación específica exigida antes de ejecutar el sublote. | No se puede reconstruir ni presumir esa autorización únicamente a partir del commit, deploy o estado de la matriz. |
 
-**Estado vigente de `Opp_Flow_V5`: `PENDIENTE DE CONFIRMACIÓN PARA REMEDIACIÓN`.** El defecto confirmado posteriormente en la ruta Taller — creación de Opportunity sin poblar `Empresa_Operadora__c` — está técnicamente identificado, pero no debe corregirse hasta recibir autorización directa de Luis o Diego que nombre `Opp_Flow_V5` y limite el cambio a esa remediación.
+**Estado registrado en esta reconciliación previa: `PENDIENTE DE CONFIRMACIÓN PARA REMEDIACIÓN`.** El defecto confirmado posteriormente en la ruta Taller — creación de Opportunity sin poblar `Empresa_Operadora__c` — quedó técnicamente identificado bajo el criterio vigente en ese momento. La sección siguiente actualiza hacia adelante el criterio operativo sin reescribir esta trazabilidad histórica.
 
 ### Regla para componentes trabajados anteriormente
 
 Una implementación, deploy, activación o documentación histórica **no equivale automáticamente a autorización abierta** para nuevos cambios, rediseños, limpieza o remediaciones. Cuando no se preserve la autorización específica de ejecución, el antecedente sirve como evidencia técnica y trazabilidad, pero el componente permanece `PENDIENTE DE CONFIRMACIÓN` para cualquier intervención posterior. La nueva autorización debe identificar el nombre API exacto y el cambio permitido conforme a la puerta obligatoria de este documento.
+
+## 2026-08-12 — criterio operativo para remediaciones técnicas
+
+La regla general de alcance se mantiene para cualquier ampliación funcional o decisión nueva. La remediación técnica se distingue de una ampliación únicamente cuando corrige de forma mínima un defecto demostrado en un componente ya trabajado, sin cambiar el requerimiento ni extender el alcance.
+
+### Sigue requiriendo autorización explícita
+
+- incorporar un componente nuevo o ampliar el Sprint;
+- agregar funcionalidad o modificar una regla de negocio;
+- introducir un cambio de UX que no se derive necesariamente del defecto;
+- definir garantías, responsables, catálogos, sucursales o territorios oficiales;
+- agregar una integración nueva;
+- realizar un cambio estructural que no sea indispensable para corregir el defecto;
+- intervenir otros Flows, LWC/Aura o componentes relacionados por discovery;
+- efectuar rediseños generales, limpieza incidental o retiro de código legacy.
+
+### Puede avanzar como remediación técnica
+
+Una corrección puede ejecutarse sin solicitar una nueva autorización funcional cuando se cumplen simultáneamente estas condiciones:
+
+1. el componente ya fue trabajado dentro del proyecto actual;
+2. existe un defecto técnico demostrable asociado directamente al comportamiento implementado;
+3. la corrección es mínima y no agrega funcionalidad;
+4. no modifica reglas de negocio ni introduce una decisión empresarial nueva;
+5. no amplía el trabajo a componentes adicionales;
+6. no agrega soporte mediante nombres, Ids o ramas empresariales hardcodeadas;
+7. preserva el comportamiento de Bavarian y Otobai;
+8. completa únicamente el soporte de Empresa/PEKING ya implementado;
+9. queda validada y documentada.
+
+Si alguna condición no se cumple, la intervención se detiene y vuelve a tratarse como alcance nuevo o decisión pendiente.
+
+### Aplicación limitada a `Opp_Flow_V5`
+
+Se conserva íntegramente la trazabilidad histórica de la sección anterior: candidato inicialmente no autorizado, decisiones técnicas de Luis registradas posteriormente, implementación/deploy realizados y ausencia de evidencia preservada de la autorización específica de ejecución del sublote 2D2.
+
+**Estado operativo actual: `REMEDIACIÓN TÉCNICA PERMITIDA — CAMBIO LIMITADO`.** El permiso cubre exclusivamente corregir la ruta Taller para que `Empresa_Operadora__c` se resuelva antes de crear la Opportunity. La corrección debe reutilizar el lookup estructural a `Empresa__c`, no extender `User.Empresa__c`, no agregar una rama literal para PEKING y conservar Bavarian/Otobai.
+
+Cualquier otro cambio en `Opp_Flow_V5` — incluidos rediseños generales, cambios no indispensables de UX, modificación de rutas ajenas, limpieza de nodos legacy o nuevas decisiones funcionales — continúa sujeto a revisión de alcance y autorización explícita.
