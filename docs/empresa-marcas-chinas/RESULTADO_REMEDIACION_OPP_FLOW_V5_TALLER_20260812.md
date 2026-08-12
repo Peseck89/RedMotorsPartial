@@ -50,6 +50,36 @@ Las validaciones iniciales `0AfAK00000146Pd0AI`, `0AfAK00000146Sr0AI`, `0AfAK000
 
 Salesforce mantuvo avisos informativos sobre `Encuentra_Price_Book` y sus cuatro Assignments sin uso. Son nodos legacy ya documentados y no se modificaron.
 
+## QA real y remediación de acceso al lookup
+
+El primer interview funcional con un usuario QA del perfil `New Asesor Postventa` confirmó que la ruta Taller entraba correctamente a `Seleccionar Empresa`, pero el lookup mostraba un error de acceso antes de permitir seleccionar PEKING. No se pulsó `Siguiente` y no se creó Opportunity ni Quote.
+
+La configuración del Flow era correcta: tanto el selector general como el selector Taller usan `Opportunity.Empresa_Operadora__c`. La causa estaba fuera del Flow:
+
+- el perfil y los Permission Sets asignados al usuario QA no concedían lectura sobre `Empresa__c`;
+- el campo fuente no estaba presente en los layouts aplicables al contexto del usuario.
+
+Se creó el Permission Set `Empresa_Consulta_Flows`, limitado a `Read` sobre `Empresa__c`, sin Create, Edit, Delete, View All, Modify All, FLS administrativa ni clases Apex. Se asignó inicialmente solo al usuario QA controlado `0050P0000074Bf7QAE`.
+
+Para operación normal, la población candidata son los usuarios autorizados que ejecuten los Opportunity Flows con selector estructural de Empresa, comenzando por `New Asesor Postventa` en la ruta Taller. La asignación masiva permanece pendiente de definición funcional; no se modificó ningún otro usuario.
+
+Se modificaron únicamente estos layouts de Opportunity:
+
+- `Autos`: layout del Record Type predeterminado `BMW`, usado como contexto fuente del lookup antes de crear la Opportunity; el campo se agregó en la sección `Fields`, inmediatamente después de `Pricebook2Id`;
+- `Taller Autos`: layout de los Record Types `BMW_Taller` y `Mostrador` usados por los Opportunity Flows ya trabajados; el campo se agregó en `Datos de la oportunidad`, inmediatamente después de `BMW_Compania__c`.
+
+No se modificaron `Autos V1.4`, `Opportunity Layout` ni `Opportunity Layout Usados V1.1` porque no corresponden al contexto predeterminado ni a los Record Types usados por las rutas autorizadas con este selector.
+
+| Evidencia de configuración | Resultado |
+|---|---|
+| Dry-run | `0AfAK000001477B0AQ` — exitoso, 3/3 componentes |
+| Deploy | `0AfAK000001478n0AA` — exitoso, 3/3 componentes |
+| Permission Set Assignment | `0PaAK000002rbcz0AA` — usuario QA únicamente |
+| Acceso efectivo a PEKING | Read: sí; Edit/Delete: no |
+| Versión del Flow | v31 activa y última, sin modificación |
+
+La remediación elimina el bloqueo de configuración del lookup. El interview funcional debe repetirse antes de declarar QA OK.
+
 ## Resultado por Empresa
 
 | Empresa | Validación técnica | QA funcional |
@@ -63,6 +93,8 @@ No se crearon Opportunities durante este bloque, para evitar disparar correos in
 ## Estado final
 
 `Opp_Flow_V5`: **Validación técnica OK — QA funcional manual pendiente**.
+
+El bloqueo de permisos/layout detectado durante el primer intento de QA quedó resuelto. El estado no cambia a QA OK hasta repetir el interview y comprobar la Opportunity resultante.
 
 El inventario autoritativo conserva 20 Flows, distribuidos ahora en:
 
