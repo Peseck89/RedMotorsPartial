@@ -195,6 +195,23 @@
         </connector>
     </assignments>
     <assignments>
+        <description>Toma el codigo ERP de la Empresa vinculada por Empresa_Operadora__c (lookup), en vez de un tercer literal RMPEKING hardcodeado. Funciona para cualquier Empresa activa, incluida Peking.</description>
+        <name>Asignar_Codigo_Empresa_Operadora</name>
+        <label>Asignar Codigo Empresa Operadora</label>
+        <locationX>50</locationX>
+        <locationY>1100</locationY>
+        <assignmentItems>
+            <assignToReference>RMOTOBAI</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Datos_Opp.Empresa_Operadora__r.Codigo_ERP__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Crear_la_Ot</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <description>RMBAVARIAN</description>
         <name>RMBAVARIAN</name>
         <label>RMBAVARIAN</label>
@@ -250,6 +267,32 @@
                 <targetReference>asigna_creada_ot_reserva_false</targetReference>
             </connector>
             <label>creada ot reserva true</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Fuente principal: Empresa_Operadora__c (lookup). Sin lookup, cae al fallback legacy revisar_Empresa_Factura (Bavarian/Otobai sin cambios).</description>
+        <name>Tiene_Empresa_Operadora</name>
+        <label>Tiene Empresa Operadora</label>
+        <locationX>182</locationX>
+        <locationY>1000</locationY>
+        <defaultConnector>
+            <targetReference>revisar_Empresa_Factura</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Sin lookup: fallback legacy Bavarian/Otobai</defaultConnectorLabel>
+        <rules>
+            <name>Empresa_Operadora_Presente</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Datos_Opp.Empresa_Operadora__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asignar_Codigo_Empresa_Operadora</targetReference>
+            </connector>
+            <label>Empresa Operadora presente</label>
         </rules>
     </decisions>
     <decisions>
@@ -322,7 +365,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>revisar_Empresa_Factura</targetReference>
+                <targetReference>Tiene_Empresa_Operadora</targetReference>
             </connector>
             <label>no esta vacio</label>
         </rules>
