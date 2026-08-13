@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tipo_Kit_Softland__c</fullName>
+    <externalId>false</externalId>
+    <description>Tipo de kit ('V' Vehículo / 'M' Mercancía-Moto) que HttpCalloutCreateKit envía a Softland para esta Empresa. Configuración mínima para reemplazar la decisión binaria previa por Record Type.</description>
+    <inlineHelpText>Valor 'V' o 'M' usado por la integración de creación de kits Softland (HttpCalloutCreateKit).</inlineHelpText>
+    <label>Tipo Kit Softland</label>
+    <length>1</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -53,13 +53,14 @@ public class HttpCalloutCreateKit extends HttpCallout {
 
     @future(callout=true)
     public static void sendCreateKitRequest(List <Id> OppIds){
-        List<String> rmbavarian = new List<String>{'BMW', 'MINI', 'Motorrad'};
-        List <Opportunity> Opps = [Select Id, Name, ConsecutivoOportunidad__c, RecordType.Name, Amount, CurrencyIsoCode, (Select Id ,Product2.Codigo_de_Producto__c ,Product2.RecordType.Name ,Quantity ,Preciodefacturacion__c, UnitPrice,Product2.esVehiculo__c FROM OpportunityLineItems where esRegalia__c = false ) from Opportunity where id IN: OppIds];            
+        List <Opportunity> Opps = [Select Id, Name, ConsecutivoOportunidad__c, Amount, CurrencyIsoCode,
+            Empresa_Operadora__c, Empresa_Operadora__r.Codigo_ERP__c, Empresa_Operadora__r.Tipo_Kit_Softland__c,
+            (Select Id ,Product2.Codigo_de_Producto__c ,Product2.RecordType.Name ,Quantity ,Preciodefacturacion__c, UnitPrice,Product2.esVehiculo__c FROM OpportunityLineItems where esRegalia__c = false ) from Opportunity where id IN: OppIds];
         List <HttpCalloutCreateKit> mapCalls = new List <HttpCalloutCreateKit> ();
 		Boolean sendRequest = false;
         for(Opportunity opp: Opps){
-            String tipo = rmbavarian.contains(opp.RecordType.Name) ? 'V' : 'M';
-            String compania =  rmbavarian.contains(opp.RecordType.Name) ? 'RMBAVARIAN' : 'RMOTOBAI';
+            String tipo = resolveTipoKitSoftland(opp);
+            String compania = resolveCompanyErpCode(opp);
             HttpCalloutCreateKit temp = new HttpCalloutCreateKit(opp.ConsecutivoOportunidad__c,opp.Name,tipo,compania,0,opp.CurrencyIsoCode);
             //HttpCalloutCreateKit temp = new HttpCalloutCreateKit(opp.ConsecutivoOportunidad__c,opp.Name,'M','RMBAVARIAN',opp.Amount,opp.CurrencyIsoCode);
             for(OpportunityLineItem ol: opp.OpportunityLineItems){
@@ -81,6 +82,34 @@ public class HttpCalloutCreateKit extends HttpCallout {
         }
     }
     
+    /**
+     * Resuelve el código ERP de Empresa a partir de Opportunity.Empresa_Operadora__c, sin usar
+     * Record Type. Cualquier Empresa activa configurada (Bavarian, Otobai, PEKING o una futura)
+     * resuelve por esta misma ruta; si no hay Empresa configurada, produce un error controlado
+     * en vez de asumir Otobai por defecto.
+     */
+    @TestVisible
+    private static String resolveCompanyErpCode(Opportunity opp) {
+        if (opp.Empresa_Operadora__c == null || String.isBlank(opp.Empresa_Operadora__r.Codigo_ERP__c)) {
+            throw new AuraHandledException('No existe Empresa configurada para la Oportunidad ' + opp.Id + '.');
+        }
+        return opp.Empresa_Operadora__r.Codigo_ERP__c;
+    }
+
+    /**
+     * Resuelve el tipo de kit Softland ('V'/'M') desde la configuración de la Empresa
+     * (Empresa__c.Tipo_Kit_Softland__c), sin depender de Record Type. Bavarian y Otobai
+     * conservan exactamente su comportamiento actual ('V' y 'M' respectivamente); PEKING usa
+     * provisionalmente el valor equivalente de Bavarian mientras no exista definición propia.
+     */
+    @TestVisible
+    private static String resolveTipoKitSoftland(Opportunity opp) {
+        if (opp.Empresa_Operadora__c == null || String.isBlank(opp.Empresa_Operadora__r.Tipo_Kit_Softland__c)) {
+            throw new AuraHandledException('No existe tipo de kit Softland configurado para la Empresa de la Oportunidad ' + opp.Id + '.');
+        }
+        return opp.Empresa_Operadora__r.Tipo_Kit_Softland__c;
+    }
+
     @InvocableMethod
     public static void sendCreateKitRequestFlow(List <Id> OppIds) {
         system.debug('Flow Create Kit in Sofland (Won Opportunities)');

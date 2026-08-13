@@ -20,21 +20,32 @@ public class HttpCalloutCreateKitTest {
         Id pricebookId = pb.Id;
         
         
+        Empresa__c bavarian = new Empresa__c(
+            Name = 'Bavarian',
+            Codigo__c = 'RMBAVARIAN',
+            Codigo_ERP__c = 'RMBAVARIAN',
+            Nombre_Legal__c = 'Bavarian Motors CR S.A.',
+            Tipo_Kit_Softland__c = 'V',
+            Activa__c = true
+        );
+        insert bavarian;
+
         // Create test data for Opportunity
         RecordType opportunityRecordType = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND DeveloperName = 'BMW' LIMIT 1];
         List<Opportunity> opportunities = new List<Opportunity>();
-        
+
         for (Integer i = 0; i < 2; i++) {
             Opportunity opp = new Opportunity(
                 Name = 'Test Opportunity ' + i,
                 StageName = 'Closed Won',
                 CloseDate = Date.today(),
                 RecordTypeId = opportunityRecordType.Id,
-                Pricebook2Id = pricebookId
+                Pricebook2Id = pricebookId,
+                Empresa_Operadora__c = bavarian.Id
             );
             opportunities.add(opp);
         }
-        
+
         insert opportunities;
         
         // Create test data for Product2
@@ -43,7 +54,7 @@ public class HttpCalloutCreateKitTest {
         for (Integer i = 0; i < 2; i++) {
             Product2 product = new Product2(
                 Name = 'Test Product ' + i,
-                Codigo_de_Producto__c = '456' // Use the correct external ID field for the Product2 object
+                Codigo_de_Producto__c = '456' + i // Distinct codes: a validation rule rejects duplicates
             );
             products.add(product);
         }
@@ -114,10 +125,117 @@ public class HttpCalloutCreateKitTest {
         Test.startTest();
         HttpCalloutCreateKit.sendCreateKitRequestFlow(new List<Id>{});
         Test.stopTest();
-        
+
         // Add assertions as needed
     }
-    
+
+    private static Empresa__c buildEmpresa(String name, String codigo, String codigoErp, String tipoKit, Boolean activa) {
+        return new Empresa__c(
+            Name = name,
+            Codigo__c = codigo,
+            Codigo_ERP__c = codigoErp,
+            Nombre_Legal__c = name + ' Test S.A.',
+            Tipo_Kit_Softland__c = tipoKit,
+            Activa__c = activa
+        );
+    }
+
+    @isTest
+    static void resolvesBavarianCompanyAndTipoByEmpresa() {
+        // @testSetup ya insertó la Empresa Bavarian; se reutiliza en vez de duplicarla.
+        Empresa__c bavarian = [SELECT Id, Codigo_ERP__c, Tipo_Kit_Softland__c FROM Empresa__c WHERE Codigo__c = 'RMBAVARIAN' LIMIT 1];
+        Opportunity opp = new Opportunity(
+            Empresa_Operadora__c = bavarian.Id,
+            Empresa_Operadora__r = bavarian
+        );
+
+        Test.startTest();
+        String erp = HttpCalloutCreateKit.resolveCompanyErpCode(opp);
+        String tipo = HttpCalloutCreateKit.resolveTipoKitSoftland(opp);
+        Test.stopTest();
+
+        System.assertEquals('RMBAVARIAN', erp);
+        System.assertEquals('V', tipo);
+    }
+
+    @isTest
+    static void resolvesOtobaiCompanyAndTipoByEmpresa() {
+        Empresa__c otobai = buildEmpresa('Otobai', 'RMOTOBAI', 'RMOTOBAI', 'M', true);
+        insert otobai;
+        Opportunity opp = new Opportunity(
+            Empresa_Operadora__c = otobai.Id,
+            Empresa_Operadora__r = otobai
+        );
+
+        Test.startTest();
+        String erp = HttpCalloutCreateKit.resolveCompanyErpCode(opp);
+        String tipo = HttpCalloutCreateKit.resolveTipoKitSoftland(opp);
+        Test.stopTest();
+
+        System.assertEquals('RMOTOBAI', erp);
+        System.assertEquals('M', tipo);
+    }
+
+    @isTest
+    static void resolvesPekingUsingProvisionalBavarianEquivalentTipo() {
+        Empresa__c peking = buildEmpresa('PEKING', 'RMPEKING', 'RMPEKING', 'V', true);
+        insert peking;
+        Opportunity opp = new Opportunity(
+            Empresa_Operadora__c = peking.Id,
+            Empresa_Operadora__r = peking
+        );
+
+        Test.startTest();
+        String erp = HttpCalloutCreateKit.resolveCompanyErpCode(opp);
+        String tipo = HttpCalloutCreateKit.resolveTipoKitSoftland(opp);
+        Test.stopTest();
+
+        System.assertEquals('RMPEKING', erp);
+        System.assertEquals('V', tipo);
+    }
+
+    @isTest
+    static void resolvesFutureCompanyThroughConfigurationWithoutCodeChange() {
+        Empresa__c futura = buildEmpresa('Futura', 'RMFUTURA', 'RMFUTURA', 'M', true);
+        insert futura;
+        Opportunity opp = new Opportunity(
+            Empresa_Operadora__c = futura.Id,
+            Empresa_Operadora__r = futura
+        );
+
+        Test.startTest();
+        String erp = HttpCalloutCreateKit.resolveCompanyErpCode(opp);
+        String tipo = HttpCalloutCreateKit.resolveTipoKitSoftland(opp);
+        Test.stopTest();
+
+        System.assertEquals('RMFUTURA', erp);
+        System.assertEquals('M', tipo);
+    }
+
+    @isTest
+    static void rejectsMissingEmpresaWithControlledErrorNoFallback() {
+        Opportunity opp = new Opportunity(Empresa_Operadora__c = null);
+
+        Test.startTest();
+        Boolean threwOnCompany = false;
+        try {
+            HttpCalloutCreateKit.resolveCompanyErpCode(opp);
+        } catch (AuraHandledException expected) {
+            threwOnCompany = true;
+        }
+
+        Boolean threwOnTipo = false;
+        try {
+            HttpCalloutCreateKit.resolveTipoKitSoftland(opp);
+        } catch (AuraHandledException expected) {
+            threwOnTipo = true;
+        }
+        Test.stopTest();
+
+        System.assert(threwOnCompany, 'Debió rechazar una Oportunidad sin Empresa configurada (compañía), no asumir Otobai.');
+        System.assert(threwOnTipo, 'Debió rechazar una Oportunidad sin Empresa configurada (tipo), no asumir un default.');
+    }
+
     // Mock HTTP response generator class
     public class MockHttpResponseGenerator implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest req) {
