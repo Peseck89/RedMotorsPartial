@@ -3858,7 +3858,7 @@
         <inputAssignments>
             <field>Compania__c</field>
             <value>
-                <elementReference>EmpresaUsuario</elementReference>
+                <elementReference>EmpresaLegacySeleccionada</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>

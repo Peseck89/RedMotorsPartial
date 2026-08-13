@@ -11,7 +11,7 @@
 | Flow | Versión activa | Clasificación de QA | Estado alcanzado |
 |---|---:|---|---|
 | `Opp_flow_V3` | v30 (`301AK00000PW6LeYAL`) | C — manual | **QA DE CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** |
-| `Opp_Flow_v6` | v80 (`301AK00000PCG7ZYAX`) | C — manual | **LISTO PARA QA MANUAL PARCIAL** en ruta Taller; la ruta Mostrador requiere una sesión funcional autorizada de ese tipo |
+| `Opp_Flow_v6` | v81 (`301AK00000PW25AYAT`) | C — manual | **VALIDACIÓN TÉCNICA OK — QA FUNCIONAL MANUAL PENDIENTE** en ruta Taller; Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `Opportunity_Flow_V2` | v7 (`301AK00000PCMb5YAH`) | C — manual | **LISTO PARA QA MANUAL PARCIAL** en ruta Taller/general; la ruta Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `PlanDeMantenimientoV2` | v24 (`301AK00000PC2ngYAD`) | C — manual | **NO LISTO**: existe Quote PEKING, pero no contiene líneas seleccionables |
 | `CreateWoliFromExpense` | v15 (`301AK00000PC2nfYAD`) | B/C — disparo por registro | **NO LISTO**: no existe Work Order PEKING ni Expense facturable relacionado reutilizable |
@@ -46,11 +46,12 @@ La diferencia entre `User.Empresa__c = Bavarian` y la selección estructural `PE
 
 ## `Opp_Flow_v6`
 
-- La definición activa es v80. La serialización moderna omite propiedades visuales/defaults preexistentes, pero conserva el grafo y los elementos funcionales de Empresa/Pricebook.
+- La definición activa es v81 (`301AK00000PW25AYAT`). La serialización moderna omite propiedades visuales/defaults preexistentes, pero conserva el grafo y los elementos funcionales de Empresa/Pricebook.
 - Hay dos entrevistas v80 abandonadas después de la primera pantalla; no constituyen QA.
-- Existe una entrevista v80 anterior (`8gZAK000000HEBR2A4`) que terminó en error en `Resolver_Pricebook_Empresa` el 6 de agosto de 2026. No se preservó el mensaje técnico completo y no quedaron Opportunity ni Quote en su ventana de ejecución.
-- Esa entrevista no demuestra por sí sola un defecto actual ni autoriza una corrección. La repetición dirigida debe capturar GUID, pantalla, mensaje y hora exacta si el error reaparece.
-- La ruta Taller puede validarse con `Control de Calidad`. Las rutas principal y Mostrador mantienen selectores estructurales separados; completar la cobertura Mostrador requiere una sesión funcional autorizada con `Tipo_de_oportunidad__c = Mostrador` o `Todas`.
+- La nueva entrevista v80 (`8gZAK000000IgaH2AS`) falló en `CreateQuote` porque `Quote.Compania__c`, picklist legacy restringido, recibió `PEKING`. Opportunity y Quote fueron revertidos.
+- Se sustituyó únicamente la fuente por `EmpresaLegacySeleccionada`: Bavarian/Otobai conservan sus valores y PEKING deja el campo legacy vacío. El dry-run `0AfAK0000014Amb0AE` y el deploy `0AfAK0000014AoD0AU` fueron exitosos.
+- `Empresa_Operadora__c` y `Resolver_Pricebook_Empresa` permanecen intactos. La ruta Taller queda pendiente de repetir una sola vez; Mostrador requiere una sesión funcional autorizada con tipo `Mostrador` o `Todas`.
+- Evidencia completa: [`RESULTADO_REMEDIACION_OPP_FLOW_V6_20260812.md`](RESULTADO_REMEDIACION_OPP_FLOW_V6_20260812.md).
 
 ## `Opportunity_Flow_V2`
 
