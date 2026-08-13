@@ -118,6 +118,22 @@
         </connector>
     </assignments>
     <assignments>
+        <name>AgregarProductIdManoObra</name>
+        <label>Agregar Product Id Mano de Obra</label>
+        <locationX>506</locationX>
+        <locationY>1310</locationY>
+        <assignmentItems>
+            <assignToReference>ProductIdsManoObra</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>LoopProductsManoObra.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>LoopProductsManoObra</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>AsignarProductoPricebook_0</name>
         <label>AsignarProductoPricebook</label>
         <locationX>594</locationX>
@@ -126,18 +142,18 @@
             <assignToReference>PricebookEntries</assignToReference>
             <operator>Add</operator>
             <value>
-                <elementReference>GetPricebookEntry.Id</elementReference>
+                <elementReference>LoopPricebookEntriesManoObra.Id</elementReference>
             </value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>PricebookEntryObject</assignToReference>
             <operator>Add</operator>
             <value>
-                <elementReference>GetPricebookEntry</elementReference>
+                <elementReference>LoopPricebookEntriesManoObra</elementReference>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>LoopProduct</targetReference>
+            <targetReference>LoopPricebookEntriesManoObra</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -446,31 +462,6 @@
         </rules>
     </decisions>
     <decisions>
-        <name>IFNOTNULL</name>
-        <label>IFNOTNULL</label>
-        <locationX>726</locationX>
-        <locationY>1550</locationY>
-        <defaultConnector>
-            <targetReference>LoopProduct</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>NotNullGet</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>GetPricebookEntry.Id</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>AsignarProductoPricebook_0</targetReference>
-            </connector>
-            <label>NotNullGet</label>
-        </rules>
-    </decisions>
-    <decisions>
         <name>IFNoWorkOrder</name>
         <label>IFNoWorkOrder</label>
         <locationX>176</locationX>
@@ -559,14 +550,28 @@
         </noMoreValuesConnector>
     </loops>
     <loops>
-        <name>LoopProduct</name>
-        <label>LoopProduct</label>
+        <name>LoopProductsManoObra</name>
+        <label>Loop Products Mano de Obra</label>
         <locationX>506</locationX>
-        <locationY>1310</locationY>
+        <locationY>1430</locationY>
         <collectionReference>GetProducts_0</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
-            <targetReference>GetPricebookEntry</targetReference>
+            <targetReference>AgregarProductIdManoObra</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetPricebookEntriesManoObra</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <name>LoopPricebookEntriesManoObra</name>
+        <label>Loop Pricebook Entries Mano de Obra</label>
+        <locationX>506</locationX>
+        <locationY>1310</locationY>
+        <collectionReference>GetPricebookEntriesManoObra</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AsignarProductoPricebook_0</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
             <targetReference>Pantalla1</targetReference>
@@ -640,34 +645,6 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <name>GetPricebookEntry</name>
-        <label>GetPricebookEntry</label>
-        <locationX>726</locationX>
-        <locationY>1430</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>IFNOTNULL</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Product2Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>LoopProduct.Id</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>Pricebook2Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>PricebookSeleccionado</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>PricebookEntry</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
         <name>GetPricebookEntryInsideLoop</name>
         <label>GetPricebookEntryLoop</label>
         <locationX>1034</locationX>
@@ -695,7 +672,7 @@
         <locationY>1190</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>LoopProduct</targetReference>
+            <targetReference>LoopProductsManoObra</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -707,6 +684,34 @@
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
         <object>Product2</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>GetPricebookEntriesManoObra</name>
+        <label>Get Pricebook Entries Mano de Obra</label>
+        <locationX>506</locationX>
+        <locationY>1190</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>LoopPricebookEntriesManoObra</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Pricebook2Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>PricebookSeleccionado</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Product2Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>ProductIdsManoObra</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>PricebookEntry</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
@@ -972,6 +977,13 @@
     </variables>
     <variables>
         <name>PricebookEntrySeleccionados</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>ProductIdsManoObra</name>
         <dataType>String</dataType>
         <isCollection>true</isCollection>
         <isInput>false</isInput>
