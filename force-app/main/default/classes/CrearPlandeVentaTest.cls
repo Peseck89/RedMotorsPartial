@@ -29,8 +29,9 @@ private class CrearPlandeVentaTest {
         Test.stopTest();
 
         Quote createdQuote = [
-            SELECT OpportunityId, Cuenta_de_facturaci_n2__c,
+            SELECT OpportunityId, Pricebook2Id, Cuenta_de_facturaci_n2__c,
                    Opportunity.Empresa_Operadora__c,
+                   Opportunity.Pricebook2Id,
                    Opportunity.BMW_Compania__c,
                    Opportunity.Cuenta_de_Facturaci_n__c
             FROM Quote
@@ -45,6 +46,8 @@ private class CrearPlandeVentaTest {
 
         System.assertNotEquals(sourceQuote.OpportunityId, createdQuote.OpportunityId);
         System.assertEquals(empresa.Id, createdQuote.Opportunity.Empresa_Operadora__c);
+        System.assertEquals(sourceQuote.Pricebook2Id, createdQuote.Pricebook2Id);
+        System.assertEquals(sourceQuote.Pricebook2Id, createdQuote.Opportunity.Pricebook2Id);
         System.assertEquals(
             sourceBefore.Empresa_Operadora__c,
             sourceAfter.Empresa_Operadora__c
@@ -306,6 +309,94 @@ private class CrearPlandeVentaTest {
         );
     }
 
+    @isTest
+    static void replacesIncompatiblePricebookWithConfiguredEmpresaPricebook() {
+        Empresa__c empresa = createEmpresa('RMPEKING-REPLACE');
+        Quote sourceQuote = createSourceQuote(
+            empresa.Id,
+            'Bavarian',
+            'INCOMPATIBLE-PRICEBOOK',
+            true
+        );
+        Pricebook2 sourcePricebook = [
+            SELECT Id, Empresa__c
+            FROM Pricebook2
+            WHERE Id = :sourceQuote.Pricebook2Id
+        ];
+        sourcePricebook.Empresa__c = null;
+        update sourcePricebook;
+
+        Pricebook2 configuredPricebook = new Pricebook2(
+            Name = 'PEKING Plan Venta USD',
+            Empresa__c = empresa.Id,
+            CurrencyIsoCode = 'USD',
+            IsActive = true
+        );
+        insert configuredPricebook;
+
+        Test.startTest();
+        CrearPlandeVenta.FlowOutput output = executePlan(sourceQuote.Id);
+        Test.stopTest();
+
+        Quote createdQuote = [
+            SELECT Pricebook2Id, Opportunity.Pricebook2Id
+            FROM Quote
+            WHERE Id = :output.newQuoteId
+        ];
+        System.assertEquals(configuredPricebook.Id, createdQuote.Pricebook2Id);
+        System.assertEquals(
+            configuredPricebook.Id,
+            createdQuote.Opportunity.Pricebook2Id
+        );
+        System.assertNotEquals(sourcePricebook.Id, createdQuote.Pricebook2Id);
+    }
+
+    @isTest
+    static void rejectsLookupEmpresaWithoutActiveUsdPricebook() {
+        Empresa__c empresa = createEmpresa('RMPEKING-NO-PRICEBOOK');
+        Quote sourceQuote = createSourceQuote(
+            empresa.Id,
+            'Bavarian',
+            'NO-PRICEBOOK',
+            true
+        );
+        Pricebook2 sourcePricebook = [
+            SELECT Id, IsActive
+            FROM Pricebook2
+            WHERE Id = :sourceQuote.Pricebook2Id
+        ];
+        sourcePricebook.IsActive = false;
+        update sourcePricebook;
+
+        Boolean receivedExpectedError = false;
+        Test.startTest();
+        try {
+            CrearPlandeVenta.FlowInput input = new CrearPlandeVenta.FlowInput();
+            input.quoteId = sourceQuote.Id;
+            CrearPlandeVenta.ejecutar(
+                new List<CrearPlandeVenta.FlowInput>{ input }
+            );
+            System.assert(false, 'La Empresa sin Pricebook activo debía detener el proceso.');
+        } catch (AuraHandledException ex) {
+            receivedExpectedError = ex.getMessage().contains('Pricebook');
+        }
+        Test.stopTest();
+
+        System.assert(
+            receivedExpectedError,
+            'La falta de Pricebook debe devolver un error controlado.'
+        );
+        System.assertEquals(
+            0,
+            [
+                SELECT COUNT()
+                FROM Quote
+                WHERE Name = :('PV-' + sourceQuote.Name)
+            ],
+            'No debe crear un Quote cuando la configuración de Empresa está incompleta.'
+        );
+    }
+
     private static CrearPlandeVenta.FlowOutput executePlan(Id sourceQuoteId) {
         CrearPlandeVenta.FlowInput input = new CrearPlandeVenta.FlowInput();
         input.quoteId = sourceQuoteId;
@@ -345,6 +436,8 @@ private class CrearPlandeVentaTest {
 
         Pricebook2 pricebook = new Pricebook2(
             Name = 'Pricebook ' + scenario,
+            Empresa__c = empresaOperadoraId,
+            CurrencyIsoCode = 'USD',
             IsActive = true
         );
         insert pricebook;
@@ -487,5 +580,16 @@ private class CrearPlandeVentaTest {
         return bavarianRecordTypes.contains(recordTypeName)
             ? '001PH00000X9ZEcYAN'
             : '0014U00002IpmIxQAJ';
+    }
+
+    private static Empresa__c createEmpresa(String codigo) {
+        Empresa__c empresa = new Empresa__c(
+            Name = codigo,
+            Codigo__c = codigo,
+            Codigo_ERP__c = codigo,
+            Activa__c = true
+        );
+        insert empresa;
+        return empresa;
     }
 }
