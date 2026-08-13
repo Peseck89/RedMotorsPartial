@@ -3,9 +3,9 @@
 **Fecha:** 13 de agosto de 2026
 
 **Ambiente:** RedMotors Sandbox Partial
-**Resultado:** **A. SPRINT 2 CERRADO TÉCNICAMENTE — único pendiente de negocio: N3 (garantía PEKING), a la espera de Diego**
+**Resultado:** **SPRINT 2 — CERRADO**
 
-**Corrección:** el resultado anterior de este documento ("F07, N2 y N4 cerrados; N3 espera confirmación de Diego") era prematuro — todavía no se había corregido el bug de recálculo de Pricebook en los 4 Flows de Opportunity. Esa corrección ya se aplicó (ver sección dedicada más abajo); con ella, Sprint 2 queda técnicamente cerrado y el único pendiente real es N3.
+**Historial de correcciones de este documento:** el resultado "F07, N2 y N4 cerrados; N3 espera confirmación de Diego" (temprano el 13 de agosto) era prematuro porque el bug de recálculo de Pricebook en los 4 Flows de Opportunity todavía no estaba corregido; esa corrección ya se aplicó (ver sección dedicada más abajo). Con N3 ahora validado sin cambio técnico (ver sección "N3 — garantía"), Sprint 2 queda **CERRADO** — no quedan pendientes técnicos ni de negocio dentro del alcance implementable de este Sprint.
 
 ## Autorización aplicada
 
@@ -166,15 +166,17 @@ Con el dataset corregido:
 
 Estado N4: **QA FUNCIONAL OK — PEKING**.
 
-## N3 — garantía
+## N3 — garantía (validación final, 2026-08-13)
 
-`SegregateWOLIs` solo muestra la selección específica de garantía Otobai cuando el Work Order pertenece a `RMOTOBAI` y existen porcentajes de garantía. Con porcentajes de garantía en cero, PEKING cae naturalmente en el comportamiento sin garantía y no requiere cambio técnico.
+`SegregateWOLIs` v51 (activa) fue revisado de forma dirigida. La regla que determina si una línea (WOLI) tiene garantía depende únicamente de dos campos porcentuales de la línea, `Garantia2 > 0` y `BSIInterno2 > 0` — es agnóstica de empresa, aplica igual a Bavarian, Otobai y PEKING.
+
+Se encontró una única condición por empresa en todo el Flow: el campo de pantalla `GarantiaOtobai` ("Garantía Otobai", opciones `KAWASAKI`/`POLARIS`) solo es visible cuando `GetWorkOrder.empresaFactura__c EqualTo 'RMOTOBAI'` (además de `Garantia2`/`BSIInterno2` > 0). Diego confirmó que esta condición no forma parte de la regla general de garantía — únicamente controla la visibilidad del selector de sub-marca de motocicleta propio de Otobai (Kawasaki/Polaris), no una regla de garantía distinta por empresa. Ninguna otra referencia a Bavarian, PEKING, `BMW_Compania__c`, `Empresa_Operadora__c`, `empresaFacturaCP__c`, Record Type o marca existe en el Flow.
 
 No se modificó el Flow y no se creó ningún campo o regla PEKING.
 
-Estado N3: **PENDIENTE CONFIRMACIÓN DIEGO — GARANTÍA PEKING**.
+Estado N3: **VALIDADO — SIN CAMBIO TÉCNICO PARA PEKING**.
 
-Diego debe confirmar si la ausencia de garantía de fábrica será la regla definitiva y si existen excepciones, porcentajes o tipos de garantía aplicables.
+**Observación para el futuro:** si PEKING llega a manejar garantía con porcentaje mayor a cero, la línea se segregará correctamente como "con garantía" (esa parte es agnóstica de empresa), pero no aparecerá ningún selector de tipo de garantía para PEKING — `Garant_a_Otobai__c` quedaría vacío en esos registros. Definir un selector o tipo de garantía propio para PEKING es una decisión funcional a tomar en ese momento; no corresponde inventarlo hoy sin ese caso de negocio.
 
 ## Corrección del bug de Pricebook en 4 Flows de Opportunity
 
@@ -213,6 +215,6 @@ Para el QA N4 del usuario asesor se agregaron las asignaciones temporales `0PaAK
 
 ## Criterio final
 
-**A. SPRINT 2 CERRADO TÉCNICAMENTE — único pendiente de negocio: N3 (garantía PEKING).**
+**SPRINT 2 — CERRADO.**
 
-El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 también cerró su FLS mínimo y completó una ejecución normal y una selectiva con PEKING, sin fault, rollback ni duplicidad. En N4, el Read mínimo de Activity resolvió la inicialización; tras corregir con autorización explícita el vínculo de Opportunity del Asset QA (de una Opportunity legacy BMW a la Opportunity PEKING ya validada `006AK00000JT9UoYAL`), v21 confirmó Case, Work Order y Opportunity estructuralmente PEKING sin fault ni duplicado, y v55 completó las pantallas de Asistió y Kilometraje con los mismos datos PEKING, sin fault, rollback ni duplicidad. Estado N4: **QA FUNCIONAL OK — PEKING**. Adicionalmente se corrigió el bug de recálculo de Pricebook en los 4 Flows de Opportunity (`Opp_flow_V3` v31, `Opp_Flow_V5` v34, `Opp_Flow_v6` v83, `Opportunity_Flow_V2` v9), validado estructuralmente para las 3 empresas, con la validación funcional en vivo diferida por requerir interacción de pantalla. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva — es el único pendiente real de Sprint 2.
+El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 también cerró su FLS mínimo y completó una ejecución normal y una selectiva con PEKING, sin fault, rollback ni duplicidad. En N4, el Read mínimo de Activity resolvió la inicialización; tras corregir con autorización explícita el vínculo de Opportunity del Asset QA (de una Opportunity legacy BMW a la Opportunity PEKING ya validada `006AK00000JT9UoYAL`), v21 confirmó Case, Work Order y Opportunity estructuralmente PEKING sin fault ni duplicado, y v55 completó las pantallas de Asistió y Kilometraje con los mismos datos PEKING, sin fault, rollback ni duplicidad. Estado N4: **QA FUNCIONAL OK — PEKING**. Se corrigió el bug de recálculo de Pricebook en los 4 Flows de Opportunity (`Opp_flow_V3` v31, `Opp_Flow_V5` v34, `Opp_Flow_v6` v83, `Opportunity_Flow_V2` v9), validado estructuralmente para las 3 empresas, con la validación funcional en vivo diferida por requerir interacción de pantalla. N3 (`SegregateWOLIs` v51) quedó **VALIDADO — SIN CAMBIO TÉCNICO PARA PEKING**: la segregación de garantía depende únicamente de `Garantia2`/`BSIInterno2` (agnóstico de empresa); la única condición por empresa encontrada (`empresaFactura__c = 'RMOTOBAI'`) solo gobierna un selector de sub-marca de motocicleta propio de Otobai (Kawasaki/Polaris), confirmado por Diego como fuera del alcance de una regla general de garantía. No quedan pendientes técnicos ni de negocio dentro del alcance implementable de Sprint 2.

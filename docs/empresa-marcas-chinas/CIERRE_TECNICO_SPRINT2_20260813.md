@@ -12,13 +12,13 @@
 
 ## Conclusión
 
-**A. SPRINT 2 CERRADO TÉCNICAMENTE — único pendiente de negocio: N3 (garantía PEKING), a la espera de Diego.**
+**SPRINT 2 — CERRADO.**
 
-**Corrección respecto a versiones anteriores de este documento:** el estado "F07, N2 y N4 cerrados, único pendiente N3" registrado antes del 13 de agosto de 2026 (tarde) era prematuro — en ese momento el bug de recálculo de Pricebook en los 4 Flows de Opportunity todavía no se había corregido. Esa corrección ya se aplicó (ver sección siguiente); con ella, la afirmación de "único pendiente N3" pasa a ser exacta.
+**Historial de correcciones de este documento:** el estado "F07, N2 y N4 cerrados, único pendiente N3" registrado antes del 13 de agosto de 2026 (tarde) era prematuro — en ese momento el bug de recálculo de Pricebook en los 4 Flows de Opportunity todavía no se había corregido. Esa corrección ya se aplicó (ver sección dedicada). Con N3 ahora validado sin cambio técnico (ver matriz F10 y sección N3 más abajo), Sprint 2 queda cerrado.
 
-Los 20 Flows del alcance autoritativo permanecen conciliados sin doble conteo. F07, N2 y N4 superaron sus defectos preexistentes y quedaron funcionalmente validados con PEKING. Los 4 Flows de Opportunity ya no dependen de la búsqueda incorrecta de Pricebook por nombre. El cierre técnico queda completo; el único pendiente restante es de negocio (N3).
+Los 20 Flows del alcance autoritativo permanecen conciliados sin doble conteo. F07, N2 y N4 superaron sus defectos preexistentes y quedaron funcionalmente validados con PEKING. Los 4 Flows de Opportunity ya no dependen de la búsqueda incorrecta de Pricebook por nombre. N3 (`SegregateWOLIs`) fue revisado de forma dirigida: su regla de garantía depende únicamente de campos porcentuales de la línea (`Garantia2`, `BSIInterno2`), agnóstica de empresa; la única condición por empresa encontrada solo controla un selector de sub-marca de motocicleta propio de Otobai (Kawasaki/Polaris), no una regla general de garantía. Diego confirmó que esto no requiere una regla propia para PEKING. No quedan pendientes técnicos ni de negocio dentro del alcance implementable de Sprint 2.
 
-N2 tiene dataset provisional, remediación técnica desplegada y QA funcional aprobado en ambas variantes. N4 tiene el mismo tipo de dataset provisional, la corrección del vínculo de Opportunity del Asset QA, y QA funcional aprobado en v21 y v55. N3 continúa pendiente de confirmación de Diego y no debe declararse QA funcional OK en este corte.
+N2 tiene dataset provisional, remediación técnica desplegada y QA funcional aprobado en ambas variantes. N4 tiene el mismo tipo de dataset provisional, la corrección del vínculo de Opportunity del Asset QA, y QA funcional aprobado en v21 y v55. N3 queda validado sin cambio técnico, confirmado por Diego.
 
 ## Corrección del bug de Pricebook2.Name = Id (4 Flows de Opportunity)
 
@@ -59,7 +59,7 @@ Versiones activas resultantes: `Opp_flow_V3` v31, `Opportunity_Flow_V2` v9, `Opp
 | F07 | `PlanDeMantenimientoV2` | **QA FUNCIONAL OK** | v24 `Completed`; Plan `A-0607` y QLI Regalía PEKING Local/CRC persistidos sin duplicado ni rollback. |
 | F08 | `Work_Order_from_Quote_Selective` | **QA FUNCIONAL OK** | v9 `Completed`; Work Order `00087394` y un WOLI PEKING persistidos, sin fault, rollback ni duplicidad. |
 | F09 | `Work_Order_from_Quote` | **QA FUNCIONAL OK** | v11 `Completed`; Work Order `00087393` y un WOLI PEKING persistidos, sin fault, rollback ni duplicidad. |
-| F10 | `SegregateWOLIs` | **BLOQUEO DE NEGOCIO** | N3: garantía/segregación PEKING sin equivalencia autorizada. |
+| F10 | `SegregateWOLIs` | **REVISADO SIN CAMBIO** | N3: validado v51 — segregación de garantía agnóstica de empresa (`Garantia2`/`BSIInterno2`); confirmado por Diego, sin cambio técnico necesario para PEKING. |
 | F11 | `ReciboUsadosFlow` | **NO APLICA** | Proceso exclusivo de usados; Luis confirmó no extenderlo a PEKING. |
 | F12 | `Opp_Flow_V5` | **QA FUNCIONAL OK** | Creación y navegación al Quote aprobadas en v33; bug de Pricebook corregido en v34, validación funcional de la ruta de recálculo diferida (estructural OK). |
 | F13 | `Opp_flow_V3` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace pendiente en la siguiente ejecución normal; bug de Pricebook corregido en v31, validación funcional de la ruta de recálculo diferida (estructural OK). |
@@ -71,7 +71,7 @@ Versiones activas resultantes: `Opp_flow_V3` v31, `Opportunity_Flow_V2` v9, `Opp
 | F19 | `AgregarManoObra` | **QA FUNCIONAL OK** | WOLI y Subtipo PEKING únicos, sin fault, rollback ni duplicidad. |
 | F20 | `Carga_MO_26_Lavado_a_Caso` | **NO APLICA** | Sin versión activa; Luis confirmó no trabajar Flows inactivos. |
 
-Resumen exacto: 8 **QA FUNCIONAL OK**, 3 **VALIDACIÓN TÉCNICA OK / QA DIFERIDO**, 1 **BLOQUEO DE NEGOCIO**, 6 **REVISADO SIN CAMBIO** y 2 **NO APLICA**. Total: **20 Flows**.
+Resumen exacto: 8 **QA FUNCIONAL OK**, 3 **VALIDACIÓN TÉCNICA OK / QA DIFERIDO**, 0 **BLOQUEO DE NEGOCIO**, 7 **REVISADO SIN CAMBIO** y 2 **NO APLICA**. Total: **20 Flows**.
 
 ## Flows con creación funcional aprobada
 
@@ -106,15 +106,17 @@ Flows afectados: `Work_Order_from_Quote` y `Work_Order_from_Quote_Selective`.
 
 Estado N2: **QA FUNCIONAL OK — PEKING**. Bodega y territorio continúan **CONFIGURACIÓN OPERATIVA PROVISIONAL BASADA EN BAVARIAN — NO PRODUCCIÓN**.
 
-### N3 — garantía y segregación
+### N3 — garantía y segregación (validado, 2026-08-13)
 
-Flow afectado: `SegregateWOLIs`.
+Flow afectado: `SegregateWOLIs` v51 (activa).
 
-Pregunta mínima:
+**Revisión dirigida:** la regla que segrega una línea (WOLI) como "con garantía" depende únicamente de dos campos porcentuales de la línea, `Garantia2 > 0` y `BSIInterno2 > 0` — agnóstica de empresa, aplica igual a Bavarian, Otobai y PEKING. La única condición por empresa encontrada en todo el Flow es la visibilidad del campo de pantalla `GarantiaOtobai` ("Garantía Otobai", opciones `KAWASAKI`/`POLARIS`), gobernada por `GetWorkOrder.empresaFactura__c EqualTo 'RMOTOBAI'` además de las condiciones de porcentaje. Diego confirmó que esta condición no forma parte de la regla general de garantía — únicamente controla la visibilidad de un selector de sub-marca de motocicleta propio de Otobai, no una regla de garantía distinta por empresa. No hay ninguna otra referencia a Bavarian, PEKING, `BMW_Compania__c`, `Empresa_Operadora__c`, `empresaFacturaCP__c`, Record Type o marca en el Flow.
 
-> ¿PEKING utiliza garantía de fábrica y cuál es el mecanismo o campo equivalente autorizado para identificarla y segregar los WOLI?
+No se modificó el Flow.
 
-No existe una equivalencia Bavarian demostrada que pueda copiarse. La resolución técnica del Record Type por `DeveloperName` puede abordarse dentro del mismo bloque, pero no define el comportamiento PEKING ni elimina la necesidad de N3.
+Estado N3: **VALIDADO — SIN CAMBIO TÉCNICO PARA PEKING**.
+
+**Observación para el futuro:** si PEKING llega a manejar garantía con porcentaje mayor a cero, la línea se segregará correctamente como "con garantía" (esa parte es agnóstica de empresa), pero no aparecerá ningún selector de tipo de garantía para PEKING — `Garant_a_Otobai__c` quedaría vacío en esos registros. Definir un selector o tipo de garantía propio para PEKING es una decisión funcional a tomar en ese momento; no corresponde inventarlo hoy sin ese caso de negocio.
 
 ### N4 — servicios, agenda y territorios
 
@@ -196,8 +198,9 @@ No se elimina ni modifica ningún artefacto en este cierre.
 ## Preguntas mínimas para Luis/Diego
 
 1. Para N2: bodega, territorio, reserva, despacho y taller oficiales para las rutas Quote→Work Order; entretanto se conserva el baseline provisional autorizado.
-2. Para N3: confirmar si PEKING usa garantía de fábrica y el mecanismo/campo autorizado para identificarla y segregar WOLI.
-3. Para N4: confirmar servicios, agenda, sucursales y territorios oficiales que sustituirán la configuración provisional.
+2. Para N4: confirmar servicios, agenda, sucursales y territorios oficiales que sustituirán la configuración provisional.
+
+N3 queda cerrado — no requiere pregunta pendiente. Si en el futuro PEKING maneja garantía con porcentaje mayor a cero, será necesario definir funcionalmente un selector o tipo de garantía propio (ver sección N3).
 
 No se requieren nuevas confirmaciones sobre los Flows ya aprobados ni sobre la creación funcional ya demostrada.
 
@@ -212,20 +215,21 @@ Este mensaje queda preparado; no se envió.
 | Respuesta negocio | Componente desbloqueado | Acción | QA requerido |
 |---|---|---|---|
 | N2: bodega/territorio/reserva/despacho/taller | `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective` | Sustituir datos provisionales por configuración autorizada si corresponde; no reabrir la resolución técnica de Empresa ni repetir el QA ya aprobado solo por evidencia. | Validar únicamente si la configuración oficial difiere del baseline provisional. |
-| N3: garantía y mecanismo/campo | `SegregateWOLIs` | Implementar solo la regla autorizada y resolver el Record Type sin Id fijo dentro del mismo sublote. | Segregación con y sin garantía; regresión Bavarian/Otobai. |
 | N4: servicios/agenda/sucursales/territorios oficiales | `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent` | QA funcional ya cerrado con dataset provisional; sustituir por configuración oficial cuando exista, sin reabrir la resolución técnica ya validada. | Validar únicamente si la configuración oficial difiere del baseline provisional. |
+| N3: si PEKING define garantía con porcentaje > 0 en el futuro | `SegregateWOLIs` | Definir funcionalmente el selector/tipo de garantía propio de PEKING; no reabrir la segregación por porcentaje, que ya es agnóstica de empresa. | Segregación con garantía para PEKING; regresión Bavarian/Otobai. |
 | Sesión funcional Mostrador disponible | `Opp_Flow_v6`, `Opportunity_Flow_V2` | Ejecutar las rutas ya desplegadas sin modificar usuario ni metadata. | Una sesión por Flow; confirmar Empresa, Quote y enlace. |
 | Siguiente ejecución funcional normal | `Opp_flow_V3`, `Opp_Flow_v6`, `Opportunity_Flow_V2` | Verificar el enlace ya remediado sin repetir solo por evidencia. | Apertura correcta del Quote. |
 
 ## Siguiente paso recomendado
 
-N3 permanece detenido hasta la confirmación de Diego sobre garantía de fábrica PEKING — es el único pendiente real de Sprint 2. No reabrir F07, N2, N4 ni la corrección de Pricebook, ni repetir entrevistas únicamente para producir evidencia adicional. Queda diferida solo la validación funcional en vivo de la ruta de recálculo de Pricebook (ver sección dedicada arriba), que no bloquea el cierre técnico.
+Sprint 2 queda cerrado — F07, N2, N4, la corrección de Pricebook y N3 están resueltos. No reabrir ninguno de los cinco ni repetir entrevistas únicamente para producir evidencia adicional. Queda diferida solo la validación funcional en vivo de la ruta de recálculo de Pricebook (ver sección dedicada arriba), que no bloquea el cierre técnico. N3 solo se reabre si en el futuro PEKING define garantía con porcentaje mayor a cero.
 
 ## Límites del cierre
 
 - Se ejecutó F07 y, posteriormente, una única entrevista normal N2 y una única entrevista selectiva N2. En N4 se ejecutó una sola vez v21 después de aplicar el FLS mínimo de Activity y corregir el vínculo de Opportunity del Asset QA, y una sola vez v55 tras aprobar v21; ambas sin fault, rollback ni duplicidad.
 - Se agregó únicamente Read sobre `Empresa__c`, `ServiceTerritory.Empresa__c`, `Empresa__c.Codigo_ERP__c`, `Event.WhoId` y `Task.WhoId` mediante Permission Sets y asignaciones dirigidas a los usuarios QA correspondientes. Se aplicó además un único DML de datos (lookups de Opportunity en el Asset QA `02iAK000001xtZNYAY`, con autorización explícita).
 - Se corrigió el bug de recálculo de Pricebook en `Opp_flow_V3`, `Opp_Flow_V5`, `Opp_Flow_v6` y `Opportunity_Flow_V2` (cambio mínimo de metadata Flow, sin Apex, sin tocar lógica de creación ni navegación); no se ejecutó ningún QA funcional en vivo adicional de creación ya validada, solo se corrigió la ruta de recálculo previamente rota.
+- N3 (`SegregateWOLIs` v51) fue revisado de forma dirigida, solo lectura; no se modificó el Flow. Confirmado por Diego que no requiere cambio técnico para PEKING.
 - No se eliminó ningún artefacto temporal.
 - No se consultó ni modificó Producción.
-- El QA diferido y los bloqueos de negocio permanecen explícitamente abiertos.
+- El QA diferido de la ruta de recálculo de Pricebook permanece explícitamente abierto (no bloquea el cierre); no quedan bloqueos de negocio abiertos.
