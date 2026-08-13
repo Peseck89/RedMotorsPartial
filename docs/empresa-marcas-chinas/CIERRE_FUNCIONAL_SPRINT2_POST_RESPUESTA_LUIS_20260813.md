@@ -3,7 +3,7 @@
 **Fecha:** 13 de agosto de 2026
 
 **Ambiente:** RedMotors Sandbox Partial
-**Resultado:** **C. SPRINT 2 NO CERRABLE — F07 y N2 cerrados; N4 conserva QA funcional pendiente y N3 espera confirmación de Diego**
+**Resultado:** **C. SPRINT 2 NO CERRABLE — F07, N2 y N4 cerrados; N3 espera confirmación de Diego**
 
 ## Autorización aplicada
 
@@ -151,11 +151,18 @@ QA dirigido posterior:
 - la Work Order conservó PEKING en `empresaFacturaCP__c`, `RMPEKING` en `empresaFactura__c`, CRC y Pricebook `PEKING Local`; no se creó otra Work Order ni se observó duplicidad;
 - la Opportunity asociada `006AK00000JM25SYAT` era preexistente y no cumplió el criterio estructural de N4: `Empresa_Operadora__c = null`, compañía legacy vacía, moneda USD, Pricebook estándar y Record Type BMW;
 - no se creó Opportunity ni Quote en esta ejecución; los cambios persistidos fueron Case, relaciones Event–Case–Work Order y actualización de la Work Order, sin rollback;
-- `ct_newCaseWorkOrderEvent` v55 no se ejecutó porque v21 no satisfizo todos los criterios de aceptación, conforme al criterio de parada.
+- `ct_newCaseWorkOrderEvent` v55 no se ejecutó en ese momento porque v21 no satisfizo todos los criterios de aceptación, conforme al criterio de parada.
 
-La remediación FLS autorizada resolvió el fallo de inicialización. N4 no puede cerrarse todavía porque la Opportunity preexistente del dataset no tiene Empresa estructural PEKING; no se amplió acceso ni se encadenó otra corrección.
+### Remediación del dataset y cierre de N4
 
-Estado N4: **QA PARCIAL — V21 SIN FAULT Y WORK ORDER PEKING VALIDADA — OPPORTUNITY DEL DATASET NO CUMPLE EMPRESA ESTRUCTURAL — V55 NO EJECUTADO**.
+Con autorización explícita, se aplicó un único DML sobre el Asset QA `02iAK000001xtZNYAY`: se actualizaron exclusivamente los lookups `Oportunidad__c` y `Oportunidad_relacionada__c`, de la Opportunity legacy `006AK00000JM25SYAT` (BMW, `Empresa_Operadora__c = null`) hacia la Opportunity ya validada `006AK00000JT9UoYAL` ("QA Prueba-Taller-12/08/2026", `Empresa_Operadora__c = PEKING`, Pricebook `PEKING Local`, CRC, `BMW_Compania__c = null`, con Quote `0Q0AK000001zJ8P0AU` ya relacionada). No se modificó ningún otro campo del Asset ni se ejecutó ningún otro DML.
+
+Con el dataset corregido:
+
+- `aperturaCaseWorOrderEvent` v21 se re-ejecutó una sola vez sobre el mismo Event `00UAK000003Bik12AC`. El Flow reconoció que el Event ya contaba con Case y Work Order (mensaje controlado "Este evento ya cuenta con caso y orden de trabajo"), sin fault y sin crear registros nuevos. FlowInterviewLog `8gZAK000000IxeM2AS` (2026-08-13T20:42:19Z). Verificado por SOQL: Case `500AK00000HnxI5YAJ`/`00091091` y Work Order `0WOAK000005k8vl4AA`/`00087393` sin cambios ni duplicados; la Opportunity asociada al Asset ya resuelve PEKING (`Empresa_Operadora__r.Codigo_ERP__c = RMPEKING`), sin fallback Bavarian/Otobai.
+- Con v21 aprobado, `ct_newCaseWorkOrderEvent` v55 se ejecutó una sola vez sobre el mismo Event. El Flow avanzó por las pantallas de "Asistió" y "Kilometraje/Horas de uso" y terminó con el mismo mensaje controlado, sin error visible. FlowInterviewLog `8gZAK000000IxuT2AS` (2026-08-13T20:54:34Z). Verificado por SOQL: `Event.Estado__c = "Asistió"`, `Kilometraje__c`/`Kilometraje_Horas_de_uso__c = 10` y `Asset.Kilometros__c = 10` persistidos sin rollback; Case y Work Order siguen siendo los mismos (`00091091` / `00087393`, sin duplicado); Work Order conserva `empresaFacturaCP__c` → PEKING y `empresaFactura__c = RMPEKING`; total de Cases y Work Orders de la cuenta QA sin cambio (2 y 3 respectivamente) — sin duplicidad.
+
+Estado N4: **QA FUNCIONAL OK — PEKING**.
 
 ## N3 — garantía
 
@@ -192,6 +199,6 @@ Para el QA N4 del usuario asesor se agregaron las asignaciones temporales `0PaAK
 
 ## Criterio final
 
-**C. SPRINT 2 NO CERRABLE — F07 y N2 están cerrados; N4 conserva una validación estructural pendiente y N3 espera confirmación.**
+**C. SPRINT 2 NO CERRABLE — F07, N2 y N4 están cerrados; N3 espera confirmación.**
 
-El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 también cerró su FLS mínimo y completó una ejecución normal y una selectiva con PEKING, sin fault, rollback ni duplicidad. En N4, el Read mínimo de Activity resolvió la inicialización y v21 llegó sin fault a su pantalla final, creó el Case y mantuvo la Work Order PEKING; la Opportunity preexistente del dataset no cumplió `Empresa_Operadora__c`, por lo que v55 no se ejecutó. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.
+El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 también cerró su FLS mínimo y completó una ejecución normal y una selectiva con PEKING, sin fault, rollback ni duplicidad. En N4, el Read mínimo de Activity resolvió la inicialización; tras corregir con autorización explícita el vínculo de Opportunity del Asset QA (de una Opportunity legacy BMW a la Opportunity PEKING ya validada `006AK00000JT9UoYAL`), v21 confirmó Case, Work Order y Opportunity estructuralmente PEKING sin fault ni duplicado, y v55 completó las pantallas de Asistió y Kilometraje con los mismos datos PEKING, sin fault, rollback ni duplicidad. Estado N4: **QA FUNCIONAL OK — PEKING**. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.

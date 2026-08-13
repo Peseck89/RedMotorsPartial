@@ -8,15 +8,15 @@
 
 **Naturaleza:** cierre documental; no resuelve ni autoriza decisiones de negocio pendientes
 
-> **Actualización posterior — 2026-08-13:** las respuestas de Luis desbloquearon F07, N2 y N4 con baselines provisionales. F07 terminó `Completed`, con Plan y QLI persistidos. N2 cerró el FLS mínimo y completó correctamente las rutas normal v11 y selectiva v9, con Work Orders y WOLI PEKING persistidos. En N4, el FLS mínimo de Activity permitió ejecutar v21 sin fault y validar la Work Order PEKING, pero la Opportunity preexistente del dataset no contiene Empresa estructural; v55 no se ejecutó. Ver `CIERRE_FUNCIONAL_SPRINT2_POST_RESPUESTA_LUIS_20260813.md`.
+> **Actualización posterior — 2026-08-13:** las respuestas de Luis desbloquearon F07, N2 y N4 con baselines provisionales. F07 terminó `Completed`, con Plan y QLI persistidos. N2 cerró el FLS mínimo y completó correctamente las rutas normal v11 y selectiva v9, con Work Orders y WOLI PEKING persistidos. En N4, tras el FLS mínimo de Activity y una corrección autorizada del vínculo de Opportunity del Asset QA (de una Opportunity legacy BMW a una Opportunity PEKING ya validada), v21 y v55 se ejecutaron una vez cada uno sin fault, con Case, Work Order y Opportunity estructuralmente PEKING. Ver `CIERRE_FUNCIONAL_SPRINT2_POST_RESPUESTA_LUIS_20260813.md`.
 
 ## Conclusión
 
-**C. SPRINT 2 NO CERRABLE — F07 y N2 están cerrados; N4 conserva QA funcional pendiente y N3 espera confirmación de Diego.**
+**C. SPRINT 2 NO CERRABLE — F07, N2 y N4 están cerrados; N3 espera confirmación de Diego.**
 
-Los 20 Flows del alcance autoritativo permanecen conciliados sin doble conteo. F07 y N2 superaron sus defectos FLS preexistentes y quedaron funcionalmente validados con PEKING. El cierre formal sigue pendiente porque N4 aún requiere su QA dirigido y N3 continúa sujeto a confirmación externa.
+Los 20 Flows del alcance autoritativo permanecen conciliados sin doble conteo. F07, N2 y N4 superaron sus defectos preexistentes y quedaron funcionalmente validados con PEKING. El cierre formal sigue pendiente únicamente porque N3 continúa sujeto a confirmación externa.
 
-N2 tiene dataset provisional, remediación técnica desplegada y QA funcional aprobado en ambas variantes. N4 está técnicamente desplegado y N3 continúa pendiente de confirmación de Diego. N4 y N3 no deben declararse QA funcional OK en este corte.
+N2 tiene dataset provisional, remediación técnica desplegada y QA funcional aprobado en ambas variantes. N4 tiene el mismo tipo de dataset provisional, la corrección del vínculo de Opportunity del Asset QA, y QA funcional aprobado en v21 y v55. N3 continúa pendiente de confirmación de Diego y no debe declararse QA funcional OK en este corte.
 
 ## Matriz final por estado
 
@@ -38,12 +38,12 @@ N2 tiene dataset provisional, remediación técnica desplegada y QA funcional ap
 | F14 | `Opp_Flow_v6` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace v82 y ruta Mostrador pendientes. |
 | F15 | `Opportunity_Flow_V2` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace v8 y ruta Mostrador pendientes. |
 | F16 | `CreateWoliFromExpense` | **QA FUNCIONAL OK** | WOLI PEKING único y correcto creado desde `EXP-1458`. |
-| F17 | `aperturaCaseWorOrderEvent` | **QA PARCIAL** | v21 llegó sin fault a la pantalla final y validó Case/Work Order PEKING; la Opportunity preexistente del dataset no tiene `Empresa_Operadora__c`. |
-| F18 | `ct_newCaseWorkOrderEvent` | **QA PENDIENTE** | No ejecutado por el criterio de parada de N4. |
+| F17 | `aperturaCaseWorOrderEvent` | **QA FUNCIONAL OK** | v21 sin fault; Case `00091091` y Work Order `00087393` PEKING validados tras corregir el vínculo de Opportunity del Asset QA. |
+| F18 | `ct_newCaseWorkOrderEvent` | **QA FUNCIONAL OK** | v55 sin fault; Asistió y Kilometraje persistidos sobre el mismo dataset PEKING, sin duplicidad. |
 | F19 | `AgregarManoObra` | **QA FUNCIONAL OK** | WOLI y Subtipo PEKING únicos, sin fault, rollback ni duplicidad. |
 | F20 | `Carga_MO_26_Lavado_a_Caso` | **NO APLICA** | Sin versión activa; Luis confirmó no trabajar Flows inactivos. |
 
-Resumen exacto: 6 **QA FUNCIONAL OK**, 3 **VALIDACIÓN TÉCNICA OK / QA DIFERIDO**, 1 **QA PARCIAL**, 1 **QA PENDIENTE**, 1 **BLOQUEO DE NEGOCIO**, 6 **REVISADO SIN CAMBIO** y 2 **NO APLICA**. Total: **20 Flows**.
+Resumen exacto: 8 **QA FUNCIONAL OK**, 3 **VALIDACIÓN TÉCNICA OK / QA DIFERIDO**, 1 **BLOQUEO DE NEGOCIO**, 6 **REVISADO SIN CAMBIO** y 2 **NO APLICA**. Total: **20 Flows**.
 
 ## Flows con creación funcional aprobada
 
@@ -104,9 +104,15 @@ El fallo de inicialización quedó demostrado como ausencia de Read sobre `Event
 
 La única ejecución posterior de v21 inició correctamente y llegó sin fault a la pantalla final: log `8gZAK000000IwNJ2A0`, GUID `1544989ff01e71df3f04aa31b5d19ffc9ce303-745e`. Creó el Case `500AK00000HnxI5YAJ` / `00091091`, relacionó el Event con la Work Order existente `0WOAK000005k8vl4AA` / `00087393` y mantuvo PEKING, RMPEKING, CRC y Pricebook `PEKING Local`, sin crear una Work Order duplicada. No creó Opportunity ni Quote.
 
-La Opportunity preexistente asociada `006AK00000JM25SYAT` no cumplió el criterio de N4: `Empresa_Operadora__c = null`, compañía legacy vacía, moneda USD, Pricebook estándar y Record Type BMW. Por ello v55 no se ejecutó y no se encadenó otra corrección.
+La Opportunity preexistente asociada `006AK00000JM25SYAT` no cumplió el criterio de N4: `Empresa_Operadora__c = null`, compañía legacy vacía, moneda USD, Pricebook estándar y Record Type BMW.
 
-Estado N4: **QA PARCIAL — V21 SIN FAULT Y WORK ORDER PEKING VALIDADA — OPPORTUNITY DEL DATASET NO CUMPLE EMPRESA ESTRUCTURAL — V55 NO EJECUTADO**.
+Con autorización explícita se aplicó un único DML sobre el Asset QA `02iAK000001xtZNYAY`, actualizando exclusivamente `Oportunidad__c` y `Oportunidad_relacionada__c` hacia la Opportunity ya validada `006AK00000JT9UoYAL` (`Empresa_Operadora__c = PEKING`, Pricebook `PEKING Local`, CRC, `BMW_Compania__c = null`, misma cuenta QA, con Quote `0Q0AK000001zJ8P0AU` relacionada). Ningún otro campo ni registro fue modificado.
+
+Con el dataset corregido, v21 se re-ejecutó una sola vez sobre el mismo Event: sin fault, reconoció el Case/Work Order existentes (mensaje controlado "Este evento ya cuenta con caso y orden de trabajo"), sin crear duplicados. FlowInterviewLog `8gZAK000000IxeM2AS`. Verificado por SOQL: la Opportunity asociada al Asset ya resuelve `Empresa_Operadora__r.Codigo_ERP__c = RMPEKING`, sin fallback Bavarian/Otobai.
+
+Con v21 aprobado, `ct_newCaseWorkOrderEvent` v55 se ejecutó una sola vez sobre el mismo Event: avanzó por las pantallas de Asistió y Kilometraje/Horas de uso y terminó con el mismo mensaje controlado, sin error. FlowInterviewLog `8gZAK000000IxuT2AS`. Verificado por SOQL: `Event.Estado__c = "Asistió"`, `Kilometraje_Horas_de_uso__c = 10` y `Asset.Kilometros__c = 10` persistidos sin rollback; Work Order `00087393` conserva `empresaFacturaCP__c` → PEKING y `empresaFactura__c = RMPEKING`; el total de Cases (2) y Work Orders (3) de la cuenta QA no cambió — sin duplicidad.
+
+Estado N4: **QA FUNCIONAL OK — PEKING**.
 
 ## QA diferido documentado
 
@@ -179,18 +185,18 @@ Este mensaje queda preparado; no se envió.
 |---|---|---|---|
 | N2: bodega/territorio/reserva/despacho/taller | `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective` | Sustituir datos provisionales por configuración autorizada si corresponde; no reabrir la resolución técnica de Empresa ni repetir el QA ya aprobado solo por evidencia. | Validar únicamente si la configuración oficial difiere del baseline provisional. |
 | N3: garantía y mecanismo/campo | `SegregateWOLIs` | Implementar solo la regla autorizada y resolver el Record Type sin Id fijo dentro del mismo sublote. | Segregación con y sin garantía; regresión Bavarian/Otobai. |
-| N4: servicios/agenda/sucursales/territorios + relación Empresa | `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent` | Configurar la fuente estructural y las rutas autorizadas, sin inferir por texto. | Caso–WO–Evento para PEKING y regresión de empresas existentes. |
+| N4: servicios/agenda/sucursales/territorios oficiales | `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent` | QA funcional ya cerrado con dataset provisional; sustituir por configuración oficial cuando exista, sin reabrir la resolución técnica ya validada. | Validar únicamente si la configuración oficial difiere del baseline provisional. |
 | Sesión funcional Mostrador disponible | `Opp_Flow_v6`, `Opportunity_Flow_V2` | Ejecutar las rutas ya desplegadas sin modificar usuario ni metadata. | Una sesión por Flow; confirmar Empresa, Quote y enlace. |
 | Siguiente ejecución funcional normal | `Opp_flow_V3`, `Opp_Flow_v6`, `Opportunity_Flow_V2` | Verificar el enlace ya remediado sin repetir solo por evidencia. | Apertura correcta del Quote. |
 
 ## Siguiente paso recomendado
 
-Resolver explícitamente el criterio de la Opportunity asociada a N4 antes de autorizar otra ejecución: el dataset debe aportar `Empresa_Operadora__c = PEKING` sin fallback Bavarian/Otobai. No ejecutar v55 hasta que v21 satisfaga ese criterio. N3 permanece detenido hasta la confirmación de Diego. No reabrir F07 ni N2, ni repetir sus entrevistas únicamente para producir evidencia adicional.
+N3 permanece detenido hasta la confirmación de Diego sobre garantía de fábrica PEKING. No reabrir F07, N2 ni N4, ni repetir sus entrevistas únicamente para producir evidencia adicional.
 
 ## Límites del cierre
 
-- Se ejecutó F07 y, posteriormente, una única entrevista normal N2 y una única entrevista selectiva N2. En N4 se ejecutó una sola vez v21 después de aplicar el FLS mínimo de Activity; llegó sin fault a la pantalla final, pero no cumplió el criterio de Opportunity, y v55 no se ejecutó.
-- Se agregó únicamente Read sobre `Empresa__c`, `ServiceTerritory.Empresa__c`, `Empresa__c.Codigo_ERP__c`, `Event.WhoId` y `Task.WhoId` mediante Permission Sets y asignaciones dirigidas a los usuarios QA correspondientes.
+- Se ejecutó F07 y, posteriormente, una única entrevista normal N2 y una única entrevista selectiva N2. En N4 se ejecutó una sola vez v21 después de aplicar el FLS mínimo de Activity y corregir el vínculo de Opportunity del Asset QA, y una sola vez v55 tras aprobar v21; ambas sin fault, rollback ni duplicidad.
+- Se agregó únicamente Read sobre `Empresa__c`, `ServiceTerritory.Empresa__c`, `Empresa__c.Codigo_ERP__c`, `Event.WhoId` y `Task.WhoId` mediante Permission Sets y asignaciones dirigidas a los usuarios QA correspondientes. Se aplicó además un único DML de datos (lookups de Opportunity en el Asset QA `02iAK000001xtZNYAY`, con autorización explícita).
 - No se eliminó ningún artefacto temporal.
 - No se consultó ni modificó Producción.
 - El QA diferido y los bloqueos de negocio permanecen explícitamente abiertos.
