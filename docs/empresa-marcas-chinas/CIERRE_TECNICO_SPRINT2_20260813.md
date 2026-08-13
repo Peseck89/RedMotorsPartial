@@ -8,15 +8,43 @@
 
 **Naturaleza:** cierre documental; no resuelve ni autoriza decisiones de negocio pendientes
 
-> **Actualización posterior — 2026-08-13:** las respuestas de Luis desbloquearon F07, N2 y N4 con baselines provisionales. F07 terminó `Completed`, con Plan y QLI persistidos. N2 cerró el FLS mínimo y completó correctamente las rutas normal v11 y selectiva v9, con Work Orders y WOLI PEKING persistidos. En N4, tras el FLS mínimo de Activity y una corrección autorizada del vínculo de Opportunity del Asset QA (de una Opportunity legacy BMW a una Opportunity PEKING ya validada), v21 y v55 se ejecutaron una vez cada uno sin fault, con Case, Work Order y Opportunity estructuralmente PEKING. Ver `CIERRE_FUNCIONAL_SPRINT2_POST_RESPUESTA_LUIS_20260813.md`.
+> **Actualización posterior — 2026-08-13:** las respuestas de Luis desbloquearon F07, N2 y N4 con baselines provisionales. F07 terminó `Completed`, con Plan y QLI persistidos. N2 cerró el FLS mínimo y completó correctamente las rutas normal v11 y selectiva v9, con Work Orders y WOLI PEKING persistidos. En N4, tras el FLS mínimo de Activity y una corrección autorizada del vínculo de Opportunity del Asset QA (de una Opportunity legacy BMW a una Opportunity PEKING ya validada), v21 y v55 se ejecutaron una vez cada uno sin fault, con Case, Work Order y Opportunity estructuralmente PEKING. Adicionalmente se corrigió el bug confirmado de recálculo de Pricebook (`Pricebook2.Name = Id`) en los 4 Flows de Opportunity (`Opp_flow_V3` v31, `Opp_Flow_V5` v34, `Opp_Flow_v6` v83, `Opportunity_Flow_V2` v9), que afectaba también a Bavarian y Otobai, no solo a PEKING. Ver `CIERRE_FUNCIONAL_SPRINT2_POST_RESPUESTA_LUIS_20260813.md`.
 
 ## Conclusión
 
-**C. SPRINT 2 NO CERRABLE — F07, N2 y N4 están cerrados; N3 espera confirmación de Diego.**
+**A. SPRINT 2 CERRADO TÉCNICAMENTE — único pendiente de negocio: N3 (garantía PEKING), a la espera de Diego.**
 
-Los 20 Flows del alcance autoritativo permanecen conciliados sin doble conteo. F07, N2 y N4 superaron sus defectos preexistentes y quedaron funcionalmente validados con PEKING. El cierre formal sigue pendiente únicamente porque N3 continúa sujeto a confirmación externa.
+**Corrección respecto a versiones anteriores de este documento:** el estado "F07, N2 y N4 cerrados, único pendiente N3" registrado antes del 13 de agosto de 2026 (tarde) era prematuro — en ese momento el bug de recálculo de Pricebook en los 4 Flows de Opportunity todavía no se había corregido. Esa corrección ya se aplicó (ver sección siguiente); con ella, la afirmación de "único pendiente N3" pasa a ser exacta.
+
+Los 20 Flows del alcance autoritativo permanecen conciliados sin doble conteo. F07, N2 y N4 superaron sus defectos preexistentes y quedaron funcionalmente validados con PEKING. Los 4 Flows de Opportunity ya no dependen de la búsqueda incorrecta de Pricebook por nombre. El cierre técnico queda completo; el único pendiente restante es de negocio (N3).
 
 N2 tiene dataset provisional, remediación técnica desplegada y QA funcional aprobado en ambas variantes. N4 tiene el mismo tipo de dataset provisional, la corrección del vínculo de Opportunity del Asset QA, y QA funcional aprobado en v21 y v55. N3 continúa pendiente de confirmación de Diego y no debe declararse QA funcional OK en este corte.
+
+## Corrección del bug de Pricebook2.Name = Id (4 Flows de Opportunity)
+
+**Defecto:** `Obtener_PriceBook_Opp` (RecordLookup) filtraba `Pricebook2.Name EqualTo Resolver_Pricebook_Empresa.pricebookId` — comparando un campo de texto contra un Id, una condición que nunca podía ser verdadera. Su salida `.Id`, siempre nula, se usaba para asignar `Pricebook2Id` en el Presupuesto y en la Oportunidad durante la ruta de **recálculo/reapertura** de un Presupuesto ya existente (no en la ruta de creación inicial, que usa `Resolver_Pricebook_Empresa.pricebookId` directamente y por eso su QA anterior fue exitoso). Afectaba a las 3 empresas por igual, no solo a PEKING.
+
+**Corrección aplicada (cambio mínimo, sin tocar lógica de creación ni navegación):**
+
+| Flow | Qué se encontró | Corrección |
+|---|---|---|
+| `Opp_flow_V3` | `Coloca_PB_en_Quote` y la actualización de Opportunity usaban `Obtener_PriceBook_Opp.Id` | Reemplazado por `Resolver_Pricebook_Empresa.pricebookId`; eliminado el `RecordLookup` roto; reconectados sus 5 predecesores (incluida la rama legacy ya muerta `Encuentra_Price_Book`) directamente al Decision `Price_Book_vac_o` |
+| `Opp_Flow_V5` | Las asignaciones ya usaban `Resolver_Pricebook_Empresa.pricebookId` directamente; solo quedaba el `RecordLookup` roto, sin consumidores | Eliminado el `RecordLookup` muerto; reconectados sus 6 predecesores directamente a `Price_Book_vac_o` |
+| `Opp_Flow_v6` | Mismo caso que `Opp_Flow_V5` (ambas rutas, principal y Mostrador, ya usaban el valor correcto) | Mismo tratamiento: eliminado el `RecordLookup` muerto, predecesores reconectados |
+| `Opportunity_Flow_V2` | 3 consumidores del valor roto: `Coloca_PB_en_Quote`, actualización de Opportunity, y un `RecordLookup` de `PricebookEntry` filtrado por `Pricebook2Id = Obtener_PriceBook_Opp.Id` | Los 3 reemplazados por `Resolver_Pricebook_Empresa.pricebookId`; eliminado el `RecordLookup` roto; predecesores reconectados a `Price_Book_vac_o` |
+
+No se modificó la lógica de creación inicial (ya validada con QA funcional), no se tocó navegación, no se agregaron hardcodes ni distinción por empresa — el resolver ya es agnóstico de Bavarian/Otobai/PEKING.
+
+**Deploy:** `RedMotorsSandbox` únicamente. Por una incompatibilidad de versión de API preexistente entre estos 4 archivos (no causada por este cambio — 2 requieren API ≤54.0 por un componente de pantalla tipo Sección sin `regionContainerType`, y los otros 2 requieren API ≥67.0 por el uso de `styleProperties` en varios campos de pantalla), el despliegue se dividió en dos manifiestos:
+- `Opp_flow_V3` + `Opportunity_Flow_V2` — deploy `0AfAK0000014j610AA`, API 54.0, 0 errores.
+- `Opp_Flow_V5` + `Opp_Flow_v6` — deploy `0AfAK0000014ezD0AQ`, API 67.0, 0 errores.
+
+Versiones activas resultantes: `Opp_flow_V3` v31, `Opportunity_Flow_V2` v9, `Opp_Flow_V5` v34, `Opp_Flow_v6` v83.
+
+**QA de la ruta de recálculo/reapertura:**
+
+- **Validación estructural (completa):** confirmado por lectura directa que los 4 Flows ahora asignan `Pricebook2Id` desde `Resolver_Pricebook_Empresa.pricebookId` en todos los puntos donde antes dependían del `RecordLookup` roto, sin ninguna rama condicionada por empresa — el mismo camino de código se ejecuta igual para PEKING, Bavarian y Otobai.
+- **Validación funcional en vivo: diferida.** Ejercer esta ruta específica requiere reabrir un Presupuesto ya existente con `Pricebook2Id` vacío desde la Oportunidad (acción "Ir a presupuesto" u equivalente) — una interacción de pantalla que no se pudo ejecutar de forma automatizada en este bloque. Se buscaron Quotes existentes con `Pricebook2Id` nulo como candidatos de prueba; los únicos encontrados no tienen Empresa PEKING/Bavarian/Otobai asociada, por lo que no sirven como evidencia funcional real y no se usaron. **Pendiente:** una ejecución manual dirigida (reapertura de un Presupuesto con Pricebook vacío) para las 3 empresas, documentando resultado exacto — no bloquea el cierre técnico porque el código ya no puede producir el resultado incorrecto observado antes (Id nulo); solo confirma en vivo lo que la lectura de código ya demuestra.
 
 ## Matriz final por estado
 
@@ -33,10 +61,10 @@ N2 tiene dataset provisional, remediación técnica desplegada y QA funcional ap
 | F09 | `Work_Order_from_Quote` | **QA FUNCIONAL OK** | v11 `Completed`; Work Order `00087393` y un WOLI PEKING persistidos, sin fault, rollback ni duplicidad. |
 | F10 | `SegregateWOLIs` | **BLOQUEO DE NEGOCIO** | N3: garantía/segregación PEKING sin equivalencia autorizada. |
 | F11 | `ReciboUsadosFlow` | **NO APLICA** | Proceso exclusivo de usados; Luis confirmó no extenderlo a PEKING. |
-| F12 | `Opp_Flow_V5` | **QA FUNCIONAL OK** | Creación y navegación al Quote aprobadas en v33. |
-| F13 | `Opp_flow_V3` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace v30 pendiente en la siguiente ejecución normal. |
-| F14 | `Opp_Flow_v6` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace v82 y ruta Mostrador pendientes. |
-| F15 | `Opportunity_Flow_V2` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace v8 y ruta Mostrador pendientes. |
+| F12 | `Opp_Flow_V5` | **QA FUNCIONAL OK** | Creación y navegación al Quote aprobadas en v33; bug de Pricebook corregido en v34, validación funcional de la ruta de recálculo diferida (estructural OK). |
+| F13 | `Opp_flow_V3` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace pendiente en la siguiente ejecución normal; bug de Pricebook corregido en v31, validación funcional de la ruta de recálculo diferida (estructural OK). |
+| F14 | `Opp_Flow_v6` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace y ruta Mostrador pendientes; bug de Pricebook corregido en v83, validación funcional de la ruta de recálculo diferida (estructural OK). |
+| F15 | `Opportunity_Flow_V2` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace y ruta Mostrador pendientes; bug de Pricebook corregido en v9, validación funcional de la ruta de recálculo diferida (estructural OK). |
 | F16 | `CreateWoliFromExpense` | **QA FUNCIONAL OK** | WOLI PEKING único y correcto creado desde `EXP-1458`. |
 | F17 | `aperturaCaseWorOrderEvent` | **QA FUNCIONAL OK** | v21 sin fault; Case `00091091` y Work Order `00087393` PEKING validados tras corregir el vínculo de Opportunity del Asset QA. |
 | F18 | `ct_newCaseWorkOrderEvent` | **QA FUNCIONAL OK** | v55 sin fault; Asistió y Kilometraje persistidos sobre el mismo dataset PEKING, sin duplicidad. |
@@ -191,12 +219,13 @@ Este mensaje queda preparado; no se envió.
 
 ## Siguiente paso recomendado
 
-N3 permanece detenido hasta la confirmación de Diego sobre garantía de fábrica PEKING. No reabrir F07, N2 ni N4, ni repetir sus entrevistas únicamente para producir evidencia adicional.
+N3 permanece detenido hasta la confirmación de Diego sobre garantía de fábrica PEKING — es el único pendiente real de Sprint 2. No reabrir F07, N2, N4 ni la corrección de Pricebook, ni repetir entrevistas únicamente para producir evidencia adicional. Queda diferida solo la validación funcional en vivo de la ruta de recálculo de Pricebook (ver sección dedicada arriba), que no bloquea el cierre técnico.
 
 ## Límites del cierre
 
 - Se ejecutó F07 y, posteriormente, una única entrevista normal N2 y una única entrevista selectiva N2. En N4 se ejecutó una sola vez v21 después de aplicar el FLS mínimo de Activity y corregir el vínculo de Opportunity del Asset QA, y una sola vez v55 tras aprobar v21; ambas sin fault, rollback ni duplicidad.
 - Se agregó únicamente Read sobre `Empresa__c`, `ServiceTerritory.Empresa__c`, `Empresa__c.Codigo_ERP__c`, `Event.WhoId` y `Task.WhoId` mediante Permission Sets y asignaciones dirigidas a los usuarios QA correspondientes. Se aplicó además un único DML de datos (lookups de Opportunity en el Asset QA `02iAK000001xtZNYAY`, con autorización explícita).
+- Se corrigió el bug de recálculo de Pricebook en `Opp_flow_V3`, `Opp_Flow_V5`, `Opp_Flow_v6` y `Opportunity_Flow_V2` (cambio mínimo de metadata Flow, sin Apex, sin tocar lógica de creación ni navegación); no se ejecutó ningún QA funcional en vivo adicional de creación ya validada, solo se corrigió la ruta de recálculo previamente rota.
 - No se eliminó ningún artefacto temporal.
 - No se consultó ni modificó Producción.
 - El QA diferido y los bloqueos de negocio permanecen explícitamente abiertos.

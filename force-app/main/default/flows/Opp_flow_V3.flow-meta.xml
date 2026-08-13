@@ -31,7 +31,7 @@
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Obtener_PriceBook_Opp</targetReference>
+            <targetReference>Price_Book_vac_o</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -47,7 +47,7 @@
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Obtener_PriceBook_Opp</targetReference>
+            <targetReference>Price_Book_vac_o</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -86,7 +86,7 @@
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Obtener_PriceBook_Opp</targetReference>
+            <targetReference>Price_Book_vac_o</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -102,7 +102,7 @@
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Obtener_PriceBook_Opp</targetReference>
+            <targetReference>Price_Book_vac_o</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -562,7 +562,7 @@
             <assignToReference>BMW_ObtenerPresupuesto.Pricebook2Id</assignToReference>
             <operator>Assign</operator>
             <value>
-                <elementReference>Obtener_PriceBook_Opp.Id</elementReference>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -896,7 +896,7 @@
         <defaultConnectorLabel>NO_CONFIGURADO, SELECCION_REQUERIDA o ERROR</defaultConnectorLabel>
         <rules><name>Pricebook_Resuelto</name><conditionLogic>and</conditionLogic>
             <conditions><leftValueReference>Resolver_Pricebook_Empresa.status</leftValueReference><operator>EqualTo</operator><rightValue><stringValue>EXITO</stringValue></rightValue></conditions>
-            <connector><targetReference>Obtener_PriceBook_Opp</targetReference></connector><label>EXITO</label>
+            <connector><targetReference>Price_Book_vac_o</targetReference></connector><label>EXITO</label>
         </rules>
     </decisions>
     <decisions>
@@ -995,7 +995,7 @@
         <locationX>858</locationX>
         <locationY>5210</locationY>
         <defaultConnector>
-            <targetReference>Obtener_PriceBook_Opp</targetReference>
+            <targetReference>Price_Book_vac_o</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -2139,27 +2139,6 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <name>Obtener_PriceBook_Opp</name>
-        <label>Obtener PriceBook Opp</label>
-        <locationX>858</locationX>
-        <locationY>5510</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Price_Book_vac_o</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Name</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>Pricebook2</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
         <name>Obtiene_Campa_a_Aseguradora</name>
         <label>Obtiene Campaña Aseguradora</label>
         <locationX>726</locationX>
@@ -2199,7 +2178,7 @@
         <inputAssignments>
             <field>Pricebook2Id</field>
             <value>
-                <elementReference>Obtener_PriceBook_Opp.Id</elementReference>
+                <elementReference>Resolver_Pricebook_Empresa.pricebookId</elementReference>
             </value>
         </inputAssignments>
         <object>Opportunity</object>
