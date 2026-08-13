@@ -216,6 +216,52 @@ El análisis estructural y de datos aisló el punto de salida:
 
 Resultado: **CreateWoliFromExpense — QA EJECUTADO, NO APROBADO; SIN FAULT NI ROLLBACK; DETENIDO POR PRODUCTO `SUB` AMBIGUO/SIN PBE PARA EL PRODUCTO SELECCIONADO**. No se reintentó, no se modificaron catálogo ni Flow y no se ejecutó `AgregarManoObra`.
 
+#### Diagnóstico dirigido de los dos Product2 `SUB`
+
+La igualdad de nombre y código externo no representa un duplicado accidental. `Codigo_de_Producto__c` es External ID pero no es único; el catálogo diferencia las variantes mediante `codigoProductoInterno__c`, que sí es único, además de Empresa y tipo de producto.
+
+| Dato | Producto histórico de subcontrato | Variante de mano de obra |
+|---|---|---|
+| Product2 Id | `01t4U000005sF8FQAU` | `01t4U000005w41KQAQ` |
+| Nombre | `Subcontratos Taller Externo Autos` | `Subcontratos Taller Externo Autos` |
+| Código externo | `SUB` | `SUB` |
+| Código interno | `SUB-RMOTOBAI` | `SUB-RMBAVARIAN` |
+| Empresa legacy | `RMOTOBAI` | `RMBAVARIAN` |
+| Tipo de producto | `Subcontrato` | `Mano de Obra` |
+| Record Type | `Materiales` | `Materiales` |
+| Activo / moneda base | Sí / CRC | Sí / CRC |
+| Creado | 2022-10-25 | 2022-07-08 |
+| Última modificación | 2026-05-11 | 2022-10-24 |
+| WOLI históricos | 25 | 0 |
+| QuoteLineItem / OpportunityLineItem | 0 / 0 | 0 / 0 |
+
+Los demás campos poblados son equivalentes: grupo `SERVICIOS`, códigos secundarios `ND`, importes/precios base de 1, sin marca/modelo/familia/descripción/unidad ni otro identificador externo. No existen registros de historial de campos que permitan reconstruir cambios anteriores.
+
+Las 25 ejecuciones históricas demostrables de `CreateWoliFromExpense` — Expenses `EXP-1432` a `EXP-1457`, entre el 23 de junio y el 14 de julio de 2026 — crearon WOLI con `Product__c = 01t4U000005sF8FQAU`, PBE `01u4U00000wowwSQAQ`, `Bavarian Local`, CRC y `empresaFactura__c = RMBAVARIAN`. Ejemplos recientes: `EXP-1457`/`1WLPH00000aExoS4AS`, `EXP-1456`/`1WLPH00000aDCdJ4AW` y `EXP-1455`/`1WLPH00000aAYp14AG`. No existe uso histórico del producto `01t4U000005w41KQAQ` en WOLI.
+
+Inventario de PricebookEntry:
+
+- `01t4U000005sF8FQAU` tiene seis PBE activas y cero inactivas: Standard CRC/USD, Bavarian Local/Dólar y Otobai Local/Dólares. No tiene PBE en PEKING.
+- `01t4U000005w41KQAQ` tiene seis PBE activas y cero inactivas: Standard CRC/USD, Bavarian Local/Dólar y PEKING Local/Dólares. No tiene PBE en Otobai.
+- La PBE PEKING Local `01uAK000000YRH7YAO` y la PBE PEKING Dólares `01uAK000000YRFWYA4` pertenecen a la variante `Mano de Obra`, no al producto histórico de `Subcontrato`.
+
+Conclusión de autoridad: para `CreateWoliFromExpense`, el producto autoritativo es `01t4U000005sF8FQAU`. Es el único marcado como `Subcontrato`, es el único usado por resultados históricos del Flow y ya posee cobertura Bavarian/Otobai. El valor legacy `Empresa__c = RMOTOBAI` no se puede usar como filtro único porque esos 25 resultados corresponden a Bavarian; el criterio estructural inequívoco es `tipoProducto__c = Subcontrato` junto con `IsActive = true` y `Codigo_de_Producto__c = SUB`.
+
+La metadata de `GetMarialesProveedorProduct` conserva desde la versión inicial un único filtro `Codigo_de_Producto__c = SUB`, `getFirstRecordOnly = true`, sin sort, y almacena automáticamente el Product2. La prueba Apex existente también crea un único producto `SUB`, por lo que no cubre la coexistencia de variantes. La duplicidad del código externo es válida en el modelo, pero el lookup del Flow trata incorrectamente ese código no único como si fuera suficiente.
+
+Corrección segura propuesta, no ejecutada:
+
+1. endurecer `GetMarialesProveedorProduct` con `IsActive = true` y `tipoProducto__c = Subcontrato`, sin Id ni empresa hardcodeados;
+2. crear la PBE PEKING correspondiente para el producto autoritativo `01t4U000005sF8FQAU` en la moneda requerida; para el QA actual basta `PEKING Local`/CRC;
+3. conservar las PBE de `01t4U000005w41KQAQ`, porque esa variante `Mano de Obra` participa en el universo seleccionable de `AgregarManoObra` y no se demostró que sea catálogo inválido;
+4. agregar una prueba con dos Product2 `SUB` de tipos distintos y verificar que el Flow use exclusivamente el de `Subcontrato`.
+
+Ninguna alternativa aislada es suficiente: modificar solo el Flow deja PEKING sin PBE para el producto correcto; crear solo la PBE permite que el lookup siga siendo no determinista. Normalizar o eliminar uno de los productos sería incorrecto sin una decisión adicional porque son variantes funcionales distintas. Clasificación final: **D — OTRO: CORRECCIÓN COMBINADA A+B, DEFECTO TÉCNICO DE SELECCIÓN MÁS CONFIGURACIÓN PEKING FALTANTE PARA EL PRODUCTO AUTORITATIVO**.
+
+`EXP-1458` puede reutilizarse después de completar y validar ambas correcciones. Conserva `ExpenseType = Facturable`, `WoliCreated__c = false` y `Work_Order_Line_Item__c = null`; v15 está configurada para CreateAndUpdate sin exigir transición de criterios. Una única actualización autorizada del mismo registro, reenviando un campo no funcional con su valor actual —por ejemplo `Description = QA técnico para CreateWoliFromExpense`— vuelve a disparar el Flow sin crear otro Expense ni alterar el caso funcional. Antes de hacerlo deben comprobarse la PBE correcta y el filtro determinista; después se debe verificar exactamente un WOLI, el producto `01t4U000005sF8FQAU`, su PBE PEKING y los dos campos de control del Expense.
+
+El dataset de `AgregarManoObra` continúa válido e independiente de esta duplicidad: `a2iAK000001zjndYAA` conserva Case `00091090`, tipo `-Control final`, CRC y el Case mantiene un único WorkOrder. Ese Screen Flow obtiene productos con `tipoProducto__c = Mano de Obra` y sus PBE; no contiene un filtro literal `SUB`. Permanece no ejecutado por el criterio de parada del bloque.
+
 ## Acciones manuales ordenadas
 
 Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar captura, hora, GUID y elemento; no repetir para obtener evidencia redundante.
@@ -225,9 +271,9 @@ Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar capt
 3. **`Opportunity_Flow_V2`.** No repetir el Flow únicamente para obtener evidencia. La creación PEKING ya quedó validada. Confirmar el enlace integrado en v8 durante la siguiente ejecución funcional normal.
 4. **Rutas Mostrador de v82/v8.** Ejecutarlas únicamente cuando exista una sesión funcional autorizada de un usuario activo con tipo `Mostrador` o `Todas`. Repetir el mismo control PEKING/CRC y verificar que el selector propio de Mostrador persiste `Empresa_Operadora__c`. No modificar usuarios para preparar la prueba.
 5. **`PlanDeMantenimientoV2`.** No ejecutar todavía. Confirmar qué producto/vehículo y término/tipo de plan aplican a PEKING; después proporcionar un Quote QA PEKING/CRC con una QuoteLineItem `Vehiculo` basada en una PricebookEntry activa de `PEKING Local`.
-6. **`CreateWoliFromExpense`.** No repetir el insert. Resolver primero la ambigüedad de los dos productos `SUB` y definir qué Product2/PBE es autoritativo para PEKING; cualquier corrección de metadata o catálogo requiere un bloque separado.
+6. **`CreateWoliFromExpense`.** No repetir el insert. El Product2 autoritativo es `01t4U000005sF8FQAU`; autorizar en un bloque separado el filtro estructural por `Subcontrato`/activo y la PBE PEKING para ese producto. Reutilizar `EXP-1458` una sola vez únicamente después de validar ambos puntos.
 7. **`AgregarManoObra`.** No ejecutar todavía. El recordId preparado es `a2iAK000001zjndYAA`, pero el criterio de parada exige conservar el dataset y esperar el cierre del fallo previo de `CreateWoliFromExpense`.
 
 ## Criterio de estado
 
-`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. `CreateWoliFromExpense` queda **QA EJECUTADO — NO APROBADO** por selección ambigua del producto `SUB` y ausencia de PBE para el producto efectivamente elegido. `AgregarManoObra` conserva el recordId preparado, pero queda **NO EJECUTADO** por el criterio de parada del bloque.
+`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. `CreateWoliFromExpense` queda **QA EJECUTADO — NO APROBADO**: el producto autoritativo de subcontrato fue identificado, pero requiere filtro determinista y PBE PEKING propia antes de reutilizar `EXP-1458`. `AgregarManoObra` conserva el recordId preparado e independiente del código `SUB`, pero queda **NO EJECUTADO** por el criterio de parada del bloque.
