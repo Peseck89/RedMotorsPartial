@@ -139,18 +139,23 @@ Configuración PEKING provisional:
 
 QA dirigido posterior:
 
-- usuario asesor funcional: Marco Mora Villavicencio (`005PH000007m1k9YAA`);
+- usuario asesor funcional (`005PH000007m1k9YAA`);
 - Event QA `00UAK000003Bik12AC`, con `OwnerId = Asesor__c`, Account/Contact/Asset QA y Service Territory provisional PEKING;
 - `Empresa_Consulta_Flows` fue asignado mediante `0PaAK000002spqp0AA`; aporta Read sobre `Empresa__c` y Read sobre `ServiceTerritory.Empresa__c`, sin Create/Edit/Delete;
 - `Empresa_Codigo_ERP_QA` fue asignado mediante `0PaAK000002swU60AI`; aporta exclusivamente Read sobre `Empresa__c.Codigo_ERP__c`;
-- la verificación posterior confirmó Read efectivo sobre Empresa, ambos campos y los registros PEKING/Event/Service Territory requeridos;
-- el único reintento autorizado de `aperturaCaseWorOrderEvent` v21 volvió a mostrar un fallo no gestionado durante la carga inicial, antes de crear `FlowInterviewLog`, GUID o llegar a un elemento registrable;
-- el Event permaneció sin Case, Work Order ni Quote; tampoco se creó Opportunity y no hubo DML funcional persistido;
-- `ct_newCaseWorkOrderEvent` v55 no se ejecutó, conforme al criterio de parada.
+- el fallo de inicialización quedó demostrado como ausencia de Read efectivo sobre `Event.WhoId` para el usuario asesor;
+- se creó `Event_Who_QA` (`0PSAK0000007iE14AI`), marcado **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**, con Read sobre `Event.WhoId` y el par Activity `Task.WhoId`, ambos con Edit=false y sin permisos de objeto o sistema adicionales; dry-run `0AfAK0000014eJF0AY`, deploy `0AfAK0000014eKr0AI` y asignación exclusiva `0PaAK000002slyU0AQ`;
+- la verificación posterior confirmó Read=true y Edit=false sobre ambos campos;
+- la única ejecución autorizada posterior de `aperturaCaseWorOrderEvent` v21 inició correctamente y llegó a la pantalla final sin fault; log `8gZAK000000IwNJ2A0`, GUID `1544989ff01e71df3f04aa31b5d19ffc9ce303-745e`;
+- se creó el Case `500AK00000HnxI5YAJ` / `00091091` y se reutilizó la Work Order `0WOAK000005k8vl4AA` / `00087393`; el Event quedó relacionado con ambos y en estado `Asistió`;
+- la Work Order conservó PEKING en `empresaFacturaCP__c`, `RMPEKING` en `empresaFactura__c`, CRC y Pricebook `PEKING Local`; no se creó otra Work Order ni se observó duplicidad;
+- la Opportunity asociada `006AK00000JM25SYAT` era preexistente y no cumplió el criterio estructural de N4: `Empresa_Operadora__c = null`, compañía legacy vacía, moneda USD, Pricebook estándar y Record Type BMW;
+- no se creó Opportunity ni Quote en esta ejecución; los cambios persistidos fueron Case, relaciones Event–Case–Work Order y actualización de la Work Order, sin rollback;
+- `ct_newCaseWorkOrderEvent` v55 no se ejecutó porque v21 no satisfizo todos los criterios de aceptación, conforme al criterio de parada.
 
-La remediación FLS autorizada quedó aplicada, pero no resolvió por sí sola el fallo de inicialización. No se amplió acceso ni se encadenó otra corrección; el siguiente paso es un diagnóstico dirigido del arranque de v21.
+La remediación FLS autorizada resolvió el fallo de inicialización. N4 no puede cerrarse todavía porque la Opportunity preexistente del dataset no tiene Empresa estructural PEKING; no se amplió acceso ni se encadenó otra corrección.
 
-Estado N4: **QA PARCIAL — FLS MÍNIMO APLICADO — FALLO DE INICIALIZACIÓN PENDIENTE DE DIAGNÓSTICO**.
+Estado N4: **QA PARCIAL — V21 SIN FAULT Y WORK ORDER PEKING VALIDADA — OPPORTUNITY DEL DATASET NO CUMPLE EMPRESA ESTRUCTURAL — V55 NO EJECUTADO**.
 
 ## N3 — garantía
 
@@ -183,10 +188,10 @@ Diego debe confirmar si la ausencia de garantía de fábrica será la regla defi
 
 `Empresa_Codigo_ERP_QA` (`0PSAK0000007i2j4AA`) y su asignación funcional `0PaAK000002skDC0AY` deben conservarse hasta terminar Sprint 2 y revisar el acceso definitivo al código ERP. Concede únicamente Read sobre `Empresa__c.Codigo_ERP__c`, sin Edit ni ampliación de permisos de objeto. Está marcado **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**.
 
-Para el QA N4 del usuario asesor se agregaron las asignaciones temporales `0PaAK000002spqp0AA` (`Empresa_Consulta_Flows`) y `0PaAK000002swU60AI` (`Empresa_Codigo_ERP_QA`). Deben conservarse únicamente mientras se diagnostica y completa N4, sin ampliación masiva ni promoción a Producción.
+Para el QA N4 del usuario asesor se agregaron las asignaciones temporales `0PaAK000002spqp0AA` (`Empresa_Consulta_Flows`), `0PaAK000002swU60AI` (`Empresa_Codigo_ERP_QA`) y `0PaAK000002slyU0AQ` (`Event_Who_QA`). Deben conservarse únicamente mientras se completa N4, sin ampliación masiva ni promoción a Producción.
 
 ## Criterio final
 
-**C. SPRINT 2 NO CERRABLE — F07 y N2 están cerrados; N4 conserva un fallo de inicialización pendiente de diagnóstico y N3 espera confirmación.**
+**C. SPRINT 2 NO CERRABLE — F07 y N2 están cerrados; N4 conserva una validación estructural pendiente y N3 espera confirmación.**
 
-El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 también cerró su FLS mínimo y completó una ejecución normal y una selectiva con PEKING, sin fault, rollback ni duplicidad. En N4 se aplicó y verificó el Read mínimo de Empresa/código ERP, pero v21 volvió a fallar antes de abrir una entrevista y v55 no se ejecutó. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.
+El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 también cerró su FLS mínimo y completó una ejecución normal y una selectiva con PEKING, sin fault, rollback ni duplicidad. En N4, el Read mínimo de Activity resolvió la inicialización y v21 llegó sin fault a su pantalla final, creó el Case y mantuvo la Work Order PEKING; la Opportunity preexistente del dataset no cumplió `Empresa_Operadora__c`, por lo que v55 no se ejecutó. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.

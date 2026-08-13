@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>QA TEMPORAL — lectura del campo Name de Activity para ejecutar N4 con usuario asesor en Partial. NO PROMOVER A PRODUCCIÓN.</description>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Event.WhoId</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Task.WhoId</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <label>Event Who QA</label>
+</PermissionSet>

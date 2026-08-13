@@ -8,7 +8,7 @@
 
 **Naturaleza:** cierre documental; no resuelve ni autoriza decisiones de negocio pendientes
 
-> **Actualización posterior — 2026-08-13:** las respuestas de Luis desbloquearon F07, N2 y N4 con baselines provisionales. F07 terminó `Completed`, con Plan y QLI persistidos. N2 cerró el FLS mínimo y completó correctamente las rutas normal v11 y selectiva v9, con Work Orders y WOLI PEKING persistidos. N4 quedó desplegado técnicamente en v21/v55 y conserva QA dirigido pendiente. Ver `CIERRE_FUNCIONAL_SPRINT2_POST_RESPUESTA_LUIS_20260813.md`.
+> **Actualización posterior — 2026-08-13:** las respuestas de Luis desbloquearon F07, N2 y N4 con baselines provisionales. F07 terminó `Completed`, con Plan y QLI persistidos. N2 cerró el FLS mínimo y completó correctamente las rutas normal v11 y selectiva v9, con Work Orders y WOLI PEKING persistidos. En N4, el FLS mínimo de Activity permitió ejecutar v21 sin fault y validar la Work Order PEKING, pero la Opportunity preexistente del dataset no contiene Empresa estructural; v55 no se ejecutó. Ver `CIERRE_FUNCIONAL_SPRINT2_POST_RESPUESTA_LUIS_20260813.md`.
 
 ## Conclusión
 
@@ -38,12 +38,12 @@ N2 tiene dataset provisional, remediación técnica desplegada y QA funcional ap
 | F14 | `Opp_Flow_v6` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace v82 y ruta Mostrador pendientes. |
 | F15 | `Opportunity_Flow_V2` | **VALIDACIÓN TÉCNICA OK / QA DIFERIDO** | Creación funcional aprobada; enlace v8 y ruta Mostrador pendientes. |
 | F16 | `CreateWoliFromExpense` | **QA FUNCIONAL OK** | WOLI PEKING único y correcto creado desde `EXP-1458`. |
-| F17 | `aperturaCaseWorOrderEvent` | **BLOQUEO DE NEGOCIO** | N4: servicios, agenda, sucursales, territorios y fuente estructural de Empresa. |
-| F18 | `ct_newCaseWorkOrderEvent` | **BLOQUEO DE NEGOCIO** | Mismo bloqueo N4. |
+| F17 | `aperturaCaseWorOrderEvent` | **QA PARCIAL** | v21 llegó sin fault a la pantalla final y validó Case/Work Order PEKING; la Opportunity preexistente del dataset no tiene `Empresa_Operadora__c`. |
+| F18 | `ct_newCaseWorkOrderEvent` | **QA PENDIENTE** | No ejecutado por el criterio de parada de N4. |
 | F19 | `AgregarManoObra` | **QA FUNCIONAL OK** | WOLI y Subtipo PEKING únicos, sin fault, rollback ni duplicidad. |
 | F20 | `Carga_MO_26_Lavado_a_Caso` | **NO APLICA** | Sin versión activa; Luis confirmó no trabajar Flows inactivos. |
 
-Resumen exacto: 6 **QA FUNCIONAL OK**, 3 **VALIDACIÓN TÉCNICA OK / QA DIFERIDO**, 3 **BLOQUEO DE NEGOCIO**, 6 **REVISADO SIN CAMBIO** y 2 **NO APLICA**. Total: **20 Flows**.
+Resumen exacto: 6 **QA FUNCIONAL OK**, 3 **VALIDACIÓN TÉCNICA OK / QA DIFERIDO**, 1 **QA PARCIAL**, 1 **QA PENDIENTE**, 1 **BLOQUEO DE NEGOCIO**, 6 **REVISADO SIN CAMBIO** y 2 **NO APLICA**. Total: **20 Flows**.
 
 ## Flows con creación funcional aprobada
 
@@ -100,9 +100,13 @@ Pregunta mínima:
 
 El dataset dirigido usa Event `00UAK000003Bik12AC`, usuario asesor `005PH000007m1k9YAA`, `OwnerId = Asesor__c` y Service Territory `0HhAK0000000sbV0AQ` relacionado con PEKING/RMPEKING. Para cubrir exclusivamente la lectura requerida se asignaron `Empresa_Consulta_Flows` (`0PaAK000002spqp0AA`) y `Empresa_Codigo_ERP_QA` (`0PaAK000002swU60AI`). La comprobación efectiva confirmó Read sobre `Empresa__c`, `ServiceTerritory.Empresa__c`, `Empresa__c.Codigo_ERP__c` y los registros involucrados.
 
-El único reintento autorizado de v21 volvió a fallar durante la inicialización, antes de generar `FlowInterviewLog`, GUID o elemento registrable. No se creó Case, Work Order, Opportunity ni Quote y el Event permaneció sin relaciones funcionales nuevas. v55 no se ejecutó por criterio de parada. La causa FLS objetivo quedó remediada, pero subsiste un fallo de arranque distinto que requiere diagnóstico dirigido antes de otro QA.
+El fallo de inicialización quedó demostrado como ausencia de Read sobre `Event.WhoId`. El permiso temporal `Event_Who_QA` (`0PSAK0000007iE14AI`) concede solo Read sobre `Event.WhoId` y el par Activity `Task.WhoId`, con Edit=false; dry-run `0AfAK0000014eJF0AY`, deploy `0AfAK0000014eKr0AI` y asignación exclusiva `0PaAK000002slyU0AQ`.
 
-Estado N4: **QA PARCIAL — FLS MÍNIMO APLICADO — FALLO DE INICIALIZACIÓN PENDIENTE DE DIAGNÓSTICO**.
+La única ejecución posterior de v21 inició correctamente y llegó sin fault a la pantalla final: log `8gZAK000000IwNJ2A0`, GUID `1544989ff01e71df3f04aa31b5d19ffc9ce303-745e`. Creó el Case `500AK00000HnxI5YAJ` / `00091091`, relacionó el Event con la Work Order existente `0WOAK000005k8vl4AA` / `00087393` y mantuvo PEKING, RMPEKING, CRC y Pricebook `PEKING Local`, sin crear una Work Order duplicada. No creó Opportunity ni Quote.
+
+La Opportunity preexistente asociada `006AK00000JM25SYAT` no cumplió el criterio de N4: `Empresa_Operadora__c = null`, compañía legacy vacía, moneda USD, Pricebook estándar y Record Type BMW. Por ello v55 no se ejecutó y no se encadenó otra corrección.
+
+Estado N4: **QA PARCIAL — V21 SIN FAULT Y WORK ORDER PEKING VALIDADA — OPPORTUNITY DEL DATASET NO CUMPLE EMPRESA ESTRUCTURAL — V55 NO EJECUTADO**.
 
 ## QA diferido documentado
 
@@ -144,6 +148,8 @@ No se elimina ni modifica ningún artefacto en este cierre.
 | Permission Set N2 | `Empresa_Codigo_ERP_QA` / `0PSAK0000007i2j4AA` | Conservar hasta finalizar Sprint 2 y revisar el modelo definitivo de acceso. Solo Read sobre `Empresa__c.Codigo_ERP__c`; **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**. |
 | Assignment N2 usuario funcional QA | `0PaAK000002skDC0AY` | Conservar junto con el Permission Set; no ampliar asignaciones sin revisión funcional. |
 | Assignment N4 código ERP | `0PaAK000002swU60AI` | Asignación temporal al usuario asesor N4; concede únicamente el Read ya definido por el Permission Set. |
+| Permission Set N4 Activity | `Event_Who_QA` / `0PSAK0000007iE14AI` | Solo Read sobre `Event.WhoId` y `Task.WhoId`, con Edit=false. **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**. |
+| Assignment N4 Activity | `0PaAK000002slyU0AQ` | Asignación exclusiva al usuario asesor N4; conservar solo mientras se completa el QA. |
 | Work Order N2 normal | `0WOAK000005k8vl4AA` / `00087393` | Evidencia QA PEKING normal aprobada; conservar con su WOLI. Configuración provisional, no Producción. |
 | WOLI N2 normal | `1WLAK0000000s8T4AQ` | Único WOLI de la ejecución normal; conservar como evidencia y no duplicar. |
 | Work Order N2 selectiva | `0WOAK000005k8yz4AA` / `00087394` | Evidencia QA PEKING selectiva aprobada; conservar con su WOLI. Configuración provisional, no Producción. |
@@ -179,12 +185,12 @@ Este mensaje queda preparado; no se envió.
 
 ## Siguiente paso recomendado
 
-Diagnosticar el fallo de inicialización de `aperturaCaseWorOrderEvent` v21 sin repetir el Flow ni ampliar permisos preventivamente. N3 permanece detenido hasta la confirmación de Diego. No reabrir F07 ni N2, ni repetir sus entrevistas únicamente para producir evidencia adicional.
+Resolver explícitamente el criterio de la Opportunity asociada a N4 antes de autorizar otra ejecución: el dataset debe aportar `Empresa_Operadora__c = PEKING` sin fallback Bavarian/Otobai. No ejecutar v55 hasta que v21 satisfaga ese criterio. N3 permanece detenido hasta la confirmación de Diego. No reabrir F07 ni N2, ni repetir sus entrevistas únicamente para producir evidencia adicional.
 
 ## Límites del cierre
 
-- Se ejecutó F07 y, posteriormente, una única entrevista normal N2 y una única entrevista selectiva N2. En N4 se intentó una sola ejecución v21 después de aplicar FLS mínimo; falló antes de abrir entrevista y v55 no se ejecutó.
-- Se agregó únicamente Read sobre `Empresa__c`, `ServiceTerritory.Empresa__c` y `Empresa__c.Codigo_ERP__c` mediante Permission Sets existentes y asignaciones dirigidas a los usuarios QA correspondientes.
+- Se ejecutó F07 y, posteriormente, una única entrevista normal N2 y una única entrevista selectiva N2. En N4 se ejecutó una sola vez v21 después de aplicar el FLS mínimo de Activity; llegó sin fault a la pantalla final, pero no cumplió el criterio de Opportunity, y v55 no se ejecutó.
+- Se agregó únicamente Read sobre `Empresa__c`, `ServiceTerritory.Empresa__c`, `Empresa__c.Codigo_ERP__c`, `Event.WhoId` y `Task.WhoId` mediante Permission Sets y asignaciones dirigidas a los usuarios QA correspondientes.
 - No se eliminó ningún artefacto temporal.
 - No se consultó ni modificó Producción.
 - El QA diferido y los bloqueos de negocio permanecen explícitamente abiertos.
