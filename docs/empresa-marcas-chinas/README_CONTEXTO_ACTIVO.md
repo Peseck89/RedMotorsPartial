@@ -39,6 +39,7 @@ aplicando porque Sprint 2 conserva pendientes de negocio y QA diferido documenta
 2. [`TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx`](TD-RQ308_Diferencias_Alcance_Entrega_Oficial.docx) — documento oficial para Red Motors, aprobado en general por Luis.
 3. [`CONTEXTO_RQ308_Y_AUTORIZACION_SPRINT3_20260805.md`](CONTEXTO_RQ308_Y_AUTORIZACION_SPRINT3_20260805.md)
 4. [`PLAN_SPRINT3_CORREGIDO_20260805.md`](PLAN_SPRINT3_CORREGIDO_20260805.md), [`LOTES_SPRINT3_CORREGIDOS_20260805.md`](LOTES_SPRINT3_CORREGIDOS_20260805.md), [`MATRIZ_ALCANCE_SPRINT3_CORREGIDA_20260805.csv`](MATRIZ_ALCANCE_SPRINT3_CORREGIDA_20260805.csv)
+5. [`CIERRE_TECNICO_SPRINT3_20260813.md`](CIERRE_TECNICO_SPRINT3_20260813.md) y [`MATRIZ_CIERRE_SPRINT3.csv`](MATRIZ_CIERRE_SPRINT3.csv) — cierre autoritativo de B7, B9 y B11; datos finales diferidos y N3/N4 separados como Sprint 2 congelado.
 
 **Sustituidos — no usar para ejecución** (autodeclarados "SUSTITUIDO PARA EJECUCIÓN", conservados solo
 por trazabilidad): `LOTES_PROPUESTOS_SPRINT3_20260805.md`, `PLAN_INICIO_SPRINT3_20260805.md`,
@@ -57,6 +58,7 @@ por trazabilidad): `LOTES_PROPUESTOS_SPRINT3_20260805.md`, `PLAN_INICIO_SPRINT3_
 - **Remediación técnica `Opp_Flow_v6` (2026-08-12):** el QA v81 confirmó la creación persistida de Opportunity y Quote con PEKING, campos legacy vacíos, CRC, Pricebook `PEKING Local`, Cuenta, Contacto, Asset y territorio correctos. La creación queda en **QA OK**. El componente legacy de navegación final coincidía con los defectos ya conocidos y fue sustituido exclusivamente por el enlace estándar al Quote; v82 está activa. Estado: **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA — QA MANUAL DEL ENLACE PENDIENTE**. Ver [`RESULTADO_REMEDIACION_OPP_FLOW_V6_20260812.md`](RESULTADO_REMEDIACION_OPP_FLOW_V6_20260812.md).
 - **Alcance de Sprint 2 al día de hoy:** usar `MATRIZ_CIERRE_SPRINT2.csv` y `CIERRE_TECNICO_SPRINT2_20260813.md` para el estado operativo final de los 20 Flows. `REGLAS_ALCANCE_AUTORIZADO.md` conserva la trazabilidad histórica y la puerta obligatoria para cualquier reanudación; una implementación previa no autoriza cambios nuevos fuera de las respuestas F07/N2/N3/N4.
 - **Sprint 3 (agregado 2026-08-05):** autorizado por Luis para **continuar** con el alcance del documento original de PortalNet. Ver sección "Contexto activo de Sprint 3 y TD-RQ308" arriba y `auditoria/INDICE_MAESTRO_AUDITORIA.md`.
+- **Cierre técnico de Sprint 3 (2026-08-13):** B7, B9 y B11, por 23 horas explícitas, quedan **TÉCNICAMENTE CERRABLES CON DATOS/CONFIGURACIONES FINALES DIFERIDOS Y PENDIENTES EXTERNOS DOCUMENTADOS**. No queda trabajo técnico nuevo autorizado y desbloqueado ni preguntas inevitables actuales de Sprint 3. N3 Garantías y N4 Service Territories permanecen congelados como pendientes de Sprint 2. Ver [`CIERRE_TECNICO_SPRINT3_20260813.md`](CIERRE_TECNICO_SPRINT3_20260813.md) y [`MATRIZ_CIERRE_SPRINT3.csv`](MATRIZ_CIERRE_SPRINT3.csv).
 
 ## Documentos de control (no forman parte del contexto activo de lectura por defecto)
 
