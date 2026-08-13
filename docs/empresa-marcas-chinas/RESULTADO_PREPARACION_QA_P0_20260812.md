@@ -14,8 +14,8 @@
 | `Opp_Flow_v6` | v82 (`301AK00000PWE36YAH`) | C — manual | **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** en ruta Taller; Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `Opportunity_Flow_V2` | v8 (`301AK00000PWLPYYA5`) | C — manual | **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** en ruta Taller/general; Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `PlanDeMantenimientoV2` | v24 (`301AK00000PC2ngYAD`) | C — manual | **BLOQUEO DE NEGOCIO**: no existe Quote PEKING con línea de vehículo; falta catálogo de vehículo PEKING y definición de término/plan aplicable |
-| `CreateWoliFromExpense` | v15 (`301AK00000PC2nfYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | No existe Work Order PEKING ni Expense facturable relacionado reutilizable; catálogo técnico listo |
-| `AgregarManoObra` | v2 (`301AK00000PC2neYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | No existe Work Order PEKING reutilizable; entradas de mano de obra en `PEKING Local` listas |
+| `CreateWoliFromExpense` | v15 (`301AK00000PC2nfYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | Ejecución detenida en Fase B por FLS de `WorkOrder.empresaFacturaCP__c`; Case QA creado, sin WorkOrder/Expense/WOLI |
+| `AgregarManoObra` | v2 (`301AK00000PC2neYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | Ejecución detenida en Fase B por el mismo FLS; Case QA creado, sin WorkOrder ni `tiposDeTrabajoCaso__c` |
 
 No se encontró un defecto técnico nuevo y demostrable que autorizara modificar o desplegar metadata en este bloque.
 
@@ -146,7 +146,18 @@ Los demás campos editables de estos cuatro objetos se dejan `null` y no se env�
 
 Orden exacto: (1) Case QA; (2) WorkOrder PEKING y verificación de sus dos campos de Empresa; (3) `tiposDeTrabajoCaso__c`; (4) Expense `Facturable`, cuyo insert constituye la ejecución real de `CreateWoliFromExpense`. El Id del paso 3 será el `recordId` de la futura ejecución manual de `AgregarManoObra`.
 
-Riesgo: bajo y acotado a registros QA nuevos. No se modifica catálogo, PricebookEntry ni datos Bavarian/Otobai. **No se ejecutó DML ni ningún Flow en este bloque.**
+Riesgo previsto: bajo y acotado a registros QA nuevos. No se modifica catálogo, PricebookEntry ni datos Bavarian/Otobai. En la preparación pre-DML inicial no se ejecutó ningún cambio; la ejecución autorizada posterior se registra a continuación.
+
+### Ejecución controlada del 13 de agosto de 2026 — detenida en Fase B
+
+La creación autorizada comenzó por fases y se detuvo antes de generar el WorkOrder:
+
+- **Fase A completada:** Case QA `00091090` (`500AK00000Hm5usYAB`) creado con Record Type `Autos`, estado `Cita`, origen `Calendario`, Account y Contact `QA Prueba`, Asset `VNA00260810051041`, CRC, territorio `Uruca - Mecánica General` y propietario funcional `Control de Calidad`.
+- **Fase B detenida sin insert:** el acceso utilizado para la ejecución no expone `WorkOrder.empresaFacturaCP__c` por seguridad de campo. Salesforce rechazó la operación antes de crear el registro; no se utilizó una vía que omitiera ese control.
+- Checkpoint posterior: el Case conserva **0 WorkOrders**, **0 `tiposDeTrabajoCaso__c`** y **0 Expenses** relacionados. No existe WOLI del bloque y `CreateWoliFromExpense` no se ejecutó.
+- No se eliminó el Case QA, de acuerdo con la instrucción de preservar los datos creados. Permanece aislado y claramente identificado para reanudar el mismo juego cuando exista un ejecutor autorizado con acceso de creación al lookup estructural.
+
+Estado operativo: **EJECUCIÓN DETENIDA EN FASE B — ACCESO FLS REQUERIDO PARA `WorkOrder.empresaFacturaCP__c`**. No es un defecto del Flow ni una decisión funcional pendiente; es una condición de acceso del ejecutor. No deben crearse el tipo de trabajo ni el Expense hasta resolverla.
 
 ## Acciones manuales ordenadas
 
@@ -157,8 +168,8 @@ Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar capt
 3. **`Opportunity_Flow_V2`.** No repetir el Flow únicamente para obtener evidencia. La creación PEKING ya quedó validada. Confirmar el enlace integrado en v8 durante la siguiente ejecución funcional normal.
 4. **Rutas Mostrador de v82/v8.** Ejecutarlas únicamente cuando exista una sesión funcional autorizada de un usuario activo con tipo `Mostrador` o `Todas`. Repetir el mismo control PEKING/CRC y verificar que el selector propio de Mostrador persiste `Empresa_Operadora__c`. No modificar usuarios para preparar la prueba.
 5. **`PlanDeMantenimientoV2`.** No ejecutar todavía. Confirmar qué producto/vehículo y término/tipo de plan aplican a PEKING; después proporcionar un Quote QA PEKING/CRC con una QuoteLineItem `Vehiculo` basada en una PricebookEntry activa de `PEKING Local`.
-6. **`CreateWoliFromExpense` y `AgregarManoObra`.** No ejecutar todavía. El juego compartido quedó **PRE-DML LISTO PARA AUTORIZACIÓN**, sin decisión de negocio pendiente. Tras autorización explícita, crear en orden un Case aislado, un único WorkOrder PEKING, el `tiposDeTrabajoCaso__c` y finalmente el Expense. Verificar los campos estructural y legacy de Empresa antes del Expense; su alta constituye la ejecución real del Flow record-triggered.
+6. **`CreateWoliFromExpense` y `AgregarManoObra`.** La ejecución autorizada quedó detenida en Fase B. Reutilizar el Case QA `00091090`; no crear otro. Reanudar únicamente con un ejecutor autorizado que pueda crear `WorkOrder.empresaFacturaCP__c`, verificar el lookup PEKING y el campo legacy vacío, y solo entonces crear `tiposDeTrabajoCaso__c` y Expense. El alta del Expense constituirá la ejecución real del Flow record-triggered.
 
 ## Criterio de estado
 
-`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. `CreateWoliFromExpense` y `AgregarManoObra` quedan como **B — QA PREPARABLE CON DML MÍNIMO — PRE-DML LISTO PARA AUTORIZACIÓN**; ya no tienen valores funcionales pendientes de derivar y no deben ejecutarse sin autorización explícita.
+`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. El pre-DML de `CreateWoliFromExpense` y `AgregarManoObra` continúa completo, pero su ejecución queda **DETENIDA EN FASE B POR FLS**: existe el Case QA aislado y faltan WorkOrder, tipo de trabajo, Expense y WOLI.
