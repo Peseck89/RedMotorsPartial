@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>QA TEMPORAL — NO PROMOVER A PRODUCCIÓN. Acceso mínimo para preparar el dataset técnico QA de CreateWoliFromExpense y AgregarManoObra en RedMotorsSandbox.</description>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>WorkOrder.empresaFacturaCP__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <label>WorkOrder Empresa Factura QA</label>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>WorkOrder</object>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+</PermissionSet>

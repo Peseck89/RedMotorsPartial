@@ -4,7 +4,7 @@
 
 **Ambiente:** `RedMotorsSandbox` (Partial)
 
-**Tipo de bloque:** consulta y preparación de QA; sin ejecución de Flows, DML, deploy ni cambios de metadata
+**Tipo de bloque:** preparación y ejecución controlada de QA en Partial; Permission Set temporal y datos QA mínimos
 
 ## Resultado ejecutivo
 
@@ -14,10 +14,10 @@
 | `Opp_Flow_v6` | v82 (`301AK00000PWE36YAH`) | C — manual | **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** en ruta Taller; Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `Opportunity_Flow_V2` | v8 (`301AK00000PWLPYYA5`) | C — manual | **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** en ruta Taller/general; Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `PlanDeMantenimientoV2` | v24 (`301AK00000PC2ngYAD`) | C — manual | **BLOQUEO DE NEGOCIO**: no existe Quote PEKING con línea de vehículo; falta catálogo de vehículo PEKING y definición de término/plan aplicable |
-| `CreateWoliFromExpense` | v15 (`301AK00000PC2nfYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | Ejecución detenida en Fase B; diagnóstico de acceso clase C: no existe Permission Set con Edit sobre `WorkOrder.empresaFacturaCP__c` |
-| `AgregarManoObra` | v2 (`301AK00000PC2neYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | Mismo bloqueo clase C; Case QA creado, sin WorkOrder ni `tiposDeTrabajoCaso__c` |
+| `CreateWoliFromExpense` | v15 (`301AK00000PC2nfYAD`) | **QA EJECUTADO — NO APROBADO** | Expense persistido, sin WOLI: selección no determinista entre dos productos `SUB`; el producto elegido no tiene PricebookEntry en `PEKING Local` y el Flow termina de forma controlada |
+| `AgregarManoObra` | v2 (`301AK00000PC2neYAD`) | **DATASET PARCIAL CREADO — NO EJECUTAR** | Case, WorkOrder y `tiposDeTrabajoCaso__c` disponibles; ejecución manual detenida por el fallo previo de `CreateWoliFromExpense` |
 
-No se encontró un defecto técnico nuevo y demostrable que autorizara modificar o desplegar metadata en este bloque.
+La remediación de acceso QA fue autorizada y desplegada únicamente en Partial. El QA posterior demostró un defecto de configuración/determinismo en `CreateWoliFromExpense`; no se corrigió ni se amplió el alcance en este bloque.
 
 ## Evidencia común reutilizable
 
@@ -185,7 +185,36 @@ Propuesta mínima pendiente de autorización separada:
 - No agregar acceso a otros objetos, campos, administración, datos globales ni Production.
 - Asignación prevista únicamente al ejecutor `005AK0000050FWPYA2` en `RedMotorsSandbox`, conservándola hasta instrucción expresa de retiro.
 
-No se creó Permission Set, no se hizo asignación, no se modificó perfil y no se desplegó metadata. El dataset continúa detenido con el mismo Case `00091090` y cero registros downstream.
+#### Reanudación autorizada y resultado del 13 de agosto de 2026
+
+Se creó el Permission Set `WorkOrder_Empresa_Factura_QA` con el rótulo **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**. Su contenido se limita a WorkOrder Read/Create/Edit, sin Delete/View All/Modify All, y Read/Edit sobre `WorkOrder.empresaFacturaCP__c`; no contiene permisos Apex, Flow, Setup, administrativos ni sobre otros objetos o campos.
+
+- Dry-run exclusivo exitoso: `0AfAK0000014CjZ0AU` (1/1 componente).
+- Deploy exclusivo a `RedMotorsSandbox`: `0AfAK0000014Cmn0AE` (1/1 componente), Permission Set `0PSAK0000007gIf4AI`.
+- Asignación exclusiva al ejecutor técnico autorizado: `0PaAK000002s2ba0AA`.
+- Verificación efectiva posterior: `WorkOrder.empresaFacturaCP__c` quedó Read=true y Edit=true. No se modificó ningún Profile, Permission Set existente ni Permission Set Group.
+
+Con el acceso mínimo disponible se reutilizó el Case `00091090` y se creó el dataset autorizado:
+
+| Registro | Id / número | Resultado verificado |
+|---|---|---|
+| Case | `500AK00000Hm5usYAB` / `00091090` | Reutilizado; exactamente un WorkOrder |
+| WorkOrder | `0WOAK000005jxsH4AQ` / `00087392` | PEKING, CRC, `PEKING Local`, territorio `Uruca - Mecánica General`, tipo `Mecánica General Autos`, empresa legacy vacía |
+| `tiposDeTrabajoCaso__c` | `a2iAK000001zjndYAA` / `T-180171` | Case correcto, tipo `-Control final`, cargo Cliente y trabajo adicional |
+| Expense | `1V4AK00000001tl0AA` / `EXP-1458` | Persistido con `Facturable`, Amount=1, `PrecioCliente__c=1`, `WoliCreated__c=false` y lookup WOLI vacío |
+| WorkOrderLineItem | No creado | Cero WOLI asociados al WorkOrder después del insert |
+
+`CreateWoliFromExpense` v15 estaba activa al ejecutar el insert. No se conservó `FlowInterview`, `FlowInterviewLog` ni Apex log para esta ejecución. Tampoco hubo excepción ni rollback: el Expense permaneció creado y sin modificación posterior.
+
+El análisis estructural y de datos aisló el punto de salida:
+
+1. `GetMarialesProveedorProduct` busca `Product2.Codigo_de_Producto__c = SUB`, pide el primer registro y no define orden.
+2. Existen dos productos activos con ese código. La consulta equivalente devuelve `01t4U000005sF8FQAU`.
+3. `PEKING Local` no tiene PricebookEntry para ese producto.
+4. La entrada provisional esperada `01uAK000000YRH7YAO` corresponde al otro producto `SUB`, `01t4U000005w41KQAQ`.
+5. `GetPricebook_Dinamico` no obtiene registro y `Validar_PricebookEntry` toma la salida controlada **“Entrada no configurada: detener”**, antes de `CreateWoliFromExpense` (Record Create).
+
+Resultado: **CreateWoliFromExpense — QA EJECUTADO, NO APROBADO; SIN FAULT NI ROLLBACK; DETENIDO POR PRODUCTO `SUB` AMBIGUO/SIN PBE PARA EL PRODUCTO SELECCIONADO**. No se reintentó, no se modificaron catálogo ni Flow y no se ejecutó `AgregarManoObra`.
 
 ## Acciones manuales ordenadas
 
@@ -196,8 +225,9 @@ Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar capt
 3. **`Opportunity_Flow_V2`.** No repetir el Flow únicamente para obtener evidencia. La creación PEKING ya quedó validada. Confirmar el enlace integrado en v8 durante la siguiente ejecución funcional normal.
 4. **Rutas Mostrador de v82/v8.** Ejecutarlas únicamente cuando exista una sesión funcional autorizada de un usuario activo con tipo `Mostrador` o `Todas`. Repetir el mismo control PEKING/CRC y verificar que el selector propio de Mostrador persiste `Empresa_Operadora__c`. No modificar usuarios para preparar la prueba.
 5. **`PlanDeMantenimientoV2`.** No ejecutar todavía. Confirmar qué producto/vehículo y término/tipo de plan aplican a PEKING; después proporcionar un Quote QA PEKING/CRC con una QuoteLineItem `Vehiculo` basada en una PricebookEntry activa de `PEKING Local`.
-6. **`CreateWoliFromExpense` y `AgregarManoObra`.** La ejecución autorizada quedó detenida en Fase B y el diagnóstico resultó clase C. Obtener autorización separada para crear/desplegar el Permission Set mínimo propuesto; después asignarlo al ejecutor, verificar FLS y reutilizar el Case QA `00091090`. No crear otro Case ni reanudar el DML antes de ese control.
+6. **`CreateWoliFromExpense`.** No repetir el insert. Resolver primero la ambigüedad de los dos productos `SUB` y definir qué Product2/PBE es autoritativo para PEKING; cualquier corrección de metadata o catálogo requiere un bloque separado.
+7. **`AgregarManoObra`.** No ejecutar todavía. El recordId preparado es `a2iAK000001zjndYAA`, pero el criterio de parada exige conservar el dataset y esperar el cierre del fallo previo de `CreateWoliFromExpense`.
 
 ## Criterio de estado
 
-`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. El pre-DML de `CreateWoliFromExpense` y `AgregarManoObra` continúa completo, pero su ejecución queda **DETENIDA EN FASE B — CLASE C**: no existe Permission Set adecuado, se requiere autorización separada para metadata mínima y faltan WorkOrder, tipo de trabajo, Expense y WOLI.
+`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. `CreateWoliFromExpense` queda **QA EJECUTADO — NO APROBADO** por selección ambigua del producto `SUB` y ausencia de PBE para el producto efectivamente elegido. `AgregarManoObra` conserva el recordId preparado, pero queda **NO EJECUTADO** por el criterio de parada del bloque.
