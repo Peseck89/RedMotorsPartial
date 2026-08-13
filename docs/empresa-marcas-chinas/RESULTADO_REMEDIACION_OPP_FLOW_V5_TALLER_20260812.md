@@ -32,9 +32,9 @@ La Decision `IfConfigUsuarioTaller` enviaba la rama Taller directamente a `Vehic
 | Versión inicial en Partial | v30 activa y última |
 | Dry-run definitivo | `0AfAK00000146Xh0AI` — exitoso, 1/1 Flow |
 | Deploy | `0AfAK00000146ZJ0AY` — exitoso, 1/1 Flow |
-| Versión resultante | v31 activa y última |
+| Versión resultante de la selección de Empresa | v31 activa y última en ese bloque |
 
-Las validaciones iniciales `0AfAK00000146Pd0AI`, `0AfAK00000146Sr0AI`, `0AfAK00000146W50AI`, `0AfAK00000145v00AA` y `0AfAK000001461S0AQ` no desplegaron metadata. Permitieron corregir el uso inválido de `isGoTo` hacia una pantalla nueva y confirmar que la definición completa requiere Metadata API 67.0 por elementos `styleProperties` preexistentes. No apareció ninguna dependencia adicional.
+Las validaciones iniciales `0AfAK00000146Pd0AI`, `0AfAK00000146Sr0AI`, `0AfAK00000146W50AI`, `0AfAK00000145v00AA` y `0AfAK000001461S0AQ` no desplegaron metadata. Permitieron corregir el uso inválido de `isGoTo` hacia una pantalla nueva. La incompatibilidad posterior de `styleProperties` y su resolución mediante serialización MDAPI canónica se documentan en la sección de remediación de Cuenta.
 
 ## Validación estructural
 
@@ -80,6 +80,54 @@ No se modificaron `Autos V1.4`, `Opportunity Layout` ni `Opportunity Layout Usad
 
 La remediación elimina el bloqueo de configuración del lookup. El interview funcional debe repetirse antes de declarar QA OK.
 
+## QA real posterior — datos del Asset y creación de Opportunity
+
+La repetición funcional con PEKING confirmó que el lookup estructural de Empresa funcionaba y permitió continuar con el Asset QA `02iAK000001xtZNYAY` (`VNA00260810051041`). Al avanzar desde `Información del presupuesto`, el Flow falló inicialmente en `UpdateAsset` por la Validation Rule `Asset.Other_Marca`: el registro tenía `Marca_Nvo__c = Otro` y `Marca_Otros__c` vacío.
+
+Este primer fallo era una inconsistencia preexistente del dato QA, no un defecto introducido por PEKING ni por la pantalla de Empresa. Se corrigió exclusivamente `Marca_Nvo__c`, de `Otro` a `BMW Automovil`; no se modificaron los campos de marca/modelo restantes ni metadata funcional.
+
+En la siguiente ejecución manual, el Flow superó `UpdateAsset` y alcanzó `CreateOpportunity`, donde Salesforce devolvió:
+
+`REQUIRED_FIELD_MISSING: Required fields are missing: [Name]`
+
+El análisis del nodo demostró que la causa real era `AccountId` vacío en la ruta Taller. `CreateOpportunity.AccountId` utilizaba directamente `idCuentaBuscadaoCreadaNew`, recurso que esa ruta no garantiza. La generación histórica de `Opportunity.Name` permanece a cargo del trigger existente; el Flow no asignaba `Name` y la remediación no agregó ni modificó ese campo.
+
+El defecto era preexistente en la ruta Taller y se corrigió mediante la fórmula:
+
+```text
+CuentaOportunidadEfectivaId =
+IF(
+  NOT(ISBLANK(idCuentaBuscadaoCreadaNew)),
+  idCuentaBuscadaoCreadaNew,
+  AssetCreadoOBuscado.AccountId
+)
+```
+
+`CreateOpportunity.AccountId` referencia ahora `CuentaOportunidadEfectivaId`. Las rutas generales conservan la cuenta previamente resuelta y Taller utiliza como fallback la cuenta del Asset seleccionado.
+
+## Compatibilidad MDAPI y deploy de la remediación de Cuenta
+
+El archivo de trabajo conservaba propiedades visuales `styleProperties` presentes en la representación interna del Flow, pero esa estructura era rechazada al validarse directamente. Para evitar eliminar o reconstruir manualmente metadata visual, se realizaron recuperaciones temporales aisladas mediante Metadata API 54 y 67.
+
+Ambas APIs produjeron la misma serialización canónica:
+
+- conservaron `AssetDataTable` y `FDGPack:GilmoreLabs_FlowDataGrid`;
+- conservaron el API interno 54.0 del Flow;
+- omitieron `styleProperties` sin transformarlo en otro elemento;
+- permitieron round-trip limpio de la v31 con estado `Unchanged`.
+
+Sobre la representación canónica API 67 se aplicaron exclusivamente la fórmula `CuentaOportunidadEfectivaId` y la referencia de `CreateOpportunity.AccountId`. El dry-run `0AfAK00000148850AA` fue exitoso, 1/1 componente, sin dependencias adicionales ni cambios funcionales o visuales no explicados.
+
+| Evidencia final | Resultado |
+|---|---|
+| Deploy real | `0AfAK00000148EX0AY` — exitoso, 1/1 Flow |
+| Versión creada | v32 |
+| Versión activa y última | v32 |
+| Flow Version Id | `301AK00000PVbLAYA1` |
+| API interno | 54.0 |
+
+La inspección de la versión activa confirmó que `EmpresaOperadoraSeleccionadaId` permanece intacta, `CuentaOportunidadEfectivaId` contiene la lógica validada, `CreateOpportunity.AccountId` usa la nueva fórmula y `CreateOpportunity` continúa sin asignar `Name`. No se intentó restaurar manualmente `styleProperties`.
+
 ## Resultado por Empresa
 
 | Empresa | Validación técnica | QA funcional |
@@ -92,9 +140,9 @@ No se crearon Opportunities durante este bloque, para evitar disparar correos in
 
 ## Estado final
 
-`Opp_Flow_V5`: **Validación técnica OK — QA funcional manual pendiente**.
+`Opp_Flow_V5` v32: **Validación técnica OK — QA funcional manual pendiente**.
 
-El bloqueo de permisos/layout detectado durante el primer intento de QA quedó resuelto. El estado no cambia a QA OK hasta repetir el interview y comprobar la Opportunity resultante.
+Los bloqueos previos de acceso al lookup y consistencia del Asset QA quedaron resueltos. La remediación de Cuenta fue desplegada y verificada estructuralmente, pero el estado no cambia a QA OK hasta repetir una sola vez el interview y comprobar la Opportunity resultante.
 
 El inventario autoritativo conserva 20 Flows, distribuidos ahora en:
 
@@ -108,13 +156,15 @@ El inventario autoritativo conserva 20 Flows, distribuidos ahora en:
 
 ## QA manual pendiente
 
-Ejecutar la entrada real de `Opp_Flow_V5` con perfiles QA autorizados, minimizando registros:
+Ejecutar una única repetición controlada:
 
-1. entrar con configuración de oportunidad Taller;
-2. seleccionar PEKING, crear una Opportunity y comprobar `Empresa_Operadora__c`, `Pricebook2Id` y continuidad del proceso;
-3. repetir una vez para Bavarian;
-4. repetir una vez para Otobai cuando la ruta sea aplicable;
-5. conservar video y consultas de los registros resultantes;
-6. registrar cualquier correo interno disparado por automatización de duplicados.
+1. ingresar como usuario QA del perfil `New Asesor Postventa` configurado para Taller;
+2. abrir `/flow/Opp_Flow_V5`;
+3. seleccionar Empresa `PEKING`;
+4. seleccionar el Asset `VNA00260810051041`;
+5. seleccionar el contacto `QA Prueba`;
+6. seleccionar la cuenta de facturación `QA Prueba`;
+7. avanzar una sola vez y comprobar que se crea la Opportunity con `Empresa_Operadora__c` y `AccountId` poblados y que el proceso continúa;
+8. conservar la evidencia y detenerse si aparece un nuevo error, sin repetir automáticamente.
 
 No continuar con otro componente como parte de esta remediación.
