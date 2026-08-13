@@ -11,7 +11,7 @@
 | Flow | Versión activa | Clasificación de QA | Estado alcanzado |
 |---|---:|---|---|
 | `Opp_flow_V3` | v30 (`301AK00000PW6LeYAL`) | C — manual | **QA DE CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** |
-| `Opp_Flow_v6` | v81 (`301AK00000PW25AYAT`) | C — manual | **VALIDACIÓN TÉCNICA OK — QA FUNCIONAL MANUAL PENDIENTE** en ruta Taller; Mostrador requiere una sesión funcional autorizada de ese tipo |
+| `Opp_Flow_v6` | v82 (`301AK00000PWE36YAH`) | C — manual | **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** en ruta Taller; Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `Opportunity_Flow_V2` | v7 (`301AK00000PCMb5YAH`) | C — manual | **LISTO PARA QA MANUAL PARCIAL** en ruta Taller/general; la ruta Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `PlanDeMantenimientoV2` | v24 (`301AK00000PC2ngYAD`) | C — manual | **NO LISTO**: existe Quote PEKING, pero no contiene líneas seleccionables |
 | `CreateWoliFromExpense` | v15 (`301AK00000PC2nfYAD`) | B/C — disparo por registro | **NO LISTO**: no existe Work Order PEKING ni Expense facturable relacionado reutilizable |
@@ -46,11 +46,13 @@ La diferencia entre `User.Empresa__c = Bavarian` y la selección estructural `PE
 
 ## `Opp_Flow_v6`
 
-- La definición activa es v81 (`301AK00000PW25AYAT`). La serialización moderna omite propiedades visuales/defaults preexistentes, pero conserva el grafo y los elementos funcionales de Empresa/Pricebook.
+- La definición activa es v82 (`301AK00000PWE36YAH`). La serialización moderna omite propiedades visuales/defaults preexistentes, pero conserva el grafo y los elementos funcionales de Empresa/Pricebook.
 - Hay dos entrevistas v80 abandonadas después de la primera pantalla; no constituyen QA.
 - La nueva entrevista v80 (`8gZAK000000IgaH2AS`) falló en `CreateQuote` porque `Quote.Compania__c`, picklist legacy restringido, recibió `PEKING`. Opportunity y Quote fueron revertidos.
 - Se sustituyó únicamente la fuente por `EmpresaLegacySeleccionada`: Bavarian/Otobai conservan sus valores y PEKING deja el campo legacy vacío. El dry-run `0AfAK0000014Amb0AE` y el deploy `0AfAK0000014AoD0AU` fueron exitosos.
-- `Empresa_Operadora__c` y `Resolver_Pricebook_Empresa` permanecen intactos. La ruta Taller queda pendiente de repetir una sola vez; Mostrador requiere una sesión funcional autorizada con tipo `Mostrador` o `Todas`.
+- El QA v81 creó y conservó Opportunity `006AK00000JTWT1YAP` y Quote `0Q0AK000001zNQZ0A2` con PEKING, CRC, `PEKING Local`, Cuenta, Contacto, Asset y territorio correctos; la creación queda en **QA OK**.
+- La pantalla final usaba el mismo `ecflc:flowIdRedirect` defectuoso de los Flows ya remediados. Se sustituyó únicamente por el enlace estándar al Quote; v82 está activa y la navegación integrada queda pendiente de QA manual.
+- `Empresa_Operadora__c` y `Resolver_Pricebook_Empresa` permanecen intactos. Mostrador requiere una sesión funcional autorizada con tipo `Mostrador` o `Todas`.
 - Evidencia completa: [`RESULTADO_REMEDIACION_OPP_FLOW_V6_20260812.md`](RESULTADO_REMEDIACION_OPP_FLOW_V6_20260812.md).
 
 ## `Opportunity_Flow_V2`
@@ -76,7 +78,7 @@ Estos tres Flows permanecen técnicamente validados, pero **no están listos par
 Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar captura, hora, GUID y elemento; no repetir para obtener evidencia redundante.
 
 1. **`Opp_flow_V3`.** No repetir el Flow únicamente para obtener evidencia. La creación PEKING ya quedó validada. Verificar el destino del Quote existente abriendo `/lightning/r/Quote/0Q0AK000001zPyb0AE/view`; confirmar el enlace integrado en v30 durante la siguiente ejecución funcional normal.
-2. **`Opp_Flow_v6` — ruta Taller.** Con el mismo usuario y Asset, abrir `/flow/Opp_Flow_v6`; seleccionar `PEKING`, Contact/Cuenta `QA Prueba`, moneda CRC y el territorio autorizado; completar una sola vez. Si reaparece un error en `Resolver_Pricebook_Empresa`, detenerse y registrar el mensaje técnico completo. Si termina, verificar Opportunity/Quote y Pricebook como en el punto 1.
+2. **`Opp_Flow_v6`.** No repetir el Flow únicamente para obtener evidencia. La creación PEKING ya quedó validada. Confirmar el enlace integrado en v82 durante la siguiente ejecución funcional normal.
 3. **`Opportunity_Flow_V2` — ruta general/Taller.** Con el mismo usuario y Asset, abrir `/flow/Opportunity_Flow_V2`; seleccionar expresamente `PEKING`; conservar Contact/Cuenta QA y CRC; escoger **No** en creación desde plantilla; completar una sola vez. Verificar que PEKING prevalece sobre `User.Empresa__c = Bavarian` y que el Pricebook final es `PEKING Local`.
 4. **Rutas Mostrador de v80/v7.** Ejecutarlas únicamente cuando exista una sesión funcional autorizada de un usuario activo con tipo `Mostrador` o `Todas`. Repetir el mismo control PEKING/CRC y verificar que el selector propio de Mostrador persiste `Empresa_Operadora__c`. No modificar usuarios para preparar la prueba.
 5. **`PlanDeMantenimientoV2`.** No ejecutar todavía. Proporcionar un Quote QA PEKING/CRC que ya contenga una QuoteLineItem funcional seleccionable y un término de plan válido.
@@ -84,4 +86,4 @@ Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar capt
 
 ## Criterio de estado
 
-`Opp_flow_V3` queda con **QA de creación OK** y navegación remediada técnicamente en v30, pendiente únicamente de validar manualmente el enlace integrado. `Opp_Flow_v6` y `Opportunity_Flow_V2` continúan listos de forma parcial en la ruta Taller/general; los tres P0 de planes/mano de obra conservan validación técnica pero requieren datos funcionales de entrada.
+`Opp_flow_V3` y `Opp_Flow_v6` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. `Opportunity_Flow_V2` continúa listo de forma parcial en la ruta general/Taller; los tres P0 de planes/mano de obra conservan validación técnica pero requieren datos funcionales de entrada.

@@ -4,7 +4,7 @@
 
 **Ambiente:** `RedMotorsSandbox` (Partial)
 
-**Estado:** **VALIDACIÓN TÉCNICA OK — QA FUNCIONAL MANUAL PENDIENTE**
+**Estado:** **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA EN v82 — QA MANUAL DEL ENLACE PENDIENTE**
 
 ## Evidencia del fallo funcional
 
@@ -83,16 +83,42 @@ La representación source local conserva metadata visual que la serialización m
 
 Las advertencias de validación correspondieron únicamente a nodos legacy inalcanzables preexistentes y no modificados.
 
-## QA manual pendiente
+## Resultado del QA funcional v81
 
-Repetir el caso Taller una sola vez con el perfil funcional QA, el Asset `VNA00260810051041`, Contacto y Cuenta de facturación `QA Prueba`, Empresa `PEKING`, moneda Colones y taller `Uruca - Mecánica General`.
+La repetición manual de v81 confirmó la creación funcional con PEKING:
 
-Verificar que:
+- FlowInterviewLog: `8gZAK000000IgnB2AS`;
+- GUID: `682248cd0259e6fd65a18a1c5219ff95111ad-4896`;
+- inicio: `2026-08-13 04:19:47 UTC` (`2026-08-12 22:19:47 UTC-6`);
+- estado: `Running`, porque la entrevista permanece en la pantalla final `Presupuesto`;
+- fault: ninguno registrado;
+- Opportunity: `006AK00000JTWT1YAP`, `QA Prueba-Taller-12/08/2026`;
+- Quote: `0Q0AK000001zNQZ0A2`, `PT-00080235`.
 
-- se creen y persistan Opportunity y Quote;
-- `Opportunity.Empresa_Operadora__c = PEKING`;
-- los campos legacy de compañía queden vacíos para PEKING;
-- moneda `CRC` y Pricebook `PEKING Local`;
-- no exista fault ni rollback.
+La Opportunity persistió con Cuenta `QA Prueba`, `Empresa_Operadora__c = PEKING`, `BMW_Compania__c = null`, Record Type `Taller`, Stage `Oferta`, moneda `CRC`, Pricebook `PEKING Local`, Asset `VNA00260810051041` y territorio `Uruca - Mecánica General`.
 
-Si aparece otro error, especialmente en `Resolver_Pricebook_Empresa`, detener la prueba, preservar GUID, hora, elemento y mensaje técnico, y abrir un diagnóstico separado. No modificar automáticamente otro componente.
+El Quote persistió relacionado con esa Opportunity, con Contacto y Cuenta de facturación `QA Prueba`, `Compania__c = null`, moneda `CRC`, Pricebook `PEKING Local` y estado `Nuevo`. No hubo fault ni rollback. La creación funcional queda en **QA OK**.
+
+## Defecto y remediación de navegación
+
+La pantalla final `Presupuesto` conservaba el campo `btn1` de tipo `ComponentInstance`, extensión `ecflc:flowIdRedirect`, con `recordId = presupuestoid`. El valor efectivo de ese recurso era el Quote `0Q0AK000001zNQZ0A2`, pero el componente no produjo navegación visible.
+
+El defecto coincide exactamente con el patrón ya demostrado y corregido en `Opp_Flow_V5` y `Opp_flow_V3`. Se clasificó como **REMEDIACIÓN TÉCNICA PERMITIDA — CAMBIO LIMITADO**.
+
+Se sustituyó únicamente `Presupuesto.btn1` por un `DisplayText` con enlace estándar dinámico:
+
+```text
+/lightning/r/Quote/{!presupuestoid}/view
+```
+
+No se modificaron `CreateOpportunity`, `CreateQuote`, Empresa, resolver, Pricebook, Cuenta, Contacto, Asset, moneda, territorio, otras pantallas ni otros Flows.
+
+Validación y despliegue de navegación:
+
+- comparación semántica: únicamente el componente legacy retirado y el enlace estándar agregado;
+- dry-run API 67.0: exitoso, 1/1 (`0AfAK0000014At30AE`);
+- deploy API 67.0: exitoso, 1/1 (`0AfAK0000014Auf0AE`);
+- versión nueva y activa: v82 (`301AK00000PWE36YAH`);
+- recuperación posterior: equivalencia semántica completa con el artefacto desplegado, cero componentes `ecflc:flowIdRedirect`, enlace estándar presente y lógica funcional intacta.
+
+No debe crearse otra Opportunity únicamente para repetir evidencia. La integración del enlace en v82 queda pendiente de confirmación durante la siguiente ejecución funcional normal.
