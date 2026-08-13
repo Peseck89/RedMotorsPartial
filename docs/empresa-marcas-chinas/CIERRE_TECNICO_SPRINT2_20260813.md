@@ -8,15 +8,15 @@
 
 **Naturaleza:** cierre documental; no resuelve ni autoriza decisiones de negocio pendientes
 
-> **Actualización posterior — 2026-08-13:** las respuestas de Luis desbloquearon F07, N2 y N4 con baselines provisionales. F07 terminó `Completed`, con Plan y QLI persistidos. N4 quedó desplegado técnicamente en v21/v55. N2 quedó remediado en v11/v9, pero su única entrevista normal se detuvo por FLS de `Empresa__c.Codigo_ERP__c`; la variante selectiva no se ejecutó. Ver `CIERRE_FUNCIONAL_SPRINT2_POST_RESPUESTA_LUIS_20260813.md`.
+> **Actualización posterior — 2026-08-13:** las respuestas de Luis desbloquearon F07, N2 y N4 con baselines provisionales. F07 terminó `Completed`, con Plan y QLI persistidos. N2 cerró el FLS mínimo y completó correctamente las rutas normal v11 y selectiva v9, con Work Orders y WOLI PEKING persistidos. N4 quedó desplegado técnicamente en v21/v55 y conserva QA dirigido pendiente. Ver `CIERRE_FUNCIONAL_SPRINT2_POST_RESPUESTA_LUIS_20260813.md`.
 
 ## Conclusión
 
-**C. SPRINT 2 NO CERRABLE — F07 está cerrado; N2/N4 conservan QA funcional pendiente y N3 espera confirmación de Diego.**
+**C. SPRINT 2 NO CERRABLE — F07 y N2 están cerrados; N4 conserva QA funcional pendiente y N3 espera confirmación de Diego.**
 
-Los 20 Flows del alcance autoritativo permanecen conciliados sin doble conteo. F07 superó el defecto FLS preexistente y quedó funcionalmente validado con PEKING. El cierre formal sigue pendiente porque N2 y N4 aún requieren sus QA dirigidos y N3 continúa sujeto a confirmación externa.
+Los 20 Flows del alcance autoritativo permanecen conciliados sin doble conteo. F07 y N2 superaron sus defectos FLS preexistentes y quedaron funcionalmente validados con PEKING. El cierre formal sigue pendiente porque N4 aún requiere su QA dirigido y N3 continúa sujeto a confirmación externa.
 
-N2 tiene dataset provisional y remediación técnica desplegada, pero está bloqueado por FLS; N4 está técnicamente desplegado y N3 continúa pendiente de confirmación de Diego. Ninguno de esos tres bloques debe declararse QA funcional OK en este corte.
+N2 tiene dataset provisional, remediación técnica desplegada y QA funcional aprobado en ambas variantes. N4 está técnicamente desplegado y N3 continúa pendiente de confirmación de Diego. N4 y N3 no deben declararse QA funcional OK en este corte.
 
 ## Matriz final por estado
 
@@ -29,8 +29,8 @@ N2 tiene dataset provisional y remediación técnica desplegada, pero está bloq
 | F05 | `Obtener_PricebookEntry_en_Linea_de_Plantilla_de_Presupuesto` | **REVISADO SIN CAMBIO** | Resolución ya validada; QA depende de productos y precios oficiales. |
 | F06 | `Opportunity_Flow_From_Work_Order` | **REVISADO SIN CAMBIO** | Ruta PEKING presente; QA depende del mapeo oficial Empresa–Record Type–territorio. |
 | F07 | `PlanDeMantenimientoV2` | **QA FUNCIONAL OK** | v24 `Completed`; Plan `A-0607` y QLI Regalía PEKING Local/CRC persistidos sin duplicado ni rollback. |
-| F08 | `Work_Order_from_Quote_Selective` | **VALIDACIÓN TÉCNICA OK / QA BLOQUEADO** | v9 activa; lookup canónico y código ERP presentes. QA no ejecutado porque la ruta normal se detuvo primero por FLS. |
-| F09 | `Work_Order_from_Quote` | **VALIDACIÓN TÉCNICA OK / QA BLOQUEADO** | v11 activa; lookup canónico y código ERP presentes. Única entrevista normal detenida en `Asignar_Codigo_Empresa_Operadora` por FLS de `Empresa__c.Codigo_ERP__c`; sin registros persistidos. |
+| F08 | `Work_Order_from_Quote_Selective` | **QA FUNCIONAL OK** | v9 `Completed`; Work Order `00087394` y un WOLI PEKING persistidos, sin fault, rollback ni duplicidad. |
+| F09 | `Work_Order_from_Quote` | **QA FUNCIONAL OK** | v11 `Completed`; Work Order `00087393` y un WOLI PEKING persistidos, sin fault, rollback ni duplicidad. |
 | F10 | `SegregateWOLIs` | **BLOQUEO DE NEGOCIO** | N3: garantía/segregación PEKING sin equivalencia autorizada. |
 | F11 | `ReciboUsadosFlow` | **NO APLICA** | Proceso exclusivo de usados; Luis confirmó no extenderlo a PEKING. |
 | F12 | `Opp_Flow_V5` | **QA FUNCIONAL OK** | Creación y navegación al Quote aprobadas en v33. |
@@ -43,7 +43,7 @@ N2 tiene dataset provisional y remediación técnica desplegada, pero está bloq
 | F19 | `AgregarManoObra` | **QA FUNCIONAL OK** | WOLI y Subtipo PEKING únicos, sin fault, rollback ni duplicidad. |
 | F20 | `Carga_MO_26_Lavado_a_Caso` | **NO APLICA** | Sin versión activa; Luis confirmó no trabajar Flows inactivos. |
 
-Resumen exacto: 4 **QA FUNCIONAL OK**, 5 **VALIDACIÓN TÉCNICA OK / QA DIFERIDO O BLOQUEADO**, 3 **BLOQUEO DE NEGOCIO**, 6 **REVISADO SIN CAMBIO** y 2 **NO APLICA**. Total: **20 Flows**.
+Resumen exacto: 6 **QA FUNCIONAL OK**, 3 **VALIDACIÓN TÉCNICA OK / QA DIFERIDO**, 3 **BLOQUEO DE NEGOCIO**, 6 **REVISADO SIN CAMBIO** y 2 **NO APLICA**. Total: **20 Flows**.
 
 ## Flows con creación funcional aprobada
 
@@ -70,11 +70,13 @@ F07 está cerrado funcionalmente. El primer QA falló por FLS de `QuoteLineItem.
 Flows afectados: `Work_Order_from_Quote` y `Work_Order_from_Quote_Selective`.
 
 - Resuelto técnicamente: ambos asignan `WorkOrder.empresaFacturaCP__c = Opportunity.Empresa_Operadora__c` y conservan `WorkOrder.empresaFactura__c = Empresa__r.Codigo_ERP__c`, sin rama literal PEKING; el fallback Bavarian/Otobai permanece intacto. Versiones activas: v11 y v9. Dry-run `0AfAK0000014YVZ0A2`; deploy `0AfAK0000014YXB0A2`.
-- QA normal: una única entrevista v11 (`0FoAK000001dktg0AA`, GUID `353408d488878c0aed243898ed1819ffc2d6b7-a94a`) terminó `Error` en `Asignar_Codigo_Empresa_Operadora` porque el usuario funcional no tiene lectura efectiva sobre `Empresa__c.Codigo_ERP__c`. No se creó Work Order ni WOLI.
-- QA selectivo: no ejecutado por la regla de parada tras el primer fault.
-- Pendiente de configuración: definir el acceso mínimo al código ERP para los usuarios funcionales autorizados a crear Work Orders. Bodega y territorio continúan **PROVISIONAL / QA / BASADO EN BAVARIAN — NO PRODUCCIÓN**.
+- Fault histórico: la primera entrevista normal v11 (`0FoAK000001dktg0AA`, GUID `353408d488878c0aed243898ed1819ffc2d6b7-a94a`) terminó `Error` en `Asignar_Codigo_Empresa_Operadora` por falta de lectura sobre `Empresa__c.Codigo_ERP__c`; no persistió registros.
+- Remediación FLS: `Empresa_Codigo_ERP_QA` (`0PSAK0000007i2j4AA`) concede únicamente Read sobre `Empresa__c.Codigo_ERP__c`, sin Edit ni permisos de objeto adicionales. Dry-run `0AfAK0000014ZUr0AM`, deploy `0AfAK0000014ZY50AM`, asignación funcional `0PaAK000002skDC0AY`.
+- QA normal: el único reintento v11 terminó `Completed`; log `8gZAK000000IsGU2A0`, GUID `469561e249a549bc9c5a63f24a19ffc414307-5b7d`. Persistió Work Order `0WOAK000005k8vl4AA` / `00087393` y un WOLI `1WLAK0000000s8T4AQ`.
+- QA selectivo: ejecutado una sola vez después del éxito normal; v9 terminó `Completed`, log `8gZAK000000ItPS2A0`, GUID `9761e249a549bc9c5a63f24a19ffc414307-4569`. Persistió Work Order `0WOAK000005k8yz4AA` / `00087394` y un WOLI `1WLAK0000000sBh4AI`.
+- Resultado: ambas Work Orders conservan PEKING en `empresaFacturaCP__c`, `RMPEKING` en el campo legacy, CRC, Pricebook `PEKING Local`, bodega y territorio provisionales; no hubo fault, rollback ni duplicidad.
 
-Después de resolver exclusivamente el FLS autorizado se repetirá una vez la ruta normal; la selectiva solo podrá ejecutarse si la normal termina correctamente.
+Estado N2: **QA FUNCIONAL OK — PEKING**. Bodega y territorio continúan **CONFIGURACIÓN OPERATIVA PROVISIONAL BASADA EN BAVARIAN — NO PRODUCCIÓN**.
 
 ### N3 — garantía y segregación
 
@@ -131,6 +133,12 @@ No se elimina ni modifica ningún artefacto en este cierre.
 | Assignment usuario funcional QA | `0PaAK000002s5nx0AA` | Conservar mientras el perfil QA deba ejecutar los pendientes; retirar al desmontar el acceso temporal. |
 | Permission Set F07 | `Plan_Mantenimiento_QLI_QA` / `0PSAK0000007hwH4AQ` | Conservar hasta finalizar Sprint 2 y revisar el modelo definitivo de acceso. **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**. |
 | Assignment F07 usuario funcional QA | `0PaAK000002sntp0AA` | Conservar junto con el Permission Set mientras se mantenga el dataset y la validación funcional; no asignar masivamente. |
+| Permission Set N2 | `Empresa_Codigo_ERP_QA` / `0PSAK0000007i2j4AA` | Conservar hasta finalizar Sprint 2 y revisar el modelo definitivo de acceso. Solo Read sobre `Empresa__c.Codigo_ERP__c`; **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**. |
+| Assignment N2 usuario funcional QA | `0PaAK000002skDC0AY` | Conservar junto con el Permission Set; no ampliar asignaciones sin revisión funcional. |
+| Work Order N2 normal | `0WOAK000005k8vl4AA` / `00087393` | Evidencia QA PEKING normal aprobada; conservar con su WOLI. Configuración provisional, no Producción. |
+| WOLI N2 normal | `1WLAK0000000s8T4AQ` | Único WOLI de la ejecución normal; conservar como evidencia y no duplicar. |
+| Work Order N2 selectiva | `0WOAK000005k8yz4AA` / `00087394` | Evidencia QA PEKING selectiva aprobada; conservar con su WOLI. Configuración provisional, no Producción. |
+| WOLI N2 selectiva | `1WLAK0000000sBh4AI` | Único WOLI de la ejecución selectiva; conservar como evidencia y no duplicar. |
 | Plan F07 | `a4VAK0000000XAT2A2` / `A-0607` | Conservar como evidencia del QA PEKING aprobado; dato provisional basado en Bavarian. |
 | QLI Regalía F07 | `0QLAK000001wmYM4AY` | Conservar junto con el Plan; PEKING Local, CRC, `SAD001`, precio nominal `1`, dato QA no comercial. |
 
@@ -154,7 +162,7 @@ Este mensaje queda preparado; no se envió.
 
 | Respuesta negocio | Componente desbloqueado | Acción | QA requerido |
 |---|---|---|---|
-| N2: bodega/territorio/reserva/despacho/taller | `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective` | Sustituir datos provisionales por configuración autorizada si corresponde; no reabrir la resolución técnica de Empresa. | Una ejecución normal y una selectiva, con trazabilidad Quote–WO–WOLI. |
+| N2: bodega/territorio/reserva/despacho/taller | `Work_Order_from_Quote`, `Work_Order_from_Quote_Selective` | Sustituir datos provisionales por configuración autorizada si corresponde; no reabrir la resolución técnica de Empresa ni repetir el QA ya aprobado solo por evidencia. | Validar únicamente si la configuración oficial difiere del baseline provisional. |
 | N3: garantía y mecanismo/campo | `SegregateWOLIs` | Implementar solo la regla autorizada y resolver el Record Type sin Id fijo dentro del mismo sublote. | Segregación con y sin garantía; regresión Bavarian/Otobai. |
 | N4: servicios/agenda/sucursales/territorios + relación Empresa | `aperturaCaseWorOrderEvent`, `ct_newCaseWorkOrderEvent` | Configurar la fuente estructural y las rutas autorizadas, sin inferir por texto. | Caso–WO–Evento para PEKING y regresión de empresas existentes. |
 | Sesión funcional Mostrador disponible | `Opp_Flow_v6`, `Opportunity_Flow_V2` | Ejecutar las rutas ya desplegadas sin modificar usuario ni metadata. | Una sesión por Flow; confirmar Empresa, Quote y enlace. |
@@ -162,12 +170,12 @@ Este mensaje queda preparado; no se envió.
 
 ## Siguiente paso recomendado
 
-Resolver primero el FLS mínimo y autorizado de N2; después repetir una vez la ruta normal y ejecutar la selectiva únicamente si la normal pasa. Continuar luego con N4. N3 permanece detenido hasta la confirmación de Diego. No reabrir F07 ni repetir su entrevista únicamente para producir evidencia adicional.
+Continuar con el QA dirigido de N4. N3 permanece detenido hasta la confirmación de Diego. No reabrir F07 ni N2, ni repetir sus entrevistas únicamente para producir evidencia adicional.
 
 ## Límites del cierre
 
-- Se ejecutó F07 y, posteriormente, una única entrevista normal N2; N4 no se ejecutó.
-- Se agregó únicamente el FLS temporal mínimo y su asignación al usuario QA.
+- Se ejecutó F07 y, posteriormente, una única entrevista normal N2 y una única entrevista selectiva N2; N4 no se ejecutó.
+- Se agregó únicamente Read sobre `Empresa__c.Codigo_ERP__c` mediante un Permission Set temporal mínimo y su asignación al usuario QA.
 - No se eliminó ningún artefacto temporal.
 - No se consultó ni modificó Producción.
 - El QA diferido y los bloqueos de negocio permanecen explícitamente abiertos.
