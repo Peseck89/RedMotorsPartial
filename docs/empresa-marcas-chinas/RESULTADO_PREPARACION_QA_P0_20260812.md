@@ -15,7 +15,7 @@
 | `Opportunity_Flow_V2` | v8 (`301AK00000PWLPYYA5`) | C — manual | **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** en ruta Taller/general; Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `PlanDeMantenimientoV2` | v24 (`301AK00000PC2ngYAD`) | C — manual | **BLOQUEO DE NEGOCIO**: no existe Quote PEKING con línea de vehículo; falta catálogo de vehículo PEKING y definición de término/plan aplicable |
 | `CreateWoliFromExpense` | v16 (`301AK00000PWXVVYA5`) | **QA FUNCIONAL OK — PEKING** | Selección estructural del producto `SUB` de tipo `Subcontrato`, PBE CRC activa en `PEKING Local` y creación única del WOLI desde `EXP-1458` verificadas |
-| `AgregarManoObra` | v2 (`301AK00000PC2neYAD`) | **LISTO PARA QA MANUAL** | Dataset verificado; el Flow sigue siendo independiente de la duplicidad `SUB` porque filtra `tipoProducto__c = Mano de Obra` |
+| `AgregarManoObra` | v2 (`301AK00000PC2neYAD`) | **LISTO PARA REINTENTO QA MANUAL** | El primer intento falló en `GetWorkOrder` por FLS de `empresaFacturaCP__c`; se reutilizó el Permission Set temporal mínimo para el usuario funcional y el dataset permanece intacto |
 
 La remediación de acceso QA fue autorizada y desplegada únicamente en Partial. El primer QA demostró un defecto de configuración/determinismo en `CreateWoliFromExpense`; la remediación técnica limitada y su validación funcional quedaron completadas el 13 de agosto de 2026, sin ampliar el alcance.
 
@@ -278,6 +278,24 @@ Clasificación: **REMEDIACIÓN TÉCNICA PERMITIDA — CAMBIO LIMITADO**.
 
 Resultado final: **CreateWoliFromExpense — QA FUNCIONAL OK — PEKING**. Se creó un solo WOLI correcto, sin duplicidad y sin usar la variante `01t4U000005w41KQAQ`.
 
+#### Bloqueo FLS de `AgregarManoObra` y preparación del reintento — 13 de agosto de 2026
+
+La entrevista manual con GUID `2839336d668afbd48bc33bb8a9a519ffa1ab129-735d`, ejecutada por el perfil QA funcional, falló en `GetWorkOrder`. La consulta generada intentó leer `Id`, `Pricebook2Id`, `empresaFacturaCP__c` y `empresaFactura__c`; Salesforce devolvió `No such column 'empresaFacturaCP__c' on entity 'WorkOrder'` aunque el campo existe en la org.
+
+La causa quedó demostrada como FLS exclusivo del usuario funcional:
+
+- WorkOrder ya tenía Read/Create/Edit efectivos y acceso de lectura al registro `0WOAK000005jxsH4AQ`;
+- `WorkOrder.Pricebook2Id`: Read/Edit efectivos;
+- `WorkOrder.empresaFactura__c`: Read/Edit efectivos;
+- `WorkOrder.empresaFacturaCP__c`: Read=false y Edit=false antes de la corrección;
+- no faltaba visibilidad sobre otro campo usado por `GetWorkOrder`.
+
+Se reutilizó el Permission Set `WorkOrder_Empresa_Factura_QA` (`0PSAK0000007gIf4AI`), marcado **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**, sin modificar Profile, Flow ni el propio Permission Set. La nueva asignación al usuario funcional es `0PaAK000002s5nx0AA`. La asignación técnica anterior `0PaAK000002s2ba0AA` se conservó.
+
+Después de la asignación, `empresaFacturaCP__c` quedó con Read=true y Edit=true; `empresaFactura__c` y `Pricebook2Id` conservaron Read/Edit, WorkOrder conserva permiso de lectura y el registro mantiene acceso efectivo. No se modificaron Case, WorkOrder, Expense, WOLI, catálogo ni otro dato funcional.
+
+Estado: **AgregarManoObra — LISTO PARA REINTENTO QA MANUAL**. No se marca QA OK y el Flow no fue ejecutado nuevamente en este bloque.
+
 ## Acciones manuales ordenadas
 
 Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar captura, hora, GUID y elemento; no repetir para obtener evidencia redundante.
@@ -288,8 +306,8 @@ Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar capt
 4. **Rutas Mostrador de v82/v8.** Ejecutarlas únicamente cuando exista una sesión funcional autorizada de un usuario activo con tipo `Mostrador` o `Todas`. Repetir el mismo control PEKING/CRC y verificar que el selector propio de Mostrador persiste `Empresa_Operadora__c`. No modificar usuarios para preparar la prueba.
 5. **`PlanDeMantenimientoV2`.** No ejecutar todavía. Confirmar qué producto/vehículo y término/tipo de plan aplican a PEKING; después proporcionar un Quote QA PEKING/CRC con una QuoteLineItem `Vehiculo` basada en una PricebookEntry activa de `PEKING Local`.
 6. **`CreateWoliFromExpense`.** QA funcional PEKING completado. No volver a actualizar `EXP-1458` para obtener evidencia redundante.
-7. **`AgregarManoObra`.** Listo para una única ejecución manual con `recordId=a2iAK000001zjndYAA`. Abrir `/flow/AgregarManoObra?recordId=a2iAK000001zjndYAA`, seleccionar una sola entrada de Mano de Obra de `PEKING Local`, avanzar, dejar el alias vacío salvo necesidad funcional, escoger **Horas**, ingresar cantidad `1`, dejar descuento vacío y avanzar. En la pantalla final no solicitar otra mano de obra duplicada y finalizar una sola vez. Si aparece un fault, detenerse y conservar captura, hora y elemento; no repetir.
+7. **`AgregarManoObra`.** Listo para un único reintento manual con `recordId=a2iAK000001zjndYAA`. Iniciar una entrevista nueva desde `/flow/AgregarManoObra?recordId=a2iAK000001zjndYAA`, seleccionar una sola entrada de Mano de Obra de `PEKING Local`, avanzar, dejar el alias vacío salvo necesidad funcional, escoger **Horas**, ingresar cantidad `1`, dejar descuento vacío y avanzar. En la pantalla final no solicitar otra mano de obra duplicada y finalizar una sola vez. Si aparece un fault, detenerse y conservar captura, hora, GUID y elemento; no repetir.
 
 ## Criterio de estado
 
-`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. `CreateWoliFromExpense` queda **QA FUNCIONAL OK — PEKING**. `AgregarManoObra` conserva el recordId preparado, permanece independiente del código `SUB` y queda **LISTO PARA QA MANUAL**.
+`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. `CreateWoliFromExpense` queda **QA FUNCIONAL OK — PEKING**. `AgregarManoObra` conserva el recordId preparado, permanece independiente del código `SUB` y queda **LISTO PARA REINTENTO QA MANUAL** después de resolver el bloqueo FLS del usuario funcional.
