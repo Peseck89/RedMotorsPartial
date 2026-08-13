@@ -45,10 +45,17 @@ public with sharing class CrearPlandeVenta {
         String idCentroDeCosto = qOriginal.Centro_de_Costo__c;
         String idTallerDeServicio = oppOriginal.BMW_TallerDeServicio__c;
         String nombreCompania = oppOriginal.BMW_Compania__c;
-        String idPricebook = qOriginal.Pricebook2Id;
+        Id idPricebook = qOriginal.Pricebook2Id;
         String accountIdFacturacion = oppOriginal.Cuenta_de_Facturaci_n__c;
         
-        if (oppOriginal.RecordType != null) {
+        // El lookup es la fuente principal. La lógica por Record Type se conserva
+        // únicamente para registros heredados que todavía no tienen Empresa.
+        if (oppOriginal.Empresa_Operadora__c != null) {
+            idPricebook = resolvePlanPricebook(
+                oppOriginal.Empresa_Operadora__c,
+                qOriginal.Pricebook2Id
+            );
+        } else if (oppOriginal.RecordType != null) {
             String rtName = oppOriginal.RecordType.Name;
             
             
@@ -68,12 +75,18 @@ public with sharing class CrearPlandeVenta {
                 if (String.isBlank(accountIdFacturacion)) {
                     accountIdFacturacion = '001PH00000X9ZEcYAN';
                 }
-            } else { // Aplica para Indian, Kawasaki, Polaris, Motos usados/usadas, o cualquier otro
+            } else if (rtName == 'Indian' || rtName == 'Kawasaki' ||
+                       rtName == 'Polaris' || rtName == 'Motos usados' ||
+                       rtName == 'Motos usadas') {
                 nombreCompania = 'Otobai';
                 idPricebook = '01s4U0000026MguQAE';
                 if (String.isBlank(accountIdFacturacion)) {
                     accountIdFacturacion = '0014U00002IpmIxQAJ';
                 }
+            } else {
+                throw new AuraHandledException(
+                    'La Opportunity no tiene Empresa configurada y su Record Type no tiene una ruta legacy de plan de venta.'
+                );
             }
 
             // C. Lógica para Centro de Costo
@@ -106,7 +119,7 @@ public with sharing class CrearPlandeVenta {
 
         // --- PROTECCIÓN PARA PRUEBAS (TESTS) ---
         // Previene el error en la clase test ignorando los IDs de Pricebook de producción
-        if (Test.isRunningTest()) {
+        if (Test.isRunningTest() && oppOriginal.Empresa_Operadora__c == null) {
             idPricebook = qOriginal.Pricebook2Id;
         }
         // ---------------------------------------
@@ -242,5 +255,22 @@ public with sharing class CrearPlandeVenta {
         }
 
         return newQuote.Id;
+    }
+
+    private static Id resolvePlanPricebook(Id empresaId, Id currentPricebookId) {
+        EmpresaPricebookResolver.PricebookResolutionResult resolution =
+            EmpresaPricebookResolver.resolveForEmpresa(
+                empresaId,
+                'USD',
+                currentPricebookId
+            );
+
+        if (!resolution.isExito()) {
+            throw new AuraHandledException(
+                'No fue posible resolver el Pricebook de la Empresa para el plan de venta: ' +
+                resolution.mensaje
+            );
+        }
+        return resolution.pricebookId;
     }
 }
