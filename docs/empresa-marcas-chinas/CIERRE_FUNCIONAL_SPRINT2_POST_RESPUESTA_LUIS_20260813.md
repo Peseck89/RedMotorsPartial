@@ -95,9 +95,11 @@ Dataset PEKING preparado:
 - bodega provisional `a2bAK0000000vvxYAA`;
 - territorio provisional `0HhAK0000000sbV0AQ`.
 
-Los dos Flows ya conservan la resolución técnica dinámica por Empresa. No se ejecutaron las entrevistas N2 en este bloque; F07 quedó cerrado primero y no se encadenó otro componente.
+El defecto de propagación quedó confirmado antes del QA: los dos Flows escribían únicamente el código ERP en `WorkOrder.empresaFactura__c` y omitían el lookup canónico `WorkOrder.empresaFacturaCP__c`. La remediación mínima agregó en `Crear_la_Ot` la asignación `empresaFacturaCP__c = Datos_Opp.Empresa_Operadora__c`, conservando sin cambios el código ERP legacy y los conectores. Dry-run `0AfAK0000014YVZ0A2` y deploy `0AfAK0000014YXB0A2`, ambos 2/2. Versiones activas resultantes: `Work_Order_from_Quote` v11 (`301AK00000PXmdtYAD`) y `Work_Order_from_Quote_Selective` v9 (`301AK00000PXmduYAD`). El retrieve posterior confirmó ambas asignaciones en la serialización de la org.
 
-Estado N2: **DATASET PROVISIONAL LISTO — QA FUNCIONAL PENDIENTE**.
+La única ejecución normal autorizada, con Quote `0Q0AK000001zH8E0AU`, usó v11 y terminó `Error` antes de crear la Work Order. Entrevista `0FoAK000001dktg0AA`, GUID `353408d488878c0aed243898ed1819ffc2d6b7-a94a`, log `8gZAK000000Iuer2AC`; elemento `Asignar_Codigo_Empresa_Operadora`. Mensaje: *"El flujo no pudo acceder al valor para Datos_Opp.Empresa_Operadora__r.Codigo_ERP__c porque el campo no está disponible para el usuario que ejecuta."* El usuario funcional no tiene FLS de lectura efectivo sobre `Empresa__c.Codigo_ERP__c`. No se persistió Work Order ni WOLI y no se ejecutó la variante selectiva.
+
+Estado N2: **REMEDIACIÓN LOOKUP DESPLEGADA — QA NORMAL BLOQUEADO POR FLS — QA SELECTIVO NO EJECUTADO**.
 
 ## N4 — servicios, agenda y territorios
 
@@ -156,7 +158,7 @@ Diego debe confirmar si la ausencia de garantía de fábrica será la regla defi
 
 ## Permiso temporal
 
-`WorkOrder_Empresa_Factura_QA` debe conservarse. N2 no fue ejecutado y el acceso sigue siendo necesario para completar sus pruebas. Continúa marcado **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN** y no debe retirarse automáticamente.
+`WorkOrder_Empresa_Factura_QA` debe conservarse. La entrevista normal N2 se ejecutó una vez y quedó bloqueada antes de crear registros; el acceso sobre Work Order sigue siendo necesario para completar sus pruebas. Continúa marcado **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN** y no debe retirarse automáticamente.
 
 `Plan_Mantenimiento_QLI_QA` y su asignación `0PaAK000002sntp0AA` deben conservarse hasta terminar Sprint 2 y decidir el modelo definitivo de acceso para los usuarios funcionales que ejecuten planes de mantenimiento. No promover a Producción ni ampliar asignaciones sin esa revisión.
 
@@ -164,4 +166,4 @@ Diego debe confirmar si la ausencia de garantía de fábrica será la regla defi
 
 **C. SPRINT 2 NO CERRABLE — F07 está cerrado; quedan QA funcionales N2/N4 y la confirmación N3.**
 
-El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 y N4 permanecen listos para sus QA dirigidos, pero no se ejecutaron en este bloque. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.
+El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 tiene la propagación de Empresa desplegada, pero su QA normal quedó bloqueado por FLS de `Empresa__c.Codigo_ERP__c`; la ruta selectiva no se ejecutó. N4 permanece listo para QA dirigido. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.

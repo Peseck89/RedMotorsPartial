@@ -557,6 +557,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>empresaFacturaCP__c</field>
+            <value>
+                <elementReference>Datos_Opp.Empresa_Operadora__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>empresaFactura__c</field>
             <value>
                 <elementReference>RMOTOBAI</elementReference>
