@@ -74,23 +74,79 @@ Los cuatro `PricebookEntry` provisionales de `SAD001` y `SUB` para PEKING contin
 - `CreateWoliFromExpense` v15 (`301AK00000PC2nfYAD`) es un Flow after-save sobre `Expense`. Se dispara al crear o actualizar un Expense cuyo `ExpenseType` sea exactamente `Facturable`; no tiene entrada manual. Resuelve Empresa primero desde `WorkOrder.empresaFacturaCP__c` y conserva el fallback legacy únicamente para Bavarian/Otobai. Con Empresa, moneda de la orden y Pricebook actual invoca `EmpresaPricebookResolver`, exige estado `EXITO` y una PricebookEntry activa del producto `SUB`. Según `WoliCreated__c`, crea o actualiza un `WorkOrderLineItem`; al crear, marca el Expense y guarda el Id del WOLI.
 - Para ese Flow se verificaron los 9.959 Work Orders disponibles mediante relaciones consultables. No existe ninguno con `PEKING Local`, ninguno ligado a una Opportunity con `Empresa_Operadora__c = PEKING`, y ninguno asociado al Account/Asset QA usados en este Sprint. El lookup `WorkOrder.empresaFacturaCP__c` existe y es la fuente de la versión activa, pero el usuario de consulta no tiene FLS para leer sus valores directamente; por tanto no se reutilizó ningún registro cuya asociación estructural completa no pudiera demostrarse.
 - Existen únicamente dos Expenses `Facturable` con `WoliCreated__c = false`: `EXP-0001` (`1V44U0000010wBVSAY`) y `EXP-0003` (`1V44U0000010wFnSAI`). Ambos tienen `WorkOrderId = null`, por lo que no son candidatos válidos. Los Expenses procesados ya apuntan a WOLI y no deben reutilizarse.
+- La comparación de Expenses Bavarian procesados confirmó que `CreateWoliFromExpense` crea la línea con el producto cuyo código es `SUB`; el título del Expense no decide el producto. `EXP-1446` (`1V4PH0000001GAn0AM`) conserva un patrón exitoso trazable: CRC, categoría vacía, `CalculoGanancia__c = Ingresar valor`, `PrecioCliente__c` trasladado sin transformación a `UnitPrice` y producto `SUB`. Su importe operativo no se copia. No se encontró un Expense QA exitoso de 1 CRC, por lo que el valor mínimo `1` se clasifica como propuesta técnica QA, no como baseline de negocio.
 - `AgregarManoObra` v2 (`301AK00000PC2neYAD`) es un Screen Flow cuyo input `recordId` corresponde a `tiposDeTrabajoCaso__c`, no a WorkOrder. Desde ese registro obtiene el Case y luego el primer WorkOrder del Case. La prueba requiere un Case aislado con un único WorkOrder PEKING, porque el lookup de WorkOrder no tiene orden explícito; un Case con varias órdenes produciría una selección ambigua. La orden debe tener Empresa estructural, moneda y Pricebook coherentes. `ServiceTerritoryId` no se filtra en este Flow, pero debe permanecer válido en la orden base.
 - El Flow consulta todos los `Product2` activos o disponibles con `tipoProducto__c = Mano de Obra`, conserva solo los que tienen PricebookEntry en el Pricebook resuelto y permite seleccionar uno o más. Crea colecciones de `WorkOrderLineItem` y `Subtipo_de_trabajo_del_caso__c`; solicita alias, cantidad en horas o UTS y descuento opcional.
 - `PEKING Local` (`01sAK0000006DVdYAM`, CRC) está activo y relacionado con PEKING. Contiene dos PricebookEntry activas de mano de obra: `SAD001 / BSI` (`01uAK000000YRDtYAO`) y `SUB / Subcontratos Taller Externo Autos` (`01uAK000000YRH7YAO`), ambas con precio unitario 1. Son los mismos productos compartidos que tienen entradas activas en los Pricebooks Bavarian y Otobai; no se necesita crear producto ni PricebookEntry.
 - No existe un `tiposDeTrabajoCaso__c` claramente QA cuyo Case carezca de WorkOrder. Los casos sin orden encontrados pertenecen a datos funcionales existentes y no son reutilizables. El Case QA de referencia `00091070` tampoco sirve: ya contiene más de un WorkOrder Bavarian y el Flow podría elegir cualquiera.
+- Tres Work Orders Bavarian recientes y equivalentes —`00087374`, `00087369` y `00087363`— repiten el mismo patrón neutro: Case `Autos` en `Cita`, origen `Calendario`, estado de orden `Nuevo`, CRC, `Uruca - Mecánica General` y Work Type `Mecánica General Autos` (`08qPH0000003dhZYAQ`). Sus cuentas, contactos, Assets, propietarios, Pricebook y compañía legacy no se copian.
+- El tipo `-Control final` (`a2jPH00000AChZhYAL`) es el valor genérico con mayor evidencia de uso en el baseline revisado: 265 registros `tiposDeTrabajoCaso__c` con cargo `Cliente` y 207 relaciones posteriores a subtipo en órdenes Bavarian de Mecánica General. Los registros recientes repiten CRC, `RM_EsTrabajoAdicional__c = true`, `RM_ModoTrabajo__c = null` y `Status__c = null`. `AgregarManoObra` usa el registro como contenedor para localizar Case/WorkOrder; no usa `Tipotrabajo__c` para resolver Empresa, Pricebook ni producto.
 
-### Propuesta pre-DML compartida — pendiente de autorización
+### PRE-DML LISTO PARA AUTORIZACIÓN
 
-Ambos Flows se clasifican como **B — QA PREPARABLE CON DML MÍNIMO**. Un único conjunto aislado puede servir para los dos, sin alterar Bavarian/Otobai:
+Ambos Flows permanecen como **B — QA PREPARABLE CON DML MÍNIMO**. Todos los datos necesarios quedaron derivados y no queda una decisión de negocio tipo D. Un único Case con un único WorkOrder puede servir a ambos: el Expense añade una línea al WorkOrder, mientras `AgregarManoObra` localiza ese mismo WorkOrder por el Case sin exigir que esté vacío.
 
-1. Crear un Case exclusivamente QA, con Record Type `Autos`, Account `QA Prueba` (`001PH00001O6pqGYAR`), Contact `QA Prueba` (`003PH00001VYijKYAT`) y Asset `VNA00260810051041` (`02iAK000001xtZNYAY`). Los restantes valores obligatorios deben copiarse de un Case QA `Autos` vigente, no de un registro real.
-2. Crear un único WorkOrder QA ligado a ese Case: Account, Contact y Asset anteriores; estado inicial estándar; `CurrencyIsoCode = CRC`; `Pricebook2Id = 01sAK0000006DVdYAM` (`PEKING Local`); `empresaFacturaCP__c = a1UAK0000009wft2AA` (PEKING); `empresaFactura__c` vacío; y `ServiceTerritoryId = 0Hh4U0000010wVFSAY` (`Uruca - Mecánica General`). La fuente de Empresa/Pricebook/moneda es la configuración estructural ya validada; la cuenta, contacto y vehículo provienen del juego QA existente.
-3. Crear un `tiposDeTrabajoCaso__c` sobre el Case nuevo usando un `tiposDeTrabajo__c` existente y controlado. El tipo concreto que se use debe copiarse de un caso QA equivalente; no se creará catálogo nuevo. Este Id será el `recordId` manual de `AgregarManoObra`.
-4. Crear un Expense QA ligado al mismo WorkOrder, con `ExpenseType = Facturable`, CRC, `WoliCreated__c = false`, `Work_Order_Line_Item__c = null`, título explícitamente QA y valores de importe/categoría/cálculo tomados de un Expense QA aprobado. Crear este registro disparará automáticamente `CreateWoliFromExpense`; por eso requiere autorización de ejecución y no debe hacerse como simple preparación silenciosa.
+Clasificación utilizada: **A** derivado técnicamente; **B** baseline Bavarian válido y neutral; **C** dato técnico de QA propuesto; **D** requiere negocio.
 
-Riesgo: bajo y acotado a datos nuevos de Sandbox si se usa un Case aislado. No se cambia ningún registro, producto ni PricebookEntry Bavarian/Otobai. La única información todavía no derivada de manera segura es el tipo de trabajo concreto y el conjunto de valores funcionales del Expense (`Amount`, `Category__c`, `CalculoGanancia__c` y, según la opción, `PrecioCliente__c`); deben copiarse de un caso QA aprobado o confirmarse antes del DML.
+| Objeto | Campo | Valor propuesto | Fuente/evidencia | Derivable | Clase |
+|---|---|---|---|---|---|
+| Case | `RecordTypeId` | `0124U00000111E9QAI` (`Autos`) | Record Type activo y patrón de los tres Cases baseline | Sí | B |
+| Case | `Status` | `Cita` | Valor inicial predeterminado y repetido en los tres baselines | Sí | B |
+| Case | `Origin` | `Calendario` | Valor inicial predeterminado y repetido en los tres baselines | Sí | B |
+| Case | `Subject` | `QA PEKING Sprint2 - WorkOrder Flows` | Nomenclatura temporal inequívoca | Sí | C |
+| Case | `Description` | `null` | Campo opcional; baseline equivalente vacío | Sí | B |
+| Case | `AccountId` | `001PH00001O6pqGYAR` | Account QA `QA Prueba` | Sí | A |
+| Case | `ContactId` | `003PH00001VYijKYAT` | Contact QA `QA Prueba`, asociado al mismo Account | Sí | A |
+| Case | `AssetId` | `02iAK000001xtZNYAY` | Asset QA `VNA00260810051041`, asociado al mismo Account/Contact | Sí | A |
+| Case | `CurrencyIsoCode` | `CRC` | Moneda PEKING/Pricebook y baseline Taller | Sí | A |
+| Case | `Service_Territory1__c` | `0Hh4U0000010wVFSAY` | `Uruca - Mecánica General`, repetido en baselines | Sí | B |
+| Case | `OwnerId` | `0050P0000074Bf7QAE` | Usuario funcional QA activo `Control de Calidad`; se fija para no depender del ejecutor del DML | Sí | C |
+| Case | `CaseNumber` | generado por Salesforce | Campo autonumérico, no se envía | Sí | A |
+| WorkOrder | `CaseId` | Id del Case creado en el paso 1 | Relación requerida por ambos Flows | Sí | A |
+| WorkOrder | `AccountId` | `001PH00001O6pqGYAR` | Mismo Account QA del Case/Asset | Sí | A |
+| WorkOrder | `ContactId` | `003PH00001VYijKYAT` | Mismo Contact QA del Case/Asset | Sí | A |
+| WorkOrder | `AssetId` | `02iAK000001xtZNYAY` | Mismo Asset QA | Sí | A |
+| WorkOrder | `Status` | `Nuevo` | Valor inicial predeterminado y repetido en los tres baselines | Sí | B |
+| WorkOrder | `CurrencyIsoCode` | `CRC` | Moneda de `PEKING Local` | Sí | A |
+| WorkOrder | `Pricebook2Id` | `01sAK0000006DVdYAM` (`PEKING Local`) | Pricebook activo relacionado con PEKING | Sí | A |
+| WorkOrder | `empresaFacturaCP__c` | `a1UAK0000009wft2AA` (PEKING) | Lookup estructural a `Empresa__c` usado por ambos Flows | Sí | A |
+| WorkOrder | `empresaFactura__c` | `null` explícito | El default del campo es `RMBAVARIAN`; debe neutralizarse porque el mecanismo legacy no representa PEKING | Sí | A |
+| WorkOrder | `ServiceTerritoryId` | `0Hh4U0000010wVFSAY` | `Uruca - Mecánica General` | Sí | B |
+| WorkOrder | `WorkTypeId` | `08qPH0000003dhZYAQ` (`Mecánica General Autos`) | Patrón repetido en los tres Work Orders baseline | Sí | B |
+| WorkOrder | `Subject` | `QA PEKING Sprint2 - WorkOrder Flows` | Nomenclatura temporal inequívoca | Sí | C |
+| WorkOrder | `Description` | `null` | Campo opcional; baseline equivalente vacío | Sí | B |
+| WorkOrder | `OwnerId` | `0050P0000074Bf7QAE` | Usuario funcional QA; valor explícito | Sí | C |
+| WorkOrder | `WorkOrderNumber` | generado por Salesforce | Campo autonumérico, no se envía | Sí | A |
+| `tiposDeTrabajoCaso__c` | `Caso__c` | Id del Case creado en el paso 1 | Único campo obligatorio del objeto | Sí | A |
+| `tiposDeTrabajoCaso__c` | `Tipotrabajo__c` | `a2jPH00000AChZhYAL` (`-Control final`) | Baseline genérico con 265 usos y 207 relaciones posteriores | Sí | B |
+| `tiposDeTrabajoCaso__c` | `Tipo_de_cargo__c` | `Cliente` | Valor repetido en el baseline validado | Sí | B |
+| `tiposDeTrabajoCaso__c` | `CurrencyIsoCode` | `CRC` | Registros baseline equivalentes y coherencia con Case/WorkOrder | Sí | B |
+| `tiposDeTrabajoCaso__c` | `RM_EsTrabajoAdicional__c` | `true` | Valor repetido en los registros recientes del baseline | Sí | B |
+| `tiposDeTrabajoCaso__c` | `RM_ModoTrabajo__c` | `null` | Baseline equivalente | Sí | B |
+| `tiposDeTrabajoCaso__c` | `Status__c` | `null` | Baseline equivalente | Sí | B |
+| `tiposDeTrabajoCaso__c` | `Name` | generado por Salesforce | Campo autonumérico, no se envía | Sí | A |
+| Expense | `WorkOrderId` | Id del WorkOrder creado en el paso 2 | Entrada estructural del Flow after-save | Sí | A |
+| Expense | `AccountId` | `001PH00001O6pqGYAR` | Mismo Account QA del WorkOrder | Sí | A |
+| Expense | `ExpenseType` | `Facturable` | Criterio exacto de disparo de `CreateWoliFromExpense` | Sí | A |
+| Expense | `Amount` | `1` CRC | Valor técnico QA mínimo; el objeto no tiene validación activa que exija un monto mayor | Sí | C |
+| Expense | `TransactionDate` | `2026-08-13` | Fecha técnica propuesta para el bloque; si la autorización se ejecuta otro día, sustituir únicamente por esa fecha real | Sí | C |
+| Expense | `Category__c` | `null` | Baseline `EXP-1446`; la rama `Ingresar valor` no necesita categoría | Sí | B |
+| Expense | `CalculoGanancia__c` | `Ingresar valor` | Baseline `EXP-1446`; evita inferir margen por categoría | Sí | B |
+| Expense | `PrecioCliente__c` | `1` | Propuesta técnica QA coherente con `Ingresar valor`; el baseline demuestra que se traslada a `UnitPrice` | Sí | C |
+| Expense | `CurrencyIsoCode` | `CRC` | Baseline y moneda del WorkOrder/Pricebook | Sí | A |
+| Expense | `Title` | `QA PEKING Sprint2 - Expense Facturable` | Nomenclatura temporal inequívoca; el producto no se deriva del título | Sí | C |
+| Expense | `Description` | `QA técnico para CreateWoliFromExpense` | Nomenclatura temporal inequívoca | Sí | C |
+| Expense | `Discount` | `null` | Baseline exitoso | Sí | B |
+| Expense | `WoliCreated__c` | `false` | Estado inicial que obliga a la rama de creación | Sí | A |
+| Expense | `Work_Order_Line_Item__c` | `null` | Estado inicial previo a la creación del WOLI | Sí | A |
+| Expense | `OwnerId` | `0050P0000074Bf7QAE` | Usuario funcional QA; valor explícito | Sí | C |
+| Expense | `ExpenseNumber` | generado por Salesforce | Campo autonumérico, no se envía | Sí | A |
 
-Estos tres Flows permanecen técnicamente validados, pero **no están listos para QA manual positivo** hasta que el equipo proporcione los registros funcionales de entrada. No se crearon registros para suplirlos.
+Los demás campos editables de estos cuatro objetos se dejan `null` y no se envían; no intervienen en las rutas analizadas. Antes de insertar el Expense deben verificarse dos invariantes del WorkOrder recién creado: `empresaFacturaCP__c = PEKING` y `empresaFactura__c = null`. Si el default legacy llegara a poblar `RMBAVARIAN`, se debe detener la ejecución y corregir únicamente ese dato antes de disparar el Flow.
+
+Orden exacto: (1) Case QA; (2) WorkOrder PEKING y verificación de sus dos campos de Empresa; (3) `tiposDeTrabajoCaso__c`; (4) Expense `Facturable`, cuyo insert constituye la ejecución real de `CreateWoliFromExpense`. El Id del paso 3 será el `recordId` de la futura ejecución manual de `AgregarManoObra`.
+
+Riesgo: bajo y acotado a registros QA nuevos. No se modifica catálogo, PricebookEntry ni datos Bavarian/Otobai. **No se ejecutó DML ni ningún Flow en este bloque.**
 
 ## Acciones manuales ordenadas
 
@@ -101,8 +157,8 @@ Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar capt
 3. **`Opportunity_Flow_V2`.** No repetir el Flow únicamente para obtener evidencia. La creación PEKING ya quedó validada. Confirmar el enlace integrado en v8 durante la siguiente ejecución funcional normal.
 4. **Rutas Mostrador de v82/v8.** Ejecutarlas únicamente cuando exista una sesión funcional autorizada de un usuario activo con tipo `Mostrador` o `Todas`. Repetir el mismo control PEKING/CRC y verificar que el selector propio de Mostrador persiste `Empresa_Operadora__c`. No modificar usuarios para preparar la prueba.
 5. **`PlanDeMantenimientoV2`.** No ejecutar todavía. Confirmar qué producto/vehículo y término/tipo de plan aplican a PEKING; después proporcionar un Quote QA PEKING/CRC con una QuoteLineItem `Vehiculo` basada en una PricebookEntry activa de `PEKING Local`.
-6. **`CreateWoliFromExpense` y `AgregarManoObra`.** No ejecutar todavía. Autorizar o rechazar la propuesta pre-DML compartida. Antes de crear registros, confirmar el tipo de trabajo y los valores funcionales del Expense; después crear un único Case/WorkOrder PEKING aislado, su `tiposDeTrabajoCaso__c` y el Expense. El alta del Expense constituye la ejecución real del Flow record-triggered.
+6. **`CreateWoliFromExpense` y `AgregarManoObra`.** No ejecutar todavía. El juego compartido quedó **PRE-DML LISTO PARA AUTORIZACIÓN**, sin decisión de negocio pendiente. Tras autorización explícita, crear en orden un Case aislado, un único WorkOrder PEKING, el `tiposDeTrabajoCaso__c` y finalmente el Expense. Verificar los campos estructural y legacy de Empresa antes del Expense; su alta constituye la ejecución real del Flow record-triggered.
 
 ## Criterio de estado
 
-`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. `CreateWoliFromExpense` y `AgregarManoObra` quedan como **B — QA PREPARABLE CON DML MÍNIMO**, pendientes de autorización del juego QA compartido y de confirmar los valores funcionales no derivables del Expense/tipo de trabajo.
+`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. `CreateWoliFromExpense` y `AgregarManoObra` quedan como **B — QA PREPARABLE CON DML MÍNIMO — PRE-DML LISTO PARA AUTORIZACIÓN**; ya no tienen valores funcionales pendientes de derivar y no deben ejecutarse sin autorización explícita.
