@@ -1092,6 +1092,16 @@
         <expression>NOW()</expression>
     </formulas>
     <formulas>
+        <name>ERPDefaultEfectivo</name>
+        <dataType>String</dataType>
+        <expression>IF(NOT(ISBLANK({!recordEvent.ServiceTerritory__r.Empresa__r.Codigo_ERP__c})), {!recordEvent.ServiceTerritory__r.Empresa__r.Codigo_ERP__c}, &quot;RMBAVARIAN&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>ERPOtobaiEfectivo</name>
+        <dataType>String</dataType>
+        <expression>IF(NOT(ISBLANK({!recordEvent.ServiceTerritory__r.Empresa__r.Codigo_ERP__c})), {!recordEvent.ServiceTerritory__r.Empresa__r.Codigo_ERP__c}, &quot;RMOTOBAI&quot;)</expression>
+    </formulas>
+    <formulas>
         <name>DateToday</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
@@ -1571,7 +1581,13 @@
         <inputAssignments>
             <field>empresaFactura__c</field>
             <value>
-                <stringValue>RMOTOBAI</stringValue>
+                <elementReference>ERPOtobaiEfectivo</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>empresaFacturaCP__c</field>
+            <value>
+                <elementReference>recordEvent.ServiceTerritory__r.Empresa__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1666,7 +1682,13 @@
         <inputAssignments>
             <field>empresaFactura__c</field>
             <value>
-                <stringValue>RMBAVARIAN</stringValue>
+                <elementReference>ERPDefaultEfectivo</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>empresaFacturaCP__c</field>
+            <value>
+                <elementReference>recordEvent.ServiceTerritory__r.Empresa__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>

@@ -1071,6 +1071,36 @@
         <expression>NOW()</expression>
     </formulas>
     <formulas>
+        <name>EmpresaLegacyEfectiva</name>
+        <dataType>String</dataType>
+        <expression>IF(ISBLANK({!recordEvent.ServiceTerritory__r.Empresa__c}), TEXT({!$User.Empresa__c}), &quot;&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>EmpresaTerritorioLookupEfectiva</name>
+        <dataType>String</dataType>
+        <expression>IF(ISBLANK({!recordEvent.ServiceTerritory__r.Empresa__c}), &quot;000000000000000AAA&quot;, {!recordEvent.ServiceTerritory__r.Empresa__c})</expression>
+    </formulas>
+    <formulas>
+        <name>ERPDefaultEfectivo</name>
+        <dataType>String</dataType>
+        <expression>IF(NOT(ISBLANK({!recordEvent.ServiceTerritory__r.Empresa__r.Codigo_ERP__c})), {!recordEvent.ServiceTerritory__r.Empresa__r.Codigo_ERP__c}, &quot;RMBAVARIAN&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>ERPOtobaiEfectivo</name>
+        <dataType>String</dataType>
+        <expression>IF(NOT(ISBLANK({!recordEvent.ServiceTerritory__r.Empresa__r.Codigo_ERP__c})), {!recordEvent.ServiceTerritory__r.Empresa__r.Codigo_ERP__c}, &quot;RMOTOBAI&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>NombrePricebookDefault</name>
+        <dataType>String</dataType>
+        <expression>IF(ISBLANK({!recordEvent.ServiceTerritory__r.Empresa__c}), &quot;Bavarian Local&quot;, &quot;&quot;)</expression>
+    </formulas>
+    <formulas>
+        <name>NombrePricebookOtobai</name>
+        <dataType>String</dataType>
+        <expression>IF(ISBLANK({!recordEvent.ServiceTerritory__r.Empresa__c}), &quot;Otobai Local&quot;, &quot;&quot;)</expression>
+    </formulas>
+    <formulas>
         <name>DateToday</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
@@ -1353,7 +1383,13 @@
         <inputAssignments>
             <field>BMW_Compania__c</field>
             <value>
-                <elementReference>$User.Empresa__c</elementReference>
+                <elementReference>EmpresaLegacyEfectiva</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Empresa_Operadora__c</field>
+            <value>
+                <elementReference>recordEvent.ServiceTerritory__r.Empresa__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1654,7 +1690,13 @@
         <inputAssignments>
             <field>BMW_Compania__c</field>
             <value>
-                <elementReference>$User.Empresa__c</elementReference>
+                <elementReference>EmpresaLegacyEfectiva</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Empresa_Operadora__c</field>
+            <value>
+                <elementReference>recordEvent.ServiceTerritory__r.Empresa__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1880,7 +1922,13 @@
         <inputAssignments>
             <field>empresaFactura__c</field>
             <value>
-                <stringValue>RMOTOBAI</stringValue>
+                <elementReference>ERPOtobaiEfectivo</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>empresaFacturaCP__c</field>
+            <value>
+                <elementReference>recordEvent.ServiceTerritory__r.Empresa__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1975,7 +2023,13 @@
         <inputAssignments>
             <field>empresaFactura__c</field>
             <value>
-                <stringValue>RMBAVARIAN</stringValue>
+                <elementReference>ERPDefaultEfectivo</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>empresaFacturaCP__c</field>
+            <value>
+                <elementReference>recordEvent.ServiceTerritory__r.Empresa__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2107,12 +2161,33 @@
         <connector>
             <targetReference>Copy_2_of_CreateOpportunity</targetReference>
         </connector>
-        <filterLogic>and</filterLogic>
+        <filterLogic>(1 AND 2 AND 3) OR 4</filterLogic>
+        <filters>
+            <field>Empresa__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>EmpresaTerritorioLookupEfectiva</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>CurrencyIsoCode</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>CRC</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
         <filters>
             <field>Name</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>Otobai Local</stringValue>
+                <elementReference>NombrePricebookOtobai</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -2191,12 +2266,33 @@
         <connector>
             <targetReference>CreateOpportunity</targetReference>
         </connector>
-        <filterLogic>and</filterLogic>
+        <filterLogic>(1 AND 2 AND 3) OR 4</filterLogic>
+        <filters>
+            <field>Empresa__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>EmpresaTerritorioLookupEfectiva</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>CurrencyIsoCode</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>CRC</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
         <filters>
             <field>Name</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>Bavarian Local</stringValue>
+                <elementReference>NombrePricebookDefault</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>

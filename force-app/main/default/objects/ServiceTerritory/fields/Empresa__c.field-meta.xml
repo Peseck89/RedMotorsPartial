@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Empresa__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Empresa operadora configurable del territorio de servicio.</description>
+    <label>Empresa</label>
+    <referenceTo>Empresa__c</referenceTo>
+    <relationshipLabel>Territorios de servicio</relationshipLabel>
+    <relationshipName>Territorios_de_servicio</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

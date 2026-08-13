@@ -24,6 +24,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>ServiceTerritory.Empresa__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Empresa__c.Codigo_ERP__c</field>
         <readable>true</readable>
     </fieldPermissions>
