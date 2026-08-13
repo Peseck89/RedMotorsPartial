@@ -132,39 +132,51 @@ La inspección de la versión activa confirmó que `EmpresaOperadoraSeleccionada
 
 | Empresa | Validación técnica | QA funcional |
 |---|---|---|
-| PEKING | La Empresa está activa y es seleccionable mediante el lookup; su Id alimenta directamente `Empresa_Operadora__c`; no depende de `User.Empresa__c` ni de una rama literal. | Interview manual pendiente. |
+| PEKING | La Empresa está activa y es seleccionable mediante el lookup; su Id alimenta directamente `Empresa_Operadora__c`; no depende de `User.Empresa__c` ni de una rama literal. | QA funcional de creación OK en v32; comprobación manual del enlace de navegación pendiente en v33. |
 | Bavarian | La Empresa está activa y es seleccionable mediante el mismo lookup; se conserva la compatibilidad legacy existente. | Interview manual pendiente. |
 | Otobai | La Empresa está activa y es seleccionable mediante el mismo lookup; se conserva la compatibilidad legacy existente. | Interview manual pendiente. |
 
-No se crearon Opportunities durante este bloque, para evitar disparar correos internos de duplicados. Por ello no se declara QA funcional completo.
+## Cierre del QA funcional de creación en v32
+
+La ejecución manual de v32 iniciada el 2026-08-12 a las 19:14:09 y finalizada a las 19:27:36 concluyó con estado `Completed`, sin fault ni rollback. La evidencia persistida confirmó:
+
+- Opportunity `006AK00000JT48gYAD`, con `AccountId = 001PH00001O6pqGYAR`, `Empresa_Operadora__c = a1UAK0000009wft2AA` (PEKING), Record Type Taller, etapa Oferta, moneda CRC y Pricebook `PEKING Local`;
+- Quote `0Q0AK000001zH8E0AU`, relacionada con la Opportunity, en moneda CRC y con el mismo Pricebook;
+- Asset `02iAK000001xtZNYAY` (`VNA00260810051041`) relacionado con la Opportunity;
+- `CuentaOportunidadEfectivaId` produjo un `AccountId` no nulo;
+- el mecanismo histórico generó correctamente `Opportunity.Name`.
+
+Por tanto, el QA funcional de creación de Opportunity y Quote con PEKING queda **OK en v32**. Esta conclusión no depende del comportamiento posterior del control de navegación.
+
+## Remediación mínima de `Ir a presupuesto`
+
+En la pantalla `Presupuesto`, el control `btn1` usaba el componente administrado `ecflc:flowIdRedirect`. El recurso `presupuestoid` contenía correctamente el Id de Quote, pero el componente no produjo navegación visible. El defecto es posterior a la creación y se clasifica como UX/navegación preexistente; no invalida la Opportunity ni el Quote creados.
+
+La corrección limitada sustituye únicamente `btn1` por un `DisplayText` estándar con enlace relativo a `/lightning/r/Quote/{!presupuestoid}/view`, abierto en una pestaña nueva. Se conserva el footer y la acción `Finalizar`; no se agrega ningún componente custom, recurso, fórmula ni cambio en los nodos de creación.
+
+La representación canónica Metadata API 67 fue comparada contra una recuperación limpia de v32. El único diff es la sustitución de `btn1`. El dry-run `0AfAK00000149SL0AY` fue exitoso, 1/1 Flow, sin dependencias adicionales. El mismo artefacto fue desplegado mediante `0AfAK00000149fF0AQ`, con resultado exitoso 1/1. Se creó y activó v33, Flow Version Id `301AK00000PVnRAYA1`.
+
+La inspección posterior de v33 confirmó que `btn1` es `DisplayText`, contiene el enlace dinámico basado en `presupuestoid`, no referencia `ecflc:flowIdRedirect` y mantiene visible el footer. `EmpresaOperadoraSeleccionadaId`, `CuentaOportunidadEfectivaId`, `CreateOpportunity.AccountId` y los nodos de creación permanecen sin cambios. La asignación de `Opportunity.Name` continúa fuera del Flow, bajo el mecanismo histórico.
 
 ## Estado final
 
-`Opp_Flow_V5` v32: **Validación técnica OK — QA funcional manual pendiente**.
+`Opp_Flow_V5` v33: **QA funcional de creación OK en v32 — navegación remediada y validada técnicamente; comprobación manual del enlace pendiente**.
 
-Los bloqueos previos de acceso al lookup y consistencia del Asset QA quedaron resueltos. La remediación de Cuenta fue desplegada y verificada estructuralmente, pero el estado no cambia a QA OK hasta repetir una sola vez el interview y comprobar la Opportunity resultante.
+Los bloqueos previos de acceso al lookup, consistencia del Asset QA y resolución de Cuenta quedaron resueltos. La Opportunity y el Quote de la ejecución v32 persisten correctamente. La comprobación manual pendiente queda limitada al enlace `Ir a presupuesto` una vez desplegada su remediación.
 
 El inventario autoritativo conserva 20 Flows, distribuidos ahora en:
 
 - 4 revisados sin cambio;
 - 2 QA OK / técnicamente cerrados;
-- 8 con validación técnica OK y QA funcional manual pendiente;
+- 7 con validación técnica OK y QA funcional manual pendiente;
+- 1 con QA funcional de creación OK y comprobación manual de navegación pendiente (`Opp_Flow_V5`);
 - 1 con validación técnica OK y comportamiento en datos reales sin confirmar (`Opportunity_Flow_V2`);
 - 0 bloqueados técnicamente;
 - 3 bloqueados por negocio;
 - 2 no aplicables a PEKING.
 
-## QA manual pendiente
+## Comprobación manual pendiente
 
-Ejecutar una única repetición controlada:
-
-1. ingresar como usuario QA del perfil `New Asesor Postventa` configurado para Taller;
-2. abrir `/flow/Opp_Flow_V5`;
-3. seleccionar Empresa `PEKING`;
-4. seleccionar el Asset `VNA00260810051041`;
-5. seleccionar el contacto `QA Prueba`;
-6. seleccionar la cuenta de facturación `QA Prueba`;
-7. avanzar una sola vez y comprobar que se crea la Opportunity con `Empresa_Operadora__c` y `AccountId` poblados y que el proceso continúa;
-8. conservar la evidencia y detenerse si aparece un nuevo error, sin repetir automáticamente.
+Después del deploy, realizar una sola comprobación manual del enlace `Ir a presupuesto` y confirmar que abre el Quote creado. No se requiere repetir el caso funcional completo de creación para sostener el QA OK ya demostrado en v32.
 
 No continuar con otro componente como parte de esta remediación.

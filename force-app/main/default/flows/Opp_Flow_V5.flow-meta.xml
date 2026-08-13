@@ -6029,31 +6029,8 @@
                 </fields>
                 <fields>
                     <name>btn1</name>
-                    <extensionName>ecflc:flowIdRedirect</extensionName>
-                    <fieldType>ComponentInstance</fieldType>
-                    <inputParameters>
-                        <name>recordId</name>
-                        <value>
-                            <elementReference>presupuestoid</elementReference>
-                        </value>
-                    </inputParameters>
-                    <inputParameters>
-                        <name>buttonLabel</name>
-                        <value>
-                            <stringValue>Ir a presupuesto</stringValue>
-                        </value>
-                    </inputParameters>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
-                    <isRequired>true</isRequired>
-                    <storeOutputAutomatically>true</storeOutputAutomatically>
-                    <styleProperties>
-                        <verticalAlignment>
-                            <stringValue>top</stringValue>
-                        </verticalAlignment>
-                        <width>
-                            <stringValue>12</stringValue>
-                        </width>
-                    </styleProperties>
+                    <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;a href=&quot;/lightning/r/Quote/{!presupuestoid}/view&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot;&gt;Ir a presupuesto&lt;/a&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
                 </fields>
                 <inputParameters>
                     <name>width</name>
