@@ -8,13 +8,15 @@
 
 **Naturaleza:** cierre documental; no resuelve ni autoriza decisiones de negocio pendientes
 
+> **Actualización posterior — 2026-08-13:** las respuestas de Luis desbloquearon F07, N2 y N4 con baselines provisionales. F07 fue ejecutado una sola vez y terminó con un fault de persistencia en v24; no quedó Plan ni línea generada. N4 quedó desplegado técnicamente en v21/v55 y N2 quedó preparado, pero sus QA no se ejecutaron después del fault. Por tanto, la conclusión original de este documento queda sustituida por **C. SPRINT 2 NO CERRABLE — queda trabajo técnico desbloqueado en F07**. Ver `CIERRE_FUNCIONAL_SPRINT2_POST_RESPUESTA_LUIS_20260813.md`.
+
 ## Conclusión
 
-**A. CERRABLE AHORA CON PENDIENTES DE NEGOCIO DOCUMENTADOS.**
+**C. SPRINT 2 NO CERRABLE — F07 presenta un fault de persistencia pendiente de diagnóstico concluyente.**
 
-Los 20 Flows del alcance autoritativo están conciliados sin doble conteo. La implementación terminó en los componentes desbloqueados, el QA funcional se completó donde los datos y reglas estaban definidos, y los casos restantes están detenidos por una respuesta de negocio o quedan como QA diferido expresamente acotado. No se identificó trabajo técnico obligatorio desbloqueado que impida el cierre formal de Sprint 2.
+Los 20 Flows del alcance autoritativo permanecen conciliados sin doble conteo. Sin embargo, la ejecución F07 posterior a la respuesta de Luis demostró un fault real de persistencia. La transacción fue revertida y la evidencia preservada no permite identificar de forma concluyente cuál de los dos Record Create finales falló. Este trabajo técnico desbloqueado impide el cierre formal.
 
-Este criterio no declara resueltos F07, N2, N3 ni N4. Al recibir cada respuesta se abrirá un bloque dirigido, limitado al componente y la decisión correspondientes.
+N2 tiene dataset provisional listo, N4 está técnicamente desplegado y N3 continúa pendiente de confirmación de Diego. Ninguno debe declararse QA funcional OK en este corte.
 
 ## Matriz final por estado
 
