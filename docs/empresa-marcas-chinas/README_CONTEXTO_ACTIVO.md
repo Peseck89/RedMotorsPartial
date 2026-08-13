@@ -4,6 +4,8 @@
 
 Ver la regla completa, el orden de autoridad entre fuentes y la tabla de autorización vigente en [`REGLAS_ALCANCE_AUTORIZADO.md`](REGLAS_ALCANCE_AUTORIZADO.md). Esa regla es obligatoria para cualquier agente (Claude Code, Codex, Cowork, ChatGPT) que trabaje en este proyecto, en cualquier Sprint o worktree.
 
+**Prioridad operativa y trabajo adicional (agregado 2026-08-13):** el orden obligatorio de trabajo (urgencias reales → lista actualizada de lo trabajado → hallazgos adicionales para aprobación → reporte consolidado para María) y la regla de que la autorización técnica no implica cobertura económica automática están en [`REGLA_PRIORIDAD_Y_TRABAJO_ADICIONAL_20260813.md`](REGLA_PRIORIDAD_Y_TRABAJO_ADICIONAL_20260813.md). Toda actividad fuera del alcance/horas original debe marcarse ahí con la etiqueta **TRABAJO EXTRA — NO CONTEMPLADO EN EL ALCANCE/HORAS ORIGINALES**.
+
 **Índice maestro de auditoría (agregado 2026-08-05):** para el estado vigente completo del proyecto (Sprint 1/2/3, TD-RQ308, documentos sustituidos, worktrees pendientes) sin depender de inventarios de auditoría de más de mil filas, ver [`auditoria/INDICE_MAESTRO_AUDITORIA.md`](auditoria/INDICE_MAESTRO_AUDITORIA.md) y [`auditoria/MATRIZ_DOCUMENTOS_CLAVE_VIGENCIA.csv`](auditoria/MATRIZ_DOCUMENTOS_CLAVE_VIGENCIA.csv).
 
 ## REGLA DE CARGA DE CONTEXTO (obligatoria, vigente desde 2026-07-28)
