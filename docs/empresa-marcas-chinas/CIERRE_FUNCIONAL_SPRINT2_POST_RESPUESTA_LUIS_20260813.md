@@ -3,7 +3,7 @@
 **Fecha:** 13 de agosto de 2026
 
 **Ambiente:** RedMotors Sandbox Partial
-**Resultado:** **C. SPRINT 2 NO CERRABLE — F07 presenta un fallo funcional reproducido y aún no diagnosticado de forma concluyente**
+**Resultado:** **C. SPRINT 2 NO CERRABLE — F07 cerrado; N2/N4 conservan QA funcional pendiente y N3 espera confirmación de Diego**
 
 ## Autorización aplicada
 
@@ -32,7 +32,7 @@ No existe una entrevista histórica completa que conserve simultáneamente vehí
 
 Se creó el PBE provisional PEKING Local `01uAK000000YWrtYAG` con precio nominal `1` y el QLI de vehículo `0QLAK000001wnB34AI`, rotulado como dato provisional basado en Bavarian.
 
-### QA ejecutado una sola vez
+### Primer QA y diagnóstico
 
 La entrevista funcional:
 
@@ -54,11 +54,25 @@ Evidencia de entrevista:
 - no quedó el QLI `SAD001` generado por el Flow;
 - la transacción fue revertida.
 
-No existen Validation Rules activas sobre `Plan_de_mantenimiento__c` ni `QuoteLineItem`. La evidencia preservada no permite distinguir de forma concluyente si el fault ocurrió en `crearPlanMantenimiento` o en `Copy_1_of_CreateQuoteLineItem`; no había registro de depuración previo y el evento técnico detallado no quedó disponible para consulta posterior.
+La entrevista preservada identificó después el elemento exacto `Copy_1_of_CreateQuoteLineItem` y el mensaje `INVALID_FIELD_FOR_INSERT_UPDATE`: el perfil funcional tenía lectura, pero no edición, sobre `QuoteLineItem.Quote_Line_Item__c` y `QuoteLineItem.esRegalia__c`. No existen Validation Rules activas sobre `Plan_de_mantenimiento__c` ni `QuoteLineItem`; Pricebook, moneda, Product2, WarrantyTerm y automatización downstream no fueron la causa.
 
-Estado F07: **QA FUNCIONAL ERROR — FAULT DE PERSISTENCIA PENDIENTE DE DIAGNÓSTICO CON EVIDENCIA TÉCNICA**.
+### Remediación FLS y QA final
 
-No se repitió la entrevista y no se aplicó una corrección especulativa.
+Se creó el Permission Set `Plan_Mantenimiento_QLI_QA`, marcado **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**, con únicamente Read/Edit sobre los dos campos requeridos. Dry-run `0AfAK0000014SoM0AU`, deploy `0AfAK0000014XZV0A2` y asignación funcional `0PaAK000002sntp0AA`.
+
+Se ejecutó una sola entrevista posterior con el mismo dataset:
+
+- versión v24;
+- GUID `65760061b22932e5cc1210b9d45c19ffc1a94d3-3be6`;
+- estado `Completed` y evento final `FlowFinish`;
+- Plan `a4VAK0000000XAT2A2` / `A-0607` persistido;
+- QLI `0QLAK000001wmYM4AY` persistido;
+- Quote `0Q0AK000001zL5N0AU` / `00080233`, PEKING Local, CRC;
+- producto `SAD001`, PBE `01uAK000000YRDtYAO`, cantidad `1`, precio `1`;
+- `Quote_Line_Item__c = 0QLAK000001wnB34AI` y `esRegalia__c = true`;
+- exactamente un Plan y un QLI creados, sin duplicado, fault ni rollback.
+
+Estado F07: **QA FUNCIONAL OK — PEKING**.
 
 ## N2 — Quote a Work Order
 
@@ -81,9 +95,9 @@ Dataset PEKING preparado:
 - bodega provisional `a2bAK0000000vvxYAA`;
 - territorio provisional `0HhAK0000000sbV0AQ`.
 
-Los dos Flows ya conservan la resolución técnica dinámica por Empresa. No se ejecutaron las entrevistas N2 porque el fault de F07 activó el criterio de parada antes de continuar.
+Los dos Flows ya conservan la resolución técnica dinámica por Empresa. No se ejecutaron las entrevistas N2 en este bloque; F07 quedó cerrado primero y no se encadenó otro componente.
 
-Estado N2: **DATASET PROVISIONAL LISTO — QA FUNCIONAL NO EJECUTADO POR PARADA F07**.
+Estado N2: **DATASET PROVISIONAL LISTO — QA FUNCIONAL PENDIENTE**.
 
 ## N4 — servicios, agenda y territorios
 
@@ -115,7 +129,7 @@ Configuración PEKING provisional:
 - moneda CRC;
 - descripción `PROVISIONAL_QA_BASADO_EN_BAVARIAN_NO_PRODUCCION`.
 
-Estado N4: **VALIDACIÓN TÉCNICA OK — CONFIGURACIÓN PROVISIONAL DESPLEGADA — QA FUNCIONAL NO EJECUTADO POR PARADA F07**.
+Estado N4: **VALIDACIÓN TÉCNICA OK — CONFIGURACIÓN PROVISIONAL DESPLEGADA — QA FUNCIONAL PENDIENTE**.
 
 ## N3 — garantía
 
@@ -144,8 +158,10 @@ Diego debe confirmar si la ausencia de garantía de fábrica será la regla defi
 
 `WorkOrder_Empresa_Factura_QA` debe conservarse. N2 no fue ejecutado y el acceso sigue siendo necesario para completar sus pruebas. Continúa marcado **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN** y no debe retirarse automáticamente.
 
+`Plan_Mantenimiento_QLI_QA` y su asignación `0PaAK000002sntp0AA` deben conservarse hasta terminar Sprint 2 y decidir el modelo definitivo de acceso para los usuarios funcionales que ejecuten planes de mantenimiento. No promover a Producción ni ampliar asignaciones sin esa revisión.
+
 ## Criterio final
 
-**C. SPRINT 2 NO CERRABLE — queda trabajo técnico desbloqueado.**
+**C. SPRINT 2 NO CERRABLE — F07 está cerrado; quedan QA funcionales N2/N4 y la confirmación N3.**
 
-El bloqueo inmediato es el fault de persistencia de F07. Antes de repetir la prueba se debe capturar evidencia técnica del fault —mediante registro de depuración dirigido o la notificación completa de Salesforce— y determinar el nodo exacto. N2 y N4 permanecen listos para QA, pero no deben ejecutarse hasta cerrar ese diagnóstico. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.
+El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 y N4 permanecen listos para sus QA dirigidos, pero no se ejecutaron en este bloque. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.
