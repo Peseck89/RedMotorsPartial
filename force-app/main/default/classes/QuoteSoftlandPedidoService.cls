@@ -143,6 +143,12 @@ public class QuoteSoftlandPedidoService {
         return this.accountsToUpdate;
     }
 
+    @TestVisible
+    private static Map<String, String> legacyCodeCache = new Map<String, String>();
+    @TestVisible
+    private static Set<String> validatedCompanyCodes = new Set<String>();
+
+    @TestVisible
     private static String resolveCompanyErpCode(Quote quote) {
         try {
             EmpresaContext context;
@@ -159,38 +165,61 @@ public class QuoteSoftlandPedidoService {
         }
     }
 
+    /**
+     * Resuelve dinámicamente el código de Empresa (Codigo__c) a partir del texto legacy
+     * (BMW_Compania__c), consultando Empresa__c en vez de una whitelist cerrada. Acepta tanto
+     * el nombre visible ("Bavarian") como el código ("RMBAVARIAN") para conservar compatibilidad
+     * con registros legacy existentes. Cualquier Empresa activa configurada resuelve sin cambio
+     * de código; si no hay coincidencia única, produce un error controlado (nunca cae a Bavarian).
+     */
     private static String resolveLegacyCompanyCode(String legacyCompany) {
         if (String.isBlank(legacyCompany)) {
             throw new AuraHandledException('No existe empresa configurada para crear el pedido de Quote.');
         }
 
         String normalizedCompany = legacyCompany.trim().toUpperCase();
-        if (normalizedCompany == 'BAVARIAN' || normalizedCompany == 'RMBAVARIAN') {
-            return 'RMBAVARIAN';
-        }
-        if (normalizedCompany == 'OTOBAI' || normalizedCompany == 'RMOTOBAI') {
-            return 'RMOTOBAI';
-        }
-        if (normalizedCompany == 'RMPEKING') {
-            return 'RMPEKING';
+        if (legacyCodeCache.containsKey(normalizedCompany)) {
+            return legacyCodeCache.get(normalizedCompany);
         }
 
-        throw new AuraHandledException('Empresa no soportada para crear el pedido de Quote.');
+        List<Empresa__c> matches = [
+            SELECT Codigo__c
+            FROM Empresa__c
+            WHERE Activa__c = true
+                AND (Codigo__c = :normalizedCompany OR Name = :normalizedCompany)
+            LIMIT 2
+        ];
+        if (matches.size() != 1) {
+            throw new AuraHandledException('Empresa no soportada para crear el pedido de Quote.');
+        }
+
+        legacyCodeCache.put(normalizedCompany, matches[0].Codigo__c);
+        return matches[0].Codigo__c;
     }
 
+    /**
+     * Valida dinámicamente que el código de Empresa resuelto corresponda a una Empresa__c activa
+     * configurada, sin depender de una whitelist cerrada de nombres de compañía.
+     */
     private static void validateSupportedCompany(String companyCode) {
         String normalizedCompany = String.isBlank(companyCode) ? null : companyCode.trim().toUpperCase();
-        if (
-            normalizedCompany == 'RMBAVARIAN' ||
-            normalizedCompany == 'RMOTOBAI' ||
-            normalizedCompany == 'RMPEKING'
-        ) {
+        if (String.isBlank(normalizedCompany)) {
+            throw new AuraHandledException('Empresa no soportada para crear el pedido de Quote.');
+        }
+        if (validatedCompanyCodes.contains(normalizedCompany)) {
             return;
         }
 
-        throw new AuraHandledException('Empresa no soportada para crear el pedido de Quote.');
+        Integer activeMatches = [
+            SELECT COUNT()
+            FROM Empresa__c
+            WHERE Activa__c = true AND Codigo_ERP__c = :normalizedCompany
+        ];
+        if (activeMatches != 1) {
+            throw new AuraHandledException('Empresa no soportada para crear el pedido de Quote.');
+        }
+
+        validatedCompanyCodes.add(normalizedCompany);
     }
-
-
 
 }
