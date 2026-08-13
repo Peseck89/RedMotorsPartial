@@ -137,7 +137,20 @@ Configuración PEKING provisional:
 - moneda CRC;
 - descripción `PROVISIONAL_QA_BASADO_EN_BAVARIAN_NO_PRODUCCION`.
 
-Estado N4: **VALIDACIÓN TÉCNICA OK — CONFIGURACIÓN PROVISIONAL DESPLEGADA — QA FUNCIONAL PENDIENTE**.
+QA dirigido posterior:
+
+- usuario asesor funcional: Marco Mora Villavicencio (`005PH000007m1k9YAA`);
+- Event QA `00UAK000003Bik12AC`, con `OwnerId = Asesor__c`, Account/Contact/Asset QA y Service Territory provisional PEKING;
+- `Empresa_Consulta_Flows` fue asignado mediante `0PaAK000002spqp0AA`; aporta Read sobre `Empresa__c` y Read sobre `ServiceTerritory.Empresa__c`, sin Create/Edit/Delete;
+- `Empresa_Codigo_ERP_QA` fue asignado mediante `0PaAK000002swU60AI`; aporta exclusivamente Read sobre `Empresa__c.Codigo_ERP__c`;
+- la verificación posterior confirmó Read efectivo sobre Empresa, ambos campos y los registros PEKING/Event/Service Territory requeridos;
+- el único reintento autorizado de `aperturaCaseWorOrderEvent` v21 volvió a mostrar un fallo no gestionado durante la carga inicial, antes de crear `FlowInterviewLog`, GUID o llegar a un elemento registrable;
+- el Event permaneció sin Case, Work Order ni Quote; tampoco se creó Opportunity y no hubo DML funcional persistido;
+- `ct_newCaseWorkOrderEvent` v55 no se ejecutó, conforme al criterio de parada.
+
+La remediación FLS autorizada quedó aplicada, pero no resolvió por sí sola el fallo de inicialización. No se amplió acceso ni se encadenó otra corrección; el siguiente paso es un diagnóstico dirigido del arranque de v21.
+
+Estado N4: **QA PARCIAL — FLS MÍNIMO APLICADO — FALLO DE INICIALIZACIÓN PENDIENTE DE DIAGNÓSTICO**.
 
 ## N3 — garantía
 
@@ -170,8 +183,10 @@ Diego debe confirmar si la ausencia de garantía de fábrica será la regla defi
 
 `Empresa_Codigo_ERP_QA` (`0PSAK0000007i2j4AA`) y su asignación funcional `0PaAK000002skDC0AY` deben conservarse hasta terminar Sprint 2 y revisar el acceso definitivo al código ERP. Concede únicamente Read sobre `Empresa__c.Codigo_ERP__c`, sin Edit ni ampliación de permisos de objeto. Está marcado **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**.
 
+Para el QA N4 del usuario asesor se agregaron las asignaciones temporales `0PaAK000002spqp0AA` (`Empresa_Consulta_Flows`) y `0PaAK000002swU60AI` (`Empresa_Codigo_ERP_QA`). Deben conservarse únicamente mientras se diagnostica y completa N4, sin ampliación masiva ni promoción a Producción.
+
 ## Criterio final
 
-**C. SPRINT 2 NO CERRABLE — F07 y N2 están cerrados; queda el QA funcional N4 y la confirmación N3.**
+**C. SPRINT 2 NO CERRABLE — F07 y N2 están cerrados; N4 conserva un fallo de inicialización pendiente de diagnóstico y N3 espera confirmación.**
 
-El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 también cerró su FLS mínimo y completó una ejecución normal y una selectiva con PEKING, sin fault, rollback ni duplicidad. N4 permanece listo para QA dirigido. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.
+El fault FLS de F07 quedó diagnosticado y remediado de forma mínima, y el reintento único concluyó correctamente. N2 también cerró su FLS mínimo y completó una ejecución normal y una selectiva con PEKING, sin fault, rollback ni duplicidad. En N4 se aplicó y verificó el Read mínimo de Empresa/código ERP, pero v21 volvió a fallar antes de abrir una entrevista y v55 no se ejecutó. N3 continúa siendo una confirmación externa de Diego y no debe convertirse en regla definitiva.

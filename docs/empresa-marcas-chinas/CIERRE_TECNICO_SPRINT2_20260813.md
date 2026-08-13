@@ -96,7 +96,13 @@ Pregunta mínima:
 
 > ¿Qué servicios, agenda, sucursales y territorios oficiales corresponden a PEKING, y qué relación estructural debe identificar la Empresa en lugar de depender del texto del nombre del Service Territory?
 
-`ServiceTerritory.Empresa__c` ya fue desplegado como fuente configurable. Las versiones activas v21/v55 conservan el fallback legacy para territorios sin Empresa y no agregan una tercera rama textual PEKING. El QA funcional de esa configuración permanece pendiente.
+`ServiceTerritory.Empresa__c` ya fue desplegado como fuente configurable. Las versiones activas v21/v55 conservan el fallback legacy para territorios sin Empresa y no agregan una tercera rama textual PEKING.
+
+El dataset dirigido usa Event `00UAK000003Bik12AC`, usuario asesor `005PH000007m1k9YAA`, `OwnerId = Asesor__c` y Service Territory `0HhAK0000000sbV0AQ` relacionado con PEKING/RMPEKING. Para cubrir exclusivamente la lectura requerida se asignaron `Empresa_Consulta_Flows` (`0PaAK000002spqp0AA`) y `Empresa_Codigo_ERP_QA` (`0PaAK000002swU60AI`). La comprobación efectiva confirmó Read sobre `Empresa__c`, `ServiceTerritory.Empresa__c`, `Empresa__c.Codigo_ERP__c` y los registros involucrados.
+
+El único reintento autorizado de v21 volvió a fallar durante la inicialización, antes de generar `FlowInterviewLog`, GUID o elemento registrable. No se creó Case, Work Order, Opportunity ni Quote y el Event permaneció sin relaciones funcionales nuevas. v55 no se ejecutó por criterio de parada. La causa FLS objetivo quedó remediada, pero subsiste un fallo de arranque distinto que requiere diagnóstico dirigido antes de otro QA.
+
+Estado N4: **QA PARCIAL — FLS MÍNIMO APLICADO — FALLO DE INICIALIZACIÓN PENDIENTE DE DIAGNÓSTICO**.
 
 ## QA diferido documentado
 
@@ -126,8 +132,10 @@ No se elimina ni modifica ningún artefacto en este cierre.
 | PBE SUB histórica de variante Mano de Obra / PEKING Dólares | `01uAK000000YRFWYA4` | Misma disposición que la anterior. |
 | PBE Subcontrato autoritativa / PEKING Local | `01uAK000000YUy9YAG` | Conservar como evidencia y configuración funcional de Sandbox; `UnitPrice=1` sigue siendo baseline QA, no precio oficial. |
 | Service Territory provisional | `0HhAK0000000sbV0AQ` / `PEKING TEMPORAL - NO PRODUCCION` | Conservar hasta respuesta N2/N4; retirar o reemplazar cuando exista territorio oficial. **QA TEMPORAL — NO PRODUCCIÓN**. |
+| Event QA N4 | `00UAK000003Bik12AC` | Conservar sin redisparar hasta diagnosticar el arranque de v21; `OwnerId = Asesor__c`, PEKING provisional y sin Case/WO/Quote persistidos. **QA TEMPORAL — NO PRODUCCIÓN**. |
 | Permission Set de consulta | `Empresa_Consulta_Flows` | Conservar. Su Read mínimo sobre `Empresa__c` puede constituir configuración funcional real para usuarios que ejecutan los Opportunity Flows; la población definitiva debe confirmarse antes de ampliar asignaciones. |
 | Assignment de consulta Empresa | `0PaAK000002rbcz0AA` | Conservar para el usuario QA que ejecuta los Opportunity Flows; no ampliar masivamente sin definición funcional. |
+| Assignment N4 consulta Empresa | `0PaAK000002spqp0AA` | Asignación temporal al usuario asesor N4; retirar o revisar al cerrar el diagnóstico funcional. |
 | Permission Set | `WorkOrder_Empresa_Factura_QA` / `0PSAK0000007gIf4AI` | Opción **B: conservar temporalmente** hasta terminar N2 y cualquier QA de Work Order. No promover a Producción ni convertirlo en configuración definitiva sin revisión funcional de permisos. |
 | Assignment técnico | `0PaAK000002s2ba0AA` | Conservar junto con el Permission Set mientras continúe el QA; retirar al desmontar el acceso temporal. |
 | Assignment usuario funcional QA | `0PaAK000002s5nx0AA` | Conservar mientras el perfil QA deba ejecutar los pendientes; retirar al desmontar el acceso temporal. |
@@ -135,6 +143,7 @@ No se elimina ni modifica ningún artefacto en este cierre.
 | Assignment F07 usuario funcional QA | `0PaAK000002sntp0AA` | Conservar junto con el Permission Set mientras se mantenga el dataset y la validación funcional; no asignar masivamente. |
 | Permission Set N2 | `Empresa_Codigo_ERP_QA` / `0PSAK0000007i2j4AA` | Conservar hasta finalizar Sprint 2 y revisar el modelo definitivo de acceso. Solo Read sobre `Empresa__c.Codigo_ERP__c`; **QA TEMPORAL — NO PROMOVER A PRODUCCIÓN**. |
 | Assignment N2 usuario funcional QA | `0PaAK000002skDC0AY` | Conservar junto con el Permission Set; no ampliar asignaciones sin revisión funcional. |
+| Assignment N4 código ERP | `0PaAK000002swU60AI` | Asignación temporal al usuario asesor N4; concede únicamente el Read ya definido por el Permission Set. |
 | Work Order N2 normal | `0WOAK000005k8vl4AA` / `00087393` | Evidencia QA PEKING normal aprobada; conservar con su WOLI. Configuración provisional, no Producción. |
 | WOLI N2 normal | `1WLAK0000000s8T4AQ` | Único WOLI de la ejecución normal; conservar como evidencia y no duplicar. |
 | Work Order N2 selectiva | `0WOAK000005k8yz4AA` / `00087394` | Evidencia QA PEKING selectiva aprobada; conservar con su WOLI. Configuración provisional, no Producción. |
@@ -170,12 +179,12 @@ Este mensaje queda preparado; no se envió.
 
 ## Siguiente paso recomendado
 
-Continuar con el QA dirigido de N4. N3 permanece detenido hasta la confirmación de Diego. No reabrir F07 ni N2, ni repetir sus entrevistas únicamente para producir evidencia adicional.
+Diagnosticar el fallo de inicialización de `aperturaCaseWorOrderEvent` v21 sin repetir el Flow ni ampliar permisos preventivamente. N3 permanece detenido hasta la confirmación de Diego. No reabrir F07 ni N2, ni repetir sus entrevistas únicamente para producir evidencia adicional.
 
 ## Límites del cierre
 
-- Se ejecutó F07 y, posteriormente, una única entrevista normal N2 y una única entrevista selectiva N2; N4 no se ejecutó.
-- Se agregó únicamente Read sobre `Empresa__c.Codigo_ERP__c` mediante un Permission Set temporal mínimo y su asignación al usuario QA.
+- Se ejecutó F07 y, posteriormente, una única entrevista normal N2 y una única entrevista selectiva N2. En N4 se intentó una sola ejecución v21 después de aplicar FLS mínimo; falló antes de abrir entrevista y v55 no se ejecutó.
+- Se agregó únicamente Read sobre `Empresa__c`, `ServiceTerritory.Empresa__c` y `Empresa__c.Codigo_ERP__c` mediante Permission Sets existentes y asignaciones dirigidas a los usuarios QA correspondientes.
 - No se eliminó ningún artefacto temporal.
 - No se consultó ni modificó Producción.
 - El QA diferido y los bloqueos de negocio permanecen explícitamente abiertos.
