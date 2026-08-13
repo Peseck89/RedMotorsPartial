@@ -9,6 +9,7 @@ public class ProductoLocalizacionHelper {
     }
 
     public HttpResponse obtenerLocalizaciones(String codigoProducto, String compania) {
+        String codigoEmpresa = requireCodigoEmpresa(compania);
         List<Localizacion> localizaciones = new List<Localizacion>();
 		HttpResponse res1 = new HttpResponse();
         try {
@@ -27,9 +28,10 @@ public class ProductoLocalizacionHelper {
             req.setHeader('Authorization', 'Bearer ' + tokenAuthentificacion);
             req.setHeader('Content-Type', 'application/json');
 
-            // JSON correcto con compania y articulo
+            // El consumidor entrega el Código Softland de la Empresa. No usar
+            // Bavarian como valor por defecto para una Empresa distinta.
             Map<String, String> bodyMap = new Map<String, String>();
-            bodyMap.put('compania', 'RMBAVARIAN');
+            bodyMap.put('compania', codigoEmpresa);
             bodyMap.put('articulo', codigoProducto);
 
             req.setBody(JSON.serialize(bodyMap));
@@ -63,5 +65,14 @@ public class ProductoLocalizacionHelper {
         }
 
         return res1;
+    }
+
+    private static String requireCodigoEmpresa(String compania) {
+        if (String.isBlank(compania)) {
+            throw new AuraHandledException(
+                'Debe indicar el Código Softland de la Empresa para consultar localizaciones.'
+            );
+        }
+        return compania.trim().toUpperCase();
     }
 }
