@@ -14,8 +14,8 @@
 | `Opp_Flow_v6` | v82 (`301AK00000PWE36YAH`) | C — manual | **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** en ruta Taller; Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `Opportunity_Flow_V2` | v8 (`301AK00000PWLPYYA5`) | C — manual | **QA CREACIÓN OK — NAVEGACIÓN REMEDIADA; QA MANUAL DEL ENLACE PENDIENTE** en ruta Taller/general; Mostrador requiere una sesión funcional autorizada de ese tipo |
 | `PlanDeMantenimientoV2` | v24 (`301AK00000PC2ngYAD`) | C — manual | **BLOQUEO DE NEGOCIO**: no existe Quote PEKING con línea de vehículo; falta catálogo de vehículo PEKING y definición de término/plan aplicable |
-| `CreateWoliFromExpense` | v15 (`301AK00000PC2nfYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | Ejecución detenida en Fase B por FLS de `WorkOrder.empresaFacturaCP__c`; Case QA creado, sin WorkOrder/Expense/WOLI |
-| `AgregarManoObra` | v2 (`301AK00000PC2neYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | Ejecución detenida en Fase B por el mismo FLS; Case QA creado, sin WorkOrder ni `tiposDeTrabajoCaso__c` |
+| `CreateWoliFromExpense` | v15 (`301AK00000PC2nfYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | Ejecución detenida en Fase B; diagnóstico de acceso clase C: no existe Permission Set con Edit sobre `WorkOrder.empresaFacturaCP__c` |
+| `AgregarManoObra` | v2 (`301AK00000PC2neYAD`) | **B — QA PREPARABLE CON DML MÍNIMO** | Mismo bloqueo clase C; Case QA creado, sin WorkOrder ni `tiposDeTrabajoCaso__c` |
 
 No se encontró un defecto técnico nuevo y demostrable que autorizara modificar o desplegar metadata en este bloque.
 
@@ -159,6 +159,34 @@ La creación autorizada comenzó por fases y se detuvo antes de generar el WorkO
 
 Estado operativo: **EJECUCIÓN DETENIDA EN FASE B — ACCESO FLS REQUERIDO PARA `WorkOrder.empresaFacturaCP__c`**. No es un defecto del Flow ni una decisión funcional pendiente; es una condición de acceso del ejecutor. No deben crearse el tipo de trabajo ni el Expense hasta resolverla.
 
+#### Diagnóstico dirigido de FLS
+
+La identidad autenticada que ejecutó el DML fallido es el usuario `005AK0000050FWPYA2`, username `peseck89@gmail.com.partial.redmotors`, perfil `System Administrator`. No fue el propietario funcional `Control de Calidad` del Case. Sus permisos efectivos son:
+
+- WorkOrder: Read, Create y Edit disponibles por el perfil; también posee permisos administrativos amplios propios de ese perfil.
+- `WorkOrder.empresaFactura__c`: Read y Edit disponibles.
+- `WorkOrder.empresaFacturaCP__c`: sin FieldPermission Read ni Edit; el campo no aparece en el contrato de datos disponible para esa identidad.
+- Permission Sets directos: `Empresa_Admin` y `QA_PEKING_S3_RecordType_Access`; ninguno concede acceso al campo. No tiene Permission Set Groups asignados.
+
+La búsqueda global no encontró ningún Permission Set asignable con Edit sobre el lookup estructural:
+
+| Fuente existente | Id | WorkOrder | `empresaFacturaCP__c` | Uso actual | Evaluación |
+|---|---|---|---|---|---|
+| Perfil `Asistente de Taller` | `00ePH00000Os4C5YAJ` | Read/Create/Edit; sin Delete/View All/Modify All | Read=true; Edit=false | Un usuario funcional activo de Taller | Baseline funcional de solo lectura; no es Permission Set asignable y no resuelve el insert |
+| `Data Cloud Salesforce Connector` | `0PSPH000000Hart4AC` | Read=true; Create/Edit=false; View All=true | Read=true; Edit=false | Usuario de integración de Data Cloud | Inadecuado y más amplio de lo necesario; no resuelve el insert |
+
+No existe una identidad técnica autenticada y respaldada que tenga Edit sobre el campo. Tampoco existe una alternativa clase A. Clasificación final: **C — NO EXISTE PERMISSION SET ADECUADO**.
+
+Propuesta mínima pendiente de autorización separada:
+
+- Permission Set sugerido: `WorkOrder_Empresa_Factura_QA` / `WorkOrder Empresa Factura QA`.
+- WorkOrder: Read=true, Create=true, Edit=true; Delete=false, View All=false, Modify All=false.
+- `WorkOrder.empresaFacturaCP__c`: Read=true, Edit=true.
+- No agregar acceso a otros objetos, campos, administración, datos globales ni Production.
+- Asignación prevista únicamente al ejecutor `005AK0000050FWPYA2` en `RedMotorsSandbox`, conservándola hasta instrucción expresa de retiro.
+
+No se creó Permission Set, no se hizo asignación, no se modificó perfil y no se desplegó metadata. El dataset continúa detenido con el mismo Case `00091090` y cero registros downstream.
+
 ## Acciones manuales ordenadas
 
 Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar captura, hora, GUID y elemento; no repetir para obtener evidencia redundante.
@@ -168,8 +196,8 @@ Ejecutar cada caso una sola vez. Si aparece un fault, detenerse y conservar capt
 3. **`Opportunity_Flow_V2`.** No repetir el Flow únicamente para obtener evidencia. La creación PEKING ya quedó validada. Confirmar el enlace integrado en v8 durante la siguiente ejecución funcional normal.
 4. **Rutas Mostrador de v82/v8.** Ejecutarlas únicamente cuando exista una sesión funcional autorizada de un usuario activo con tipo `Mostrador` o `Todas`. Repetir el mismo control PEKING/CRC y verificar que el selector propio de Mostrador persiste `Empresa_Operadora__c`. No modificar usuarios para preparar la prueba.
 5. **`PlanDeMantenimientoV2`.** No ejecutar todavía. Confirmar qué producto/vehículo y término/tipo de plan aplican a PEKING; después proporcionar un Quote QA PEKING/CRC con una QuoteLineItem `Vehiculo` basada en una PricebookEntry activa de `PEKING Local`.
-6. **`CreateWoliFromExpense` y `AgregarManoObra`.** La ejecución autorizada quedó detenida en Fase B. Reutilizar el Case QA `00091090`; no crear otro. Reanudar únicamente con un ejecutor autorizado que pueda crear `WorkOrder.empresaFacturaCP__c`, verificar el lookup PEKING y el campo legacy vacío, y solo entonces crear `tiposDeTrabajoCaso__c` y Expense. El alta del Expense constituirá la ejecución real del Flow record-triggered.
+6. **`CreateWoliFromExpense` y `AgregarManoObra`.** La ejecución autorizada quedó detenida en Fase B y el diagnóstico resultó clase C. Obtener autorización separada para crear/desplegar el Permission Set mínimo propuesto; después asignarlo al ejecutor, verificar FLS y reutilizar el Case QA `00091090`. No crear otro Case ni reanudar el DML antes de ese control.
 
 ## Criterio de estado
 
-`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. El pre-DML de `CreateWoliFromExpense` y `AgregarManoObra` continúa completo, pero su ejecución queda **DETENIDA EN FASE B POR FLS**: existe el Case QA aislado y faltan WorkOrder, tipo de trabajo, Expense y WOLI.
+`Opp_flow_V3`, `Opp_Flow_v6` y `Opportunity_Flow_V2` quedan con **QA de creación OK** y navegación remediada técnicamente, pendiente únicamente de validar manualmente el enlace integrado. Las rutas Mostrador de `Opp_Flow_v6` y `Opportunity_Flow_V2` requieren sesiones funcionales autorizadas. `PlanDeMantenimientoV2` conserva **BLOQUEO DE NEGOCIO**. El pre-DML de `CreateWoliFromExpense` y `AgregarManoObra` continúa completo, pero su ejecución queda **DETENIDA EN FASE B — CLASE C**: no existe Permission Set adecuado, se requiere autorización separada para metadata mínima y faltan WorkOrder, tipo de trabajo, Expense y WOLI.
