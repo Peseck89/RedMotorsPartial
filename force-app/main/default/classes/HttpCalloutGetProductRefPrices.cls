@@ -6,6 +6,8 @@ public with sharing class HttpCalloutGetProductRefPrices {
     }
 
     public HttpResponse getProductRefPricesPOST(String articulo, String compania) {
+        String codigoEmpresa = requireCodigoEmpresa(compania);
+
         // Get authentication token
         HttpCalloutAuth httpAuth = new HttpCalloutAuth(Label.ClientIdSoftland, Label.ClientSecretSoftland);
         HttpResponse resAuth = httpAuth.getAuth();
@@ -14,9 +16,12 @@ public with sharing class HttpCalloutGetProductRefPrices {
         String authResponse = resAuth.getBody();
         cls_AuthorizationJSON auth = cls_AuthorizationJSON.parseAutorizationResponse(authResponse);
 
-        // Prepare the JSON payload
-        String payload = '{ "articulo": "' + articulo + '", "compania": "' + 'RMBAVARIAN' + '" }';
-        //String payload = '{ "articulo": "' + articulo + '", "compania": "' + compania + '" }';
+        // El consumidor entrega el Código Softland de la Empresa. No seleccionar
+        // una compañía por defecto: una Empresa nueva debe viajar por configuración.
+        String payload = JSON.serialize(new Map<String, String>{
+            'articulo' => articulo,
+            'compania' => codigoEmpresa
+        });
 
         // Build the full URL
         String fullUrl = this.url + '/' + this.ambiente + '/softlandAPI/Catalogs/getProductRefPrices';
@@ -35,6 +40,15 @@ public with sharing class HttpCalloutGetProductRefPrices {
         System.debug(res.getBody());
         // Return the response
         return res;
+    }
+
+    private static String requireCodigoEmpresa(String compania) {
+        if (String.isBlank(compania)) {
+            throw new AuraHandledException(
+                'Debe indicar el Código Softland de la Empresa para consultar precios de referencia.'
+            );
+        }
+        return compania.trim().toUpperCase();
     }
     
     
