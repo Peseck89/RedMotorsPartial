@@ -167,7 +167,7 @@ export default class Rm_vn_crear_opp_inventario extends LightningElement {
         window.clearTimeout(this.delayTimeout);
         const searchKey = event.target.value;
         this.delayTimeout = setTimeout(() => {
-            this.interexternalColornalColor = searchKey;
+            this.externalColor = searchKey;
         }, DELAY);
     }     
     
