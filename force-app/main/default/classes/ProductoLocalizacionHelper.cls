@@ -69,9 +69,10 @@ public class ProductoLocalizacionHelper {
 
     private static String requireCodigoEmpresa(String compania) {
         if (String.isBlank(compania)) {
-            throw new AuraHandledException(
-                'Debe indicar el Código Softland de la Empresa para consultar localizaciones.'
-            );
+            String errorMessage = 'Debe indicar el Código Softland de la Empresa para consultar localizaciones.';
+            AuraHandledException ex = new AuraHandledException(errorMessage);
+            ex.setMessage(errorMessage);
+            throw ex;
         }
         return compania.trim().toUpperCase();
     }

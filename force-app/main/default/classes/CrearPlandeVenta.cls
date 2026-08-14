@@ -84,9 +84,13 @@ public with sharing class CrearPlandeVenta {
                     accountIdFacturacion = '0014U00002IpmIxQAJ';
                 }
             } else {
-                throw new AuraHandledException(
+                AuraHandledException ex = new AuraHandledException(
                     'La Opportunity no tiene Empresa configurada y su Record Type no tiene una ruta legacy de plan de venta.'
                 );
+                ex.setMessage(
+                    'La Opportunity no tiene Empresa configurada y su Record Type no tiene una ruta legacy de plan de venta.'
+                );
+                throw ex;
             }
 
             // C. Lógica para Centro de Costo
@@ -266,10 +270,12 @@ public with sharing class CrearPlandeVenta {
             );
 
         if (!resolution.isExito()) {
-            throw new AuraHandledException(
+            String errorMessage =
                 'No fue posible resolver el Pricebook de la Empresa para el plan de venta: ' +
-                resolution.mensaje
-            );
+                resolution.mensaje;
+            AuraHandledException ex = new AuraHandledException(errorMessage);
+            ex.setMessage(errorMessage);
+            throw ex;
         }
         return resolution.pricebookId;
     }

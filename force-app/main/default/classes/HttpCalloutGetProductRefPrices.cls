@@ -44,9 +44,10 @@ public with sharing class HttpCalloutGetProductRefPrices {
 
     private static String requireCodigoEmpresa(String compania) {
         if (String.isBlank(compania)) {
-            throw new AuraHandledException(
-                'Debe indicar el Código Softland de la Empresa para consultar precios de referencia.'
-            );
+            String errorMessage = 'Debe indicar el Código Softland de la Empresa para consultar precios de referencia.';
+            AuraHandledException ex = new AuraHandledException(errorMessage);
+            ex.setMessage(errorMessage);
+            throw ex;
         }
         return compania.trim().toUpperCase();
     }
