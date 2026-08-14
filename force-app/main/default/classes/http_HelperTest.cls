@@ -83,8 +83,57 @@ public class http_HelperTest {
         Test.setMock(HttpCalloutMock.class, new ExampleCalloutMock());
         http_Helper.generateAccountJSON(acc, true);
         http_Helper.generateAccountJSON(acc, false);
-        http_Helper.generateOrderJSON(new Opportunity(), 'qwer');
+        System.assertEquals('RMBAVARIAN', http_Helper.resolveSoftlandCompanyForOrder(new Opportunity(empresaQueFactura__c = 'Bavarian')));
         Test.stopTest();
+    }
+
+    @isTest
+    public static void testResolveSoftlandCompanyForOrderLegacyValues() {
+        System.assertEquals(
+            'RMBAVARIAN',
+            http_Helper.resolveSoftlandCompanyForOrder(new Opportunity(empresaQueFactura__c = 'Bavarian'))
+        );
+        System.assertEquals(
+            'RMBAVARIAN',
+            http_Helper.resolveSoftlandCompanyForOrder(new Opportunity(empresaQueFactura__c = 'RMBAVARIAN'))
+        );
+        System.assertEquals(
+            'RMOTOBAI',
+            http_Helper.resolveSoftlandCompanyForOrder(new Opportunity(empresaQueFactura__c = 'Otobai'))
+        );
+        System.assertEquals(
+            'RMOTOBAI',
+            http_Helper.resolveSoftlandCompanyForOrder(new Opportunity(empresaQueFactura__c = 'RMOTOBAI'))
+        );
+    }
+
+    @isTest
+    public static void testResolveSoftlandCompanyForOrderUsesEmpresaLookup() {
+        Empresa__c empresaPeking = new Empresa__c(
+            Name = 'PEKING QA',
+            Codigo__c = 'RMPEKING',
+            Codigo_ERP__c = 'RMPEKING',
+            Nombre_Legal__c = 'PEKING QA',
+            Activa__c = true
+        );
+        insert empresaPeking;
+
+        Opportunity opp = new Opportunity(
+            Empresa_Operadora__c = empresaPeking.Id,
+            empresaQueFactura__c = 'Bavarian'
+        );
+
+        System.assertEquals('RMPEKING', http_Helper.resolveSoftlandCompanyForOrder(opp));
+    }
+
+    @isTest
+    public static void testResolveSoftlandCompanyForOrderBlocksUnknownCompany() {
+        try {
+            http_Helper.resolveSoftlandCompanyForOrder(new Opportunity(empresaQueFactura__c = 'Empresa sin configurar'));
+            System.assert(false, 'Una empresa desconocida no debe caer silenciosamente en Bavarian u Otobai.');
+        } catch (EmpresaConfigurationException e) {
+            System.assert(e.getMessage().contains('no está configurada'));
+        }
     }
     
     @isTest
