@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Default Price List VN</label>
+    <protected>false</protected>
+    <values>
+        <field>Descripcion__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Description__c</field>
+        <value xsi:type="xsd:string">Nombre de la lsiatde precios default para vehiculos nuevos, se utiliza en los componentes al seleccionar inventario</value>
+    </values>
+    <values>
+        <field>Perfiles__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:type="xsd:string">Bavarian Dólar</value>
+    </values>
+</CustomMetadata>
