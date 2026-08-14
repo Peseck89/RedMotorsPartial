@@ -51,10 +51,46 @@ public class http_Helper {
         return strAccount;
     }
 
+    @TestVisible
+    private static String resolveSoftlandCompanyForOrder(Opportunity actualOpp) {
+        if (actualOpp == null) {
+            throw new EmpresaConfigurationException('La Opportunity es requerida para resolver la empresa Softland.');
+        }
+
+        Map<String, Object> populatedFields = actualOpp.getPopulatedFieldsAsMap();
+        Object empresaOperadoraValue = populatedFields.get('Empresa_Operadora__c');
+        if (empresaOperadoraValue != null) {
+            return EmpresaResolver.resolve((Id) empresaOperadoraValue).requireCodigoErp();
+        }
+
+        String legacyCompany = (String) populatedFields.get('empresaQueFactura__c');
+        if (String.isBlank(legacyCompany)) {
+            throw new EmpresaConfigurationException(
+                'La Opportunity debe tener Empresa_Operadora__c o empresaQueFactura__c para generar el pedido Softland.'
+            );
+        }
+
+        String normalizedCompany = legacyCompany.trim().toUpperCase();
+        if (normalizedCompany == 'BAVARIAN' || normalizedCompany == 'RMBAVARIAN') {
+            return 'RMBAVARIAN';
+        }
+        if (normalizedCompany == 'OTOBAI' || normalizedCompany == 'RMOTOBAI') {
+            return 'RMOTOBAI';
+        }
+
+        try {
+            return EmpresaResolver.resolveByCodigo(normalizedCompany).requireCodigoErp();
+        } catch (EmpresaConfigurationException e) {
+            throw new EmpresaConfigurationException(
+                'La empresa ' + legacyCompany + ' no está configurada para generar el pedido Softland.'
+            );
+        }
+    }
+
     public static String generateOrderJSON(Opportunity actualOpp,String cardCode)
     {
         String moneda = actualOpp.MonedaIngreso__c == 'CRC'?'L':'D';
-        String compania = actualOpp.empresaQueFactura__c == 'Bavarian'?'RMBAVARIAN':'RMOTOBAI';
+        String compania = resolveSoftlandCompanyForOrder(actualOpp);
         String observaciones = actualOpp.Observaciones__c!=null?actualOpp.Observaciones__c:'';
         String comentarioCxC = actualOpp.Comentario_CxC__c!=null?+actualOpp.Comentario_CxC__c:'';
         String condicionPago = actualOpp.condicionPago__r.condicionPago__c!=null?actualOpp.condicionPago__r.condicionPago__c:'';
