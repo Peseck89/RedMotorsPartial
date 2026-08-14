@@ -1,86 +1,83 @@
 # RedMotors / PEKING - Cierre implementación Sprint 4
 
-Fecha: 2026-08-13
+Fecha: 2026-08-14
 
 Rama de trabajo: `feature/luis/peking-sprint4-implementacion-20260813`
 
-HEAD base de esta continuación: `4b1b623ce27cfee91a52797da8dacc433d4953ad`
+HEAD remoto vigente al iniciar esta continuación: `b0fc34c25eabac6fc484f7aa44267df77d3ea715`
 
-Alcance aplicado: cierre del núcleo formal restante de Sprint 4 sobre la rama ya entregada. Se revisaron los 13 campos/picklists, Record Types de `Opportunity`, `Lead`, `Order` y `Case`, y los Global Value Sets contemplados por el alcance oficial.
+Fuente nueva autoritativa incorporada: commit `93498803398cea70ce62793f2ce7e1f4e991ccd8`, documento `docs/empresa-marcas-chinas/FUENTES_METADATA_SPRINT4_20260813.md`.
 
-Restricciones respetadas: no Salesforce, no deploy, no DML, no Production, no Sprint 1/2, no Apex bloqueado por el otro Code, no volver a modificar los LWC ya cerrados salvo fallo demostrado.
+Alcance aplicado: cierre del núcleo formal restante de Sprint 4 con metadata real recuperada de Partial. Se trabajaron únicamente campos/picklists, Record Types de `Order`, y el Global Value Set determinable de marca. No se reabrieron Apex, Flows, LWC, Aura, Layouts ni Sprint 1/2/3.
 
-## Resumen ejecutivo
+Restricciones respetadas: no Salesforce, no deploy, no DML, no Production, no Apex, no Flows, no LWC reabiertos, no datos de catálogo inventados.
 
-No se encontraron gaps seguros de metadata que deban modificarse directamente en Git para este núcleo formal sin hacer retrieve desde Salesforce.
+## 1. Campos/picklists oficiales
 
-Lo que está versionado y forma parte del modelo actual ya quedó cubierto:
+| # | Componente/API name | Estado | Valores/acción | Evidencia exacta |
+|---:|---|---|---|---|
+| 1 | `Quote.Compania__c` | HECHO | Se incorporó metadata fuente real y se agregó `PEKING` junto a `Bavarian`/`Otobai`. | `force-app/main/default/objects/Quote/fields/Compania__c.field-meta.xml` |
+| 2 | `Quote.empresaFactura__c` | NO APLICA | NO EXISTE EN MODELO ACTUAL — NO CREAR SIN NECESIDAD FUNCIONAL DEMOSTRADA. | `FUENTES_METADATA_SPRINT4_20260813.md` confirma que en `Quote` no existe este campo ni variante cercana; `Quote.Compania__c` es el campo real. |
+| 3 | `Opportunity.BMW_Compania__c` | NO APLICA | No se reintroduce PEKING en este picklist legacy porque la ruta vigente de Sprint 2 usa `Opportunity.Empresa_Operadora__c` como lookup/configuración. | Campo no está dentro del bloque nuevo de metadata recuperada; se conserva criterio de lookup Empresa. |
+| 4 | `Opportunity.empresaQueFactura__c` | HECHO | Se incorporó metadata fuente real y se agregó `PEKING`, conservando el valor histórico `Otobay` tal como existe en la org. | `force-app/main/default/objects/Opportunity/fields/empresaQueFactura__c.field-meta.xml` |
+| 5 | `Order.empresaQueFactura__c` | HECHO | Se incorporó metadata fuente real y se agregó `RMPEKING`, respetando que este campo usa códigos ERP (`RMBAVARIAN`, `RMOTOBAI`). | `force-app/main/default/objects/Order/fields/empresaQueFactura__c.field-meta.xml` |
+| 6 | `WorkOrder.empresaFactura__c` | HECHO | Ya estaba completo en Git con `RMPEKING`; no se modificó. | `force-app/main/default/objects/WorkOrder/fields/empresaFactura__c.field-meta.xml` |
+| 7 | `User.Empresa__c` | HECHO | Se incorporó metadata fuente real y se agregó `PEKING` junto a `Bavarian`/`Otobai`. | `force-app/main/default/objects/User/fields/Empresa__c.field-meta.xml` |
+| 8 | `Product2.Empresa__c` | HECHO | Ya estaba completo en Git con `RMPEKING`; no se modificó. | `force-app/main/default/objects/Product2/fields/Empresa__c.field-meta.xml` |
+| 9 | `CentroCosto__c.Empresa__c` | NO APLICA | NO EXISTE EN MODELO ACTUAL — NO CREAR SIN NECESIDAD FUNCIONAL DEMOSTRADA. | `FUENTES_METADATA_SPRINT4_20260813.md` confirma que `CentroCosto__c` no tiene campo de Empresa/Compañía; decisión vigente reutiliza centro de costo existente. |
+| 10 | `TipoDeCargoConManoDeObra__c.Empresa__c` | HECHO | Ya estaba completo en Git con `RMPEKING`; no se modificó. | `force-app/main/default/objects/TipoDeCargoConManoDeObra__c/fields/Empresa__c.field-meta.xml` |
+| 11 | `Linea_Plantilla_de_Presupuesto__c.Empresa__c` | HECHO | La metadata real confirmó que es picklist restringido, no lookup. Se agregó `RMPEKING`. | `force-app/main/default/objects/Linea_Plantilla_de_Presupuesto__c/fields/Empresa__c.field-meta.xml` |
+| 12 | `ReciboUsado__c.Empresa__c` | HECHO | Se incorporó metadata fuente real y se agregó `RMPEKING`, respetando la convención de código ERP. | `force-app/main/default/objects/ReciboUsado__c/fields/Empresa__c.field-meta.xml` |
+| 13 | `Plantilla_de_Presupuesto__c.BMW_Compania__c` | HECHO | La metadata real confirmó que es picklist restringido requerido, no lookup. Se agregó `PEKING`. | `force-app/main/default/objects/Plantilla_de_Presupuesto__c/fields/BMW_Compania__c.field-meta.xml` |
 
-- `WorkOrder.empresaFactura__c` incluye `RMPEKING`.
-- `Product2.Empresa__c` incluye `RMPEKING`.
-- `TipoDeCargoConManoDeObra__c.Empresa__c` incluye `RMPEKING`.
-- `Opportunity.Omoda` y `Opportunity.Jaecoo` existen y están activos.
-- `Lead.Omoda` y `Lead.Jaecoo` existen y están activos.
-- `RM_RecordTypeMapping.Lead_Omoda_to_Opp` y `RM_RecordTypeMapping.Lead_Jaecoo_to_Opp` existen y están activos.
-- `Opportunity.Empresa_Operadora__c`, `WorkOrder.empresaFacturaCP__c` y `Plantilla_de_Presupuesto__c.Empresa_Operadora__c` son el camino vigente de lookup/configuración hacia `Empresa__c`.
+Campos modificados/incorporados en esta continuación:
 
-Lo que no está versionado en la rama no se inventó. Crear XML de campos, Record Types de `Order`/`Case` o Global Value Sets sin la metadata fuente real puede romper el deploy por propiedades invisibles en Git, business/support process, dependencias de picklist, permisos o diferencias del campo productivo.
+- `Quote.Compania__c`: valor agregado `PEKING`.
+- `Opportunity.empresaQueFactura__c`: valor agregado `PEKING`.
+- `Order.empresaQueFactura__c`: valor agregado `RMPEKING`.
+- `User.Empresa__c`: valor agregado `PEKING`.
+- `ReciboUsado__c.Empresa__c`: valor agregado `RMPEKING`.
+- `Linea_Plantilla_de_Presupuesto__c.Empresa__c`: valor agregado `RMPEKING`.
+- `Plantilla_de_Presupuesto__c.BMW_Compania__c`: valor agregado `PEKING`.
 
-## 1. 13 campos/picklists oficiales
+## 2. Record Types
 
-| # | Campo oficial | Estado | Evidencia en Git | Acción tomada | Nota de cierre |
-|---:|---|---|---|---|---|
-| 1 | `Quote.Compania__c` | PENDIENTE SOURCE / REQUIERE RETRIEVE | No existe `force-app/main/default/objects/Quote` en la rama. Flows lo referencian como campo legacy, pero las rutas nuevas resuelven Empresa desde `Opportunity.Empresa_Operadora__c`. | Ninguna. | No se agrega PEKING a ciegas. Requiere recuperar el campo real si negocio decide mantenerlo como picklist activo. |
-| 2 | `Quote.empresaFactura__c` | PENDIENTE SOURCE / REQUIERE RETRIEVE | No existe `force-app/main/default/objects/Quote`. LWC como `busquedaDetallada`, `qoSearchDetailProduct` y `woSearchDetailProduct` lo importan como campo legacy. | Ninguna. | No hay XML base para modificar valores ni confirmar tipo/restricción. |
-| 3 | `Opportunity.BMW_Compania__c` | NO APLICA POR LOOKUP EMPRESA | El campo legacy no está versionado. Sí existe `Opportunity/fields/Empresa_Operadora__c.field-meta.xml` como lookup a `Empresa__c`. Los Flows activos usan `Empresa_Operadora__c` y dejan el legacy solo como compatibilidad Bavarian/Otobai. | Ninguna. | No se debe reintroducir PEKING en este picklist si la ruta moderna ya usa lookup Empresa. |
-| 4 | `Opportunity.empresaQueFactura__c` | PENDIENTE SOURCE / LEGACY | No está versionado. `Opportunity_Flow_V2` aún lo llena desde `$User.Empresa__c` en una ruta legacy, pero también guarda `Empresa_Operadora__c`. | Ninguna. | Requiere retrieve si se decide corregir el picklist legacy; preferible no ampliarlo si se puede retirar por lookup. |
-| 5 | `Order.empresaQueFactura__c` | PENDIENTE SOURCE / REQUIERE RETRIEVE | No existe `force-app/main/default/objects/Order`. Código como `OrderBatch` obtiene empresa desde `Work_Order__r.empresaFactura__c`, no desde metadata versionada de Order. | Ninguna. | No se inventa el campo ni sus valores desde el PDF. |
-| 6 | `WorkOrder.empresaFactura__c` | HECHO | `force-app/main/default/objects/WorkOrder/fields/empresaFactura__c.field-meta.xml` contiene `RMBAVARIAN`, `RMOTOBAI`, `RMPEKING`. | Ninguna. | Picklist legacy completo. El lookup `empresaFacturaCP__c` sigue siendo la fuente moderna cuando existe. |
-| 7 | `User.Empresa__c` | PENDIENTE SOURCE / REQUIERE RETRIEVE | No existe `force-app/main/default/objects/User`. Flows lo usan como sugerencia/default, no como fuente final cuando hay selección explícita de Empresa. | Ninguna. | No se inventa campo estándar/custom de User sin XML real. |
-| 8 | `Product2.Empresa__c` | HECHO | `force-app/main/default/objects/Product2/fields/Empresa__c.field-meta.xml` contiene `RMBAVARIAN`, `RMOTOBAI`, `RMPEKING`. `Product2/recordTypes/Producto_Red_Motors.recordType-meta.xml` también habilita los tres valores. | Ninguna. | Campo listo para PEKING en metadata versionada. |
-| 9 | `CentroCosto__c.Empresa__c` | PENDIENTE SOURCE / NO BLOQUEO FUNCIONAL | No existe `force-app/main/default/objects/CentroCosto__c`. La decisión vigente indica reutilizar un centro de costo existente y mantener aprobadores por la lógica actual. | Ninguna. | No requiere inventar valor PEKING para cerrar Sprint 4; si negocio exige segregación futura, requiere retrieve y alcance separado. |
-| 10 | `TipoDeCargoConManoDeObra__c.Empresa__c` | HECHO | `force-app/main/default/objects/TipoDeCargoConManoDeObra__c/fields/Empresa__c.field-meta.xml` contiene `RMBAVARIAN`, `RMOTOBAI`, `RMPEKING`. | Ninguna. | Metadata lista. La carga de registros catálogo/PricebookEntry es dato funcional, no DML en este bloque. |
-| 11 | `Linea_Plantilla_de_Presupuesto__c.Empresa__c` | NO APLICA POR LOOKUP EMPRESA / SOURCE NO VERSIONADO | No existe metadata del objeto/campo. Las rutas actuales usan `Plantilla_de_Presupuesto__c.Empresa_Operadora__c` para resolver Empresa/Pricebook. | Ninguna. | No se debe recrear un picklist por línea si el modelo vigente resuelve desde la Plantilla/Empresa. |
-| 12 | `ReciboUsado__c.Empresa__c` | PENDIENTE SOURCE / FUERA DE VN PEKING | No existe metadata del objeto/campo; solo Flows/clases de usados referencian `ReciboUsado__c`. | Ninguna. | No se modifica en Sprint 4 porque el alcance PEKING/Omoda/Jaecoo de VN no debe arrastrar usados sin autorización. |
-| 13 | `Plantilla_de_Presupuesto__c.BMW_Compania__c` | NO APLICA POR LOOKUP EMPRESA | El campo legacy no está versionado. Sí existe `Plantilla_de_Presupuesto__c/fields/Empresa_Operadora__c.field-meta.xml` como lookup a `Empresa__c`. | Ninguna. | No reintroducir PEKING al picklist legacy; la ruta correcta es `Empresa_Operadora__c`. |
+| Objeto | Estado | RT existentes/creados | Baseline usado | Evidencia exacta |
+|---|---|---|---|---|
+| `Opportunity` | HECHO | `Omoda`, `Jaecoo` ya existían y estaban activos. No se duplicaron. | No aplica. | `force-app/main/default/objects/Opportunity/recordTypes/Omoda.recordType-meta.xml`, `force-app/main/default/objects/Opportunity/recordTypes/Jaecoo.recordType-meta.xml` |
+| `Lead` | HECHO | `Omoda`, `Jaecoo` ya existían y estaban activos. No se duplicaron. | No aplica. | `force-app/main/default/objects/Lead/recordTypes/Omoda.recordType-meta.xml`, `force-app/main/default/objects/Lead/recordTypes/Jaecoo.recordType-meta.xml` |
+| Lead -> Opportunity | HECHO | Mapping `Lead_Omoda_to_Opp` y `Lead_Jaecoo_to_Opp` ya existía. | No aplica. | `force-app/main/default/customMetadata/RM_RecordTypeMapping.Lead_Omoda_to_Opp.md-meta.xml`, `force-app/main/default/customMetadata/RM_RecordTypeMapping.Lead_Jaecoo_to_Opp.md-meta.xml` |
+| `Order` | HECHO | Se incorporó `BMW` como metadata fuente/baseline y se crearon `Omoda` y `Jaecoo`. | `Order.BMW`, único RT activo recuperado de Partial; sólo contiene `compactLayoutAssignment=Formato_Personalizado` y `Status=Aprobado/Draft`. | `force-app/main/default/objects/Order/recordTypes/BMW.recordType-meta.xml`, `Omoda.recordType-meta.xml`, `Jaecoo.recordType-meta.xml` |
+| `Case` | BLOQUEADO | No se creó RT nuevo. | No existe Record Type de marca ni equivalente funcional único que replicar. | `FUENTES_METADATA_SPRINT4_20260813.md` lista 14 RT activos por función/tipo: `Autos`, `Autos_nuevos`, `Autos_usados`, `BMW_Service`, `Lifestyle_Autos`, `Lifestyle_Motos`, `Motos`, `Motos_nuevos`, `Motos_usados`, `Repuestos_autos`, `Repuestos_motos`, `Solicitudes_contabilidad_y_finanzas`, `Taller_de_Servicio_Autos`, `Taller_de_Servicio_Motos`. |
 
-Campos modificados en esta continuación: ninguno.
+Detalle del bloqueo de `Case`:
 
-Campos ya completos en Git: `WorkOrder.empresaFactura__c`, `Product2.Empresa__c`, `TipoDeCargoConManoDeObra__c.Empresa__c`.
+BLOQUEADO — NO EXISTE RECORD TYPE DE MARCA/EQUIVALENTE FUNCIONAL ÚNICO QUE REPLICAR.
 
-Campos que no deben ampliarse con PEKING por el modelo actual: `Opportunity.BMW_Compania__c`, `Plantilla_de_Presupuesto__c.BMW_Compania__c`, y preferentemente `Linea_Plantilla_de_Presupuesto__c.Empresa__c` si la empresa se hereda desde la Plantilla.
-
-Campos que requieren retrieve antes de cualquier cambio: `Quote.Compania__c`, `Quote.empresaFactura__c`, `Opportunity.empresaQueFactura__c`, `Order.empresaQueFactura__c`, `User.Empresa__c`, `CentroCosto__c.Empresa__c`, `ReciboUsado__c.Empresa__c`.
-
-## 2. Record Types Omoda/Jaecoo
-
-| Objeto | Estado | RT existentes en Git | RT creados en esta continuación | Evidencia | Siguiente acción |
-|---|---|---|---|---|---|
-| `Opportunity` | HECHO | `Omoda`, `Jaecoo` | Ninguno | `force-app/main/default/objects/Opportunity/recordTypes/Omoda.recordType-meta.xml`; `Jaecoo.recordType-meta.xml` | No duplicar. Validar asignación por perfil/app en QA. |
-| `Lead` | HECHO | `Omoda`, `Jaecoo` | Ninguno | `force-app/main/default/objects/Lead/recordTypes/Omoda.recordType-meta.xml`; `Jaecoo.recordType-meta.xml` | No duplicar. |
-| Lead -> Opportunity | HECHO | Mapping Omoda y Jaecoo activo | Ninguno | `force-app/main/default/customMetadata/RM_RecordTypeMapping.Lead_Omoda_to_Opp.md-meta.xml`; `Lead_Jaecoo_to_Opp.md-meta.xml` | Validación funcional de conversión en Partial. |
-| `Order` | PENDIENTE SOURCE / NO CREADO | No existe `force-app/main/default/objects/Order` | Ninguno | El documento oficial dice que Order tenía solo BMW, pero la rama no trae XML de Order ni sus picklists/permisos. | Hacer retrieve de `Order` y sus RT reales antes de crear `Omoda`/`Jaecoo`; no crear RT a ciegas. |
-| `Case` | PENDIENTE SOURCE / NO CREADO | No existe `force-app/main/default/objects/Case` | Ninguno | El documento oficial dice revisar RT por marca/tipo. La rama no trae XML de Case ni support process/business process. | Hacer retrieve de `Case`, support process y valores por RT antes de crear `Omoda`/`Jaecoo`. |
-
-Record Types creados en esta continuación: ninguno.
-
-Motivo: los faltantes reales de `Order` y `Case` no tienen metadata fuente en la rama. En especial `Case` puede depender de support process/business process; inventarlo desde Git sería más riesgoso que dejarlo documentado como gap de source.
+La metadata recuperada demuestra que `Case` está segmentado por función y tipo de vehículo, no por marca. Para OMODA/JAECOO lo técnicamente seguro es reutilizar la familia funcional `Autos*` existente hasta que negocio/arquitectura defina si realmente necesita Record Types de marca en `Case`.
 
 ## 3. Global Value Sets
 
-| Elemento | Estado | Evidencia | Acción tomada | Siguiente acción |
+| GVS/API name | Consumido por | Estado | Acción | Evidencia exacta |
 |---|---|---|---|---|
-| 3 GVS oficiales de marca | PENDIENTE SOURCE / NOMBRES EXACTOS NO VERSIONADOS | El PDF oficial solo indica agregar valores de marca/familia en `Family` y Global Value Sets de marca. La documentación interna conserva el pendiente como "tres GVS por identificar" y "41 GVS existen en Partial; tres objetivo no identificados aquí". En la rama no existe `force-app/main/default/globalValueSets`, `standardValueSets`, ni referencias `valueSetName`/`globalValueSet`. | Ninguna. | Retrieve dirigido de los 3 GVS reales o confirmación de sus API names antes de modificar. |
-| `Product2.Family` por `Producto_Red_Motors` | REVISADO / NO MODIFICADO | `Product2/recordTypes/Producto_Red_Motors.recordType-meta.xml` contiene `Family = None`. | Ninguna. | No agregar `OMODA`, `JAECOO` o `PEKING` a `Family` sin semántica aprobada; marca/empresa/familia no son equivalentes. |
-| `Product2.Empresa__c` | HECHO | Campo y RT `Producto_Red_Motors` ya permiten `RMPEKING`. | Ninguna. | QA de productos/datos PEKING; no DML en este bloque. |
+| `Marca_de_Interes` | `Product2.Marca__c` | HECHO | Se incorporó metadata real y se agregaron `OMODA` y `JAECOO`. No se agregó `PEKING` porque este GVS representa marca, no empresa. | `force-app/main/default/globalValueSets/Marca_de_Interes.globalValueSet-meta.xml` |
+| `Familia` | `Product2.Familia__c` | PENDIENTE DE CATÁLOGO | No se modificó. No hay familia OMODA/JAECOO derivable desde metadata/documentación sin inventar catálogo. | `FUENTES_METADATA_SPRINT4_20260813.md` confirma que el GVS real existe y no contiene OMODA/JAECOO; no hay valores aprobados para alta. |
+| `Modelo_de_Interes2` | `Product2.Modelo_De_Inter_s__c` | PENDIENTE DE CATÁLOGO | No se modificó. No hay modelos OMODA/JAECOO derivables desde metadata/documentación sin inventar catálogo. | `FUENTES_METADATA_SPRINT4_20260813.md` confirma que el GVS real existe y no contiene OMODA/JAECOO; no hay valores aprobados para alta. |
 
-GVS identificados/modificados: ninguno modificado. Los nombres técnicos exactos no están en Git ni en el PDF; por restricción de no Salesforce no se hizo retrieve ni consulta de org.
+GVS modificados:
 
-No se inventó un cuarto GVS ni valores ajenos.
+- `Marca_de_Interes`: valores agregados `OMODA`, `JAECOO`.
+
+GVS no modificados por restricción de no inventar catálogo:
+
+- `Familia`.
+- `Modelo_de_Interes2`.
+
+No se creó un cuarto GVS ni se tocaron los GVS decoy `Marca`/`Modelo`.
 
 ## 4. LWC ya cerrados
 
-No se rehicieron ni se volvieron a modificar los LWC cerrados en `4b1b623`.
+No se rehicieron ni se volvieron a modificar los LWC cerrados previamente.
 
 Se mantienen como cambios previos de Sprint 4:
 
@@ -90,23 +87,43 @@ Se mantienen como cambios previos de Sprint 4:
 - `rm_vn_crear_opp_inventario`
 - `rm_vn_get_record_opp_record_types`
 
-## 5. Archivos modificados en esta continuación
+## 5. Archivos modificados/incorporados en esta continuación
 
+Documentación:
+
+- `docs/empresa-marcas-chinas/FUENTES_METADATA_SPRINT4_20260813.md`
 - `docs/empresa-marcas-chinas/CIERRE_IMPLEMENTACION_SPRINT4_PEKING_20260813.md`
 
-No se modificaron Apex, Flows, LWC, Aura, Layouts, Custom Fields, Record Types ni Global Value Sets en esta continuación.
+Campos/picklists:
+
+- `force-app/main/default/objects/Quote/fields/Compania__c.field-meta.xml`
+- `force-app/main/default/objects/Opportunity/fields/empresaQueFactura__c.field-meta.xml`
+- `force-app/main/default/objects/Order/fields/empresaQueFactura__c.field-meta.xml`
+- `force-app/main/default/objects/User/fields/Empresa__c.field-meta.xml`
+- `force-app/main/default/objects/ReciboUsado__c/fields/Empresa__c.field-meta.xml`
+- `force-app/main/default/objects/Linea_Plantilla_de_Presupuesto__c/fields/Empresa__c.field-meta.xml`
+- `force-app/main/default/objects/Plantilla_de_Presupuesto__c/fields/BMW_Compania__c.field-meta.xml`
+
+Record Types:
+
+- `force-app/main/default/objects/Order/recordTypes/BMW.recordType-meta.xml`
+- `force-app/main/default/objects/Order/recordTypes/Omoda.recordType-meta.xml`
+- `force-app/main/default/objects/Order/recordTypes/Jaecoo.recordType-meta.xml`
+
+Global Value Sets:
+
+- `force-app/main/default/globalValueSets/Marca_de_Interes.globalValueSet-meta.xml`
 
 ## 6. Qué queda realmente pendiente
 
-Pendiente por falta de source/retrieve, no por decisión de negocio:
+Pendiente de catálogo:
 
-1. Recuperar metadata real de `Quote` para revisar `Compania__c` y `empresaFactura__c`.
-2. Recuperar metadata real de `Order` para revisar `empresaQueFactura__c` y crear solo los RT Omoda/Jaecoo que falten.
-3. Recuperar metadata real de `Case` junto con support/business process para crear solo los RT Omoda/Jaecoo que falten.
-4. Recuperar metadata real de `User.Empresa__c` si se decide mantenerlo como picklist/default operativo.
-5. Recuperar metadata real de `CentroCosto__c.Empresa__c` si negocio exige segregación de centro de costo por Empresa; con la definición vigente de reutilizar centro de costo, no bloquea.
-6. Recuperar metadata real de `ReciboUsado__c.Empresa__c` solo si se autoriza usados para PEKING.
-7. Identificar por API name los 3 GVS reales de marca/familia/modelo antes de agregar Omoda/Jaecoo/PEKING.
+1. `Familia` (`Product2.Familia__c`): faltan valores de familia OMODA/JAECOO aprobados.
+2. `Modelo_de_Interes2` (`Product2.Modelo_De_Inter_s__c`): faltan modelos OMODA/JAECOO aprobados.
+
+Bloqueado:
+
+1. `Case` Record Types OMODA/JAECOO: BLOQUEADO — NO EXISTE RECORD TYPE DE MARCA/EQUIVALENTE FUNCIONAL ÚNICO QUE REPLICAR.
 
 No pendiente por definición de negocio en este bloque:
 
@@ -117,20 +134,25 @@ No pendiente por definición de negocio en este bloque:
 - branding/razón social: prueba;
 - garantía: validada sin cambio técnico.
 
-## 7. Validaciones
+## 7. Validaciones realizadas
 
 - No Salesforce.
 - No deploy.
 - No DML.
 - No Production.
-- No Sprint 1/2.
-- No Apex bloqueado por el otro Code.
+- No Sprint 1/2/3.
+- No Apex.
+- No Flows.
 - No LWC reabiertos.
-- Búsqueda local en clon temporal de Git confirmó ausencia de `Quote`, `Order`, `Case`, `User`, `CentroCosto__c`, `Linea_Plantilla_de_Presupuesto__c`, `globalValueSets` y `standardValueSets` como metadata versionada.
-- XML inspeccionado para `WorkOrder.empresaFactura__c`, `Product2.Empresa__c`, `TipoDeCargoConManoDeObra__c.Empresa__c`, `Plantilla_de_Presupuesto__c.Empresa_Operadora__c`, RT de `Opportunity`, RT de `Lead` y mappings `RM_RecordTypeMapping`.
+- Se usó metadata fuente real recuperada en `93498803398cea70ce62793f2ce7e1f4e991ccd8`.
+- Se respetó la convención real por campo: `PEKING` para picklists comerciales y `RMPEKING` para picklists que usan código ERP.
+- Se validó que `Opportunity`/`Lead` ya tenían `Omoda`/`Jaecoo` y no se duplicaron.
+- Se creó `Order.Omoda` y `Order.Jaecoo` únicamente copiando el baseline real `Order.BMW`.
+- Se dejó `Case` bloqueado por falta de RT de marca/equivalente único.
+- Se dejó `Familia` y `Modelo_de_Interes2` como pendiente de catálogo, sin inventar valores.
 
 ## 8. Dictamen
 
-El núcleo formal de Sprint 4 queda reconciliado en Git con una conclusión importante: no hay más cambio seguro que hacer sin retrieve de la metadata faltante.
+Sprint 4 queda implementado en Git en todo lo técnicamente determinable con la metadata real disponible.
 
-Si el equipo quiere que esta rama sea deployable como paquete de implementación, puede integrarse tal cual con los LWC ya cerrados y este documento de cierre. Si además quieren cerrar físicamente `Quote`, `Order`, `Case` y los 3 GVS, el siguiente paso técnico no es inventar XML, sino recuperar esa metadata real de Partial y aplicar el mismo criterio: modificar solo gaps confirmados, sin reintroducir PEKING como hardcode cuando el lookup Empresa ya lo reemplazó.
+El paquete está listo para que el equipo integre, despliegue y haga QA en Partial. Lo único que no queda cerrado por Git es lo que requiere catálogo real (`Familia`, `Modelo_de_Interes2`) o decisión de arquitectura/negocio (`Case` Record Types por marca vs reutilización funcional de `Autos*`).
