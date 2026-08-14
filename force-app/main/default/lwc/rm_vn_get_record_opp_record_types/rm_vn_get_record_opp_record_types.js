@@ -31,7 +31,7 @@ export default class Rm_vn_get_record_opp_record_types extends LightningElement 
 
     @wire(getRecordTypes)
     wiredRecordTypes({error, data}) {
-        this.isloading = true
+        this.isLoading = true;
         if (data) {
             // Convert the fetched record types into the format that lightning-combobox expects
             this.recordTypeOptions = data.map(recordType => {
@@ -77,6 +77,6 @@ export default class Rm_vn_get_record_opp_record_types extends LightningElement 
 
 
     get brandLabel(){
-        return this.isloading ? 'Cargando...' : '--- Seleccionar ---';
+        return this.isLoading ? 'Cargando...' : '--- Seleccionar ---';
     }
 }

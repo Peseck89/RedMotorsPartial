@@ -1,7 +1,7 @@
 import { LightningElement,api } from 'lwc';
 import FORM_FACTOR from '@salesforce/client/formFactor'; 
 export default class Rm_vn_crear_opp_general extends LightningElement {
-    @api brand = 'BMW';
+    @api brand = '';
     @api year;
     get isMobile() {
         console.log('FORM_FACTOR ',FORM_FACTOR);
