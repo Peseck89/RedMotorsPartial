@@ -1,0 +1,4226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>120</fullName>
+        <default>false</default>
+        <label>120</label>
+    </customValue>
+    <customValue>
+        <fullName>318</fullName>
+        <default>false</default>
+        <label>318</label>
+    </customValue>
+    <customValue>
+        <fullName>320</fullName>
+        <default>false</default>
+        <label>320</label>
+    </customValue>
+    <customValue>
+        <fullName>330</fullName>
+        <default>false</default>
+        <label>330</label>
+    </customValue>
+    <customValue>
+        <fullName>4010 TRANS</fullName>
+        <default>false</default>
+        <label>4010 TRANS</label>
+    </customValue>
+    <customValue>
+        <fullName>4010 TRANS SE</fullName>
+        <default>false</default>
+        <label>4010 TRANS SE</label>
+    </customValue>
+    <customValue>
+        <fullName>420</fullName>
+        <default>false</default>
+        <label>420</label>
+    </customValue>
+    <customValue>
+        <fullName>428</fullName>
+        <default>false</default>
+        <label>428</label>
+    </customValue>
+    <customValue>
+        <fullName>520</fullName>
+        <default>false</default>
+        <label>520</label>
+    </customValue>
+    <customValue>
+        <fullName>528</fullName>
+        <default>false</default>
+        <label>528</label>
+    </customValue>
+    <customValue>
+        <fullName>740</fullName>
+        <default>false</default>
+        <label>740</label>
+    </customValue>
+    <customValue>
+        <fullName>BRUTE FORCE 300</fullName>
+        <default>false</default>
+        <label>BRUTE FORCE 300</label>
+    </customValue>
+    <customValue>
+        <fullName>BRUTE FORCE 750</fullName>
+        <default>false</default>
+        <label>BRUTE FORCE 750</label>
+    </customValue>
+    <customValue>
+        <fullName>C400GT</fullName>
+        <default>false</default>
+        <label>C400GT</label>
+    </customValue>
+    <customValue>
+        <fullName>C400X</fullName>
+        <default>false</default>
+        <label>C400X</label>
+    </customValue>
+    <customValue>
+        <fullName>C 400 X</fullName>
+        <default>false</default>
+        <label>C 400 X</label>
+    </customValue>
+    <customValue>
+        <fullName>C600 SPORT</fullName>
+        <default>false</default>
+        <label>C600 SPORT</label>
+    </customValue>
+    <customValue>
+        <fullName>C650 SPORT</fullName>
+        <default>false</default>
+        <label>C650 SPORT</label>
+    </customValue>
+    <customValue>
+        <fullName>CLUBMAN</fullName>
+        <default>false</default>
+        <label>CLUBMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>CONCOURS 14</fullName>
+        <default>false</default>
+        <label>CONCOURS 14</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER</fullName>
+        <default>false</default>
+        <label>COOPER</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER S</fullName>
+        <default>false</default>
+        <label>COOPER S</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN S</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN S</label>
+    </customValue>
+    <customValue>
+        <fullName>CLUBMAN S</fullName>
+        <default>false</default>
+        <label>CLUBMAN S</label>
+    </customValue>
+    <customValue>
+        <fullName>ER650</fullName>
+        <default>false</default>
+        <label>ER650</label>
+    </customValue>
+    <customValue>
+        <fullName>ER6N</fullName>
+        <default>false</default>
+        <label>ER6N</label>
+    </customValue>
+    <customValue>
+        <fullName>F650GS</fullName>
+        <default>false</default>
+        <label>F650GS</label>
+    </customValue>
+    <customValue>
+        <fullName>F650GS (650)</fullName>
+        <default>false</default>
+        <label>F650GS (650)</label>
+    </customValue>
+    <customValue>
+        <fullName>F750GS</fullName>
+        <default>false</default>
+        <label>F750GS</label>
+    </customValue>
+    <customValue>
+        <fullName>F800GS</fullName>
+        <default>false</default>
+        <label>F800GS</label>
+    </customValue>
+    <customValue>
+        <fullName>F800GS ADV</fullName>
+        <default>false</default>
+        <label>F800GS ADV</label>
+    </customValue>
+    <customValue>
+        <fullName>F800GT</fullName>
+        <default>false</default>
+        <label>F800GT</label>
+    </customValue>
+    <customValue>
+        <fullName>F800R</fullName>
+        <default>false</default>
+        <label>F800R</label>
+    </customValue>
+    <customValue>
+        <fullName>F800ST</fullName>
+        <default>false</default>
+        <label>F800ST</label>
+    </customValue>
+    <customValue>
+        <fullName>F850GS</fullName>
+        <default>false</default>
+        <label>F850GS</label>
+    </customValue>
+    <customValue>
+        <fullName>F850GS ADV</fullName>
+        <default>false</default>
+        <label>F850GS ADV</label>
+    </customValue>
+    <customValue>
+        <fullName>F900R</fullName>
+        <default>false</default>
+        <label>F900R</label>
+    </customValue>
+    <customValue>
+        <fullName>F900XR</fullName>
+        <default>false</default>
+        <label>F900XR</label>
+    </customValue>
+    <customValue>
+        <fullName>G310GS</fullName>
+        <default>false</default>
+        <label>G310GS</label>
+    </customValue>
+    <customValue>
+        <fullName>G310R</fullName>
+        <default>false</default>
+        <label>G310R</label>
+    </customValue>
+    <customValue>
+        <fullName>G650GS</fullName>
+        <default>false</default>
+        <label>G650GS</label>
+    </customValue>
+    <customValue>
+        <fullName>G650GS SERTAO</fullName>
+        <default>false</default>
+        <label>G650GS SERTAO</label>
+    </customValue>
+    <customValue>
+        <fullName>GP</fullName>
+        <default>false</default>
+        <label>GP</label>
+    </customValue>
+    <customValue>
+        <fullName>I3</fullName>
+        <default>false</default>
+        <label>I3</label>
+    </customValue>
+    <customValue>
+        <fullName>I3 REX</fullName>
+        <default>false</default>
+        <label>I3 REX</label>
+    </customValue>
+    <customValue>
+        <fullName>JOHN COOPER WORKS</fullName>
+        <default>false</default>
+        <label>JOHN COOPER WORKS</label>
+    </customValue>
+    <customValue>
+        <fullName>K1200R</fullName>
+        <default>false</default>
+        <label>K1200R</label>
+    </customValue>
+    <customValue>
+        <fullName>K1600B</fullName>
+        <default>false</default>
+        <label>K1600B</label>
+    </customValue>
+    <customValue>
+        <fullName>K1600GT</fullName>
+        <default>false</default>
+        <label>K1600GT</label>
+    </customValue>
+    <customValue>
+        <fullName>K1600GTL</fullName>
+        <default>false</default>
+        <label>K1600GTL</label>
+    </customValue>
+    <customValue>
+        <fullName>K1600GTL EXCLUSIVE</fullName>
+        <default>false</default>
+        <label>K1600GTL EXCLUSIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>KLR 650</fullName>
+        <default>false</default>
+        <label>KLR 650</label>
+    </customValue>
+    <customValue>
+        <fullName>KLR650 ADV</fullName>
+        <default>false</default>
+        <label>KLR650 ADV</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX 150</fullName>
+        <default>false</default>
+        <label>KLX 150</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX 250</fullName>
+        <default>false</default>
+        <label>KLX 250</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX300R</fullName>
+        <default>false</default>
+        <label>KLX300R</label>
+    </customValue>
+    <customValue>
+        <fullName>KX 100</fullName>
+        <default>false</default>
+        <label>KX 100</label>
+    </customValue>
+    <customValue>
+        <fullName>KX 250</fullName>
+        <default>false</default>
+        <label>KX 250</label>
+    </customValue>
+    <customValue>
+        <fullName>KX 250 XC</fullName>
+        <default>false</default>
+        <label>KX 250 XC</label>
+    </customValue>
+    <customValue>
+        <fullName>KX 450</fullName>
+        <default>false</default>
+        <label>KX 450</label>
+    </customValue>
+    <customValue>
+        <fullName>KX 450 XC</fullName>
+        <default>false</default>
+        <label>KX 450 XC</label>
+    </customValue>
+    <customValue>
+        <fullName>Kx 65</fullName>
+        <default>false</default>
+        <label>Kx 65</label>
+    </customValue>
+    <customValue>
+        <fullName>KX 85</fullName>
+        <default>false</default>
+        <label>KX 85</label>
+    </customValue>
+    <customValue>
+        <fullName>M3</fullName>
+        <default>false</default>
+        <label>M3</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO FXT EPS LE</fullName>
+        <default>false</default>
+        <label>MULE PRO FXT EPS LE</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO-MX (EPS) LE</fullName>
+        <default>false</default>
+        <label>MULE PRO-MX (EPS) LE</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX 4X4</fullName>
+        <default>false</default>
+        <label>MULE SX 4X4</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX XC SE</fullName>
+        <default>false</default>
+        <label>MULE SX XC SE</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA 1000SX</fullName>
+        <default>false</default>
+        <label>NINJA 1000SX</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA 1000 SX</fullName>
+        <default>false</default>
+        <label>NINJA 1000 SX</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA 300</fullName>
+        <default>false</default>
+        <label>NINJA 300</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA 400</fullName>
+        <default>false</default>
+        <label>NINJA 400</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA 650</fullName>
+        <default>false</default>
+        <label>NINJA 650</label>
+    </customValue>
+    <customValue>
+        <fullName>OUTLANDER 110</fullName>
+        <default>false</default>
+        <label>OUTLANDER 110</label>
+    </customValue>
+    <customValue>
+        <fullName>PACEMAN</fullName>
+        <default>false</default>
+        <label>PACEMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>PRAIRIE 360</fullName>
+        <default>false</default>
+        <label>PRAIRIE 360</label>
+    </customValue>
+    <customValue>
+        <fullName>R1200GS</fullName>
+        <default>false</default>
+        <label>R1200GS</label>
+    </customValue>
+    <customValue>
+        <fullName>R1200GS ADV</fullName>
+        <default>false</default>
+        <label>R1200GS ADV</label>
+    </customValue>
+    <customValue>
+        <fullName>R1200GS FULL</fullName>
+        <default>false</default>
+        <label>R1200GS FULL</label>
+    </customValue>
+    <customValue>
+        <fullName>R1200GS K25</fullName>
+        <default>false</default>
+        <label>R1200GS K25</label>
+    </customValue>
+    <customValue>
+        <fullName>R1200R</fullName>
+        <default>false</default>
+        <label>R1200R</label>
+    </customValue>
+    <customValue>
+        <fullName>R1200RS</fullName>
+        <default>false</default>
+        <label>R1200RS</label>
+    </customValue>
+    <customValue>
+        <fullName>R1200RT</fullName>
+        <default>false</default>
+        <label>R1200RT</label>
+    </customValue>
+    <customValue>
+        <fullName>R1250GS</fullName>
+        <default>false</default>
+        <label>R1250GS</label>
+    </customValue>
+    <customValue>
+        <fullName>R1250GS ADV</fullName>
+        <default>false</default>
+        <label>R1250GS ADV</label>
+    </customValue>
+    <customValue>
+        <fullName>R1250GS FULL</fullName>
+        <default>false</default>
+        <label>R1250GS FULL</label>
+    </customValue>
+    <customValue>
+        <fullName>R1250R</fullName>
+        <default>false</default>
+        <label>R1250R</label>
+    </customValue>
+    <customValue>
+        <fullName>R18</fullName>
+        <default>false</default>
+        <label>R18</label>
+    </customValue>
+    <customValue>
+        <fullName>RANGER 500</fullName>
+        <default>false</default>
+        <label>RANGER 500</label>
+    </customValue>
+    <customValue>
+        <fullName>RANGER 570</fullName>
+        <default>false</default>
+        <label>RANGER 570</label>
+    </customValue>
+    <customValue>
+        <fullName>RANGER 800</fullName>
+        <default>false</default>
+        <label>RANGER 800</label>
+    </customValue>
+    <customValue>
+        <fullName>RANGER CREW</fullName>
+        <default>false</default>
+        <label>RANGER CREW</label>
+    </customValue>
+    <customValue>
+        <fullName>RANGER CREW 1000</fullName>
+        <default>false</default>
+        <label>RANGER CREW 1000</label>
+    </customValue>
+    <customValue>
+        <fullName>RANGER CREW 500</fullName>
+        <default>false</default>
+        <label>RANGER CREW 500</label>
+    </customValue>
+    <customValue>
+        <fullName>RANGER XP1000 EPS</fullName>
+        <default>false</default>
+        <label>RANGER XP1000 EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger XP 570</fullName>
+        <default>false</default>
+        <label>Ranger XP 570</label>
+    </customValue>
+    <customValue>
+        <fullName>RNG CREW EPS</fullName>
+        <default>false</default>
+        <label>RNG CREW EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>RNINET</fullName>
+        <default>false</default>
+        <label>RNINET</label>
+    </customValue>
+    <customValue>
+        <fullName>RNINET /5</fullName>
+        <default>false</default>
+        <label>RNINET /5</label>
+    </customValue>
+    <customValue>
+        <fullName>RNINET PURE</fullName>
+        <default>false</default>
+        <label>RNINET PURE</label>
+    </customValue>
+    <customValue>
+        <fullName>RNINET SCRAMBLER</fullName>
+        <default>false</default>
+        <label>RNINET SCRAMBLER</label>
+    </customValue>
+    <customValue>
+        <fullName>RNINET URBAN</fullName>
+        <default>false</default>
+        <label>RNINET URBAN</label>
+    </customValue>
+    <customValue>
+        <fullName>RNINET URBAN GS</fullName>
+        <default>false</default>
+        <label>RNINET URBAN GS</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR170</fullName>
+        <default>false</default>
+        <label>RZR170</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR 4 900XP</fullName>
+        <default>false</default>
+        <label>RZR 4 900XP</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR  800</fullName>
+        <default>false</default>
+        <label>RZR  800</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR900</fullName>
+        <default>false</default>
+        <label>RZR900</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR TURBO 1000</fullName>
+        <default>false</default>
+        <label>RZR TURBO 1000</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR XP 1000</fullName>
+        <default>false</default>
+        <label>RZR XP 1000</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR XP1000 EPS</fullName>
+        <default>false</default>
+        <label>RZR XP1000 EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR XP4 1000</fullName>
+        <default>false</default>
+        <label>RZR XP4 1000</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR XP Turbo EPS</fullName>
+        <default>false</default>
+        <label>RZR XP Turbo EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>S1000R</fullName>
+        <default>false</default>
+        <label>S1000R</label>
+    </customValue>
+    <customValue>
+        <fullName>S1000RR</fullName>
+        <default>false</default>
+        <label>S1000RR</label>
+    </customValue>
+    <customValue>
+        <fullName>S1000RR M</fullName>
+        <default>false</default>
+        <label>S1000RR M</label>
+    </customValue>
+    <customValue>
+        <fullName>S1000XR</fullName>
+        <default>false</default>
+        <label>S1000XR</label>
+    </customValue>
+    <customValue>
+        <fullName>SCRAMBLER 1000 XP</fullName>
+        <default>false</default>
+        <label>SCRAMBLER 1000 XP</label>
+    </customValue>
+    <customValue>
+        <fullName>SCRAMBLER 1000 XP EP</fullName>
+        <default>false</default>
+        <label>SCRAMBLER 1000 XP EP</label>
+    </customValue>
+    <customValue>
+        <fullName>SPORTSMAN 450 HO EPS</fullName>
+        <default>false</default>
+        <label>SPORTSMAN 450 HO EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>SPORTSMAN 550 EPS</fullName>
+        <default>false</default>
+        <label>SPORTSMAN 550 EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>SPORTSMAN 570</fullName>
+        <default>false</default>
+        <label>SPORTSMAN 570</label>
+    </customValue>
+    <customValue>
+        <fullName>SPORTSMAN 850</fullName>
+        <default>false</default>
+        <label>SPORTSMAN 850</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX 4 800 EPS LE</fullName>
+        <default>false</default>
+        <label>TERYX 4 800 EPS LE</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX 750</fullName>
+        <default>false</default>
+        <label>TERYX 750</label>
+    </customValue>
+    <customValue>
+        <fullName>VERSYS 1000</fullName>
+        <default>false</default>
+        <label>VERSYS 1000</label>
+    </customValue>
+    <customValue>
+        <fullName>VERSYS 300</fullName>
+        <default>false</default>
+        <label>VERSYS 300</label>
+    </customValue>
+    <customValue>
+        <fullName>VERSYS 650</fullName>
+        <default>false</default>
+        <label>VERSYS 650</label>
+    </customValue>
+    <customValue>
+        <fullName>VULCAN 900</fullName>
+        <default>false</default>
+        <label>VULCAN 900</label>
+    </customValue>
+    <customValue>
+        <fullName>VULCAN S</fullName>
+        <default>false</default>
+        <label>VULCAN S</label>
+    </customValue>
+    <customValue>
+        <fullName>W800</fullName>
+        <default>false</default>
+        <label>W800</label>
+    </customValue>
+    <customValue>
+        <fullName>X1</fullName>
+        <default>false</default>
+        <label>X1</label>
+    </customValue>
+    <customValue>
+        <fullName>X3</fullName>
+        <default>false</default>
+        <label>X3</label>
+    </customValue>
+    <customValue>
+        <fullName>X4</fullName>
+        <default>false</default>
+        <label>X4</label>
+    </customValue>
+    <customValue>
+        <fullName>X5</fullName>
+        <default>false</default>
+        <label>X5</label>
+    </customValue>
+    <customValue>
+        <fullName>X6</fullName>
+        <default>false</default>
+        <label>X6</label>
+    </customValue>
+    <customValue>
+        <fullName>Z1000</fullName>
+        <default>false</default>
+        <label>Z1000</label>
+    </customValue>
+    <customValue>
+        <fullName>Z 250 SL</fullName>
+        <default>false</default>
+        <label>Z 250 SL</label>
+    </customValue>
+    <customValue>
+        <fullName>Z400</fullName>
+        <default>false</default>
+        <label>Z400</label>
+    </customValue>
+    <customValue>
+        <fullName>Z650 ABS</fullName>
+        <default>false</default>
+        <label>Z650 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Z 650 ABS</fullName>
+        <default>false</default>
+        <label>Z 650 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Z800</fullName>
+        <default>false</default>
+        <label>Z800</label>
+    </customValue>
+    <customValue>
+        <fullName>Z900</fullName>
+        <default>false</default>
+        <label>Z900</label>
+    </customValue>
+    <customValue>
+        <fullName>Z900RS</fullName>
+        <default>false</default>
+        <label>Z900RS</label>
+    </customValue>
+    <customValue>
+        <fullName>ZH2</fullName>
+        <default>false</default>
+        <label>ZH2</label>
+    </customValue>
+    <customValue>
+        <fullName>ZX 10R</fullName>
+        <default>false</default>
+        <label>ZX 10R</label>
+    </customValue>
+    <customValue>
+        <fullName>ZX6R</fullName>
+        <default>false</default>
+        <label>ZX6R</label>
+    </customValue>
+    <customValue>
+        <fullName>128</fullName>
+        <default>false</default>
+        <label>128</label>
+    </customValue>
+    <customValue>
+        <fullName>43i</fullName>
+        <default>false</default>
+        <label>43i</label>
+    </customValue>
+    <customValue>
+        <fullName>z4i</fullName>
+        <default>false</default>
+        <label>z4i</label>
+    </customValue>
+    <customValue>
+        <fullName>218i</fullName>
+        <default>false</default>
+        <label>218i</label>
+    </customValue>
+    <customValue>
+        <fullName>Otro</fullName>
+        <default>false</default>
+        <label>Otro</label>
+    </customValue>
+    <customValue>
+        <fullName>X2</fullName>
+        <default>false</default>
+        <label>X2</label>
+    </customValue>
+    <customValue>
+        <fullName>F700GS</fullName>
+        <default>false</default>
+        <label>F700GS</label>
+    </customValue>
+    <customValue>
+        <fullName>iX</fullName>
+        <default>false</default>
+        <label>iX</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper S-E</fullName>
+        <default>false</default>
+        <label>Cooper S-E</label>
+    </customValue>
+    <customValue>
+        <fullName>X7</fullName>
+        <default>false</default>
+        <label>X7</label>
+    </customValue>
+    <customValue>
+        <fullName>IX3</fullName>
+        <default>false</default>
+        <label>IX3</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX 300</fullName>
+        <default>false</default>
+        <label>KLX 300</label>
+    </customValue>
+    <customValue>
+        <fullName>328I A</fullName>
+        <default>false</default>
+        <label>328I A</label>
+    </customValue>
+    <customValue>
+        <fullName>i4</fullName>
+        <default>false</default>
+        <label>i4</label>
+    </customValue>
+    <customValue>
+        <fullName>320 GT - EXECUTIVE</fullName>
+        <default>false</default>
+        <label>320 GT - EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 M Competition</fullName>
+        <default>false</default>
+        <label>X5 M Competition</label>
+    </customValue>
+    <customValue>
+        <fullName>iX3 Inspiring</fullName>
+        <default>false</default>
+        <label>iX3 Inspiring</label>
+    </customValue>
+    <customValue>
+        <fullName>IX3 Impressive</fullName>
+        <default>false</default>
+        <label>IX3 Impressive</label>
+    </customValue>
+    <customValue>
+        <fullName>X6 xDrive40i Paquete M</fullName>
+        <default>false</default>
+        <label>X6 xDrive40i Paquete M</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 4 Coupé 430i Paquete M (2P)</fullName>
+        <default>false</default>
+        <label>Serie 4 Coupé 430i Paquete M (2P)</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 40i paquete M</fullName>
+        <default>false</default>
+        <label>X5 40i paquete M</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie3 320i Executive</fullName>
+        <default>false</default>
+        <label>Serie3 320i Executive</label>
+    </customValue>
+    <customValue>
+        <fullName>X7 40d_Paq M</fullName>
+        <default>false</default>
+        <label>X7 40d_Paq M</label>
+    </customValue>
+    <customValue>
+        <fullName>Z4 20i_Paq M</fullName>
+        <default>false</default>
+        <label>Z4 20i_Paq M</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 3 - Sedán 320i</fullName>
+        <default>false</default>
+        <label>Serie 3 - Sedán 320i</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 5 - Sedán - 520i</fullName>
+        <default>false</default>
+        <label>Serie 5 - Sedán - 520i</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 3 - Sedán - M340i xDrive</fullName>
+        <default>false</default>
+        <label>Serie 3 - Sedán - M340i xDrive</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 7 - Sedán - M760Li xDrive</fullName>
+        <default>false</default>
+        <label>Serie 7 - Sedán - M760Li xDrive</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie1 - (5 puertas) - 1181i</fullName>
+        <default>false</default>
+        <label>Serie1 - (5 puertas) - 1181i</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 5 - Sedán - M550i xDrive</fullName>
+        <default>false</default>
+        <label>Serie 5 - Sedán - M550i xDrive</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie - 1 - (5 puertas) - M135i - xDrive</fullName>
+        <default>false</default>
+        <label>Serie - 1 - (5 puertas) - M135i - xDrive</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 7 - Sedán - 730i</fullName>
+        <default>false</default>
+        <label>Serie 7 - Sedán - 730i</label>
+    </customValue>
+    <customValue>
+        <fullName>2.5d PREMIUM</fullName>
+        <default>false</default>
+        <label>2.5d PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 7 - Sedán - 740i</fullName>
+        <default>false</default>
+        <label>Serie 7 - Sedán - 740i</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2 - Cabrio - 220i</fullName>
+        <default>false</default>
+        <label>Serie 2 - Cabrio - 220i</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2 - Coupé M240i</fullName>
+        <default>false</default>
+        <label>Serie 2 - Coupé M240i</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2 - Cabrio - M240i</fullName>
+        <default>false</default>
+        <label>Serie 2 - Cabrio - M240i</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2 - Coupé - 220i</fullName>
+        <default>false</default>
+        <label>Serie 2 - Coupé - 220i</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2 - Gran Coupé - 218i</fullName>
+        <default>false</default>
+        <label>Serie 2 - Gran Coupé - 218i</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2 - Gran Coupé - M235i xDrive</fullName>
+        <default>false</default>
+        <label>Serie 2 - Gran Coupé - M235i xDrive</label>
+    </customValue>
+    <customValue>
+        <fullName>M5 Sedan - M5</fullName>
+        <default>false</default>
+        <label>M5 Sedan - M5</label>
+    </customValue>
+    <customValue>
+        <fullName>Z4 Roadster - Z4 sDrive20i</fullName>
+        <default>false</default>
+        <label>Z4 Roadster - Z4 sDrive20i</label>
+    </customValue>
+    <customValue>
+        <fullName>Z4 Roadster - Z4 M40i</fullName>
+        <default>false</default>
+        <label>Z4 Roadster - Z4 M40i</label>
+    </customValue>
+    <customValue>
+        <fullName>i4 - eDrive 40 MPackage</fullName>
+        <default>false</default>
+        <label>i4 - eDrive 40 MPackage</label>
+    </customValue>
+    <customValue>
+        <fullName>iX 50_Atelier</fullName>
+        <default>false</default>
+        <label>iX 50_Atelier</label>
+    </customValue>
+    <customValue>
+        <fullName>iX 50_Suite</fullName>
+        <default>false</default>
+        <label>iX 50_Suite</label>
+    </customValue>
+    <customValue>
+        <fullName>iX 50_Sport</fullName>
+        <default>false</default>
+        <label>iX 50_Sport</label>
+    </customValue>
+    <customValue>
+        <fullName>X1 sDrive18i</fullName>
+        <default>false</default>
+        <label>X1 sDrive18i</label>
+    </customValue>
+    <customValue>
+        <fullName>X1 sDrive18d</fullName>
+        <default>false</default>
+        <label>X1 sDrive18d</label>
+    </customValue>
+    <customValue>
+        <fullName>X3 sDrive20i</fullName>
+        <default>false</default>
+        <label>X3 sDrive20i</label>
+    </customValue>
+    <customValue>
+        <fullName>X3 xDrive20d</fullName>
+        <default>false</default>
+        <label>X3 xDrive20d</label>
+    </customValue>
+    <customValue>
+        <fullName>X4 xDrive20d</fullName>
+        <default>false</default>
+        <label>X4 xDrive20d</label>
+    </customValue>
+    <customValue>
+        <fullName>118i - PAQ M</fullName>
+        <default>false</default>
+        <label>118i - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X4 xDrive20i</fullName>
+        <default>false</default>
+        <label>X4 xDrive20i</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 xDrive30d</fullName>
+        <default>false</default>
+        <label>X5 xDrive30d</label>
+    </customValue>
+    <customValue>
+        <fullName>X6 xDrive30d</fullName>
+        <default>false</default>
+        <label>X6 xDrive30d</label>
+    </customValue>
+    <customValue>
+        <fullName>X7 40d_Premium</fullName>
+        <default>false</default>
+        <label>X7 40d_Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>X7 xDrive30d</fullName>
+        <default>false</default>
+        <label>X7 xDrive30d</label>
+    </customValue>
+    <customValue>
+        <fullName>BM175 - i3</fullName>
+        <default>false</default>
+        <label>BM175 - i3</label>
+    </customValue>
+    <customValue>
+        <fullName>i3s</fullName>
+        <default>false</default>
+        <label>i3s</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 xDrive45e</fullName>
+        <default>false</default>
+        <label>X5 xDrive45e</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 1 - 128Ti</fullName>
+        <default>false</default>
+        <label>Serie 1 - 128Ti</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie4 - Gran Coupé 430</fullName>
+        <default>false</default>
+        <label>Serie4 - Gran Coupé 430</label>
+    </customValue>
+    <customValue>
+        <fullName>120i - PAQ M</fullName>
+        <default>false</default>
+        <label>120i - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X4 M</fullName>
+        <default>false</default>
+        <label>X4 M</label>
+    </customValue>
+    <customValue>
+        <fullName>318 - Executive</fullName>
+        <default>false</default>
+        <label>318 - Executive</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 30d-Special Edition</fullName>
+        <default>false</default>
+        <label>X5 30d-Special Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>X6 30d- Special Edition</fullName>
+        <default>false</default>
+        <label>X6 30d- Special Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>iX - Sport</fullName>
+        <default>false</default>
+        <label>iX - Sport</label>
+    </customValue>
+    <customValue>
+        <fullName>M - M4 Competition</fullName>
+        <default>false</default>
+        <label>M - M4 Competition</label>
+    </customValue>
+    <customValue>
+        <fullName>M-M3 Competition</fullName>
+        <default>false</default>
+        <label>M-M3 Competition</label>
+    </customValue>
+    <customValue>
+        <fullName>M-M5 CS</fullName>
+        <default>false</default>
+        <label>M-M5 CS</label>
+    </customValue>
+    <customValue>
+        <fullName>320 GT - SPORT LINE</fullName>
+        <default>false</default>
+        <label>320 GT - SPORT LINE</label>
+    </customValue>
+    <customValue>
+        <fullName>420I GC - PAQ M</fullName>
+        <default>false</default>
+        <label>420I GC - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 4-Gran Coupe 420i Paquete M</fullName>
+        <default>false</default>
+        <label>Serie 4-Gran Coupe 420i Paquete M</label>
+    </customValue>
+    <customValue>
+        <fullName>X2 sDrive20i</fullName>
+        <default>false</default>
+        <label>X2 sDrive20i</label>
+    </customValue>
+    <customValue>
+        <fullName>M235 - PAQ M</fullName>
+        <default>false</default>
+        <label>M235 - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2 - M2 Competition</fullName>
+        <default>false</default>
+        <label>Serie 2 - M2 Competition</label>
+    </customValue>
+    <customValue>
+        <fullName>M3 - M</fullName>
+        <default>false</default>
+        <label>M3 - M</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 4 - M4 Competition</fullName>
+        <default>false</default>
+        <label>Serie 4 - M4 Competition</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 M - PAQ M</fullName>
+        <default>false</default>
+        <label>X5 M - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X6 M - PAQ M</fullName>
+        <default>false</default>
+        <label>X6 M - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X1 - 1.8d EXECUTIVE</fullName>
+        <default>false</default>
+        <label>X1 - 1.8d EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>X1 - 1.8d SPORT</fullName>
+        <default>false</default>
+        <label>X1 - 1.8d SPORT</label>
+    </customValue>
+    <customValue>
+        <fullName>X1 - 1.8d XLINE</fullName>
+        <default>false</default>
+        <label>X1 - 1.8d XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>220i COUPE - PAQ M</fullName>
+        <default>false</default>
+        <label>220i COUPE - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X1 - 2.0d EXECUTIVE</fullName>
+        <default>false</default>
+        <label>X1 - 2.0d EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>X3  - 20i SDRIVE Premium</fullName>
+        <default>false</default>
+        <label>X3  - 20i SDRIVE Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>X3  - 20i SDRIVE XLINE</fullName>
+        <default>false</default>
+        <label>X3  - 20i SDRIVE XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>X3  - 20d SDRIVE XLINE</fullName>
+        <default>false</default>
+        <label>X3  - 20d SDRIVE XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>X4 - 20i PAQ M</fullName>
+        <default>false</default>
+        <label>X4 - 20i PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 25d PREMIUM</fullName>
+        <default>false</default>
+        <label>X5 - 25d PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 25d PAQ M</fullName>
+        <default>false</default>
+        <label>X5 - 25d PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 30d PREMIUM</fullName>
+        <default>false</default>
+        <label>X5 - 30d PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 30d 3RA FILA</fullName>
+        <default>false</default>
+        <label>X5 - 30d 3RA FILA</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 30d EXECUTIVE</fullName>
+        <default>false</default>
+        <label>X5 - 30d EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>330 BERLINA - PAQ M</fullName>
+        <default>false</default>
+        <label>330 BERLINA - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 30d EXECUTIVE PLUS ARO 20&quot;</fullName>
+        <default>false</default>
+        <label>X5 - 30d EXECUTIVE PLUS ARO 20&quot;</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 30d PAQ M</fullName>
+        <default>false</default>
+        <label>X5 - 30d PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 40e PREMIUM</fullName>
+        <default>false</default>
+        <label>X5 - 40e PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>X6 30d EXECUTIVE  2017</fullName>
+        <default>false</default>
+        <label>X6 30d EXECUTIVE  2017</label>
+    </customValue>
+    <customValue>
+        <fullName>X6 - 30d EXCLUSIVE 2017</fullName>
+        <default>false</default>
+        <label>X6 - 30d EXCLUSIVE 2017</label>
+    </customValue>
+    <customValue>
+        <fullName>X6 30d PAQ M  2017</fullName>
+        <default>false</default>
+        <label>X6 30d PAQ M  2017</label>
+    </customValue>
+    <customValue>
+        <fullName>i3 ALTIER</fullName>
+        <default>false</default>
+        <label>i3 ALTIER</label>
+    </customValue>
+    <customValue>
+        <fullName>i3 LODGE</fullName>
+        <default>false</default>
+        <label>i3 LODGE</label>
+    </customValue>
+    <customValue>
+        <fullName>i3s - AlTIER</fullName>
+        <default>false</default>
+        <label>i3s - AlTIER</label>
+    </customValue>
+    <customValue>
+        <fullName>i3 REX LOFT</fullName>
+        <default>false</default>
+        <label>i3 REX LOFT</label>
+    </customValue>
+    <customValue>
+        <fullName>340 BERLINA - PAQ M</fullName>
+        <default>false</default>
+        <label>340 BERLINA - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>i3 REX LODGE</fullName>
+        <default>false</default>
+        <label>i3 REX LODGE</label>
+    </customValue>
+    <customValue>
+        <fullName>i8 CARPO</fullName>
+        <default>false</default>
+        <label>i8 CARPO</label>
+    </customValue>
+    <customValue>
+        <fullName>430I GC - PAQ M</fullName>
+        <default>false</default>
+        <label>430I GC - PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 3 - Sedán - 330i</fullName>
+        <default>false</default>
+        <label>Serie 3 - Sedán - 330i</label>
+    </customValue>
+    <customValue>
+        <fullName>530i - EXECUTIVE</fullName>
+        <default>false</default>
+        <label>530i - EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>530i - SPORT LINE</fullName>
+        <default>false</default>
+        <label>530i - SPORT LINE</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 25d PREMIUM SMART</fullName>
+        <default>false</default>
+        <label>X5 - 25d PREMIUM SMART</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 25d BUSINESS</fullName>
+        <default>false</default>
+        <label>X5 - 25d BUSINESS</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 30d NUEVO EXECUTIVE</fullName>
+        <default>false</default>
+        <label>X5 - 30d NUEVO EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>X1 - 1.8i Paquete M</fullName>
+        <default>false</default>
+        <label>X1 - 1.8i Paquete M</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 25d 3RA FILA</fullName>
+        <default>false</default>
+        <label>X5 - 25d 3RA FILA</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 30d PREMIUM RD</fullName>
+        <default>false</default>
+        <label>X5 - 30d PREMIUM RD</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 30d PREMIUM RDT</fullName>
+        <default>false</default>
+        <label>X5 - 30d PREMIUM RDT</label>
+    </customValue>
+    <customValue>
+        <fullName>X6 30d EXCLUSIVE 2017 RD0</fullName>
+        <default>false</default>
+        <label>X6 30d EXCLUSIVE 2017 RD0</label>
+    </customValue>
+    <customValue>
+        <fullName>330i - SPORT LINE</fullName>
+        <default>false</default>
+        <label>330i - SPORT LINE</label>
+    </customValue>
+    <customValue>
+        <fullName>420I GC - SPORT LINE</fullName>
+        <default>false</default>
+        <label>420I GC - SPORT LINE</label>
+    </customValue>
+    <customValue>
+        <fullName>520i - SPORT</fullName>
+        <default>false</default>
+        <label>520i - SPORT</label>
+    </customValue>
+    <customValue>
+        <fullName>X6 - X6 30d PAQ M</fullName>
+        <default>false</default>
+        <label>X6 - X6 30d PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>X3 - sDRIVE 20i Premium</fullName>
+        <default>false</default>
+        <label>X3 - sDRIVE 20i Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>X3 - XDRIVE 30i Premium</fullName>
+        <default>false</default>
+        <label>X3 - XDRIVE 30i Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>520i - EXECUTIVE PLUS</fullName>
+        <default>false</default>
+        <label>520i - EXECUTIVE PLUS</label>
+    </customValue>
+    <customValue>
+        <fullName>X3 - XDRIVE 20d Premium</fullName>
+        <default>false</default>
+        <label>X3 - XDRIVE 20d Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>X3 - XDRIVE 20d XLINE</fullName>
+        <default>false</default>
+        <label>X3 - XDRIVE 20d XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>X3 - XDRIVE 20d Paquete M</fullName>
+        <default>false</default>
+        <label>X3 - XDRIVE 20d Paquete M</label>
+    </customValue>
+    <customValue>
+        <fullName>X3 -- Sdrive 20i Premium</fullName>
+        <default>false</default>
+        <label>X3 -- Sdrive 20i Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>X2 - X2 sdrive 20i Premium</fullName>
+        <default>false</default>
+        <label>X2 - X2 sdrive 20i Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>X2 - X2 sdrive 20i Paq M</fullName>
+        <default>false</default>
+        <label>X2 - X2 sdrive 20i Paq M</label>
+    </customValue>
+    <customValue>
+        <fullName>i3 - i3 Rex Suite</fullName>
+        <default>false</default>
+        <label>i3 - i3 Rex Suite</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 5 - 550i PAQ M</fullName>
+        <default>false</default>
+        <label>Serie 5 - 550i PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>i3 - Loft S</fullName>
+        <default>false</default>
+        <label>i3 - Loft S</label>
+    </customValue>
+    <customValue>
+        <fullName>520i - LUXURY</fullName>
+        <default>false</default>
+        <label>520i - LUXURY</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 5 - 550i Sport</fullName>
+        <default>false</default>
+        <label>Serie 5 - 550i Sport</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 1 - 118i Paq M</fullName>
+        <default>false</default>
+        <label>Serie 1 - 118i Paq M</label>
+    </customValue>
+    <customValue>
+        <fullName>X4 - XDrive 20i XLine</fullName>
+        <default>false</default>
+        <label>X4 - XDrive 20i XLine</label>
+    </customValue>
+    <customValue>
+        <fullName>X4 - XDrive 20d Premium</fullName>
+        <default>false</default>
+        <label>X4 - XDrive 20d Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>X4 - XDrive 20d XLine</fullName>
+        <default>false</default>
+        <label>X4 - XDrive 20d XLine</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 4.0 PREMIUM</fullName>
+        <default>false</default>
+        <label>X5 - 4.0 PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 4.0 XLINE</fullName>
+        <default>false</default>
+        <label>X5 - 4.0 XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 4.0 PAQUETE M</fullName>
+        <default>false</default>
+        <label>X5 - 4.0 PAQUETE M</label>
+    </customValue>
+    <customValue>
+        <fullName>X4 - XDrive 20i Premium</fullName>
+        <default>false</default>
+        <label>X4 - XDrive 20i Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>650i GC - EXECUTIVE</fullName>
+        <default>false</default>
+        <label>650i GC - EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 30d XLINE</fullName>
+        <default>false</default>
+        <label>X5 - 30d XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>X7 - 40i Premium</fullName>
+        <default>false</default>
+        <label>X7 - 40i Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>X7 - 40i Pure Excellence</fullName>
+        <default>false</default>
+        <label>X7 - 40i Pure Excellence</label>
+    </customValue>
+    <customValue>
+        <fullName>X7 - 40i M Pack</fullName>
+        <default>false</default>
+        <label>X7 - 40i M Pack</label>
+    </customValue>
+    <customValue>
+        <fullName>X7 - 30d Premium</fullName>
+        <default>false</default>
+        <label>X7 - 30d Premium</label>
+    </customValue>
+    <customValue>
+        <fullName>X7 - 30d Pure  Excellence</fullName>
+        <default>false</default>
+        <label>X7 - 30d Pure  Excellence</label>
+    </customValue>
+    <customValue>
+        <fullName>X7 - 30d M Pack</fullName>
+        <default>false</default>
+        <label>X7 - 30d M Pack</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 3 - 330i PAQ M</fullName>
+        <default>false</default>
+        <label>Serie 3 - 330i PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>i3 SUIT S</fullName>
+        <default>false</default>
+        <label>i3 SUIT S</label>
+    </customValue>
+    <customValue>
+        <fullName>X5 - 520i Sport Line</fullName>
+        <default>false</default>
+        <label>X5 - 520i Sport Line</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW - X3 xDrive30i</fullName>
+        <default>false</default>
+        <label>BMW - X3 xDrive30i</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW - X4 - M40i</fullName>
+        <default>false</default>
+        <label>BMW - X4 - M40i</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW - X4 xDrive30i</fullName>
+        <default>false</default>
+        <label>BMW - X4 xDrive30i</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW - X5 M50i</fullName>
+        <default>false</default>
+        <label>BMW - X5 M50i</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW M4 CSL</fullName>
+        <default>false</default>
+        <label>BMW M4 CSL</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-128-TI-VR-TI</fullName>
+        <default>false</default>
+        <label>BMW-128-TI-VR-TI</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-218-GC-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-218-GC-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-220-C-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-220-C-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-220-GC-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-220-GC-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-320-VR-EXECUTIVE</fullName>
+        <default>false</default>
+        <label>BMW-320-VR-EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-320-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-320-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-320-VR-SPORT-LIN</fullName>
+        <default>false</default>
+        <label>BMW-320-VR-SPORT-LIN</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-330-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-330-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-420-GC-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-420-GC-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-420-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-420-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-430-C-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-430-C-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-430-GC-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-430-GC-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-530-VR-EXECUTIVE</fullName>
+        <default>false</default>
+        <label>BMW-530-VR-EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-I4-EXECUTIVE</fullName>
+        <default>false</default>
+        <label>BMW-I4-EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-I4-VR-EXECUTIVE</fullName>
+        <default>false</default>
+        <label>BMW-I4-VR-EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-I4-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-I4-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-I5-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-I5-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-I7</fullName>
+        <default>false</default>
+        <label>BMW-I7</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX1-20-VR-PAQ</fullName>
+        <default>false</default>
+        <label>BMW-IX1-20-VR-PAQ</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX1-20-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-IX1-20-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX1-20-VR-XLINE-PLUS</fullName>
+        <default>false</default>
+        <label>BMW-IX1-20-VR-XLINE-PLUS</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX1-30-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-IX1-30-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX1-30-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-IX1-30-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX1-30-VR-XLINE-PLUS</fullName>
+        <default>false</default>
+        <label>BMW-IX1-30-VR-XLINE-PLUS</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX2-30-VR-EXECUTIVE</fullName>
+        <default>false</default>
+        <label>BMW-IX2-30-VR-EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX2-30-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-IX2-30-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX3-VR-IMPRESSIVE</fullName>
+        <default>false</default>
+        <label>BMW-IX3-VR-IMPRESSIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX3-VR-INSPIRING</fullName>
+        <default>false</default>
+        <label>BMW-IX3-VR-INSPIRING</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX40-VR-ATELIER</fullName>
+        <default>false</default>
+        <label>BMW-IX40-VR-ATELIER</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX40-VR-PREMIUM</fullName>
+        <default>false</default>
+        <label>BMW-IX40-VR-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX40-VR-SPORT</fullName>
+        <default>false</default>
+        <label>BMW-IX40-VR-SPORT</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX40-VR-SUITE</fullName>
+        <default>false</default>
+        <label>BMW-IX40-VR-SUITE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX50-VR-ATELIER</fullName>
+        <default>false</default>
+        <label>BMW-IX50-VR-ATELIER</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX50-VR-PREMIUM</fullName>
+        <default>false</default>
+        <label>BMW-IX50-VR-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX50-VR-SPORT</fullName>
+        <default>false</default>
+        <label>BMW-IX50-VR-SPORT</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX50-VR-SUITE</fullName>
+        <default>false</default>
+        <label>BMW-IX50-VR-SUITE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-M2-VR-COUPE</fullName>
+        <default>false</default>
+        <label>BMW-M2-VR-COUPE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-M240-VR-MPA</fullName>
+        <default>false</default>
+        <label>BMW-M240-VR-MPA</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-M3-VR-M-COMPETI</fullName>
+        <default>false</default>
+        <label>BMW-M3-VR-M-COMPETI</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-M340-VR-MPA</fullName>
+        <default>false</default>
+        <label>BMW-M340-VR-MPA</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-M4-VR-M-COMPETI</fullName>
+        <default>false</default>
+        <label>BMW-M4-VR-M-COMPETI</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-R-1250-R</fullName>
+        <default>false</default>
+        <label>BMW-R-1250-R</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X1-18D-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X1-18D-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X1-18D-VR-XLINEPLUS</fullName>
+        <default>false</default>
+        <label>BMW-X1-18D-VR-XLINEPLUS</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X1-18I-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X1-18I-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X1-18I-VR-XLINEPLUS</fullName>
+        <default>false</default>
+        <label>BMW-X1-18I-VR-XLINEPLUS</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X1-M35-VR-MPA</fullName>
+        <default>false</default>
+        <label>BMW-X1-M35-VR-MPA</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-20D-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X3-20D-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-20I-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X3-20I-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-30I-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X3-30I-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-M-VR-M-COMPETI</fullName>
+        <default>false</default>
+        <label>BMW-X3-M-VR-M-COMPETI</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-M40I-VR-MPA</fullName>
+        <default>false</default>
+        <label>BMW-X3-M40I-VR-MPA</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X4-20D-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X4-20D-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X4-20D-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X4-20D-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X4-20I-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X4-20I-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X4-20I-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X4-20I-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X4-30I-VR-PAQ M</fullName>
+        <default>false</default>
+        <label>BMW-X4-30I-VR-PAQ M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X4-30I-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X4-30I-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X4-M40I-VR-M-COMPETI</fullName>
+        <default>false</default>
+        <label>BMW-X4-M40I-VR-M-COMPETI</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X4-M40I-VR-MPA</fullName>
+        <default>false</default>
+        <label>BMW-X4-M40I-VR-MPA</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-25D-VR-PREMIUM</fullName>
+        <default>false</default>
+        <label>BMW-X5-25D-VR-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-30D-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X5-30D-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-30D-VR-PREMIUM</fullName>
+        <default>false</default>
+        <label>BMW-X5-30D-VR-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-30D-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X5-30D-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-30D-VR-XLINEPLUS</fullName>
+        <default>false</default>
+        <label>BMW-X5-30D-VR-XLINEPLUS</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-40I-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X5-40I-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-40i-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X5-40i-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-50E-VR-PREMIUM</fullName>
+        <default>false</default>
+        <label>BMW-X5-50E-VR-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-M-VR-M-COMPETI</fullName>
+        <default>false</default>
+        <label>BMW-X5-M-VR-M-COMPETI</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X5-M60-VR-MPA</fullName>
+        <default>false</default>
+        <label>BMW-X5-M60-VR-MPA</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X6-30D-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X6-30D-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X6-40i-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X6-40i-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X6-M60i-VR-MPA</fullName>
+        <default>false</default>
+        <label>BMW-X6-M60i-VR-MPA</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X7-30D-VR-PREMIUM</fullName>
+        <default>false</default>
+        <label>BMW-X7-30D-VR-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X7-40D-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X7-40D-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X7-40D-VR-PREMIUM</fullName>
+        <default>false</default>
+        <label>BMW-X7-40D-VR-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X7-40I-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X7-40I-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X7-40I-VR-PREMIUM</fullName>
+        <default>false</default>
+        <label>BMW-X7-40I-VR-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-XM-VR-M</fullName>
+        <default>false</default>
+        <label>BMW-XM-VR-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-Z4-20i-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-Z4-20i-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-Z4-20i-VR-SPORT-LIN</fullName>
+        <default>false</default>
+        <label>BMW-Z4-20i-VR-SPORT-LIN</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 5 - Sedán - 530i</fullName>
+        <default>false</default>
+        <label>Serie 5 - Sedán - 530i</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW Serie 4 Coupé</fullName>
+        <default>false</default>
+        <label>BMW Serie 4 Coupé</label>
+    </customValue>
+    <customValue>
+        <fullName>TS01 - X3 M Competition</fullName>
+        <default>false</default>
+        <label>TS01 - X3 M Competition</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-S-VR-5-TURER</fullName>
+        <default>false</default>
+        <label>COOPER-S-VR-5-TURER</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-S-VR-CABRIO</fullName>
+        <default>false</default>
+        <label>COOPER-S-VR-CABRIO</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-S-VR-CLUBMAN</fullName>
+        <default>false</default>
+        <label>COOPER-S-VR-CLUBMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-S-VR-COUNT-ALL</fullName>
+        <default>false</default>
+        <label>COOPER-S-VR-COUNT-ALL</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-S-VR-COUNTRYMA</fullName>
+        <default>false</default>
+        <label>COOPER-S-VR-COUNTRYMA</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-S-VR-HATCH</fullName>
+        <default>false</default>
+        <label>COOPER-S-VR-HATCH</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-S-VR-MULTITONE</fullName>
+        <default>false</default>
+        <label>COOPER-S-VR-MULTITONE</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-SE-VR-CLASSIC</fullName>
+        <default>false</default>
+        <label>COOPER-SE-VR-CLASSIC</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-SE-VR-COUNTRYMA</fullName>
+        <default>false</default>
+        <label>COOPER-SE-VR-COUNTRYMA</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-SE-VR-CR</fullName>
+        <default>false</default>
+        <label>COOPER-SE-VR-CR</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-SE-VR-ICONIC</fullName>
+        <default>false</default>
+        <label>COOPER-SE-VR-ICONIC</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-VR-5-TURER</fullName>
+        <default>false</default>
+        <label>COOPER-VR-5-TURER</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-VR-COUNTRYMA</fullName>
+        <default>false</default>
+        <label>COOPER-VR-COUNTRYMA</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-VR-HATCH</fullName>
+        <default>false</default>
+        <label>COOPER-VR-HATCH</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER 3PTS (MT)</fullName>
+        <default>false</default>
+        <label>COOPER 3PTS (MT)</label>
+    </customValue>
+    <customValue>
+        <fullName>John  Cooper Works</fullName>
+        <default>false</default>
+        <label>John  Cooper Works</label>
+    </customValue>
+    <customValue>
+        <fullName>CLUBMAN COOPER S - JCW Pack</fullName>
+        <default>false</default>
+        <label>CLUBMAN COOPER S - JCW Pack</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN COOPER S</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN COOPER S</label>
+    </customValue>
+    <customValue>
+        <fullName>John Cooper Works Plus</fullName>
+        <default>false</default>
+        <label>John Cooper Works Plus</label>
+    </customValue>
+    <customValue>
+        <fullName>CABRIO COOPER S</fullName>
+        <default>false</default>
+        <label>CABRIO COOPER S</label>
+    </customValue>
+    <customValue>
+        <fullName>Countryman - Híbrido (PHEV)</fullName>
+        <default>false</default>
+        <label>Countryman - Híbrido (PHEV)</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN COOPER PPC17</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN COOPER PPC17</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper S 3pts Patt Moss</fullName>
+        <default>false</default>
+        <label>Cooper S 3pts Patt Moss</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper 3 PTS (AT) - JCW Pack</fullName>
+        <default>false</default>
+        <label>Cooper 3 PTS (AT) - JCW Pack</label>
+    </customValue>
+    <customValue>
+        <fullName>JCW Hatch  Patt Moss</fullName>
+        <default>false</default>
+        <label>JCW Hatch  Patt Moss</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER S 5PTS (AT)</fullName>
+        <default>false</default>
+        <label>COOPER S 5PTS (AT)</label>
+    </customValue>
+    <customValue>
+        <fullName>Countryman John Cooper Works</fullName>
+        <default>false</default>
+        <label>Countryman John Cooper Works</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER 3PTS (AT)</fullName>
+        <default>false</default>
+        <label>COOPER 3PTS (AT)</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper 3 PTS 60 Aniversario Edition</fullName>
+        <default>false</default>
+        <label>Cooper 3 PTS 60 Aniversario Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper S 3 PTS 60 Aniversario Edition</fullName>
+        <default>false</default>
+        <label>Cooper S 3 PTS 60 Aniversario Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>Countryman All Black Edition</fullName>
+        <default>false</default>
+        <label>Countryman All Black Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>John Cooper Works Cabrio</fullName>
+        <default>false</default>
+        <label>John Cooper Works Cabrio</label>
+    </customValue>
+    <customValue>
+        <fullName>Clubman John Cooper Works</fullName>
+        <default>false</default>
+        <label>Clubman John Cooper Works</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper S Multitone</fullName>
+        <default>false</default>
+        <label>Cooper S Multitone</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN COOPER Salt</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN COOPER Salt</label>
+    </customValue>
+    <customValue>
+        <fullName>3 PUERTAS- BEV C.R. TRIM</fullName>
+        <default>false</default>
+        <label>3 PUERTAS- BEV C.R. TRIM</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper 3 Puertas - SE Classic</fullName>
+        <default>false</default>
+        <label>Cooper 3 Puertas - SE Classic</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER 5PTS (AT) JCW Pack</fullName>
+        <default>false</default>
+        <label>COOPER 5PTS (AT) JCW Pack</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI 3 DOOR.</fullName>
+        <default>false</default>
+        <label>MINI 3 DOOR.</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI 5 DOOR.</fullName>
+        <default>false</default>
+        <label>MINI 5 DOOR.</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER S 3PTS</fullName>
+        <default>false</default>
+        <label>COOPER S 3PTS</label>
+    </customValue>
+    <customValue>
+        <fullName>CLUBMAN COOPER</fullName>
+        <default>false</default>
+        <label>CLUBMAN COOPER</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN COOPER</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN COOPER</label>
+    </customValue>
+    <customValue>
+        <fullName>CLUBMAN COOPER S</fullName>
+        <default>false</default>
+        <label>CLUBMAN COOPER S</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN COOPER S ALL4</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN COOPER S ALL4</label>
+    </customValue>
+    <customValue>
+        <fullName>JCW-VR-CABRIO</fullName>
+        <default>false</default>
+        <label>JCW-VR-CABRIO</label>
+    </customValue>
+    <customValue>
+        <fullName>JCW-VR-CLUBMAN</fullName>
+        <default>false</default>
+        <label>JCW-VR-CLUBMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>JCW-VR-HAT-SPITF</fullName>
+        <default>false</default>
+        <label>JCW-VR-HAT-SPITF</label>
+    </customValue>
+    <customValue>
+        <fullName>JCW-VR-HATCH</fullName>
+        <default>false</default>
+        <label>JCW-VR-HATCH</label>
+    </customValue>
+    <customValue>
+        <fullName>JCW-VR-JCW-ALL4</fullName>
+        <default>false</default>
+        <label>JCW-VR-JCW-ALL4</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-F850GS-AD</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-F850GS-AD</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-F850GS-SEMI</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-F850GS-SEMI</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-G310-GS</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-G310-GS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-R1250GS-AD</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-R1250GS-AD</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-R1300GS-F</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-R1300GS-F</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-R1300GS-F719</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-R1300GS-F719</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-R1300GS-FP719</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-R1300GS-FP719</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-R300GS-FP</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-R300GS-FP</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-NINET</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-NINET</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-NINET-PURE</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-NINET-PURE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-NINET-SCRAM</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-NINET-SCRAM</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-R18</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-R18</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-R18-B</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-R18-B</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-R18-ROCTANE</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-R18-ROCTANE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-RNINET-UGS</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-RNINET-UGS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-M-1000-R</fullName>
+        <default>false</default>
+        <label>MN-BMW-M-1000-R</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-M-1000-RR</fullName>
+        <default>false</default>
+        <label>MN-BMW-M-1000-RR</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ROADSTER-F900-R</fullName>
+        <default>false</default>
+        <label>MN-BMW-ROADSTER-F900-R</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ROADSTER-G310-R</fullName>
+        <default>false</default>
+        <label>MN-BMW-ROADSTER-G310-R</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ROADSTER-R1250-R</fullName>
+        <default>false</default>
+        <label>MN-BMW-ROADSTER-R1250-R</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ROADSTER-S1000-R</fullName>
+        <default>false</default>
+        <label>MN-BMW-ROADSTER-S1000-R</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-SPORT-F900-XR</fullName>
+        <default>false</default>
+        <label>MN-BMW-SPORT-F900-XR</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-SPORT-R1250-RS</fullName>
+        <default>false</default>
+        <label>MN-BMW-SPORT-R1250-RS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-SPORT-S1000-RR</fullName>
+        <default>false</default>
+        <label>MN-BMW-SPORT-S1000-RR</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-SPORT-S1000-XR</fullName>
+        <default>false</default>
+        <label>MN-BMW-SPORT-S1000-XR</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-TOUR-R1250-RT</fullName>
+        <default>false</default>
+        <label>MN-BMW-TOUR-R1250-RT</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-UM-C400-GT</fullName>
+        <default>false</default>
+        <label>MN-BMW-UM-C400-GT</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-UM-C400-X</fullName>
+        <default>false</default>
+        <label>MN-BMW-UM-C400-X</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-UM-CE-04</fullName>
+        <default>false</default>
+        <label>MN-BMW-UM-CE-04</label>
+    </customValue>
+    <customValue>
+        <fullName>M1000RR</fullName>
+        <default>false</default>
+        <label>M1000RR</label>
+    </customValue>
+    <customValue>
+        <fullName>R 18</fullName>
+        <default>false</default>
+        <label>R 18</label>
+    </customValue>
+    <customValue>
+        <fullName>M1000R</fullName>
+        <default>false</default>
+        <label>M1000R</label>
+    </customValue>
+    <customValue>
+        <fullName>R 18 Bagger</fullName>
+        <default>false</default>
+        <label>R 18 Bagger</label>
+    </customValue>
+    <customValue>
+        <fullName>S 1000 XR</fullName>
+        <default>false</default>
+        <label>S 1000 XR</label>
+    </customValue>
+    <customValue>
+        <fullName>S 1000 R</fullName>
+        <default>false</default>
+        <label>S 1000 R</label>
+    </customValue>
+    <customValue>
+        <fullName>G310 R</fullName>
+        <default>false</default>
+        <label>G310 R</label>
+    </customValue>
+    <customValue>
+        <fullName>S 1000 RR</fullName>
+        <default>false</default>
+        <label>S 1000 RR</label>
+    </customValue>
+    <customValue>
+        <fullName>R Nine T</fullName>
+        <default>false</default>
+        <label>R Nine T</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1200 X (GS)</fullName>
+        <default>false</default>
+        <label>R 1200 X (GS)</label>
+    </customValue>
+    <customValue>
+        <fullName>R Nine T Pure</fullName>
+        <default>false</default>
+        <label>R Nine T Pure</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1200 X (Scrambler)</fullName>
+        <default>false</default>
+        <label>R 1200 X (Scrambler)</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1200 X (Race)</fullName>
+        <default>false</default>
+        <label>R 1200 X (Race)</label>
+    </customValue>
+    <customValue>
+        <fullName>K 1600 GT</fullName>
+        <default>false</default>
+        <label>K 1600 GT</label>
+    </customValue>
+    <customValue>
+        <fullName>K 1600 GTL</fullName>
+        <default>false</default>
+        <label>K 1600 GTL</label>
+    </customValue>
+    <customValue>
+        <fullName>K 1600 GTL EXCL.</fullName>
+        <default>false</default>
+        <label>K 1600 GTL EXCL.</label>
+    </customValue>
+    <customValue>
+        <fullName>F 750 GS</fullName>
+        <default>false</default>
+        <label>F 750 GS</label>
+    </customValue>
+    <customValue>
+        <fullName>F 850 GS</fullName>
+        <default>false</default>
+        <label>F 850 GS</label>
+    </customValue>
+    <customValue>
+        <fullName>G310 GS</fullName>
+        <default>false</default>
+        <label>G310 GS</label>
+    </customValue>
+    <customValue>
+        <fullName>Urban - C400X</fullName>
+        <default>false</default>
+        <label>Urban - C400X</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1250 GS Exclusive</fullName>
+        <default>false</default>
+        <label>R 1250 GS Exclusive</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1250 GS Ralley</fullName>
+        <default>false</default>
+        <label>R 1250 GS Ralley</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1250 R</fullName>
+        <default>false</default>
+        <label>R 1250 R</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1250 RT</fullName>
+        <default>false</default>
+        <label>R 1250 RT</label>
+    </customValue>
+    <customValue>
+        <fullName>S  1000 RR</fullName>
+        <default>false</default>
+        <label>S  1000 RR</label>
+    </customValue>
+    <customValue>
+        <fullName>S 1000 RR &quot;M&quot; Blanca</fullName>
+        <default>false</default>
+        <label>S 1000 RR &quot;M&quot; Blanca</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1250 GS ADV</fullName>
+        <default>false</default>
+        <label>R 1250 GS ADV</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1250 GS Full</fullName>
+        <default>false</default>
+        <label>R 1250 GS Full</label>
+    </customValue>
+    <customValue>
+        <fullName>F750 GS Entry</fullName>
+        <default>false</default>
+        <label>F750 GS Entry</label>
+    </customValue>
+    <customValue>
+        <fullName>F850 GS Entry</fullName>
+        <default>false</default>
+        <label>F850 GS Entry</label>
+    </customValue>
+    <customValue>
+        <fullName>K 1600 Bagger</fullName>
+        <default>false</default>
+        <label>K 1600 Bagger</label>
+    </customValue>
+    <customValue>
+        <fullName>F850 GS ADV</fullName>
+        <default>false</default>
+        <label>F850 GS ADV</label>
+    </customValue>
+    <customValue>
+        <fullName>F900 R</fullName>
+        <default>false</default>
+        <label>F900 R</label>
+    </customValue>
+    <customValue>
+        <fullName>F 900 XR</fullName>
+        <default>false</default>
+        <label>F 900 XR</label>
+    </customValue>
+    <customValue>
+        <fullName>F900  R</fullName>
+        <default>false</default>
+        <label>F900  R</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1250 GS</fullName>
+        <default>false</default>
+        <label>R 1250 GS</label>
+    </customValue>
+    <customValue>
+        <fullName>F900 XR</fullName>
+        <default>false</default>
+        <label>F900 XR</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1250 GS ADVENTURE</fullName>
+        <default>false</default>
+        <label>R 1250 GS ADVENTURE</label>
+    </customValue>
+    <customValue>
+        <fullName>R 1250 RS</fullName>
+        <default>false</default>
+        <label>R 1250 RS</label>
+    </customValue>
+    <customValue>
+        <fullName>C 400 GT</fullName>
+        <default>false</default>
+        <label>C 400 GT</label>
+    </customValue>
+    <customValue>
+        <fullName>K 1600 GA</fullName>
+        <default>false</default>
+        <label>K 1600 GA</label>
+    </customValue>
+    <customValue>
+        <fullName>URBAN MOVILITY - CE04</fullName>
+        <default>false</default>
+        <label>URBAN MOVILITY - CE04</label>
+    </customValue>
+    <customValue>
+        <fullName>R Nine T Racer</fullName>
+        <default>false</default>
+        <label>R Nine T Racer</label>
+    </customValue>
+    <customValue>
+        <fullName>R Nine T Scrambler</fullName>
+        <default>false</default>
+        <label>R Nine T Scrambler</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-F750-GS</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-F750-GS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-F850-GS</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-F850-GS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-BRUTE FORCE-300</fullName>
+        <default>false</default>
+        <label>MN-KAWA-BRUTE FORCE-300</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-BRUTE FORCE-750-4x4i-EPS</fullName>
+        <default>false</default>
+        <label>MN-KAWA-BRUTE FORCE-750-4x4i-EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-ELIMINATOR</fullName>
+        <default>false</default>
+        <label>MN-KAWA-ELIMINATOR</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-KLR-650-ADVENTURE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-KLR-650-ADVENTURE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-KLX-300</fullName>
+        <default>false</default>
+        <label>MN-KAWA-KLX-300</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-MULE-4010-4x4-FE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-MULE-4010-4x4-FE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-MULE-4010-TRANS4x4-FE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-MULE-4010-TRANS4x4-FE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-MULE-PRO-FX-EPS-LE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-MULE-PRO-FX-EPS-LE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-MULE-PRO-FXT-1000-LE-RE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-MULE-PRO-FXT-1000-LE-RE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-MULE-PRO-FXT-RE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-MULE-PRO-FXT-RE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-MULE-PRO-MX-EPS</fullName>
+        <default>false</default>
+        <label>MN-KAWA-MULE-PRO-MX-EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-MULE-PRO-MX-SE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-MULE-PRO-MX-SE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-MULE-SX-4x4-XC-LE-FI</fullName>
+        <default>false</default>
+        <label>MN-KAWA-MULE-SX-4x4-XC-LE-FI</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-NINJA-1000SX</fullName>
+        <default>false</default>
+        <label>MN-KAWA-NINJA-1000SX</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-NINJA-500SE-ABS</fullName>
+        <default>false</default>
+        <label>MN-KAWA-NINJA-500SE-ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-NINJA-ZR-10R-KRT-EDITION</fullName>
+        <default>false</default>
+        <label>MN-KAWA-NINJA-ZR-10R-KRT-EDITION</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-NINJA-ZX-4RR-ABS</fullName>
+        <default>false</default>
+        <label>MN-KAWA-NINJA-ZX-4RR-ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-NINJA-ZX-6R-KRT-EDITION</fullName>
+        <default>false</default>
+        <label>MN-KAWA-NINJA-ZX-6R-KRT-EDITION</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-TERYX-KRX-1000-eS</fullName>
+        <default>false</default>
+        <label>MN-KAWA-TERYX-KRX-1000-eS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-TERYX-KRX-1000-TE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-TERYX-KRX-1000-TE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-TERYX-KRX4-1000-SE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-TERYX-KRX4-1000-SE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-TERYX4-S-SE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-TERYX4-S-SE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-VERSYS-650</fullName>
+        <default>false</default>
+        <label>MN-KAWA-VERSYS-650</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-VERSYS-X-300</fullName>
+        <default>false</default>
+        <label>MN-KAWA-VERSYS-X-300</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-VULCAN-900-CLASSIC</fullName>
+        <default>false</default>
+        <label>MN-KAWA-VULCAN-900-CLASSIC</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-VULCAN-900-CUSTOM</fullName>
+        <default>false</default>
+        <label>MN-KAWA-VULCAN-900-CUSTOM</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-Z-H2-SE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-Z-H2-SE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-Z-Z900</fullName>
+        <default>false</default>
+        <label>MN-KAWA-Z-Z900</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-Z-Z900-ABS</fullName>
+        <default>false</default>
+        <label>MN-KAWA-Z-Z900-ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-Z-Z900-SE</fullName>
+        <default>false</default>
+        <label>MN-KAWA-Z-Z900-SE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KLX-150</fullName>
+        <default>false</default>
+        <label>MN-KLX-150</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KX-250</fullName>
+        <default>false</default>
+        <label>MN-KX-250</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KX-450</fullName>
+        <default>false</default>
+        <label>MN-KX-450</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-Z-500-SE-ABS</fullName>
+        <default>false</default>
+        <label>MN-Z-500-SE-ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-Z-E1-ABS</fullName>
+        <default>false</default>
+        <label>MN-Z-E1-ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX - KLX250S Camo Gray</fullName>
+        <default>false</default>
+        <label>KLX - KLX250S Camo Gray</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - Ninja 400</fullName>
+        <default>false</default>
+        <label>Ninja - Ninja 400</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - Ninja 400 ABS</fullName>
+        <default>false</default>
+        <label>Ninja - Ninja 400 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - Ninja 400 ABS SE</fullName>
+        <default>false</default>
+        <label>Ninja - Ninja 400 ABS SE</label>
+    </customValue>
+    <customValue>
+        <fullName>Eliminator</fullName>
+        <default>false</default>
+        <label>Eliminator</label>
+    </customValue>
+    <customValue>
+        <fullName>NinjaZX-10R  (E-Suspension)</fullName>
+        <default>false</default>
+        <label>NinjaZX-10R  (E-Suspension)</label>
+    </customValue>
+    <customValue>
+        <fullName>KT8 - 690 SMC</fullName>
+        <default>false</default>
+        <label>KT8 - 690 SMC</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja H2 SX SE +</fullName>
+        <default>false</default>
+        <label>Ninja H2 SX SE +</label>
+    </customValue>
+    <customValue>
+        <fullName>Z400 ABS</fullName>
+        <default>false</default>
+        <label>Z400 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Z900RS ABS</fullName>
+        <default>false</default>
+        <label>Z900RS ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Z900 RS  CAFE</fullName>
+        <default>false</default>
+        <label>Z900 RS  CAFE</label>
+    </customValue>
+    <customValue>
+        <fullName>Brute Force 750 4x4i</fullName>
+        <default>false</default>
+        <label>Brute Force 750 4x4i</label>
+    </customValue>
+    <customValue>
+        <fullName>KLR - 650</fullName>
+        <default>false</default>
+        <label>KLR - 650</label>
+    </customValue>
+    <customValue>
+        <fullName>KLR - 650 CAMO</fullName>
+        <default>false</default>
+        <label>KLR - 650 CAMO</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja 1000 SX ABS</fullName>
+        <default>false</default>
+        <label>Ninja 1000 SX ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>ZR 900 RS</fullName>
+        <default>false</default>
+        <label>ZR 900 RS</label>
+    </customValue>
+    <customValue>
+        <fullName>Z H2</fullName>
+        <default>false</default>
+        <label>Z H2</label>
+    </customValue>
+    <customValue>
+        <fullName>Z H2 SE</fullName>
+        <default>false</default>
+        <label>Z H2 SE</label>
+    </customValue>
+    <customValue>
+        <fullName>Versys - 650 ABS</fullName>
+        <default>false</default>
+        <label>Versys - 650 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>KLR®650 ABS</fullName>
+        <default>false</default>
+        <label>KLR®650 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>KLR®650 TRAVELER</fullName>
+        <default>false</default>
+        <label>KLR®650 TRAVELER</label>
+    </customValue>
+    <customValue>
+        <fullName>KLR®650 ADVENTURE</fullName>
+        <default>false</default>
+        <label>KLR®650 ADVENTURE</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX®300</fullName>
+        <default>false</default>
+        <label>KLX®300</label>
+    </customValue>
+    <customValue>
+        <fullName>Versys - 1000 ABS</fullName>
+        <default>false</default>
+        <label>Versys - 1000 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX - KLX®300SM</fullName>
+        <default>false</default>
+        <label>KLX - KLX®300SM</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX - KLX®300R</fullName>
+        <default>false</default>
+        <label>KLX - KLX®300R</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA® 400 ABS KRT</fullName>
+        <default>false</default>
+        <label>NINJA® 400 ABS KRT</label>
+    </customValue>
+    <customValue>
+        <fullName>Versys - 300 ABS</fullName>
+        <default>false</default>
+        <label>Versys - 300 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan - 900 Classic ABS</fullName>
+        <default>false</default>
+        <label>Vulcan - 900 Classic ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - H2</fullName>
+        <default>false</default>
+        <label>Ninja - H2</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - H2 Carbon</fullName>
+        <default>false</default>
+        <label>Ninja - H2 Carbon</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - H2 R</fullName>
+        <default>false</default>
+        <label>Ninja - H2 R</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 14R ABS</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 14R ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 14R ABS Brembo</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 14R ABS Brembo</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 10R</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 10R</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 10R ABS (KRT)</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 10R ABS (KRT)</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 10R ABS</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 10R ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 10R ABS KRT</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 10R ABS KRT</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 6R</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 6R</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 6R ABS (KRT)</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 6R ABS (KRT)</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 6R ABS</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 6R ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX - 6R KRT ABS</fullName>
+        <default>false</default>
+        <label>Ninja ZX - 6R KRT ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - 1000</fullName>
+        <default>false</default>
+        <label>Ninja - 1000</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - 650</fullName>
+        <default>false</default>
+        <label>Ninja - 650</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA® 650 ABS</fullName>
+        <default>false</default>
+        <label>NINJA® 650 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA® 650 ABS KRT EDITION</fullName>
+        <default>false</default>
+        <label>NINJA® 650 ABS KRT EDITION</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - 300</fullName>
+        <default>false</default>
+        <label>Ninja - 300</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - 300 ABS</fullName>
+        <default>false</default>
+        <label>Ninja - 300 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - 300 ABS SE</fullName>
+        <default>false</default>
+        <label>Ninja - 300 ABS SE</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja - 300 ABS SE LTS winter test edition</fullName>
+        <default>false</default>
+        <label>Ninja - 300 ABS SE LTS winter test edition</label>
+    </customValue>
+    <customValue>
+        <fullName>Z - 900</fullName>
+        <default>false</default>
+        <label>Z - 900</label>
+    </customValue>
+    <customValue>
+        <fullName>Z - 900 ABS</fullName>
+        <default>false</default>
+        <label>Z - 900 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Z - 650 ABS</fullName>
+        <default>false</default>
+        <label>Z - 650 ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan - 1700 Voyager ABS</fullName>
+        <default>false</default>
+        <label>Vulcan - 1700 Voyager ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan - 1700 Vaquero ABS</fullName>
+        <default>false</default>
+        <label>Vulcan - 1700 Vaquero ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan - 900 Classic</fullName>
+        <default>false</default>
+        <label>Vulcan - 900 Classic</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan - 900 Classic LT</fullName>
+        <default>false</default>
+        <label>Vulcan - 900 Classic LT</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan - 900 Custom</fullName>
+        <default>false</default>
+        <label>Vulcan - 900 Custom</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan - S</fullName>
+        <default>false</default>
+        <label>Vulcan - S</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan - S ABS</fullName>
+        <default>false</default>
+        <label>Vulcan - S ABS</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan - S ABS SE</fullName>
+        <default>false</default>
+        <label>Vulcan - S ABS SE</label>
+    </customValue>
+    <customValue>
+        <fullName>VULCAN® S ABS CAFÉ</fullName>
+        <default>false</default>
+        <label>VULCAN® S ABS CAFÉ</label>
+    </customValue>
+    <customValue>
+        <fullName>KX - 450R</fullName>
+        <default>false</default>
+        <label>KX - 450R</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA® ZX™-10RR</fullName>
+        <default>false</default>
+        <label>NINJA® ZX™-10RR</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja ZX 4RR KRT Edition</fullName>
+        <default>false</default>
+        <label>Ninja ZX 4RR KRT Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-GENERAL-XP-PREMIUM</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-GENERAL-XP-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-GENERAL-XP4-PREMIUM</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-GENERAL-XP4-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RANGER-CREW-SP-570</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RANGER-CREW-SP-570</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RANGER-CREW-XP-1000-NEP</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RANGER-CREW-XP-1000-NEP</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RANGER-CREW-XP-1000-PREMIUM</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RANGER-CREW-XP-1000-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RANGER-XP-KINETIC-PREMIUM</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RANGER-XP-KINETIC-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RZR-PRO-R-ULTIMATE</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RZR-PRO-R-ULTIMATE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RZR-PRO-XP4-PREMIUM</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RZR-PRO-XP4-PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RZR-PRO-XP4-SPORT</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RZR-PRO-XP4-SPORT</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RZR-XP-1000-HL</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RZR-XP-1000-HL</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RZR-XP-ULTIMATE</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RZR-XP-ULTIMATE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RZR-XP4-1000</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RZR-XP4-1000</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-POLARIS-RZR-XP4-SPORT</fullName>
+        <default>false</default>
+        <label>MN-POLARIS-RZR-XP4-SPORT</label>
+    </customValue>
+    <customValue>
+        <fullName>GENERAL XP 4 1000 PREMIUM</fullName>
+        <default>false</default>
+        <label>GENERAL XP 4 1000 PREMIUM</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE -MULE PRO-FXT EPS Camo</fullName>
+        <default>false</default>
+        <label>MULE -MULE PRO-FXT EPS Camo</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO-FXT™ RANCH EDITION</fullName>
+        <default>false</default>
+        <label>MULE PRO-FXT™ RANCH EDITION</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE - MULE PRO-FXR</fullName>
+        <default>false</default>
+        <label>MULE - MULE PRO-FXR</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE - MULE 4010 Trans4x4 Camo</fullName>
+        <default>false</default>
+        <label>MULE - MULE 4010 Trans4x4 Camo</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE 4000 TRANS™</fullName>
+        <default>false</default>
+        <label>MULE 4000 TRANS™</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE - MULE SX 4x4 XC</fullName>
+        <default>false</default>
+        <label>MULE - MULE SX 4x4 XC</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE™ 4010 4x4</fullName>
+        <default>false</default>
+        <label>MULE™ 4010 4x4</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE™ 4010 4x4® FE</fullName>
+        <default>false</default>
+        <label>MULE™ 4010 4x4® FE</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE™ 4010 TRANS4x4®</fullName>
+        <default>false</default>
+        <label>MULE™ 4010 TRANS4x4®</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE™ 4010 TRANS4x4® FE</fullName>
+        <default>false</default>
+        <label>MULE™ 4010 TRANS4x4® FE</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX 4 KRX® 1000 SPECIAL EDITION</fullName>
+        <default>false</default>
+        <label>TERYX 4 KRX® 1000 SPECIAL EDITION</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE Pro-MX EPS SE</fullName>
+        <default>false</default>
+        <label>MULE Pro-MX EPS SE</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE Pro FX-EPS LE</fullName>
+        <default>false</default>
+        <label>MULE Pro FX-EPS LE</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX™ 4x4 SE FI</fullName>
+        <default>false</default>
+        <label>MULE SX™ 4x4 SE FI</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX™ 4x4 XC FI</fullName>
+        <default>false</default>
+        <label>MULE SX™ 4x4 XC FI</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX KRX® 1000 SPECIAL EDITION</fullName>
+        <default>false</default>
+        <label>TERYX KRX® 1000 SPECIAL EDITION</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX KRX® 1000 TRAIL EDITION</fullName>
+        <default>false</default>
+        <label>TERYX KRX® 1000 TRAIL EDITION</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX KRX® 1000 Es</fullName>
+        <default>false</default>
+        <label>TERYX KRX® 1000 Es</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX4™ S LE</fullName>
+        <default>false</default>
+        <label>TERYX4™ S LE</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO-MX EPS</fullName>
+        <default>false</default>
+        <label>MULE PRO-MX EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO-MX EPS LE</fullName>
+        <default>false</default>
+        <label>MULE PRO-MX EPS LE</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE™ 4000</fullName>
+        <default>false</default>
+        <label>MULE™ 4000</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX™ 4x4 FI</fullName>
+        <default>false</default>
+        <label>MULE SX™ 4x4 FI</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX 4x4 XC CAMO</fullName>
+        <default>false</default>
+        <label>MULE SX 4x4 XC CAMO</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX 4x4 XC CAMO FI</fullName>
+        <default>false</default>
+        <label>MULE SX 4x4 XC CAMO FI</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX™ 4x4 XC LE FI</fullName>
+        <default>false</default>
+        <label>MULE SX™ 4x4 XC LE FI</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX 4x4 XC SE</fullName>
+        <default>false</default>
+        <label>MULE SX 4x4 XC SE</label>
+    </customValue>
+    <customValue>
+        <fullName>Mule Pro MX SE</fullName>
+        <default>false</default>
+        <label>Mule Pro MX SE</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX 4x4 FI</fullName>
+        <default>false</default>
+        <label>MULE SX 4x4 FI</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX™</fullName>
+        <default>false</default>
+        <label>MULE SX™</label>
+    </customValue>
+    <customValue>
+        <fullName>SX - 4 x 4 XC SE</fullName>
+        <default>false</default>
+        <label>SX - 4 x 4 XC SE</label>
+    </customValue>
+    <customValue>
+        <fullName>PRO FXT - Standard</fullName>
+        <default>false</default>
+        <label>PRO FXT - Standard</label>
+    </customValue>
+    <customValue>
+        <fullName>PRO FXT - EPS</fullName>
+        <default>false</default>
+        <label>PRO FXT - EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>PRO FXT - EPS LE</fullName>
+        <default>false</default>
+        <label>PRO FXT - EPS LE</label>
+    </customValue>
+    <customValue>
+        <fullName>PRO FX - Standard</fullName>
+        <default>false</default>
+        <label>PRO FX - Standard</label>
+    </customValue>
+    <customValue>
+        <fullName>PRO FX - EPS</fullName>
+        <default>false</default>
+        <label>PRO FX - EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>PRO FX - EPS LE</fullName>
+        <default>false</default>
+        <label>PRO FX - EPS LE</label>
+    </customValue>
+    <customValue>
+        <fullName>Teryx - Standard</fullName>
+        <default>false</default>
+        <label>Teryx - Standard</label>
+    </customValue>
+    <customValue>
+        <fullName>Teryx - LE EPS</fullName>
+        <default>false</default>
+        <label>Teryx - LE EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>Teryx 4 - Standard</fullName>
+        <default>false</default>
+        <label>Teryx 4 - Standard</label>
+    </customValue>
+    <customValue>
+        <fullName>Teryx 4 - LE EPS</fullName>
+        <default>false</default>
+        <label>Teryx 4 - LE EPS</label>
+    </customValue>
+    <customValue>
+        <fullName>Teryx KRX</fullName>
+        <default>false</default>
+        <label>Teryx KRX</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX KRX®4 1000 eS SPECIAL EDITION</fullName>
+        <default>false</default>
+        <label>TERYX KRX®4 1000 eS SPECIAL EDITION</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX4™ S SE</fullName>
+        <default>false</default>
+        <label>TERYX4™ S SE</label>
+    </customValue>
+    <customValue>
+        <fullName>Brute Force - 300</fullName>
+        <default>false</default>
+        <label>Brute Force - 300</label>
+    </customValue>
+    <customValue>
+        <fullName>Brute Force - 750 4 x 4</fullName>
+        <default>false</default>
+        <label>Brute Force - 750 4 x 4</label>
+    </customValue>
+    <customValue>
+        <fullName>Cruiser</fullName>
+        <default>false</default>
+        <label>Cruiser</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 1</fullName>
+        <default>false</default>
+        <label>Serie 1</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2</fullName>
+        <default>false</default>
+        <label>Serie 2</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 3</fullName>
+        <default>false</default>
+        <label>Serie 3</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 4</fullName>
+        <default>false</default>
+        <label>Serie 4</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 5</fullName>
+        <default>false</default>
+        <label>Serie 5</label>
+    </customValue>
+    <customValue>
+        <fullName>Sport</fullName>
+        <default>false</default>
+        <label>Sport</label>
+    </customValue>
+    <customValue>
+        <fullName>Z</fullName>
+        <default>false</default>
+        <label>Z</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 7</fullName>
+        <default>false</default>
+        <label>Serie 7</label>
+    </customValue>
+    <customValue>
+        <fullName>S2</fullName>
+        <default>false</default>
+        <label>S2</label>
+    </customValue>
+    <customValue>
+        <fullName>iX1</fullName>
+        <default>false</default>
+        <label>iX1</label>
+    </customValue>
+    <customValue>
+        <fullName>M4</fullName>
+        <default>false</default>
+        <label>M4</label>
+    </customValue>
+    <customValue>
+        <fullName>X3M</fullName>
+        <default>false</default>
+        <label>X3M</label>
+    </customValue>
+    <customValue>
+        <fullName>X4M</fullName>
+        <default>false</default>
+        <label>X4M</label>
+    </customValue>
+    <customValue>
+        <fullName>XM</fullName>
+        <default>false</default>
+        <label>XM</label>
+    </customValue>
+    <customValue>
+        <fullName>i5</fullName>
+        <default>false</default>
+        <label>i5</label>
+    </customValue>
+    <customValue>
+        <fullName>iX2</fullName>
+        <default>false</default>
+        <label>iX2</label>
+    </customValue>
+    <customValue>
+        <fullName>Adventure MT</fullName>
+        <default>false</default>
+        <label>Adventure MT</label>
+    </customValue>
+    <customValue>
+        <fullName>Heritage</fullName>
+        <default>false</default>
+        <label>Heritage</label>
+    </customValue>
+    <customValue>
+        <fullName>Roadster</fullName>
+        <default>false</default>
+        <label>Roadster</label>
+    </customValue>
+    <customValue>
+        <fullName>M</fullName>
+        <default>false</default>
+        <label>M</label>
+    </customValue>
+    <customValue>
+        <fullName>ADVENTURE</fullName>
+        <default>false</default>
+        <label>ADVENTURE</label>
+    </customValue>
+    <customValue>
+        <fullName>TOUR</fullName>
+        <default>false</default>
+        <label>TOUR</label>
+    </customValue>
+    <customValue>
+        <fullName>URBAN MOBILITY</fullName>
+        <default>false</default>
+        <label>URBAN MOBILITY</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX</fullName>
+        <default>false</default>
+        <label>KLX</label>
+    </customValue>
+    <customValue>
+        <fullName>KX</fullName>
+        <default>false</default>
+        <label>KX</label>
+    </customValue>
+    <customValue>
+        <fullName>Mule</fullName>
+        <default>false</default>
+        <label>Mule</label>
+    </customValue>
+    <customValue>
+        <fullName>Naked</fullName>
+        <default>false</default>
+        <label>Naked</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja</fullName>
+        <default>false</default>
+        <label>Ninja</label>
+    </customValue>
+    <customValue>
+        <fullName>Teryx</fullName>
+        <default>false</default>
+        <label>Teryx</label>
+    </customValue>
+    <customValue>
+        <fullName>Street</fullName>
+        <default>false</default>
+        <label>Street</label>
+    </customValue>
+    <customValue>
+        <fullName>Versys</fullName>
+        <default>false</default>
+        <label>Versys</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan</fullName>
+        <default>false</default>
+        <label>Vulcan</label>
+    </customValue>
+    <customValue>
+        <fullName>KLR</fullName>
+        <default>false</default>
+        <label>KLR</label>
+    </customValue>
+    <customValue>
+        <fullName>Brute Force</fullName>
+        <default>false</default>
+        <label>Brute Force</label>
+    </customValue>
+    <customValue>
+        <fullName>ATV</fullName>
+        <default>false</default>
+        <label>ATV</label>
+    </customValue>
+    <customValue>
+        <fullName>CABRIO</fullName>
+        <default>false</default>
+        <label>CABRIO</label>
+    </customValue>
+    <customValue>
+        <fullName>3 PUERTAS</fullName>
+        <default>false</default>
+        <label>3 PUERTAS</label>
+    </customValue>
+    <customValue>
+        <fullName>5 PUERTAS</fullName>
+        <default>false</default>
+        <label>5 PUERTAS</label>
+    </customValue>
+    <customValue>
+        <fullName>ELÉCTRICO</fullName>
+        <default>false</default>
+        <label>ELÉCTRICO</label>
+    </customValue>
+    <customValue>
+        <fullName>JCW</fullName>
+        <default>false</default>
+        <label>JCW</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN BEV</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN BEV</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN JCW</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN JCW</label>
+    </customValue>
+    <customValue>
+        <fullName>ACEMAN</fullName>
+        <default>false</default>
+        <label>ACEMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>General</fullName>
+        <default>false</default>
+        <label>General</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger</fullName>
+        <default>false</default>
+        <label>Ranger</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR</fullName>
+        <default>false</default>
+        <label>RZR</label>
+    </customValue>
+    <customValue>
+        <fullName>Ace</fullName>
+        <default>false</default>
+        <label>Ace</label>
+    </customValue>
+    <customValue>
+        <fullName>ATV - KW</fullName>
+        <default>false</default>
+        <label>ATV - KW</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper 3 puertas</fullName>
+        <default>false</default>
+        <label>Cooper 3 puertas</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper 5 puertas</fullName>
+        <default>false</default>
+        <label>Cooper 5 puertas</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper S 3 puertas</fullName>
+        <default>false</default>
+        <label>Cooper S 3 puertas</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI ejemplo</fullName>
+        <default>false</default>
+        <label>MINI ejemplo</label>
+    </customValue>
+    <customValue>
+        <fullName>MI24 - Clubman John Cooper Works</fullName>
+        <default>false</default>
+        <label>MI24 - Clubman John Cooper Works</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger Diesel</fullName>
+        <default>false</default>
+        <label>Ranger Diesel</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger EV</fullName>
+        <default>false</default>
+        <label>Ranger EV</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger Full Size</fullName>
+        <default>false</default>
+        <label>Ranger Full Size</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger HD</fullName>
+        <default>false</default>
+        <label>Ranger HD</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger Mide Size</fullName>
+        <default>false</default>
+        <label>Ranger Mide Size</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 6</fullName>
+        <default>false</default>
+        <label>Serie 6</label>
+    </customValue>
+    <customValue>
+        <fullName>Naked KT</fullName>
+        <default>false</default>
+        <label>Naked KT</label>
+    </customValue>
+    <customValue>
+        <fullName>48 Special</fullName>
+        <default>false</default>
+        <label>48 Special</label>
+    </customValue>
+    <customValue>
+        <fullName>CVO 115th Anniversary Limited</fullName>
+        <default>false</default>
+        <label>CVO 115th Anniversary Limited</label>
+    </customValue>
+    <customValue>
+        <fullName>CVO Limited</fullName>
+        <default>false</default>
+        <label>CVO Limited</label>
+    </customValue>
+    <customValue>
+        <fullName>CVO Road Glide</fullName>
+        <default>false</default>
+        <label>CVO Road Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>CVO Street Glide</fullName>
+        <default>false</default>
+        <label>CVO Street Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Doble Proposito</fullName>
+        <default>false</default>
+        <label>Doble Proposito</label>
+    </customValue>
+    <customValue>
+        <fullName>Enduro</fullName>
+        <default>false</default>
+        <label>Enduro</label>
+    </customValue>
+    <customValue>
+        <fullName>FXDR™ 114</fullName>
+        <default>false</default>
+        <label>FXDR™ 114</label>
+    </customValue>
+    <customValue>
+        <fullName>i-8</fullName>
+        <default>false</default>
+        <label>i-8</label>
+    </customValue>
+    <customValue>
+        <fullName>Iron 1200</fullName>
+        <default>false</default>
+        <label>Iron 1200</label>
+    </customValue>
+    <customValue>
+        <fullName>Jet Ski</fullName>
+        <default>false</default>
+        <label>Jet Ski</label>
+    </customValue>
+    <customValue>
+        <fullName>MX - KT</fullName>
+        <default>false</default>
+        <label>MX - KT</label>
+    </customValue>
+    <customValue>
+        <fullName>Off-Road</fullName>
+        <default>false</default>
+        <label>Off-Road</label>
+    </customValue>
+    <customValue>
+        <fullName>Scrambler</fullName>
+        <default>false</default>
+        <label>Scrambler</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail 115th Anniversary Breakout 114</fullName>
+        <default>false</default>
+        <label>Softail 115th Anniversary Breakout 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail 115th Anniversary Fat Boy 114</fullName>
+        <default>false</default>
+        <label>Softail 115th Anniversary Fat Boy 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail 115th AnniversaryHeritage Classic 114</fullName>
+        <default>false</default>
+        <label>Softail 115th AnniversaryHeritage Classic 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Breakout</fullName>
+        <default>false</default>
+        <label>Softail Breakout</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Breakout 114</fullName>
+        <default>false</default>
+        <label>Softail Breakout 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Deluxe</fullName>
+        <default>false</default>
+        <label>Softail Deluxe</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Fat Bob 114</fullName>
+        <default>false</default>
+        <label>Softail Fat Bob 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Fat Bob FXFB</fullName>
+        <default>false</default>
+        <label>Softail Fat Bob FXFB</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Fat Boy</fullName>
+        <default>false</default>
+        <label>Softail Fat Boy</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Fat Boy 114</fullName>
+        <default>false</default>
+        <label>Softail Fat Boy 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Heritage Classic</fullName>
+        <default>false</default>
+        <label>Softail Heritage Classic</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Heritage Classic 114</fullName>
+        <default>false</default>
+        <label>Softail Heritage Classic 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Low Rider</fullName>
+        <default>false</default>
+        <label>Softail Low Rider</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Soft trail Slim</fullName>
+        <default>false</default>
+        <label>Softail Soft trail Slim</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Street Bob</fullName>
+        <default>false</default>
+        <label>Softail Street Bob</label>
+    </customValue>
+    <customValue>
+        <fullName>Sport Glide™</fullName>
+        <default>false</default>
+        <label>Sport Glide™</label>
+    </customValue>
+    <customValue>
+        <fullName>Sport MT</fullName>
+        <default>false</default>
+        <label>Sport MT</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportsman</fullName>
+        <default>false</default>
+        <label>Sportsman</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster 115th Anniversary 48</fullName>
+        <default>false</default>
+        <label>Sportster 115th Anniversary 48</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster 48</fullName>
+        <default>false</default>
+        <label>Sportster 48</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster Iron 883</fullName>
+        <default>false</default>
+        <label>Sportster Iron 883</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster Roadster</fullName>
+        <default>false</default>
+        <label>Sportster Roadster</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster Super Low</fullName>
+        <default>false</default>
+        <label>Sportster Super Low</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster Super Low 1200T</fullName>
+        <default>false</default>
+        <label>Sportster Super Low 1200T</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster XL 1200 Custom</fullName>
+        <default>false</default>
+        <label>Sportster XL 1200 Custom</label>
+    </customValue>
+    <customValue>
+        <fullName>Sport Tourer</fullName>
+        <default>false</default>
+        <label>Sport Tourer</label>
+    </customValue>
+    <customValue>
+        <fullName>Street 750</fullName>
+        <default>false</default>
+        <label>Street 750</label>
+    </customValue>
+    <customValue>
+        <fullName>Street Rod</fullName>
+        <default>false</default>
+        <label>Street Rod</label>
+    </customValue>
+    <customValue>
+        <fullName>Super Moto</fullName>
+        <default>false</default>
+        <label>Super Moto</label>
+    </customValue>
+    <customValue>
+        <fullName>Super Sport</fullName>
+        <default>false</default>
+        <label>Super Sport</label>
+    </customValue>
+    <customValue>
+        <fullName>Super Sport KT</fullName>
+        <default>false</default>
+        <label>Super Sport KT</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring</fullName>
+        <default>false</default>
+        <label>Touring</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring 115TH Anniversary Street Glide</fullName>
+        <default>false</default>
+        <label>Touring 115TH Anniversary Street Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring 115TH Anniversary Street Glide Special</fullName>
+        <default>false</default>
+        <label>Touring 115TH Anniversary Street Glide Special</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring 115TH Anniversary Ultra Limited</fullName>
+        <default>false</default>
+        <label>Touring 115TH Anniversary Ultra Limited</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring MT</fullName>
+        <default>false</default>
+        <label>Touring MT</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Police Electra Glide</fullName>
+        <default>false</default>
+        <label>Touring Police Electra Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Police Road King</fullName>
+        <default>false</default>
+        <label>Touring Police Road King</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road Glide</fullName>
+        <default>false</default>
+        <label>Touring Road Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road Glide Special</fullName>
+        <default>false</default>
+        <label>Touring Road Glide Special</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road Glide Ultra</fullName>
+        <default>false</default>
+        <label>Touring Road Glide Ultra</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road King Classic</fullName>
+        <default>false</default>
+        <label>Touring Road King Classic</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road King Special</fullName>
+        <default>false</default>
+        <label>Touring Road King Special</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Street Glide</fullName>
+        <default>false</default>
+        <label>Touring Street Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Street Glide Special</fullName>
+        <default>false</default>
+        <label>Touring Street Glide Special</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Ultra Limited</fullName>
+        <default>false</default>
+        <label>Touring Ultra Limited</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Ultra Limited Low</fullName>
+        <default>false</default>
+        <label>Touring Ultra Limited Low</label>
+    </customValue>
+    <customValue>
+        <fullName>Travel</fullName>
+        <default>false</default>
+        <label>Travel</label>
+    </customValue>
+    <customValue>
+        <fullName>Trike 115th Anniversary Tri Glide Ultra</fullName>
+        <default>false</default>
+        <label>Trike 115th Anniversary Tri Glide Ultra</label>
+    </customValue>
+    <customValue>
+        <fullName>Trike freewheeler</fullName>
+        <default>false</default>
+        <label>Trike freewheeler</label>
+    </customValue>
+    <customValue>
+        <fullName>Trike Tri Glide Ultra</fullName>
+        <default>false</default>
+        <label>Trike Tri Glide Ultra</label>
+    </customValue>
+    <customValue>
+        <fullName>Urban</fullName>
+        <default>false</default>
+        <label>Urban</label>
+    </customValue>
+    <customValue>
+        <fullName>W175</fullName>
+        <default>false</default>
+        <label>W175</label>
+    </customValue>
+    <customValue>
+        <fullName>Youth</fullName>
+        <default>false</default>
+        <label>Youth</label>
+    </customValue>
+    <customValue>
+        <fullName>Z125</fullName>
+        <default>false</default>
+        <label>Z125</label>
+    </customValue>
+    <customValue>
+        <fullName>MT50 - Low Rider S</fullName>
+        <default>false</default>
+        <label>MT50 - Low Rider S</label>
+    </customValue>
+    <customValue>
+        <fullName>BM111- X3 M40I Msport Edition</fullName>
+        <default>false</default>
+        <label>BM111- X3 M40I Msport Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>BM112- X4 M40I Msport Edition</fullName>
+        <default>false</default>
+        <label>BM112- X4 M40I Msport Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>BM197-M-M3 Competition</fullName>
+        <default>false</default>
+        <label>BM197-M-M3 Competition</label>
+    </customValue>
+    <customValue>
+        <fullName>BM161 i4 eDrive 40- M Package</fullName>
+        <default>false</default>
+        <label>BM161 i4 eDrive 40- M Package</label>
+    </customValue>
+    <customValue>
+        <fullName>Ridge</fullName>
+        <default>false</default>
+        <label>Ridge</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-F900-GS</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-F900-GS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-F900GS-AD</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-F900GS-AD</label>
+    </customValue>
+    <customValue>
+        <fullName>Set 15</fullName>
+        <default>false</default>
+        <label>Set 15</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-20-VR-XLINE</fullName>
+        <default>false</default>
+        <label>BMW-X3-20-VR-XLINE</label>
+    </customValue>
+    <customValue>
+        <fullName>2000</fullName>
+        <default>false</default>
+        <label>2000</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-20-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X3-20-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-KLX-150</fullName>
+        <default>false</default>
+        <label>MN-KAWA-KLX-150</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-KAWA-BRUTE FORCE-450</fullName>
+        <default>false</default>
+        <label>MN-KAWA-BRUTE FORCE-450</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X1-18D-VR-EXECUTIVE</fullName>
+        <default>false</default>
+        <label>BMW-X1-18D-VR-EXECUTIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-F800-GS</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-F800-GS</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-M50-VR-MPA</fullName>
+        <default>false</default>
+        <label>BMW-X3-M50-VR-MPA</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-R1300GS</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-R1300GS</label>
+    </customValue>
+    <customValue>
+        <fullName>NEW-E-VR-COUNTRYMAN</fullName>
+        <default>false</default>
+        <label>NEW-E-VR-COUNTRYMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-118-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-118-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-F900-GS-TOURING</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-F900-GS-TOURING</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX60-VR-Paq M</fullName>
+        <default>false</default>
+        <label>BMW-IX60-VR-Paq M</label>
+    </customValue>
+    <customValue>
+        <fullName>NEW-SE-VR-ACEMAN</fullName>
+        <default>false</default>
+        <label>NEW-SE-VR-ACEMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>YAMAHAMT</fullName>
+        <default>false</default>
+        <label>YAMAHAMT</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-20d-VR-PAQ-M</fullName>
+        <default>false</default>
+        <label>BMW-X3-20d-VR-PAQ-M</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-X3-20-VR-XLINE-SDRIVE</fullName>
+        <default>false</default>
+        <label>BMW-X3-20-VR-XLINE-SDRIVE</label>
+    </customValue>
+    <customValue>
+        <fullName>NEW-E-VR-ACEMAN</fullName>
+        <default>false</default>
+        <label>NEW-E-VR-ACEMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-R12-NINET</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-R12-NINET</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-R1300GS-ADV-719-ASA</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-R1300GS-ADV-719-ASA</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-ADVENTURE-R1300GS-ADV-719</fullName>
+        <default>false</default>
+        <label>MN-BMW-ADVENTURE-R1300GS-ADV-719</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW-IX45-VR-Paq M</fullName>
+        <default>false</default>
+        <label>BMW-IX45-VR-Paq M</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-VR-JCW-ALL4</fullName>
+        <default>false</default>
+        <label>COOPER-VR-JCW-ALL4</label>
+    </customValue>
+    <customValue>
+        <fullName>VEPSPAGTS</fullName>
+        <default>false</default>
+        <label>VEPSPAGTS</label>
+    </customValue>
+    <customValue>
+        <fullName>COOPER-S-VR-COUNT-ALL.</fullName>
+        <default>false</default>
+        <label>COOPER-S-VR-COUNT-ALL.</label>
+    </customValue>
+    <description>Lista de Modelos para nuevo picklist</description>
+    <masterLabel>Modelo</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

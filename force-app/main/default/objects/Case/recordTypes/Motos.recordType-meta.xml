@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Motos</fullName>
+    <active>true</active>
+    <businessProcess>Case Auots Motos</businessProcess>
+    <compactLayoutAssignment>COMPACT_LAYOUT</compactLayoutAssignment>
+    <label>Motos</label>
+    <picklistValues>
+        <picklist>Origin</picklist>
+        <values>
+            <fullName>Correo electrónico</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Formulario Web</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Llamada telefónica</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Presencial</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sin Citas</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>VOC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Whatsapp</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Priority</picklist>
+        <values>
+            <fullName>Alta</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Baja</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Media</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reason</picklist>
+        <values>
+            <fullName>Complex functionality</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Existing problem</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Instructions not clear</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New problem</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User didn%27t attend training</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>Carrocería y Pintura</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Garantías</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mecánica General</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mecánica Rápida</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Especifica</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nuevos</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Respuestos</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Taller</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Usados</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

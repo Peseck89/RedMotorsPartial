@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>BMW</fullName>
+        <default>false</default>
+        <label>BMW</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI</fullName>
+        <default>false</default>
+        <label>MINI</label>
+    </customValue>
+    <customValue>
+        <fullName>KAWASAKI</fullName>
+        <default>false</default>
+        <label>KAWASAKI</label>
+    </customValue>
+    <customValue>
+        <fullName>POLARIS</fullName>
+        <default>false</default>
+        <label>POLARIS</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW MOTO</fullName>
+        <default>false</default>
+        <label>BMW MOTO</label>
+    </customValue>
+    <masterLabel>Marca</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

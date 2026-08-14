@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Familia__c</fullName>
+    <description>Familia que pertenece el vehículo, depende del campo Marca</description>
+    <externalId>false</externalId>
+    <label>Familia</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Grupo__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetName>Familia</valueSetName>
+        <valueSettings>
+            <controllingFieldValue>VERSYS</controllingFieldValue>
+            <valueName>Versys</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>VULCAN</controllingFieldValue>
+            <valueName>Vulcan</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>GENERAL</controllingFieldValue>
+            <valueName>General</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>RANGER</controllingFieldValue>
+            <valueName>Ranger</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>RZR</controllingFieldValue>
+            <valueName>RZR</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>SPORTSMAN</controllingFieldValue>
+            <valueName>Sportsman</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cruiser</controllingFieldValue>
+            <valueName>Cruiser</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>CABRIO</controllingFieldValue>
+            <controllingFieldValue>Hatch</controllingFieldValue>
+            <controllingFieldValue>SUV</controllingFieldValue>
+            <controllingFieldValue>Crossover</controllingFieldValue>
+            <valueName>JCW</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>CABRIO</controllingFieldValue>
+            <valueName>CABRIO JCW</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Grupo Wizard</controllingFieldValue>
+            <valueName>Familia Wizard</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MINI Countryman</controllingFieldValue>
+            <controllingFieldValue>SUV</controllingFieldValue>
+            <valueName>COUNTRYMAN</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Categoria prueba en prod</controllingFieldValue>
+            <valueName>Familia en Prod</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>STANDARD</controllingFieldValue>
+            <valueName>STANDARD</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <valueName>Serie 1</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <controllingFieldValue>Serie 2</controllingFieldValue>
+            <valueName>Serie 2</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <controllingFieldValue>Serie 3</controllingFieldValue>
+            <valueName>Serie 3</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <controllingFieldValue>Serie 4</controllingFieldValue>
+            <valueName>Serie 4</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <valueName>Serie 5</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <valueName>Serie 6</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <valueName>Serie 7</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Adventure</controllingFieldValue>
+            <valueName>ADVENTURE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PRUEBAS X6</controllingFieldValue>
+            <valueName>SSSB</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Heritage</controllingFieldValue>
+            <valueName>Heritage</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>M</controllingFieldValue>
+            <controllingFieldValue>BMW M</controllingFieldValue>
+            <valueName>M</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>M</controllingFieldValue>
+            <valueName>M3</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>M</controllingFieldValue>
+            <controllingFieldValue>BMW M</controllingFieldValue>
+            <valueName>M4</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>M</controllingFieldValue>
+            <valueName>M2</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>M</controllingFieldValue>
+            <valueName>M5</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Roadster</controllingFieldValue>
+            <valueName>Roadster</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Roadster</controllingFieldValue>
+            <controllingFieldValue>Z</controllingFieldValue>
+            <valueName>Z</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sport</controllingFieldValue>
+            <valueName>Sport</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW i</controllingFieldValue>
+            <valueName>i4</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW i</controllingFieldValue>
+            <valueName>i5</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW i</controllingFieldValue>
+            <valueName>iX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW i</controllingFieldValue>
+            <valueName>iX1</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW i</controllingFieldValue>
+            <valueName>iX2</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW i</controllingFieldValue>
+            <valueName>iX3</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X1</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X2</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X3</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X3M</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X4</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X4M</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X5</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X6</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X7</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>XM</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X6M</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X5M</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>X</controllingFieldValue>
+            <valueName>X7M</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Z</controllingFieldValue>
+            <valueName>Z4</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>QA X</controllingFieldValue>
+            <valueName>QA FAMILY</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>QA X</controllingFieldValue>
+            <valueName>QA SSS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>FAMILIA M</controllingFieldValue>
+            <valueName>M TEST</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Tour</controllingFieldValue>
+            <valueName>TOUR</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Hatch</controllingFieldValue>
+            <valueName>3 PUERTAS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Hatch</controllingFieldValue>
+            <valueName>ELÉCTRICO</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Hatch</controllingFieldValue>
+            <valueName>ELÉCTRICO JCW</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Urban Mobility</controllingFieldValue>
+            <valueName>URBAN MOBILITY</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sedán</controllingFieldValue>
+            <valueName>5 PUERTAS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BRUTE FORCE</controllingFieldValue>
+            <valueName>Brute Force</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>SUV</controllingFieldValue>
+            <valueName>COUNTRYMAN BEV</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>SUV</controllingFieldValue>
+            <valueName>COUNTRYMAN JCW</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>ELIMINATOR</controllingFieldValue>
+            <valueName>Eliminator</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Crossover</controllingFieldValue>
+            <valueName>ACEMAN</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Crossover</controllingFieldValue>
+            <valueName>ACEMAN JCW</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>KLE</controllingFieldValue>
+            <valueName>KLE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>KLX</controllingFieldValue>
+            <valueName>KLX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>KX</controllingFieldValue>
+            <valueName>KX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MULE</controllingFieldValue>
+            <valueName>Mule</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>NINJA</controllingFieldValue>
+            <valueName>Ninja</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>TERYX</controllingFieldValue>
+            <valueName>Teryx</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>BMW</fullName>
+        <default>false</default>
+        <label>BMW</label>
+    </customValue>
+    <customValue>
+        <fullName>Kawasaki</fullName>
+        <default>false</default>
+        <label>Kawasaki</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI</fullName>
+        <default>false</default>
+        <label>MINI</label>
+    </customValue>
+    <customValue>
+        <fullName>Motorrad</fullName>
+        <default>false</default>
+        <label>Motorrad</label>
+    </customValue>
+    <customValue>
+        <fullName>Polaris</fullName>
+        <default>false</default>
+        <label>Polaris</label>
+    </customValue>
+    <customValue>
+        <fullName>Todas</fullName>
+        <default>false</default>
+        <label>Todas</label>
+    </customValue>
+    <customValue>
+        <fullName>Macas 2 Ruedas</fullName>
+        <default>false</default>
+        <label>Macas 2 Ruedas</label>
+    </customValue>
+    <customValue>
+        <fullName>Marcas Vehículos</fullName>
+        <default>false</default>
+        <label>Marcas Vehículos</label>
+    </customValue>
+    <customValue>
+        <fullName>Harley-Davidson</fullName>
+        <default>false</default>
+        <label>Harley-Davidson</label>
+    </customValue>
+    <customValue>
+        <fullName>Dos Ruedas</fullName>
+        <default>false</default>
+        <label>Dos Ruedas</label>
+    </customValue>
+    <customValue>
+        <fullName>Cuatro Ruedas</fullName>
+        <default>false</default>
+        <label>Cuatro Ruedas</label>
+    </customValue>
+    <customValue>
+        <fullName>ISUZU</fullName>
+        <default>false</default>
+        <label>ISUZU</label>
+    </customValue>
+    <customValue>
+        <fullName>D-MAX</fullName>
+        <default>false</default>
+        <label>D-MAX</label>
+    </customValue>
+    <customValue>
+        <fullName>AUDI</fullName>
+        <default>false</default>
+        <label>AUDI</label>
+    </customValue>
+    <customValue>
+        <fullName>JEEP</fullName>
+        <default>false</default>
+        <label>JEEP</label>
+    </customValue>
+    <customValue>
+        <fullName>HUSQVARNA</fullName>
+        <default>false</default>
+        <label>HUSQVARNA</label>
+    </customValue>
+    <customValue>
+        <fullName>LANDROVER</fullName>
+        <default>false</default>
+        <label>LANDROVER</label>
+    </customValue>
+    <customValue>
+        <fullName>MERCEDEZB</fullName>
+        <default>false</default>
+        <label>MERCEDEZB</label>
+    </customValue>
+    <customValue>
+        <fullName>KTM</fullName>
+        <default>false</default>
+        <label>KTM</label>
+    </customValue>
+    <customValue>
+        <fullName>Indian</fullName>
+        <default>false</default>
+        <label>Indian</label>
+    </customValue>
+    <customValue>
+        <fullName>KAWA</fullName>
+        <default>false</default>
+        <label>KAWA</label>
+    </customValue>
+    <customValue>
+        <fullName>Toyota</fullName>
+        <default>false</default>
+        <label>Toyota</label>
+    </customValue>
+    <customValue>
+        <fullName>MarcaIndividualTest 1</fullName>
+        <default>false</default>
+        <label>MarcaIndividualTest 1</label>
+    </customValue>
+    <customValue>
+        <fullName>Marca Wizard</fullName>
+        <default>false</default>
+        <label>Marca Wizard</label>
+    </customValue>
+    <customValue>
+        <fullName>Marca en prod</fullName>
+        <default>false</default>
+        <label>Marca en prod</label>
+    </customValue>
+    <customValue>
+        <fullName>PRUEBA</fullName>
+        <default>false</default>
+        <label>PRUEBA</label>
+    </customValue>
+    <customValue>
+        <fullName>PRUEBA SOFÍA</fullName>
+        <default>false</default>
+        <label>PRUEBA SOFÍA</label>
+    </customValue>
+    <customValue>
+        <fullName>QA</fullName>
+        <default>false</default>
+        <label>QA</label>
+    </customValue>
+    <customValue>
+        <fullName>FUNCIONAMIENTO</fullName>
+        <default>false</default>
+        <label>FUNCIONAMIENTO</label>
+    </customValue>
+    <customValue>
+        <fullName>Tesla</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Tesla</label>
+    </customValue>
+    <customValue>
+        <fullName>Marca Test</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Marca Test</label>
+    </customValue>
+    <customValue>
+        <fullName>Geely</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Geely</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 7</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Serie 7</label>
+    </customValue>
+    <customValue>
+        <fullName>sin valor prefijo</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>sin valor prefijo</label>
+    </customValue>
+    <customValue>
+        <fullName>Prueba amh</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Prueba amh</label>
+    </customValue>
+    <customValue>
+        <fullName>Arnoldo 1</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Arnoldo 1</label>
+    </customValue>
+    <customValue>
+        <fullName>Prueba campo1</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Prueba campo1</label>
+    </customValue>
+    <masterLabel>Marca_de_Interes</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

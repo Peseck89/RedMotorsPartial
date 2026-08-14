@@ -1,0 +1,971 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>3 PUERTAS</fullName>
+        <default>false</default>
+        <label>3 PUERTAS</label>
+    </customValue>
+    <customValue>
+        <fullName>48 Special</fullName>
+        <default>false</default>
+        <label>48 Special</label>
+    </customValue>
+    <customValue>
+        <fullName>5 PUERTAS</fullName>
+        <default>false</default>
+        <label>5 PUERTAS</label>
+    </customValue>
+    <customValue>
+        <fullName>ACEMAN</fullName>
+        <default>false</default>
+        <label>ACEMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>ADVENTURE</fullName>
+        <default>false</default>
+        <label>ADVENTURE</label>
+    </customValue>
+    <customValue>
+        <fullName>Adventure MT</fullName>
+        <default>false</default>
+        <label>Adventure MT</label>
+    </customValue>
+    <customValue>
+        <fullName>ATV</fullName>
+        <default>false</default>
+        <label>ATV</label>
+    </customValue>
+    <customValue>
+        <fullName>ATV - KW</fullName>
+        <default>false</default>
+        <label>ATV - KW</label>
+    </customValue>
+    <customValue>
+        <fullName>Brute Force</fullName>
+        <default>false</default>
+        <label>Brute Force</label>
+    </customValue>
+    <customValue>
+        <fullName>CABRIO</fullName>
+        <default>false</default>
+        <label>CABRIO</label>
+    </customValue>
+    <customValue>
+        <fullName>CLUBMAN</fullName>
+        <default>false</default>
+        <label>CLUBMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN BEV</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN BEV</label>
+    </customValue>
+    <customValue>
+        <fullName>COUNTRYMAN JCW</fullName>
+        <default>false</default>
+        <label>COUNTRYMAN JCW</label>
+    </customValue>
+    <customValue>
+        <fullName>Cruiser</fullName>
+        <default>false</default>
+        <label>Cruiser</label>
+    </customValue>
+    <customValue>
+        <fullName>CVO 115th Anniversary Limited</fullName>
+        <default>false</default>
+        <label>CVO 115th Anniversary Limited</label>
+    </customValue>
+    <customValue>
+        <fullName>CVO Limited</fullName>
+        <default>false</default>
+        <label>CVO Limited</label>
+    </customValue>
+    <customValue>
+        <fullName>CVO Road Glide</fullName>
+        <default>false</default>
+        <label>CVO Road Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>CVO Street Glide</fullName>
+        <default>false</default>
+        <label>CVO Street Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Doble Proposito</fullName>
+        <default>false</default>
+        <label>Doble Proposito</label>
+    </customValue>
+    <customValue>
+        <fullName>ELÉCTRICO</fullName>
+        <default>false</default>
+        <label>ELÉCTRICO</label>
+    </customValue>
+    <customValue>
+        <fullName>Eliminator</fullName>
+        <default>false</default>
+        <label>Eliminator</label>
+    </customValue>
+    <customValue>
+        <fullName>Enduro</fullName>
+        <default>false</default>
+        <label>Enduro</label>
+    </customValue>
+    <customValue>
+        <fullName>Familia en Prod</fullName>
+        <default>false</default>
+        <label>Familia en Prod</label>
+    </customValue>
+    <customValue>
+        <fullName>Familia Wizard</fullName>
+        <default>false</default>
+        <label>Familia Wizard</label>
+    </customValue>
+    <customValue>
+        <fullName>FXDR™ 114</fullName>
+        <default>false</default>
+        <label>FXDR™ 114</label>
+    </customValue>
+    <customValue>
+        <fullName>General</fullName>
+        <default>false</default>
+        <label>General</label>
+    </customValue>
+    <customValue>
+        <fullName>Heritage</fullName>
+        <default>false</default>
+        <label>Heritage</label>
+    </customValue>
+    <customValue>
+        <fullName>I3</fullName>
+        <default>false</default>
+        <label>I3</label>
+    </customValue>
+    <customValue>
+        <fullName>i4</fullName>
+        <default>false</default>
+        <label>i4</label>
+    </customValue>
+    <customValue>
+        <fullName>i5</fullName>
+        <default>false</default>
+        <label>i5</label>
+    </customValue>
+    <customValue>
+        <fullName>I8</fullName>
+        <default>false</default>
+        <label>i-8</label>
+    </customValue>
+    <customValue>
+        <fullName>Iron 1200</fullName>
+        <default>false</default>
+        <label>Iron 1200</label>
+    </customValue>
+    <customValue>
+        <fullName>iX</fullName>
+        <default>false</default>
+        <label>iX</label>
+    </customValue>
+    <customValue>
+        <fullName>iX1</fullName>
+        <default>false</default>
+        <label>iX1</label>
+    </customValue>
+    <customValue>
+        <fullName>iX2</fullName>
+        <default>false</default>
+        <label>iX2</label>
+    </customValue>
+    <customValue>
+        <fullName>iX3</fullName>
+        <default>false</default>
+        <label>iX3</label>
+    </customValue>
+    <customValue>
+        <fullName>JCW</fullName>
+        <default>false</default>
+        <label>JCW</label>
+    </customValue>
+    <customValue>
+        <fullName>Jet Ski</fullName>
+        <default>false</default>
+        <label>Jet Ski</label>
+    </customValue>
+    <customValue>
+        <fullName>KLR</fullName>
+        <default>false</default>
+        <label>KLR</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX</fullName>
+        <default>false</default>
+        <label>KLX</label>
+    </customValue>
+    <customValue>
+        <fullName>KX</fullName>
+        <default>false</default>
+        <label>KX</label>
+    </customValue>
+    <customValue>
+        <fullName>M</fullName>
+        <default>false</default>
+        <label>M</label>
+    </customValue>
+    <customValue>
+        <fullName>M3</fullName>
+        <default>false</default>
+        <label>M3</label>
+    </customValue>
+    <customValue>
+        <fullName>M4</fullName>
+        <default>false</default>
+        <label>M4</label>
+    </customValue>
+    <customValue>
+        <fullName>Low Rider S</fullName>
+        <default>false</default>
+        <label>MT50 - Low Rider S</label>
+    </customValue>
+    <customValue>
+        <fullName>M TEST</fullName>
+        <default>false</default>
+        <label>M TEST</label>
+    </customValue>
+    <customValue>
+        <fullName>Mule</fullName>
+        <default>false</default>
+        <label>Mule</label>
+    </customValue>
+    <customValue>
+        <fullName>MX - KT</fullName>
+        <default>false</default>
+        <label>MX - KT</label>
+    </customValue>
+    <customValue>
+        <fullName>Naked</fullName>
+        <default>false</default>
+        <label>Naked</label>
+    </customValue>
+    <customValue>
+        <fullName>Naked KT</fullName>
+        <default>false</default>
+        <label>Naked KT</label>
+    </customValue>
+    <customValue>
+        <fullName>Ninja</fullName>
+        <default>false</default>
+        <label>Ninja</label>
+    </customValue>
+    <customValue>
+        <fullName>Off-Road</fullName>
+        <default>false</default>
+        <label>Off-Road</label>
+    </customValue>
+    <customValue>
+        <fullName>QA FAMILY</fullName>
+        <default>false</default>
+        <label>QA FAMILY</label>
+    </customValue>
+    <customValue>
+        <fullName>QA SSS</fullName>
+        <default>false</default>
+        <label>QA SSS</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger</fullName>
+        <default>false</default>
+        <label>Ranger</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger Crew</fullName>
+        <default>false</default>
+        <label>Ranger Crew</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger Diesel</fullName>
+        <default>false</default>
+        <label>Ranger Diesel</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger EV</fullName>
+        <default>false</default>
+        <label>Ranger EV</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger Full Size</fullName>
+        <default>false</default>
+        <label>Ranger Full Size</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger HD</fullName>
+        <default>false</default>
+        <label>Ranger HD</label>
+    </customValue>
+    <customValue>
+        <fullName>Ranger Mide Size</fullName>
+        <default>false</default>
+        <label>Ranger Mide Size</label>
+    </customValue>
+    <customValue>
+        <fullName>RAV4</fullName>
+        <default>false</default>
+        <label>RAV4</label>
+    </customValue>
+    <customValue>
+        <fullName>Ridge</fullName>
+        <default>false</default>
+        <label>Ridge</label>
+    </customValue>
+    <customValue>
+        <fullName>Roadster</fullName>
+        <default>false</default>
+        <label>Roadster</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR</fullName>
+        <default>false</default>
+        <label>RZR</label>
+    </customValue>
+    <customValue>
+        <fullName>S2</fullName>
+        <default>false</default>
+        <label>S2</label>
+    </customValue>
+    <customValue>
+        <fullName>Scrambler</fullName>
+        <default>false</default>
+        <label>Scrambler</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 1</fullName>
+        <default>false</default>
+        <label>Serie 1</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2</fullName>
+        <default>false</default>
+        <label>Serie 2</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 3</fullName>
+        <default>false</default>
+        <label>Serie 3</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 4</fullName>
+        <default>false</default>
+        <label>Serie 4</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 5</fullName>
+        <default>false</default>
+        <label>Serie 5</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 6</fullName>
+        <default>false</default>
+        <label>Serie 6</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 7</fullName>
+        <default>false</default>
+        <label>Serie 7</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail 115th Anniversary Breakout 114</fullName>
+        <default>false</default>
+        <label>Softail 115th Anniversary Breakout 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail 115th Anniversary Fat Boy 114</fullName>
+        <default>false</default>
+        <label>Softail 115th Anniversary Fat Boy 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail 115th AnniversaryHeritage Classic 114</fullName>
+        <default>false</default>
+        <label>Softail 115th AnniversaryHeritage Classic 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Breakout</fullName>
+        <default>false</default>
+        <label>Softail Breakout</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Breakout 114</fullName>
+        <default>false</default>
+        <label>Softail Breakout 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Deluxe</fullName>
+        <default>false</default>
+        <label>Softail Deluxe</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Fat Bob 114</fullName>
+        <default>false</default>
+        <label>Softail Fat Bob 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Fat Boy  FXFB</fullName>
+        <default>false</default>
+        <label>Softail Fat Bob  FXFB</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Fat Boy</fullName>
+        <default>false</default>
+        <label>Softail Fat Boy</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Fat Boy 114</fullName>
+        <default>false</default>
+        <label>Softail Fat Boy 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Heritage Classic</fullName>
+        <default>false</default>
+        <label>Softail Heritage Classic</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Heritage Classic 114</fullName>
+        <default>false</default>
+        <label>Softail Heritage Classic 114</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Low Rider</fullName>
+        <default>false</default>
+        <label>Softail Low Rider</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Soft trail Slim</fullName>
+        <default>false</default>
+        <label>Softail Soft trail Slim</label>
+    </customValue>
+    <customValue>
+        <fullName>Softail Street Bob</fullName>
+        <default>false</default>
+        <label>Softail Street Bob</label>
+    </customValue>
+    <customValue>
+        <fullName>Sport</fullName>
+        <default>false</default>
+        <label>Sport</label>
+    </customValue>
+    <customValue>
+        <fullName>Sport Glide™</fullName>
+        <default>false</default>
+        <label>Sport Glide™</label>
+    </customValue>
+    <customValue>
+        <fullName>Sport MT</fullName>
+        <default>false</default>
+        <label>Sport MT</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportsman</fullName>
+        <default>false</default>
+        <label>Sportsman</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster 115th Anniversary 48</fullName>
+        <default>false</default>
+        <label>Sportster 115th Anniversary 48</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster 48</fullName>
+        <default>false</default>
+        <label>Sportster 48</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster Iron 883</fullName>
+        <default>false</default>
+        <label>Sportster Iron 883</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster Roadster</fullName>
+        <default>false</default>
+        <label>Sportster Roadster</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster Super Low</fullName>
+        <default>false</default>
+        <label>Sportster Super Low</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster Super Low 1200T</fullName>
+        <default>false</default>
+        <label>Sportster Super Low 1200T</label>
+    </customValue>
+    <customValue>
+        <fullName>Sportster XL 1200 Custom</fullName>
+        <default>false</default>
+        <label>Sportster XL 1200 Custom</label>
+    </customValue>
+    <customValue>
+        <fullName>Sport Tourer</fullName>
+        <default>false</default>
+        <label>Sport Tourer</label>
+    </customValue>
+    <customValue>
+        <fullName>SSSB</fullName>
+        <default>false</default>
+        <label>SSSB</label>
+    </customValue>
+    <customValue>
+        <fullName>STANDARD</fullName>
+        <default>false</default>
+        <label>STANDARD</label>
+    </customValue>
+    <customValue>
+        <fullName>Street</fullName>
+        <default>false</default>
+        <label>Street</label>
+    </customValue>
+    <customValue>
+        <fullName>Street 750</fullName>
+        <default>false</default>
+        <label>Street 750</label>
+    </customValue>
+    <customValue>
+        <fullName>Street Rod</fullName>
+        <default>false</default>
+        <label>Street Rod</label>
+    </customValue>
+    <customValue>
+        <fullName>Super Moto</fullName>
+        <default>false</default>
+        <label>Super Moto</label>
+    </customValue>
+    <customValue>
+        <fullName>Super Sport</fullName>
+        <default>false</default>
+        <label>Super Sport</label>
+    </customValue>
+    <customValue>
+        <fullName>Super Sport KT</fullName>
+        <default>false</default>
+        <label>Super Sport KT</label>
+    </customValue>
+    <customValue>
+        <fullName>Teryx</fullName>
+        <default>false</default>
+        <label>Teryx</label>
+    </customValue>
+    <customValue>
+        <fullName>TOUR</fullName>
+        <default>false</default>
+        <label>TOUR</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring</fullName>
+        <default>false</default>
+        <label>Touring</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring 115TH Anniversary Street Glide</fullName>
+        <default>false</default>
+        <label>Touring 115TH Anniversary Street Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring 115TH Anniversary Street Glide Special</fullName>
+        <default>false</default>
+        <label>Touring 115TH Anniversary Street Glide Special</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring 115TH Anniversary Ultra Limited</fullName>
+        <default>false</default>
+        <label>Touring 115TH Anniversary Ultra Limited</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring MT</fullName>
+        <default>false</default>
+        <label>Touring MT</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring  Police Electra Glide</fullName>
+        <default>false</default>
+        <label>Touring  Police Electra Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Police Road King</fullName>
+        <default>false</default>
+        <label>Touring Police Road King</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road Glide</fullName>
+        <default>false</default>
+        <label>Touring Road Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road Glide Special</fullName>
+        <default>false</default>
+        <label>Touring Road Glide Special</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road Glide Ultra</fullName>
+        <default>false</default>
+        <label>Touring Road Glide Ultra</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road King Classic</fullName>
+        <default>false</default>
+        <label>Touring Road King Classic</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Road King Special</fullName>
+        <default>false</default>
+        <label>Touring Road King Special</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Street Glide</fullName>
+        <default>false</default>
+        <label>Touring Street Glide</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Street Glide Special</fullName>
+        <default>false</default>
+        <label>Touring Street Glide Special</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Ultra Limited</fullName>
+        <default>false</default>
+        <label>Touring Ultra Limited</label>
+    </customValue>
+    <customValue>
+        <fullName>Touring Ultra Limited Low</fullName>
+        <default>false</default>
+        <label>Touring Ultra Limited Low</label>
+    </customValue>
+    <customValue>
+        <fullName>Travel</fullName>
+        <default>false</default>
+        <label>Travel</label>
+    </customValue>
+    <customValue>
+        <fullName>Trike 115th Anniversary Tri Glide Ultra</fullName>
+        <default>false</default>
+        <label>Trike 115th Anniversary Tri Glide Ultra</label>
+    </customValue>
+    <customValue>
+        <fullName>Trike freewheeler</fullName>
+        <default>false</default>
+        <label>Trike freewheeler</label>
+    </customValue>
+    <customValue>
+        <fullName>Trike Tri Glide Ultra</fullName>
+        <default>false</default>
+        <label>Trike Tri Glide Ultra</label>
+    </customValue>
+    <customValue>
+        <fullName>Urban</fullName>
+        <default>false</default>
+        <label>Urban</label>
+    </customValue>
+    <customValue>
+        <fullName>URBAN MOBILITY</fullName>
+        <default>false</default>
+        <label>URBAN MOBILITY</label>
+    </customValue>
+    <customValue>
+        <fullName>Versys</fullName>
+        <default>false</default>
+        <label>Versys</label>
+    </customValue>
+    <customValue>
+        <fullName>Vulcan</fullName>
+        <default>false</default>
+        <label>Vulcan</label>
+    </customValue>
+    <customValue>
+        <fullName>W175</fullName>
+        <default>false</default>
+        <label>W175</label>
+    </customValue>
+    <customValue>
+        <fullName>W800</fullName>
+        <default>false</default>
+        <label>W800</label>
+    </customValue>
+    <customValue>
+        <fullName>X1</fullName>
+        <default>false</default>
+        <label>X1</label>
+    </customValue>
+    <customValue>
+        <fullName>X2</fullName>
+        <default>false</default>
+        <label>X2</label>
+    </customValue>
+    <customValue>
+        <fullName>X3</fullName>
+        <default>false</default>
+        <label>X3</label>
+    </customValue>
+    <customValue>
+        <fullName>X3M</fullName>
+        <default>false</default>
+        <label>X3M</label>
+    </customValue>
+    <customValue>
+        <fullName>X4</fullName>
+        <default>false</default>
+        <label>X4</label>
+    </customValue>
+    <customValue>
+        <fullName>X4M</fullName>
+        <default>false</default>
+        <label>X4M</label>
+    </customValue>
+    <customValue>
+        <fullName>X5</fullName>
+        <default>false</default>
+        <label>X5</label>
+    </customValue>
+    <customValue>
+        <fullName>X6</fullName>
+        <default>false</default>
+        <label>X6</label>
+    </customValue>
+    <customValue>
+        <fullName>X7</fullName>
+        <default>false</default>
+        <label>X7</label>
+    </customValue>
+    <customValue>
+        <fullName>XM</fullName>
+        <default>false</default>
+        <label>XM</label>
+    </customValue>
+    <customValue>
+        <fullName>Youth</fullName>
+        <default>false</default>
+        <label>Youth</label>
+    </customValue>
+    <customValue>
+        <fullName>Z</fullName>
+        <default>false</default>
+        <label>Z</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-R12-GS</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-R12-GS</label>
+    </customValue>
+    <customValue>
+        <fullName>MN-BMW-HERITAGE-R12-GS-719</fullName>
+        <default>false</default>
+        <label>MN-BMW-HERITAGE-R12-GS-719</label>
+    </customValue>
+    <customValue>
+        <fullName>X6M</fullName>
+        <default>false</default>
+        <label>X6M</label>
+    </customValue>
+    <customValue>
+        <fullName>X5M</fullName>
+        <default>false</default>
+        <label>X5M</label>
+    </customValue>
+    <customValue>
+        <fullName>X7M</fullName>
+        <default>false</default>
+        <label>X7M</label>
+    </customValue>
+    <customValue>
+        <fullName>M2</fullName>
+        <default>false</default>
+        <label>M2</label>
+    </customValue>
+    <customValue>
+        <fullName>M5</fullName>
+        <default>false</default>
+        <label>M5</label>
+    </customValue>
+    <customValue>
+        <fullName>KLE</fullName>
+        <default>false</default>
+        <label>KLE</label>
+    </customValue>
+    <customValue>
+        <fullName>ACEMAN JCW</fullName>
+        <default>false</default>
+        <label>ACEMAN JCW</label>
+    </customValue>
+    <customValue>
+        <fullName>Z4</fullName>
+        <default>false</default>
+        <label>Z4</label>
+    </customValue>
+    <customValue>
+        <fullName>CABRIO JCW</fullName>
+        <default>false</default>
+        <label>CABRIO JCW</label>
+    </customValue>
+    <customValue>
+        <fullName>ELÉCTRICO JCW</fullName>
+        <default>false</default>
+        <label>ELÉCTRICO JCW</label>
+    </customValue>
+    <customValue>
+        <fullName>Clubman Cooper</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Clubman Cooper</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper 5 puertas</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cooper 5 puertas</label>
+    </customValue>
+    <customValue>
+        <fullName>Countryman Cooper</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Countryman Cooper</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper 3 puertas</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cooper 3 puertas</label>
+    </customValue>
+    <customValue>
+        <fullName>Cooper S 3 puertas</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cooper S 3 puertas</label>
+    </customValue>
+    <customValue>
+        <fullName>Familia Test Diego</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Familia Test Diego</label>
+    </customValue>
+    <customValue>
+        <fullName>QA SOFÍA</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>QA SOFÍA</label>
+    </customValue>
+    <customValue>
+        <fullName>SOF PRUEBA</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>SOF PRUEBA</label>
+    </customValue>
+    <customValue>
+        <fullName>ixtest</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>ixtest</label>
+    </customValue>
+    <customValue>
+        <fullName>xe14</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>xe14</label>
+    </customValue>
+    <customValue>
+        <fullName>xe12</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>xe12</label>
+    </customValue>
+    <customValue>
+        <fullName>MI24 - Clubman John Cooper Works</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>MI24 - Clubman John Cooper Works</label>
+    </customValue>
+    <customValue>
+        <fullName>BM161 i4 eDrive 40- M Package</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>BM161 i4 eDrive 40- M Package</label>
+    </customValue>
+    <customValue>
+        <fullName>BM197-M-M3 Competition</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>BM197-M-M3 Competition</label>
+    </customValue>
+    <customValue>
+        <fullName>Ace</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Ace</label>
+    </customValue>
+    <customValue>
+        <fullName>BM112- X4 M40I Msport Edition</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>BM112- X4 M40I Msport Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>BM111- X3 M40I Msport Edition</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>BM111- X3 M40I Msport Edition</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>BMW</label>
+    </customValue>
+    <customValue>
+        <fullName>Murillo 2</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Murillo 2</label>
+    </customValue>
+    <customValue>
+        <fullName>Prueba Campo 2</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Prueba Campo 2</label>
+    </customValue>
+    <customValue>
+        <fullName>Z900</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Z900</label>
+    </customValue>
+    <customValue>
+        <fullName>Z400</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Z400</label>
+    </customValue>
+    <customValue>
+        <fullName>Z125</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Z125</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI ejemplo</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>MINI ejemplo</label>
+    </customValue>
+    <customValue>
+        <fullName>Countryman cooper S</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Countryman cooper S</label>
+    </customValue>
+    <customValue>
+        <fullName>Clubman Cooper S</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Clubman Cooper S</label>
+    </customValue>
+    <masterLabel>Familia</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

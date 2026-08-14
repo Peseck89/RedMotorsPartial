@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Grupo__c</fullName>
+    <externalId>false</externalId>
+    <label>Categoria</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Categor_a_veh_culo__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetName>Categor_a</valueSetName>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>Serie 1</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>Serie 2</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>Serie 3</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Serie</controllingFieldValue>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>Serie 4</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Roadster</controllingFieldValue>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>Z</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DIESEL</controllingFieldValue>
+            <controllingFieldValue>Eléctrico</controllingFieldValue>
+            <controllingFieldValue>Gasolina</controllingFieldValue>
+            <valueName>SUV</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sedán</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>M</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sedán</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>Roadster</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sedán</controllingFieldValue>
+            <controllingFieldValue>CABRIO</controllingFieldValue>
+            <valueName>Serie</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PRUEBA CAT 1</controllingFieldValue>
+            <valueName>PRUEBAS X6</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Eléctrico Sof</controllingFieldValue>
+            <valueName>Sof x</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>QA 1</controllingFieldValue>
+            <valueName>QA X</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MANUAL</controllingFieldValue>
+            <valueName>FAMILIA M</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>SUV</controllingFieldValue>
+            <valueName>X</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Eléctrico</controllingFieldValue>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>BMW i</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Eléctrico</controllingFieldValue>
+            <valueName>Hatchback</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Eléctrico</controllingFieldValue>
+            <controllingFieldValue>Gasolina</controllingFieldValue>
+            <valueName>Hatch</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Eléctrico</controllingFieldValue>
+            <valueName>Crossover</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>BMW M</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MINI 3 Puertas</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MINI 5 Puertas</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Gasolina</controllingFieldValue>
+            <controllingFieldValue>CABRIO</controllingFieldValue>
+            <valueName>CABRIO</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MINI Countryman</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MINI Eléctrico</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MINI John Cooper Works</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>Adventure</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>Heritage</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>Sport</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>Tour</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>Urban Mobility</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Cuadra</controllingFieldValue>
+            <valueName>BRUTE FORCE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>ELIMINATOR</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>JET SKI STX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>JET SKI SX-R</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>JET SKI ULTRA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>KFX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>KLX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>KX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Mula</controllingFieldValue>
+            <valueName>MULE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MULE 4010</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MULE PRO-DXT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MULE PRO-FX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MULE PRO-FXR</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MULE PRO-FXT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MULE PRO-MX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MULE SX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MULE 4010 TRANS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>NINJA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Mula</controllingFieldValue>
+            <valueName>TERYX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Mula</controllingFieldValue>
+            <valueName>TERYX KRX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Mula</controllingFieldValue>
+            <valueName>TERYX KRX4</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Mula</controllingFieldValue>
+            <valueName>TERYX4</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>VERSYS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>VULCAN</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Mula</controllingFieldValue>
+            <valueName>GENERAL</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Mula</controllingFieldValue>
+            <valueName>RANGER</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Mula</controllingFieldValue>
+            <valueName>RZR</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Cuadra</controllingFieldValue>
+            <valueName>SCRAMBLER</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Cuadra</controllingFieldValue>
+            <valueName>SPORTSMAN</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>YOUTH</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>Cruiser</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <valueName>MINI ACEMAN</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Todos</controllingFieldValue>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>KLE</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Tipo Individual Test 2</controllingFieldValue>
+            <valueName>Categoria Individual Test 1</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Tipo Wizard</controllingFieldValue>
+            <valueName>Grupo Wizard</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Tipo en prod prueba</controllingFieldValue>
+            <valueName>Categoria prueba en prod</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Gasolina</controllingFieldValue>
+            <valueName>Sedán</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Moto</controllingFieldValue>
+            <valueName>STANDARD</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>
