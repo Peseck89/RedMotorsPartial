@@ -6,6 +6,16 @@
         <label>BMW</label>
     </customValue>
     <customValue>
+        <fullName>OMODA</fullName>
+        <default>false</default>
+        <label>OMODA</label>
+    </customValue>
+    <customValue>
+        <fullName>JAECOO</fullName>
+        <default>false</default>
+        <label>JAECOO</label>
+    </customValue>
+    <customValue>
         <fullName>Kawasaki</fullName>
         <default>false</default>
         <label>Kawasaki</label>
