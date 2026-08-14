@@ -20,6 +20,11 @@
                 <default>false</default>
                 <label>Bavarian</label>
             </value>
+            <value>
+                <fullName>RMPEKING</fullName>
+                <default>false</default>
+                <label>PEKING</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
