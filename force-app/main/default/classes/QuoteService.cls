@@ -4,17 +4,29 @@ public with sharing class QuoteService {
     private static final String OTOBAI_BODEGA_CODE = 'BR02';
     private static final String OTOBAI_BODEGA_EXTERNAL_ID = 'RMOTOBAIBR02';
     private static final String PEKING_BODEGA_MESSAGE = 'No existe bodega principal confirmada para RMPEKING.';
+    private static final String PEKING_BODEGA_CONFIG_KEY = 'Bodega_Principal_RMPEKING';
 
     // Bodegas principales permitidas (por código)
     private static final Set<String> PRINCIPAL_BODEGAS = new Set<String>{ 'BR01', OTOBAI_BODEGA_CODE, 'RM01' };
 
+    // Bodega principal de RMPEKING: configurable vía RM_Config__mdt (Bodega_Principal_RMPEKING),
+    // no hardcodeada, para poder sustituirse por la bodega oficial sin modificar código.
+    private static String getPekingPrincipalBodegaCode() {
+        RM_Config__mdt cfg = RM_Config__mdt.getInstance(PEKING_BODEGA_CONFIG_KEY);
+        return (cfg != null) ? cfg.Value__c : null;
+    }
+
     private static Boolean isPrincipalBodega(ProductoXBodega__c pxb) {
         String code = (pxb != null && pxb.Bodega__r != null) ? pxb.Bodega__r.Bodega__c : null;
-        if (String.isBlank(code) || !PRINCIPAL_BODEGAS.contains(code)) return false;
-        if (code == OTOBAI_BODEGA_CODE) {
-            return pxb.Bodega__r.ID_EXTERNO_BODEGA__c == OTOBAI_BODEGA_EXTERNAL_ID;
+        if (String.isBlank(code)) return false;
+        if (PRINCIPAL_BODEGAS.contains(code)) {
+            if (code == OTOBAI_BODEGA_CODE) {
+                return pxb.Bodega__r.ID_EXTERNO_BODEGA__c == OTOBAI_BODEGA_EXTERNAL_ID;
+            }
+            return true;
         }
-        return true;
+        String pekingCode = getPekingPrincipalBodegaCode();
+        return String.isNotBlank(pekingCode) && code == pekingCode;
     }
 
     // =========================================================
@@ -92,7 +104,10 @@ public with sharing class QuoteService {
 
     private static void ensureCompanyHasConfiguredBodega(String companyCode) {
         if (companyCode == 'RMPEKING') {
-            throw new AuraHandledException(PEKING_BODEGA_MESSAGE);
+            if (String.isBlank(getPekingPrincipalBodegaCode())) {
+                throw new AuraHandledException(PEKING_BODEGA_MESSAGE);
+            }
+            return;
         }
         if (companyCode != 'RMBAVARIAN' && companyCode != 'RMOTOBAI') {
             throw new AuraHandledException('La empresa ' + companyCode + ' no está soportada para determinar bodega.');
@@ -141,6 +156,7 @@ public with sharing class QuoteService {
         );
         ensureCompanyHasConfiguredBodega(companyCode);
         if (companyCode == 'RMOTOBAI') return OTOBAI_BODEGA_CODE;
+        if (companyCode == 'RMPEKING') return getPekingPrincipalBodegaCode();
         return 'BR01';
     }
 
@@ -172,7 +188,14 @@ public with sharing class QuoteService {
 
         if (isPrincipalBodega(selectedPxb)) return selectedPxb.Bodega__c;
 
-        String code = companyCode == 'RMOTOBAI' ? OTOBAI_BODEGA_CODE : (isMotoBrand(brand) ? 'RM01' : 'BR01');
+        String code;
+        if (companyCode == 'RMOTOBAI') {
+            code = OTOBAI_BODEGA_CODE;
+        } else if (companyCode == 'RMPEKING') {
+            code = getPekingPrincipalBodegaCode();
+        } else {
+            code = isMotoBrand(brand) ? 'RM01' : 'BR01';
+        }
 
         Id bodId = getBodegaIdByCode(code);
         if (bodId == null) {

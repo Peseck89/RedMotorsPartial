@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Bodega Principal RMPEKING</label>
+    <protected>false</protected>
+    <values>
+        <field>Descripcion__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Description__c</field>
+        <value xsi:type="xsd:string">Código Bodega__c principal de RMPEKING en QuoteService. Valor PROVISIONAL de QA (bodega PEKING TEMPORAL - NO USAR EN PRODUCCION); sustituir por la bodega oficial cuando exista, sin cambiar código.</value>
+    </values>
+    <values>
+        <field>Perfiles__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Value__c</field>
+        <value xsi:type="xsd:string">PKT01</value>
+    </values>
+</CustomMetadata>
