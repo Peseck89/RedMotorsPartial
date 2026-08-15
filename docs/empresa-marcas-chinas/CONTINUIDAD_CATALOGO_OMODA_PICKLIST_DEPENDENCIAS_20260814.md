@@ -152,6 +152,63 @@ Ambos archivos fueron copiados verbatim (sin edición manual) desde el source co
 
 Con este baseline versionado, el siguiente bloque autorizado es la implementación del metadata temporal OMODA descrita en la sección anterior, partiendo de una base ya completa y recuperable.
 
+## Checkpoint — Implementación del metadata temporal OMODA (2026-08-14)
+
+Sobre el baseline reconciliado (`09c16e8`, documentado en `7bddc28`), se implementó de forma aditiva la cadena temporal completa:
+
+```
+OMODA → OMODA QA → OMODA QA → OMODA QA → QA OMODA
+Marca__c → Categor_a_veh_culo__c → Grupo__c → Familia__c → Modelo_De_Inter_s__c
+```
+
+### Archivos modificados
+
+- `force-app/main/default/globalValueSets/Categoria_Vehiculo.globalValueSet-meta.xml` — recuperado de Partial (no existía localmente) + agregado `OMODA QA` (24 valores totales).
+- `force-app/main/default/globalValueSets/Categor_a.globalValueSet-meta.xml` — recuperado de Partial (no existía localmente) + agregado `OMODA QA` (69 valores totales).
+- `force-app/main/default/globalValueSets/Familia.globalValueSet-meta.xml` — agregado `OMODA QA` (existente localmente, solo se añadió el valor).
+- `force-app/main/default/globalValueSets/Modelo_de_Interes2.globalValueSet-meta.xml` — versionado por primera vez el `QA OMODA` ya desplegado previamente en Partial (dry-run `0AfAK0000015KGr0AM`, deploy `0AfAK0000015KIT0A2`); diff verificado antes de incluirlo — contenía exclusivamente esa adición.
+- `force-app/main/default/objects/Product2/fields/Categor_a_veh_culo__c.field-meta.xml` — agregado `valueSettings` (`controllingFieldValue=OMODA` → `valueName=OMODA QA`).
+- `force-app/main/default/objects/Product2/fields/Grupo__c.field-meta.xml` — agregado `valueSettings` (`controllingFieldValue=OMODA QA` → `valueName=OMODA QA`).
+- `force-app/main/default/objects/Product2/fields/Familia__c.field-meta.xml` — agregado `valueSettings` (`controllingFieldValue=OMODA QA` → `valueName=OMODA QA`).
+- `force-app/main/default/objects/Product2/fields/Modelo_De_Inter_s__c.field-meta.xml` — agregado `valueSettings` (`controllingFieldValue=OMODA QA` → `valueName=QA OMODA`, reutilizando el valor de GVS ya existente, sin duplicar).
+- `force-app/main/default/objects/Product2/recordTypes/Producto_Red_Motors.recordType-meta.xml` — agregado un `<values>` nuevo (`default=false`) en cada uno de los 5 bloques `picklistValues` correspondientes, preservando el 100% de los valores existentes (+20 líneas, 0 eliminaciones).
+
+### Conteos verificados (UI API, RecordType `0120P000000ENW0QAO`)
+
+| Campo | Predeploy | Postdeploy | Incremento |
+|---|---|---|---|
+| Marca__c | 18 | 19 | +1 |
+| Categor_a_veh_culo__c | 23 | 24 | +1 |
+| Grupo__c | 68 | 69 | +1 |
+| Familia__c | 72 | 73 | +1 |
+| Modelo_De_Inter_s__c | 337 | 338 | +1 |
+
+### Dry-run y deploy
+
+- Dry-run: `0AfAK0000015Lfx0AE` — Succeeded, 9/9 componentes, sin errores.
+- Deploy real: `0AfAK0000015LhZ0AU` — Succeeded, exactamente los mismos 9 componentes (sin ampliar el package entre dry-run y deploy real). Componentes: 4 CustomField, 4 GlobalValueSet, 1 RecordType.
+
+### Verificación de la cadena completa (post-deploy, vía `controllerValues`/`validFor`)
+
+`Marca__c('OMODA', índice 1) → Categor_a_veh_culo__c('OMODA QA', validFor=[1]) → Grupo__c('OMODA QA', validFor=[23], índice 23 en el mapa de Familia__c) → Familia__c('OMODA QA', validFor=[68], índice 68 en el mapa de Modelo_De_Inter_s__c) → Modelo_De_Inter_s__c('QA OMODA', validFor=[72])`. Cadena confirmada extremo a extremo.
+
+### Verificación de que BMW permanece intacto
+
+Se re-verificó la cadena de referencia BMW tras el deploy: `BMW → Eléctrico (validFor incluye 0) → BMW i (validFor incluye 0) → iX1 (validFor=[0]) → BMW-IX1-20-VR-XLINE (validFor=[18])` — sin cambios respecto al estado anterior al deploy.
+
+### Commit funcional y documental
+
+- Commit funcional: `e72747f` — `feat(peking): add temporary omoda product catalog metadata`, 9 archivos, 521 inserciones, 0 eliminaciones.
+- Push realizado, rama sincronizada 0/0 con origin.
+
+### Aclaraciones
+
+- Los valores `OMODA QA` (Categoría/Grupo/Familia) y la relación hacia `QA OMODA` (Modelo) son **temporales de QA**, autorizados expresamente por Luis, y deberán reemplazarse por el catálogo oficial OMODA/JAECOO cuando esté disponible.
+- Clasificación: dentro del alcance oficial de Sprint 4 (Global Value Sets, configuración de Product2). No es trabajo extra.
+- **No se creó todavía** ningún `Product2`, `Pricebook2` ni `PricebookEntry` — eso corresponde al siguiente bloque.
+- No hubo DML en ningún momento de este checkpoint.
+- Producción no fue tocada — todo ejecutado exclusivamente en `RedMotorsSandbox` / Partial.
+
 ## Estado
 
-Investigación, diseño y reconciliación de baseline completos. Implementación del metadata temporal OMODA: **pendiente, no ejecutada.**
+Investigación, diseño, reconciliación de baseline e implementación del metadata temporal OMODA: **completos.** Creación del catálogo de fantasía OMODA 2026 (`Product2`, `Pricebook2`, `PricebookEntry`) y reanudación del QA del modal "Agregar vehículo": **pendiente, siguiente bloque.**
