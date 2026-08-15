@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Categor_a_veh_culo__c</fullName>
+    <externalId>false</externalId>
+    <label>Tipo</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Marca__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetName>Categoria_Vehiculo</valueSetName>
+        <valueSettings>
+            <controllingFieldValue>Indian</controllingFieldValue>
+            <controllingFieldValue>Kawasaki</controllingFieldValue>
+            <controllingFieldValue>Motorrad</controllingFieldValue>
+            <valueName>Moto</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MarcaIndividualTest 1</controllingFieldValue>
+            <valueName>Tipo Individual Test 1</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MarcaIndividualTest 1</controllingFieldValue>
+            <valueName>Tipo Individual Test 2</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Harley-Davidson</controllingFieldValue>
+            <controllingFieldValue>Dos Ruedas</controllingFieldValue>
+            <controllingFieldValue>BMW</controllingFieldValue>
+            <controllingFieldValue>Kawasaki</controllingFieldValue>
+            <controllingFieldValue>MINI</controllingFieldValue>
+            <controllingFieldValue>Motorrad</controllingFieldValue>
+            <controllingFieldValue>Polaris</controllingFieldValue>
+            <controllingFieldValue>Todas</controllingFieldValue>
+            <controllingFieldValue>Macas 2 Ruedas</controllingFieldValue>
+            <controllingFieldValue>Marcas Vehículos</controllingFieldValue>
+            <valueName>Todos</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marca Wizard</controllingFieldValue>
+            <valueName>Tipo Wizard</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Marca en prod</controllingFieldValue>
+            <valueName>Tipo en prod prueba</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PRUEBA</controllingFieldValue>
+            <valueName>PRUEBA CAT 1</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PRUEBA SOFÍA</controllingFieldValue>
+            <valueName>Eléctrico Sof</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PRUEBA SOFÍA</controllingFieldValue>
+            <valueName>Gasolina Sof</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>QA</controllingFieldValue>
+            <valueName>QA 1</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>FUNCIONAMIENTO</controllingFieldValue>
+            <valueName>MANUAL</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW</controllingFieldValue>
+            <controllingFieldValue>MINI</controllingFieldValue>
+            <valueName>Eléctrico</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW</controllingFieldValue>
+            <valueName>Híbrido</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW</controllingFieldValue>
+            <valueName>Serie</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW</controllingFieldValue>
+            <valueName>SERIEPRUEBA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW</controllingFieldValue>
+            <valueName>Sedán</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW</controllingFieldValue>
+            <valueName>SUV</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW</controllingFieldValue>
+            <controllingFieldValue>MINI</controllingFieldValue>
+            <valueName>CABRIO</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>BMW</controllingFieldValue>
+            <valueName>Roadster</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Kawasaki</controllingFieldValue>
+            <controllingFieldValue>Polaris</controllingFieldValue>
+            <valueName>Cuadra</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Kawasaki</controllingFieldValue>
+            <controllingFieldValue>Polaris</controllingFieldValue>
+            <valueName>Mula</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MINI</controllingFieldValue>
+            <valueName>Gasolina</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>MINI</controllingFieldValue>
+            <valueName>DIESEL</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>
