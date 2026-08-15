@@ -209,6 +209,28 @@ Se re-verificó la cadena de referencia BMW tras el deploy: `BMW → Eléctrico 
 - No hubo DML en ningún momento de este checkpoint.
 - Producción no fue tocada — todo ejecutado exclusivamente en `RedMotorsSandbox` / Partial.
 
+## Checkpoint — Catálogo de fantasía, unidad de inventario real y habilitación de ubicaciones OMODA (2026-08-14)
+
+Sobre el metadata temporal ya versionado, se ejecutó una serie de bloques de DML y un segundo hallazgo de picklist restringido, todos exclusivamente en Partial:
+
+1. **Catálogo mínimo de fantasía OMODA 2026** (DML, sin cambios Git): `Product2` `01tAK000009EFbVYAW` ("OMODA QA 2026", `esVehiculo__c=false`, cadena Marca/Categoría/Grupo/Familia/Modelo temporal completa), `Pricebook2` `01sAK0000007MmzYAE` ("OMODA - 2026"), `PricebookEntry` Standard `01uAK000000YeMQYA0` y `PricebookEntry` OMODA-2026 `01uAK000000YeMRYA0`. Resolvió el error "No se encontraron precios de fantasía". Nota técnica: el primer intento falló por `DUPLICATE_VALUE` porque `ProductTrigger` (AfterInsert) auto-crea un Standard PricebookEntry al insertar `Product2` — el script debe detectarlo y actualizarlo, no reinsertarlo.
+
+2. **Diagnóstico "precios de Softland"**: reveló que `RM_VN_Service.gePBEBavarian()` es una cadena de datos completamente separada — consulta `Product2` con `esVehiculo__c=TRUE` (unidad de inventario **real**, no catálogo/fantasía), filtrando por campos de texto libre `marcaVehiculo__c`/`Anno__c`/`modelo__c` (sin relación con la cadena de picklists Marca__c→...→Modelo_De_Inter_s__c).
+
+3. **Unidad temporal de inventario OMODA 2026**: `Product2` `01tAK000009EGCbYAO` ("QAOMODA2026UNIT001", `esVehiculo__c=true`, `marcaVehiculo__c=OMODA`, `Anno__c=2026`, `modelo__c=QA OMODA`) + `PricebookEntry` en Pricebook2 "PEKING Dólares" `01uAK000000YeUVYA0`. Hallazgo relevante: **el 100% de las 1080 unidades reales BMW 2026 usan RecordType "Vehiculos"**, no "Producto Red Motors" como se instruyó inicialmente — se aplicó la corrección técnica deducible y se usó "Vehiculos" (`0124U00000111EDQAY`). Resolvió el error "No se encontraron precios de Softland".
+
+4. **Diagnóstico de grilla vacía**: reveló que la grilla de "Seleccionar Inventario" **no consulta `Product2` directamente** — consulta `ProductoXBodega__c` (junction de inventario físico por bodega) vía `Producto__r`, con `Bodega__c IN :locationIds`, donde `locationIds` proviene de `Ubicaciones_por_Marca__c WHERE Marca__c LIKE '%brand%'`. Para OMODA, `Ubicaciones_por_Marca__c` tenía 0 registros → `locationIds` vacío → 0 filas sin importar nada más. Gap secundario independiente: tampoco existía ningún `ProductoXBodega__c` para la unidad OMODA.
+
+5. **Segundo hallazgo de picklist restringido**: al intentar crear la relación `Ubicaciones_por_Marca__c` (Marca=OMODA → Bodega PEKING temporal `a2bAK0000000vvxYAA`), se descubrió que `Ubicaciones_por_Marca__c.Marca__c` es también un picklist restringido, con solo 6 valores activos (BMW, INDIAN, KAWA, MINI, MOTORRAD, POLARIS) — **sin OMODA**. El objeto no tenía metadata alguna versionada localmente. Se detuvo el bloque de DML sin ejecutar nada (ni siquiera el ajuste de la bodega, para no dejar un cambio huérfano).
+
+6. **Habilitación de OMODA en `Ubicaciones_por_Marca__c.Marca__c`** (este checkpoint): retrieve completo autoritativo de `CustomObject:Ubicaciones_por_Marca__c` hacia carpeta externa (`Tmp-UbicacionesMarca-Metadata-20260814`), convertido a Source Format. Mecanismo confirmado: `Marca__c` usa un **`valueSetDefinition` local** (no Global Value Set), `restricted=true`, y el objeto **no tiene ningún RecordType**. Se incorporó a Git por primera vez el metadata completo del objeto (object shell, campos `Bodega__c`/`Marca__c`, list view "All") y se agregó `OMODA` (activo, no default) preservando los 6 valores existentes intactos. Dry-run `0AfAK0000015MDp0AM` (Succeeded) → deploy real `0AfAK0000015MFR0A2` (Succeeded), 4/4 componentes. Verificado post-deploy vía describe: 7 valores activos totales (6 originales + OMODA). Commit funcional: `c8dfaf9` — `feat(peking): enable omoda for inventory locations`. Push realizado, sincronizado 0/0.
+
+### Aclaraciones
+
+- Todo lo anterior (puntos 1-6) es exclusivo de `RedMotorsSandbox` / Partial. **Producción no fue tocada en ningún momento.**
+- Ningún DML se registra en Git — los IDs de registros creados (Product2, Pricebook2, PricebookEntry) quedan documentados aquí como referencia, no como metadata versionada.
+- Clasificación: dentro del alcance oficial de Sprint 4 (catálogo/configuración necesaria para OMODA/JAECOO). No es trabajo extra.
+
 ## Estado
 
-Investigación, diseño, reconciliación de baseline e implementación del metadata temporal OMODA: **completos.** Creación del catálogo de fantasía OMODA 2026 (`Product2`, `Pricebook2`, `PricebookEntry`) y reanudación del QA del modal "Agregar vehículo": **pendiente, siguiente bloque.**
+Investigación, diseño, reconciliación de baseline, metadata temporal OMODA (cadena de picklists de Product2), catálogo de fantasía, unidad de inventario real y habilitación de `Ubicaciones_por_Marca__c` para OMODA: **completos.** Pendiente para el siguiente bloque: `Bodega_vehiculos_nuevos__c` false→true en la bodega PEKING temporal, creación de `Ubicaciones_por_Marca__c` (OMODA→bodega PEKING) y `ProductoXBodega__c` (unidad OMODA→misma bodega), verificación final de `getRecords`, y reanudación del QA manual del modal "Agregar vehículo".
