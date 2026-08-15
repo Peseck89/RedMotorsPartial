@@ -322,5 +322,9 @@
             <controllingFieldValue>Moto</controllingFieldValue>
             <valueName>STANDARD</valueName>
         </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>OMODA QA</controllingFieldValue>
+            <valueName>OMODA QA</valueName>
+        </valueSettings>
     </valueSet>
 </CustomField>

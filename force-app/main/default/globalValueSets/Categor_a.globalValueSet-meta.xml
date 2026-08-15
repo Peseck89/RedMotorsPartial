@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>BMW i</fullName>
+        <default>false</default>
+        <label>BMW i</label>
+    </customValue>
+    <customValue>
+        <fullName>BMW M</fullName>
+        <default>false</default>
+        <label>BMW M</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 1</fullName>
+        <default>false</default>
+        <label>Serie 1</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 2</fullName>
+        <default>false</default>
+        <label>Serie 2</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 3</fullName>
+        <default>false</default>
+        <label>Serie 3</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie 4</fullName>
+        <default>false</default>
+        <label>Serie 4</label>
+    </customValue>
+    <customValue>
+        <fullName>X</fullName>
+        <default>false</default>
+        <label>X</label>
+    </customValue>
+    <customValue>
+        <fullName>Z</fullName>
+        <default>false</default>
+        <label>Z</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI 3 Puertas</fullName>
+        <default>false</default>
+        <label>MINI 3 Puertas</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI 5 Puertas</fullName>
+        <default>false</default>
+        <label>MINI 5 Puertas</label>
+    </customValue>
+    <customValue>
+        <fullName>CABRIO</fullName>
+        <default>false</default>
+        <label>CABRIO</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI Countryman</fullName>
+        <default>false</default>
+        <label>MINI Countryman</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI Eléctrico</fullName>
+        <default>false</default>
+        <label>MINI Eléctrico</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI John Cooper Works</fullName>
+        <default>false</default>
+        <label>MINI John Cooper Works</label>
+    </customValue>
+    <customValue>
+        <fullName>Adventure</fullName>
+        <default>false</default>
+        <label>Adventure</label>
+    </customValue>
+    <customValue>
+        <fullName>Heritage</fullName>
+        <default>false</default>
+        <label>Heritage</label>
+    </customValue>
+    <customValue>
+        <fullName>M</fullName>
+        <default>false</default>
+        <label>M</label>
+    </customValue>
+    <customValue>
+        <fullName>Roadster</fullName>
+        <default>false</default>
+        <label>Roadster</label>
+    </customValue>
+    <customValue>
+        <fullName>Sport</fullName>
+        <default>false</default>
+        <label>Sport</label>
+    </customValue>
+    <customValue>
+        <fullName>Tour</fullName>
+        <default>false</default>
+        <label>Tour</label>
+    </customValue>
+    <customValue>
+        <fullName>Urban Mobility</fullName>
+        <default>false</default>
+        <label>Urban Mobility</label>
+    </customValue>
+    <customValue>
+        <fullName>BRUTE FORCE</fullName>
+        <default>false</default>
+        <label>BRUTE FORCE</label>
+    </customValue>
+    <customValue>
+        <fullName>ELIMINATOR</fullName>
+        <default>false</default>
+        <label>ELIMINATOR</label>
+    </customValue>
+    <customValue>
+        <fullName>JET SKI STX</fullName>
+        <default>false</default>
+        <label>JET SKI STX</label>
+    </customValue>
+    <customValue>
+        <fullName>JET SKI SX-R</fullName>
+        <default>false</default>
+        <label>JET SKI SX-R</label>
+    </customValue>
+    <customValue>
+        <fullName>JET SKI ULTRA</fullName>
+        <default>false</default>
+        <label>JET SKI ULTRA</label>
+    </customValue>
+    <customValue>
+        <fullName>KFX</fullName>
+        <default>false</default>
+        <label>KFX</label>
+    </customValue>
+    <customValue>
+        <fullName>KLX</fullName>
+        <default>false</default>
+        <label>KLX</label>
+    </customValue>
+    <customValue>
+        <fullName>KX</fullName>
+        <default>false</default>
+        <label>KX</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE</fullName>
+        <default>false</default>
+        <label>MULE</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE 4010</fullName>
+        <default>false</default>
+        <label>MULE 4010</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO-DXT</fullName>
+        <default>false</default>
+        <label>MULE PRO-DXT</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO-FX</fullName>
+        <default>false</default>
+        <label>MULE PRO-FX</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO-FXR</fullName>
+        <default>false</default>
+        <label>MULE PRO-FXR</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO-FXT</fullName>
+        <default>false</default>
+        <label>MULE PRO-FXT</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE PRO-MX</fullName>
+        <default>false</default>
+        <label>MULE PRO-MX</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE SX</fullName>
+        <default>false</default>
+        <label>MULE SX</label>
+    </customValue>
+    <customValue>
+        <fullName>MULE 4010 TRANS</fullName>
+        <default>false</default>
+        <label>MULE 4010 TRANS</label>
+    </customValue>
+    <customValue>
+        <fullName>NINJA</fullName>
+        <default>false</default>
+        <label>NINJA</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX</fullName>
+        <default>false</default>
+        <label>TERYX</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX KRX</fullName>
+        <default>false</default>
+        <label>TERYX KRX</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX KRX4</fullName>
+        <default>false</default>
+        <label>TERYX KRX4</label>
+    </customValue>
+    <customValue>
+        <fullName>TERYX4</fullName>
+        <default>false</default>
+        <label>TERYX4</label>
+    </customValue>
+    <customValue>
+        <fullName>VERSYS</fullName>
+        <default>false</default>
+        <label>VERSYS</label>
+    </customValue>
+    <customValue>
+        <fullName>VULCAN</fullName>
+        <default>false</default>
+        <label>VULCAN</label>
+    </customValue>
+    <customValue>
+        <fullName>GENERAL</fullName>
+        <default>false</default>
+        <label>GENERAL</label>
+    </customValue>
+    <customValue>
+        <fullName>RANGER</fullName>
+        <default>false</default>
+        <label>RANGER</label>
+    </customValue>
+    <customValue>
+        <fullName>RZR</fullName>
+        <default>false</default>
+        <label>RZR</label>
+    </customValue>
+    <customValue>
+        <fullName>SCRAMBLER</fullName>
+        <default>false</default>
+        <label>SCRAMBLER</label>
+    </customValue>
+    <customValue>
+        <fullName>SPORTSMAN</fullName>
+        <default>false</default>
+        <label>SPORTSMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>YOUTH</fullName>
+        <default>false</default>
+        <label>YOUTH</label>
+    </customValue>
+    <customValue>
+        <fullName>Cruiser</fullName>
+        <default>false</default>
+        <label>Cruiser</label>
+    </customValue>
+    <customValue>
+        <fullName>MINI ACEMAN</fullName>
+        <default>false</default>
+        <label>MINI ACEMAN</label>
+    </customValue>
+    <customValue>
+        <fullName>Categoria Individual Test 1</fullName>
+        <default>false</default>
+        <label>Categoria Individual Test 1</label>
+    </customValue>
+    <customValue>
+        <fullName>Grupo Wizard</fullName>
+        <default>false</default>
+        <label>Grupo Wizard</label>
+    </customValue>
+    <customValue>
+        <fullName>Categoria prueba en prod</fullName>
+        <default>false</default>
+        <label>Categoria prueba en prod</label>
+    </customValue>
+    <customValue>
+        <fullName>STANDARD</fullName>
+        <default>false</default>
+        <label>STANDARD</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie</fullName>
+        <default>false</default>
+        <label>Serie </label>
+    </customValue>
+    <customValue>
+        <fullName>PRUEBAS X6</fullName>
+        <default>false</default>
+        <label>PRUEBAS X6</label>
+    </customValue>
+    <customValue>
+        <fullName>Sof x</fullName>
+        <default>false</default>
+        <label>Sof x</label>
+    </customValue>
+    <customValue>
+        <fullName>QA X</fullName>
+        <default>false</default>
+        <label>QA X</label>
+    </customValue>
+    <customValue>
+        <fullName>FAMILIA M</fullName>
+        <default>false</default>
+        <label>FAMILIA M</label>
+    </customValue>
+    <customValue>
+        <fullName>Hatchback</fullName>
+        <default>false</default>
+        <label>Hatchback</label>
+    </customValue>
+    <customValue>
+        <fullName>Hatch</fullName>
+        <default>false</default>
+        <label>Hatch</label>
+    </customValue>
+    <customValue>
+        <fullName>Sedán</fullName>
+        <default>false</default>
+        <label>Sedán</label>
+    </customValue>
+    <customValue>
+        <fullName>SUV</fullName>
+        <default>false</default>
+        <label>SUV</label>
+    </customValue>
+    <customValue>
+        <fullName>Crossover</fullName>
+        <default>false</default>
+        <label>Crossover</label>
+    </customValue>
+    <customValue>
+        <fullName>KLE</fullName>
+        <default>false</default>
+        <label>KLE</label>
+    </customValue>
+    <customValue>
+        <fullName>OMODA QA</fullName>
+        <default>false</default>
+        <label>OMODA QA</label>
+    </customValue>
+    <masterLabel>Categor_a</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

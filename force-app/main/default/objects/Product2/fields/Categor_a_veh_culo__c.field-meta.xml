@@ -117,5 +117,9 @@
             <controllingFieldValue>MINI</controllingFieldValue>
             <valueName>DIESEL</valueName>
         </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>OMODA</controllingFieldValue>
+            <valueName>OMODA QA</valueName>
+        </valueSettings>
     </valueSet>
 </CustomField>

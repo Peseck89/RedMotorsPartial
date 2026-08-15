@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Eléctrico</fullName>
+        <default>false</default>
+        <label>Eléctrico</label>
+    </customValue>
+    <customValue>
+        <fullName>Híbrido</fullName>
+        <default>false</default>
+        <label>Híbrido</label>
+    </customValue>
+    <customValue>
+        <fullName>Todos</fullName>
+        <default>false</default>
+        <label>Todos</label>
+    </customValue>
+    <customValue>
+        <fullName>Tipo Individual Test 1</fullName>
+        <default>false</default>
+        <label>Tipo Individual Test 1</label>
+    </customValue>
+    <customValue>
+        <fullName>Tipo Individual Test 2</fullName>
+        <default>false</default>
+        <label>Tipo Individual Test 2</label>
+    </customValue>
+    <customValue>
+        <fullName>Tipo Wizard</fullName>
+        <default>false</default>
+        <label>Tipo Wizard</label>
+    </customValue>
+    <customValue>
+        <fullName>Tipo en prod prueba</fullName>
+        <default>false</default>
+        <label>Tipo en prod prueba</label>
+    </customValue>
+    <customValue>
+        <fullName>Cuadra</fullName>
+        <default>false</default>
+        <label>Cuadra</label>
+    </customValue>
+    <customValue>
+        <fullName>Mula</fullName>
+        <default>false</default>
+        <label>Mula</label>
+    </customValue>
+    <customValue>
+        <fullName>Moto</fullName>
+        <default>false</default>
+        <label>Moto</label>
+    </customValue>
+    <customValue>
+        <fullName>Serie</fullName>
+        <default>false</default>
+        <label>Serie</label>
+    </customValue>
+    <customValue>
+        <fullName>SERIEPRUEBA</fullName>
+        <default>false</default>
+        <label>SERIEPRUEBA</label>
+    </customValue>
+    <customValue>
+        <fullName>Sedán</fullName>
+        <default>false</default>
+        <label>Sedán</label>
+    </customValue>
+    <customValue>
+        <fullName>PRUEBA CAT 1</fullName>
+        <default>false</default>
+        <label>PRUEBA CAT 1</label>
+    </customValue>
+    <customValue>
+        <fullName>Eléctrico Sof</fullName>
+        <default>false</default>
+        <label>Eléctrico Sof</label>
+    </customValue>
+    <customValue>
+        <fullName>Gasolina Sof</fullName>
+        <default>false</default>
+        <label>Gasolina Sof</label>
+    </customValue>
+    <customValue>
+        <fullName>QA 1</fullName>
+        <default>false</default>
+        <label>QA 1</label>
+    </customValue>
+    <customValue>
+        <fullName>MANUAL</fullName>
+        <default>false</default>
+        <label>MANUAL</label>
+    </customValue>
+    <customValue>
+        <fullName>SUV</fullName>
+        <default>false</default>
+        <label>SUV</label>
+    </customValue>
+    <customValue>
+        <fullName>Gasolina</fullName>
+        <default>false</default>
+        <label>Gasolina</label>
+    </customValue>
+    <customValue>
+        <fullName>CABRIO</fullName>
+        <default>false</default>
+        <label>CABRIO</label>
+    </customValue>
+    <customValue>
+        <fullName>Roadster</fullName>
+        <default>false</default>
+        <label>Roadster</label>
+    </customValue>
+    <customValue>
+        <fullName>DIESEL</fullName>
+        <default>false</default>
+        <label>DIESEL</label>
+    </customValue>
+    <customValue>
+        <fullName>OMODA QA</fullName>
+        <default>false</default>
+        <label>OMODA QA</label>
+    </customValue>
+    <masterLabel>Categoria_Vehiculo</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

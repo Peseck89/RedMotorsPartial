@@ -966,6 +966,11 @@
         <isActive>false</isActive>
         <label>Clubman Cooper S</label>
     </customValue>
+    <customValue>
+        <fullName>OMODA QA</fullName>
+        <default>false</default>
+        <label>OMODA QA</label>
+    </customValue>
     <masterLabel>Familia</masterLabel>
     <sorted>false</sorted>
 </GlobalValueSet>

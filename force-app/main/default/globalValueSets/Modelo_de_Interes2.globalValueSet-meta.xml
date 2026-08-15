@@ -4136,6 +4136,11 @@
         <isActive>false</isActive>
         <label>BMW-IX-50-SUITE</label>
     </customValue>
+    <customValue>
+        <fullName>QA OMODA</fullName>
+        <default>false</default>
+        <label>QA OMODA</label>
+    </customValue>
     <masterLabel>Modelo_de_Interes2</masterLabel>
     <sorted>false</sorted>
 </GlobalValueSet>

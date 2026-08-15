@@ -1440,5 +1440,9 @@
             <controllingFieldValue>X2</controllingFieldValue>
             <valueName>BMW-X2-20i-VR-PAQ-M</valueName>
         </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>OMODA QA</controllingFieldValue>
+            <valueName>QA OMODA</valueName>
+        </valueSettings>
     </valueSet>
 </CustomField>

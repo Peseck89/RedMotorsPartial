@@ -309,5 +309,9 @@
             <controllingFieldValue>TERYX</controllingFieldValue>
             <valueName>Teryx</valueName>
         </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>OMODA QA</controllingFieldValue>
+            <valueName>OMODA QA</valueName>
+        </valueSettings>
     </valueSet>
 </CustomField>
