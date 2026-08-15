@@ -345,6 +345,11 @@
         <default>false</default>
         <label>OMODA QA</label>
     </customValue>
+    <customValue>
+        <fullName>JAECOO QA</fullName>
+        <default>false</default>
+        <label>JAECOO QA</label>
+    </customValue>
     <masterLabel>Categor_a</masterLabel>
     <sorted>false</sorted>
 </GlobalValueSet>

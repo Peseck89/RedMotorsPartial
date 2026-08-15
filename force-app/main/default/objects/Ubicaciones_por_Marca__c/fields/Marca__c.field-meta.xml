@@ -45,6 +45,11 @@
                 <default>false</default>
                 <label>OMODA</label>
             </value>
+            <value>
+                <fullName>JAECOO</fullName>
+                <default>false</default>
+                <label>JAECOO</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

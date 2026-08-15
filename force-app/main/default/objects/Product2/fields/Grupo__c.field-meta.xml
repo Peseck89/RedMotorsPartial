@@ -326,5 +326,9 @@
             <controllingFieldValue>OMODA QA</controllingFieldValue>
             <valueName>OMODA QA</valueName>
         </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>JAECOO QA</controllingFieldValue>
+            <valueName>JAECOO QA</valueName>
+        </valueSettings>
     </valueSet>
 </CustomField>

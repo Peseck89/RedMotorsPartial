@@ -113,6 +113,10 @@
             <fullName>OMODA QA</fullName>
             <default>false</default>
         </values>
+        <values>
+            <fullName>JAECOO QA</fullName>
+            <default>false</default>
+        </values>
     </picklistValues>
     <picklistValues>
         <picklist>Combustible_flujo__c</picklist>
@@ -438,6 +442,10 @@
             <fullName>OMODA QA</fullName>
             <default>false</default>
         </values>
+        <values>
+            <fullName>JAECOO QA</fullName>
+            <default>false</default>
+        </values>
     </picklistValues>
     <picklistValues>
         <picklist>Family</picklist>
@@ -724,6 +732,10 @@
             <fullName>OMODA QA</fullName>
             <default>false</default>
         </values>
+        <values>
+            <fullName>JAECOO QA</fullName>
+            <default>false</default>
+        </values>
     </picklistValues>
     <picklistValues>
         <picklist>Marca__c</picklist>
@@ -801,6 +813,10 @@
         </values>
         <values>
             <fullName>OMODA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>JAECOO</fullName>
             <default>false</default>
         </values>
     </picklistValues>
@@ -2199,6 +2215,10 @@
         </values>
         <values>
             <fullName>QA OMODA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>QA JAECOO</fullName>
             <default>false</default>
         </values>
     </picklistValues>
