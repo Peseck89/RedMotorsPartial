@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bodega__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Bodega</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Bodega__c.Bodega_vehiculos_nuevos__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Bodega__c</referenceTo>
+    <relationshipLabel>Ubicaciones por Marcas</relationshipLabel>
+    <relationshipName>Ubicaciones_por_Marcas</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
