@@ -139,6 +139,19 @@ Luis autorizó expresamente el uso de datos/valores provisionales de QA (Categor
 - **Producción no fue tocada** en ningún momento de esta investigación.
 - Todo el retrieve/conversión de este bloque se realizó fuera del repositorio, en `C:\Users\dokur\Documents\Auditorias-RedMotors-PEKING\Tmp-Product2-Metadata-20260814`. No se copió metadata de esa carpeta al repositorio.
 
+## Checkpoint — Reconciliación de baseline en Git (2026-08-14)
+
+El commit `f242f55` documentó el diagnóstico completo (cadena de 5 niveles, limitación del retrieve aislado de RecordType, diseño mínimo propuesto). Este checkpoint incorpora a Git, en el commit `09c16e8`, el **baseline real y completo** de `Product2` tal como existe hoy en Partial:
+
+- `force-app/main/default/objects/Product2/recordTypes/Producto_Red_Motors.recordType-meta.xml` reemplazado por la versión completa (2,309 líneas / 18 campos con `picklistValues`, conteos 18/23/68/72/338 verificados por hash contra el source convertido), en lugar de la versión incompleta anterior (21 líneas / 2 campos).
+- `force-app/main/default/objects/Product2/fields/Categor_a_veh_culo__c.field-meta.xml` agregado por primera vez al repositorio (no existía en absoluto antes de este checkpoint).
+
+Ambos archivos fueron copiados verbatim (sin edición manual) desde el source convertido externo (`source-convertido/`, generado por `sf project convert mdapi` a partir del retrieve completo `CustomObject:Product2`, SHA-256 `207c50810da5893d707ad93b19b8d5b3dc91051ddbeebe02fe0ce644acce1237`), y verificados con hash idéntico antes de commitear.
+
+**Este checkpoint todavía NO contiene ninguna implementación temporal de OMODA** — cero valores "OMODA QA" agregados, cero valores nuevos en ningún GVS, cero cambios en `<valueSettings>`. Es exclusivamente la incorporación a Git de configuración que ya existía y estaba desplegada en Partial. No hubo deploy (Salesforce ya tiene esta configuración), no hubo DML, Producción no fue tocada.
+
+Con este baseline versionado, el siguiente bloque autorizado es la implementación del metadata temporal OMODA descrita en la sección anterior, partiendo de una base ya completa y recuperable.
+
 ## Estado
 
-Investigación y diseño completos. Reconciliación e implementación del metadata temporal OMODA: **pendiente, no ejecutada.**
+Investigación, diseño y reconciliación de baseline completos. Implementación del metadata temporal OMODA: **pendiente, no ejecutada.**
