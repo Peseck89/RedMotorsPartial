@@ -600,6 +600,11 @@
         <expression>&apos;Validación de ingreso requerida – &apos; + IF(ISBLANK({!Get_Cliente.Name}), {!Get_Oportunidad.Name}, {!Get_Cliente.Name}) + &apos; – &apos; + TEXT({!$Record.Monto__c}) + &apos; &apos; + TEXT({!$Record.CurrencyIsoCode})</expression>
     </formulas>
     <formulas>
+        <name>EmailReservaHeliosTicketUrl</name>
+        <dataType>String</dataType>
+        <expression>IF(ISBLANK({!$Record.Identificador_Helios__c}), &apos;&apos;, &apos;http://172.16.69.8/Reporte/Index?solicitud=&apos; + {!$Record.Identificador_Helios__c})</expression>
+    </formulas>
+    <formulas>
         <name>NotificationBody</name>
         <dataType>String</dataType>
         <expression>&apos;La solicitud &apos; + {!$Record.Name} + &apos; de la oportunidad &apos; + {!Get_Oportunidad.Name} + &apos; cambió a aprobación producto &apos; + TEXT({!$Record.Estado_Aprobacion_Producto__c}) + &apos;.&apos;</expression>
@@ -1001,7 +1006,7 @@
 &lt;/head&gt;
 
 &lt;body class=&quot;body&quot;
-  style=&quot;width:100%;height:100%;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0&quot;&gt;
+  style=&quot;width:100%;height:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0&quot;&gt;
   &lt;div dir=&quot;ltr&quot; class=&quot;es-wrapper-color&quot; lang=&quot;es&quot; style=&quot;background-color:#F6F6F6&quot;&gt;
     &lt;table width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; class=&quot;es-wrapper&quot; role=&quot;none&quot;
       style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top&quot;&gt;
@@ -1070,47 +1075,42 @@
                                       &lt;tbody&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:24px;padding-bottom:12px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:30px;letter-spacing:0;color:#333333;font-size:20px;text-align:center&quot;&gt;&lt;strong style=&quot;font-weight:bolder !important&quot;&gt;Validación de ingreso requerida&lt;/strong&gt;&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:30px;letter-spacing:0;color:#333333;font-size:20px;text-align:center&quot;&gt;&lt;strong style=&quot;font-weight:bolder !important&quot;&gt;Validación de ingreso requerida&lt;/strong&gt;&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:8px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;Hola,&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;Se ha creado una solicitud para validar un ingreso de dinero asociado a la oportunidad {!Get_Oportunidad.Name}.&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:8px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;Se registró una solicitud VN-RQ106 que requiere validación de Tesorería.&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Resumen de la solicitud:&lt;/strong&gt;&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:8px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Cliente:&lt;/strong&gt; {!Get_Cliente.Name}&lt;br/&gt;&lt;strong&gt;Oportunidad:&lt;/strong&gt; {!Get_Oportunidad.Name}&lt;br/&gt;&lt;strong&gt;Número de anticipo:&lt;/strong&gt; {!$Record.Name}&lt;br/&gt;&lt;strong&gt;Tipo de ingreso:&lt;/strong&gt; {!$Record.Tipo_Ingreso__c}&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Cliente:&lt;/strong&gt; {!Get_Cliente.Name}&lt;br/&gt;&lt;strong&gt;Asesor:&lt;/strong&gt; {!Get_Asesor.Name}&lt;br/&gt;&lt;strong&gt;Tipo de ingreso:&lt;/strong&gt; {!$Record.Tipo_Ingreso__c}&lt;br/&gt;&lt;strong&gt;Monto:&lt;/strong&gt; {!$Record.Monto__c} {!$Record.CurrencyIsoCode}&lt;br/&gt;&lt;strong&gt;Medio de pago:&lt;/strong&gt; {!$Record.Medio_Pago__c}&lt;br/&gt;&lt;strong&gt;Fecha del ingreso:&lt;/strong&gt; {!$Record.Fecha_Ingreso__c}&lt;br/&gt;&lt;strong&gt;Referencia / comprobante:&lt;/strong&gt; {!$Record.Referencia_Comprobante__c}&lt;br/&gt;&lt;strong&gt;Depositante:&lt;/strong&gt; {!$Record.Depositante__c}&lt;br/&gt;&lt;strong&gt;Vehículo / VIN:&lt;/strong&gt; {!EmailReservaVinDisplay}&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:8px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Monto:&lt;/strong&gt; {!$Record.Monto__c} {!$Record.CurrencyIsoCode}&lt;br/&gt;&lt;strong&gt;Medio de pago:&lt;/strong&gt; {!$Record.Medio_Pago__c}&lt;br/&gt;&lt;strong&gt;Referencia:&lt;/strong&gt; {!$Record.Referencia_Comprobante__c}&lt;br/&gt;&lt;strong&gt;Fecha de ingreso:&lt;/strong&gt; {!$Record.Fecha_Ingreso__c}&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;Favor validar si el ingreso fue recibido correctamente y completar la aprobación en Helios.&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:8px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Depositante:&lt;/strong&gt; {!$Record.Depositante__c}&lt;br/&gt;&lt;strong&gt;Identificación depositante:&lt;/strong&gt; {!$Record.Identificacion_Depositante__c}&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Ticket Helios:&lt;/strong&gt; {!$Record.Identificador_Helios__c}&lt;br/&gt;&lt;strong&gt;Enlace:&lt;/strong&gt; &lt;a href=&quot;{!EmailReservaHeliosTicketUrl}&quot; style=&quot;color:#0062a6;text-decoration:underline&quot;&gt;{!EmailReservaHeliosTicketUrl}&lt;/a&gt;&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:8px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Comentarios del asesor:&lt;/strong&gt;&lt;br/&gt;{!$Record.Comentarios_Asesor__c}&lt;/p&gt;
-                                          &lt;/td&gt;
-                                        &lt;/tr&gt;
-                                        &lt;tr&gt;
-                                          &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:8px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Link de la oportunidad:&lt;/strong&gt; &lt;a href=&quot;{!EmailReservaOpportunityUrl}&quot; style=&quot;color:#0062a6;text-decoration:underline&quot;&gt;{!EmailReservaOpportunityUrl}&lt;/a&gt;&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;Si la información no coincide, favor registrar el motivo y comentario para mantener la trazabilidad del proceso.&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:24px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;Saludos,&lt;br/&gt;Red Motors&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;Saludos,&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                       &lt;/tbody&gt;
@@ -1150,13 +1150,13 @@
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;padding:0 0 0 40px;Margin:0&quot;&gt;
                                             &lt;p class=&quot;d&quot;
-                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#f8f8f8;font-size:14px&quot;&gt;
+                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#f8f8f8;font-size:14px&quot;&gt;
                                               &lt;strong style=&quot;font-weight:bolder !important&quot;&gt;Red Motors&lt;/strong&gt;&lt;/p&gt;
                                             &lt;p class=&quot;d&quot;
-                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#f8f8f8;font-size:14px&quot;&gt;
+                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#f8f8f8;font-size:14px&quot;&gt;
                                               2547-5000&lt;/p&gt;
                                             &lt;p class=&quot;d&quot;
-                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#f8f8f8;font-size:14px&quot;&gt;
+                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#f8f8f8;font-size:14px&quot;&gt;
                                               Uruca - Escazú - Pinares&amp;nbsp;&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
@@ -1225,23 +1225,23 @@
                                         &lt;tr&gt;
                                           &lt;td align=&quot;right&quot; style=&quot;padding:0 0 20px;Margin:0&quot;&gt;
                                             &lt;p class=&quot;e&quot;
-                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:18px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:12px&quot;&gt;
+                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:18px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:12px&quot;&gt;
                                               Conoce nuestros canales digitales de Red Motors&lt;/p&gt;
                                             &lt;p
-                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:14px;display:none&quot;&gt;
+                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:14px;display:none&quot;&gt;
                                               &lt;br&gt;&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;right&quot; style=&quot;padding:0;Margin:0&quot;&gt;
                                             &lt;p class=&quot;e&quot;
-                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:18px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:12px&quot;&gt;
+                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:18px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:12px&quot;&gt;
                                               Accede por medio de WhatsApp o nuestra App Web&lt;/p&gt;
                                             &lt;p
-                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:18px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:12px;display:none&quot;&gt;
+                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:18px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:12px;display:none&quot;&gt;
                                               &lt;br&gt;&lt;/p&gt;
                                             &lt;p
-                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:14px;display:none&quot;&gt;
+                                              style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#ffffff;font-size:14px;display:none&quot;&gt;
                                               &lt;br&gt;&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
@@ -1282,12 +1282,12 @@
                                          &lt;table role=&quot;presentation&quot; style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:15px;width:100%;table-layout:fixed;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;&quot;&gt;
                                              &lt;tr&gt;
                                                  &lt;td style=&quot;padding:0;Margin:0;text-align:left;vertical-align:middle;width:50%;&quot;&gt;
-                                                     &lt;p style=&quot;Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;font-size:13px;color:#707070;margin:0;&quot;&gt;
+                                                     &lt;p style=&quot;Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:13px;color:#707070;margin:0;&quot;&gt;
                                                          Descarga RedMotors Service para:
                                                      &lt;/p&gt;
                                                  &lt;/td&gt;
                                                  &lt;td style=&quot;padding:0;Margin:0;text-align:right;vertical-align:middle;width:50%;&quot;&gt;
-                                                     &lt;div style=&quot;font-size:13px;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;color:#333355;word-break:break-word;&quot;&gt;
+                                                     &lt;div style=&quot;font-size:13px;font-family:arial, 'helvetica neue', helvetica, sans-serif;color:#333355;word-break:break-word;&quot;&gt;
                                                          &lt;span style=&quot;color:#333355; margin:0 5px;&quot;&gt;|&lt;/span&gt;
                                                          &lt;a href=&quot;https://apps.apple.com/us/app/redmotors-service/id6763822204&quot; style=&quot;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:none;color:#333333;font-weight:normal;margin:0 5px;&quot;&gt;iPhone&lt;/a&gt;
                                                          &lt;span style=&quot;color:#333355; margin:0 5px;&quot;&gt;|&lt;/span&gt;
