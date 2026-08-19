@@ -10,6 +10,8 @@ public with sharing class VN_RQ106_AnticipoController {
     private static final String TIPO_RESERVA = 'Reserva de vehículo';
     @TestVisible private static final String MISSING_CLIENT_EMAIL_TASK_SUBJECT =
         'VN-RQ106: cliente sin correo';
+    @TestVisible private static final String MISSING_SOFTLAND_CODE_MESSAGE =
+        'La cuenta no tiene código de cliente en Softland, por favor crearlo utilizando el botón de la cuenta primero.';
     private static final String CUSTOM_NOTIFICATION_TYPE_DEVELOPER_NAME =
         'Redmotors_Notification';
     @TestVisible private static Boolean simulateTreasuryFailure = false;
@@ -173,6 +175,13 @@ public with sharing class VN_RQ106_AnticipoController {
         Anticipo__c solicitud = solicitudes[0];
         if (solicitud.Estatus__c != STATUS_BORRADOR) {
             throw new AuraHandledException('Solo se pueden enviar solicitudes en estado Borrador.');
+        }
+
+        if (String.isBlank(solicitud.Oportunidad__r?.Account?.codigoSoftland__c)) {
+            AuraHandledException missingSoftlandCodeException =
+                new AuraHandledException(MISSING_SOFTLAND_CODE_MESSAGE);
+            missingSoftlandCodeException.setMessage(MISSING_SOFTLAND_CODE_MESSAGE);
+            throw missingSoftlandCodeException;
         }
 
         Integer evidenceCount = [

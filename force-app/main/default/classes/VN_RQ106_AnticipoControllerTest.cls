@@ -1015,6 +1015,50 @@ private class VN_RQ106_AnticipoControllerTest {
     }
 
     @IsTest
+    static void sendToTreasuryWithoutSoftlandCodeFailsAndKeepsBorrador() {
+        Opportunity opp = createOpportunity();
+        update new Account(Id = opp.AccountId, codigoSoftland__c = null);
+
+        Id anticipoId = createDraftAnticipo(opp.Id);
+        attachEvidence(anticipoId);
+
+        Boolean exceptionThrown = false;
+        String exceptionMessage;
+
+        Test.startTest();
+        try {
+            VN_RQ106_AnticipoController.sendToTreasury(anticipoId);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+            exceptionMessage = e.getMessage();
+        }
+        Test.stopTest();
+
+        Anticipo__c solicitud = [
+            SELECT Id, Estatus__c, Identificador_Helios__c
+            FROM Anticipo__c
+            WHERE Id = :anticipoId
+        ];
+
+        System.assertEquals(
+            true,
+            exceptionThrown,
+            'No debe enviar a Tesorería si la cuenta no tiene código de cliente en Softland.'
+        );
+        System.assertEquals(
+            VN_RQ106_AnticipoController.MISSING_SOFTLAND_CODE_MESSAGE,
+            exceptionMessage,
+            'Debe mostrar el mensaje exacto solicitado por negocio.'
+        );
+        System.assertEquals('Borrador', solicitud.Estatus__c);
+        System.assertEquals(
+            null,
+            solicitud.Identificador_Helios__c,
+            'No debe llegar al callout de Tesorería/Helios.'
+        );
+    }
+
+    @IsTest
     static void sendToTreasuryWithNullFails() {
         Boolean exceptionThrown = false;
 
