@@ -392,6 +392,13 @@
                     <stringValue>Aprobada</stringValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>$Record__Prior.Estado_Aprobacion_Producto__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Aprobada</stringValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <targetReference>Tiene_Email_Asesor_Aprobada</targetReference>
             </connector>
