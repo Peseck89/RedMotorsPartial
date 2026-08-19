@@ -324,6 +324,28 @@
         <locationY>458</locationY>
         <defaultConnectorLabel>Evento no notificado</defaultConnectorLabel>
         <rules>
+            <name>En_Validacion_de_Tesoreria</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Estatus__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>En validación de Tesorería</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record__Prior.Estatus__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>En validación de Tesorería</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Enviar_Correo_Tesoreria</targetReference>
+            </connector>
+            <label>En validación de Tesorería</label>
+        </rules>
+        <rules>
             <name>Reenvio_reserva_pendiente</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
@@ -374,21 +396,6 @@
                 <targetReference>Tiene_Email_Asesor_Aprobada</targetReference>
             </connector>
             <label>Vehículo reservado</label>
-        </rules>
-        <rules>
-            <name>En_Validacion_de_Tesoreria</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.Estatus__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>En validación de Tesorería</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Enviar_Correo_Tesoreria</targetReference>
-            </connector>
-            <label>En validación de Tesorería</label>
         </rules>
     </decisions>
     <decisions>
