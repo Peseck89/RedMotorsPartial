@@ -14,6 +14,23 @@
             </value>
         </assignmentItems>
         <connector>
+            <targetReference>Acumular_QLI_Procesada</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Conserva el elemento del loop ya marcado para persistir únicamente las QuoteLineItems procesadas.</description>
+        <name>Acumular_QLI_Procesada</name>
+        <label>Acumular QLI Procesada</label>
+        <locationX>138</locationX>
+        <locationY>2222</locationY>
+        <assignmentItems>
+            <assignToReference>QuoteLineItemsProcesadas</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>recorrer_items</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
             <targetReference>recorrer_items</targetReference>
         </connector>
     </assignments>
@@ -668,7 +685,7 @@
         <connector>
             <targetReference>decide_creada_ot</targetReference>
         </connector>
-        <inputReference>buscar_los_items</inputReference>
+        <inputReference>QuoteLineItemsProcesadas</inputReference>
     </recordUpdates>
     <recordUpdates>
         <name>ligar_la_OT</name>
@@ -841,6 +858,14 @@
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <objectType>WorkOrderLineItem</objectType>
+    </variables>
+    <variables>
+        <name>QuoteLineItemsProcesadas</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>QuoteLineItem</objectType>
     </variables>
     <variables>
         <name>recordId</name>
