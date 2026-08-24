@@ -782,7 +782,6 @@
                 <booleanValue>true</booleanValue>
             </value>
         </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>Empresa__c</object>
         <outputAssignments>
             <assignToReference>EmpresaOperadoraId</assignToReference>
