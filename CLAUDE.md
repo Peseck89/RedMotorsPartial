@@ -122,3 +122,7 @@ Track work for Luis using:
 - Root junk cleanup was prepared in branch cleanup/laptop/redmotors-root-junk-20260525.
 - LWC backup.js cleanup was prepared in branch cleanup/laptop/redmotors-lwc-backupjs-20260525.
 - No destructive Salesforce deployment was performed for backup.js.
+
+## Revisión de seguridad — Go-Live RedMotors 29-08-2026
+
+Antes de revisar o recomendar cualquier cambio del pase PEKING/Jerarquización, leer `docs/empresa-marcas-chinas/go-live-20260829/README_AUTORITATIVO.md`, `docs/empresa-marcas-chinas/go-live-20260829/FUENTES_Y_PRECEDENCIA.md`, `docs/empresa-marcas-chinas/go-live-20260829/REGLAS_PRODUCCION.md` y `docs/empresa-marcas-chinas/go-live-20260829/CONTRADICCIONES_Y_GATES.md`. Claude actúa como auditor independiente de alcance, impacto, dependencias y seguridad productiva; no debe aceptar como verdad un inventario o veredicto generado por otro agente sin reconciliarlo con las fuentes originales y el estado live.

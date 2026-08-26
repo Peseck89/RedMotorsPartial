@@ -38,3 +38,7 @@ Active context for Sprint 2 (nothing else, unless a listed file points to it):
 7. Direct answers from Luis and Diego.
 
 Sprint 1's closure documentation stays available strictly as a reference when resolving a Sprint 1 dependency — never as a starting point for Sprint 2 work. See `docs/empresa-marcas-chinas/INDICE_DOCUMENTOS_HISTORICOS.md` for the full historical document index and its usage warnings.
+
+## RedMotors Go-Live 29-08-2026 — obligatorio
+
+Para cualquier tarea relacionada con PEKING/OMODA/JAECOO, Jerarquización, Copado, QA o Producción del pase del 29-08-2026, leer primero `docs/empresa-marcas-chinas/go-live-20260829/README_AUTORITATIVO.md` y seguir `docs/empresa-marcas-chinas/go-live-20260829/AGENT_PRECHECK.md`. No modificar Producción basándose en memoria del agente. Si una fuente no está disponible o hay contradicción que afecte el pase, detener la mutación y reportarla. No des-fusionar componentes compartidos entre Marcas Chinas y Jerarquización.
