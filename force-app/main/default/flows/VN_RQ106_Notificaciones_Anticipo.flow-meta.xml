@@ -347,7 +347,7 @@
         </rules>
         <rules>
             <name>Reenvio_reserva_pendiente</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>1 AND 2 AND (3 OR (4 AND (5 OR 6)))</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.Estado_Aprobacion_Producto__c</leftValueReference>
                 <operator>EqualTo</operator>
@@ -356,10 +356,38 @@
                 </rightValue>
             </conditions>
             <conditions>
+                <leftValueReference>$Record.Tipo_Ingreso__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Reserva de vehículo</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
                 <leftValueReference>$Record__Prior.Estado_Aprobacion_Producto__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Rechazada</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Estatus__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Anticipo creado</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record__Prior.Estatus__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Anticipo creado</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record__Prior.Estado_Aprobacion_Producto__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Pendiente</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -552,7 +580,7 @@
     <formulas>
         <name>EmailAddressesAsesorYJefeProducto</name>
         <dataType>String</dataType>
-        <expression>&apos;cmora@redmotorscr.com, oaparicio@redmotorscr.com, admin@portalnetcr.com&apos; + IF(OR(ISBLANK({!Get_Asesor.Email}), CONTAINS(&apos;,cmora@redmotorscr.com,oaparicio@redmotorscr.com,admin@portalnetcr.com,&apos;, &apos;,&apos; + LOWER({!Get_Asesor.Email}) + &apos;,&apos;)), &apos;&apos;, &apos;, &apos; + {!Get_Asesor.Email}) + IF(OR(ISBLANK({!Get_Jefe_Producto.Email}), LOWER({!Get_Jefe_Producto.Email}) = LOWER({!Get_Asesor.Email}), CONTAINS(&apos;,cmora@redmotorscr.com,oaparicio@redmotorscr.com,admin@portalnetcr.com,&apos;, &apos;,&apos; + LOWER({!Get_Jefe_Producto.Email}) + &apos;,&apos;)), &apos;&apos;, &apos;, &apos; + {!Get_Jefe_Producto.Email})</expression>
+        <expression>&apos;cmora@redmotorscr.com, oaparicio@redmotorscr.com, admin@portalnetcr.com, ssoto@redmotorscr.com&apos; + IF(OR(ISBLANK({!Get_Asesor.Email}), CONTAINS(&apos;,cmora@redmotorscr.com,oaparicio@redmotorscr.com,admin@portalnetcr.com,ssoto@redmotorscr.com,&apos;, &apos;,&apos; + LOWER({!Get_Asesor.Email}) + &apos;,&apos;)), &apos;&apos;, &apos;, &apos; + {!Get_Asesor.Email}) + IF(OR(ISBLANK({!Get_Jefe_Producto.Email}), LOWER({!Get_Jefe_Producto.Email}) = LOWER({!Get_Asesor.Email}), CONTAINS(&apos;,cmora@redmotorscr.com,oaparicio@redmotorscr.com,admin@portalnetcr.com,ssoto@redmotorscr.com,&apos;, &apos;,&apos; + LOWER({!Get_Jefe_Producto.Email}) + &apos;,&apos;)), &apos;&apos;, &apos;, &apos; + {!Get_Jefe_Producto.Email})</expression>
     </formulas>
     <formulas>
         <name>EmailSubject</name>
