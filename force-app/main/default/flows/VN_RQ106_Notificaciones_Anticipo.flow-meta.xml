@@ -1595,8 +1595,8 @@
               &lt;tbody&gt;
                 &lt;tr&gt;
                   &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
-                    &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bc&quot;
-                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot;
+                    &lt;table width=&quot;600&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bc&quot;
+                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px;max-width:600px;table-layout:fixed&quot;
                       role=&quot;none&quot;&gt;
                       &lt;tbody&gt;
                         &lt;tr&gt;
@@ -1635,8 +1635,8 @@
               &lt;tbody&gt;
                 &lt;tr&gt;
                   &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
-                    &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bb&quot;
-                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot;
+                    &lt;table width=&quot;600&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bb&quot;
+                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px;max-width:600px;table-layout:fixed&quot;
                       role=&quot;none&quot;&gt;
                       &lt;tbody&gt;
                         &lt;tr&gt;
@@ -1667,7 +1667,7 @@
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:8px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Solicitado por:&lt;/strong&gt; {!Get_Asesor.Name}&lt;br/&gt;&lt;strong&gt;Link de la oportunidad:&lt;/strong&gt; &lt;a href=&quot;{!EmailReservaOpportunityUrl}&quot; style=&quot;color:#0062a6;text-decoration:underline&quot;&gt;{!EmailReservaOpportunityUrl}&lt;/a&gt;&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Solicitado por:&lt;/strong&gt; {!Get_Asesor.Name}&lt;br/&gt;&lt;strong&gt;Link de la oportunidad:&lt;/strong&gt; &lt;a href=&quot;{!EmailReservaOpportunityUrl}&quot; style=&quot;color:#0062a6;text-decoration:underline;word-break:break-all&quot;&gt;{!EmailReservaOpportunityUrl}&lt;/a&gt;&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
@@ -1709,8 +1709,8 @@
               &lt;tbody&gt;
                 &lt;tr&gt;
                   &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
-                    &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;ba&quot;
-                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot;
+                    &lt;table width=&quot;600&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;ba&quot;
+                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px;max-width:600px;table-layout:fixed&quot;
                       role=&quot;none&quot;&gt;
                       &lt;tbody&gt;
                         &lt;tr&gt;&lt;/tr&gt;
@@ -2144,8 +2144,8 @@
               &lt;tbody&gt;
                 &lt;tr&gt;
                   &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
-                    &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bc&quot;
-                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot;
+                    &lt;table width=&quot;600&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bc&quot;
+                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px;max-width:600px;table-layout:fixed&quot;
                       role=&quot;none&quot;&gt;
                       &lt;tbody&gt;
                         &lt;tr&gt;
@@ -2184,8 +2184,8 @@
               &lt;tbody&gt;
                 &lt;tr&gt;
                   &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
-                    &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bb&quot;
-                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot;
+                    &lt;table width=&quot;600&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bb&quot;
+                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px;max-width:600px;table-layout:fixed&quot;
                       role=&quot;none&quot;&gt;
                       &lt;tbody&gt;
                         &lt;tr&gt;
@@ -2221,7 +2221,7 @@
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
                                           &lt;td align=&quot;left&quot; style=&quot;Margin:0;padding-left:40px;padding-right:40px;padding-top:8px;padding-bottom:8px&quot;&gt;
-                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Detalle de la reserva:&lt;/strong&gt;&lt;br/&gt;&lt;span style=&quot;line-height:10px&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;br/&gt;&lt;strong&gt;Cliente:&lt;/strong&gt; {!Get_Cliente.Name}&lt;br/&gt;&lt;strong&gt;VIN solicitado:&lt;/strong&gt; {!EmailReservaVinDisplay}&lt;br/&gt;&lt;strong&gt;Oportunidad:&lt;/strong&gt; {!Get_Oportunidad.Name}&lt;br/&gt;&lt;strong&gt;Link de la oportunidad:&lt;/strong&gt; &lt;a href=&quot;{!EmailReservaOpportunityUrl}&quot; style=&quot;color:#0062a6;text-decoration:underline&quot;&gt;{!EmailReservaOpportunityUrl}&lt;/a&gt;&lt;/p&gt;
+                                            &lt;p style=&quot;Margin:0;mso-line-height-rule:exactly;font-family:arial, &apos;helvetica neue&apos;, helvetica, sans-serif;line-height:23px;letter-spacing:0;color:#333333;font-size:15px&quot;&gt;&lt;strong&gt;Detalle de la reserva:&lt;/strong&gt;&lt;br/&gt;&lt;span style=&quot;line-height:10px&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;br/&gt;&lt;strong&gt;Cliente:&lt;/strong&gt; {!Get_Cliente.Name}&lt;br/&gt;&lt;strong&gt;VIN solicitado:&lt;/strong&gt; {!EmailReservaVinDisplay}&lt;br/&gt;&lt;strong&gt;Oportunidad:&lt;/strong&gt; {!Get_Oportunidad.Name}&lt;br/&gt;&lt;strong&gt;Link de la oportunidad:&lt;/strong&gt; &lt;a href=&quot;{!EmailReservaOpportunityUrl}&quot; style=&quot;color:#0062a6;text-decoration:underline;word-break:break-all&quot;&gt;{!EmailReservaOpportunityUrl}&lt;/a&gt;&lt;/p&gt;
                                           &lt;/td&gt;
                                         &lt;/tr&gt;
                                         &lt;tr&gt;
@@ -2258,8 +2258,8 @@
               &lt;tbody&gt;
                 &lt;tr&gt;
                   &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
-                    &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;ba&quot;
-                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot;
+                    &lt;table width=&quot;600&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;ba&quot;
+                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px;max-width:600px;table-layout:fixed&quot;
                       role=&quot;none&quot;&gt;
                       &lt;tbody&gt;
                         &lt;tr&gt;&lt;/tr&gt;
@@ -2693,8 +2693,8 @@
               &lt;tbody&gt;
                 &lt;tr&gt;
                   &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
-                    &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bc&quot;
-                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot;
+                    &lt;table width=&quot;600&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bc&quot;
+                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px;max-width:600px;table-layout:fixed&quot;
                       role=&quot;none&quot;&gt;
                       &lt;tbody&gt;
                         &lt;tr&gt;
@@ -2733,8 +2733,8 @@
               &lt;tbody&gt;
                 &lt;tr&gt;
                   &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
-                    &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bb&quot;
-                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot;
+                    &lt;table width=&quot;600&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;bb&quot;
+                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px;max-width:600px;table-layout:fixed&quot;
                       role=&quot;none&quot;&gt;
                       &lt;tbody&gt;
                         &lt;tr&gt;
@@ -2797,8 +2797,8 @@
               &lt;tbody&gt;
                 &lt;tr&gt;
                   &lt;td align=&quot;center&quot; style=&quot;padding:0;Margin:0&quot;&gt;
-                    &lt;table cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;ba&quot;
-                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px&quot;
+                    &lt;table width=&quot;600&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#f1f1f1&quot; align=&quot;center&quot; class=&quot;ba&quot;
+                      style=&quot;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#f1f1f1;width:600px;max-width:600px;table-layout:fixed&quot;
                       role=&quot;none&quot;&gt;
                       &lt;tbody&gt;
                         &lt;tr&gt;&lt;/tr&gt;

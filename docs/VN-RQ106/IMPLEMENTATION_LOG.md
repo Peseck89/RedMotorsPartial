@@ -355,4 +355,50 @@ Se registra el cierre tecnico final del requerimiento VN-RQ106 despues del pase 
 - Proyecto: cerrado tecnicamente.
 - Pendiente: monitoreo post-produccion y atencion de incidencias si negocio reporta hallazgos.
 
+## 2026-09-04 - Hotfix visual correo "Solicitud de aprobacion para reserva" (Maria)
+
+Se registra un hotfix visual puntual sobre el Flow `VN_RQ106_Notificaciones_Anticipo`, posterior al cierre productivo del 2026-07-01, solicitado por Maria por un defecto de ancho en el bloque celeste del correo de solicitud de aprobacion de reserva.
+
+### Alcance del hotfix
+
+- Flow: `VN_RQ106_Notificaciones_Anticipo`.
+- Cambio: 9 tablas (`class="bc"`, `"bb"`, `"ba"`, 3 por cada uno de los 3 templates `EmailBodyReservaPendienteTemplate`/`Rechazada`/`Aprobada`) con `width="600"` + `max-width:600px;table-layout:fixed`; 2 links `EmailReservaOpportunityUrl` (Pendiente y Rechazada) con `word-break:break-all`.
+- Sin cambios en destinatarios, logica del Flow, `EmailBodyTesoreria`, textos, variables ni formulas de aprobacion.
+
+### QA Sandbox
+
+- Version Sandbox: v10 Active.
+- Validation ID: `0AfAK000001FPOx0AO`.
+- Deploy contenido (Draft): `0AfAK000001FUJl0AO`.
+- Activacion v10: `0AfAK000001FUZt0AO`.
+- QA visual Gmail: PASS.
+- QA visual Outlook: NO EJECUTADO (sin acceso).
+
+### Produccion
+
+- Check-only (artefacto completo): `0AfPH000001yqhV0AQ`.
+- Check-only (copia Draft): `0AfPH000001yqnx0AA`.
+- Deploy Draft v7: `0AfPH000001yqpZ0AQ`.
+- Flow v7 Id: `301PH00001hPgKYYA0`.
+- Activacion v7: `0AfPH000001yrP30AI`.
+- Estado final: v7 Active, v6 Obsolete.
+- Backup Produccion pre-deploy (SHA-256): `1e138cab631153a54feb2be6f56f1a412452bb07ad13247275ec0179d0a39a43`.
+
+### Limpieza QA posterior
+
+- `ANT-02565` restaurado a su estado previo (`Estatus__c = Rechazada por Tesoreria`, `Estado_Aprobacion_Producto__c = Aprobada` sin cambios).
+- `PermissionSetAssignment` temporal de Claudia Perez sobre `VN_RQ106_Anticipo` eliminado.
+- Correo personal de QA eliminado/redactado de artefactos temporales locales.
+
+### Notas
+
+- El proyecto PEKING (`RedMotors-PEKING-Rebuild-20260901`) no forma parte de este hotfix; toda la investigacion y ejecucion se realizo unicamente en este repo/rama.
+- `EmailBodyTesoreria` verificado byte a byte intacto en Sandbox y Produccion antes y despues del hotfix.
+
+### Estado final
+
+- Sandbox: v10 Active.
+- Produccion: v7 Active, hotfix visual en vivo.
+- Pendiente: commit/push del cambio en `force-app/main/default/flows/VN_RQ106_Notificaciones_Anticipo.flow-meta.xml` y limpieza de artefactos temporales locales.
+
 ---
