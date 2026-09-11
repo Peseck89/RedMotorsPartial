@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>53.0</apiVersion>
     <actionCalls>
         <name>Resuelve_Pricebook_Empresa</name>
         <label>Resuelve Pricebook Empresa</label>
@@ -33,12 +32,13 @@
             <name>pricebookId</name>
         </outputParameters>
     </actionCalls>
+    <apiVersion>53.0</apiVersion>
     <assignments>
+        <description>Fallback temporal: solo aplica cuando Opportunity.Empresa_Operadora__c está vacío.</description>
         <name>Asigna_Empresa_Desde_Fallback</name>
         <label>Asigna Empresa Desde Fallback</label>
         <locationX>314</locationX>
         <locationY>92</locationY>
-        <description>Fallback temporal: solo aplica cuando Opportunity.Empresa_Operadora__c está vacío.</description>
         <assignmentItems>
             <assignToReference>EmpresaIdResuelta</assignToReference>
             <operator>Assign</operator>
@@ -67,34 +67,97 @@
         </connector>
     </assignments>
     <decisions>
-        <name>Tiene_Empresa_Resuelta</name>
-        <label>Tiene Empresa Resuelta</label>
+        <description>Solo se pisa el Pricebook cuando el actual es una lista Softland (Pricebook2.Empresa__c poblado). Las listas de catálogo o fantasía (BMW - 20xx, MINI - 20xx, KAWASAKI, MOTORRAD, POLARIS, INDIAN, OMODA, JAECOO, Standard) tienen Empresa__c vacío y no se tocan: sus modelos no existen en las listas Softland, y pisar el Pricebook rompe el insert del OpportunityLineItem con FIELD_INTEGRITY_EXCEPTION (pricebook entry is in a different pricebook than the one assigned to the opportunity).</description>
+        <name>Pricebook_Actual_Es_Lista_De_Empresa</name>
+        <label>Pricebook Actual Es Lista De Empresa</label>
         <locationX>176</locationX>
-        <locationY>150</locationY>
-        <description>Guarda de seguridad: solo invoca el resolver Apex cuando EmpresaIdResuelta quedó realmente poblado (evita pasar un Id vacío/'' al action call, tanto desde el lookup directo como desde el fallback sin coincidencia).</description>
-        <defaultConnectorLabel>Sin Empresa resuelta (no se actualiza)</defaultConnectorLabel>
+        <locationY>524</locationY>
+        <defaultConnectorLabel>Lista de fantasía o catálogo (no se pisa)</defaultConnectorLabel>
         <rules>
-            <name>Empresa_Resuelta</name>
+            <name>Pricebook_Actual_Con_Empresa</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>EmpresaIdResuelta</leftValueReference>
+                <leftValueReference>Pricebook_Actual.Empresa__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_current.Pricebook2Id</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>PriceBookIdResuelto</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Actualiza_Pricebook_Opportunity</targetReference>
+            </connector>
+            <label>Pricebook Actual Con Empresa</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Guarda anti-pisado: si la Oportunidad ya trae un Pricebook hay que ver primero de qué tipo es. Si viene vacío no hay nada que proteger y se asigna directo.</description>
+        <name>Pricebook_Actual_Vacio</name>
+        <label>Pricebook Actual Vacio</label>
+        <locationX>176</locationX>
+        <locationY>380</locationY>
+        <defaultConnector>
+            <targetReference>Pricebook_Actual</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Ya tiene Pricebook (revisar de qué tipo)</defaultConnectorLabel>
+        <rules>
+            <name>Sin_Pricebook_Actual</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_current.Pricebook2Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Actualiza_Pricebook_Opportunity</targetReference>
+            </connector>
+            <label>Sin Pricebook Actual</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Solo se actualiza Opportunity.Pricebook2Id cuando el resolver devuelve EXITO. NO_CONFIGURADO/SELECCION_REQUERIDA/ERROR no sobrescriben el Pricebook actual (sin default silencioso).</description>
+        <name>Pricebook_Resuelto_Exitosamente</name>
+        <label>Pricebook Resuelto Exitosamente</label>
+        <locationX>176</locationX>
+        <locationY>308</locationY>
+        <defaultConnectorLabel>Sin resolución (no se actualiza)</defaultConnectorLabel>
+        <rules>
+            <name>Resolucion_Exitosa</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>PricebookResolutionStatus</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>EXITO</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>PriceBookIdResuelto</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Resuelve_Pricebook_Empresa</targetReference>
+                <targetReference>Pricebook_Actual_Vacio</targetReference>
             </connector>
-            <label>Empresa Resuelta</label>
+            <label>Resolución Exitosa</label>
         </rules>
     </decisions>
     <decisions>
+        <description>Empresa_Operadora__c es la fuente principal para resolver el Pricebook. BMW_Compania__c solo se usa como fallback temporal cuando el lookup está vacío (ver Asigna_Empresa_Desde_Fallback).</description>
         <name>Tiene_Empresa_Operadora</name>
         <label>Tiene Empresa Operadora</label>
         <locationX>176</locationX>
         <locationY>0</locationY>
-        <description>Empresa_Operadora__c es la fuente principal para resolver el Pricebook. BMW_Compania__c solo se usa como fallback temporal cuando el lookup está vacío (ver Asigna_Empresa_Desde_Fallback).</description>
         <defaultConnector>
             <targetReference>BMW_Compania_Fallback_Empresa</targetReference>
         </defaultConnector>
@@ -116,41 +179,34 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Pricebook_Resuelto_Exitosamente</name>
-        <label>Pricebook Resuelto Exitosamente</label>
+        <description>Guarda de seguridad: solo invoca el resolver Apex cuando EmpresaIdResuelta quedó realmente poblado (evita pasar un Id vacío/&apos;&apos; al action call, tanto desde el lookup directo como desde el fallback sin coincidencia).</description>
+        <name>Tiene_Empresa_Resuelta</name>
+        <label>Tiene Empresa Resuelta</label>
         <locationX>176</locationX>
-        <locationY>308</locationY>
-        <description>Solo se actualiza Opportunity.Pricebook2Id cuando el resolver devuelve EXITO. NO_CONFIGURADO/SELECCION_REQUERIDA/ERROR no sobrescriben el Pricebook actual (sin default silencioso).</description>
-        <defaultConnectorLabel>Sin resolución (no se actualiza)</defaultConnectorLabel>
+        <locationY>150</locationY>
+        <defaultConnectorLabel>Sin Empresa resuelta (no se actualiza)</defaultConnectorLabel>
         <rules>
-            <name>Resolucion_Exitosa</name>
+            <name>Empresa_Resuelta</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>PricebookResolutionStatus</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>EXITO</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>PriceBookIdResuelto</leftValueReference>
+                <leftValueReference>EmpresaIdResuelta</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Actualiza_Pricebook_Opportunity</targetReference>
+                <targetReference>Resuelve_Pricebook_Empresa</targetReference>
             </connector>
-            <label>Resolución Exitosa</label>
+            <label>Empresa Resuelta</label>
         </rules>
     </decisions>
-    <description>Gestiona la lista de precio de acuerdo a la Empresa y divisa de la Oportunidad, resolviendo el Pricebook dinámicamente (EmpresaPricebookResolver) en vez de Ids fijos por combinación.</description>
+    <description>Gestiona la lista de precio de acuerdo a la Empresa y divisa de la Oportunidad, resolviendo el Pricebook dinámicamente (EmpresaPricebookResolver) en vez de Ids fijos por combinación. No pisa el Pricebook cuando la Oportunidad ya trae una lista de fantasía o catálogo (Pricebook2.Empresa__c vacío).</description>
     <formulas>
+        <description>Fallback temporal: traduce el picklist legacy BMW_Compania__c a Empresa.Codigo_ERP__c solo cuando Opportunity.Empresa_Operadora__c está vacío. No decide el Pricebook por nombre, solo ubica la Empresa.</description>
         <name>CodigoErpLegacyDesdeCompania</name>
         <dataType>String</dataType>
-        <description>Fallback temporal: traduce el picklist legacy BMW_Compania__c a Empresa.Codigo_ERP__c solo cuando Opportunity.Empresa_Operadora__c está vacío. No decide el Pricebook por nombre, solo ubica la Empresa.</description>
-        <expression>CASE({!myVariable_current.BMW_Compania__c}, "Otobai", "RMOTOBAI", "Bavarian", "RMBAVARIAN", "")</expression>
+        <expression>CASE({!myVariable_current.BMW_Compania__c}, &quot;Otobai&quot;, &quot;RMOTOBAI&quot;, &quot;Bavarian&quot;, &quot;RMBAVARIAN&quot;, &quot;PEKING&quot;, &quot;RMPEKING&quot;, &quot;Peking&quot;, &quot;RMPEKING&quot;, &quot;RMPEKING&quot;, &quot;RMPEKING&quot;, &quot;&quot;)</expression>
     </formulas>
     <interviewLabel>BMW_Gestiona_Listas_de_Precios-2_InterviewLabel</interviewLabel>
     <label>Gestiona Listas de Precios</label>
@@ -180,11 +236,11 @@
     </processMetadataValues>
     <processType>Workflow</processType>
     <recordLookups>
+        <description>Fallback temporal: solo se ejecuta cuando Opportunity.Empresa_Operadora__c está vacío. Ubica la Empresa por Codigo_ERP__c, nunca por Pricebook.Name.</description>
         <name>BMW_Compania_Fallback_Empresa</name>
         <label>BMW Compania Fallback Empresa</label>
         <locationX>314</locationX>
         <locationY>0</locationY>
-        <description>Fallback temporal: solo se ejecuta cuando Opportunity.Empresa_Operadora__c está vacío. Ubica la Empresa por Codigo_ERP__c, nunca por Pricebook.Name.</description>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Asigna_Empresa_Desde_Fallback</targetReference>
@@ -208,11 +264,33 @@
         <object>Empresa__c</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
+    <recordLookups>
+        <description>Lee la lista de precios que la Oportunidad ya tiene, solo para saber si es una lista Softland (Empresa__c poblado) o una lista de fantasía o catálogo (Empresa__c vacío).</description>
+        <name>Pricebook_Actual</name>
+        <label>Pricebook Actual</label>
+        <locationX>314</locationX>
+        <locationY>452</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Pricebook_Actual_Es_Lista_De_Empresa</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.Pricebook2Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Pricebook2</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <recordUpdates>
         <name>Actualiza_Pricebook_Opportunity</name>
         <label>Actualiza Pricebook Opportunity</label>
         <locationX>176</locationX>
-        <locationY>416</locationY>
+        <locationY>668</locationY>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>

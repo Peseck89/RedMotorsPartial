@@ -3,7 +3,7 @@
  * @TestClass RM_VN_CambiarUbicacion_Ctrl_Test
  * @author Redmotors
  * @since 06-09-2024
- * @ChangeLog se agrega ajuste para enviar dinamicamente la compañia RMBAVARIAN si la empresa es BAVARIAN y RMOTOBAI cuando es OTOBAI
+ * @ChangeLog la compañía se resuelve dinámicamente desde Empresa__c.Codigo_ERP__c
  */
 public with sharing class RM_VN_CambiarUbicacion_Ctrl {
 
@@ -87,22 +87,31 @@ public with sharing class RM_VN_CambiarUbicacion_Ctrl {
         }
     }
 
+    @TestVisible
     private static String getCompanyName(String empresa){
         if (String.isBlank(empresa)) {
             throw new AuraHandledException('La empresa del producto es requerida para cambiar la ubicación.');
         }
 
         String normalizedEmpresa = empresa.trim().toUpperCase();
-        if(normalizedEmpresa == 'RMOTOBAI' || normalizedEmpresa == 'OTOBAI'){
-            return 'RMOTOBAI';
+        String empresaName = empresa.trim();
+        List<Empresa__c> empresas = [
+            SELECT Codigo_ERP__c
+            FROM Empresa__c
+            WHERE Activa__c = true
+                AND (
+                    Codigo__c = :normalizedEmpresa
+                    OR Codigo_ERP__c = :normalizedEmpresa
+                    OR Name = :empresaName
+                )
+            LIMIT 2
+        ];
+        if (empresas.size() != 1 || String.isBlank(empresas[0].Codigo_ERP__c)) {
+            throw new AuraHandledException(
+                'No existe una configuración activa y única de Empresa para cambiar la ubicación: ' + empresa
+            );
         }
-        if(normalizedEmpresa == 'RMBAVARIAN' || normalizedEmpresa == 'BAVARIAN'){
-            return 'RMBAVARIAN';
-        }
-        if(normalizedEmpresa == 'RMPEKING'){
-            throw new AuraHandledException('RMPEKING no tiene configuración de Softland para cambio de ubicación.');
-        }
-        throw new AuraHandledException('Empresa no soportada para cambio de ubicación: ' + empresa);
+        return empresas[0].Codigo_ERP__c;
     }
 
     /**
@@ -116,7 +125,6 @@ public with sharing class RM_VN_CambiarUbicacion_Ctrl {
     public static String prepareParams(String vin,String empresa,String bodegaOrigen,String bodegaDestino) {
         return JSON.serialize(new Map<String, Object>{
             'VIN' => vin,
-            // 'compania' => 'RMBAVARIAN',
             'compania' => empresa,
             'origen' => bodegaOrigen,
             'destino' => bodegaDestino

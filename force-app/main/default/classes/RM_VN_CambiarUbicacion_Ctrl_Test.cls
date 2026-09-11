@@ -8,6 +8,9 @@ public with sharing class RM_VN_CambiarUbicacion_Ctrl_Test {
     @TestSetup
     static void makeData(){
         RM_VN_DataFactoryHelper.createRecordsVN();
+        ensureEmpresa('Bavarian', 'RMBAVARIAN', 'RMBAVARIAN');
+        ensureEmpresa('Otobai', 'RMOTOBAI', 'RMOTOBAI');
+        ensureEmpresa('PEKING', 'RMPEKING', 'RMPEKING');
     }
 
     @IsTest
@@ -43,18 +46,28 @@ public with sharing class RM_VN_CambiarUbicacion_Ctrl_Test {
     }
 
     @IsTest
-    static void cambioBodegaPekingNoHaceFallbackBavarianTest(){
-        ProductoXBodega__c productoXBodega = getProductoXBodegaForCompany('RMPEKING');
-        Bodega__c bodegaDestino = getDestino(productoXBodega.Bodega__c);
+    static void cambioBodegaPekingResuelveCodigoErpTest(){
+        System.assertEquals(
+            'RMPEKING',
+            RM_VN_CambiarUbicacion_Ctrl.getCompanyName('RMPEKING'),
+            'PEKING debe resolverse desde Empresa y no por una rama fija.'
+        );
+        System.assertEquals(
+            'RMPEKING',
+            RM_VN_CambiarUbicacion_Ctrl.getCompanyName('PEKING'),
+            'El nombre de Empresa debe resolver el mismo código ERP.'
+        );
+    }
 
-        Test.startTest();
-        try {
-            RM_VN_CambiarUbicacion_Ctrl.guardar(productoXBodega.Id, bodegaDestino.Id);
-            System.assert(false, 'RMPEKING no debe enviarse a Softland por fallback.');
-        } catch (AuraHandledException e) {
-            System.assertNotEquals(null, e, 'Debe lanzarse un error controlado.');
-        }
-        Test.stopTest();
+    @IsTest
+    static void cambioBodegaEmpresaFuturaResuelveSinCambioDeCodigoTest(){
+        ensureEmpresa('Empresa Futura', 'RMFUTURA', 'ERP-FUTURA');
+
+        System.assertEquals(
+            'ERP-FUTURA',
+            RM_VN_CambiarUbicacion_Ctrl.getCompanyName('RMFUTURA'),
+            'Una Empresa futura debe resolverse por configuración.'
+        );
     }
 
     @IsTest
@@ -152,6 +165,18 @@ public with sharing class RM_VN_CambiarUbicacion_Ctrl_Test {
             WHERE Id != :bodegaOrigenId
             LIMIT 1
         ];
+    }
+
+    private static void ensureEmpresa(String name, String codigo, String codigoErp) {
+        if ([SELECT COUNT() FROM Empresa__c WHERE Codigo__c = :codigo] == 0) {
+            insert new Empresa__c(
+                Name = name,
+                Codigo__c = codigo,
+                Codigo_ERP__c = codigoErp,
+                Nombre_Legal__c = name + ' Test S.A.',
+                Activa__c = true
+            );
+        }
     }
 
     /**
