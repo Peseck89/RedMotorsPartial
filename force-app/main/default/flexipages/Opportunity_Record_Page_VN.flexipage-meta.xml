@@ -206,9 +206,9 @@
                             <value>Opportunity.VN_RQ106_Solicitudes_Anticipos</value>
                             <visibilityRule>
                                 <criteria>
-                                    <leftValue>{!$Permission.CustomPermission.System_Admin_CP}</leftValue>
+                                    <leftValue>{!Record.StageName}</leftValue>
                                     <operator>EQUAL</operator>
-                                    <rightValue>true</rightValue>
+                                    <rightValue>Reserva</rightValue>
                                 </criteria>
                             </visibilityRule>
                         </valueListItems>
